@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="320dp"
+    android:height="180dp"
+    android:viewportWidth="320"
+    android:viewportHeight="180">
+
+    <!-- Background -->
+    <path
+        android:fillColor="#121212"
+        android:pathData="M0,0h320v180h-320z" />
+
+    <!-- Grid pattern (like the launcher background) -->
+    <path
+        android:strokeColor="#33FFFFFF"
+        android:strokeWidth="0.5"
+        android:pathData="M0,20 L320,20 M0,40 L320,40 M0,60 L320,60 M0,80 L320,80 M0,100 L320,100 M0,120 L320,120 M0,140 L320,140 M0,160 L320,160" />
+    <path
+        android:strokeColor="#33FFFFFF"
+        android:strokeWidth="0.5"
+        android:pathData="M20,0 L20,180 M40,0 L40,180 M60,0 L60,180 M80,0 L80,180 M100,0 L100,180 M120,0 L120,180 M140,0 L140,180 M160,0 L160,180 M180,0 L180,180 M200,0 L200,180 M220,0 L220,180 M240,0 L240,180 M260,0 L260,180 M280,0 L280,180 M300,0 L300,180" />
+
+    <!-- Game Icon/Logo placeholder -->
+    <path
+        android:fillColor="#3DDC84"
+        android:pathData="M160,90 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M160,90 m-20,0 l15,-15 l0,30 z" />
+</vector>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="500dp"
+    android:layout_height="wrap_content"
+    android:background="#222222"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/guide_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/guide_title_default"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/guide_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/guide_content_default"
+        android:textColor="#CCCCCC"
+        android:textSize="18sp"
+        android:layout_marginBottom="24dp" />
+
+    <CheckBox
+        android:id="@+id/cb_dont_show_again"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dont_show_again"
+        android:textColor="#AAAAAA"
+        android:buttonTint="#4CAF50"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btn_close_guide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/start_game"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#FFFFFF" />
+
+</LinearLayout>

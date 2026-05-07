@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    <!-- Mine Body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M32,32m-16,0a16,16 0 1,1 32,0a16,16 0 1,1 -32,0" />
+    <!-- Spikes -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,8h4v8h-4zM30,48h4v8h-4zM8,30h8v4h-8zM48,30h8v4h-8z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M16.5,16.5l5.6,5.6l-2.8,2.8l-5.6,-5.6zM42.5,42.5l5.6,5.6l-2.8,2.8l-5.6,-5.6zM16.5,47.5l5.6,-5.6l2.8,2.8l-5.6,5.6zM42.5,21.5l5.6,-5.6l2.8,2.8l-5.6,5.6z" />
+    <!-- Shine -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.3"
+        android:pathData="M24,24m-4,0a4,4 0 1,1 8,0a4,4 0 1,1 -8,0" />
+</vector>

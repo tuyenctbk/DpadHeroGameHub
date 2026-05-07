@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    <!-- Chrome Dino Silhouette (Simplified) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M44,12 h12 v12 h-4 v4 h-8 v4 h-4 v4 h-16 v4 h4 v4 h-12 v-4 h-4 v-8 h12 v-4 h4 v-16 z" />
+    <!-- Eye -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M46,16 h4 v4 h-4 z" />
+</vector>
