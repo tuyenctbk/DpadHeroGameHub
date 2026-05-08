@@ -27,9 +27,17 @@ class BrickBreakView @JvmOverloads constructor(
         typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
     }
 
+    private var lastFrameTimeNanos: Long = 0L
+
     override fun doFrame(frameTimeNanos: Long) {
         if (!isGameOver && !isWin) {
-            update()
+            val dtSec = if (lastFrameTimeNanos == 0L) {
+                0f
+            } else {
+                ((frameTimeNanos - lastFrameTimeNanos) / 1_000_000_000f).coerceIn(0f, MAX_FRAME_DELTA_SEC)
+            }
+            lastFrameTimeNanos = frameTimeNanos
+            update(dtSec)
             invalidate()
             Choreographer.getInstance().postFrameCallback(this)
         }
@@ -75,12 +83,14 @@ class BrickBreakView @JvmOverloads constructor(
 
     override fun pause() {
         isPaused = true
+        lastFrameTimeNanos = 0L
         Choreographer.getInstance().removeFrameCallback(this)
     }
 
     override fun resume() {
         if (!isGameOver && !isWin) {
             isPaused = false
+            lastFrameTimeNanos = 0L
             Choreographer.getInstance().removeFrameCallback(this)
             Choreographer.getInstance().postFrameCallback(this)
         }
@@ -96,6 +106,7 @@ class BrickBreakView @JvmOverloads constructor(
         highScore = ScoreManager.getHighScore(context, gameKey)
         initializeBoard()
         invalidate()
+        lastFrameTimeNanos = 0L
         Choreographer.getInstance().removeFrameCallback(this)
         Choreographer.getInstance().postFrameCallback(this)
     }
@@ -189,16 +200,24 @@ class BrickBreakView @JvmOverloads constructor(
         }
     }
 
-    private fun update() {
-        // Move paddle - High precision movement
-        var currentSpeed = 0f
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) currentSpeed -= width * 0.035f
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) currentSpeed += width * 0.035f
+    private fun clampPaddleHorizontal() {
+        if (paddle.left < 0f) paddle.offset(-paddle.left, 0f)
+        if (paddle.right > width) paddle.offset(width - paddle.right, 0f)
+    }
 
-        if (currentSpeed != 0f) {
-            paddle.offset(currentSpeed, 0f)
-            if (paddle.left < 0f) paddle.offset(-paddle.left, 0f)
-            if (paddle.right > width) paddle.offset(width - paddle.right, 0f)
+    private fun update(dtSec: Float) {
+        // Paddle: speed in fractions of screen width per second (smooth, frame-rate independent).
+        var dir = 0f
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) dir -= 1f
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) dir += 1f
+        if (dir != 0f) {
+            val effectiveDt = when {
+                dtSec > 0f -> dtSec
+                else -> FIRST_FRAME_DT_SEC
+            }
+            val distance = dir * width * PADDLE_SPEED_PER_SCREEN_WIDTH_PER_SEC * effectiveDt
+            paddle.offset(distance, 0f)
+            clampPaddleHorizontal()
         }
 
         if (isPaused && isBallLaunched) return
@@ -405,5 +424,9 @@ class BrickBreakView @JvmOverloads constructor(
         private const val BRICK_COLUMNS = 10
         private const val BRICK_PADDING = 6f
         private const val INITIAL_LIVES = 3
+        /** Screen widths per second; movement is scaled by frame delta for smooth, consistent speed. */
+        private const val PADDLE_SPEED_PER_SCREEN_WIDTH_PER_SEC = 1.5f
+        private const val MAX_FRAME_DELTA_SEC = 0.05f
+        private const val FIRST_FRAME_DT_SEC = 1f / 60f
     }
 }
