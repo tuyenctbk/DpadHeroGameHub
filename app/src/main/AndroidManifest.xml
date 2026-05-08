@@ -71,6 +71,48 @@
             tools:ignore="LockedOrientationActivity" />
 
         <activity
+            android:name="com.tdpham.games.brickbreak.BrickBreakActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.tictactoe.TicTacToeActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.sudoku.SudokuActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.checkers.CheckersActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.sokoban.SokobanActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.tetris.TetrisActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
             android:name="com.tdpham.games.hub.SettingsActivity"
             android:exported="false"
             android:screenOrientation="landscape"

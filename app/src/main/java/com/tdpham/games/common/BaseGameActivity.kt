@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.tdpham.games.R
 import com.tdpham.games.hub.GuideManager
@@ -16,7 +15,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     protected abstract val gameInstructions: String
     
     protected lateinit var gameView: GameView
-    private lateinit var btnHelp: Button
+    private lateinit var btnHelp: View
     private var isGuideShowing = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +32,11 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
         btnHelp = findViewById(R.id.btn_show_guide)
         btnHelp.setOnClickListener { showGameGuide() }
+        btnHelp.isFocusable = false
+        btnHelp.isFocusableInTouchMode = false
+        
+        // Hide the help UI container to prevent any focus interference
+        (btnHelp.parent as? View)?.visibility = View.GONE
 
         if (GuideManager.shouldShowGuide(this, gameKey)) {
             showGameGuide()
@@ -82,10 +86,18 @@ abstract class BaseGameActivity : AppCompatActivity() {
             finish()
             return true
         }
+        if (keyCode == KeyEvent.KEYCODE_S || keyCode == KeyEvent.KEYCODE_VOLUME_MUTE) {
+            gameView.toggleSound()
+            return true
+        }
         if (keyCode == KeyEvent.KEYCODE_H || keyCode == KeyEvent.KEYCODE_INFO) {
             showGameGuide()
             return true
         }
         return (gameView as View).onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        return (gameView as View).onKeyUp(keyCode, event)
     }
 }

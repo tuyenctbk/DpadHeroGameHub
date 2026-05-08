@@ -108,6 +108,86 @@
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
+            <Button
+                android:id="@+id/btn_brick_break"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:backgroundTint="@color/btn_brick_break_color"
+                android:elevation="8dp"
+                android:focusable="true"
+                android:nextFocusUp="@id/btn_settings"
+                android:text="@string/game_brick_break"
+                android:drawableTop="@drawable/ic_game_brick_break"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btn_tictactoe"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:backgroundTint="@color/btn_tictactoe_color"
+                android:elevation="8dp"
+                android:focusable="true"
+                android:nextFocusUp="@id/btn_settings"
+                android:text="@string/game_tictactoe"
+                android:drawableTop="@drawable/ic_game_tictactoe"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btn_checkers"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:backgroundTint="@color/btn_checkers_color"
+                android:elevation="8dp"
+                android:focusable="true"
+                android:nextFocusUp="@id/btn_settings"
+                android:text="@string/game_checkers"
+                android:drawableTop="@drawable/ic_game_checkers"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btn_sokoban"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:backgroundTint="@color/btn_sokoban_color"
+                android:elevation="8dp"
+                android:focusable="true"
+                android:nextFocusUp="@id/btn_settings"
+                android:text="@string/game_sokoban"
+                android:drawableTop="@drawable/ic_game_sokoban"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btn_sudoku"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:backgroundTint="@color/btn_sudoku_color"
+                android:elevation="8dp"
+                android:focusable="true"
+                android:nextFocusUp="@id/btn_settings"
+                android:text="@string/game_sudoku"
+                android:drawableTop="@drawable/ic_game_sudoku"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
         </LinearLayout>
     </HorizontalScrollView>
 

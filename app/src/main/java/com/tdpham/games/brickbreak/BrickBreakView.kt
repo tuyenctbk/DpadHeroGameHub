@@ -1,0 +1,409 @@
+package com.tdpham.games.brickbreak
+
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
+import android.graphics.Typeface
+import android.util.AttributeSet
+import android.view.Choreographer
+import android.view.KeyEvent
+import android.view.View
+import com.tdpham.games.common.GamePalette
+import com.tdpham.games.common.GameView
+import com.tdpham.games.common.ScoreManager
+import com.tdpham.games.common.SoundManager
+
+class BrickBreakView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr), GameView, Choreographer.FrameCallback {
+    override var gameKey: String = "brick_break"
+
+    private val paint = Paint().apply {
+        isAntiAlias = true
+        typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+    }
+
+    override fun doFrame(frameTimeNanos: Long) {
+        if (!isGameOver && !isWin) {
+            update()
+            invalidate()
+            Choreographer.getInstance().postFrameCallback(this)
+        }
+    }
+
+    private val ball = RectF()
+    private val paddle = RectF()
+    private val bricks = mutableListOf<RectF>()
+
+    private var ballDx = 0f
+    private var ballDy = 0f
+    private var ballRadius = 0f
+    private val pressedKeys = mutableSetOf<Int>()
+
+    private var isBallLaunched = false
+    private var isPaused = true
+    private var isGameOver = false
+    private var isWin = false
+
+    private var score = 0
+    private var highScore = 0
+    private var lives = INITIAL_LIVES
+
+    init {
+        isFocusable = true
+        isFocusableInTouchMode = true
+        isClickable = true
+        setOnClickListener {
+            if (!isFocused) {
+                requestFocus()
+            }
+        }
+    }
+
+    override fun startGame() {
+        if (isGameOver || isWin) {
+            resetGame()
+            return
+        }
+        resume()
+        requestFocus()
+    }
+
+    override fun pause() {
+        isPaused = true
+        Choreographer.getInstance().removeFrameCallback(this)
+    }
+
+    override fun resume() {
+        if (!isGameOver && !isWin) {
+            isPaused = false
+            Choreographer.getInstance().removeFrameCallback(this)
+            Choreographer.getInstance().postFrameCallback(this)
+        }
+    }
+
+    override fun resetGame() {
+        score = 0
+        lives = INITIAL_LIVES
+        isGameOver = false
+        isWin = false
+        isPaused = true
+        isBallLaunched = false
+        highScore = ScoreManager.getHighScore(context, gameKey)
+        initializeBoard()
+        invalidate()
+        Choreographer.getInstance().removeFrameCallback(this)
+        Choreographer.getInstance().postFrameCallback(this)
+    }
+
+    override fun toggleSound(): Boolean = SoundManager.toggleSound()
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        requestFocus()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        Choreographer.getInstance().removeFrameCallback(this)
+    }
+
+    override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
+        super.onWindowFocusChanged(hasWindowFocus)
+        if (hasWindowFocus) {
+            requestFocus()
+        } else {
+            pressedKeys.clear()
+            pause()
+        }
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0) {
+            initializeBoard()
+            highScore = ScoreManager.getHighScore(context, gameKey)
+        }
+    }
+
+    private fun initializeBoard() {
+        if (width == 0 || height == 0) return
+
+        val paddleWidth = width * 0.22f
+        val paddleHeight = height * 0.025f
+        val paddleTop = height * 0.88f
+        paddle.set(
+            width / 2f - paddleWidth / 2f,
+            paddleTop,
+            width / 2f + paddleWidth / 2f,
+            paddleTop + paddleHeight
+        )
+
+        ballRadius = width * 0.012f
+        resetBall()
+        createBricks()
+    }
+
+    private fun createBricks() {
+        bricks.clear()
+        val areaTop = height * 0.12f
+        val areaHeight = height * 0.33f
+        val rowHeight = areaHeight / BRICK_ROWS
+        val columnWidth = width / BRICK_COLUMNS.toFloat()
+
+        for (row in 0 until BRICK_ROWS) {
+            for (col in 0 until BRICK_COLUMNS) {
+                val left = col * columnWidth + BRICK_PADDING
+                val top = areaTop + row * rowHeight + BRICK_PADDING
+                val right = (col + 1) * columnWidth - BRICK_PADDING
+                val bottom = areaTop + (row + 1) * rowHeight - BRICK_PADDING
+                bricks.add(RectF(left, top, right, bottom))
+            }
+        }
+    }
+
+    private fun resetBall() {
+        val centerX = (paddle.left + paddle.right) / 2f
+        val centerY = paddle.top - ballRadius * 1.8f
+        ball.set(
+            centerX - ballRadius,
+            centerY - ballRadius,
+            centerX + ballRadius,
+            centerY + ballRadius
+        )
+        ballDx = 0f
+        ballDy = 0f
+        isBallLaunched = false
+    }
+
+    private fun launchBall() {
+        if (!isBallLaunched) {
+            isBallLaunched = true
+            ballDx = width * 0.008f
+            ballDy = -height * 0.01f
+            SoundManager.playClick()
+        }
+    }
+
+    private fun update() {
+        // Move paddle - High precision movement
+        var currentSpeed = 0f
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) currentSpeed -= width * 0.035f
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) currentSpeed += width * 0.035f
+
+        if (currentSpeed != 0f) {
+            paddle.offset(currentSpeed, 0f)
+            if (paddle.left < 0f) paddle.offset(-paddle.left, 0f)
+            if (paddle.right > width) paddle.offset(width - paddle.right, 0f)
+        }
+
+        if (isPaused && isBallLaunched) return
+
+        if (!isBallLaunched) {
+            val centerX = (paddle.left + paddle.right) / 2f
+            ball.offsetTo(centerX - ballRadius, paddle.top - ballRadius * 2f)
+            return
+        }
+
+        ball.offset(ballDx, ballDy)
+
+        if (ball.left <= 0f || ball.right >= width) {
+            ballDx = -ballDx
+            SoundManager.playClick()
+        }
+
+        if (ball.top <= 0f) {
+            ballDy = -ballDy
+            SoundManager.playClick()
+        }
+
+        if (RectF.intersects(ball, paddle) && ballDy > 0f) {
+            val impact = ((ball.centerX() - paddle.centerX()) / (paddle.width() / 2f)).coerceIn(-1f, 1f)
+            ballDy = -kotlin.math.abs(ballDy)
+            ballDx = impact * width * 0.012f
+            SoundManager.playClick()
+        }
+
+        var hitBrick: RectF? = null
+        for (brick in bricks) {
+            if (RectF.intersects(ball, brick)) {
+                hitBrick = brick
+                break
+            }
+        }
+
+        if (hitBrick != null) {
+            bricks.remove(hitBrick)
+            ballDy = -ballDy
+            score += 10
+            SoundManager.playScore()
+            if (bricks.isEmpty()) {
+                isWin = true
+                isPaused = true
+                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+                if (isNewHigh) highScore = score
+                SoundManager.playSuccess()
+                Choreographer.getInstance().removeFrameCallback(this)
+            }
+        }
+
+        if (ball.top > height) {
+            lives -= 1
+            SoundManager.playError()
+            if (lives <= 0) {
+                isGameOver = true
+                isPaused = true
+                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+                if (isNewHigh) highScore = score
+                Choreographer.getInstance().removeFrameCallback(this)
+            } else {
+                resetBall()
+            }
+        }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        // Always consume D-Pad and Enter keys to keep focus on the game
+        val isDpadKey = keyCode == KeyEvent.KEYCODE_DPAD_LEFT || 
+                        keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
+                        keyCode == KeyEvent.KEYCODE_DPAD_UP || 
+                        keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+                        keyCode == KeyEvent.KEYCODE_DPAD_CENTER || 
+                        keyCode == KeyEvent.KEYCODE_ENTER
+
+        if (isGameOver || isWin) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                resetGame()
+                resume()
+                requestFocus()
+            }
+            return isDpadKey || super.onKeyDown(keyCode, event)
+        }
+
+        return when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                pressedKeys.add(keyCode)
+                true
+            }
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+                if (isPaused) {
+                    resume()
+                    launchBall()
+                } else if (!isBallLaunched) {
+                    launchBall()
+                } else {
+                    pause()
+                }
+                true
+            }
+            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> {
+                toggleSound()
+                true
+            }
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN -> {
+                // Consume to prevent focus navigation
+                true
+            }
+            else -> super.onKeyDown(keyCode, event)
+        }
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                pressedKeys.remove(keyCode)
+                true
+            }
+            else -> super.onKeyUp(keyCode, event)
+        }
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        
+        // Always try to keep focus on the game view
+        if (!isGameOver && !isWin && !isFocused) {
+            requestFocus()
+        }
+
+        canvas.drawColor(GamePalette.BACKGROUND)
+
+        paint.style = Paint.Style.FILL
+        paint.color = Color.parseColor("#2C2C2C")
+        canvas.drawRect(0f, height * 0.1f, width.toFloat(), height.toFloat(), paint)
+
+        drawBricks(canvas)
+
+        paint.color = Color.WHITE
+        canvas.drawRoundRect(paddle, 12f, 12f, paint)
+
+        paint.color = Color.parseColor("#FFEB3B")
+        canvas.drawOval(ball, paint)
+
+        drawHud(canvas)
+
+        if (isPaused && !isGameOver && !isWin) {
+            drawOverlay(canvas, "BRICK BREAK", "Press Center to Launch")
+        } else if (isGameOver) {
+            drawOverlay(canvas, "GAME OVER", "Press Center to Restart")
+        } else if (isWin) {
+            drawOverlay(canvas, "STAGE CLEAR!", "Press Center to Play Again")
+        }
+    }
+
+    private fun drawBricks(canvas: Canvas) {
+        paint.style = Paint.Style.FILL
+        for ((index, brick) in bricks.withIndex()) {
+            val row = index / BRICK_COLUMNS
+            paint.color = when (row % 5) {
+                0 -> Color.parseColor("#EF5350")
+                1 -> Color.parseColor("#AB47BC")
+                2 -> Color.parseColor("#42A5F5")
+                3 -> Color.parseColor("#66BB6A")
+                else -> Color.parseColor("#FFA726")
+            }
+            canvas.drawRoundRect(brick, 8f, 8f, paint)
+        }
+    }
+
+    private fun drawHud(canvas: Canvas) {
+        paint.textSize = width / 35f
+        paint.textAlign = Paint.Align.LEFT
+        paint.color = GamePalette.TEXT_PRIMARY
+        canvas.drawText("SCORE: $score", 40f, 60f, paint)
+
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = GamePalette.WARNING
+        canvas.drawText("LIVES: $lives", width / 2f, 60f, paint)
+
+        paint.textAlign = Paint.Align.RIGHT
+        paint.color = GamePalette.SCORE
+        canvas.drawText("BEST: $highScore", width - 40f, 60f, paint)
+    }
+
+    private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {
+        paint.style = Paint.Style.FILL
+        paint.color = GamePalette.OVERLAY
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.WHITE
+        paint.textSize = width / 14f
+        canvas.drawText(title, width / 2f, height / 2f - 20f, paint)
+
+        paint.color = Color.LTGRAY
+        paint.textSize = width / 36f
+        canvas.drawText(subtitle, width / 2f, height / 2f + 60f, paint)
+    }
+
+    companion object {
+        private const val BRICK_ROWS = 6
+        private const val BRICK_COLUMNS = 10
+        private const val BRICK_PADDING = 6f
+        private const val INITIAL_LIVES = 3
+    }
+}

@@ -287,6 +287,9 @@ class TRexView @JvmOverloads constructor(
         paint.color = theme.secondaryColor
         if (isNightMode) {
             canvas.drawCircle(width - 150f, 150f, 50f, paint) // Moon
+            // Add a "crater" or crescent effect
+            paint.color = theme.bgColor
+            canvas.drawCircle(width - 130f, 135f, 40f, paint)
         } else if (currentWeather == Weather.SUNNY) {
             canvas.drawCircle(width - 150f, 150f, 60f, paint) // Sun
         }
@@ -398,7 +401,7 @@ class TRexView @JvmOverloads constructor(
 
     private fun getEnvironmentTheme(): Theme {
         return if (isNightMode) {
-            Theme(Color.parseColor("#202124"), Color.WHITE, Color.parseColor("#BDC1C6"), Color.DKGRAY, Color.parseColor("#444444"), Color.parseColor("#FFD700"), Color.parseColor("#81C784"), Color.parseColor("#A5D6A7"), Color.parseColor("#F48FB1"), Color.WHITE)
+            Theme(Color.parseColor("#202124"), Color.WHITE, Color.parseColor("#BDC1C6"), Color.DKGRAY, Color.parseColor("#444444"), Color.parseColor("#F1F3F4"), Color.parseColor("#81C784"), Color.parseColor("#A5D6A7"), Color.parseColor("#F48FB1"), Color.WHITE)
         } else {
             when (currentSeason) {
                 Season.SPRING -> Theme(Color.parseColor("#E8F5E9"), Color.BLACK, Color.parseColor("#2E7D32"), Color.WHITE, Color.parseColor("#A5D6A7"), Color.parseColor("#FFD600"), Color.parseColor("#F06292"), Color.parseColor("#43A047"), Color.parseColor("#EC407A"), Color.parseColor("#64B5F6"))

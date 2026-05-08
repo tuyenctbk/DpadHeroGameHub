@@ -306,19 +306,19 @@ class MinesweeperView @JvmOverloads constructor(
 
         canvas.drawColor(GamePalette.BACKGROUND)
 
-        val headerY = offsetY - cellSize * 1.2f
-        paint.textSize = cellSize * 0.7f
+        val headerY = offsetY - cellSize * 1.0f
+        paint.textSize = cellSize * 0.55f
         paint.textAlign = Paint.Align.LEFT
         paint.color = GamePalette.TEXT_PRIMARY
         canvas.drawText("MINES: $minesCount", offsetX, headerY, paint)
         
         paint.textAlign = Paint.Align.RIGHT
-        paint.color = GamePalette.SCORE
-        canvas.drawText("FLAGS: ${getFlaggedCount()}", offsetX + cols * cellSize, headerY, paint)
+        paint.color = GamePalette.TEXT_SECONDARY
+        canvas.drawText("WINS: $totalWins", offsetX + cols * cellSize, headerY, paint)
         
         paint.textAlign = Paint.Align.CENTER
-        paint.color = GamePalette.TEXT_SECONDARY
-        canvas.drawText("WINS: $totalWins", width / 2f, headerY, paint)
+        paint.color = GamePalette.SCORE
+        canvas.drawText("FLAGS: ${getFlaggedCount()}", width / 2f, headerY, paint)
 
         for (r in 0 until rows) {
             for (c in 0 until cols) {
@@ -389,19 +389,19 @@ class MinesweeperView @JvmOverloads constructor(
         }
 
         if (isGameOver || isWin) {
-            // Smaller, less intrusive banner so the board (and mistakes) is still visible
+            // Semi-transparent overlay
             paint.color = GamePalette.OVERLAY
             paint.style = Paint.Style.FILL
-            canvas.drawRect(0f, height / 2f - 120f, width.toFloat(), height / 2f + 160f, paint)
+            canvas.drawRect(0f, height / 2f - 100f, width.toFloat(), height / 2f + 140f, paint)
             
             paint.color = if (isWin) Color.GREEN else GamePalette.WARNING
             paint.textAlign = Paint.Align.CENTER
-            paint.textSize = width / 15f
+            paint.textSize = width / 18f
             canvas.drawText(if (isWin) "MISSION ACCOMPLISHED!" else "BOOM! GAME OVER", width / 2f, height / 2f, paint)
             
             paint.color = GamePalette.TEXT_PRIMARY
-            paint.textSize = width / 40f
-            canvas.drawText("Press Center to Play Again | Press Back to Exit", width / 2f, height / 2f + 100f, paint)
+            paint.textSize = width / 45f
+            canvas.drawText("Press Center to Play Again | Press Back to Exit", width / 2f, height / 2f + 80f, paint)
         }
     }
 
