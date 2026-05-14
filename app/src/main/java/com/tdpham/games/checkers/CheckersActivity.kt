@@ -7,10 +7,11 @@ class CheckersActivity : BaseGameActivity() {
     override val gameKey = "checkers"
     override val gameTitle = "CHECKERS GUIDE"
     override val gameInstructions =
-        "• Move cursor with D-PAD.\n" +
-            "• Press CENTER to select and move a piece.\n" +
-            "• Red moves up, CPU moves down.\n" +
-            "• Capture all CPU pieces to win."
+        "• D-PAD: move cursor. CENTER: select square, then destination.\n" +
+            "• Red (you) moves up; CPU moves down. Dark squares only.\n" +
+            "• Captures are mandatory when possible; finish multi-jumps on the same piece (magenta outline).\n" +
+            "• Reach the far row to crown a king (K); kings slide and capture on all diagonals.\n" +
+            "• Clear all CPU pieces or block their moves to win."
 
     override fun getLayoutId() = R.layout.activity_checkers
     override fun getGameViewId() = R.id.checkers_view

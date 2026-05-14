@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    <!-- Spaceship Icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M32,10 L48,50 L32,42 L16,50 Z" />
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M32,10 L36,40 L32,38 L28,40 Z" />
+</vector>

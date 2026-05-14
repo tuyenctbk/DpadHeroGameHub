@@ -19,38 +19,93 @@ class SokobanView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "sokoban"
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val map = arrayOf(
-        "##########",
-        "#   .    #",
-        "#  $$    #",
-        "#   @    #",
-        "#   .    #",
-        "#        #",
-        "##########"
+
+    private val levels = listOf(
+        arrayOf(
+            "##########",
+            "#   .    #",
+            "#  $$    #",
+            "#   @    #",
+            "#   .    #",
+            "#        #",
+            "##########"
+        ),
+        arrayOf(
+            "########",
+            "#   .  #",
+            "#  $   #",
+            "# .$@$.#",
+            "#  $   #",
+            "#   .  #",
+            "########"
+        ),
+        arrayOf(
+            "#########",
+            "#       #",
+            "# .$$$  #",
+            "# $@$   #",
+            "#  $    #",
+            "# . .   #",
+            "#       #",
+            "#########"
+        ),
+        arrayOf(
+            "############",
+            "#     @    #",
+            "# $ $ $ $  #",
+            "#  .....   #",
+            "#          #",
+            "############"
+        ),
+        arrayOf(
+            "###########",
+            "#  .....  #",
+            "#  $$$$$  #",
+            "# $@    $ #",
+            "#  $$$$$  #",
+            "#  .....  #",
+            "###########"
+        )
     )
-    private val rows = map.size
-    private val cols = map[0].length
+
+    private var levelIndex = 0
+    private var rows = 0
+    private var cols = 0
     private lateinit var board: Array<CharArray>
     private var playerR = 0
     private var playerC = 0
     private var solved = false
+    private var allLevelsDone = false
     private var best = 0
     private var pushes = 0
+    private var totalPushesAllLevels = 0
 
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        resetGame()
+        loadLevel(0)
     }
 
     override fun startGame() {
         requestFocus()
     }
+
     override fun pause() {}
     override fun resume() {}
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
+        levelIndex = 0
+        totalPushesAllLevels = 0
+        allLevelsDone = false
+        loadLevel(0)
+    }
+
+    private fun loadLevel(index: Int) {
+        levelIndex = index.coerceIn(0, levels.lastIndex)
+        val map = levels[levelIndex]
+        rows = map.size
+        cols = map[0].length
         board = Array(rows) { r -> map[r].toCharArray() }
         solved = false
         pushes = 0
@@ -64,17 +119,31 @@ class SokobanView @JvmOverloads constructor(
         invalidate()
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (solved && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
+    private fun restartCurrentLevel() {
+        loadLevel(levelIndex)
+    }
+
+    private fun advanceOrRestart() {
+        if (allLevelsDone) {
             resetGame()
-            return true
+            return
+        }
+        loadLevel(levelIndex + 1)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (solved || allLevelsDone) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (allLevelsDone) resetGame() else advanceOrRestart()
+                return true
+            }
         }
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> move(-1, 0)
             KeyEvent.KEYCODE_DPAD_DOWN -> move(1, 0)
             KeyEvent.KEYCODE_DPAD_LEFT -> move(0, -1)
             KeyEvent.KEYCODE_DPAD_RIGHT -> move(0, 1)
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> resetGame()
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> restartCurrentLevel()
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
@@ -83,7 +152,7 @@ class SokobanView @JvmOverloads constructor(
     }
 
     private fun move(dr: Int, dc: Int) {
-        if (solved) return
+        if (solved || allLevelsDone) return
         val nr = playerR + dr
         val nc = playerC + dc
         if (nr !in 0 until rows || nc !in 0 until cols) return
@@ -98,6 +167,7 @@ class SokobanView @JvmOverloads constructor(
             board[br][bc] = if (beyond == '.') '*' else '$'
             board[nr][nc] = if (next == '*') '.' else ' '
             pushes++
+            totalPushesAllLevels++
             SoundManager.playScore()
         } else {
             SoundManager.playClick()
@@ -108,8 +178,11 @@ class SokobanView @JvmOverloads constructor(
         board[playerR][playerC] = if (board[playerR][playerC] == '.') '+' else '@'
         if (isSolved()) {
             solved = true
-            val score = (1000 - pushes * 10).coerceAtLeast(10)
-            if (ScoreManager.updateHighScore(context, gameKey, score)) best = score
+            if (levelIndex >= levels.lastIndex) {
+                allLevelsDone = true
+                val score = (5000 - totalPushesAllLevels * 5).coerceAtLeast(50)
+                if (ScoreManager.updateHighScore(context, gameKey, score)) best = score
+            }
             SoundManager.playSuccess()
         }
     }
@@ -121,7 +194,7 @@ class SokobanView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(GamePalette.BACKGROUND)
-        val cell = (width.coerceAtMost(height) / (cols + 2)).toFloat()
+        val cell = (width.coerceAtMost(height) / (maxOf(cols, rows) + 2)).toFloat()
         val left = (width - cols * cell) / 2f
         val top = (height - rows * cell) / 2f + 40f
         for (r in 0 until rows) for (c in 0 until cols) {
@@ -154,14 +227,28 @@ class SokobanView @JvmOverloads constructor(
         }
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
-        paint.textSize = 40f
+        paint.textSize = 36f
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("PUSHES: $pushes", 30f, 56f, paint)
+        canvas.drawText("LEVEL ${levelIndex + 1}/${levels.size}  PUSHES: $pushes", 30f, 52f, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 30f, 56f, paint)
-        if (solved) {
-            paint.textAlign = Paint.Align.CENTER
-            canvas.drawText("LEVEL CLEARED - CENTER TO RESTART", width / 2f, top - 16f, paint)
+        canvas.drawText("BEST: $best", width - 30f, 52f, paint)
+        paint.textAlign = Paint.Align.CENTER
+        paint.textSize = 30f
+        when {
+            allLevelsDone -> {
+                canvas.drawText("ALL LEVELS CLEARED! CENTER TO PLAY AGAIN", width / 2f, top - 16f, paint)
+            }
+            solved -> {
+                canvas.drawText(
+                    if (levelIndex >= levels.lastIndex) "FINAL LEVEL - CENTER TO FINISH" else "CLEARED - CENTER FOR NEXT",
+                    width / 2f,
+                    top - 16f,
+                    paint
+                )
+            }
+            else -> {
+                canvas.drawText("CENTER: RESTART LEVEL", width / 2f, top - 16f, paint)
+            }
         }
     }
 }

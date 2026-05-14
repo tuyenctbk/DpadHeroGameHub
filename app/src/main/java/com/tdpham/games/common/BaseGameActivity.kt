@@ -17,6 +17,9 @@ abstract class BaseGameActivity : AppCompatActivity() {
     protected lateinit var gameView: GameView
     private lateinit var btnHelp: View
     private var isGuideShowing = false
+    private var hasStarted = false
+
+    protected open fun shouldShowHelpButton(): Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +38,18 @@ abstract class BaseGameActivity : AppCompatActivity() {
         btnHelp.isFocusable = false
         btnHelp.isFocusableInTouchMode = false
         
-        // Hide the help UI container to prevent any focus interference
-        (btnHelp.parent as? View)?.visibility = View.GONE
+        // Hide or show the help UI container based on game preference
+        val helpContainer = (btnHelp.parent as? View)
+        if (shouldShowHelpButton()) {
+            helpContainer?.visibility = View.VISIBLE
+        } else {
+            helpContainer?.visibility = View.GONE
+        }
 
         if (GuideManager.shouldShowGuide(this, gameKey)) {
             showGameGuide()
         } else {
+            hasStarted = true
             gameView.startGame()
             (view as View).requestFocus()
         }
@@ -59,11 +68,17 @@ abstract class BaseGameActivity : AppCompatActivity() {
     protected fun showGameGuide() {
         isGuideShowing = true
         gameView.pause()
+        val btnText = if (hasStarted) getString(R.string.resume) else getString(R.string.start_game)
         GuideManager.showGuide(
-            this, gameKey, gameTitle, gameInstructions,
+            this, gameKey, gameTitle, gameInstructions, btnText,
             onDismiss = {
                 isGuideShowing = false
-                gameView.resume()
+                if (!hasStarted) {
+                    hasStarted = true
+                    gameView.startGame()
+                } else {
+                    gameView.resume()
+                }
                 (gameView as View).requestFocus()
             }
         )

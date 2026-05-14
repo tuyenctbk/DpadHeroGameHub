@@ -13,6 +13,8 @@ class BrickBreakActivity : BaseGameActivity() {
             "• You have 3 lives. Don't let the ball fall.\n" +
             "• Press 'S' or MUTE to toggle sound."
 
+    override fun shouldShowHelpButton(): Boolean = true
+
     override fun getLayoutId() = R.layout.activity_brick_break
     override fun getGameViewId() = R.id.brick_break_view
 }

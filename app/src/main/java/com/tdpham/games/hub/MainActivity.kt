@@ -13,6 +13,18 @@ import com.tdpham.games.snake.SnakeActivity
 import com.tdpham.games.minesweeper.MinesweeperActivity
 import com.tdpham.games.sokoban.SokobanActivity
 import com.tdpham.games.sudoku.SudokuActivity
+import com.tdpham.games.tetris.TetrisActivity
+import com.tdpham.games.starfighter.StarFighterActivity
+import com.tdpham.games.memory.MemoryActivity
+import com.tdpham.games.slidepuzzle.SlidePuzzleActivity
+import com.tdpham.games.mazequiz.MazeQuizActivity
+import com.tdpham.games.mentalmath.MentalMathActivity
+import com.tdpham.games.simon.SimonSaysActivity
+import com.tdpham.games.froggy.FroggyCrossActivity
+import com.tdpham.games.tanks.BattleTanksActivity
+import com.tdpham.games.wordquest.WordQuestActivity
+import com.tdpham.games.dungeon.DungeonEscapeActivity
+import com.tdpham.games.flappy.FlappyHeroActivity
 import com.tdpham.games.twentyfortyeight.TwentyFortyEightActivity
 import com.tdpham.games.trex.TRexActivity
 import com.tdpham.games.tictactoe.TicTacToeActivity
@@ -82,6 +94,66 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SudokuActivity::class.java))
         }
 
+        val btnTetris = findViewById<Button>(R.id.btn_tetris)
+        setupGameButton(btnTetris) {
+            startActivity(Intent(this, TetrisActivity::class.java))
+        }
+
+        val btnStarFighter = findViewById<Button>(R.id.btn_starfighter)
+        setupGameButton(btnStarFighter) {
+            startActivity(Intent(this, StarFighterActivity::class.java))
+        }
+
+        val btnMemory = findViewById<Button>(R.id.btn_memory)
+        setupGameButton(btnMemory) {
+            startActivity(Intent(this, MemoryActivity::class.java))
+        }
+
+        val btnSlidePuzzle = findViewById<Button>(R.id.btn_slide_puzzle)
+        setupGameButton(btnSlidePuzzle) {
+            startActivity(Intent(this, SlidePuzzleActivity::class.java))
+        }
+
+        val btnMazeQuiz = findViewById<Button>(R.id.btn_maze_quiz)
+        setupGameButton(btnMazeQuiz) {
+            startActivity(Intent(this, MazeQuizActivity::class.java))
+        }
+
+        val btnMentalMath = findViewById<Button>(R.id.btn_mental_math)
+        setupGameButton(btnMentalMath) {
+            startActivity(Intent(this, MentalMathActivity::class.java))
+        }
+
+        val btnFroggy = findViewById<Button>(R.id.btn_froggy)
+        setupGameButton(btnFroggy) {
+            startActivity(Intent(this, FroggyCrossActivity::class.java))
+        }
+
+        val btnSimon = findViewById<Button>(R.id.btn_simon)
+        setupGameButton(btnSimon) {
+            startActivity(Intent(this, SimonSaysActivity::class.java))
+        }
+
+        val btnTanks = findViewById<Button>(R.id.btn_tanks)
+        setupGameButton(btnTanks) {
+            startActivity(Intent(this, BattleTanksActivity::class.java))
+        }
+
+        val btnWordQuest = findViewById<Button>(R.id.btn_word_quest)
+        setupGameButton(btnWordQuest) {
+            startActivity(Intent(this, WordQuestActivity::class.java))
+        }
+
+        val btnDungeon = findViewById<Button>(R.id.btn_dungeon)
+        setupGameButton(btnDungeon) {
+            startActivity(Intent(this, DungeonEscapeActivity::class.java))
+        }
+
+        val btnFlappy = findViewById<Button>(R.id.btn_flappy)
+        setupGameButton(btnFlappy) {
+            startActivity(Intent(this, FlappyHeroActivity::class.java))
+        }
+
         focusLastPlayed()
     }
 
@@ -99,6 +171,18 @@ class MainActivity : AppCompatActivity() {
             "checkers" -> findViewById<Button>(R.id.btn_checkers).requestFocus()
             "sokoban" -> findViewById<Button>(R.id.btn_sokoban).requestFocus()
             "sudoku" -> findViewById<Button>(R.id.btn_sudoku).requestFocus()
+            "tetris" -> findViewById<Button>(R.id.btn_tetris).requestFocus()
+            "star_fighter" -> findViewById<Button>(R.id.btn_starfighter).requestFocus()
+            "memory" -> findViewById<Button>(R.id.btn_memory).requestFocus()
+            "slide_puzzle" -> findViewById<Button>(R.id.btn_slide_puzzle).requestFocus()
+            "maze_quiz" -> findViewById<Button>(R.id.btn_maze_quiz).requestFocus()
+            "mental_math" -> findViewById<Button>(R.id.btn_mental_math).requestFocus()
+            "froggy_cross" -> findViewById<Button>(R.id.btn_froggy).requestFocus()
+            "simon_says" -> findViewById<Button>(R.id.btn_simon).requestFocus()
+            "battle_tanks" -> findViewById<Button>(R.id.btn_tanks).requestFocus()
+            "word_quest" -> findViewById<Button>(R.id.btn_word_quest).requestFocus()
+            "dungeon_escape" -> findViewById<Button>(R.id.btn_dungeon).requestFocus()
+            "flappy_hero" -> findViewById<Button>(R.id.btn_flappy).requestFocus()
             else -> findViewById<Button>(R.id.btn_snake).requestFocus()
         }
     }

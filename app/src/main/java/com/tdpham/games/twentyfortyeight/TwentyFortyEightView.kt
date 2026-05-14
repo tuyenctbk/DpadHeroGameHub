@@ -90,7 +90,6 @@ class TwentyFortyEightView @JvmOverloads constructor(
         if (moved) {
             addRandomTile()
             checkGameState()
-            SoundManager.playClick()
             invalidate()
             return true
         }
@@ -132,6 +131,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
                 val newValue = filtered[i] * 2
                 result.add(newValue)
                 score += newValue
+                SoundManager.playScore() // Play sound only on merge
                 i += 2
             } else {
                 result.add(filtered[i])

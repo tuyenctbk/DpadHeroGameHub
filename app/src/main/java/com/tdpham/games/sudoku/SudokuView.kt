@@ -19,7 +19,8 @@ class SudokuView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "sudoku"
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val puzzle = arrayOf(
+
+    private val puzzleBaseA: Array<IntArray> = arrayOf(
         intArrayOf(5, 3, 0, 0, 7, 0, 0, 0, 0),
         intArrayOf(6, 0, 0, 1, 9, 5, 0, 0, 0),
         intArrayOf(0, 9, 8, 0, 0, 0, 0, 6, 0),
@@ -30,17 +31,36 @@ class SudokuView @JvmOverloads constructor(
         intArrayOf(0, 0, 0, 4, 1, 9, 0, 0, 5),
         intArrayOf(0, 0, 0, 0, 8, 0, 0, 7, 9)
     )
-    private val solution = arrayOf(
-        intArrayOf(5, 3, 4, 6, 7, 8, 9, 1, 2),
-        intArrayOf(6, 7, 2, 1, 9, 5, 3, 4, 8),
-        intArrayOf(1, 9, 8, 3, 4, 2, 5, 6, 7),
-        intArrayOf(8, 5, 9, 7, 6, 1, 4, 2, 3),
-        intArrayOf(4, 2, 6, 8, 5, 3, 7, 9, 1),
-        intArrayOf(7, 1, 3, 9, 2, 4, 8, 5, 6),
-        intArrayOf(9, 6, 1, 5, 3, 7, 2, 8, 4),
-        intArrayOf(2, 8, 7, 4, 1, 9, 6, 3, 5),
-        intArrayOf(3, 4, 5, 2, 8, 6, 1, 7, 9)
+
+    /** Second classic grid; rotations keep givens consistent and solvable. */
+    private val puzzleBaseB: Array<IntArray> = arrayOf(
+        intArrayOf(0, 0, 0, 6, 0, 0, 4, 0, 0),
+        intArrayOf(7, 0, 0, 0, 0, 3, 6, 0, 0),
+        intArrayOf(0, 0, 0, 0, 9, 1, 0, 8, 0),
+        intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        intArrayOf(0, 5, 0, 1, 8, 0, 0, 0, 3),
+        intArrayOf(0, 0, 0, 3, 0, 6, 0, 4, 5),
+        intArrayOf(0, 4, 0, 2, 0, 0, 0, 6, 0),
+        intArrayOf(9, 0, 3, 0, 0, 0, 0, 0, 0),
+        intArrayOf(0, 2, 0, 0, 0, 0, 1, 0, 0)
     )
+
+    private val puzzles: List<Array<IntArray>> = buildList {
+        fun rotate90(p: Array<IntArray>): Array<IntArray> =
+            Array(9) { r -> IntArray(9) { c -> p[8 - c][r] } }
+        fun addFourRotations(p: Array<IntArray>) {
+            var cur = p
+            repeat(4) {
+                add(Array(9) { r -> cur[r].clone() })
+                cur = rotate90(cur)
+            }
+        }
+        addFourRotations(puzzleBaseA)
+        addFourRotations(puzzleBaseB)
+    }
+
+    private var puzzleIndex = 0
+    private lateinit var given: Array<BooleanArray>
     private lateinit var board: Array<IntArray>
     private var cursorR = 0
     private var cursorC = 0
@@ -50,18 +70,27 @@ class SudokuView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        resetGame()
+        loadPuzzle(0)
     }
 
     override fun startGame() {
         requestFocus()
     }
+
     override fun pause() {}
     override fun resume() {}
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
-        board = Array(9) { r -> puzzle[r].clone() }
+        puzzleIndex = 0
+        loadPuzzle(0)
+    }
+
+    private fun loadPuzzle(index: Int) {
+        puzzleIndex = index % puzzles.size
+        val p = puzzles[puzzleIndex]
+        board = Array(9) { r -> p[r].clone() }
+        given = Array(9) { r -> BooleanArray(9) { c -> p[r][c] != 0 } }
         cursorR = 0
         cursorC = 0
         solved = false
@@ -71,7 +100,7 @@ class SudokuView @JvmOverloads constructor(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (solved && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
-            resetGame()
+            loadPuzzle(puzzleIndex + 1)
             return true
         }
         when (keyCode) {
@@ -87,21 +116,44 @@ class SudokuView @JvmOverloads constructor(
         return true
     }
 
+    /** Cycle 0 (empty) → 1 → … → 9 → 0 on editable cells. */
     private fun cycleCell() {
-        if (puzzle[cursorR][cursorC] != 0 || solved) return
-        board[cursorR][cursorC] = (board[cursorR][cursorC] % 9) + 1
+        if (given[cursorR][cursorC] || solved) return
+        board[cursorR][cursorC] = (board[cursorR][cursorC] + 1) % 10
         SoundManager.playClick()
-        if (isSolved()) {
+        if (isCompleteAndValid()) {
             solved = true
-            val points = 500
-            if (ScoreManager.updateHighScore(context, gameKey, points)) best = points
+            val score = (600 + (puzzles.size - puzzleIndex) * 25).coerceAtLeast(100)
+            if (ScoreManager.updateHighScore(context, gameKey, score)) best = score
             SoundManager.playSuccess()
         }
     }
 
-    private fun isSolved(): Boolean {
-        for (r in 0 until 9) for (c in 0 until 9) if (board[r][c] != solution[r][c]) return false
+    private fun isCompleteAndValid(): Boolean {
+        for (r in 0 until 9) for (c in 0 until 9) {
+            if (board[r][c] == 0) return false
+            if (hasConflict(r, c)) return false
+        }
         return true
+    }
+
+    private fun hasConflict(r: Int, c: Int): Boolean {
+        val v = board[r][c]
+        if (v == 0) return false
+        for (cc in 0 until 9) {
+            if (cc != c && board[r][cc] == v) return true
+        }
+        for (rr in 0 until 9) {
+            if (rr != r && board[rr][c] == v) return true
+        }
+        val br = r / 3 * 3
+        val bc = c / 3 * 3
+        for (rr in br until br + 3) {
+            for (cc in bc until bc + 3) {
+                if ((rr != r || cc != c) && board[rr][cc] == v) return true
+            }
+        }
+        return false
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -117,6 +169,11 @@ class SudokuView @JvmOverloads constructor(
             paint.style = Paint.Style.FILL
             paint.color = if ((r / 3 + c / 3) % 2 == 0) Color.parseColor("#1E1E1E") else Color.parseColor("#252525")
             canvas.drawRect(x, y, x + cell, y + cell, paint)
+            val conflict = board[r][c] != 0 && hasConflict(r, c)
+            if (conflict) {
+                paint.color = Color.argb(120, 183, 28, 28)
+                canvas.drawRect(x, y, x + cell, y + cell, paint)
+            }
             if (r == cursorR && c == cursorC && !solved) {
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 4f
@@ -128,7 +185,11 @@ class SudokuView @JvmOverloads constructor(
                 paint.style = Paint.Style.FILL
                 paint.textAlign = Paint.Align.CENTER
                 paint.textSize = cell * 0.55f
-                paint.color = if (puzzle[r][c] == 0) Color.CYAN else Color.WHITE
+                paint.color = when {
+                    conflict -> Color.parseColor("#FF8A80")
+                    given[r][c] -> Color.WHITE
+                    else -> Color.CYAN
+                }
                 canvas.drawText(v.toString(), x + cell / 2, y + cell * 0.68f, paint)
             }
         }
@@ -144,13 +205,17 @@ class SudokuView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
         paint.textAlign = Paint.Align.LEFT
-        paint.textSize = 38f
-        canvas.drawText("BEST: $best", 30f, 52f, paint)
+        paint.textSize = 34f
+        canvas.drawText("PUZZLE ${puzzleIndex + 1}/${puzzles.size}  BEST: $best", 30f, 52f, paint)
         paint.textAlign = Paint.Align.CENTER
+        paint.textSize = 28f
         canvas.drawText(
-            if (solved) "SOLVED! CENTER TO RESTART" else "CENTER: 1-9 CYCLE",
+            when {
+                solved -> "SOLVED! CENTER FOR NEXT PUZZLE"
+                else -> "CENTER: 0-9 CYCLE (0 CLEAR)  GIVENS LOCKED"
+            },
             width / 2f,
-            top - 16f,
+            top - 14f,
             paint
         )
     }

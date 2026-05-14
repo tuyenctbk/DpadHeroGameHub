@@ -7,10 +7,10 @@ class SudokuActivity : BaseGameActivity() {
     override val gameKey = "sudoku"
     override val gameTitle = "SUDOKU GUIDE"
     override val gameInstructions =
-        "• Move cursor with D-PAD.\n" +
-            "• Press CENTER to cycle number 1-9.\n" +
-            "• Fill all empty cells correctly.\n" +
-            "• Press CENTER after finish to restart."
+        "• D-PAD: move cell. CENTER: cycle value 0 (clear) through 9 on empty cells.\n" +
+            "• Given numbers (white) are locked.\n" +
+            "• No repeats in any row, column, or 3×3 box; conflicts tint red.\n" +
+            "• When the grid is complete and valid, CENTER loads the next puzzle."
 
     override fun getLayoutId() = R.layout.activity_sudoku
     override fun getGameViewId() = R.id.sudoku_view

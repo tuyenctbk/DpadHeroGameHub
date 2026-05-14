@@ -19,7 +19,7 @@ object GuideManager {
         return prefs.getBoolean("show_$gameKey", true)
     }
 
-    fun showGuide(context: Context, gameKey: String, title: String, content: String, onDismiss: () -> Unit) {
+    fun showGuide(context: Context, gameKey: String, title: String, content: String, buttonText: String? = null, onDismiss: () -> Unit) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_guide)
@@ -30,6 +30,8 @@ object GuideManager {
         dialog.findViewById<TextView>(R.id.guide_content).text = content
         val checkBox = dialog.findViewById<CheckBox>(R.id.cb_dont_show_again)
         val btnClose = dialog.findViewById<Button>(R.id.btn_close_guide)
+
+        buttonText?.let { btnClose.text = it }
 
         btnClose.setOnClickListener {
             if (checkBox.isChecked) {

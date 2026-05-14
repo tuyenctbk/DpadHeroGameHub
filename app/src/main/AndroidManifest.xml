@@ -113,6 +113,83 @@
             tools:ignore="LockedOrientationActivity" />
 
         <activity
+            android:name="com.tdpham.games.starfighter.StarFighterActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.memory.MemoryActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.slidepuzzle.SlidePuzzleActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.mazequiz.MazeQuizActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.mentalmath.MentalMathActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.froggy.FroggyCrossActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.simon.SimonSaysActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.tanks.BattleTanksActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.wordquest.WordQuestActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.dungeon.DungeonEscapeActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.flappy.FlappyHeroActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
             android:name="com.tdpham.games.hub.SettingsActivity"
             android:exported="false"
             android:screenOrientation="landscape"
