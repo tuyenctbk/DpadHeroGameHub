@@ -21,19 +21,26 @@
         android:pathData="M16,38 L48,38"
         android:strokeColor="#FFFFFF"
         android:strokeWidth="2" />
-    <!-- X in top-left -->
+    <!-- X in top-left (Red) -->
     <path
         android:pathData="M18,20 L26,28 M26,20 L18,28"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="2" />
-    <!-- O in top-right -->
+        android:strokeColor="#F44336"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+    <!-- O in top-right (Blue) -->
     <path
         android:pathData="M45,22m-3.5,0a3.5,3.5 0,1 1,7 0a3.5,3.5 0,1 1,-7 0"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="2" />
-    <!-- X in bottom-left -->
+        android:strokeColor="#2196F3"
+        android:strokeWidth="3" />
+    <!-- X in bottom-right (Red) -->
     <path
-        android:pathData="M18,42 L26,50 M26,42 L18,50"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="2" />
+        android:pathData="M38,42 L46,50 M46,42 L38,50"
+        android:strokeColor="#F44336"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+    <!-- O in center (Blue) -->
+    <path
+        android:pathData="M32,32m-3.5,0a3.5,3.5 0,1 1,7 0a3.5,3.5 0,1 1,-7 0"
+        android:strokeColor="#2196F3"
+        android:strokeWidth="3" />
 </vector>

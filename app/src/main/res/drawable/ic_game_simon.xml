@@ -4,7 +4,39 @@
     android:height="48dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
+    <!-- Top Left (Green) -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M12,20C7.58,20 4,16.42 4,12C4,7.58 7.58,4 12,4C16.42,4 20,7.58 20,12C20,16.42 16.42,20 12,20M11,7H13V13H11V7M11,15H13V17H11V15Z" />
+        android:fillColor="#2E7D32"
+        android:pathData="M11,3 A9,9 0 0 0 3,11 L11,11 Z" />
+    <path
+        android:fillColor="#43A047"
+        android:pathData="M11,4 A8,8 0 0 0 4,11 L11,11 Z" />
+    <!-- Top Right (Red) -->
+    <path
+        android:fillColor="#C62828"
+        android:pathData="M13,3 L13,11 L21,11 A9,9 0 0 0 13,3 Z" />
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M13,4 L13,11 L20,11 A8,8 0 0 0 13,4 Z" />
+    <!-- Bottom Left (Yellow) -->
+    <path
+        android:fillColor="#FBC02D"
+        android:pathData="M3,13 A9,9 0 0 0 11,21 L11,13 Z" />
+    <path
+        android:fillColor="#FFEB3B"
+        android:pathData="M4,13 A8,8 0 0 0 11,20 L11,13 Z" />
+    <!-- Bottom Right (Blue) -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M13,13 L13,21 A9,9 0 0 0 21,13 Z" />
+    <path
+        android:fillColor="#1E88E5"
+        android:pathData="M13,13 L13,20 A8,8 0 0 0 20,13 Z" />
+    <!-- Center Button -->
+    <path
+        android:fillColor="#212121"
+        android:pathData="M12,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+    <path
+        android:fillColor="#424242"
+        android:pathData="M12,11.5m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
 </vector>

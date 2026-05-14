@@ -249,33 +249,55 @@ class StarFighterView @JvmOverloads constructor(
         paint.alpha = 255
 
         if (!gameOver) {
-            // Player Ship (Triangular)
+            // Player Ship (Triangular with details)
             paint.color = Color.CYAN
             playerPath.reset()
             playerPath.moveTo(playerX, playerY - playerSize)
             playerPath.lineTo(playerX - playerSize / 2, playerY + playerSize / 2)
             playerPath.lineTo(playerX + playerSize / 2, playerY + playerSize / 2)
             playerPath.close()
-            canvas.drawPath(playerPath, paint)
             
-            // Engine flame
-            if (random.nextBoolean()) {
-                paint.color = Color.parseColor("#FF9800") // Orange
-                canvas.drawCircle(playerX, playerY + playerSize / 2 + 10, 15f, paint)
-            }
+            // Subtle glow for ship
+            paint.setShadowLayer(15f, 0f, 0f, Color.CYAN)
+            canvas.drawPath(playerPath, paint)
+            paint.clearShadowLayer()
+
+            // Ship cockpit/details
+            paint.color = Color.parseColor("#1A237E") // Dark blue
+            canvas.drawCircle(playerX, playerY - playerSize * 0.2f, playerSize * 0.15f, paint)
+            
+            // Engine flame (Animated flicker)
+            val flameSize = 15f + random.nextFloat() * 10f
+            paint.color = Color.parseColor("#FF9800") // Orange
+            paint.setShadowLayer(20f, 0f, 0f, Color.YELLOW)
+            canvas.drawCircle(playerX, playerY + playerSize / 2 + 5, flameSize, paint)
+            paint.color = Color.YELLOW
+            canvas.drawCircle(playerX, playerY + playerSize / 2 + 5, flameSize * 0.6f, paint)
+            paint.clearShadowLayer()
         }
 
-        // Bullets
+        // Bullets (With glow)
         paint.color = Color.YELLOW
+        paint.setShadowLayer(10f, 0f, 0f, Color.YELLOW)
         bullets.forEach { canvas.drawRect(it.x - 4, it.y - 15, it.x + 4, it.y, paint) }
+        paint.clearShadowLayer()
 
-        // Enemies
+        // Enemies (Improved look)
         enemies.forEach { 
+            // Body
             paint.color = Color.RED
+            paint.setShadowLayer(10f, 0f, 0f, Color.RED)
             canvas.drawRect(it.x - 30, it.y - 30, it.x + 30, it.y + 30, paint)
+            paint.clearShadowLayer()
+
+            // Details/Eyes
             paint.color = Color.BLACK
             canvas.drawRect(it.x - 20, it.y - 20, it.x - 5, it.y - 5, paint)
             canvas.drawRect(it.x + 5, it.y - 20, it.x + 20, it.y - 5, paint)
+            
+            // Subtle highlight
+            paint.color = Color.argb(80, 255, 255, 255)
+            canvas.drawRect(it.x - 25, it.y - 25, it.x - 15, it.y - 15, paint)
         }
 
         // HUD

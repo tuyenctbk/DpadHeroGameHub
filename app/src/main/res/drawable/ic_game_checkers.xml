@@ -4,16 +4,38 @@
     android:height="96dp"
     android:viewportWidth="96"
     android:viewportHeight="96">
+    <!-- Board Shadow/Border -->
+    <path
+        android:fillColor="#4E342E"
+        android:pathData="M10,18h76v60h-76z" />
+    <!-- Board -->
     <path
         android:fillColor="#6D4C41"
         android:pathData="M12,20h72v56h-72z" />
+    <!-- Light Squares -->
     <path
-        android:fillColor="#BCAAA4"
+        android:fillColor="#D7CCC8"
         android:pathData="M12,20h18v14h-18zM48,20h18v14h-18zM30,34h18v14h-18zM66,34h18v14h-18zM12,48h18v14h-18zM48,48h18v14h-18zM30,62h18v14h-18zM66,62h18v14h-18z" />
+    <!-- Red Piece -->
+    <path
+        android:fillColor="#C62828"
+        android:pathData="M34,64m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0" />
     <path
         android:fillColor="#EF5350"
         android:pathData="M34,62m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0" />
     <path
-        android:fillColor="#EEEEEE"
+        android:fillColor="#FFCDD2"
+        android:fillAlpha="0.3"
+        android:pathData="M34,60m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+    <!-- White Piece -->
+    <path
+        android:fillColor="#9E9E9E"
+        android:pathData="M62,36m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0" />
+    <path
+        android:fillColor="#FFFFFF"
         android:pathData="M62,34m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0" />
+    <path
+        android:fillColor="#BDBDBD"
+        android:fillAlpha="0.2"
+        android:pathData="M62,32m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
 </vector>

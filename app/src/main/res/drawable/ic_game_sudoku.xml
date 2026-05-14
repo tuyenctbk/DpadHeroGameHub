@@ -4,16 +4,25 @@
     android:height="96dp"
     android:viewportWidth="96"
     android:viewportHeight="96">
+    <!-- Grid Background -->
     <path
-        android:fillColor="#1E1E1E"
+        android:fillColor="#F5F5F5"
         android:pathData="M12,12h72v72h-72z" />
+    <!-- Subgrid Borders (Thick) -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#212121"
         android:pathData="M12,36h72v2h-72zM12,60h72v2h-72zM36,12h2v72h-2zM60,12h2v72h-2z" />
+    <!-- Cell Borders (Thin) -->
     <path
-        android:fillColor="#9E9E9E"
+        android:fillColor="#BDBDBD"
         android:pathData="M12,24h72v1h-72zM12,48h72v1h-72zM12,72h72v1h-72zM24,12h1v72h-1zM48,12h1v72h-1zM72,12h1v72h-1z" />
+    <!-- Numbers/Placeholders -->
     <path
-        android:fillColor="#4DD0E1"
+        android:fillColor="#3F51B5"
         android:pathData="M20,30h8v10h-8zM44,42h8v10h-8zM68,54h8v10h-8z" />
+    <!-- Highlight Selection -->
+    <path
+        android:fillColor="#2196F3"
+        android:fillAlpha="0.2"
+        android:pathData="M36,36h24v24h-24z" />
 </vector>

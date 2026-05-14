@@ -192,9 +192,34 @@ class SimonSaysView @JvmOverloads constructor(
     }
 
     private fun drawQuadrant(canvas: Canvas, id: Int, l: Float, t: Float, r: Float, b: Float) {
+        val isActive = activeQuadrant == id
         paint.color = colors[id]
-        paint.alpha = if (activeQuadrant == id) 255 else 80
-        canvas.drawRoundRect(l, t, r, b, 30f, 30f, paint)
+        
+        if (isActive) {
+            paint.alpha = 255
+            // Glow effect for active quadrant with pulse
+            val pulse = (Math.sin(System.currentTimeMillis() / 100.0).toFloat() * 10f)
+            paint.setShadowLayer(40f + pulse, 0f, 0f, colors[id])
+            invalidate() // Continuous animation while active
+        } else {
+            paint.alpha = 80
+            paint.clearShadowLayer()
+        }
+        
+        val rect = RectF(l, t, r, b)
+        if (isActive) {
+            // Subtle scale up for active button
+            rect.inset(-5f, -5f)
+        }
+        
+        canvas.drawRoundRect(rect, 30f, 30f, paint)
+        paint.clearShadowLayer()
+        
+        // Simple bevel/highlight for the button
+        paint.color = Color.WHITE
+        paint.alpha = if (isActive) 100 else 40
+        canvas.drawRoundRect(l + 10, t + 10, l + 40, t + 25, 10f, 10f, paint)
+        
         paint.alpha = 255
     }
 

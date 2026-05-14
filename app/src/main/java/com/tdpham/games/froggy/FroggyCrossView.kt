@@ -158,21 +158,61 @@ class FroggyCrossView @JvmOverloads constructor(
 
         if (!gamePaused && !gameOver) update()
 
-        // Draw Entities
+    // Draw Entities
         for (lane in lanes) {
             for (e in lane.entities) {
                 paint.color = e.color
-                canvas.drawRect(e.c * cellW, lane.r * cellH + 5, (e.c + e.length) * cellW, (lane.r + 1) * cellH - 5, paint)
+                val r = RectF(e.c * cellW, lane.r * cellH + 5, (e.c + e.length) * cellW, (lane.r + 1) * cellH - 5)
+                
+                if (lane.isRiver) {
+                    // Logs with texture/lines
+                    paint.color = Color.parseColor("#5D4037")
+                    canvas.drawRoundRect(r, 10f, 10f, paint)
+                    paint.color = Color.parseColor("#4E342E")
+                    paint.strokeWidth = 2f
+                    canvas.drawLine(r.left + 10, r.top + r.height()/2, r.right - 10, r.top + r.height()/2, paint)
+                } else {
+                    // Cars with simple 3D effect
+                    canvas.drawRoundRect(r, 8f, 8f, paint)
+                    paint.color = Color.BLACK
+                    canvas.drawRect(r.left + r.width()*0.2f, r.top + 5, r.right - r.width()*0.2f, r.bottom - 5, paint)
+                    paint.color = Color.YELLOW
+                    canvas.drawRect(r.left + 2, r.top + 10, r.left + 10, r.bottom - 10, paint) // Headlights
+                }
+                
                 // Wrap around drawing
                 if (e.c + e.length > cols) {
-                    canvas.drawRect((e.c - cols) * cellW, lane.r * cellH + 5, (e.c + e.length - cols) * cellW, (lane.r + 1) * cellH - 5, paint)
+                    val r2 = RectF((e.c - cols) * cellW, lane.r * cellH + 5, (e.c + e.length - cols) * cellW, (lane.r + 1) * cellH - 5)
+                    paint.color = e.color
+                    if (lane.isRiver) {
+                        paint.color = Color.parseColor("#5D4037")
+                        canvas.drawRoundRect(r2, 10f, 10f, paint)
+                    } else {
+                        canvas.drawRoundRect(r2, 8f, 8f, paint)
+                    }
                 }
             }
         }
 
-        // Draw Frog
+        // Draw Frog with simple animation (jumping scale)
+        val jumpScale = if (gamePaused || gameOver) 1.0f else (1.0f + 0.1f * Math.sin(System.currentTimeMillis() / 150.0).toFloat())
+        val frogRadius = cellH * 0.35f * jumpScale
+        val fx = frogX * cellW + cellW / 2
+        val fy = frogR * cellH + cellH / 2
+        
+        paint.color = Color.parseColor("#1B5E20") // Darker green shadow
+        canvas.drawCircle(fx, fy + 5, frogRadius, paint)
+        
         paint.color = Color.GREEN
-        canvas.drawCircle(frogX * cellW + cellW / 2, frogR * cellH + cellH / 2, cellH * 0.35f, paint)
+        canvas.drawCircle(fx, fy, frogRadius, paint)
+        
+        // Eyes
+        paint.color = Color.WHITE
+        canvas.drawCircle(fx - frogRadius * 0.4f, fy - frogRadius * 0.4f, frogRadius * 0.25f, paint)
+        canvas.drawCircle(fx + frogRadius * 0.4f, fy - frogRadius * 0.4f, frogRadius * 0.25f, paint)
+        paint.color = Color.BLACK
+        canvas.drawCircle(fx - frogRadius * 0.4f, fy - frogRadius * 0.5f, frogRadius * 0.1f, paint)
+        canvas.drawCircle(fx + frogRadius * 0.4f, fy - frogRadius * 0.5f, frogRadius * 0.1f, paint)
 
         // HUD
         paint.color = Color.WHITE

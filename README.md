@@ -12,6 +12,21 @@ The hub features several classic game implementations:
 *   **T-Rex Run**: Jump over cacti and dodge birds in this endless runner with dynamic day/night cycles and seasons.
 *   **Brick Break**: Use a responsive paddle to bounce a ball and destroy all bricks on the screen.
 *   **Tic-Tac-Toe**: Challenge a CPU opponent in a classic game of strategy.
+*   **Checkers**: Play a match of Checkers against the computer.
+*   **Sokoban**: Solve warehouse puzzles by pushing crates to their target locations.
+*   **Sudoku**: Classic number-placement puzzle game.
+*   **Tetris**: Stack falling blocks and clear lines.
+*   **Star Fighter**: Shoot down enemy spaceships in a retro space shooter.
+*   **Memory**: Test your memory by matching pairs of cards.
+*   **Slide Puzzle**: Reorder tiles to complete the image.
+*   **Maze Quiz**: Navigate through a maze and answer questions.
+*   **Mental Math**: Solve math problems quickly to test your mental agility.
+*   **Simon Says**: Repeat sequences of lights and sounds.
+*   **Froggy Cross**: Help the frog cross the road and river safely.
+*   **Battle Tanks**: Control a tank and destroy enemy forces.
+*   **Word Quest**: Find hidden words in a grid of letters.
+*   **Dungeon Escape**: Explore dungeons and find your way out.
+*   **Flappy Hero**: Navigate through obstacles by flapping your wings.
 
 ## ⌨️ Controls
 

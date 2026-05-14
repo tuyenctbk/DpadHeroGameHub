@@ -2,6 +2,8 @@ package com.tdpham.games.twentyfortyeight
 
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
@@ -25,6 +27,18 @@ class TwentyFortyEightView @JvmOverloads constructor(
     private var isGameOver = false
     private var isWin = false
     private var cellSize = 0f
+
+    private var animationFrame = 0
+    private val animationHandler = Handler(Looper.getMainLooper())
+    private val animationRunnable = object : Runnable {
+        override fun run() {
+            animationFrame++
+            invalidate()
+            animationHandler.postDelayed(this, 50)
+        }
+    }
+
+    private val mergedTiles = mutableSetOf<Pair<Int, Int>>()
     
     private val paint = Paint().apply {
         isAntiAlias = true
@@ -35,6 +49,12 @@ class TwentyFortyEightView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        animationHandler.post(animationRunnable)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        animationHandler.removeCallbacks(animationRunnable)
     }
 
     override fun startGame() {
@@ -50,6 +70,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
         isGameOver = false
         isWin = false
         highScore = ScoreManager.getHighScore(context, gameKey)
+        mergedTiles.clear()
         addRandomTile()
         addRandomTile()
         invalidate()
@@ -99,11 +120,12 @@ class TwentyFortyEightView @JvmOverloads constructor(
 
     private fun move(dx: Int, dy: Int): Boolean {
         var moved = false
+        mergedTiles.clear()
         
         if (dx != 0) { // Horizontal move
             for (r in 0 until gridSize) {
                 val row = board[r]
-                val newRow = if (dx < 0) shift(row) else shift(row.reversedArray()).reversedArray()
+                val newRow = if (dx < 0) shift(row, r, false) else shift(row.reversedArray(), r, true).reversedArray()
                 if (!row.contentEquals(newRow)) {
                     board[r] = newRow
                     moved = true
@@ -112,7 +134,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
         } else { // Vertical move
             for (c in 0 until gridSize) {
                 val col = IntArray(gridSize) { r -> board[r][c] }
-                val newCol = if (dy < 0) shift(col) else shift(col.reversedArray()).reversedArray()
+                val newCol = if (dy < 0) shift(col, c, false, true) else shift(col.reversedArray(), c, true, true).reversedArray()
                 if (!col.contentEquals(newCol)) {
                     for (r in 0 until gridSize) board[r][c] = newCol[r]
                     moved = true
@@ -122,7 +144,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
         return moved
     }
 
-    private fun shift(arr: IntArray): IntArray {
+    private fun shift(arr: IntArray, index: Int, reversed: Boolean, isVertical: Boolean = false): IntArray {
         val result = mutableListOf<Int>()
         val filtered = arr.filter { it != 0 }
         var i = 0
@@ -132,6 +154,12 @@ class TwentyFortyEightView @JvmOverloads constructor(
                 result.add(newValue)
                 score += newValue
                 SoundManager.playScore() // Play sound only on merge
+                
+                val pos = result.size - 1
+                val finalIdx = if (reversed) gridSize - 1 - pos else pos
+                if (isVertical) mergedTiles.add(Pair(finalIdx, index))
+                else mergedTiles.add(Pair(index, finalIdx))
+                
                 i += 2
             } else {
                 result.add(filtered[i])
@@ -212,10 +240,23 @@ class TwentyFortyEightView @JvmOverloads constructor(
 
     private fun drawTile(canvas: Canvas, r: Int, c: Int, offsetX: Float, offsetY: Float) {
         val value = board[r][c]
-        val left = offsetX + c * cellSize + 5
-        val top = offsetY + r * cellSize + 5
-        val right = left + cellSize - 10
-        val bottom = top + cellSize - 10
+        var left = offsetX + c * cellSize + 5
+        var top = offsetY + r * cellSize + 5
+        var right = left + cellSize - 10
+        var bottom = top + cellSize - 10
+
+        // Subtle scale animation for merged tiles
+        if (value > 0 && mergedTiles.contains(Pair(r, c))) {
+            val scale = 1.0f + (Math.sin(animationFrame * 0.5).toFloat() * 0.05f).coerceAtLeast(0f)
+            val cx = left + (cellSize - 10) / 2
+            val cy = top + (cellSize - 10) / 2
+            val halfW = (cellSize - 10) / 2 * scale
+            val halfH = (cellSize - 10) / 2 * scale
+            left = cx - halfW
+            top = cy - halfH
+            right = cx + halfW
+            bottom = cy + halfH
+        }
 
         paint.color = getTileColor(value)
         canvas.drawRoundRect(left, top, right, bottom, 15f, 15f, paint)
@@ -227,7 +268,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
             val text = value.toString()
             val textRect = Rect()
             paint.getTextBounds(text, 0, text.length, textRect)
-            canvas.drawText(text, left + (cellSize-10)/2, top + (cellSize-10)/2 + textRect.height()/2, paint)
+            canvas.drawText(text, left + (right - left) / 2, top + (bottom - top) / 2 + textRect.height() / 2, paint)
         }
     }
 

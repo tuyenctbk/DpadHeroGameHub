@@ -36,6 +36,8 @@ class TRexView @JvmOverloads constructor(
     private val groundY = 0.8f 
     private var isJumping = false
     private var isDucking = false
+    private var animationFrame = 0
+    private var walkFrame = 0
     
     // Environment State
     private var isNightMode = false
@@ -152,6 +154,11 @@ class TRexView @JvmOverloads constructor(
 
     private fun update() {
         if (isGameOver || isPaused) return
+
+        animationFrame++
+        if (animationFrame % 6 == 0) {
+            walkFrame = (walkFrame + 1) % 2
+        }
 
         distanceTravelled += gameSpeed
         score = (distanceTravelled / 50).toInt()
@@ -372,6 +379,14 @@ class TRexView @JvmOverloads constructor(
             canvas.drawRect(x + 26*p, y + 4*p, x + 30*p, y + 10*p, paint)
             paint.color = eyeColor
             canvas.drawRect(x + 18*p, y + 4*p, x + 20*p, y + 6*p, paint)
+            
+            // Ducking walking animation
+            paint.color = color
+            if (walkFrame == 0) {
+                canvas.drawRect(x + 4*p, y + 15*p, x + 8*p, y + 17*p, paint)
+            } else {
+                canvas.drawRect(x + 10*p, y + 15*p, x + 14*p, y + 17*p, paint)
+            }
         } else {
             canvas.drawRect(x + 11*p, y, x + 22*p, y + 8*p, paint) 
             canvas.drawRect(x + 22*p, y + 3*p, x + 25*p, y + 8*p, paint)
@@ -382,8 +397,20 @@ class TRexView @JvmOverloads constructor(
             canvas.drawRect(x, y + 10*p, x + 15*p, y + 18*p, paint)
             canvas.drawRect(x + 15*p, y + 10*p, x + 17*p, y + 14*p, paint) 
             canvas.drawRect(x - 3*p, y + 10*p, x, y + 14*p, paint)
-            canvas.drawRect(x + 4*p, y + 18*p, x + 7*p, y + 21*p, paint)
-            canvas.drawRect(x + 9*p, y + 18*p, x + 12*p, y + 21*p, paint)
+            
+            // Walking animation
+            if (isJumping) {
+                canvas.drawRect(x + 4*p, y + 18*p, x + 7*p, y + 21*p, paint)
+                canvas.drawRect(x + 9*p, y + 18*p, x + 12*p, y + 21*p, paint)
+            } else {
+                if (walkFrame == 0) {
+                    canvas.drawRect(x + 4*p, y + 18*p, x + 7*p, y + 23*p, paint)
+                    canvas.drawRect(x + 9*p, y + 18*p, x + 12*p, y + 20*p, paint)
+                } else {
+                    canvas.drawRect(x + 4*p, y + 18*p, x + 7*p, y + 20*p, paint)
+                    canvas.drawRect(x + 9*p, y + 18*p, x + 12*p, y + 23*p, paint)
+                }
+            }
         }
     }
 

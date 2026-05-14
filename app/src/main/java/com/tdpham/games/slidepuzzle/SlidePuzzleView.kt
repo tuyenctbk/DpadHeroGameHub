@@ -238,8 +238,29 @@ class SlidePuzzleView @JvmOverloads constructor(
             val srcSize = bitmap.width / gridSize
             val srcRect = Rect((tileVal % gridSize) * srcSize, (tileVal / gridSize) * srcSize, 
                                ((tileVal % gridSize) + 1) * srcSize, ((tileVal / gridSize) + 1) * srcSize)
-            val destRect = RectF(x + 1, y + 1, x + size - 1, y + size - 1)
+            val destRect = RectF(x + 2, y + 2, x + size - 2, y + size - 2)
             canvas.drawBitmap(bitmap, srcRect, destRect, paint)
+            
+            // Subtle bevel/border for each tile
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = 2f
+            paint.color = Color.argb(100, 255, 255, 255) // Top-left highlight
+            canvas.drawLine(destRect.left, destRect.top, destRect.right, destRect.top, paint)
+            canvas.drawLine(destRect.left, destRect.top, destRect.left, destRect.bottom, paint)
+            
+            paint.color = Color.argb(100, 0, 0, 0) // Bottom-right shadow
+            canvas.drawLine(destRect.right, destRect.top, destRect.right, destRect.bottom, paint)
+            canvas.drawLine(destRect.left, destRect.bottom, destRect.right, destRect.bottom, paint)
+            
+            paint.style = Paint.Style.FILL
+            
+            // Draw tile number for clarity
+            paint.color = Color.argb(180, 0, 0, 0)
+            paint.textSize = size * 0.25f
+            paint.textAlign = Paint.Align.CENTER
+            canvas.drawText((tileVal + 1).toString(), destRect.centerX(), destRect.bottom - 10f, paint)
+            paint.color = Color.WHITE
+            canvas.drawText((tileVal + 1).toString(), destRect.centerX() - 1, destRect.bottom - 11f, paint)
         }
     }
 

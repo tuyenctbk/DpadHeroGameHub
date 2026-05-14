@@ -4,11 +4,26 @@
     android:height="64dp"
     android:viewportWidth="64"
     android:viewportHeight="64">
-    <!-- Spaceship Icon -->
+    <!-- Spaceship Body -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#BDBDBD"
         android:pathData="M32,10 L48,50 L32,42 L16,50 Z" />
+    <!-- Wing Highlights -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M32,10 L40,46 L32,42 L24,46 Z" />
+    <!-- Cockpit -->
     <path
         android:fillColor="#2196F3"
-        android:pathData="M32,10 L36,40 L32,38 L28,40 Z" />
+        android:pathData="M32,15 L38,40 L32,38 L26,40 Z" />
+    <path
+        android:fillColor="#64B5F6"
+        android:pathData="M32,15 L34,30 L32,29 L30,30 Z" />
+    <!-- Engine Glow -->
+    <path
+        android:fillColor="#FF5722"
+        android:pathData="M28,45 L36,45 L32,55 Z" />
+    <path
+        android:fillColor="#FFEB3B"
+        android:pathData="M30,45 L34,45 L32,50 Z" />
 </vector>

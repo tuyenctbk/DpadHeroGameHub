@@ -160,18 +160,42 @@ class WordQuestView @JvmOverloads constructor(
             val word = if (r < guesses.size) guesses[r] else if (r == guesses.size) currentGuess else ""
             for (c in 0 until 5) {
                 val char = if (c < word.length) word[c] else ' '
-                val color = if (r < guesses.size) getCharColor(char, c, guesses[r]) else Color.DKGRAY
+                val color = if (r < guesses.size) getCharColor(char, c, guesses[r]) else Color.parseColor("#333333")
                 
-                paint.color = color
                 val x = startX + c * (cellS + margin)
                 val y = startY + r * (cellS + margin)
-                canvas.drawRoundRect(x, y, x + cellS, y + cellS, 10f, 10f, paint)
+                val rect = RectF(x, y, x + cellS, y + cellS)
                 
+                // Draw cell with bevel
+                paint.color = color
+                canvas.drawRoundRect(rect, 10f, 10f, paint)
+                
+                // Bevel highlight
+                paint.color = Color.argb(40, 255, 255, 255)
+                canvas.drawRect(x + 5, y + 5, x + cellS - 5, y + 12, paint)
+
                 if (char != ' ') {
+                    // Subtle "pop" animation by slight scaling (simulated)
+                    val isCurrentChar = (r == guesses.size && c == word.length - 1)
+                    val charScale = if (isCurrentChar) 1.2f else 1.0f
+                    
                     paint.color = Color.WHITE
-                    paint.textSize = 40f
+                    paint.textSize = 44f * charScale
                     paint.textAlign = Paint.Align.CENTER
+                    
+                    // Shadow
+                    paint.color = Color.BLACK
+                    canvas.drawText(char.toString(), x + cellS / 2 + 2, y + cellS / 2 + 17f, paint)
+                    
+                    paint.color = Color.WHITE
                     canvas.drawText(char.toString(), x + cellS / 2, y + cellS / 2 + 15f, paint)
+                } else {
+                    // Empty cell border
+                    paint.style = Paint.Style.STROKE
+                    paint.strokeWidth = 2f
+                    paint.color = Color.GRAY
+                    canvas.drawRoundRect(rect, 10f, 10f, paint)
+                    paint.style = Paint.Style.FILL
                 }
             }
         }
@@ -193,6 +217,10 @@ class WordQuestView @JvmOverloads constructor(
                 val keyChar = kRow[c]
                 val keyStatus = usedKeys[keyChar]
                 
+                // Selection Pulse
+                val pulse = if (isSelected) (Math.sin(System.currentTimeMillis() / 150.0).toFloat() * 3f) else 0f
+                val rect = RectF(x - pulse, y - pulse, x + keyS + pulse, y + keyS + pulse)
+
                 paint.color = when {
                     isSelected -> Color.YELLOW
                     keyStatus == 2 -> Color.parseColor("#4CAF50")
@@ -200,12 +228,17 @@ class WordQuestView @JvmOverloads constructor(
                     keyStatus == 0 -> Color.parseColor("#424242")
                     else -> Color.GRAY
                 }
-                canvas.drawRoundRect(x, y, x + keyS, y + keyS, 8f, 8f, paint)
+                
+                if (isSelected) {
+                    paint.setShadowLayer(15f, 0f, 0f, Color.YELLOW)
+                }
+                canvas.drawRoundRect(rect, 8f, 8f, paint)
+                paint.clearShadowLayer()
                 
                 paint.color = if (isSelected) Color.BLACK else Color.WHITE
                 paint.textSize = 30f
                 paint.textAlign = Paint.Align.CENTER
-                canvas.drawText(kRow[c].toString(), x + keyS / 2, y + keyS / 2 + 10f, paint)
+                canvas.drawText(kRow[c].toString(), rect.centerX(), rect.centerY() + 10f, paint)
             }
         }
 

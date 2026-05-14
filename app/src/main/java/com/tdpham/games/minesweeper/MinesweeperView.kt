@@ -63,6 +63,15 @@ class MinesweeperView @JvmOverloads constructor(
     private val revealQueue: Queue<Pair<Int, Int>> = LinkedList()
     private val revealHandler = Handler(Looper.getMainLooper())
     private var isProcessingQueue = false
+    private var animationFrame = 0
+    private val animationHandler = Handler(Looper.getMainLooper())
+    private val animationRunnable = object : Runnable {
+        override fun run() {
+            animationFrame++
+            invalidate()
+            animationHandler.postDelayed(this, 50)
+        }
+    }
 
     private val processQueueRunnable = object : Runnable {
         override fun run() {
@@ -96,11 +105,13 @@ class MinesweeperView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         setupGame()
+        animationHandler.post(animationRunnable)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         revealHandler.removeCallbacks(processQueueRunnable)
+        animationHandler.removeCallbacks(animationRunnable)
     }
 
     private fun setupGame() {
@@ -334,12 +345,19 @@ class MinesweeperView @JvmOverloads constructor(
                     paint.color = Color.parseColor("#424242")
                 }
                 paint.style = Paint.Style.FILL
-                canvas.drawRect(rectLeft + 2, rectTop + 2, rectRight - 2, rectBottom - 2, paint)
+                
+                val margin = if (cell.isRevealed) 1f else 2f
+                canvas.drawRect(rectLeft + margin, rectTop + margin, rectRight - margin, rectBottom - margin, paint)
                 
                 if (!cell.isRevealed) {
-                    paint.color = Color.GRAY
+                    // 3D light effect for unrevealed cells
+                    paint.color = Color.parseColor("#616161")
                     canvas.drawLine(rectLeft + 2, rectTop + 2, rectRight - 2, rectTop + 2, paint)
                     canvas.drawLine(rectLeft + 2, rectTop + 2, rectLeft + 2, rectBottom - 2, paint)
+                    
+                    paint.color = Color.parseColor("#212121")
+                    canvas.drawLine(rectRight - 2, rectTop + 2, rectRight - 2, rectBottom - 2, paint)
+                    canvas.drawLine(rectLeft + 2, rectBottom - 2, rectRight - 2, rectBottom - 2, paint)
                 }
 
                 if (cell.isRevealed) {
@@ -380,10 +398,11 @@ class MinesweeperView @JvmOverloads constructor(
                 }
 
                 if (r == cursorY && c == cursorX) {
+                    val pulse = (Math.sin(animationFrame * 0.3).toFloat() * 2f)
                     paint.color = Color.YELLOW
                     paint.style = Paint.Style.STROKE
-                    paint.strokeWidth = 6f
-                    canvas.drawRect(rectLeft, rectTop, rectRight, rectBottom, paint)
+                    paint.strokeWidth = 6f + pulse
+                    canvas.drawRect(rectLeft - pulse/2, rectTop - pulse/2, rectRight + pulse/2, rectBottom + pulse/2, paint)
                 }
             }
         }

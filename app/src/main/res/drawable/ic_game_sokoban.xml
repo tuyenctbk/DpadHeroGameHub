@@ -4,19 +4,49 @@
     android:height="96dp"
     android:viewportWidth="96"
     android:viewportHeight="96">
+    <!-- Walls -->
     <path
         android:fillColor="#37474F"
         android:pathData="M10,14h76v68h-76z" />
     <path
+        android:fillColor="#455A64"
+        android:pathData="M10,14h76v2h-76z M10,14h2v68h-2z" />
+    <path
         android:fillColor="#263238"
         android:pathData="M18,22h60v52h-60z" />
+
+    <!-- Crate -->
     <path
-        android:fillColor="#4DD0E1"
-        android:pathData="M24,28m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0M72,68m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0" />
-    <path
-        android:fillColor="#FFB300"
+        android:fillColor="#8D6E63"
         android:pathData="M34,40h20v20h-20z" />
     <path
-        android:fillColor="#66BB6A"
+        android:fillColor="#A1887F"
+        android:pathData="M34,40h20v2h-20z M34,40h2v20h-2z" />
+    <path
+        android:fillColor="#5D4037"
+        android:pathData="M34,58h20v2h-20z M52,40h2v20h-2z" />
+    <path
+        android:fillColor="#5D4037"
+        android:pathData="M38,44h12v12h-12z" />
+    <path
+        android:fillColor="#8D6E63"
+        android:pathData="M40,46h8v8h-8z" />
+
+    <!-- Player -->
+    <path
+        android:fillColor="#43A047"
         android:pathData="M62,40m-7,0a7,7 0,1 1,14 0a7,7 0,1 1,-14 0" />
+    <path
+        android:fillColor="#66BB6A"
+        android:pathData="M62,38m-7,0a7,7 0,1 1,14 0a7,7 0,1 1,-14 0" />
+    <!-- Hat/Hair -->
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M55,38a7,7 0 0,1 14,0" />
+
+    <!-- Targets -->
+    <path
+        android:fillColor="#FFD54F"
+        android:fillAlpha="0.6"
+        android:pathData="M24,28m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M72,68m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
 </vector>

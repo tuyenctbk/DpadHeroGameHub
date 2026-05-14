@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
@@ -270,12 +271,30 @@ class MentalMathView @JvmOverloads constructor(
             
             val isSelected = (i == selectedOptionIdx)
             
+            // Subtle pulse for selection
+            val pulse = if (isSelected && !isReviewing) (Math.sin(System.currentTimeMillis() / 150.0).toFloat() * 5f) else 0f
+            
             paint.style = Paint.Style.FILL
             paint.color = if (isSelected) Color.YELLOW else Color.parseColor("#333333")
-            canvas.drawRoundRect(x - optW/2, y - optH/2, x + optW/2, y + optH/2, 20f, 20f, paint)
+            
+            // Draw option box with bevel
+            val rect = RectF(x - optW/2 - pulse, y - optH/2 - pulse, x + optW/2 + pulse, y + optH/2 + pulse)
+            canvas.drawRoundRect(rect, 20f, 20f, paint)
+            
+            // Highlight/Shadow
+            paint.color = Color.argb(40, 255, 255, 255)
+            canvas.drawRect(rect.left + 5, rect.top + 5, rect.right - 5, rect.top + 12, paint)
             
             paint.color = if (isSelected) Color.BLACK else Color.WHITE
             paint.textSize = 48f
+            paint.textAlign = Paint.Align.CENTER
+            
+            // Text shadow
+            if (!isSelected) {
+                paint.color = Color.BLACK
+                canvas.drawText(options[i].toString(), x + 2, y + 18f, paint)
+                paint.color = Color.WHITE
+            }
             canvas.drawText(options[i].toString(), x, y + 16f, paint)
             
             if (isReviewing) {
@@ -283,10 +302,14 @@ class MentalMathView @JvmOverloads constructor(
                 paint.strokeWidth = 8f
                 if (options[i] == correctAnswer) {
                     paint.color = Color.GREEN
-                    canvas.drawRoundRect(x - optW/2, y - optH/2, x + optW/2, y + optH/2, 20f, 20f, paint)
+                    paint.setShadowLayer(15f, 0f, 0f, Color.GREEN)
+                    canvas.drawRoundRect(rect, 20f, 20f, paint)
+                    paint.clearShadowLayer()
                 } else if (isSelected && !isCorrect) {
                     paint.color = Color.RED
-                    canvas.drawRoundRect(x - optW/2, y - optH/2, x + optW/2, y + optH/2, 20f, 20f, paint)
+                    paint.setShadowLayer(15f, 0f, 0f, Color.RED)
+                    canvas.drawRoundRect(rect, 20f, 20f, paint)
+                    paint.clearShadowLayer()
                 }
             }
         }

@@ -193,6 +193,22 @@ class DungeonEscapeView @JvmOverloads constructor(
             }
             canvas.drawRect(x + 1, y + 1, x + cellS - 1, y + cellS - 1, paint)
             
+            // Subtle texture/detail
+            if (type == 1) { // Wall bevel
+                paint.color = Color.parseColor("#616161")
+                canvas.drawRect(x + 2, y + 2, x + cellS - 2, y + 6, paint)
+                canvas.drawRect(x + 2, y + 2, x + 6, y + cellS - 2, paint)
+            } else if (type == 0) { // Floor detail
+                if ((r + c) % 4 == 0) {
+                    paint.color = Color.parseColor("#252525")
+                    canvas.drawCircle(x + cellS/2, y + cellS/2, 4f, paint)
+                }
+            } else if (type == 3) { // Key glow
+                paint.setShadowLayer(10f, 0f, 0f, Color.YELLOW)
+                canvas.drawCircle(x + cellS/2, y + cellS/2, cellS * 0.2f, paint)
+                paint.clearShadowLayer()
+            }
+            
             if (type == 2) { // Draw spike triangles
                 paint.color = Color.WHITE
                 spikePath.reset()
@@ -216,9 +232,22 @@ class DungeonEscapeView @JvmOverloads constructor(
             paint.alpha = 255
         }
 
-        // Draw Player
+        // Draw Player with simple animation
+        val jumpScale = if (gamePaused || gameOver) 1.0f else (1.0f + 0.05f * Math.sin(System.currentTimeMillis() / 150.0).toFloat())
+        val px = offsetX + playerX * cellS + cellS/2
+        val py = offsetY + playerY * cellS + cellS/2
+        
         paint.color = Color.CYAN
-        canvas.drawCircle(offsetX + playerX * cellS + cellS/2, offsetY + playerY * cellS + cellS/2, cellS * 0.35f, paint)
+        paint.setShadowLayer(15f, 0f, 0f, Color.CYAN)
+        canvas.drawCircle(px, py, cellS * 0.35f * jumpScale, paint)
+        paint.clearShadowLayer()
+        
+        // Torch flicker effect (simulated on floor near player)
+        if (!gamePaused && !gameOver) {
+            paint.color = Color.argb(30, 255, 160, 0)
+            val torchSize = cellS * (1.5f + 0.2f * Random.nextFloat())
+            canvas.drawCircle(px, py, torchSize, paint)
+        }
 
         // HUD
         paint.color = Color.WHITE

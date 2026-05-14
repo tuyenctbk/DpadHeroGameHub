@@ -11,6 +11,21 @@
         android:fillColor="#121212"
         android:pathData="M0,0h320v180h-320z" />
 
+    <!-- Subtle radial glow from center -->
+    <path
+        android:pathData="M0,0h320v180h-320z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:centerX="160"
+                android:centerY="90"
+                android:gradientRadius="150"
+                android:type="radial">
+                <item android:color="#1AFFFFFF" android:offset="0" />
+                <item android:color="#00FFFFFF" android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
     <!-- Grid pattern (like the launcher background) -->
     <path
         android:strokeColor="#33FFFFFF"
@@ -21,12 +36,22 @@
         android:strokeWidth="0.5"
         android:pathData="M20,0 L20,180 M40,0 L40,180 M60,0 L60,180 M80,0 L80,180 M100,0 L100,180 M120,0 L120,180 M140,0 L140,180 M160,0 L160,180 M180,0 L180,180 M200,0 L200,180 M220,0 L220,180 M240,0 L240,180 M260,0 L260,180 M280,0 L280,180 M300,0 L300,180" />
 
-    <!-- Game Icon/Logo placeholder -->
+    <!-- Game Icon/Logo - Shadow -->
+    <path
+        android:fillColor="#1A000000"
+        android:pathData="M162,92 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0" />
+
+    <!-- Game Icon/Logo -->
     <path
         android:fillColor="#3DDC84"
         android:pathData="M160,90 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0" />
 
+    <!-- Shine Effect -->
+    <path
+        android:fillColor="#33FFFFFF"
+        android:pathData="M160,90 m-40,0 a40,40 0 1,0 40,-40 l0,40 z" />
+
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M160,90 m-20,0 l15,-15 l0,30 z" />
+        android:pathData="M160,90 m-20,0 l25,-15 l0,30 z" />
 </vector>

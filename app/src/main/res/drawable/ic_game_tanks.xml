@@ -4,7 +4,29 @@
     android:height="48dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
+    <!-- Tank Body -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M20,18V15H18V18H15V20H18V23H20V20H23V18H20M11,10L11,1L13,1L13,10L22,10L22,12L13,12L13,21L11,21L11,12L2,12L2,10L11,10Z" />
+        android:fillColor="#558B2F"
+        android:pathData="M6,8h12v10h-12z" />
+    <!-- Tracks -->
+    <path
+        android:fillColor="#212121"
+        android:pathData="M4,7h2v12h-2z M18,7h2v12h-2z" />
+    <!-- Turret -->
+    <path
+        android:fillColor="#33691E"
+        android:pathData="M9,10h6v6h-6z" />
+    <!-- Barrel -->
+    <path
+        android:fillColor="#33691E"
+        android:pathData="M11,4h2v6h-2z" />
+    <!-- Detail/Hatch -->
+    <path
+        android:fillColor="#689F38"
+        android:pathData="M11,12h2v2h-2z" />
+    <!-- Aim Reticle (Partial from original icon feel) -->
+    <path
+        android:fillColor="#FF5252"
+        android:fillAlpha="0.6"
+        android:pathData="M20,18V15H18V18H15V20H18V23H20V20H23V18H20" />
 </vector>

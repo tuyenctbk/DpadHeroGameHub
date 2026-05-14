@@ -41,6 +41,7 @@ class SnakeGameView @JvmOverloads constructor(
 
     private val gridSize = 20
     private var cellSize = 0f
+    private var animationFrame = 0
 
     private val handler = Handler(Looper.getMainLooper())
     private val gameLoop = object : Runnable {
@@ -48,6 +49,10 @@ class SnakeGameView @JvmOverloads constructor(
             if (!isGameOver && !isPaused) {
                 direction = nextDirection
                 moveSnake()
+                animationFrame++
+                invalidate()
+            } else if (isPaused || isGameOver) {
+                animationFrame++
                 invalidate()
             }
             if (!isGameOver) {
@@ -245,14 +250,46 @@ class SnakeGameView @JvmOverloads constructor(
             val rectRight = offsetX + (point.x + 1) * cellSize - 1
             val rectBottom = offsetY + (point.y + 1) * cellSize - 1
             
-            canvas.drawRoundRect(rectLeft, rectTop, rectRight, rectBottom, 8f, 8f, paint)
+            val cornerRadius = if (i == 0) cellSize / 2f else 8f
+            canvas.drawRoundRect(rectLeft, rectTop, rectRight, rectBottom, cornerRadius, cornerRadius, paint)
+
+            // Draw eyes for the head
+            if (i == 0) {
+                paint.color = Color.WHITE
+                val eyeSize = cellSize / 6f
+                val eyeOffset = cellSize / 4f
+                
+                // Position eyes based on direction
+                when (direction) {
+                    Direction.UP -> {
+                        canvas.drawCircle(rectLeft + eyeOffset, rectTop + eyeOffset, eyeSize, paint)
+                        canvas.drawCircle(rectRight - eyeOffset, rectTop + eyeOffset, eyeSize, paint)
+                    }
+                    Direction.DOWN -> {
+                        canvas.drawCircle(rectLeft + eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                        canvas.drawCircle(rectRight - eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                    }
+                    Direction.LEFT -> {
+                        canvas.drawCircle(rectLeft + eyeOffset, rectTop + eyeOffset, eyeSize, paint)
+                        canvas.drawCircle(rectLeft + eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                    }
+                    Direction.RIGHT -> {
+                        canvas.drawCircle(rectRight - eyeOffset, rectTop + eyeOffset, eyeSize, paint)
+                        canvas.drawCircle(rectRight - eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                    }
+                }
+            }
         }
 
-        // Draw food
+        // Draw food with pulsing animation
         paint.color = GamePalette.WARNING // Vibrant Red
         val foodCenterX = offsetX + food.x * cellSize + cellSize / 2
         val foodCenterY = offsetY + food.y * cellSize + cellSize / 2
-        canvas.drawCircle(foodCenterX, foodCenterY, cellSize / 2 - 2, paint)
+        
+        val pulse = (Math.sin(animationFrame * 0.4).toFloat() * 2f)
+        val foodRadius = (cellSize / 2 - 2) + pulse
+        
+        canvas.drawCircle(foodCenterX, foodCenterY, foodRadius, paint)
         // Add a small shine to food
         paint.color = Color.WHITE
         canvas.drawCircle(foodCenterX - cellSize / 6, foodCenterY - cellSize / 6, cellSize / 8, paint)

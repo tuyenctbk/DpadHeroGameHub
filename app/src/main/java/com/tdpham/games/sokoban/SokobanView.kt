@@ -209,13 +209,31 @@ class SokobanView @JvmOverloads constructor(
             }
             canvas.drawRect(x + 2, y + 2, x + cell - 2, y + cell - 2, paint)
             when (ch) {
+                '#' -> {
+                    paint.color = Color.DKGRAY
+                    canvas.drawRect(x + 2, y + 2, x + cell - 2, y + cell - 2, paint)
+                    // Bevel for walls
+                    paint.color = Color.WHITE
+                    paint.alpha = 50
+                    canvas.drawRect(x + 2, y + 2, x + cell * 0.4f, y + cell * 0.4f, paint)
+                    paint.alpha = 255
+                }
                 '$', '*' -> {
                     paint.color = Color.parseColor("#FFB300")
                     canvas.drawRect(x + cell * 0.2f, y + cell * 0.2f, x + cell * 0.8f, y + cell * 0.8f, paint)
+                    // Bevel for crates
+                    paint.color = Color.WHITE
+                    paint.alpha = 100
+                    canvas.drawRect(x + cell * 0.2f, y + cell * 0.2f, x + cell * 0.45f, y + cell * 0.45f, paint)
+                    paint.alpha = 255
                 }
                 '@', '+' -> {
                     paint.color = Color.parseColor("#66BB6A")
                     canvas.drawCircle(x + cell / 2, y + cell / 2, cell * 0.28f, paint)
+                    // Simple face for player
+                    paint.color = Color.WHITE
+                    canvas.drawCircle(x + cell * 0.42f, y + cell * 0.45f, cell * 0.05f, paint)
+                    canvas.drawCircle(x + cell * 0.58f, y + cell * 0.45f, cell * 0.05f, paint)
                 }
             }
             if (ch == '.' || ch == '+' || ch == '*') {

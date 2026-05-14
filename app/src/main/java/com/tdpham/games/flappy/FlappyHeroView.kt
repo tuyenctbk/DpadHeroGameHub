@@ -24,8 +24,11 @@ class FlappyHeroView @JvmOverloads constructor(
     private val gravity = 0.8f
     private val jump = -15f
     private val birdSize = 40f
+    private var wingFrame = 0
+    private var frameCount = 0
 
     private val pipes = mutableListOf<Pipe>()
+    private val clouds = mutableListOf<Cloud>()
     private var pipeSpeed = 8f
     private var pipeSpawnTime = 0L
     private val pipeInterval = 1500L
@@ -35,8 +38,10 @@ class FlappyHeroView @JvmOverloads constructor(
     private var gameOver = false
     private var gamePaused = true
     private var lastUpdate = 0L
+    private val beakPath = Path()
 
     data class Pipe(var x: Float, val gapY: Float, val gapH: Float, var passed: Boolean = false)
+    data class Cloud(var x: Float, var y: Float, var speed: Float, var scale: Float)
 
     init {
         isFocusable = true
@@ -58,6 +63,7 @@ class FlappyHeroView @JvmOverloads constructor(
         birdY = height / 2f
         birdV = 0f
         pipes.clear()
+        clouds.clear()
         score = 0
         best = ScoreManager.getHighScore(context, gameKey)
         gameOver = false
@@ -99,18 +105,77 @@ class FlappyHeroView @JvmOverloads constructor(
 
         if (!gamePaused && !gameOver) update()
 
+        // Draw Clouds
+        paint.color = Color.argb(150, 255, 255, 255)
+        for (cloud in clouds) {
+            canvas.drawCircle(cloud.x, cloud.y, 30f * cloud.scale, paint)
+            canvas.drawCircle(cloud.x + 20f * cloud.scale, cloud.y - 10f * cloud.scale, 25f * cloud.scale, paint)
+            canvas.drawCircle(cloud.x + 40f * cloud.scale, cloud.y, 30f * cloud.scale, paint)
+        }
+
         // Draw Pipes
-        paint.color = Color.parseColor("#388E3C") // Pipe Green
         for (pipe in pipes) {
-            canvas.drawRect(pipe.x, 0f, pipe.x + 100f, pipe.gapY, paint)
-            canvas.drawRect(pipe.x, pipe.gapY + pipe.gapH, pipe.x + 100f, height.toFloat(), paint)
+            // Draw pipe body
+            paint.color = Color.parseColor("#388E3C") // Pipe Green
+            canvas.drawRect(pipe.x + 10f, 0f, pipe.x + 90f, pipe.gapY, paint)
+            canvas.drawRect(pipe.x + 10f, pipe.gapY + pipe.gapH, pipe.x + 90f, height.toFloat(), paint)
+
+            // Draw pipe shading
+            paint.color = Color.parseColor("#2E7D32")
+            canvas.drawRect(pipe.x + 70f, 0f, pipe.x + 85f, pipe.gapY, paint)
+            canvas.drawRect(pipe.x + 70f, pipe.gapY + pipe.gapH, pipe.x + 85f, height.toFloat(), paint)
+
+            paint.color = Color.parseColor("#4CAF50")
+            canvas.drawRect(pipe.x + 15f, 0f, pipe.x + 25f, pipe.gapY, paint)
+            canvas.drawRect(pipe.x + 15f, pipe.gapY + pipe.gapH, pipe.x + 25f, height.toFloat(), paint)
+
+            // Draw pipe caps
+            paint.color = Color.parseColor("#388E3C")
+            canvas.drawRect(pipe.x, pipe.gapY - 40f, pipe.x + 100f, pipe.gapY, paint)
+            canvas.drawRect(pipe.x, pipe.gapY + pipe.gapH, pipe.x + 100f, pipe.gapY + pipe.gapH + 40f, paint)
+            
+            // Cap outline
+            paint.style = Paint.Style.STROKE
+            paint.color = Color.parseColor("#1B5E20")
+            paint.strokeWidth = 4f
+            canvas.drawRect(pipe.x, pipe.gapY - 40f, pipe.x + 100f, pipe.gapY, paint)
+            canvas.drawRect(pipe.x, pipe.gapY + pipe.gapH, pipe.x + 100f, pipe.gapY + pipe.gapH + 40f, paint)
+            paint.style = Paint.Style.FILL
         }
 
         // Draw Bird
+        canvas.save()
+        val rotation = (birdV * 3f).coerceIn(-30f, 90f)
+        canvas.rotate(rotation, 150f, birdY)
+
+        // Body
         paint.color = Color.YELLOW
         canvas.drawCircle(150f, birdY, birdSize, paint)
+        
+        // Wing
+        paint.color = Color.WHITE
+        if (wingFrame == 0) {
+            canvas.drawOval(130f, birdY - 5f, 160f, birdY + 15f, paint)
+        } else {
+            canvas.drawOval(130f, birdY - 15f, 160f, birdY + 5f, paint)
+        }
+
+        // Eye
+        paint.color = Color.WHITE
+        canvas.drawCircle(170f, birdY - 10f, 12f, paint)
         paint.color = Color.BLACK
-        canvas.drawCircle(170f, birdY - 10f, 5f, paint) // Eye
+        canvas.drawCircle(175f, birdY - 10f, 5f, paint)
+
+        // Beak
+        paint.color = Color.parseColor("#FF9800") // Orange
+        beakPath.reset()
+        beakPath.moveTo(185f, birdY)
+        beakPath.lineTo(170f, birdY - 10f)
+        beakPath.lineTo(170f, birdY + 10f)
+        beakPath.close()
+        canvas.drawPath(beakPath, paint)
+
+        canvas.restore()
 
         // HUD
         paint.color = Color.WHITE
@@ -133,6 +198,10 @@ class FlappyHeroView @JvmOverloads constructor(
         val now = System.currentTimeMillis()
         if (lastUpdate == 0L) lastUpdate = now
         lastUpdate = now
+        frameCount++
+        if (frameCount % 5 == 0) {
+            wingFrame = (wingFrame + 1) % 2
+        }
 
         // Physics
         birdV += gravity
@@ -140,6 +209,17 @@ class FlappyHeroView @JvmOverloads constructor(
 
         if (birdY < 0 || birdY > height) {
             die()
+        }
+
+        // Clouds
+        if (clouds.size < 5 && Random.nextFloat() < 0.01f) {
+            clouds.add(Cloud(width.toFloat() + 100f, Random.nextFloat() * height * 0.5f, Random.nextFloat() * 2f + 1f, Random.nextFloat() * 1f + 0.5f))
+        }
+        val cIter = clouds.iterator()
+        while (cIter.hasNext()) {
+            val c = cIter.next()
+            c.x -= c.speed
+            if (c.x < -200f) cIter.remove()
         }
 
         // Pipes

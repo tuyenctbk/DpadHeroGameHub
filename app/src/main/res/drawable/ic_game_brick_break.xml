@@ -4,13 +4,54 @@
     android:height="64dp"
     android:viewportWidth="64"
     android:viewportHeight="64">
+    <!-- Bricks -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M8,10h14v8h-14zM25,10h14v8h-14zM42,10h14v8h-14zM8,21h14v8h-14zM25,21h14v8h-14zM42,21h14v8h-14z" />
+        android:fillColor="#E91E63"
+        android:pathData="M8,10h14v8h-14z" />
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#FF80AB"
+        android:pathData="M8,10h14v2h-14z M8,10h2v8h-2z" />
+    <path
+        android:fillColor="#C2185B"
+        android:pathData="M8,16h14v2h-14z M20,10h2v8h-2z" />
+
+    <path
+        android:fillColor="#9C27B0"
+        android:pathData="M25,10h14v8h-14z" />
+    <path
+        android:fillColor="#EA80FC"
+        android:pathData="M25,10h14v2h-14z M25,10h2v8h-2z" />
+    <path
+        android:fillColor="#7B1FA2"
+        android:pathData="M25,16h14v2h-14z M37,10h2v8h-2z" />
+
+    <path
+        android:fillColor="#673AB7"
+        android:pathData="M42,10h14v8h-14z" />
+    <path
+        android:fillColor="#B388FF"
+        android:pathData="M42,10h14v2h-14z M42,10h2v8h-2z" />
+    <path
+        android:fillColor="#512DA8"
+        android:pathData="M42,16h14v2h-14z M54,10h2v8h-2z" />
+
+    <!-- Paddle -->
+    <path
+        android:fillColor="#2196F3"
         android:pathData="M24,48h16v5h-16z" />
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#BBDEFB"
+        android:pathData="M24,48h16v1h-16z M24,48h1v5h-1z" />
+    <path
+        android:fillColor="#1976D2"
+        android:pathData="M24,52h16v1h-16z M39,48h1v5h-1z" />
+
+    <!-- Ball -->
+    <path
+        android:fillColor="#FFEB3B"
         android:pathData="M32,40a4,4 0 1,0 0.01,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.5"
+        android:pathData="M31,38a1.5,1.5 0 1,0 0.01,0z" />
 </vector>

@@ -33,6 +33,15 @@ class TicTacToeView @JvmOverloads constructor(
     
     private var turnStarter = 1 // 1 for Player, 2 for CPU
     private var isPlayerTurn = true
+    private var animationFrame = 0
+    private val animationHandler = Handler(Looper.getMainLooper())
+    private val animationRunnable = object : Runnable {
+        override fun run() {
+            animationFrame++
+            invalidate()
+            animationHandler.postDelayed(this, 50)
+        }
+    }
     private val handler = Handler(Looper.getMainLooper())
     private val cpuMoveRunnable = Runnable { cpuMove() }
 
@@ -40,6 +49,7 @@ class TicTacToeView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        animationHandler.post(animationRunnable)
     }
 
     override fun startGame() {
@@ -149,6 +159,7 @@ class TicTacToeView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         handler.removeCallbacks(cpuMoveRunnable)
+        animationHandler.removeCallbacks(animationRunnable)
     }
 
     private fun findBestMove(): Pair<Int, Int>? {
@@ -241,27 +252,33 @@ class TicTacToeView @JvmOverloads constructor(
         for (r in 0 until gridSize) for (c in 0 until gridSize) {
             val cx = left + c * cell + cell / 2
             val cy = top + r * cell + cell / 2
+            
+            val scale = if (board[r][c] != 0) {
+                1.0f + (Math.sin(animationFrame * 0.4).toFloat() * 0.02f)
+            } else 1.0f
+
             if (board[r][c] == 1) {
                 paint.color = Color.parseColor("#81C784")
                 paint.textAlign = Paint.Align.CENTER
-                paint.textSize = cell * 0.6f
-                canvas.drawText("X", cx, cy + cell * 0.2f, paint)
+                paint.textSize = cell * 0.6f * scale
+                canvas.drawText("X", cx, cy + (cell * 0.2f) * scale, paint)
             } else if (board[r][c] == 2) {
                 paint.color = Color.parseColor("#E57373")
                 paint.textAlign = Paint.Align.CENTER
-                paint.textSize = cell * 0.6f
-                canvas.drawText("O", cx, cy + cell * 0.2f, paint)
+                paint.textSize = cell * 0.6f * scale
+                canvas.drawText("O", cx, cy + (cell * 0.2f) * scale, paint)
             }
         }
 
         // Draw Cursor
         if (!gameOver && isPlayerTurn) {
+            val pulse = (Math.sin(animationFrame * 0.3).toFloat() * 3f)
             paint.style = Paint.Style.STROKE
-            paint.strokeWidth = 6f
+            paint.strokeWidth = 6f + pulse
             paint.color = Color.YELLOW
             val l = left + cursorC * cell
             val t = top + cursorR * cell
-            canvas.drawRect(l + 6, t + 6, l + cell - 6, t + cell - 6, paint)
+            canvas.drawRect(l + 10 - pulse/2, t + 10 - pulse/2, l + cell - 10 + pulse/2, t + cell - 10 + pulse/2, paint)
             paint.style = Paint.Style.FILL
         }
 

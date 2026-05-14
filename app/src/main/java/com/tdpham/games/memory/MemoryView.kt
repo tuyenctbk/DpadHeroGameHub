@@ -113,6 +113,7 @@ class MemoryView @JvmOverloads constructor(
 
         card.isFlipped = true
         SoundManager.playClick()
+        invalidate() // Added to ensure animation if needed
 
         if (selectedIdx1 == null) {
             selectedIdx1 = idx
@@ -209,40 +210,73 @@ class MemoryView @JvmOverloads constructor(
         val radius = 16f
 
         if (card.isMatched) {
-            // Draw matched state (optional, can be empty or subtle)
-            paint.color = Color.parseColor("#1B5E20")
-            paint.alpha = 50
+            // Very subtle placeholder for matched cards
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = 2f
+            paint.color = Color.DKGRAY
             canvas.drawRoundRect(rect, radius, radius, paint)
-            paint.alpha = 255
+            paint.style = Paint.Style.FILL
             return
         }
 
         if (isCursor) {
+            // Outer glow for cursor
+            paint.style = Paint.Style.FILL
+            paint.color = Color.argb(100, 255, 255, 0)
+            val cursorPulse = (Math.sin(System.currentTimeMillis() / 200.0).toFloat() * 4f)
+            canvas.drawRoundRect(RectF(rect).apply { inset(-8f - cursorPulse, -8f - cursorPulse) }, radius + 8, radius + 8, paint)
+            
             paint.color = Color.YELLOW
             paint.style = Paint.Style.STROKE
-            paint.strokeWidth = 8f
-            canvas.drawRoundRect(rect.apply { inset(-6f, -6f) }, radius + 6, radius + 6, paint)
-            rect.inset(6f, 6f)
+            paint.strokeWidth = 6f
+            canvas.drawRoundRect(rect, radius, radius, paint)
             paint.style = Paint.Style.FILL
+            invalidate() // Ensure continuous animation for cursor pulse
         }
 
         if (card.isFlipped) {
+            // Front of the card with subtle bevel
             paint.color = Color.WHITE
             canvas.drawRoundRect(rect, radius, radius, paint)
+            
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = 4f
+            paint.color = Color.LTGRAY
+            canvas.drawRoundRect(rect, radius, radius, paint)
+            paint.style = Paint.Style.FILL
+
             paint.textSize = size * 0.5f
             paint.textAlign = Paint.Align.CENTER
             val fontMetrics = paint.fontMetrics
             val baseline = rect.centerY() - (fontMetrics.ascent + fontMetrics.descent) / 2
+            
+            // Text shadow for depth
+            paint.color = Color.argb(40, 0, 0, 0)
+            canvas.drawText(card.symbol, rect.centerX() + 2, baseline + 2, paint)
+            
+            paint.color = Color.BLACK
             canvas.drawText(card.symbol, rect.centerX(), baseline, paint)
         } else {
+            // Back of the card with 3D look
             paint.color = Color.parseColor("#3F51B5")
             canvas.drawRoundRect(rect, radius, radius, paint)
+            
+            // Highlight (top-left)
+            paint.color = Color.argb(80, 255, 255, 255)
+            canvas.drawRect(rect.left + 5, rect.top + 5, rect.right - 5, rect.top + 10, paint)
+            canvas.drawRect(rect.left + 5, rect.top + 5, rect.left + 10, rect.bottom - 5, paint)
+            
+            // Shadow (bottom-right)
+            paint.color = Color.argb(80, 0, 0, 0)
+            canvas.drawRect(rect.left + 5, rect.bottom - 10, rect.right - 5, rect.bottom - 5, paint)
+            canvas.drawRect(rect.right - 10, rect.top + 5, rect.right - 5, rect.bottom - 5, paint)
             
             // Back pattern
             paint.color = Color.parseColor("#1A237E")
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = 3f
             canvas.drawCircle(rect.centerX(), rect.centerY(), size * 0.2f, paint)
+            canvas.drawCircle(rect.centerX(), rect.centerY(), size * 0.1f, paint)
             paint.style = Paint.Style.FILL
         }
     }

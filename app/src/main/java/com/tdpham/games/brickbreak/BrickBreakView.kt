@@ -46,6 +46,8 @@ class BrickBreakView @JvmOverloads constructor(
     private val ball = RectF()
     private val paddle = RectF()
     private val bricks = mutableListOf<RectF>()
+    private val ballTrail = mutableListOf<Pair<Float, Float>>()
+    private var frameCount = 0
 
     private var ballDx = 0f
     private var ballDy = 0f
@@ -206,6 +208,7 @@ class BrickBreakView @JvmOverloads constructor(
     }
 
     private fun update(dtSec: Float) {
+        frameCount++
         // Paddle: speed in fractions of screen width per second (smooth, frame-rate independent).
         var dir = 0f
         if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) dir -= 1f
@@ -225,7 +228,14 @@ class BrickBreakView @JvmOverloads constructor(
         if (!isBallLaunched) {
             val centerX = (paddle.left + paddle.right) / 2f
             ball.offsetTo(centerX - ballRadius, paddle.top - ballRadius * 2f)
+            ballTrail.clear()
             return
+        }
+
+        // Update ball trail
+        if (frameCount % 2 == 0) {
+            ballTrail.add(0, ball.centerX() to ball.centerY())
+            if (ballTrail.size > 8) ballTrail.removeAt(ballTrail.size - 1)
         }
 
         ball.offset(ballDx, ballDy)
@@ -343,7 +353,6 @@ class BrickBreakView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        
         // Always try to keep focus on the game view
         if (!isGameOver && !isWin && !isFocused) {
             requestFocus()
@@ -355,6 +364,16 @@ class BrickBreakView @JvmOverloads constructor(
         paint.color = Color.parseColor("#2C2C2C")
         canvas.drawRect(0f, height * 0.1f, width.toFloat(), height.toFloat(), paint)
 
+        // Draw Ball Trail
+        for (i in ballTrail.indices) {
+            val point = ballTrail[i]
+            paint.color = Color.parseColor("#FFEB3B")
+            paint.alpha = (255 * (1f - i.toFloat() / ballTrail.size)).toInt().coerceIn(0, 255)
+            val radius = ballRadius * (1f - 0.5f * i.toFloat() / ballTrail.size)
+            canvas.drawCircle(point.first, point.second, radius, paint)
+        }
+        paint.alpha = 255
+
         drawBricks(canvas)
 
         paint.color = Color.WHITE
@@ -362,6 +381,10 @@ class BrickBreakView @JvmOverloads constructor(
 
         paint.color = Color.parseColor("#FFEB3B")
         canvas.drawOval(ball, paint)
+
+        // Add a small shine to the ball
+        paint.color = Color.WHITE
+        canvas.drawCircle(ball.centerX() - ballRadius * 0.3f, ball.centerY() - ballRadius * 0.3f, ballRadius * 0.2f, paint)
 
         drawHud(canvas)
 
@@ -386,6 +409,21 @@ class BrickBreakView @JvmOverloads constructor(
                 else -> Color.parseColor("#FFA726")
             }
             canvas.drawRoundRect(brick, 8f, 8f, paint)
+
+            // Add a highlight and shadow to the brick
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = 2f
+            paint.color = Color.WHITE
+            paint.alpha = 100
+            canvas.drawLine(brick.left + 2, brick.top + 2, brick.right - 2, brick.top + 2, paint)
+            canvas.drawLine(brick.left + 2, brick.top + 2, brick.left + 2, brick.bottom - 2, paint)
+
+            paint.color = Color.BLACK
+            paint.alpha = 50
+            canvas.drawLine(brick.right - 2, brick.top + 2, brick.right - 2, brick.bottom - 2, paint)
+            canvas.drawLine(brick.left + 2, brick.bottom - 2, brick.right - 2, brick.bottom - 2, paint)
+            paint.style = Paint.Style.FILL
+            paint.alpha = 255
         }
     }
 

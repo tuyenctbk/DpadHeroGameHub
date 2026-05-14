@@ -166,25 +166,47 @@ class SudokuView @JvmOverloads constructor(
         for (r in 0 until 9) for (c in 0 until 9) {
             val x = left + c * cell
             val y = top + r * cell
+
+            // Background shading for 3x3 blocks
             paint.style = Paint.Style.FILL
             paint.color = if ((r / 3 + c / 3) % 2 == 0) Color.parseColor("#1E1E1E") else Color.parseColor("#252525")
             canvas.drawRect(x, y, x + cell, y + cell, paint)
-            val conflict = board[r][c] != 0 && hasConflict(r, c)
-            if (conflict) {
-                paint.color = Color.argb(120, 183, 28, 28)
+
+            // Highlight selected row and column (crosshair effect)
+            if (!solved && (r == cursorR || c == cursorC)) {
+                paint.color = Color.argb(40, 255, 255, 255) // Subtle white highlight
                 canvas.drawRect(x, y, x + cell, y + cell, paint)
             }
+
+            // Conflict warning
+            val conflict = board[r][c] != 0 && hasConflict(r, c)
+            if (conflict) {
+                paint.color = Color.argb(100, 183, 28, 28)
+                canvas.drawRect(x, y, x + cell, y + cell, paint)
+            }
+
+            // Selection cursor with subtle bevel
             if (r == cursorR && c == cursorC && !solved) {
+                // Bevel-like highlight
+                paint.color = Color.argb(60, 255, 255, 0)
+                canvas.drawRect(x, y, x + cell, y + cell, paint)
+
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 4f
                 paint.color = Color.YELLOW
                 canvas.drawRect(x + 2, y + 2, x + cell - 2, y + cell - 2, paint)
             }
+
             val v = board[r][c]
             if (v != 0) {
                 paint.style = Paint.Style.FILL
                 paint.textAlign = Paint.Align.CENTER
                 paint.textSize = cell * 0.55f
+                
+                // Add tiny shadow for depth
+                paint.color = Color.BLACK
+                canvas.drawText(v.toString(), x + cell / 2 + 2, y + cell * 0.68f + 2, paint)
+
                 paint.color = when {
                     conflict -> Color.parseColor("#FF8A80")
                     given[r][c] -> Color.WHITE

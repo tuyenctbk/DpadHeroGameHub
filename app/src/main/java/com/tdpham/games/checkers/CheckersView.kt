@@ -412,14 +412,30 @@ class CheckersView @JvmOverloads constructor(
                 PLAYER_MAN -> {
                     paint.color = Color.parseColor("#EF5350")
                     canvas.drawCircle(x + cell / 2, y + cell / 2, cell * 0.35f, paint)
+                    // Bevel
+                    paint.color = Color.WHITE
+                    paint.alpha = 60
+                    canvas.drawCircle(x + cell * 0.4f, y + cell * 0.4f, cell * 0.1f, paint)
+                    paint.alpha = 255
                 }
                 CPU_MAN -> {
                     paint.color = Color.parseColor("#EEEEEE")
                     canvas.drawCircle(x + cell / 2, y + cell / 2, cell * 0.35f, paint)
+                    // Bevel
+                    paint.color = Color.WHITE
+                    paint.alpha = 150
+                    canvas.drawCircle(x + cell * 0.4f, y + cell * 0.4f, cell * 0.1f, paint)
+                    paint.alpha = 255
                 }
                 PLAYER_KING -> {
                     paint.color = Color.parseColor("#EF5350")
                     canvas.drawCircle(x + cell / 2, y + cell / 2, cell * 0.35f, paint)
+                    // Bevel
+                    paint.color = Color.WHITE
+                    paint.alpha = 60
+                    canvas.drawCircle(x + cell * 0.4f, y + cell * 0.4f, cell * 0.1f, paint)
+                    paint.alpha = 255
+                    
                     paint.color = Color.parseColor("#FFD54F")
                     paint.textAlign = Paint.Align.CENTER
                     paint.textSize = cell * 0.45f
@@ -428,6 +444,12 @@ class CheckersView @JvmOverloads constructor(
                 CPU_KING -> {
                     paint.color = Color.parseColor("#EEEEEE")
                     canvas.drawCircle(x + cell / 2, y + cell / 2, cell * 0.35f, paint)
+                    // Bevel
+                    paint.color = Color.WHITE
+                    paint.alpha = 150
+                    canvas.drawCircle(x + cell * 0.4f, y + cell * 0.4f, cell * 0.1f, paint)
+                    paint.alpha = 255
+                    
                     paint.color = Color.parseColor("#424242")
                     paint.textAlign = Paint.Align.CENTER
                     paint.textSize = cell * 0.45f

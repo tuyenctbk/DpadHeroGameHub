@@ -212,8 +212,12 @@ class MazeQuizView @JvmOverloads constructor(
                 val x = left + c * cellSize
                 val y = top + r * cellSize
                 if (maze[r][c] == 1) {
+                    // Wall with bevel
                     paint.color = Color.DKGRAY
                     canvas.drawRect(x, y, x + cellSize, y + cellSize, paint)
+                    paint.color = Color.GRAY
+                    canvas.drawRect(x + 2, y + 2, x + cellSize - 2, y + 6, paint)
+                    canvas.drawRect(x + 2, y + 2, x + 6, y + cellSize - 2, paint)
                 } else {
                     paint.color = Color.BLACK
                     canvas.drawRect(x, y, x + cellSize, y + cellSize, paint)
@@ -221,26 +225,39 @@ class MazeQuizView @JvmOverloads constructor(
             }
         }
 
+        // Start point with pulse
+        val startPulse = (Math.sin(System.currentTimeMillis() / 200.0).toFloat() * cellSize * 0.05f)
         paint.color = Color.GREEN
-        canvas.drawCircle(left + startX * cellSize + cellSize / 2, top + startY * cellSize + cellSize / 2, cellSize * 0.3f, paint)
+        paint.setShadowLayer(15f, 0f, 0f, Color.GREEN)
+        canvas.drawCircle(left + startX * cellSize + cellSize / 2, top + startY * cellSize + cellSize / 2, cellSize * 0.3f + startPulse, paint)
+        paint.clearShadowLayer()
 
-        paint.textSize = 24f
+        paint.textSize = 28f
         paint.textAlign = Paint.Align.CENTER
         for (i in options.indices) {
             val opt = options[i]
             val x = left + opt * cellSize + cellSize / 2
-            val y = top - 20f
+            val y = top - 30f
             
-            paint.color = if (!isReviewing && i == selectedOptionIdx) Color.YELLOW else Color.WHITE
+            val isSelected = (!isReviewing && i == selectedOptionIdx)
+            
+            // Draw option marker
+            paint.color = if (isSelected) Color.YELLOW else Color.WHITE
+            if (isSelected) paint.setShadowLayer(10f, 0f, 0f, Color.YELLOW)
             canvas.drawText(('A' + i).toString(), x, y, paint)
+            paint.clearShadowLayer()
             
             if (isReviewing) {
                 if (opt == correctOption) {
                     paint.color = Color.GREEN
-                    canvas.drawCircle(x, y - 40f, 10f, paint)
+                    paint.setShadowLayer(10f, 0f, 0f, Color.GREEN)
+                    canvas.drawCircle(x, y - 40f, 12f, paint)
+                    paint.clearShadowLayer()
                 } else if (i == selectedOptionIdx && !isCorrect) {
                     paint.color = Color.RED
-                    canvas.drawCircle(x, y - 40f, 10f, paint)
+                    paint.setShadowLayer(10f, 0f, 0f, Color.RED)
+                    canvas.drawCircle(x, y - 40f, 12f, paint)
+                    paint.clearShadowLayer()
                 }
             }
         }
@@ -251,12 +268,23 @@ class MazeQuizView @JvmOverloads constructor(
         
         for (i in options.indices) {
             val x = startOptionsX + i * optionSpacing
-            paint.color = if (i == selectedOptionIdx) Color.YELLOW else Color.LTGRAY
-            paint.style = if (i == selectedOptionIdx) Paint.Style.FILL_AND_STROKE else Paint.Style.FILL
+            val isSelected = (i == selectedOptionIdx)
+            
+            // Outer glow for selected
+            if (isSelected) {
+                paint.color = Color.argb(100, 255, 255, 0)
+                canvas.drawCircle(x, optionsY, 50f, paint)
+            }
+            
+            paint.color = if (isSelected) Color.YELLOW else Color.LTGRAY
+            paint.style = Paint.Style.FILL
             canvas.drawCircle(x, optionsY, 40f, paint)
             
+            // Bevel for the button
+            paint.color = Color.argb(80, 255, 255, 255)
+            canvas.drawCircle(x - 10, optionsY - 10, 15f, paint)
+
             paint.color = Color.BLACK
-            paint.style = Paint.Style.FILL
             paint.textSize = 36f
             canvas.drawText(('A' + i).toString(), x, optionsY + 12f, paint)
         }

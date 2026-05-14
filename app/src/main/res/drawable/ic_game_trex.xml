@@ -4,12 +4,19 @@
     android:height="64dp"
     android:viewportWidth="64"
     android:viewportHeight="64">
-    <!-- Chrome Dino Silhouette (Simplified) -->
+    <!-- T-Rex Body -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#535353"
         android:pathData="M44,12 h12 v12 h-4 v4 h-8 v4 h-4 v4 h-16 v4 h4 v4 h-12 v-4 h-4 v-8 h12 v-4 h4 v-16 z" />
+    <!-- Highlights -->
+    <path
+        android:fillColor="#757575"
+        android:pathData="M44,12 h12 v2 h-12 z M24,32 h16 v2 h-16 z" />
     <!-- Eye -->
     <path
-        android:fillColor="#000000"
+        android:fillColor="#FFFFFF"
         android:pathData="M46,16 h4 v4 h-4 z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M48,17 h2 v2 h-2 z" />
 </vector>

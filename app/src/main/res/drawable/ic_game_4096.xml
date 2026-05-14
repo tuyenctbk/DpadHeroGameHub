@@ -6,11 +6,19 @@
     android:viewportHeight="64">
     <!-- Big Tile Background -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M4,4h56v56h-56z" />
+        android:fillColor="#BBADA0"
+        android:pathData="M4,8 A4,4 0 0 1 8,4 L56,4 A4,4 0 0 1 60,8 L60,56 A4,4 0 0 1 56,60 L8,60 A4,4 0 0 1 4,56 Z" />
     <!-- Mini Tiles inside for detail -->
     <path
-        android:fillColor="#FFFFFF"
-        android:fillAlpha="0.6"
-        android:pathData="M12,12h16v16h-16zM36,12h16v16h-16zM12,36h16v16h-16zM36,36h16v16h-16z" />
+        android:fillColor="#EEE4DA"
+        android:pathData="M10,10 A2,2 0 0 1 12,8 L28,8 A2,2 0 0 1 30,10 L30,26 A2,2 0 0 1 28,28 L12,28 A2,2 0 0 1 10,26 Z" />
+    <path
+        android:fillColor="#EDE0C8"
+        android:pathData="M34,10 A2,2 0 0 1 36,8 L52,8 A2,2 0 0 1 54,10 L54,26 A2,2 0 0 1 52,28 L36,28 A2,2 0 0 1 34,26 Z" />
+    <path
+        android:fillColor="#F2B179"
+        android:pathData="M10,34 A2,2 0 0 1 12,32 L28,32 A2,2 0 0 1 30,34 L30,50 A2,2 0 0 1 28,52 L12,52 A2,2 0 0 1 10,50 Z" />
+    <path
+        android:fillColor="#F59563"
+        android:pathData="M34,34 A2,2 0 0 1 36,32 L52,32 A2,2 0 0 1 54,34 L54,50 A2,2 0 0 1 52,52 L36,52 A2,2 0 0 1 34,50 Z" />
 </vector>

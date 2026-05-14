@@ -4,26 +4,48 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
+    <!-- Outer Shield/Console Shape - Shadow -->
+    <path
+        android:fillColor="#1A000000"
+        android:pathData="M55,13 C31.8,13 13,31.8 13,55 C13,78.2 31.8,97 55,97 C78.2,97 97,78.2 97,55 C97,31.8 78.2,13 55,13 Z" />
+
     <!-- Outer Shield/Console Shape -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#EEEEEE"
         android:pathData="M54,12 C30.8,12 12,30.8 12,54 C12,77.2 30.8,96 54,96 C77.2,96 96,77.2 96,54 C96,30.8 77.2,12 54,12 Z M54,88 C35.2,88 20,72.8 20,54 C20,35.2 35.2,20 54,20 C72.8,20 88,35.2 88,54 C88,72.8 72.8,88 54,88 Z" />
+
+    <!-- D-Pad Plus Shape - Shadow -->
+    <path
+        android:fillColor="#B79500"
+        android:pathData="M55,35 L47,35 L47,47 L35,47 L35,55 L47,55 L47,67 L55,67 L55,55 L67,55 L67,47 L55,47 Z" />
 
     <!-- D-Pad Plus Shape -->
     <path
         android:fillColor="#FFD600"
         android:pathData="M54,34 L46,34 L46,46 L34,46 L34,54 L46,54 L46,66 L54,66 L54,54 L66,54 L66,46 L54,46 Z" />
 
+    <!-- Red Button - Shadow -->
+    <path
+        android:fillColor="#C62828"
+        android:pathData="M72,43m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
     <!-- Red Button -->
     <path
         android:fillColor="#FF5252"
         android:pathData="M72,42m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
 
+    <!-- Green Button - Shadow -->
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M78,51m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
     <!-- Green Button -->
     <path
         android:fillColor="#4CAF50"
         android:pathData="M78,50m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
 
+    <!-- Blue Button - Shadow -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M72,59m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
     <!-- Blue Button -->
     <path
         android:fillColor="#2196F3"
@@ -31,6 +53,11 @@
 
     <!-- Arcade Joystick Handle / Base Line -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#CCCCCC"
         android:pathData="M38,74 L70,74 L70,78 L38,78 Z" />
+
+    <!-- Shine Effect -->
+    <path
+        android:fillColor="#33FFFFFF"
+        android:pathData="M54,20 C35.2,20 20,35.2 20,54 L54,54 Z" />
 </vector>

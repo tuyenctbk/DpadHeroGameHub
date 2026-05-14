@@ -188,17 +188,40 @@ class BattleTanksView @JvmOverloads constructor(
     }
 
     private fun drawTank(canvas: Canvas, tank: Tank, color: Int) {
-        paint.color = color
         val x = tank.x * cellW
         val y = tank.y * cellH
-        canvas.drawRect(x + 4, y + 4, x + cellW - 4, y + cellH - 4, paint)
-        // Barrel
+        val centerX = x + cellW / 2
+        val centerY = y + cellH / 2
+        val padding = 6f
+
+        // Tracks (left and right)
+        paint.color = Color.DKGRAY
+        canvas.drawRect(x + 2, y + 2, x + 12, y + cellH - 2, paint)
+        canvas.drawRect(x + cellW - 12, y + 2, x + cellW - 2, y + cellH - 2, paint)
+        
+        // Body with simple 3D bevel
+        paint.color = color
+        canvas.drawRoundRect(x + 10, y + 10, x + cellW - 10, y + cellH - 10, 4f, 4f, paint)
+        
+        // Highlight
+        paint.color = Color.argb(60, 255, 255, 255)
+        canvas.drawRect(x + 12, y + 12, x + cellW - 20, y + 18, paint)
+
+        // Turret (Center part)
+        paint.color = color
+        canvas.drawCircle(centerX, centerY, cellW * 0.2f, paint)
+        paint.color = Color.argb(40, 0, 0, 0)
+        canvas.drawCircle(centerX, centerY, cellW * 0.15f, paint)
+
+        // Barrel with glow/shading
         paint.color = Color.WHITE
+        val barrelW = 6f
+        val barrelL = cellH * 0.45f
         when (tank.dir) {
-            0 -> canvas.drawRect(x + cellW / 2 - 4, y, x + cellW / 2 + 4, y + cellH / 2, paint)
-            1 -> canvas.drawRect(x + cellW / 2, y + cellH / 2 - 4, x + cellW, y + cellH / 2 + 4, paint)
-            2 -> canvas.drawRect(x + cellW / 2 - 4, y + cellH / 2, x + cellW / 2 + 4, y + cellH, paint)
-            3 -> canvas.drawRect(x, y + cellH / 2 - 4, x + cellW / 2, y + cellH / 2 + 4, paint)
+            0 -> canvas.drawRect(centerX - barrelW, y, centerX + barrelW, centerY, paint)
+            1 -> canvas.drawRect(centerX, centerY - barrelW, x + cellW, centerY + barrelW, paint)
+            2 -> canvas.drawRect(centerX - barrelW, centerY, centerX + barrelW, y + cellH, paint)
+            3 -> canvas.drawRect(x, centerY - barrelW, centerX, centerY + barrelW, paint)
         }
     }
 
