@@ -6,10 +6,10 @@
     android:viewportHeight="24">
     <!-- Keyboard Base -->
     <path
-        android:fillColor="#424242"
+        android:fillColor="#757575"
         android:pathData="M2,2h20v20h-20z" />
     <path
-        android:fillColor="#616161"
+        android:fillColor="#9E9E9E"
         android:pathData="M2,2h20v1h-20z M2,2h1v20h-1z" />
     <!-- Keys -->
     <path

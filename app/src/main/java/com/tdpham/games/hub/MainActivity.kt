@@ -23,6 +23,8 @@ import com.tdpham.games.simon.SimonSaysActivity
 import com.tdpham.games.froggy.FroggyCrossActivity
 import com.tdpham.games.tanks.BattleTanksActivity
 import com.tdpham.games.wordquest.WordQuestActivity
+import com.tdpham.games.lines98.Lines98Activity
+import com.tdpham.games.solitaire.SolitaireActivity
 import com.tdpham.games.dungeon.DungeonEscapeActivity
 import com.tdpham.games.flappy.FlappyHeroActivity
 import com.tdpham.games.twentyfortyeight.TwentyFortyEightActivity
@@ -152,6 +154,16 @@ class MainActivity : AppCompatActivity() {
         val btnFlappy = findViewById<Button>(R.id.btn_flappy)
         setupGameButton(btnFlappy) {
             startActivity(Intent(this, FlappyHeroActivity::class.java))
+        }
+
+        val btnLines98 = findViewById<Button>(R.id.btn_lines98)
+        setupGameButton(btnLines98) {
+            startActivity(Intent(this, Lines98Activity::class.java))
+        }
+
+        val btnSolitaire = findViewById<Button>(R.id.btn_solitaire)
+        setupGameButton(btnSolitaire) {
+            startActivity(Intent(this, SolitaireActivity::class.java))
         }
 
         focusLastPlayed()

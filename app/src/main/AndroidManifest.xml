@@ -190,6 +190,20 @@
             tools:ignore="LockedOrientationActivity" />
 
         <activity
+            android:name="com.tdpham.games.lines98.Lines98Activity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.solitaire.SolitaireActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
             android:name="com.tdpham.games.hub.SettingsActivity"
             android:exported="false"
             android:screenOrientation="landscape"

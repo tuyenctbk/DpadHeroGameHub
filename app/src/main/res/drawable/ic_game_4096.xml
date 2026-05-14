@@ -6,7 +6,7 @@
     android:viewportHeight="64">
     <!-- Big Tile Background -->
     <path
-        android:fillColor="#BBADA0"
+        android:fillColor="#D7CCC8"
         android:pathData="M4,8 A4,4 0 0 1 8,4 L56,4 A4,4 0 0 1 60,8 L60,56 A4,4 0 0 1 56,60 L8,60 A4,4 0 0 1 4,56 Z" />
     <!-- Mini Tiles inside for detail -->
     <path

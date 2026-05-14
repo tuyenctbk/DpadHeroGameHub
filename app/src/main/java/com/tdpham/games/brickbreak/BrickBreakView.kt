@@ -46,7 +46,7 @@ class BrickBreakView @JvmOverloads constructor(
     private val ball = RectF()
     private val paddle = RectF()
     private val bricks = mutableListOf<RectF>()
-    private val ballTrail = mutableListOf<Pair<Float, Float>>()
+    private val brickFlashes = mutableMapOf<RectF, Long>()
     private var frameCount = 0
 
     private var ballDx = 0f
@@ -106,6 +106,7 @@ class BrickBreakView @JvmOverloads constructor(
         isPaused = true
         isBallLaunched = false
         highScore = ScoreManager.getHighScore(context, gameKey)
+        brickFlashes.clear()
         initializeBoard()
         invalidate()
         lastFrameTimeNanos = 0L
@@ -196,8 +197,8 @@ class BrickBreakView @JvmOverloads constructor(
     private fun launchBall() {
         if (!isBallLaunched) {
             isBallLaunched = true
-            ballDx = width * 0.008f
-            ballDy = -height * 0.01f
+            ballDx = width * 0.5f // Screen widths per second
+            ballDy = -height * 0.6f // Screen heights per second
             SoundManager.playClick()
         }
     }
@@ -228,32 +229,40 @@ class BrickBreakView @JvmOverloads constructor(
         if (!isBallLaunched) {
             val centerX = (paddle.left + paddle.right) / 2f
             ball.offsetTo(centerX - ballRadius, paddle.top - ballRadius * 2f)
-            ballTrail.clear()
             return
         }
 
-        // Update ball trail
-        if (frameCount % 2 == 0) {
-            ballTrail.add(0, ball.centerX() to ball.centerY())
-            if (ballTrail.size > 8) ballTrail.removeAt(ballTrail.size - 1)
-        }
+        // Move ball based on time
+        ball.offset(ballDx * dtSec, ballDy * dtSec)
 
-        ball.offset(ballDx, ballDy)
-
-        if (ball.left <= 0f || ball.right >= width) {
-            ballDx = -ballDx
+        if (ball.left <= 0f) {
+            ball.offset(-ball.left, 0f)
+            ballDx = kotlin.math.abs(ballDx)
+            SoundManager.playClick()
+        } else if (ball.right >= width) {
+            ball.offset(width - ball.right, 0f)
+            ballDx = -kotlin.math.abs(ballDx)
             SoundManager.playClick()
         }
 
         if (ball.top <= 0f) {
-            ballDy = -ballDy
+            ball.offset(0f, -ball.top)
+            ballDy = kotlin.math.abs(ballDy)
             SoundManager.playClick()
         }
 
         if (RectF.intersects(ball, paddle) && ballDy > 0f) {
             val impact = ((ball.centerX() - paddle.centerX()) / (paddle.width() / 2f)).coerceIn(-1f, 1f)
             ballDy = -kotlin.math.abs(ballDy)
-            ballDx = impact * width * 0.012f
+            
+            // Influence horizontal speed based on impact point
+            val maxHorizontalSpeed = width * 0.8f
+            ballDx = impact * maxHorizontalSpeed
+            
+            // Ensure a minimum vertical speed to avoid too shallow angles
+            val minVerticalSpeed = -height * 0.4f
+            if (ballDy > minVerticalSpeed) ballDy = minVerticalSpeed
+            
             SoundManager.playClick()
         }
 
@@ -266,8 +275,22 @@ class BrickBreakView @JvmOverloads constructor(
         }
 
         if (hitBrick != null) {
+            // Determine which side of the brick was hit
+            val overlapLeft = ball.right - hitBrick.left
+            val overlapRight = hitBrick.right - ball.left
+            val overlapTop = ball.bottom - hitBrick.top
+            val overlapBottom = hitBrick.bottom - ball.top
+
+            val minOverlap = minOf(overlapLeft, overlapRight, overlapTop, overlapBottom)
+
+            if (minOverlap == overlapLeft || minOverlap == overlapRight) {
+                ballDx = -ballDx
+            } else {
+                ballDy = -ballDy
+            }
+
             bricks.remove(hitBrick)
-            ballDy = -ballDy
+            brickFlashes[hitBrick] = System.currentTimeMillis()
             score += 10
             SoundManager.playScore()
             if (bricks.isEmpty()) {
@@ -364,17 +387,27 @@ class BrickBreakView @JvmOverloads constructor(
         paint.color = Color.parseColor("#2C2C2C")
         canvas.drawRect(0f, height * 0.1f, width.toFloat(), height.toFloat(), paint)
 
-        // Draw Ball Trail
-        for (i in ballTrail.indices) {
-            val point = ballTrail[i]
-            paint.color = Color.parseColor("#FFEB3B")
-            paint.alpha = (255 * (1f - i.toFloat() / ballTrail.size)).toInt().coerceIn(0, 255)
-            val radius = ballRadius * (1f - 0.5f * i.toFloat() / ballTrail.size)
-            canvas.drawCircle(point.first, point.second, radius, paint)
+        // Draw Ball
+        drawBricks(canvas)
+
+        // Draw brick flashes
+        val currentTime = System.currentTimeMillis()
+        val iterator = brickFlashes.entries.iterator()
+        while (iterator.hasNext()) {
+            val entry = iterator.next()
+            val brick = entry.key
+            val startTime = entry.value
+            val elapsed = currentTime - startTime
+            if (elapsed > 200) {
+                iterator.remove()
+            } else {
+                val alpha = (255 * (1f - elapsed / 200f)).toInt()
+                paint.color = Color.WHITE
+                paint.alpha = alpha
+                canvas.drawRoundRect(brick, 8f, 8f, paint)
+            }
         }
         paint.alpha = 255
-
-        drawBricks(canvas)
 
         paint.color = Color.WHITE
         canvas.drawRoundRect(paddle, 12f, 12f, paint)

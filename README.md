@@ -27,6 +27,8 @@ The hub features several classic game implementations:
 *   **Word Quest**: Find hidden words in a grid of letters.
 *   **Dungeon Escape**: Explore dungeons and find your way out.
 *   **Flappy Hero**: Navigate through obstacles by flapping your wings.
+*   **Lines 98**: Align 5 or more balls of the same color to score.
+*   **Solitaire**: Classic card game of strategy and patience.
 
 ## ⌨️ Controls
 

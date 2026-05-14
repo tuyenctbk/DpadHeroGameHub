@@ -6,11 +6,11 @@
     android:viewportHeight="64">
     <!-- T-Rex Body -->
     <path
-        android:fillColor="#535353"
+        android:fillColor="#757575"
         android:pathData="M44,12 h12 v12 h-4 v4 h-8 v4 h-4 v4 h-16 v4 h4 v4 h-12 v-4 h-4 v-8 h12 v-4 h4 v-16 z" />
     <!-- Highlights -->
     <path
-        android:fillColor="#757575"
+        android:fillColor="#9E9E9E"
         android:pathData="M44,12 h12 v2 h-12 z M24,32 h16 v2 h-16 z" />
     <!-- Eye -->
     <path

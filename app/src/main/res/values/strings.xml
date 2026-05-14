@@ -22,6 +22,8 @@
     <string name="game_word_quest">WORD QUEST</string>
     <string name="game_dungeon">DUNGEON ESCAPE</string>
     <string name="game_flappy">FLAPPY HERO</string>
+    <string name="game_lines98">LINES 98</string>
+    <string name="game_solitaire">SOLITAIRE</string>
     <string name="select_game_hint">DpadHero: Select a game with D-Pad</string>
     <string name="settings">Settings</string>
     <string name="settings_button_description">Settings</string>

@@ -1,0 +1,376 @@
+package com.tdpham.games.lines98
+
+import android.content.Context
+import android.graphics.*
+import android.util.AttributeSet
+import android.view.KeyEvent
+import android.view.View
+import com.tdpham.games.common.GameView
+import com.tdpham.games.common.ScoreManager
+import com.tdpham.games.common.SoundManager
+import java.util.*
+
+class Lines98View @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr), GameView {
+
+    override var gameKey: String = "lines98"
+    private val gridSize = 9
+    private var board = Array(gridSize) { IntArray(gridSize) { 0 } }
+    private var selectedX = -1
+    private var selectedY = -1
+    private var cursorX = 4
+    private var cursorY = 4
+
+    private var pulseFactor = 1.0f
+    private var pulseDirection = 1
+    
+    private var score = 0
+    private var isGameOver = false
+    private var isPaused = false
+    
+    private val ballColors = intArrayOf(
+        Color.parseColor("#F44336"), // Red
+        Color.parseColor("#2196F3"), // Blue
+        Color.parseColor("#4CAF50"), // Green
+        Color.parseColor("#FFEB3B"), // Yellow
+        Color.parseColor("#9C27B0"), // Purple
+        Color.parseColor("#FF9800"), // Orange
+        Color.parseColor("#00BCD4")  // Cyan
+    )
+
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val random = Random()
+    private var nextBalls = mutableListOf<Int>()
+
+    init {
+        isFocusable = true
+        isFocusableInTouchMode = true
+        resetGame()
+    }
+
+    override fun startGame() {
+        isPaused = false
+        invalidate()
+    }
+
+    override fun pause() {
+        isPaused = true
+        invalidate()
+    }
+
+    override fun resume() {
+        isPaused = false
+        invalidate()
+    }
+
+    override fun resetGame() {
+        board = Array(gridSize) { IntArray(gridSize) { 0 } }
+        score = 0
+        isGameOver = false
+        selectedX = -1
+        selectedY = -1
+        generateNextBalls()
+        spawnBalls()
+        generateNextBalls()
+        invalidate()
+    }
+
+    override fun toggleSound(): Boolean {
+        return SoundManager.toggleSound()
+    }
+
+    private fun generateNextBalls() {
+        nextBalls.clear()
+        for (i in 0 until 3) {
+            nextBalls.add(random.nextInt(ballColors.size) + 1)
+        }
+    }
+
+    private fun spawnBalls() {
+        val emptyCells = mutableListOf<Pair<Int, Int>>()
+        for (r in 0 until gridSize) {
+            for (c in 0 until gridSize) {
+                if (board[r][c] == 0) emptyCells.add(r to c)
+            }
+        }
+
+        if (emptyCells.isEmpty()) {
+            isGameOver = true
+            return
+        }
+
+        val ballsToSpawn = Math.min(emptyCells.size, nextBalls.size)
+        repeat(ballsToSpawn) {
+            val idx = random.nextInt(emptyCells.size)
+            val (r, c) = emptyCells.removeAt(idx)
+            board[r][c] = nextBalls.removeAt(0)
+            checkLines(r, c) // Check if spawning naturally forms a line
+        }
+
+        if (emptyCells.isEmpty() && nextBalls.isNotEmpty()) {
+            isGameOver = true
+        }
+    }
+
+    private fun checkLines(r: Int, c: Int): Boolean {
+        val color = board[r][c]
+        if (color == 0) return false
+
+        val directions = arrayOf(
+            1 to 0,  // Vertical
+            0 to 1,  // Horizontal
+            1 to 1,  // Diagonal \
+            1 to -1  // Diagonal /
+        )
+
+        val toRemove = mutableSetOf<Pair<Int, Int>>()
+
+        for ((dr, dc) in directions) {
+            val line = mutableSetOf<Pair<Int, Int>>()
+            line.add(r to c)
+            
+            // Check in positive direction
+            var nr = r + dr
+            var nc = c + dc
+            while (nr in 0 until gridSize && nc in 0 until gridSize && board[nr][nc] == color) {
+                line.add(nr to nc)
+                nr += dr
+                nc += dc
+            }
+            
+            // Check in negative direction
+            nr = r - dr
+            nc = c - dc
+            while (nr in 0 until gridSize && nc in 0 until gridSize && board[nr][nc] == color) {
+                line.add(nr to nc)
+                nr -= dr
+                nc -= dc
+            }
+
+            if (line.size >= 5) {
+                toRemove.addAll(line)
+            }
+        }
+
+        if (toRemove.isNotEmpty()) {
+            for ((rr, cc) in toRemove) {
+                board[rr][cc] = 0
+            }
+            score += toRemove.size * 2
+            ScoreManager.updateHighScore(context, gameKey, score)
+            SoundManager.playScore()
+            return true
+        }
+        return false
+    }
+
+    private fun canMove(fromX: Int, fromY: Int, toX: Int, toY: Int): Boolean {
+        if (board[toY][toX] != 0) return false
+        
+        val queue: Queue<Pair<Int, Int>> = LinkedList()
+        val visited = Array(gridSize) { BooleanArray(gridSize) }
+        
+        queue.add(fromY to fromX)
+        visited[fromY][fromX] = true
+        
+        val dr = intArrayOf(0, 0, 1, -1)
+        val dc = intArrayOf(1, -1, 0, 0)
+        
+        while (queue.isNotEmpty()) {
+            val (r, c) = queue.poll()
+            if (r == toY && c == toX) return true
+            
+            for (i in 0 until 4) {
+                val nr = r + dr[i]
+                val nc = c + dc[i]
+                if (nr in 0 until gridSize && nc in 0 until gridSize && !visited[nr][nc] && board[nr][nc] == 0) {
+                    visited[nr][nc] = true
+                    queue.add(nr to nc)
+                }
+            }
+        }
+        return false
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (isGameOver) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+                resetGame()
+                return true
+            }
+            return super.onKeyDown(keyCode, event)
+        }
+
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_UP -> cursorY = (cursorY - 1 + gridSize) % gridSize
+            KeyEvent.KEYCODE_DPAD_DOWN -> cursorY = (cursorY + 1) % gridSize
+            KeyEvent.KEYCODE_DPAD_LEFT -> cursorX = (cursorX - 1 + gridSize) % gridSize
+            KeyEvent.KEYCODE_DPAD_RIGHT -> cursorX = (cursorX + 1) % gridSize
+            KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DPAD_CENTER -> {
+                handleSelection()
+            }
+            else -> return super.onKeyDown(keyCode, event)
+        }
+        invalidate()
+        return true
+    }
+
+    private fun handleSelection() {
+        if (selectedX == -1) {
+            if (board[cursorY][cursorX] != 0) {
+                selectedX = cursorX
+                selectedY = cursorY
+                SoundManager.playClick()
+            }
+        } else {
+            if (selectedX == cursorX && selectedY == cursorY) {
+                selectedX = -1
+                selectedY = -1
+            } else if (board[cursorY][cursorX] != 0) {
+                selectedX = cursorX
+                selectedY = cursorY
+                SoundManager.playClick()
+            } else {
+                if (canMove(selectedX, selectedY, cursorX, cursorY)) {
+                    board[cursorY][cursorX] = board[selectedY][selectedX]
+                    board[selectedY][selectedX] = 0
+                    if (!checkLines(cursorY, cursorX)) {
+                        spawnBalls()
+                        generateNextBalls()
+                    }
+                    selectedX = -1
+                    selectedY = -1
+                } else {
+                    SoundManager.playError()
+                }
+            }
+        }
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        
+        // Update pulse animation
+        if (selectedX != -1 || !isGameOver) {
+            pulseFactor += 0.02f * pulseDirection
+            if (pulseFactor > 1.1f) {
+                pulseFactor = 1.1f
+                pulseDirection = -1
+            } else if (pulseFactor < 0.9f) {
+                pulseFactor = 0.9f
+                pulseDirection = 1
+            }
+            invalidate()
+        }
+
+        val cellSize = Math.min(width, height) / (gridSize + 1f)
+        val offsetX = (width - cellSize * gridSize) / 2f
+        val offsetY = (height - cellSize * gridSize) / 2f
+
+        // Draw Grid
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = 2f
+        paint.color = Color.DKGRAY
+        for (i in 0..gridSize) {
+            canvas.drawLine(offsetX, offsetY + i * cellSize, offsetX + gridSize * cellSize, offsetY + i * cellSize, paint)
+            canvas.drawLine(offsetX + i * cellSize, offsetY, offsetX + i * cellSize, offsetY + gridSize * cellSize, paint)
+        }
+
+        // Draw Balls
+        paint.style = Paint.Style.FILL
+        for (r in 0 until gridSize) {
+            for (c in 0 until gridSize) {
+                val ballColorIdx = board[r][c]
+                if (ballColorIdx > 0) {
+                    val cx = offsetX + c * cellSize + cellSize / 2
+                    val cy = offsetY + r * cellSize + cellSize / 2
+                    
+                    // Shadow
+                    paint.color = Color.BLACK
+                    paint.alpha = 50
+                    canvas.drawCircle(cx + 4, cy + 4, cellSize * 0.4f, paint)
+                    paint.alpha = 255
+
+                    // Ball
+                    paint.color = ballColors[ballColorIdx - 1]
+                    val drawRadius = if (c == selectedX && r == selectedY) cellSize * 0.4f * pulseFactor else cellSize * 0.4f
+                    canvas.drawCircle(cx, cy, drawRadius, paint)
+
+                    // Highlight (3D effect)
+                    val gradient = RadialGradient(
+                        cx - cellSize * 0.15f, cy - cellSize * 0.15f, cellSize * 0.3f,
+                        Color.WHITE, Color.TRANSPARENT, Shader.TileMode.CLAMP
+                    )
+                    paint.shader = gradient
+                    paint.alpha = 150
+                    canvas.drawCircle(cx, cy, drawRadius, paint)
+                    paint.shader = null
+                    paint.alpha = 255
+
+                    if (c == selectedX && r == selectedY) {
+                        paint.style = Paint.Style.STROKE
+                        paint.strokeWidth = 4f
+                        paint.color = Color.WHITE
+                        canvas.drawCircle(cx, cy, drawRadius + 4f, paint)
+                        paint.style = Paint.Style.FILL
+                    }
+                }
+            }
+        }
+
+        // Draw Cursor
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = 6f * pulseFactor
+        paint.color = Color.parseColor("#FF4081") // Pinkish
+        val pad = 4f * (1f - pulseFactor)
+        canvas.drawRect(
+            offsetX + cursorX * cellSize + pad,
+            offsetY + cursorY * cellSize + pad,
+            offsetX + (cursorX + 1) * cellSize - pad,
+            offsetY + (cursorY + 1) * cellSize - pad,
+            paint
+        )
+
+        // Draw Info
+        paint.style = Paint.Style.FILL
+        paint.color = Color.WHITE
+        paint.textSize = 40f
+        canvas.drawText("Score: $score", 50f, 80f, paint)
+        canvas.drawText("High Score: ${ScoreManager.getHighScore(context, gameKey)}", 50f, 130f, paint)
+
+        // Next Balls
+        canvas.drawText("Next:", width - 300f, 80f, paint)
+        for (i in nextBalls.indices) {
+            paint.color = ballColors[nextBalls[i] - 1]
+            canvas.drawCircle(width - 150f + i * 60f, 70f, 20f, paint)
+        }
+
+        if (isGameOver) {
+            drawOverlay(canvas, "GAME OVER", "Final Score: $score\nPress CENTER to Restart")
+        } else if (isPaused) {
+            drawOverlay(canvas, "PAUSED", "Press BACK to Resume")
+        }
+    }
+
+    private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {
+        paint.color = Color.parseColor("#AA000000")
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+
+        paint.color = Color.WHITE
+        paint.textAlign = Paint.Align.CENTER
+        paint.textSize = 80f
+        paint.isFakeBoldText = true
+        canvas.drawText(title, width / 2f, height / 2f - 40, paint)
+
+        paint.textSize = 40f
+        paint.isFakeBoldText = false
+        val lines = subtitle.split("\n")
+        var yOffset = height / 2f + 40
+        for (line in lines) {
+            canvas.drawText(line, width / 2f, yOffset, paint)
+            yOffset += 50
+        }
+        paint.textAlign = Paint.Align.LEFT
+    }
+}

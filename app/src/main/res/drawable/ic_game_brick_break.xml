@@ -6,33 +6,33 @@
     android:viewportHeight="64">
     <!-- Bricks -->
     <path
-        android:fillColor="#E91E63"
+        android:fillColor="#F06292"
         android:pathData="M8,10h14v8h-14z" />
     <path
-        android:fillColor="#FF80AB"
+        android:fillColor="#F8BBD0"
         android:pathData="M8,10h14v2h-14z M8,10h2v8h-2z" />
     <path
-        android:fillColor="#C2185B"
+        android:fillColor="#E91E63"
         android:pathData="M8,16h14v2h-14z M20,10h2v8h-2z" />
 
     <path
-        android:fillColor="#9C27B0"
+        android:fillColor="#BA68C8"
         android:pathData="M25,10h14v8h-14z" />
     <path
-        android:fillColor="#EA80FC"
+        android:fillColor="#E1BEE7"
         android:pathData="M25,10h14v2h-14z M25,10h2v8h-2z" />
     <path
-        android:fillColor="#7B1FA2"
+        android:fillColor="#9C27B0"
         android:pathData="M25,16h14v2h-14z M37,10h2v8h-2z" />
 
     <path
-        android:fillColor="#673AB7"
+        android:fillColor="#9575CD"
         android:pathData="M42,10h14v8h-14z" />
     <path
-        android:fillColor="#B388FF"
+        android:fillColor="#D1C4E9"
         android:pathData="M42,10h14v2h-14z M42,10h2v8h-2z" />
     <path
-        android:fillColor="#512DA8"
+        android:fillColor="#673AB7"
         android:pathData="M42,16h14v2h-14z M54,10h2v8h-2z" />
 
     <!-- Paddle -->

@@ -1,4 +1,5 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
@@ -11,18 +12,44 @@
 
     <!-- Outer Shield/Console Shape -->
     <path
-        android:fillColor="#EEEEEE"
-        android:pathData="M54,12 C30.8,12 12,30.8 12,54 C12,77.2 30.8,96 54,96 C77.2,96 96,77.2 96,54 C96,30.8 77.2,12 54,12 Z M54,88 C35.2,88 20,72.8 20,54 C20,35.2 35.2,20 54,20 C72.8,20 88,35.2 88,54 C88,72.8 72.8,88 54,88 Z" />
+        android:pathData="M54,12 C30.8,12 12,30.8 12,54 C12,77.2 30.8,96 54,96 C77.2,96 96,77.2 96,54 C96,30.8 77.2,12 54,12 Z M54,88 C35.2,88 20,72.8 20,54 C20,35.2 35.2,20 54,20 C72.8,20 88,35.2 88,54 C88,72.8 72.8,88 54,88 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:centerX="54"
+                android:centerY="12"
+                android:endY="96"
+                android:startY="12"
+                android:type="linear">
+                <item android:color="#FFFFFF" android:offset="0" />
+                <item android:color="#E0E0E0" android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Console Inner Ring Detail -->
+    <path
+        android:strokeColor="#DDDDDD"
+        android:strokeWidth="0.5"
+        android:pathData="M54,22 C36.3,22 22,36.3 22,54 C22,71.7 36.3,86 54,86 C71.7,86 86,71.7 86,54 C86,36.3 71.7,22 54,22 Z" />
 
     <!-- D-Pad Plus Shape - Shadow -->
     <path
         android:fillColor="#B79500"
         android:pathData="M55,35 L47,35 L47,47 L35,47 L35,55 L47,55 L47,67 L55,67 L55,55 L67,55 L67,47 L55,47 Z" />
 
-    <!-- D-Pad Plus Shape -->
     <path
-        android:fillColor="#FFD600"
-        android:pathData="M54,34 L46,34 L46,46 L34,46 L34,54 L46,54 L46,66 L54,66 L54,54 L66,54 L66,46 L54,46 Z" />
+        android:pathData="M54,34 L46,34 L46,46 L34,46 L34,54 L46,54 L46,66 L54,66 L54,54 L66,54 L66,46 L54,46 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:centerX="54"
+                android:centerY="50"
+                android:gradientRadius="20"
+                android:type="radial">
+                <item android:color="#FFE600" android:offset="0" />
+                <item android:color="#FFD600" android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
 
     <!-- Red Button - Shadow -->
     <path
@@ -58,6 +85,9 @@
 
     <!-- Shine Effect -->
     <path
-        android:fillColor="#33FFFFFF"
+        android:fillColor="#1AFFFFFF"
         android:pathData="M54,20 C35.2,20 20,35.2 20,54 L54,54 Z" />
+    <path
+        android:fillColor="#0DFFFFFF"
+        android:pathData="M54,20 L88,54 L54,54 Z" />
 </vector>

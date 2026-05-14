@@ -6,10 +6,10 @@
     android:viewportHeight="24">
     <!-- Shield / Gate -->
     <path
-        android:fillColor="#455A64"
+        android:fillColor="#546E7A"
         android:pathData="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1" />
     <path
-        android:fillColor="#607D8B"
+        android:fillColor="#78909C"
         android:pathData="M12,2.5L4.5,5.8V11C4.5,15.8 7.8,20.3 12,21.5C16.2,20.3 19.5,15.8 19.5,11V5.8L12,2.5" />
     <!-- Character / Torch -->
     <path
