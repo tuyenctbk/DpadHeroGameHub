@@ -19,7 +19,7 @@ The hub features several classic game implementations:
 *   **Star Fighter**: Shoot down enemy spaceships in a retro space shooter.
 *   **Memory**: Test your memory by matching pairs of cards.
 *   **Slide Puzzle**: Reorder tiles to complete the image.
-*   **Maze Quiz**: Navigate through a maze and answer questions.
+*   **Maze**: Navigate through a maze and reach the correct destination.
 *   **Mental Math**: Solve math problems quickly to test your mental agility.
 *   **Simon Says**: Repeat sequences of lights and sounds.
 *   **Froggy Cross**: Help the frog cross the road and river safely.

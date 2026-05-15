@@ -31,14 +31,13 @@ class TetrisView @JvmOverloads constructor(
     private var best = 0
     private var paused = true
     private var gameOver = false
-    private var isHardDroppingDown = false
     private var flashFrames = 0
     private val handler = Handler(Looper.getMainLooper())
 
     private val tick = object : Runnable {
         override fun run() {
             if (!paused && !gameOver) {
-                if (!tryMove(current.r + 1, current.c, current.rot, playSound = false)) {
+                if (!tryMove(current.r + 1, current.c, current.rot)) {
                     lockPiece()
                 }
                 if (flashFrames > 0) flashFrames--
@@ -57,6 +56,7 @@ class TetrisView @JvmOverloads constructor(
 
     override fun startGame() {
         paused = false
+        handler.removeCallbacks(tick)
         handler.post(tick)
     }
 
@@ -119,6 +119,7 @@ class TetrisView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_UP -> rotate()
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> hardDrop()
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
+            else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
@@ -127,12 +128,16 @@ class TetrisView @JvmOverloads constructor(
     private fun rotate() {
         val nextRot = (current.rot + 1) % 4
         if (tryMove(current.r, current.c, nextRot, playSound = true)) {
-            // Success
+            // Rotated successfully
+        } else {
+            // Simple wall kick attempt
+            if (tryMove(current.r, current.c - 1, nextRot, playSound = true)) return
+            if (tryMove(current.r, current.c + 1, nextRot, playSound = true)) return
         }
     }
 
     private fun fastMoveDown() {
-        if (tryMove(current.r + 1, current.c, current.rot, playSound = false)) {
+        if (tryMove(current.r + 1, current.c, current.rot)) {
             score += 1
         } else {
             lockPiece()
@@ -140,14 +145,12 @@ class TetrisView @JvmOverloads constructor(
     }
 
     private fun hardDrop() {
-        isHardDroppingDown = true
         var dropLines = 0
-        while (tryMove(current.r + 1, current.c, current.rot, playSound = false)) {
+        while (tryMove(current.r + 1, current.c, current.rot)) {
             dropLines++
         }
         score += dropLines * 2
         lockPiece()
-        isHardDroppingDown = false
         SoundManager.playClick()
     }
 
@@ -188,7 +191,8 @@ class TetrisView @JvmOverloads constructor(
 
     private fun clearLines() {
         var linesCleared = 0
-        for (r in rows - 1 downTo 0) {
+        var r = rows - 1
+        while (r >= 0) {
             var full = true
             for (c in 0 until cols) {
                 if (board[r][c] == 0) {
@@ -202,59 +206,89 @@ class TetrisView @JvmOverloads constructor(
                     for (cc in 0 until cols) board[rr][cc] = board[rr - 1][cc]
                 }
                 for (cc in 0 until cols) board[0][cc] = 0
-                // Re-check same row
-                clearLines()
-                return
+                // Stay on same row index to check the newly dropped line
+            } else {
+                r--
             }
         }
         if (linesCleared > 0) {
-            flashFrames = 3
+            flashFrames = 2
             score += when (linesCleared) {
                 1 -> 100
                 2 -> 300
                 3 -> 500
                 4 -> 800
-                else -> 0
+                else -> 1000
             }
             SoundManager.playScore()
         }
     }
 
     private fun spawnPieceData(): Piece {
-        return Piece(0, cols / 2 - 1, 0, Random.nextInt(7))
+        val shape = Random.nextInt(7)
+        // Adjust start row if some cells are negative (none are in rot 0 with new def)
+        return Piece(0, cols / 2, 0, shape)
     }
 
     private fun shapeCells(shape: Int, rot: Int): List<Pair<Int, Int>> {
-        val s = when (shape) {
-            0 -> listOf(0 to 0, 0 to 1, 0 to 2, 0 to 3) // I
-            1 -> listOf(0 to 0, 0 to 1, 0 to 2, 1 to 2) // J
-            2 -> listOf(0 to 0, 0 to 1, 0 to 2, 1 to 0) // L
+        return when (shape) {
+            0 -> // I
+                when (rot % 2) {
+                    0 -> listOf(0 to -1, 0 to 0, 0 to 1, 0 to 2)
+                    else -> listOf(-1 to 0, 0 to 0, 1 to 0, 2 to 0)
+                }
+            1 -> // J
+                when (rot) {
+                    0 -> listOf(0 to -1, 0 to 0, 0 to 1, 1 to 1)
+                    1 -> listOf(-1 to 0, 0 to 0, 1 to 0, 1 to -1)
+                    2 -> listOf(0 to 1, 0 to 0, 0 to -1, -1 to -1)
+                    else -> listOf(1 to 0, 0 to 0, -1 to 0, -1 to 1)
+                }
+            2 -> // L
+                when (rot) {
+                    0 -> listOf(0 to -1, 0 to 0, 0 to 1, 1 to -1)
+                    1 -> listOf(-1 to 0, 0 to 0, 1 to 0, -1 to -1)
+                    2 -> listOf(0 to 1, 0 to 0, 0 to -1, -1 to 1)
+                    else -> listOf(1 to 0, 0 to 0, -1 to 0, 1 to 1)
+                }
             3 -> listOf(0 to 0, 0 to 1, 1 to 0, 1 to 1) // O
-            4 -> listOf(0 to 1, 0 to 2, 1 to 0, 1 to 1) // S
-            5 -> listOf(0 to 0, 0 to 1, 1 to 1, 1 to 2) // Z
-            6 -> listOf(0 to 0, 0 to 1, 0 to 2, 1 to 1) // T
+            4 -> // S
+                when (rot % 2) {
+                    0 -> listOf(0 to 0, 0 to 1, 1 to -1, 1 to 0)
+                    else -> listOf(-1 to 0, 0 to 0, 0 to 1, 1 to 1)
+                }
+            5 -> // Z
+                when (rot % 2) {
+                    0 -> listOf(0 to -1, 0 to 0, 1 to 0, 1 to 1)
+                    else -> listOf(-1 to 1, 0 to 1, 0 to 0, 1 to 0)
+                }
+            6 -> // T
+                when (rot) {
+                    0 -> listOf(0 to -1, 0 to 0, 0 to 1, 1 to 0)
+                    1 -> listOf(-1 to 0, 0 to 0, 1 to 0, 0 to -1)
+                    2 -> listOf(0 to 1, 0 to 0, 0 to -1, -1 to 0)
+                    else -> listOf(1 to 0, 0 to 0, -1 to 0, 0 to 1)
+                }
             else -> emptyList()
-        }
-        return when (rot) {
-            0 -> s
-            1 -> s.map { it.second to -it.first }
-            2 -> s.map { -it.first to -it.second }
-            3 -> s.map { -it.second to it.first }
-            else -> s
         }
     }
 
     override fun onDraw(canvas: Canvas) {
-        val size = (height / rows).coerceAtMost(width / (cols + 6)).toFloat()
+        val size = (height / (rows + 2)).coerceAtMost(width / (cols + 8)).toFloat()
         val offsetX = (width - cols * size) / 2f
         val offsetY = (height - rows * size) / 2f
 
-        // Draw board background
+        // Draw background
+        paint.color = GamePalette.BACKGROUND
+        paint.style = Paint.Style.FILL
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+
+        // Draw board area
         paint.color = Color.DKGRAY
         canvas.drawRect(offsetX, offsetY, offsetX + cols * size, offsetY + rows * size, paint)
 
         // Draw Grid lines
-        paint.color = Color.parseColor("#33FFFFFF")
+        paint.color = GamePalette.GRID_LINE
         paint.strokeWidth = 1f
         for (i in 0..cols) canvas.drawLine(offsetX + i * size, offsetY, offsetX + i * size, offsetY + rows * size, paint)
         for (i in 0..rows) canvas.drawLine(offsetX, offsetY + i * size, offsetX + cols * size, offsetY + i * size, paint)
@@ -293,16 +327,17 @@ class TetrisView @JvmOverloads constructor(
         }
 
         // HUD
-        paint.color = Color.WHITE
+        paint.color = GamePalette.TEXT_PRIMARY
         paint.textSize = size * 0.8f
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("SCORE: $score", offsetX + cols * size + 20, offsetY + size, paint)
-        canvas.drawText("BEST: $best", offsetX + cols * size + 20, offsetY + size * 2.5f, paint)
-        canvas.drawText("NEXT:", offsetX + cols * size + 20, offsetY + size * 4.5f, paint)
+        canvas.drawText("SCORE: $score", offsetX + cols * size + 40, offsetY + size, paint)
+        paint.color = GamePalette.TEXT_SECONDARY
+        canvas.drawText("BEST: $best", offsetX + cols * size + 40, offsetY + size * 2.5f, paint)
+        canvas.drawText("NEXT:", offsetX + cols * size + 40, offsetY + size * 4.5f, paint)
 
         // Draw next piece
         for (cell in shapeCells(next.shape, next.rot)) {
-            drawBlock(canvas, offsetX + (cols + 2 + cell.second) * size, offsetY + (6 + cell.first) * size, size, colorFor(next.shape + 1))
+            drawBlock(canvas, offsetX + (cols + 3 + cell.second) * size, offsetY + (6 + cell.first) * size, size, colorFor(next.shape + 1))
         }
 
         if (gameOver) drawOverlay(canvas, "GAME OVER", "Score: $score\nPress Center to Restart")
@@ -310,13 +345,14 @@ class TetrisView @JvmOverloads constructor(
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {
-        paint.color = Color.argb(180, 0, 0, 0)
+        paint.color = GamePalette.OVERLAY
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
         paint.color = Color.WHITE
         paint.textSize = 60f
         paint.textAlign = Paint.Align.CENTER
         canvas.drawText(title, width / 2f, height / 2f - 40, paint)
         paint.textSize = 30f
+        paint.color = Color.LTGRAY
         canvas.drawText(subtitle, width / 2f, height / 2f + 40, paint)
     }
 
@@ -326,6 +362,7 @@ class TetrisView @JvmOverloads constructor(
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = 2f
             canvas.drawRect(x + 2, y + 2, x + size - 2, y + size - 2, paint)
+            paint.style = Paint.Style.FILL
         } else {
             paint.style = Paint.Style.FILL
             canvas.drawRect(x + 1, y + 1, x + size - 1, y + size - 1, paint)
@@ -338,13 +375,14 @@ class TetrisView @JvmOverloads constructor(
     }
 
     private fun colorFor(v: Int): Int = when (v) {
-        1 -> Color.parseColor("#00E5FF")
-        2 -> Color.parseColor("#2979FF")
-        3 -> Color.parseColor("#FF9100")
-        4 -> Color.parseColor("#FFEA00")
-        5 -> Color.parseColor("#00E676")
-        6 -> Color.parseColor("#D500F9")
-        else -> Color.parseColor("#F44336")
+        1 -> Color.parseColor("#00E5FF") // I: Cyan
+        2 -> Color.parseColor("#2979FF") // J: Blue
+        3 -> Color.parseColor("#FF9100") // L: Orange
+        4 -> Color.parseColor("#FFEA00") // O: Yellow
+        5 -> Color.parseColor("#00E676") // S: Green
+        6 -> Color.parseColor("#F44336") // Z: Red
+        7 -> Color.parseColor("#D500F9") // T: Purple
+        else -> Color.GRAY
     }
 
     data class Piece(val r: Int, val c: Int, val rot: Int, val shape: Int)

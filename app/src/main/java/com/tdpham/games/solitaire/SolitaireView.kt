@@ -129,24 +129,38 @@ class SolitaireView @JvmOverloads constructor(
 
     private fun moveCursor(dx: Int, dy: Int) {
         cursorX = (cursorX + dx + 7) % 7
+        
+        val tableau = tableaus[cursorX]
+        val firstFaceUpIdx = tableau.indexOfFirst { it.isFaceUp }
+
         if (dy != 0) {
-            if (cursorY == 0 && dy > 0) {
-                cursorY = 1
-            } else if (cursorY >= 1 && dy < 0) {
-                cursorY = 0
-            } else if (cursorY >= 1 && dy > 0) {
-                val tableauSize = tableaus[cursorX].size
-                if (cursorY < tableauSize) cursorY++
-            } else if (cursorY > 1 && dy < 0) {
-                cursorY--
+            if (dy > 0) { // Moving Down
+                if (cursorY == 0) {
+                    cursorY = if (firstFaceUpIdx != -1) firstFaceUpIdx + 1 else 1
+                } else {
+                    if (cursorY < tableau.size) cursorY++
+                }
+            } else { // Moving Up
+                if (cursorY > (if (firstFaceUpIdx != -1) firstFaceUpIdx + 1 else 1)) {
+                    cursorY--
+                } else {
+                    cursorY = 0
+                }
             }
         }
         
         // Snap cursorY to valid range for current cursorX
         if (cursorY >= 1) {
-            val tableauSize = tableaus[cursorX].size
-            if (tableauSize == 0) cursorY = 1
-            else if (cursorY > tableauSize) cursorY = tableauSize
+            if (tableau.isEmpty()) {
+                cursorY = 1
+            } else {
+                val minValidY = if (firstFaceUpIdx != -1) firstFaceUpIdx + 1 else tableau.size
+                if (cursorY < minValidY) {
+                    cursorY = minValidY
+                } else if (cursorY > tableau.size) {
+                    cursorY = tableau.size
+                }
+            }
         }
     }
 

@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:background="#121212">
 
-    <com.tdpham.games.mazequiz.MazeQuizView
-        android:id="@+id/maze_quiz_view"
+    <com.tdpham.games.maze.MazeView
+        android:id="@+id/maze_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#444444"
             android:focusable="true"
-            android:nextFocusDown="@id/maze_quiz_view"
+            android:nextFocusDown="@id/maze_view"
             android:text="@string/help"
             android:textColor="#FFFFFF"
             android:textSize="14sp" />

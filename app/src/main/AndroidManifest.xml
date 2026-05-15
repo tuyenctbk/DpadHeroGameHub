@@ -134,7 +134,7 @@
             tools:ignore="LockedOrientationActivity" />
 
         <activity
-            android:name="com.tdpham.games.mazequiz.MazeQuizActivity"
+            android:name="com.tdpham.games.maze.MazeActivity"
             android:exported="false"
             android:screenOrientation="landscape"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"

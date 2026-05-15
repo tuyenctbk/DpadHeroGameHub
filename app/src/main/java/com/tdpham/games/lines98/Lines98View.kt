@@ -42,6 +42,7 @@ class Lines98View @JvmOverloads constructor(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val random = Random()
     private var nextBalls = mutableListOf<Int>()
+    private var nextPositions = mutableListOf<Pair<Int, Int>>()
 
     init {
         isFocusable = true
@@ -70,6 +71,8 @@ class Lines98View @JvmOverloads constructor(
         isGameOver = false
         selectedX = -1
         selectedY = -1
+        nextBalls.clear()
+        nextPositions.clear()
         generateNextBalls()
         spawnBalls()
         generateNextBalls()
@@ -82,12 +85,7 @@ class Lines98View @JvmOverloads constructor(
 
     private fun generateNextBalls() {
         nextBalls.clear()
-        for (i in 0 until 3) {
-            nextBalls.add(random.nextInt(ballColors.size) + 1)
-        }
-    }
-
-    private fun spawnBalls() {
+        nextPositions.clear()
         val emptyCells = mutableListOf<Pair<Int, Int>>()
         for (r in 0 until gridSize) {
             for (c in 0 until gridSize) {
@@ -95,22 +93,40 @@ class Lines98View @JvmOverloads constructor(
             }
         }
 
-        if (emptyCells.isEmpty()) {
-            isGameOver = true
-            return
-        }
-
-        val ballsToSpawn = Math.min(emptyCells.size, nextBalls.size)
-        repeat(ballsToSpawn) {
+        val count = Math.min(emptyCells.size, 3)
+        repeat(count) {
+            nextBalls.add(random.nextInt(ballColors.size) + 1)
             val idx = random.nextInt(emptyCells.size)
-            val (r, c) = emptyCells.removeAt(idx)
-            board[r][c] = nextBalls.removeAt(0)
-            checkLines(r, c) // Check if spawning naturally forms a line
+            nextPositions.add(emptyCells.removeAt(idx))
         }
+    }
 
-        if (emptyCells.isEmpty() && nextBalls.isNotEmpty()) {
-            isGameOver = true
+    private fun spawnBalls() {
+        if (nextPositions.isEmpty()) return
+
+        for (i in nextPositions.indices) {
+            val (r, c) = nextPositions[i]
+            if (board[r][c] == 0 && i < nextBalls.size) {
+                board[r][c] = nextBalls[i]
+                checkLines(r, c)
+            }
         }
+        
+        nextBalls.clear()
+        nextPositions.clear()
+
+        // Check if game over after spawning
+        var hasEmpty = false
+        for (r in 0 until gridSize) {
+            for (c in 0 until gridSize) {
+                if (board[r][c] == 0) {
+                    hasEmpty = true
+                    break
+                }
+            }
+            if (hasEmpty) break
+        }
+        if (!hasEmpty) isGameOver = true
     }
 
     private fun checkLines(r: Int, c: Int): Boolean {
@@ -275,6 +291,20 @@ class Lines98View @JvmOverloads constructor(
         for (i in 0..gridSize) {
             canvas.drawLine(offsetX, offsetY + i * cellSize, offsetX + gridSize * cellSize, offsetY + i * cellSize, paint)
             canvas.drawLine(offsetX + i * cellSize, offsetY, offsetX + i * cellSize, offsetY + gridSize * cellSize, paint)
+        }
+
+        // Draw Future Balls (Dots)
+        paint.style = Paint.Style.FILL
+        for (i in nextPositions.indices) {
+            val (r, c) = nextPositions[i]
+            if (board[r][c] == 0 && i < nextBalls.size) {
+                paint.color = ballColors[nextBalls[i] - 1]
+                paint.alpha = 180
+                val cx = offsetX + c * cellSize + cellSize / 2
+                val cy = offsetY + r * cellSize + cellSize / 2
+                canvas.drawCircle(cx, cy, cellSize * 0.15f, paint)
+                paint.alpha = 255
+            }
         }
 
         // Draw Balls

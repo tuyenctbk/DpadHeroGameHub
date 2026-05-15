@@ -17,7 +17,6 @@ import com.tdpham.games.tetris.TetrisActivity
 import com.tdpham.games.starfighter.StarFighterActivity
 import com.tdpham.games.memory.MemoryActivity
 import com.tdpham.games.slidepuzzle.SlidePuzzleActivity
-import com.tdpham.games.mazequiz.MazeQuizActivity
 import com.tdpham.games.mentalmath.MentalMathActivity
 import com.tdpham.games.simon.SimonSaysActivity
 import com.tdpham.games.froggy.FroggyCrossActivity
@@ -116,11 +115,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SlidePuzzleActivity::class.java))
         }
 
-        val btnMazeQuiz = findViewById<Button>(R.id.btn_maze_quiz)
-        setupGameButton(btnMazeQuiz) {
-            startActivity(Intent(this, MazeQuizActivity::class.java))
-        }
-
         val btnMentalMath = findViewById<Button>(R.id.btn_mental_math)
         setupGameButton(btnMentalMath) {
             startActivity(Intent(this, MentalMathActivity::class.java))
@@ -187,7 +181,6 @@ class MainActivity : AppCompatActivity() {
             "star_fighter" -> findViewById<Button>(R.id.btn_starfighter).requestFocus()
             "memory" -> findViewById<Button>(R.id.btn_memory).requestFocus()
             "slide_puzzle" -> findViewById<Button>(R.id.btn_slide_puzzle).requestFocus()
-            "maze_quiz" -> findViewById<Button>(R.id.btn_maze_quiz).requestFocus()
             "mental_math" -> findViewById<Button>(R.id.btn_mental_math).requestFocus()
             "froggy_cross" -> findViewById<Button>(R.id.btn_froggy).requestFocus()
             "simon_says" -> findViewById<Button>(R.id.btn_simon).requestFocus()

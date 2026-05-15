@@ -253,14 +253,6 @@ class SlidePuzzleView @JvmOverloads constructor(
             canvas.drawLine(destRect.left, destRect.bottom, destRect.right, destRect.bottom, paint)
             
             paint.style = Paint.Style.FILL
-            
-            // Draw tile number for clarity
-            paint.color = Color.argb(180, 0, 0, 0)
-            paint.textSize = size * 0.25f
-            paint.textAlign = Paint.Align.CENTER
-            canvas.drawText((tileVal + 1).toString(), destRect.centerX(), destRect.bottom - 10f, paint)
-            paint.color = Color.WHITE
-            canvas.drawText((tileVal + 1).toString(), destRect.centerX() - 1, destRect.bottom - 11f, paint)
         }
     }
 
