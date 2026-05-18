@@ -24,6 +24,10 @@
     <string name="game_flappy">FLAPPY HERO</string>
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLITAIRE</string>
+    <string name="game_road_racer">ROAD RACER</string>
+    <string name="game_hangman">HANGMAN</string>
+    <string name="game_spinball">SPINBALL</string>
+    <string name="spinball_instructions">Use LEFT/RIGHT to rotate the circle. Collect stars and avoid spikes. Don\'t let the ball escape!</string>
     <string name="select_game_hint">DpadHero: Select a game with D-Pad</string>
     <string name="settings">Settings</string>
     <string name="settings_button_description">Settings</string>

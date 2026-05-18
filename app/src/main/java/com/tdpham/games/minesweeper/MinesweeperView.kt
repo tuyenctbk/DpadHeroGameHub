@@ -13,6 +13,7 @@ import android.view.KeyEvent
 import android.view.View
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
+import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import java.util.*
@@ -315,7 +316,7 @@ class MinesweeperView @JvmOverloads constructor(
         val offsetX = (width - cellSize * cols) / 2
         val offsetY = (height - cellSize * rows) / 2 + cellSize * 1.5f
 
-        canvas.drawColor(GamePalette.BACKGROUND)
+        GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.GRID, paint = paint)
 
         val headerY = offsetY - cellSize * 1.0f
         paint.textSize = cellSize * 0.55f

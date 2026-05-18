@@ -7,6 +7,7 @@ import android.view.KeyEvent
 import android.view.View
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
+import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import kotlin.random.Random
@@ -182,7 +183,7 @@ class SlidePuzzleView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        canvas.drawColor(GamePalette.BACKGROUND)
+        GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.WOOD, paint = paint)
         
         val margin = 60f
         val topArea = 140f

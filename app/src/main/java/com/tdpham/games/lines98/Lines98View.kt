@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
 import com.tdpham.games.common.GameView
+import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import java.util.*
@@ -266,6 +267,8 @@ class Lines98View @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        
+        GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.GRID, paint = paint)
         
         // Update pulse animation
         if (selectedX != -1 || !isGameOver) {

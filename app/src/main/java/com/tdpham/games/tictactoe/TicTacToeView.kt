@@ -11,6 +11,7 @@ import android.view.KeyEvent
 import android.view.View
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
+import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import kotlin.random.Random
@@ -234,7 +235,9 @@ class TicTacToeView @JvmOverloads constructor(
     private fun isDraw(): Boolean = board.all { row -> row.none { it == 0 } }
 
     override fun onDraw(canvas: Canvas) {
-        canvas.drawColor(GamePalette.BACKGROUND)
+        // Draw Wooden Background
+        GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.WOOD, paint = paint)
+        
         val size = width.coerceAtMost(height) * 0.65f
         val left = (width - size) / 2f
         val top = (height - size) / 2f + 60f

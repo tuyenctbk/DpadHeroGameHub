@@ -13,6 +13,7 @@ import android.view.KeyEvent
 import android.view.View
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
+import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import java.util.*
@@ -63,6 +64,9 @@ class SnakeGameView @JvmOverloads constructor(
         }
     }
 
+    private var bgType = GameEnvironment.BackgroundType.CHECKERBOARD
+    private var isNight = false
+
     init {
         isFocusable = true
         isFocusableInTouchMode = true
@@ -104,6 +108,9 @@ class SnakeGameView @JvmOverloads constructor(
         highScore = ScoreManager.getHighScore(context, gameKey)
         score = 0
         spawnFood()
+        
+        bgType = listOf(GameEnvironment.BackgroundType.CHECKERBOARD, GameEnvironment.BackgroundType.GRID, GameEnvironment.BackgroundType.DOTS).random()
+        isNight = Random().nextBoolean()
     }
 
     fun updateDirection(newDirection: Direction) {
@@ -224,9 +231,7 @@ class SnakeGameView @JvmOverloads constructor(
         val offsetY = (height - cellSize * gridSize) / 2 + cellSize // Shift down slightly for score room
 
         // Draw background
-        paint.color = GamePalette.BACKGROUND
-        paint.style = Paint.Style.FILL
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        GameEnvironment.draw(canvas, bgType, GameEnvironment.SceneType.FIELD, isNight = isNight, paint = paint)
 
         // Draw grid border
         paint.color = Color.GRAY

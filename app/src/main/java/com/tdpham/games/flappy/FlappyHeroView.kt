@@ -7,6 +7,7 @@ import android.view.KeyEvent
 import android.view.View
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
+import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import kotlin.random.Random
@@ -29,9 +30,9 @@ class FlappyHeroView @JvmOverloads constructor(
 
     private val pipes = mutableListOf<Pipe>()
     private val clouds = mutableListOf<Cloud>()
-    private var pipeSpeed = 8f
+    private var pipeSpeed = 5f
     private var pipeSpawnTime = 0L
-    private val pipeInterval = 1500L
+    private val pipeInterval = 2500L
 
     private var score = 0
     private var best = 0
@@ -101,7 +102,8 @@ class FlappyHeroView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        canvas.drawColor(Color.parseColor("#4FC3F7")) // Sky Blue
+        GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.GRADIENT, paint = paint)
+        super.onDraw(canvas)
 
         if (!gamePaused && !gameOver) update()
 
@@ -224,8 +226,14 @@ class FlappyHeroView @JvmOverloads constructor(
 
         // Pipes
         if (now - pipeSpawnTime > pipeInterval) {
-            val gapH = 300f
-            val gapY = Random.nextFloat() * (height - gapH - 200f) + 100f
+            val gapH = height * 0.35f
+            val minY = 100f
+            val maxY = height - gapH - 100f
+            val gapY = if (maxY > minY) {
+                Random.nextFloat() * (maxY - minY) + minY
+            } else {
+                height / 2f - gapH / 2f
+            }
             pipes.add(Pipe(width.toFloat(), gapY, gapH))
             pipeSpawnTime = now
         }

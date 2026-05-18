@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.view.Choreographer
 import android.view.KeyEvent
 import android.view.View
+import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
@@ -381,7 +382,7 @@ class BrickBreakView @JvmOverloads constructor(
             requestFocus()
         }
 
-        canvas.drawColor(GamePalette.BACKGROUND)
+        GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.STRIPES, paint = paint)
 
         paint.style = Paint.Style.FILL
         paint.color = Color.parseColor("#2C2C2C")

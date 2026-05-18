@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    <!-- Outer Circle -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M32,8 A24,24 0 1,1 31.99,8" />
+    <!-- Center Spin -->
+    <path
+        android:fillColor="#BA68C8"
+        android:pathData="M32,32 m-8,0 a8,8 0 1,1 16,0 a8,8 0 1,1 -16,0" />
+    <!-- Ball -->
+    <path
+        android:fillColor="#FFEB3B"
+        android:pathData="M44,20 m-4,0 a4,4 0 1,1 8,0 a4,4 0 1,1 -8,0" />
+</vector>

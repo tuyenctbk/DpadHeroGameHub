@@ -5,8 +5,8 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
-import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
+import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import java.util.*
@@ -48,8 +48,8 @@ class TRexView @JvmOverloads constructor(
     // Particles/Decorations
     private val clouds = mutableListOf<PointF>()
     private val groundDots = mutableListOf<PointF>()
-    private val weatherParticles = mutableListOf<PointF>()
-    private val treePath = Path()
+    private val particles = mutableListOf<GameEnvironment.Particle>()
+    private val pathBuffer = Path()
     
     // Obstacles
     private val obstacles = mutableListOf<Obstacle>()
@@ -102,7 +102,10 @@ class TRexView @JvmOverloads constructor(
         obstacles.clear()
         clouds.clear()
         groundDots.clear()
-        weatherParticles.clear()
+        particles.clear()
+        repeat(30) {
+            particles.add(GameEnvironment.Particle(random.nextFloat() * 2000, random.nextFloat() * 1000, random.nextFloat() * 10 + 5))
+        }
         for (i in 0..5) spawnCloud(random.nextFloat() * 2000)
         for (i in 0..15) spawnGroundDot(random.nextFloat() * 2000)
         nextObstacleDistance = 600f
@@ -230,41 +233,41 @@ class TRexView @JvmOverloads constructor(
         groundDots.forEach { it.x -= gameSpeed }
         groundDots.removeAll { it.x < -50 }
         if (groundDots.size < 15) spawnGroundDot(width.toFloat())
-        
-        // Weather Particles
-        if (currentWeather != Weather.SUNNY) {
-            repeat(3) {
-                weatherParticles.add(PointF(random.nextFloat() * width, -20f))
-            }
-        }
-        val pIterator = weatherParticles.iterator()
-        while (pIterator.hasNext()) {
-            val p = pIterator.next()
-            if (currentWeather == Weather.RAINY) {
-                p.y += 25f
-                p.x -= 5f
-            } else if (currentWeather == Weather.SNOWY) {
-                p.y += 5f
-                p.x += random.nextFloat() * 4 - 2
-            }
-            if (p.y > height) pIterator.remove()
-        }
     }
 
     private fun spawnCloud(x: Float) = clouds.add(PointF(x, 80f + random.nextInt(150)))
     private fun spawnGroundDot(x: Float) = groundDots.add(PointF(x, height * groundY + 5 + random.nextInt(40)))
 
     private fun spawnObstacle() {
-        val type = when (random.nextInt(10)) {
+        val type = when (random.nextInt(15)) {
             in 0..1 -> if (score > 400) ObstacleType.BIRD else ObstacleType.CACTUS
             in 2..4 -> ObstacleType.TREE
+            in 5..6 -> ObstacleType.ROCK
+            in 7..8 -> ObstacleType.BUSH
             else -> ObstacleType.CACTUS
         }
-        val width = if (type == ObstacleType.BIRD) 70f else 40f + random.nextInt(40)
-        val height = if (type == ObstacleType.BIRD) 50f else 60f + random.nextInt(60)
-        val y = if (type == ObstacleType.BIRD) (this.height * groundY) - 160f - random.nextInt(100) else (this.height * groundY) - height
+        val width = when(type) {
+            ObstacleType.BIRD -> 70f
+            ObstacleType.ROCK -> 60f + random.nextInt(40)
+            ObstacleType.BUSH -> 50f + random.nextInt(30)
+            else -> 40f + random.nextInt(40)
+        }
+        val height = when(type) {
+            ObstacleType.BIRD -> 50f
+            ObstacleType.ROCK -> 30f + random.nextInt(20)
+            ObstacleType.BUSH -> 40f + random.nextInt(20)
+            else -> 60f + random.nextInt(60)
+        }
+        
+        val y = if (type == ObstacleType.BIRD) {
+            val h = if (random.nextBoolean()) 160f else 80f
+            (this.height * groundY) - h - random.nextInt(60)
+        } else {
+            (this.height * groundY) - height
+        }
+        
         obstacles.add(Obstacle(this.width.toFloat(), y, width, height, type))
-        nextObstacleDistance = 700f + random.nextInt(800).toFloat()
+        nextObstacleDistance = (600f + random.nextInt(900).toFloat()).coerceAtLeast(400f)
     }
 
     private fun checkCollision(obs: Obstacle): Boolean {
@@ -288,13 +291,27 @@ class TRexView @JvmOverloads constructor(
         update()
 
         val theme = getEnvironmentTheme()
+        val envWeather = when(currentWeather) {
+            Weather.RAINY -> GameEnvironment.WeatherType.RAIN
+            Weather.SNOWY -> GameEnvironment.WeatherType.SNOW
+            else -> GameEnvironment.WeatherType.NONE
+        }
+
+        GameEnvironment.draw(
+            canvas, 
+            GameEnvironment.BackgroundType.SOLID, 
+            isNight = isNightMode, 
+            weather = envWeather, 
+            paint = paint, 
+            particles = particles
+        )
+
         canvas.drawColor(theme.bgColor)
 
         // Draw Sun/Moon
         paint.color = theme.secondaryColor
         if (isNightMode) {
             canvas.drawCircle(width - 150f, 150f, 50f, paint) // Moon
-            // Add a "crater" or crescent effect
             paint.color = theme.bgColor
             canvas.drawCircle(width - 130f, 135f, 40f, paint)
         } else if (currentWeather == Weather.SUNNY) {
@@ -312,21 +329,12 @@ class TRexView @JvmOverloads constructor(
         canvas.drawLine(0f, lineY, width.toFloat(), lineY, paint)
         for (dot in groundDots) canvas.drawRect(dot.x, dot.y, dot.x + 4, dot.y + 4, paint)
 
-        // Draw Weather
-        if (currentWeather != Weather.SUNNY) {
-            paint.color = theme.weatherColor
-            for (p in weatherParticles) {
-                if (currentWeather == Weather.RAINY) canvas.drawLine(p.x, p.y, p.x - 5, p.y + 15, paint)
-                else canvas.drawCircle(p.x, p.y, 4f, paint)
-            }
-        }
-
-        // Draw Obstacles (Distinct colors per season)
+        // Draw Obstacles
         for (obs in obstacles) {
             drawObstacle(canvas, obs, theme)
         }
 
-        // Draw Dino (Always high contrast)
+        // Draw Dino
         drawDino(canvas, 100f, dinoY, theme.dinoColor, theme.bgColor)
 
         // Score
@@ -340,31 +348,51 @@ class TRexView @JvmOverloads constructor(
     }
 
     private fun drawObstacle(canvas: Canvas, obs: Obstacle, theme: Theme) {
-        paint.color = when (obs.type) {
-            ObstacleType.CACTUS -> theme.cactusColor
-            ObstacleType.TREE -> theme.treeColor
-            ObstacleType.BIRD -> theme.birdColor
-        }
         paint.style = Paint.Style.FILL
-        if (obs.type == ObstacleType.TREE) {
-            // Trunk
-            paint.color = Color.parseColor("#795548")
-            canvas.drawRect(obs.x + obs.width * 0.4f, obs.y + obs.height * 0.6f, obs.x + obs.width * 0.6f, obs.y + obs.height, paint)
-            // Leaves
-            paint.color = theme.treeColor
-            treePath.reset()
-            treePath.moveTo(obs.x + obs.width * 0.5f, obs.y)
-            treePath.lineTo(obs.x, obs.y + obs.height * 0.7f)
-            treePath.lineTo(obs.x + obs.width, obs.y + obs.height * 0.7f)
-            treePath.close()
-            canvas.drawPath(treePath, paint)
-        } else {
-            canvas.drawRect(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height, paint)
-            if (obs.type == ObstacleType.CACTUS && obs.height > 60f) {
-                canvas.drawRect(obs.x - 12f, obs.y + 20f, obs.x, obs.y + 40f, paint)
-                canvas.drawRect(obs.x + obs.width, obs.y + 15f, obs.x + obs.width + 12f, obs.y + 35f, paint)
-            } else if (obs.type == ObstacleType.BIRD) {
-                canvas.drawRect(obs.x + 10f, obs.y - 15f, obs.x + 40f, obs.y, paint)
+        when (obs.type) {
+            ObstacleType.CACTUS -> {
+                paint.color = theme.cactusColor
+                canvas.drawRect(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height, paint)
+                if (obs.height > 60f) {
+                    canvas.drawRect(obs.x - 12f, obs.y + 20f, obs.x, obs.y + 40f, paint)
+                    canvas.drawRect(obs.x + obs.width, obs.y + 15f, obs.x + obs.width + 12f, obs.y + 35f, paint)
+                }
+            }
+            ObstacleType.TREE -> {
+                // Trunk
+                paint.color = Color.parseColor("#795548")
+                canvas.drawRect(obs.x + obs.width * 0.4f, obs.y + obs.height * 0.6f, obs.x + obs.width * 0.6f, obs.y + obs.height, paint)
+                // Leaves
+                paint.color = theme.treeColor
+                pathBuffer.reset()
+                pathBuffer.moveTo(obs.x + obs.width * 0.5f, obs.y)
+                pathBuffer.lineTo(obs.x, obs.y + obs.height * 0.7f)
+                pathBuffer.lineTo(obs.x + obs.width, obs.y + obs.height * 0.7f)
+                pathBuffer.close()
+                canvas.drawPath(pathBuffer, paint)
+            }
+            ObstacleType.BIRD -> {
+                paint.color = theme.birdColor
+                canvas.drawRect(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height, paint)
+                // Wing
+                val wingY = if (walkFrame == 0) obs.y - 15f else obs.y + obs.height
+                canvas.drawRect(obs.x + 10f, wingY, obs.x + 40f, wingY + 15f, paint)
+            }
+            ObstacleType.ROCK -> {
+                paint.color = Color.GRAY
+                pathBuffer.reset()
+                pathBuffer.moveTo(obs.x, obs.y + obs.height)
+                pathBuffer.lineTo(obs.x + obs.width * 0.2f, obs.y)
+                pathBuffer.lineTo(obs.x + obs.width * 0.8f, obs.y + obs.height * 0.1f)
+                pathBuffer.lineTo(obs.x + obs.width, obs.y + obs.height)
+                pathBuffer.close()
+                canvas.drawPath(pathBuffer, paint)
+            }
+            ObstacleType.BUSH -> {
+                paint.color = theme.treeColor
+                canvas.drawCircle(obs.x + obs.width * 0.3f, obs.y + obs.height * 0.5f, obs.height * 0.5f, paint)
+                canvas.drawCircle(obs.x + obs.width * 0.7f, obs.y + obs.height * 0.5f, obs.height * 0.5f, paint)
+                canvas.drawCircle(obs.x + obs.width * 0.5f, obs.y + obs.height * 0.3f, obs.height * 0.5f, paint)
             }
         }
     }
@@ -380,7 +408,6 @@ class TRexView @JvmOverloads constructor(
             paint.color = eyeColor
             canvas.drawRect(x + 18*p, y + 4*p, x + 20*p, y + 6*p, paint)
             
-            // Ducking walking animation
             paint.color = color
             if (walkFrame == 0) {
                 canvas.drawRect(x + 4*p, y + 15*p, x + 8*p, y + 17*p, paint)
@@ -398,7 +425,6 @@ class TRexView @JvmOverloads constructor(
             canvas.drawRect(x + 15*p, y + 10*p, x + 17*p, y + 14*p, paint) 
             canvas.drawRect(x - 3*p, y + 10*p, x, y + 14*p, paint)
             
-            // Walking animation
             if (isJumping) {
                 canvas.drawRect(x + 4*p, y + 18*p, x + 7*p, y + 21*p, paint)
                 canvas.drawRect(x + 9*p, y + 18*p, x + 12*p, y + 21*p, paint)
@@ -440,6 +466,6 @@ class TRexView @JvmOverloads constructor(
     }
 
     data class Theme(val bgColor: Int, val textColor: Int, val dinoColor: Int, val cloudColor: Int, val groundColor: Int, val secondaryColor: Int, val cactusColor: Int, val treeColor: Int, val birdColor: Int, val weatherColor: Int)
-    enum class ObstacleType { CACTUS, BIRD, TREE }
+    enum class ObstacleType { CACTUS, BIRD, TREE, ROCK, BUSH }
     data class Obstacle(var x: Float, var y: Float, val width: Float, val height: Float, val type: ObstacleType)
 }

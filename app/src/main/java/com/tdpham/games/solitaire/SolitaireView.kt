@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
 import com.tdpham.games.common.GameView
+import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import java.util.*
@@ -27,6 +28,7 @@ class SolitaireView @JvmOverloads constructor(
     private var selectedCards = mutableListOf<Card>()
     private var sourcePile: PileType? = null
     private var sourceIndex: Int = -1
+    private var sourceCardIndex: Int = -1
 
     private var score = 0
     private var isGameOver = false
@@ -99,6 +101,7 @@ class SolitaireView @JvmOverloads constructor(
         cursorY = 0
         selectedCards.clear()
         sourcePile = null
+        sourceCardIndex = -1
         invalidate()
     }
 
@@ -128,38 +131,18 @@ class SolitaireView @JvmOverloads constructor(
     }
 
     private fun moveCursor(dx: Int, dy: Int) {
-        cursorX = (cursorX + dx + 7) % 7
-        
-        val tableau = tableaus[cursorX]
-        val firstFaceUpIdx = tableau.indexOfFirst { it.isFaceUp }
-
-        if (dy != 0) {
-            if (dy > 0) { // Moving Down
-                if (cursorY == 0) {
-                    cursorY = if (firstFaceUpIdx != -1) firstFaceUpIdx + 1 else 1
-                } else {
-                    if (cursorY < tableau.size) cursorY++
-                }
-            } else { // Moving Up
-                if (cursorY > (if (firstFaceUpIdx != -1) firstFaceUpIdx + 1 else 1)) {
-                    cursorY--
-                } else {
-                    cursorY = 0
-                }
+        if (dx != 0) {
+            cursorX = (cursorX + dx + 7) % 7
+            // Skip the gap at index 2 in top row
+            if (cursorY == 0 && cursorX == 2) {
+                cursorX = (cursorX + dx + 7) % 7
             }
         }
-        
-        // Snap cursorY to valid range for current cursorX
-        if (cursorY >= 1) {
-            if (tableau.isEmpty()) {
-                cursorY = 1
-            } else {
-                val minValidY = if (firstFaceUpIdx != -1) firstFaceUpIdx + 1 else tableau.size
-                if (cursorY < minValidY) {
-                    cursorY = minValidY
-                } else if (cursorY > tableau.size) {
-                    cursorY = tableau.size
-                }
+        if (dy != 0) {
+            cursorY = if (dy > 0) 1 else 0
+            // If moving to top row, ensure we don't land on the gap
+            if (cursorY == 0 && cursorX == 2) {
+                cursorX = 3 // Move to first foundation
             }
         }
     }
@@ -193,6 +176,7 @@ class SolitaireView @JvmOverloads constructor(
                             selectedCards.add(foundations[fIdx].last())
                             sourcePile = PileType.FOUNDATION
                             sourceIndex = fIdx
+                            sourceCardIndex = foundations[fIdx].size - 1
                         }
                     }
                 }
@@ -200,11 +184,30 @@ class SolitaireView @JvmOverloads constructor(
                 val tIdx = cursorX
                 val tableau = tableaus[tIdx]
                 if (tableau.isNotEmpty()) {
-                    val cardIdx = cursorY - 1
-                    if (tableau[cardIdx].isFaceUp) {
-                        selectedCards.addAll(tableau.subList(cardIdx, tableau.size))
+                    // Smart: Try Auto-move to foundation first
+                    val lastCard = tableau.last()
+                    for (i in 0 until 4) {
+                        if (canMoveToFoundation(lastCard, i)) {
+                            selectedCards.add(lastCard)
+                            sourcePile = PileType.TABLEAU
+                            sourceIndex = tIdx
+                            sourceCardIndex = tableau.size - 1
+                            moveCardsToFoundation(i)
+                            finalizeMove()
+                            SoundManager.playSuccess()
+                            checkWin()
+                            return
+                        }
+                    }
+
+                    // Else pick up the entire face-up stack
+                    val firstFaceUpIdx = tableau.indexOfFirst { it.isFaceUp }
+                    if (firstFaceUpIdx != -1) {
+                        selectedCards.addAll(tableau.subList(firstFaceUpIdx, tableau.size))
                         sourcePile = PileType.TABLEAU
                         sourceIndex = tIdx
+                        sourceCardIndex = firstFaceUpIdx
+                        SoundManager.playClick()
                     }
                 }
             }
@@ -213,17 +216,36 @@ class SolitaireView @JvmOverloads constructor(
             // Placing
             var moveSuccessful = false
             if (cursorY == 0) {
-                if (cursorX in 3..6 && selectedCards.size == 1) {
+                if (cursorX in 3..6) {
                     val fIdx = cursorX - 3
-                    if (canMoveToFoundation(selectedCards[0], fIdx)) {
-                        moveCardsToFoundation(fIdx)
+                    val lastCard = selectedCards.last()
+                    if (canMoveToFoundation(lastCard, fIdx)) {
+                        // Move ONLY the last card of our stack
+                        val cardToMove = lastCard
+                        selectedCards.removeAt(selectedCards.size - 1)
+                        val rest = selectedCards.toList()
+                        
+                        selectedCards.add(cardToMove) // For removeCardsFromSource
+                        removeCardsFromSource()
+                        returnCardsToSource(rest)
+                        
+                        foundations[fIdx].add(cardToMove)
+                        score += 10
                         moveSuccessful = true
                     }
                 }
             } else {
                 val tIdx = cursorX
-                if (canMoveToTableau(selectedCards, tIdx)) {
-                    moveCardsToTableau(tIdx)
+                val movableIdx = findMovableStackIndex(selectedCards, tIdx)
+                if (movableIdx != -1) {
+                    val toMove = selectedCards.subList(movableIdx, selectedCards.size).toList()
+                    val toReturn = selectedCards.subList(0, movableIdx).toList()
+                    
+                    removeCardsFromSource()
+                    returnCardsToSource(toReturn)
+                    
+                    tableaus[tIdx].addAll(toMove)
+                    score += 5
                     moveSuccessful = true
                 }
             }
@@ -235,8 +257,28 @@ class SolitaireView @JvmOverloads constructor(
             } else {
                 selectedCards.clear()
                 sourcePile = null
+                sourceCardIndex = -1
                 SoundManager.playError()
             }
+        }
+    }
+
+    private fun findMovableStackIndex(cards: List<Card>, tIdx: Int): Int {
+        val tableau = tableaus[tIdx]
+        if (tableau.isEmpty()) {
+            return cards.indexOfFirst { it.rank == Rank.KING }
+        }
+        val topCard = tableau.last()
+        return cards.indexOfFirst { it.isRed != topCard.isRed && it.rank.value == topCard.rank.value - 1 }
+    }
+
+    private fun returnCardsToSource(cards: List<Card>) {
+        if (cards.isEmpty()) return
+        when (sourcePile) {
+            PileType.WASTE -> waste.addAll(cards)
+            PileType.FOUNDATION -> foundations[sourceIndex].addAll(cards)
+            PileType.TABLEAU -> tableaus[sourceIndex].addAll(cards)
+            else -> {}
         }
     }
 
@@ -256,29 +298,13 @@ class SolitaireView @JvmOverloads constructor(
         score += 10
     }
 
-    private fun canMoveToTableau(cards: List<Card>, tIdx: Int): Boolean {
-        val tableau = tableaus[tIdx]
-        val firstCard = cards[0]
-        if (tableau.isEmpty()) {
-            return firstCard.rank == Rank.KING
-        }
-        val topCard = tableau.last()
-        return firstCard.isRed != topCard.isRed && firstCard.rank.value == topCard.rank.value - 1
-    }
-
-    private fun moveCardsToTableau(tIdx: Int) {
-        removeCardsFromSource()
-        tableaus[tIdx].addAll(selectedCards)
-        score += 5
-    }
-
     private fun removeCardsFromSource() {
         when (sourcePile) {
-            PileType.WASTE -> waste.removeAt(waste.size - 1)
-            PileType.FOUNDATION -> foundations[sourceIndex].removeAt(foundations[sourceIndex].size - 1)
+            PileType.WASTE -> if (waste.isNotEmpty()) waste.removeAt(waste.size - 1)
+            PileType.FOUNDATION -> if (foundations[sourceIndex].isNotEmpty()) foundations[sourceIndex].removeAt(foundations[sourceIndex].size - 1)
             PileType.TABLEAU -> {
                 val tableau = tableaus[sourceIndex]
-                repeat(selectedCards.size) { tableau.removeAt(tableau.size - 1) }
+                repeat(selectedCards.size) { if (tableau.isNotEmpty()) tableau.removeAt(tableau.size - 1) }
                 if (tableau.isNotEmpty() && !tableau.last().isFaceUp) {
                     tableau.last().isFaceUp = true
                     score += 5
@@ -291,6 +317,7 @@ class SolitaireView @JvmOverloads constructor(
     private fun finalizeMove() {
         selectedCards.clear()
         sourcePile = null
+        sourceCardIndex = -1
         ScoreManager.updateHighScore(context, gameKey, score)
     }
 
@@ -302,6 +329,9 @@ class SolitaireView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        // Green Felt Background
+        GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.FELT, paint = paint)
+
         super.onDraw(canvas)
         
         // Update pulse animation
@@ -337,11 +367,26 @@ class SolitaireView @JvmOverloads constructor(
             val ty = 2 * spacing + cardH
             if (tableaus[i].isEmpty()) {
                 drawEmptySlot(canvas, tx, ty, cardW, cardH)
+                if (cursorX == i && cursorY == 1) {
+                    paint.style = Paint.Style.STROKE
+                    paint.strokeWidth = 6f * pulseFactor
+                    paint.color = Color.YELLOW
+                    canvas.drawRoundRect(tx, ty, tx + cardW, ty + cardH, 12f, 12f, paint)
+                }
             } else {
                 for (j in tableaus[i].indices) {
                     val card = tableaus[i][j]
-                    val cardY = ty + j * cardH * 0.2f
-                    drawCard(canvas, card, tx, cardY, cardW, cardH)
+                    val cardY = ty + j * cardH * 0.3f
+                    val isSelected = sourcePile == PileType.TABLEAU && sourceIndex == i && j >= sourceCardIndex
+                    
+                    val isCursorOnColumn = cursorX == i && cursorY == 1
+                    val isCursor = isCursorOnColumn && card.isFaceUp
+                    
+                    drawCard(canvas, card, tx, cardY, cardW, cardH, isSelected = isSelected, isCursor = isCursor)
+                    
+                    if (isCursorOnColumn && j == tableaus[i].size - 1) {
+                        drawMagnifiedCard(canvas, card, tx, cardY, cardW, cardH)
+                    }
                 }
             }
         }
@@ -356,13 +401,19 @@ class SolitaireView @JvmOverloads constructor(
             if (cursorX != 2) {
                 val pad = 5f * pulseFactor
                 canvas.drawRoundRect(cx - pad, spacing - pad, cx + cardW + pad, spacing + cardH + pad, 12f, 12f, paint)
+                
+                val currentCard = when(cursorX) {
+                    0 -> stock.lastOrNull()
+                    1 -> waste.lastOrNull()
+                    in 3..6 -> foundations[cursorX - 3].lastOrNull()
+                    else -> null
+                }
+                if (currentCard != null) {
+                    drawMagnifiedCard(canvas, currentCard, cx, spacing, cardW, cardH)
+                }
             }
         } else {
-            val cx = spacing + cursorX * (spacing + cardW)
-            val ty = 2 * spacing + cardH
-            val cy = ty + (cursorY - 1) * cardH * 0.2f
-            val pad = 5f * pulseFactor
-            canvas.drawRoundRect(cx - pad, cy - pad, cx + cardW + pad, cy + cardH + pad, 12f, 12f, paint)
+            // No individual card focus box needed anymore, handled by column highlight
         }
 
         // Draw Score
@@ -390,22 +441,27 @@ class SolitaireView @JvmOverloads constructor(
         paint.alpha = 255
     }
 
-    private fun drawCard(canvas: Canvas, card: Card, x: Float, y: Float, w: Float, h: Float, forceFaceUp: Boolean = false) {
+    private fun drawCard(canvas: Canvas, card: Card, x: Float, y: Float, w: Float, h: Float, forceFaceUp: Boolean = false, isSelected: Boolean = false, isCursor: Boolean = false) {
         val isFaceUp = card.isFaceUp || forceFaceUp
         
         // Shadow/Elevation
         paint.style = Paint.Style.FILL
         paint.color = Color.BLACK
-        paint.alpha = 40
-        canvas.drawRoundRect(x + 4, y + 4, x + w + 4, y + h + 4, 12f, 12f, paint)
+        paint.alpha = if (isSelected) 80 else 40
+        val elev = if (isSelected) 8f else 4f
+        canvas.drawRoundRect(x + elev, y + elev, x + w + elev, y + h + elev, 12f, 12f, paint)
         paint.alpha = 255
 
-        paint.color = if (isFaceUp) Color.WHITE else Color.parseColor("#3F51B5")
+        paint.color = if (isFaceUp) {
+            if (isSelected) Color.parseColor("#FFFDE7") else Color.WHITE
+        } else {
+            if (isSelected) Color.parseColor("#5C6BC0") else Color.parseColor("#3F51B5")
+        }
         canvas.drawRoundRect(x, y, x + w, y + h, 12f, 12f, paint)
         
         paint.style = Paint.Style.STROKE
-        paint.color = Color.parseColor("#E0E0E0")
-        paint.strokeWidth = 2f
+        paint.color = if (isSelected) Color.YELLOW else Color.parseColor("#E0E0E0")
+        paint.strokeWidth = if (isSelected) 4f else 2f
         canvas.drawRoundRect(x, y, x + w, y + h, 12f, 12f, paint)
 
         if (isFaceUp) {
@@ -430,6 +486,14 @@ class SolitaireView @JvmOverloads constructor(
                 Suit.SPADES -> "♠"
             }
             canvas.drawText(suitSymbol, x + w - paint.measureText(suitSymbol) - 10, y + h - 12, paint)
+            
+            // If cursor is on this card, show a larger suit in center
+            if (isCursor) {
+                paint.alpha = 40
+                paint.textSize = w * 0.8f
+                canvas.drawText(suitSymbol, x + w/2 - paint.measureText(suitSymbol)/2, y + h/2 + paint.textSize/3, paint)
+                paint.alpha = 255
+            }
             paint.isFakeBoldText = false
         } else {
             // Card back design
@@ -442,6 +506,20 @@ class SolitaireView @JvmOverloads constructor(
             paint.alpha = 255
             paint.style = Paint.Style.FILL
         }
+    }
+
+    private fun drawMagnifiedCard(canvas: Canvas, card: Card, x: Float, y: Float, w: Float, h: Float) {
+        // Draw a slightly larger version over the current card for visibility
+        // Only if it's face up
+        if (!card.isFaceUp) return
+        
+        val mag = 1.1f
+        val mw = w * mag
+        val mh = h * mag
+        val mx = x - (mw - w) / 2
+        val my = y - (mh - h) / 2
+        
+        drawCard(canvas, card, mx, my, mw, mh, forceFaceUp = true)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {

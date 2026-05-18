@@ -22,6 +22,10 @@
         android:isGame="true"
         android:appCategory="game">
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713"/>
+
         <activity
             android:name="com.tdpham.games.hub.SplashActivity"
             android:exported="true"
@@ -198,6 +202,27 @@
 
         <activity
             android:name="com.tdpham.games.solitaire.SolitaireActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.roadracer.RoadRacerActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.hangman.HangmanActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.spinball.SpinballActivity"
             android:exported="false"
             android:screenOrientation="landscape"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"

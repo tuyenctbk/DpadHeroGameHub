@@ -17,6 +17,7 @@ import com.tdpham.games.tetris.TetrisActivity
 import com.tdpham.games.starfighter.StarFighterActivity
 import com.tdpham.games.memory.MemoryActivity
 import com.tdpham.games.slidepuzzle.SlidePuzzleActivity
+import com.tdpham.games.maze.MazeActivity
 import com.tdpham.games.mentalmath.MentalMathActivity
 import com.tdpham.games.simon.SimonSaysActivity
 import com.tdpham.games.froggy.FroggyCrossActivity
@@ -29,13 +30,23 @@ import com.tdpham.games.flappy.FlappyHeroActivity
 import com.tdpham.games.twentyfortyeight.TwentyFortyEightActivity
 import com.tdpham.games.trex.TRexActivity
 import com.tdpham.games.tictactoe.TicTacToeActivity
+import com.tdpham.games.hangman.HangmanActivity
+import com.tdpham.games.roadracer.RoadRacerActivity
+import com.tdpham.games.spinball.SpinballActivity
 import com.tdpham.games.common.SoundManager
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
+import com.google.firebase.Firebase
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        firebaseAnalytics = Firebase.analytics
 
         findViewById<ImageButton>(R.id.btn_settings).apply {
             setOnClickListener {
@@ -115,6 +126,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SlidePuzzleActivity::class.java))
         }
 
+        val btnMaze = findViewById<Button>(R.id.btn_maze)
+        setupGameButton(btnMaze) {
+            startActivity(Intent(this, MazeActivity::class.java))
+        }
+
         val btnMentalMath = findViewById<Button>(R.id.btn_mental_math)
         setupGameButton(btnMentalMath) {
             startActivity(Intent(this, MentalMathActivity::class.java))
@@ -160,6 +176,21 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SolitaireActivity::class.java))
         }
 
+        val btnRoadRacer = findViewById<Button>(R.id.btn_road_racer)
+        setupGameButton(btnRoadRacer) {
+            startActivity(Intent(this, RoadRacerActivity::class.java))
+        }
+
+        val btnHangman = findViewById<Button>(R.id.btn_hangman)
+        setupGameButton(btnHangman) {
+            startActivity(Intent(this, HangmanActivity::class.java))
+        }
+
+        val btnSpinball = findViewById<Button>(R.id.btn_spinball)
+        setupGameButton(btnSpinball) {
+            startActivity(Intent(this, SpinballActivity::class.java))
+        }
+
         focusLastPlayed()
     }
 
@@ -188,12 +219,24 @@ class MainActivity : AppCompatActivity() {
             "word_quest" -> findViewById<Button>(R.id.btn_word_quest).requestFocus()
             "dungeon_escape" -> findViewById<Button>(R.id.btn_dungeon).requestFocus()
             "flappy_hero" -> findViewById<Button>(R.id.btn_flappy).requestFocus()
+            "hangman" -> findViewById<Button>(R.id.btn_hangman).requestFocus()
+            "spinball" -> findViewById<Button>(R.id.btn_spinball).requestFocus()
+            "road_racer" -> findViewById<Button>(R.id.btn_road_racer).requestFocus()
+            "maze" -> findViewById<Button>(R.id.btn_maze).requestFocus()
+            "lines98" -> findViewById<Button>(R.id.btn_lines98).requestFocus()
+            "solitaire" -> findViewById<Button>(R.id.btn_solitaire).requestFocus()
             else -> findViewById<Button>(R.id.btn_snake).requestFocus()
         }
     }
 
     private fun setupGameButton(button: Button, action: () -> Unit) {
-        button.setOnClickListener { action() }
+        button.setOnClickListener { 
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, button.text.toString())
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "game")
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+            action() 
+        }
         
         button.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {

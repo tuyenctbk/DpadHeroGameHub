@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="96"
+    android:viewportHeight="96">
+    <!-- Road Background -->
+    <path
+        android:fillColor="#455A64"
+        android:pathData="M10,10h76v76h-76z" />
+    <!-- Lane Marker -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M46,20h4v15h-4z M46,45h4v15h-4z M46,70h4v15h-4z" />
+    <!-- Car Shape -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M35,40h26v40h-26z" />
+    <path
+        android:fillColor="#212121"
+        android:pathData="M38,45h20v20h-20z" />
+    <path
+        android:fillColor="#BBDEFB"
+        android:pathData="M40,48h16v8h-16z" />
+</vector>

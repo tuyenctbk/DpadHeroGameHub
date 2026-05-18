@@ -9,6 +9,7 @@ import android.view.KeyEvent
 import android.view.View
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
+import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import kotlin.random.Random
@@ -47,6 +48,9 @@ class TetrisView @JvmOverloads constructor(
             }
         }
     }
+
+    private var bgType = GameEnvironment.BackgroundType.GRADIENT
+    private var isNight = false
 
     init {
         isFocusable = true
@@ -87,6 +91,8 @@ class TetrisView @JvmOverloads constructor(
         gameOver = false
         paused = true
         handler.removeCallbacks(tick)
+        bgType = listOf(GameEnvironment.BackgroundType.GRADIENT, GameEnvironment.BackgroundType.GRID, GameEnvironment.BackgroundType.STRIPES).random()
+        isNight = Random.nextBoolean()
         invalidate()
     }
 
@@ -273,32 +279,35 @@ class TetrisView @JvmOverloads constructor(
         }
     }
 
+    private val boardPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val overlayPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val blockPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
     override fun onDraw(canvas: Canvas) {
         val size = (height / (rows + 2)).coerceAtMost(width / (cols + 8)).toFloat()
         val offsetX = (width - cols * size) / 2f
         val offsetY = (height - rows * size) / 2f
 
         // Draw background
-        paint.color = GamePalette.BACKGROUND
-        paint.style = Paint.Style.FILL
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        GameEnvironment.draw(canvas, bgType, isNight = isNight, paint = paint)
 
         // Draw board area
-        paint.color = Color.DKGRAY
-        canvas.drawRect(offsetX, offsetY, offsetX + cols * size, offsetY + rows * size, paint)
+        boardPaint.color = Color.argb(150, 0, 0, 0)
+        canvas.drawRect(offsetX, offsetY, offsetX + cols * size, offsetY + rows * size, boardPaint)
 
         // Draw Grid lines
-        paint.color = GamePalette.GRID_LINE
-        paint.strokeWidth = 1f
-        for (i in 0..cols) canvas.drawLine(offsetX + i * size, offsetY, offsetX + i * size, offsetY + rows * size, paint)
-        for (i in 0..rows) canvas.drawLine(offsetX, offsetY + i * size, offsetX + cols * size, offsetY + i * size, paint)
+        boardPaint.color = GamePalette.GRID_LINE
+        boardPaint.strokeWidth = 1f
+        for (i in 0..cols) canvas.drawLine(offsetX + i * size, offsetY, offsetX + i * size, offsetY + rows * size, boardPaint)
+        for (i in 0..rows) canvas.drawLine(offsetX, offsetY + i * size, offsetX + cols * size, offsetY + i * size, boardPaint)
 
         // Draw flash effect
         if (flashFrames > 0) {
-            paint.color = Color.WHITE
-            paint.alpha = 100
-            canvas.drawRect(offsetX, offsetY, offsetX + cols * size, offsetY + rows * size, paint)
-            paint.alpha = 255
+            boardPaint.color = Color.WHITE
+            boardPaint.alpha = 100
+            canvas.drawRect(offsetX, offsetY, offsetX + cols * size, offsetY + rows * size, boardPaint)
+            boardPaint.alpha = 255
         }
 
         // Draw ghost piece
@@ -327,13 +336,13 @@ class TetrisView @JvmOverloads constructor(
         }
 
         // HUD
-        paint.color = GamePalette.TEXT_PRIMARY
-        paint.textSize = size * 0.8f
-        paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("SCORE: $score", offsetX + cols * size + 40, offsetY + size, paint)
-        paint.color = GamePalette.TEXT_SECONDARY
-        canvas.drawText("BEST: $best", offsetX + cols * size + 40, offsetY + size * 2.5f, paint)
-        canvas.drawText("NEXT:", offsetX + cols * size + 40, offsetY + size * 4.5f, paint)
+        textPaint.color = GamePalette.TEXT_PRIMARY
+        textPaint.textSize = size * 0.8f
+        textPaint.textAlign = Paint.Align.LEFT
+        canvas.drawText("SCORE: $score", offsetX + cols * size + 40, offsetY + size, textPaint)
+        textPaint.color = GamePalette.TEXT_SECONDARY
+        canvas.drawText("BEST: $best", offsetX + cols * size + 40, offsetY + size * 2.5f, textPaint)
+        canvas.drawText("NEXT:", offsetX + cols * size + 40, offsetY + size * 4.5f, textPaint)
 
         // Draw next piece
         for (cell in shapeCells(next.shape, next.rot)) {
@@ -345,32 +354,32 @@ class TetrisView @JvmOverloads constructor(
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {
-        paint.color = GamePalette.OVERLAY
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
-        paint.color = Color.WHITE
-        paint.textSize = 60f
-        paint.textAlign = Paint.Align.CENTER
-        canvas.drawText(title, width / 2f, height / 2f - 40, paint)
-        paint.textSize = 30f
-        paint.color = Color.LTGRAY
-        canvas.drawText(subtitle, width / 2f, height / 2f + 40, paint)
+        overlayPaint.color = GamePalette.OVERLAY
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), overlayPaint)
+        overlayPaint.color = Color.WHITE
+        overlayPaint.textSize = 60f
+        overlayPaint.textAlign = Paint.Align.CENTER
+        canvas.drawText(title, width / 2f, height / 2f - 40, overlayPaint)
+        overlayPaint.textSize = 30f
+        overlayPaint.color = Color.LTGRAY
+        canvas.drawText(subtitle, width / 2f, height / 2f + 40, overlayPaint)
     }
 
     private fun drawBlock(canvas: Canvas, x: Float, y: Float, size: Float, color: Int, isGhost: Boolean = false) {
-        paint.color = color
+        blockPaint.color = color
         if (isGhost) {
-            paint.style = Paint.Style.STROKE
-            paint.strokeWidth = 2f
-            canvas.drawRect(x + 2, y + 2, x + size - 2, y + size - 2, paint)
-            paint.style = Paint.Style.FILL
+            blockPaint.style = Paint.Style.STROKE
+            blockPaint.strokeWidth = 2f
+            canvas.drawRect(x + 2, y + 2, x + size - 2, y + size - 2, blockPaint)
+            blockPaint.style = Paint.Style.FILL
         } else {
-            paint.style = Paint.Style.FILL
-            canvas.drawRect(x + 1, y + 1, x + size - 1, y + size - 1, paint)
+            blockPaint.style = Paint.Style.FILL
+            canvas.drawRect(x + 1, y + 1, x + size - 1, y + size - 1, blockPaint)
             // Bevel effect
-            paint.color = Color.WHITE
-            paint.alpha = 70
-            canvas.drawRect(x + 2, y + 2, x + size * 0.35f, y + size * 0.35f, paint)
-            paint.alpha = 255
+            blockPaint.color = Color.WHITE
+            blockPaint.alpha = 70
+            canvas.drawRect(x + 2, y + 2, x + size * 0.35f, y + size * 0.35f, blockPaint)
+            blockPaint.alpha = 255
         }
     }
 

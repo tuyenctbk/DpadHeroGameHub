@@ -9,6 +9,7 @@ import android.view.KeyEvent
 import android.view.View
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
+import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 
@@ -157,7 +158,7 @@ class SudokuView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        canvas.drawColor(GamePalette.BACKGROUND)
+        GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.GRID, paint = paint)
         val grid = width.coerceAtMost(height) * 0.78f
         val left = (width - grid) / 2f
         val top = (height - grid) / 2f + 32f

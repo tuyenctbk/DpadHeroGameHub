@@ -10,7 +10,8 @@ class TetrisActivity : BaseGameActivity() {
         "• Move piece with LEFT/RIGHT.\n" +
             "• Rotate with UP.\n" +
             "• Soft drop with DOWN.\n" +
-            "• Press CENTER to pause/resume."
+            "• Hard drop with CENTER.\n" +
+            "• Press H or INFO to pause/guide."
 
     override fun getLayoutId() = R.layout.activity_tetris
     override fun getGameViewId() = R.id.tetris_view

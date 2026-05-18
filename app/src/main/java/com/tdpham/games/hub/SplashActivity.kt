@@ -11,6 +11,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.tdpham.games.R
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.ConfigManager
+import com.tdpham.games.common.AdManager
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,6 +20,8 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         SoundManager.init(this)
+        ConfigManager.init()
+        AdManager.init(this)
 
         // Hide system UI with modern approach for API 30+, fallback for older versions
         hideSystemUI()
