@@ -5,12 +5,8 @@ import com.tdpham.games.common.BaseGameActivity
 
 class SokobanActivity : BaseGameActivity() {
     override val gameKey = "sokoban"
-    override val gameTitle = "SOKOBAN GUIDE"
-    override val gameInstructions =
-        "• D-PAD: move. Push boxes ($) onto targets (cyan rings); on-target shows as *.\n" +
-            "• Only one box at a time; you cannot pull.\n" +
-            "• CENTER: restart current level if stuck.\n" +
-            "• When a level is solved, CENTER advances. Clear all levels for a high score."
+    override val gameTitle get() = getString(R.string.how_to_play_guide, getString(R.string.game_sokoban))
+    override val gameInstructions get() = getString(R.string.game_sokoban_instructions)
 
     override fun getLayoutId() = R.layout.activity_sokoban
     override fun getGameViewId() = R.id.sokoban_view

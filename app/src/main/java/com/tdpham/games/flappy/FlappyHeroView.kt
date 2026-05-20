@@ -40,7 +40,14 @@ class FlappyHeroView @JvmOverloads constructor(
     private var gamePaused = true
     private var lastUpdate = 0L
     private val beakPath = Path()
+    private val sunsetPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    // Themes & Stages
+    private enum class FlappyTheme { DAY, NIGHT, SUNSET, WINTER }
+    private var currentTheme = FlappyTheme.DAY
+    private val particles = mutableListOf<GameEnvironment.Particle>()
+    private val random = java.util.Random()
+    
     data class Pipe(var x: Float, val gapY: Float, val gapH: Float, var passed: Boolean = false)
     data class Cloud(var x: Float, var y: Float, var speed: Float, var scale: Float)
 
@@ -70,6 +77,16 @@ class FlappyHeroView @JvmOverloads constructor(
         gameOver = false
         gamePaused = true
         pipeSpawnTime = 0L
+        
+        // Random Theme Selection
+        currentTheme = FlappyTheme.entries.random()
+        particles.clear()
+        if (currentTheme == FlappyTheme.WINTER) {
+            repeat(30) { 
+                particles.add(GameEnvironment.Particle(random.nextFloat() * 2000, random.nextFloat() * 1000, random.nextFloat() * 5 + 2, random.nextFloat() * 2 - 1)) 
+            }
+        }
+        
         invalidate()
     }
 
@@ -102,28 +119,62 @@ class FlappyHeroView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.GRADIENT, paint = paint)
+        val bgType = when (currentTheme) {
+            FlappyTheme.NIGHT -> GameEnvironment.BackgroundType.STARRY
+            FlappyTheme.WINTER -> GameEnvironment.BackgroundType.SOLID
+            FlappyTheme.SUNSET -> GameEnvironment.BackgroundType.GRADIENT
+            else -> GameEnvironment.BackgroundType.GRADIENT
+        }
+        
+        val weather = if (currentTheme == FlappyTheme.WINTER) GameEnvironment.WeatherType.SNOW else GameEnvironment.WeatherType.NONE
+        val isNight = currentTheme == FlappyTheme.NIGHT
+        
+        if (currentTheme == FlappyTheme.SUNSET) {
+            // Special sunset draw
+            val colors = intArrayOf(Color.parseColor("#FF5722"), Color.parseColor("#3F51B5"))
+            sunsetPaint.shader = LinearGradient(0f, 0f, 0f, height.toFloat(), colors[0], colors[1], Shader.TileMode.CLAMP)
+            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), sunsetPaint)
+        } else if (currentTheme == FlappyTheme.WINTER) {
+             canvas.drawColor(Color.parseColor("#E1F5FE")) // Light Blue Sky
+        } else {
+            GameEnvironment.draw(canvas, bgType, isNight = isNight, weather = weather, paint = paint, particles = particles)
+        }
+        
         super.onDraw(canvas)
 
         if (!gamePaused && !gameOver) update()
 
-        // Draw Clouds
-        paint.color = Color.argb(150, 255, 255, 255)
-        for (cloud in clouds) {
-            canvas.drawCircle(cloud.x, cloud.y, 30f * cloud.scale, paint)
-            canvas.drawCircle(cloud.x + 20f * cloud.scale, cloud.y - 10f * cloud.scale, 25f * cloud.scale, paint)
-            canvas.drawCircle(cloud.x + 40f * cloud.scale, cloud.y, 30f * cloud.scale, paint)
+        // Draw Clouds (not in Night/Winter)
+        if (currentTheme == FlappyTheme.DAY || currentTheme == FlappyTheme.SUNSET) {
+            paint.color = Color.argb(150, 255, 255, 255)
+            for (cloud in clouds) {
+                canvas.drawCircle(cloud.x, cloud.y, 30f * cloud.scale, paint)
+                canvas.drawCircle(cloud.x + 20f * cloud.scale, cloud.y - 10f * cloud.scale, 25f * cloud.scale, paint)
+                canvas.drawCircle(cloud.x + 40f * cloud.scale, cloud.y, 30f * cloud.scale, paint)
+            }
         }
 
         // Draw Pipes
+        val pipeColor = when(currentTheme) {
+            FlappyTheme.NIGHT -> "#455A64"
+            FlappyTheme.SUNSET -> "#795548"
+            FlappyTheme.WINTER -> "#0288D1"
+            else -> "#388E3C"
+        }
+        val pipeColorDark = when(currentTheme) {
+            FlappyTheme.NIGHT -> "#263238"
+            FlappyTheme.WINTER -> "#01579B"
+            else -> "#2E7D32"
+        }
+        
         for (pipe in pipes) {
             // Draw pipe body
-            paint.color = Color.parseColor("#388E3C") // Pipe Green
+            paint.color = Color.parseColor(pipeColor)
             canvas.drawRect(pipe.x + 10f, 0f, pipe.x + 90f, pipe.gapY, paint)
             canvas.drawRect(pipe.x + 10f, pipe.gapY + pipe.gapH, pipe.x + 90f, height.toFloat(), paint)
 
             // Draw pipe shading
-            paint.color = Color.parseColor("#2E7D32")
+            paint.color = Color.parseColor(pipeColorDark)
             canvas.drawRect(pipe.x + 70f, 0f, pipe.x + 85f, pipe.gapY, paint)
             canvas.drawRect(pipe.x + 70f, pipe.gapY + pipe.gapH, pipe.x + 85f, height.toFloat(), paint)
 

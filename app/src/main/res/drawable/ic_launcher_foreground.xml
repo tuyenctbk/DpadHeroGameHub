@@ -20,21 +20,21 @@
                 android:endY="96"
                 android:startY="12"
                 android:type="linear">
-                <item android:color="#FFFFFF" android:offset="0" />
-                <item android:color="#E0E0E0" android:offset="1" />
+                <item android:color="#263238" android:offset="0" />
+                <item android:color="#212121" android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
 
     <!-- Console Inner Ring Detail -->
     <path
-        android:strokeColor="#DDDDDD"
+        android:strokeColor="#455A64"
         android:strokeWidth="0.5"
         android:pathData="M54,22 C36.3,22 22,36.3 22,54 C22,71.7 36.3,86 54,86 C71.7,86 86,71.7 86,54 C86,36.3 71.7,22 54,22 Z" />
 
     <!-- D-Pad Plus Shape - Shadow -->
     <path
-        android:fillColor="#B79500"
+        android:fillColor="#1A237E"
         android:pathData="M55,35 L47,35 L47,47 L35,47 L35,55 L47,55 L47,67 L55,67 L55,55 L67,55 L67,47 L55,47 Z" />
 
     <path
@@ -45,8 +45,8 @@
                 android:centerY="50"
                 android:gradientRadius="20"
                 android:type="radial">
-                <item android:color="#FFE600" android:offset="0" />
-                <item android:color="#FFD600" android:offset="1" />
+                <item android:color="#5C6BC0" android:offset="0" />
+                <item android:color="#3F51B5" android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
@@ -57,30 +57,30 @@
         android:pathData="M72,43m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
     <!-- Red Button -->
     <path
-        android:fillColor="#FF5252"
+        android:fillColor="#F44336"
         android:pathData="M72,42m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
 
     <!-- Green Button - Shadow -->
     <path
-        android:fillColor="#2E7D32"
+        android:fillColor="#E65100"
         android:pathData="M78,51m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
     <!-- Green Button -->
     <path
-        android:fillColor="#4CAF50"
+        android:fillColor="#FF9800"
         android:pathData="M78,50m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
 
     <!-- Blue Button - Shadow -->
     <path
-        android:fillColor="#1565C0"
+        android:fillColor="#FFD600"
         android:pathData="M72,59m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
     <!-- Blue Button -->
     <path
-        android:fillColor="#2196F3"
+        android:fillColor="#FFFF00"
         android:pathData="M72,58m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
 
     <!-- Arcade Joystick Handle / Base Line -->
     <path
-        android:fillColor="#CCCCCC"
+        android:fillColor="#37474F"
         android:pathData="M38,74 L70,74 L70,78 L38,78 Z" />
 
     <!-- Shine Effect -->
