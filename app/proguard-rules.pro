@@ -19,3 +19,15 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# AdMob
+-keep class com.google.android.gms.ads.** { *; }
+-keep interface com.google.android.gms.ads.** { *; }
+
+# Firebase
+-keep class com.google.firebase.** { *; }
+
+# Keeping some standard Android things
+-keep class androidx.appcompat.widget.SearchView { *; }
+-keep class androidx.appcompat.widget.SwitchCompat { *; }
+-keep class androidx.appcompat.widget.Toolbar { *; }

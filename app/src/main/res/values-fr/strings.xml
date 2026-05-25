@@ -60,6 +60,7 @@
     <string name="settings_button_description">Paramètres</string>
     <string name="sound_effects">Effets Sonores</string>
     <string name="sound_effects_description">Activer ou désactiver les effets sonores.</string>
+    <string name="privacy_policy">Politique de Confidentialité</string>
     <string name="back">Retour</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">Supporte : D-pad / Télécommande</string>

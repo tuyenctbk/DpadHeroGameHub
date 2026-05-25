@@ -60,6 +60,7 @@
     <string name="settings_button_description">设置</string>
     <string name="sound_effects">音效</string>
     <string name="sound_effects_description">开启或关闭游戏音效。</string>
+    <string name="privacy_policy">隐私政策</string>
     <string name="back">返回</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">支持: 方向键 / 遥控器</string>

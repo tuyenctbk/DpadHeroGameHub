@@ -60,6 +60,7 @@
     <string name="settings_button_description">Cài đặt</string>
     <string name="sound_effects">Âm thanh</string>
     <string name="sound_effects_description">Bật hoặc tắt hiệu ứng âm thanh trong trò chơi.</string>
+    <string name="privacy_policy">Chính sách bảo mật</string>
     <string name="back">Quay lại</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">Hỗ trợ: D-pad / Điều khiển từ xa</string>

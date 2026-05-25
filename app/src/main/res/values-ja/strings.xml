@@ -60,6 +60,7 @@
     <string name="settings_button_description">設定</string>
     <string name="sound_effects">効果音</string>
     <string name="sound_effects_description">ゲーム内の効果音をオン/オフにします。</string>
+    <string name="privacy_policy">プライバシーポリシー</string>
     <string name="back">戻る</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">対応: 十字キー / リモコン</string>

@@ -60,6 +60,7 @@
     <string name="settings_button_description">설정</string>
     <string name="sound_effects">효과음</string>
     <string name="sound_effects_description">게임 내 효과음을 켜거나 끕니다.</string>
+    <string name="privacy_policy">개인정보 처리방침</string>
     <string name="back">뒤로</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">지원: 방향키 / 리모컨</string>

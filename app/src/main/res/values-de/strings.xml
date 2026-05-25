@@ -60,6 +60,7 @@
     <string name="settings_button_description">Einstellungen</string>
     <string name="sound_effects">Soundeffekte</string>
     <string name="sound_effects_description">In-Game Soundeffekte ein- oder ausschalten.</string>
+    <string name="privacy_policy">Datenschutz-Bestimmungen</string>
     <string name="back">Zurück</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">Unterstützt: D-pad / Fernbedienung</string>
