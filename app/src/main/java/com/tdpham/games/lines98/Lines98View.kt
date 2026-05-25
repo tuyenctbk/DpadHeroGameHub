@@ -268,7 +268,7 @@ class Lines98View @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         
-        GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.GRID, paint = paint)
+        GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.SOLID, paint = paint)
         
         // Update pulse animation
         if (selectedX != -1 || !isGameOver) {
@@ -287,10 +287,15 @@ class Lines98View @JvmOverloads constructor(
         val offsetX = (width - cellSize * gridSize) / 2f
         val offsetY = (height - cellSize * gridSize) / 2f
 
+        // Draw Board Background
+        paint.style = Paint.Style.FILL
+        paint.color = Color.parseColor("#1A1A1A")
+        canvas.drawRect(offsetX, offsetY, offsetX + gridSize * cellSize, offsetY + gridSize * cellSize, paint)
+
         // Draw Grid
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = 2f
-        paint.color = Color.DKGRAY
+        paint.strokeWidth = 1f
+        paint.color = Color.parseColor("#333333")
         for (i in 0..gridSize) {
             canvas.drawLine(offsetX, offsetY + i * cellSize, offsetX + gridSize * cellSize, offsetY + i * cellSize, paint)
             canvas.drawLine(offsetX + i * cellSize, offsetY, offsetX + i * cellSize, offsetY + gridSize * cellSize, paint)

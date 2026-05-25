@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="500dp"
     android:layout_height="wrap_content"
-    android:background="#222222"
+    android:background="@drawable/dialog_background"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="32dp">
 
     <TextView
         android:id="@+id/guide_title"
@@ -12,35 +12,57 @@
         android:layout_height="wrap_content"
         android:text="@string/guide_title_default"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
+        android:textSize="32sp"
         android:textStyle="bold"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="4"
         android:gravity="center"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="24dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#44FFFFFF"
+        android:layout_marginBottom="24dp" />
 
     <TextView
         android:id="@+id/guide_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/guide_content_default"
-        android:textColor="#CCCCCC"
-        android:textSize="18sp"
-        android:layout_marginBottom="24dp" />
+        android:textColor="#EEEEEE"
+        android:textSize="20sp"
+        android:lineSpacingExtra="4dp"
+        android:layout_marginBottom="32dp" />
 
-    <CheckBox
-        android:id="@+id/cb_dont_show_again"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/dont_show_again"
-        android:textColor="#AAAAAA"
-        android:buttonTint="#4CAF50"
-        android:layout_marginBottom="16dp" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="24dp">
+
+        <CheckBox
+            android:id="@+id/cb_dont_show_again"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dont_show_again"
+            android:textColor="#BBBBBB"
+            android:textSize="16sp"
+            android:buttonTint="#4CAF50" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_close_guide"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:text="@string/start_game"
         android:backgroundTint="#4CAF50"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:elevation="4dp" />
 
 </LinearLayout>

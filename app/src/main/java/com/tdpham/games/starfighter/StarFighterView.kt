@@ -33,12 +33,15 @@ class StarFighterView @JvmOverloads constructor(
 
     private val bullets = mutableListOf<Bullet>()
     private val enemies = mutableListOf<Enemy>()
+    private val powerUps = mutableListOf<PowerUp>()
     private val particles = mutableListOf<Particle>()
     private val bgParticles = mutableListOf<GameEnvironment.Particle>()
     private val random = Random()
 
     private var lastEnemySpawn = 0L
     private var lastShoot = 0L
+    private var gunLevel = 3
+    private var powerUpEndTime = 0L
     private var bgType = GameEnvironment.BackgroundType.GRADIENT
 
     init {
@@ -60,8 +63,11 @@ class StarFighterView @JvmOverloads constructor(
         best = ScoreManager.getHighScore(context, gameKey)
         gameOver = false
         isPaused = true
+        gunLevel = 3
+        powerUpEndTime = 0L
         bullets.clear()
         enemies.clear()
+        powerUps.clear()
         particles.clear()
         bgParticles.clear()
         bgType = listOf(GameEnvironment.BackgroundType.GRADIENT, GameEnvironment.BackgroundType.STARRY, GameEnvironment.BackgroundType.SOLID).random()
@@ -113,7 +119,33 @@ class StarFighterView @JvmOverloads constructor(
 
         // Auto-shoot
         if (now - lastShoot > 300) {
-            bullets.add(Bullet(playerX, playerY - 30, -15f))
+            if (now > powerUpEndTime) {
+                gunLevel = 3
+            }
+            
+            when (gunLevel) {
+                3 -> {
+                    bullets.add(Bullet(playerX, playerY - 30, -18f))
+                    bullets.add(Bullet(playerX - 20, playerY - 10, -18f))
+                    bullets.add(Bullet(playerX + 20, playerY - 10, -18f))
+                }
+                5 -> {
+                    bullets.add(Bullet(playerX, playerY - 30, -18f))
+                    bullets.add(Bullet(playerX - 20, playerY - 10, -18f))
+                    bullets.add(Bullet(playerX + 20, playerY - 10, -18f))
+                    bullets.add(Bullet(playerX - 40, playerY + 10, -18f))
+                    bullets.add(Bullet(playerX + 40, playerY + 10, -18f))
+                }
+                7 -> {
+                    bullets.add(Bullet(playerX, playerY - 30, -18f))
+                    bullets.add(Bullet(playerX - 20, playerY - 10, -18f))
+                    bullets.add(Bullet(playerX + 20, playerY - 10, -18f))
+                    bullets.add(Bullet(playerX - 40, playerY + 10, -18f))
+                    bullets.add(Bullet(playerX + 40, playerY + 10, -18f))
+                    bullets.add(Bullet(playerX - 60, playerY + 30, -18f))
+                    bullets.add(Bullet(playerX + 60, playerY + 30, -18f))
+                }
+            }
             lastShoot = now
         }
 
@@ -122,7 +154,33 @@ class StarFighterView @JvmOverloads constructor(
         while (bIter.hasNext()) {
             val b = bIter.next()
             b.y += b.vy
-            if (b.y < -50) bIter.remove()
+            if (b.y < -50 || b.y > height + 50) {
+                bIter.remove()
+                continue
+            }
+
+            if (b.isEnemy) {
+                // Check collision with player
+                if (RectF(playerX - 25, playerY - 25, playerX + 25, playerY + 25).contains(b.x, b.y)) {
+                    endGame()
+                    return
+                }
+            }
+        }
+
+        // Update power-ups
+        val pUpIter = powerUps.iterator()
+        while (pUpIter.hasNext()) {
+            val pu = pUpIter.next()
+            pu.y += 5f
+            if (pu.y > height + 50) {
+                pUpIter.remove()
+            } else if (Math.abs(pu.x - playerX) < 40 && Math.abs(pu.y - playerY) < 40) {
+                gunLevel = if (gunLevel < 7) gunLevel + 2 else 7
+                powerUpEndTime = now + 10000 // 10 seconds
+                SoundManager.playScore()
+                pUpIter.remove()
+            }
         }
 
         // Update enemies
@@ -135,6 +193,12 @@ class StarFighterView @JvmOverloads constructor(
                 else -> 7f
             }
             e.y += speed
+            
+            // Enemy shooting
+            if (now - e.lastShoot > 2000) {
+                bullets.add(Bullet(e.x, e.y + e.size, 10f, isEnemy = true))
+                e.lastShoot = now
+            }
             
             // Check collision with player
             if (RectF(playerX - 30, playerY - 30, playerX + 30, playerY + 30).intersects(e.x - e.size, e.y - e.size, e.x + e.size, e.y + e.size)) {
@@ -153,6 +217,9 @@ class StarFighterView @JvmOverloads constructor(
                     if (e.hp <= 0) {
                         spawnExplosion(e.x, e.y, e.color)
                         score += when(e.type) { EnemyType.BIG -> 50; EnemyType.FAST -> 30; else -> 10 }
+                        if (random.nextFloat() < 0.15) {
+                            powerUps.add(PowerUp(e.x, e.y))
+                        }
                         SoundManager.playScore()
                         destroyed = true
                     }
@@ -214,8 +281,20 @@ class StarFighterView @JvmOverloads constructor(
         }
 
         // Bullets
-        paint.color = Color.YELLOW
-        bullets.forEach { canvas.drawRect(it.x - 4, it.y - 15, it.x + 4, it.y, paint) }
+        bullets.forEach {
+            paint.color = if (it.isEnemy) Color.RED else Color.YELLOW
+            canvas.drawRect(it.x - 4, it.y - 15, it.x + 4, it.y, paint)
+        }
+
+        // Power-ups
+        powerUps.forEach {
+            paint.color = Color.GREEN
+            canvas.drawCircle(it.x, it.y, 15f, paint)
+            paint.color = Color.WHITE
+            paint.textSize = 20f
+            paint.textAlign = Paint.Align.CENTER
+            canvas.drawText("P", it.x, it.y + 7, paint)
+        }
 
         // Enemies
         enemies.forEach { 
@@ -250,13 +329,15 @@ class StarFighterView @JvmOverloads constructor(
         canvas.drawText(sub, width / 2f, height / 2f + 60f, paint)
     }
 
-    data class Bullet(val x: Float, var y: Float, val vy: Float)
+    data class Bullet(val x: Float, var y: Float, val vy: Float, val isEnemy: Boolean = false)
     enum class EnemyType { NORMAL, FAST, BIG }
     data class Enemy(val x: Float, var y: Float, val type: EnemyType) {
         val size = when(type) { EnemyType.BIG -> 60f; EnemyType.FAST -> 25f; else -> 40f }
         var hp = when(type) { EnemyType.BIG -> 5; else -> 1 }
         val color = when(type) { EnemyType.BIG -> Color.MAGENTA; EnemyType.FAST -> Color.YELLOW; else -> Color.RED }
+        var lastShoot = System.currentTimeMillis() + (Math.random() * 1000).toLong()
     }
+    data class PowerUp(val x: Float, var y: Float)
     class Particle(var x: Float, var y: Float, val color: Int, random: Random) {
         var vx = random.nextFloat() * 10 - 5
         var vy = random.nextFloat() * 10 - 5

@@ -16,8 +16,12 @@ The hub features a diverse library of classic games:
 *   **Sokoban & Sudoku**: Challenging logic and spatial puzzles.
 *   **Tetris**: The ultimate block-stacking puzzle.
 *   **Star Fighter**: Retro space shooter with wave-based combat.
-*   **Maze**: High-complexity maze navigation with emoji-based goals.
-*   **Lines 98**: Strategic color-matching ball game.
+*   **Lines 98**: Strategic color-matching ball game with refined visuals.
+*   **Hangman**: Classic word-guessing game.
+*   **Road Racer**: High-speed traffic dodging game.
+*   **Memory**: Traditional card-matching game to test your recall.
+*   **Slide Puzzle**: Classic number/image sliding challenge.
+*   **Maze**: Find the correct exit in complex connected paths.
 *   **And many more**: Froggy Cross, Battle Tanks, Word Quest, Dungeon Escape, Solitaire, Simon Says, Mental Math, etc.
 
 ## ⌨️ Controls & Accessibility

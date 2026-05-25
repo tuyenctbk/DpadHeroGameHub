@@ -17,7 +17,6 @@ import com.tdpham.games.tetris.TetrisActivity
 import com.tdpham.games.starfighter.StarFighterActivity
 import com.tdpham.games.memory.MemoryActivity
 import com.tdpham.games.slidepuzzle.SlidePuzzleActivity
-import com.tdpham.games.maze.MazeActivity
 import com.tdpham.games.mentalmath.MentalMathActivity
 import com.tdpham.games.simon.SimonSaysActivity
 import com.tdpham.games.froggy.FroggyCrossActivity
@@ -32,7 +31,6 @@ import com.tdpham.games.trex.TRexActivity
 import com.tdpham.games.tictactoe.TicTacToeActivity
 import com.tdpham.games.hangman.HangmanActivity
 import com.tdpham.games.roadracer.RoadRacerActivity
-import com.tdpham.games.spinball.SpinballActivity
 import com.tdpham.games.common.SoundManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
@@ -126,10 +124,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SlidePuzzleActivity::class.java))
         }
 
-        val btnMaze = findViewById<Button>(R.id.btn_maze)
-        setupGameButton(btnMaze) {
-            startActivity(Intent(this, MazeActivity::class.java))
-        }
 
         val btnMentalMath = findViewById<Button>(R.id.btn_mental_math)
         setupGameButton(btnMentalMath) {
@@ -186,11 +180,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, HangmanActivity::class.java))
         }
 
-        val btnSpinball = findViewById<Button>(R.id.btn_spinball)
-        setupGameButton(btnSpinball) {
-            startActivity(Intent(this, SpinballActivity::class.java))
-        }
-
         focusLastPlayed()
     }
 
@@ -220,9 +209,7 @@ class MainActivity : AppCompatActivity() {
             "dungeon_escape" -> findViewById<Button>(R.id.btn_dungeon).requestFocus()
             "flappy_hero" -> findViewById<Button>(R.id.btn_flappy).requestFocus()
             "hangman" -> findViewById<Button>(R.id.btn_hangman).requestFocus()
-            "spinball" -> findViewById<Button>(R.id.btn_spinball).requestFocus()
             "road_racer" -> findViewById<Button>(R.id.btn_road_racer).requestFocus()
-            "maze" -> findViewById<Button>(R.id.btn_maze).requestFocus()
             "lines98" -> findViewById<Button>(R.id.btn_lines98).requestFocus()
             "solitaire" -> findViewById<Button>(R.id.btn_solitaire).requestFocus()
             else -> findViewById<Button>(R.id.btn_snake).requestFocus()
