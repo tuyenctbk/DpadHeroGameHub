@@ -8,7 +8,7 @@
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#-keepclassmembers class fqcn.of.Fjavascript.interface.for.webview {
 #   public *;
 #}
 
@@ -31,3 +31,7 @@
 -keep class androidx.appcompat.widget.SearchView { *; }
 -keep class androidx.appcompat.widget.SwitchCompat { *; }
 -keep class androidx.appcompat.widget.Toolbar { *; }
+
+# Fix R8 missing classes
+-dontwarn android.media.LoudnessCodecController$OnLoudnessCodecUpdateListener
+-dontwarn android.media.LoudnessCodecController

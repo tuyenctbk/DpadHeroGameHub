@@ -71,4 +71,13 @@
     <string name="dont_show_again">Nicht mehr anzeigen</string>
     <string name="start_game">SPIEL STARTEN</string>
     <string name="resume">FORTSETZEN</string>
+    <string name="score_label">PUNKTE</string>
+    <string name="best_label">REKORD</string>
+    <string name="next_label">NÄCHSTER</string>
+    <string name="game_over">GAME OVER</string>
+    <string name="paused">PAUSE</string>
+    <string name="win_4096">4096 ERREICHT!</string>
+    <string name="restart_hint">Drücke Center zum Neustart</string>
+    <string name="exit_hint">Back zum Beenden</string>
+    <string name="resume_hint">Drücke Center zum Fortsetzen</string>
 </resources>

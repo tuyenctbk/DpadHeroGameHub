@@ -1,29 +1,26 @@
 {
   "project_info": {
-    "project_number": "000000000000",
-    "project_id": "placeholder-id",
-    "storage_bucket": "placeholder-id.appspot.com"
+    "project_number": "755629936292",
+    "project_id": "dpad-hero",
+    "storage_bucket": "dpad-hero.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+        "mobilesdk_app_id": "1:755629936292:android:563111bd83e87f16d52031",
         "android_client_info": {
           "package_name": "com.tdpham.games"
         }
       },
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "placeholder-key"
+          "current_key": "AIzaSyBs6b9lZIqPGMkzAEFcow1kvAT4m6T8u2Q"
         }
       ],
       "services": {
         "appinvite_service": {
-          "status": 1,
           "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

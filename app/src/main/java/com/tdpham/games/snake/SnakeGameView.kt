@@ -11,6 +11,7 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
+import com.tdpham.games.R
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
@@ -300,23 +301,28 @@ class SnakeGameView @JvmOverloads constructor(
         canvas.drawCircle(foodCenterX - cellSize / 6, foodCenterY - cellSize / 6, cellSize / 8, paint)
 
         if (isGameOver) {
-            drawOverlay(canvas, gameOverReason, "Press Center to Restart\nPress Back to Exit")
+            val restartHint = context.getString(R.string.restart_hint)
+            val exitHint = context.getString(R.string.exit_hint)
+            drawOverlay(canvas, gameOverReason, "$restartHint\n$exitHint")
         } else if (isPaused) {
-            drawOverlay(canvas, "PAUSED", "Press Center to Resume\nPress Back to Exit")
+            val resumeHint = context.getString(R.string.resume_hint)
+            val exitHint = context.getString(R.string.exit_hint)
+            drawOverlay(canvas, context.getString(R.string.paused), "$resumeHint\n$exitHint")
         }
 
         // Draw Score Header
         paint.textSize = cellSize * 1.0f
         paint.textAlign = Paint.Align.LEFT
         paint.color = GamePalette.TEXT_SECONDARY
-        canvas.drawText("SCORE: ", offsetX, offsetY - cellSize * 1.2f, paint)
-        val scoreWidth = paint.measureText("SCORE: ")
+        val scoreLabel = context.getString(R.string.score_label) + ": "
+        canvas.drawText(scoreLabel, offsetX, offsetY - cellSize * 1.2f, paint)
+        val scoreWidth = paint.measureText(scoreLabel)
         paint.color = GamePalette.SCORE
         canvas.drawText("$score", offsetX + scoreWidth, offsetY - cellSize * 1.2f, paint)
         
         paint.textAlign = Paint.Align.RIGHT
         paint.color = GamePalette.TEXT_SECONDARY
-        canvas.drawText("BEST: $highScore", offsetX + gridSize * cellSize, offsetY - cellSize * 1.2f, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", offsetX + gridSize * cellSize, offsetY - cellSize * 1.2f, paint)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {

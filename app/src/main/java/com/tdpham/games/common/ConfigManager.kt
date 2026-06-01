@@ -13,7 +13,7 @@ object ConfigManager {
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.setDefaultsAsync(mapOf(
-            "is_ads_enabled" to false,
+            "is_ads_enabled" to true,
             "snake_speed" to 150L
         ))
         remoteConfig.fetchAndActivate()

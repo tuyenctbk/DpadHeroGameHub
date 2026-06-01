@@ -77,7 +77,9 @@ abstract class BaseGameActivity : AppCompatActivity() {
                     hasStarted = true
                     gameView.startGame()
                 } else {
-                    gameView.resume()
+                    AdManager.showInterstitial(this) {
+                        gameView.resume()
+                    }
                 }
                 (gameView as View).requestFocus()
             }

@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
+import com.tdpham.games.R
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
@@ -339,18 +340,18 @@ class TetrisView @JvmOverloads constructor(
         textPaint.color = GamePalette.TEXT_PRIMARY
         textPaint.textSize = size * 0.8f
         textPaint.textAlign = Paint.Align.LEFT
-        canvas.drawText("SCORE: $score", offsetX + cols * size + 40, offsetY + size, textPaint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", offsetX + cols * size + 40, offsetY + size, textPaint)
         textPaint.color = GamePalette.TEXT_SECONDARY
-        canvas.drawText("BEST: $best", offsetX + cols * size + 40, offsetY + size * 2.5f, textPaint)
-        canvas.drawText("NEXT:", offsetX + cols * size + 40, offsetY + size * 4.5f, textPaint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", offsetX + cols * size + 40, offsetY + size * 2.5f, textPaint)
+        canvas.drawText("${context.getString(R.string.next_label)}:", offsetX + cols * size + 40, offsetY + size * 4.5f, textPaint)
 
         // Draw next piece
         for (cell in shapeCells(next.shape, next.rot)) {
             drawBlock(canvas, offsetX + (cols + 3 + cell.second) * size, offsetY + (6 + cell.first) * size, size, colorFor(next.shape + 1))
         }
 
-        if (gameOver) drawOverlay(canvas, "GAME OVER", "Score: $score\nPress Center to Restart")
-        else if (paused) drawOverlay(canvas, "PAUSED", "Press Center to Resume")
+        if (gameOver) drawOverlay(canvas, context.getString(R.string.game_over), "Score: $score\n${context.getString(R.string.restart_hint)}")
+        else if (paused) drawOverlay(canvas, context.getString(R.string.paused), context.getString(R.string.resume_hint))
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {

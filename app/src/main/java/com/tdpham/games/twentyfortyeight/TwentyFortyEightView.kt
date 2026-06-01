@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
+import com.tdpham.games.R
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
@@ -209,7 +210,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.LEFT
         paint.textSize = cellSize * 0.3f
         paint.color = GamePalette.TEXT_SECONDARY
-        canvas.drawText("SCORE", offsetX, offsetY - cellSize * 0.8f, paint)
+        canvas.drawText(context.getString(R.string.score_label), offsetX, offsetY - cellSize * 0.8f, paint)
         paint.textSize = cellSize * 0.5f
         paint.color = GamePalette.TEXT_PRIMARY
         canvas.drawText("$score", offsetX, offsetY - cellSize * 0.3f, paint)
@@ -218,7 +219,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.RIGHT
         paint.textSize = cellSize * 0.3f
         paint.color = GamePalette.TEXT_SECONDARY
-        canvas.drawText("BEST", offsetX + gridSize * cellSize, offsetY - cellSize * 0.8f, paint)
+        canvas.drawText(context.getString(R.string.best_label), offsetX + gridSize * cellSize, offsetY - cellSize * 0.8f, paint)
         paint.textSize = cellSize * 0.5f
         paint.color = GamePalette.SCORE
         canvas.drawText("$highScore", offsetX + gridSize * cellSize, offsetY - cellSize * 0.3f, paint)
@@ -279,11 +280,13 @@ class TwentyFortyEightView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = width / 15f
         paint.color = if (isWin) Color.GREEN else GamePalette.WARNING
-        canvas.drawText(if (isWin) "4096 REACHED!" else "GAME OVER", width / 2f, height / 2f, paint)
+        canvas.drawText(if (isWin) context.getString(R.string.win_4096) else context.getString(R.string.game_over), width / 2f, height / 2f, paint)
         
         paint.textSize = width / 40f
         paint.color = GamePalette.TEXT_PRIMARY
-        canvas.drawText("Press Center to Restart | Back to Exit", width / 2f, height / 2f + 80f, paint)
+        val restartHint = context.getString(R.string.restart_hint)
+        val exitHint = context.getString(R.string.exit_hint)
+        canvas.drawText("$restartHint | $exitHint", width / 2f, height / 2f + 80f, paint)
     }
 
     private fun getTileColor(value: Int): Int {
