@@ -22,6 +22,7 @@ class TicTacToeView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "tic_tac_toe"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     
     private var gridSize = 3
@@ -31,6 +32,7 @@ class TicTacToeView @JvmOverloads constructor(
     private var gameOver = false
     private var status = ""
     private var wins = 0
+    private val winningCells = mutableListOf<Pair<Int, Int>>()
     
     private var turnStarter = 1 // 1 for Player, 2 for CPU
     private var isPlayerTurn = true
@@ -69,6 +71,7 @@ class TicTacToeView @JvmOverloads constructor(
         cursorR = gridSize / 2
         cursorC = gridSize / 2
         gameOver = false
+        winningCells.clear()
         wins = ScoreManager.getHighScore(context, gameKey)
         
         isPlayerTurn = (turnStarter == 1)
@@ -190,11 +193,13 @@ class TicTacToeView @JvmOverloads constructor(
             gameOver = true
             status = "$winLabel - CENTER TO RESTART"
             SoundManager.playSuccess()
+            onGameOver?.invoke(wins)
             true
         } else if (isDraw()) {
             gameOver = true
             status = "DRAW - CENTER TO RESTART"
             SoundManager.playError()
+            onGameOver?.invoke(wins)
             true
         } else {
             false
@@ -207,7 +212,10 @@ class TicTacToeView @JvmOverloads constructor(
             if (board[r][0] != 0) {
                 var win = true
                 for (c in 1 until gridSize) if (board[r][c] != board[r][0]) { win = false; break }
-                if (win) return board[r][0]
+                if (win) {
+                    repeat(gridSize) { winningCells.add(r to it) }
+                    return board[r][0]
+                }
             }
         }
         // Cols
@@ -215,19 +223,28 @@ class TicTacToeView @JvmOverloads constructor(
             if (board[0][c] != 0) {
                 var win = true
                 for (r in 1 until gridSize) if (board[r][c] != board[0][c]) { win = false; break }
-                if (win) return board[0][c]
+                if (win) {
+                    repeat(gridSize) { winningCells.add(it to c) }
+                    return board[0][c]
+                }
             }
         }
         // Diagonals
         if (board[0][0] != 0) {
             var win = true
             for (i in 1 until gridSize) if (board[i][i] != board[0][0]) { win = false; break }
-            if (win) return board[0][0]
+            if (win) {
+                repeat(gridSize) { winningCells.add(it to it) }
+                return board[0][0]
+            }
         }
         if (board[0][gridSize - 1] != 0) {
             var win = true
             for (i in 1 until gridSize) if (board[i][gridSize - 1 - i] != board[0][gridSize - 1]) { win = false; break }
-            if (win) return board[0][gridSize - 1]
+            if (win) {
+                repeat(gridSize) { winningCells.add(it to gridSize - 1 - it) }
+                return board[0][gridSize - 1]
+            }
         }
         return 0
     }
@@ -261,12 +278,12 @@ class TicTacToeView @JvmOverloads constructor(
             } else 1.0f
 
             if (board[r][c] == 1) {
-                paint.color = Color.parseColor("#81C784")
+                paint.color = if (winningCells.contains(r to c)) Color.WHITE else Color.parseColor("#81C784")
                 paint.textAlign = Paint.Align.CENTER
                 paint.textSize = cell * 0.6f * scale
                 canvas.drawText("X", cx, cy + (cell * 0.2f) * scale, paint)
             } else if (board[r][c] == 2) {
-                paint.color = Color.parseColor("#E57373")
+                paint.color = if (winningCells.contains(r to c)) Color.WHITE else Color.parseColor("#E57373")
                 paint.textAlign = Paint.Align.CENTER
                 paint.textSize = cell * 0.6f * scale
                 canvas.drawText("O", cx, cy + (cell * 0.2f) * scale, paint)

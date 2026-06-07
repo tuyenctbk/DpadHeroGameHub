@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
-import android.media.ToneGenerator
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -24,35 +23,13 @@ class MinesweeperView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "minesweeper"
+    override var onGameOver: ((Int) -> Unit)? = null
 
     private val rows = 10
     private val cols = 10
     private val minesCount = 12
     private var cellSize = 0f
 
-    override fun startGame() {
-        requestFocus()
-    }
-
-    override fun pause() {
-        revealHandler.removeCallbacks(processQueueRunnable)
-    }
-
-    override fun resume() {
-        if (isProcessingQueue && !isGameOver && !isWin) {
-            revealHandler.post(processQueueRunnable)
-        }
-    }
-
-    override fun resetGame() {
-        totalWins = ScoreManager.getHighScore(context, gameKey)
-        setupGame()
-    }
-
-    override fun toggleSound(): Boolean {
-        return SoundManager.toggleSound()
-    }
-    
     private val grid = Array(rows) { Array(cols) { Cell() } }
     private var cursorX = 0
     private var cursorY = 0
@@ -61,9 +38,29 @@ class MinesweeperView @JvmOverloads constructor(
     private var isFirstClick = true
     private var totalWins = 0
     
+    private val pressedKeys = mutableSetOf<Int>()
+    private val moveHandler = Handler(Looper.getMainLooper())
+    private val moveRunnable = object : Runnable {
+        override fun run() {
+            if (pressedKeys.isNotEmpty() && !isGameOver && !isWin) {
+                var moved = false
+                if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_UP) && cursorY > 0) { cursorY--; moved = true }
+                if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_DOWN) && cursorY < rows - 1) { cursorY++; moved = true }
+                if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT) && cursorX > 0) { cursorX--; moved = true }
+                if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT) && cursorX < cols - 1) { cursorX++; moved = true }
+                
+                if (moved) {
+                    invalidate()
+                    moveHandler.postDelayed(this, 150)
+                }
+            }
+        }
+    }
+
     private val revealQueue: Queue<Pair<Int, Int>> = LinkedList()
     private val revealHandler = Handler(Looper.getMainLooper())
     private var isProcessingQueue = false
+    
     private var animationFrame = 0
     private val animationHandler = Handler(Looper.getMainLooper())
     private val animationRunnable = object : Runnable {
@@ -93,7 +90,7 @@ class MinesweeperView @JvmOverloads constructor(
                 checkWin()
             }
             
-            revealHandler.postDelayed(this, 30) // Ripple speed
+            revealHandler.postDelayed(this, 30)
         }
     }
 
@@ -109,10 +106,33 @@ class MinesweeperView @JvmOverloads constructor(
         animationHandler.post(animationRunnable)
     }
 
+    override fun startGame() {
+        requestFocus()
+    }
+
+    override fun pause() {
+        revealHandler.removeCallbacks(processQueueRunnable)
+    }
+
+    override fun resume() {
+        if (isProcessingQueue && !isGameOver && !isWin) {
+            revealHandler.post(processQueueRunnable)
+        }
+    }
+
+    override fun resetGame() {
+        setupGame()
+    }
+
+    override fun toggleSound(): Boolean {
+        return SoundManager.toggleSound()
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         revealHandler.removeCallbacks(processQueueRunnable)
         animationHandler.removeCallbacks(animationRunnable)
+        moveHandler.removeCallbacks(moveRunnable)
     }
 
     private fun setupGame() {
@@ -173,12 +193,8 @@ class MinesweeperView @JvmOverloads constructor(
             for (c in 0 until cols) {
                 if (grid[r][c].isMine) {
                     grid[r][c].isRevealed = true
-                    // Mark the specific mine that was hit
-                    if (r == hitR && c == hitC) {
-                        grid[r][c].isExploded = true
-                    }
+                    if (r == hitR && c == hitC) grid[r][c].isExploded = true
                 } else if (grid[r][c].isFlagged) {
-                    // Mark incorrectly flagged cells
                     grid[r][c].isBadFlag = true
                 }
             }
@@ -190,20 +206,18 @@ class MinesweeperView @JvmOverloads constructor(
         
         if (isFirstClick) {
             isFirstClick = false
-            if (grid[r][c].isMine) {
-                moveMine(r, c)
-            }
+            if (grid[r][c].isMine) moveMine(r, c)
         }
 
         if (grid[r][c].isMine) {
             isGameOver = true
             SoundManager.playError()
             revealAllMines(r, c)
+            onGameOver?.invoke(totalWins)
             invalidate()
             return
         }
 
-        // Start staggered reveal
         revealQueue.add(Pair(r, c))
         if (!isProcessingQueue) {
             isProcessingQueue = true
@@ -258,12 +272,13 @@ class MinesweeperView @JvmOverloads constructor(
             totalWins++
             ScoreManager.updateHighScore(context, gameKey, totalWins)
             SoundManager.playSuccess()
+            onGameOver?.invoke(totalWins)
             invalidate()
         }
     }
 
     private fun toggleFlag(r: Int, c: Int) {
-        if (!grid[r][c].isRevealed) {
+        if (!grid[r][c].isRevealed && !isGameOver && !isWin) {
             grid[r][c].isFlagged = !grid[r][c].isFlagged
             SoundManager.playFlag()
             invalidate()
@@ -279,25 +294,45 @@ class MinesweeperView @JvmOverloads constructor(
             return super.onKeyDown(keyCode, event)
         }
 
-        return when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> { if (cursorY > 0) cursorY--; invalidate(); true }
-            KeyEvent.KEYCODE_DPAD_DOWN -> { if (cursorY < rows - 1) cursorY++; invalidate(); true }
-            KeyEvent.KEYCODE_DPAD_LEFT -> { if (cursorX > 0) cursorX--; invalidate(); true }
-            KeyEvent.KEYCODE_DPAD_RIGHT -> { if (cursorX < cols - 1) cursorX++; invalidate(); true }
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN,
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                if (pressedKeys.isEmpty()) {
+                    when (keyCode) {
+                        KeyEvent.KEYCODE_DPAD_UP -> if (cursorY > 0) cursorY--
+                        KeyEvent.KEYCODE_DPAD_DOWN -> if (cursorY < rows - 1) cursorY++
+                        KeyEvent.KEYCODE_DPAD_LEFT -> if (cursorX > 0) cursorX--
+                        KeyEvent.KEYCODE_DPAD_RIGHT -> if (cursorX < cols - 1) cursorX++
+                    }
+                    invalidate()
+                    moveHandler.removeCallbacks(moveRunnable)
+                    moveHandler.postDelayed(moveRunnable, 400)
+                }
+                pressedKeys.add(keyCode)
+                return true
+            }
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
                 revealCell(cursorY, cursorX)
-                true
+                return true
             }
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_DPAD_DOWN_LEFT -> {
                 toggleFlag(cursorY, cursorX)
-                true
+                return true
             }
             KeyEvent.KEYCODE_M, KeyEvent.KEYCODE_VOLUME_MUTE -> {
                 toggleSound()
-                true
+                return true
             }
-            else -> super.onKeyDown(keyCode, event)
         }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        pressedKeys.remove(keyCode)
+        if (pressedKeys.isEmpty()) {
+            moveHandler.removeCallbacks(moveRunnable)
+        }
+        return super.onKeyUp(keyCode, event)
     }
 
     private fun getFlaggedCount(): Int {
@@ -351,7 +386,6 @@ class MinesweeperView @JvmOverloads constructor(
                 canvas.drawRect(rectLeft + margin, rectTop + margin, rectRight - margin, rectBottom - margin, paint)
                 
                 if (!cell.isRevealed) {
-                    // 3D light effect for unrevealed cells
                     paint.color = Color.parseColor("#616161")
                     canvas.drawLine(rectLeft + 2, rectTop + 2, rectRight - 2, rectTop + 2, paint)
                     canvas.drawLine(rectLeft + 2, rectTop + 2, rectLeft + 2, rectBottom - 2, paint)
@@ -363,7 +397,6 @@ class MinesweeperView @JvmOverloads constructor(
 
                 if (cell.isRevealed) {
                     if (cell.isMine) {
-                        // Highlight the mine that ended the game
                         paint.color = if (cell.isExploded) Color.RED else Color.BLACK
                         paint.style = Paint.Style.FILL
                         canvas.drawRect(rectLeft + 2, rectTop + 2, rectRight - 2, rectBottom - 2, paint)
@@ -378,14 +411,11 @@ class MinesweeperView @JvmOverloads constructor(
                     }
                 } else if (cell.isFlagged) {
                     if (isGameOver && !cell.isMine) {
-                        // Show "Bad Flag" (Crossed out mine)
                         paint.color = Color.LTGRAY
                         paint.style = Paint.Style.FILL
                         canvas.drawRect(rectLeft + 2, rectTop + 2, rectRight - 2, rectBottom - 2, paint)
-                        
                         paint.color = Color.BLACK
                         canvas.drawCircle(rectLeft + cellSize / 2, rectTop + cellSize / 2, cellSize / 3, paint)
-                        
                         paint.color = Color.RED
                         paint.strokeWidth = 3f
                         canvas.drawLine(rectLeft + 5, rectTop + 5, rectRight - 5, rectBottom - 5, paint)
@@ -398,7 +428,7 @@ class MinesweeperView @JvmOverloads constructor(
                     }
                 }
 
-                if (r == cursorY && c == cursorX) {
+                if (r == cursorY && c == cursorX && !isGameOver && !isWin) {
                     val pulse = (Math.sin(animationFrame * 0.3).toFloat() * 2f)
                     paint.color = Color.YELLOW
                     paint.style = Paint.Style.STROKE
@@ -409,7 +439,6 @@ class MinesweeperView @JvmOverloads constructor(
         }
 
         if (isGameOver || isWin) {
-            // Semi-transparent overlay
             paint.color = GamePalette.OVERLAY
             paint.style = Paint.Style.FILL
             canvas.drawRect(0f, height / 2f - 100f, width.toFloat(), height / 2f + 140f, paint)

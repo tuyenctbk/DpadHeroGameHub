@@ -18,6 +18,7 @@ class RoadRacerView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr), GameView {
 
     override var gameKey: String = "road_racer"
+    override var onGameOver: ((Int) -> Unit)? = null
 
     private var score = 0
     private var highScore = 0
@@ -175,6 +176,7 @@ class RoadRacerView @JvmOverloads constructor(
         isGameOver = true
         SoundManager.playError()
         ScoreManager.updateHighScore(context, gameKey, score)
+        onGameOver?.invoke(score)
     }
 
     override fun onDraw(canvas: Canvas) {

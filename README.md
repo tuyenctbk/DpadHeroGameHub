@@ -65,5 +65,14 @@ For a successful Google Play launch, the following improvements are suggested:
 *   **Platform**: Android (Min SDK 24+)
 *   **Rendering**: Custom 2D Graphics via Android `Canvas`.
 
+## 📦 Release Build & Signing
+
+To generate a signed release APK or App Bundle, use the following keystore information:
+
+*   **Keystore Path**: `common_release_key.jks` (Project Root)
+*   **Keystore Password**: `dpadhero123`
+*   **Alias**: `release`
+*   **Key Password**: `dpadhero123`
+
 ---
 Developed by **DPADHERO STUDIO**

@@ -2,6 +2,8 @@ package com.tdpham.games.starfighter
 
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
@@ -19,6 +21,7 @@ class StarFighterView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr), GameView {
 
     override var gameKey: String = "starfighter"
+    override var onGameOver: ((Int) -> Unit)? = null
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var score = 0
@@ -44,8 +47,20 @@ class StarFighterView @JvmOverloads constructor(
     private var gunLevel = 1
     private var powerUpEndTime = 0L
     private var bgType = GameEnvironment.BackgroundType.STARRY
+    private val pressedKeys = mutableSetOf<Int>()
+    private val screenShake = com.tdpham.games.common.ScreenShake()
 
-    // Reuse objects to avoid allocations in onDraw
+    private val handler = Handler(Looper.getMainLooper())
+    private val gameLoop = object : Runnable {
+        override fun run() {
+            if (!isPaused && !gameOver) {
+                update()
+                invalidate()
+                handler.postDelayed(this, 16)
+            }
+        }
+    }
+
     private val tempRect = RectF()
     private val playerPath = Path()
     private val tempPath = Path()
@@ -58,11 +73,20 @@ class StarFighterView @JvmOverloads constructor(
 
     override fun startGame() {
         isPaused = false
-        invalidate()
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
     }
 
-    override fun pause() { isPaused = true }
-    override fun resume() { isPaused = false; invalidate() }
+    override fun pause() { 
+        isPaused = true
+        handler.removeCallbacks(gameLoop)
+    }
+    
+    override fun resume() { 
+        isPaused = false
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+    }
 
     override fun resetGame() {
         score = 0
@@ -78,6 +102,8 @@ class StarFighterView @JvmOverloads constructor(
         powerUps.clear()
         particles.clear()
         bgParticles.clear()
+        pressedKeys.clear()
+        handler.removeCallbacks(gameLoop)
         bgType = listOf(GameEnvironment.BackgroundType.GRADIENT, GameEnvironment.BackgroundType.STARRY, GameEnvironment.BackgroundType.SOLID).random()
         repeat(60) {
             bgParticles.add(GameEnvironment.Particle(random.nextFloat() * 2000, random.nextFloat() * 2000, random.nextFloat() * 4 + 1))
@@ -101,37 +127,54 @@ class StarFighterView @JvmOverloads constructor(
             return super.onKeyDown(keyCode, event)
         }
 
-        val step = 45f
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_LEFT -> playerX = (playerX - step).coerceAtLeast(playerSize)
-            KeyEvent.KEYCODE_DPAD_RIGHT -> playerX = (playerX + step).coerceAtMost(width - playerSize)
-            KeyEvent.KEYCODE_DPAD_UP -> playerY = (playerY - step).coerceAtLeast(playerSize)
-            KeyEvent.KEYCODE_DPAD_DOWN -> playerY = (playerY + step).coerceAtMost(height - playerSize)
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
-            else -> return super.onKeyDown(keyCode, event)
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT,
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN -> {
+                pressedKeys.add(keyCode)
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+                pause()
+                return true
+            }
+            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> {
+                toggleSound()
+                return true
+            }
         }
-        invalidate()
-        return true
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        pressedKeys.remove(keyCode)
+        return super.onKeyUp(keyCode, event)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(gameLoop)
     }
 
     private fun update() {
         if (isPaused || gameOver) return
 
+        val step = 12f
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) playerX = (playerX - step).coerceAtLeast(playerSize)
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) playerX = (playerX + step).coerceAtMost(width - playerSize)
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_UP)) playerY = (playerY - step).coerceAtLeast(playerSize)
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_DOWN)) playerY = (playerY + step).coerceAtMost(height - playerSize)
+
         val now = System.currentTimeMillis()
         
-        // Spawn Enemies
         if (now - lastEnemySpawn > (1200 - (score / 200) * 50).coerceAtLeast(600)) {
             val type = if (random.nextFloat() < 0.15) EnemyType.FAST else if (random.nextFloat() < 0.1) EnemyType.BIG else EnemyType.NORMAL
             enemies.add(Enemy(random.nextFloat() * (width - 150) + 75, -100f, type))
             lastEnemySpawn = now
         }
 
-        // Auto-shoot
         val shootInterval = if (gunLevel >= 3) 250 else 350
         if (now - lastShoot > shootInterval) {
-            if (now > powerUpEndTime) {
-                gunLevel = 1
-            }
+            if (now > powerUpEndTime) gunLevel = 1
             
             when (gunLevel) {
                 1 -> bullets.add(Bullet(playerX, playerY - 40, -18f))
@@ -144,7 +187,7 @@ class StarFighterView @JvmOverloads constructor(
                     bullets.add(Bullet(playerX - 25, playerY - 20, -20f, -3f))
                     bullets.add(Bullet(playerX + 25, playerY - 20, -20f, 3f))
                 }
-                else -> { // Level 4+
+                else -> {
                     bullets.add(Bullet(playerX, playerY - 40, -22f))
                     bullets.add(Bullet(playerX - 20, playerY - 35, -22f))
                     bullets.add(Bullet(playerX + 20, playerY - 35, -22f))
@@ -155,7 +198,6 @@ class StarFighterView @JvmOverloads constructor(
             lastShoot = now
         }
 
-        // Update bullets
         val bIter = bullets.iterator()
         while (bIter.hasNext()) {
             val b = bIter.next()
@@ -167,7 +209,6 @@ class StarFighterView @JvmOverloads constructor(
             }
 
             if (b.isEnemy) {
-                // Check collision with player
                 if (now > invulnerableUntil && RectF(playerX - 25, playerY - 25, playerX + 25, playerY + 25).contains(b.x, b.y)) {
                     playerHit()
                     bIter.remove()
@@ -177,7 +218,6 @@ class StarFighterView @JvmOverloads constructor(
             }
         }
 
-        // Update power-ups
         val pUpIter = powerUps.iterator()
         while (pUpIter.hasNext()) {
             val pu = pUpIter.next()
@@ -186,52 +226,31 @@ class StarFighterView @JvmOverloads constructor(
                 pUpIter.remove()
             } else if (Math.abs(pu.x - playerX) < 50 && Math.abs(pu.y - playerY) < 50) {
                 when(pu.type) {
-                    PowerUpType.WEAPON -> {
-                        gunLevel = (gunLevel + 1).coerceAtMost(4)
-                        powerUpEndTime = now + 15000 // 15 seconds
-                    }
-                    PowerUpType.LIFE -> {
-                        lives = (lives + 1).coerceAtMost(5)
-                    }
+                    PowerUpType.WEAPON -> { gunLevel = (gunLevel + 1).coerceAtMost(4); powerUpEndTime = now + 15000 }
+                    PowerUpType.LIFE -> { lives = (lives + 1).coerceAtMost(5) }
                 }
                 SoundManager.playScore()
                 pUpIter.remove()
             }
         }
 
-        // Update enemies
         val eIter = enemies.iterator()
         while (eIter.hasNext()) {
             val e = eIter.next()
-            val speedY = when(e.type) {
-                EnemyType.FAST -> 8f
-                EnemyType.BIG -> 2.5f
-                else -> 4.5f
-            }
+            val speedY = when(e.type) { EnemyType.FAST -> 8f; EnemyType.BIG -> 2.5f; else -> 4.5f }
             e.y += speedY
 
-            // Hunting logic: Move towards player horizontally
-            val huntSpeed = when(e.type) {
-                EnemyType.FAST -> 4.5f
-                EnemyType.BIG -> 1.5f
-                else -> 3f
-            }
-            if (e.y > 0 && e.y < height * 0.8f) { // Only hunt while on screen
+            val huntSpeed = when(e.type) { EnemyType.FAST -> 4.5f; EnemyType.BIG -> 1.5f; else -> 3f }
+            if (e.y > 0 && e.y < height * 0.8f) {
                 if (e.x < playerX - 15) e.x += huntSpeed
                 else if (e.x > playerX + 15) e.x -= huntSpeed
             }
             
-            // Enemy shooting (Shoot back)
-            val shootChance = when(e.type) {
-                EnemyType.BIG -> 0.02f
-                EnemyType.FAST -> 0.005f
-                else -> 0.01f
-            }
+            val shootChance = when(e.type) { EnemyType.BIG -> 0.02f; EnemyType.FAST -> 0.005f; else -> 0.01f }
             if (random.nextFloat() < shootChance && e.y > 0 && e.y < height * 0.7f) {
                 bullets.add(Bullet(e.x, e.y + e.size, 10f, 0f, true))
             }
             
-            // Check collision with player
             if (now > invulnerableUntil && RectF(playerX - 35, playerY - 35, playerX + 35, playerY + 35).intersects(e.x - e.size * 0.8f, e.y - e.size * 0.8f, e.x + e.size * 0.8f, e.y + e.size * 0.8f)) {
                 playerHit()
                 spawnExplosion(e.x, e.y, e.color)
@@ -240,7 +259,6 @@ class StarFighterView @JvmOverloads constructor(
                 continue
             }
 
-            // Check collision with bullets
             val bIter2 = bullets.iterator()
             var destroyed = false
             while (bIter2.hasNext()) {
@@ -251,7 +269,6 @@ class StarFighterView @JvmOverloads constructor(
                     if (e.hp <= 0) {
                         spawnExplosion(e.x, e.y, e.color)
                         score += when(e.type) { EnemyType.BIG -> 100; EnemyType.FAST -> 50; else -> 20 }
-                        // Reward system
                         if (random.nextFloat() < 0.12) {
                             val pType = if (random.nextFloat() < 0.8 || lives >= 5) PowerUpType.WEAPON else PowerUpType.LIFE
                             powerUps.add(PowerUp(e.x, e.y, pType))
@@ -266,25 +283,23 @@ class StarFighterView @JvmOverloads constructor(
             else if (e.y > height + 150) eIter.remove()
         }
 
-        // Particles
         val pIter = particles.iterator()
         while (pIter.hasNext()) {
             val p = pIter.next()
             p.update()
             if (p.life <= 0) pIter.remove()
         }
-        
-        invalidate()
     }
 
     private fun playerHit() {
         lives--
+        screenShake.trigger(12, 20f)
         spawnExplosion(playerX, playerY, Color.CYAN)
         SoundManager.playError()
         if (lives <= 0) {
             endGame()
         } else {
-            invulnerableUntil = System.currentTimeMillis() + 2000 // 2s invulnerability
+            invulnerableUntil = System.currentTimeMillis() + 2000
         }
     }
 
@@ -295,15 +310,15 @@ class StarFighterView @JvmOverloads constructor(
     private fun endGame() {
         gameOver = true
         ScoreManager.updateHighScore(context, gameKey, score)
+        onGameOver?.invoke(score)
     }
 
     override fun onDraw(canvas: Canvas) {
+        val needsInvalidate = screenShake.apply(canvas)
         if (playerX == 0f) { playerX = width / 2f; playerY = height - 250f }
         
-        update()
         GameEnvironment.draw(canvas, bgType, isNight = true, paint = paint, particles = bgParticles)
 
-        // Particles
         particles.forEach { 
             paint.color = it.color
             paint.alpha = (it.life * 255).toInt()
@@ -318,45 +333,17 @@ class StarFighterView @JvmOverloads constructor(
             }
         }
 
-        // Bullets
-        bullets.forEach {
-            paint.color = if (it.isEnemy) Color.RED else Color.CYAN
-            paint.style = Paint.Style.FILL
-            canvas.drawRect(it.x - 3, it.y - 12, it.x + 3, it.y + 12, paint)
-            // Glow
-            paint.alpha = 100
-            canvas.drawCircle(it.x, it.y, 8f, paint)
-            paint.alpha = 255
-        }
-
-        // Power-ups
-        powerUps.forEach { pu ->
-            paint.style = Paint.Style.FILL
-            paint.color = if (pu.type == PowerUpType.LIFE) Color.RED else Color.GREEN
-            canvas.drawCircle(pu.x, pu.y, 22f, paint)
-            paint.color = Color.WHITE
-            paint.style = Paint.Style.STROKE
-            paint.strokeWidth = 2f
-            canvas.drawCircle(pu.x, pu.y, 26f, paint)
-            
-            paint.style = Paint.Style.FILL
-            paint.textSize = 24f
-            paint.textAlign = Paint.Align.CENTER
-            val label = if (pu.type == PowerUpType.LIFE) "❤" else "W"
-            canvas.drawText(label, pu.x, pu.y + 10f, paint)
-        }
-
-        // Enemies
-        enemies.forEach { e ->
-            paint.style = Paint.Style.FILL
+        for (e in enemies) {
             paint.color = e.color
             when (e.type) {
                 EnemyType.BIG -> {
                     tempRect.set(e.x - e.size, e.y - e.size, e.x + e.size, e.y + e.size)
                     canvas.drawRoundRect(tempRect, 15f, 15f, paint)
                     paint.color = Color.BLACK
+                    paint.alpha = 100
                     canvas.drawRect(e.x - 20, e.y - 10, e.x - 10, e.y + 10, paint)
                     canvas.drawRect(e.x + 10, e.y - 10, e.x + 20, e.y + 10, paint)
+                    paint.alpha = 255
                 }
                 EnemyType.FAST -> {
                     tempPath.reset()
@@ -369,13 +356,38 @@ class StarFighterView @JvmOverloads constructor(
                 else -> {
                     canvas.drawCircle(e.x, e.y, e.size, paint)
                     paint.color = Color.WHITE
+                    paint.alpha = 150
                     canvas.drawCircle(e.x - 10, e.y - 5, 5f, paint)
                     canvas.drawCircle(e.x + 10, e.y - 5, 5f, paint)
+                    paint.alpha = 255
                 }
             }
         }
 
-        // HUD
+        bullets.forEach {
+            paint.color = if (it.isEnemy) Color.RED else Color.CYAN
+            paint.style = Paint.Style.FILL
+            canvas.drawRect(it.x - 3, it.y - 12, it.x + 3, it.y + 12, paint)
+            paint.alpha = 100
+            canvas.drawCircle(it.x, it.y, 8f, paint)
+            paint.alpha = 255
+        }
+
+        powerUps.forEach { pu ->
+            paint.style = Paint.Style.FILL
+            paint.color = if (pu.type == PowerUpType.LIFE) Color.RED else Color.GREEN
+            canvas.drawCircle(pu.x, pu.y, 22f, paint)
+            paint.color = Color.WHITE
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = 2f
+            canvas.drawCircle(pu.x, pu.y, 26f, paint)
+            paint.style = Paint.Style.FILL
+            paint.textSize = 24f
+            paint.textAlign = Paint.Align.CENTER
+            val label = if (pu.type == PowerUpType.LIFE) "❤" else "W"
+            canvas.drawText(label, pu.x, pu.y + 10f, paint)
+        }
+
         paint.color = Color.WHITE
         paint.textSize = 40f
         paint.style = Paint.Style.FILL
@@ -384,19 +396,19 @@ class StarFighterView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("BEST: $best", width - 40f, 60f, paint)
         
-        // Lives
         paint.textAlign = Paint.Align.LEFT
         paint.color = Color.RED
-        val livesStr = "❤".repeat(lives)
+        val livesStr = "❤ ".repeat(lives)
         canvas.drawText(livesStr, 40f, 110f, paint)
 
         if (gameOver) drawOverlay(canvas, "MISSION FAILED", "Score: $score\nPress Center to Restart")
         else if (isPaused) drawOverlay(canvas, "STAR FIGHTER", "Use DPAD to move\nPress Center to Start")
+        
+        if (needsInvalidate) invalidate()
     }
 
     private fun drawPlayerShip(canvas: Canvas, x: Float, y: Float) {
         paint.style = Paint.Style.FILL
-        // Wings
         paint.color = Color.parseColor("#455A64")
         playerPath.reset()
         playerPath.moveTo(x - 60, y + 30)
@@ -406,7 +418,6 @@ class StarFighterView @JvmOverloads constructor(
         playerPath.close()
         canvas.drawPath(playerPath, paint)
 
-        // Body
         paint.color = Color.CYAN
         playerPath.reset()
         playerPath.moveTo(x, y - 50)
@@ -415,11 +426,9 @@ class StarFighterView @JvmOverloads constructor(
         playerPath.close()
         canvas.drawPath(playerPath, paint)
 
-        // Cockpit
         paint.color = Color.WHITE
         canvas.drawCircle(x, y - 10, 8f, paint)
 
-        // Thruster flame
         if ((System.currentTimeMillis() / 50) % 2 == 0L) {
             paint.color = Color.YELLOW
             canvas.drawCircle(x, y + 45, 10f, paint)

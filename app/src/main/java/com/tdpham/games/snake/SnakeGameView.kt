@@ -25,6 +25,7 @@ class SnakeGameView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "snake"
+    override var onGameOver: ((Int) -> Unit)? = null
 
     private val paint = Paint().apply {
         isAntiAlias = true
@@ -41,9 +42,13 @@ class SnakeGameView @JvmOverloads constructor(
     private var score = 0
     private var highScore = 0
 
+    private val particles = mutableListOf<GameEnvironment.Particle>()
+    private val random = Random()
+
     private val gridSize = 20
     private var cellSize = 0f
     private var animationFrame = 0
+    private val screenShake = com.tdpham.games.common.ScreenShake()
 
     private val handler = Handler(Looper.getMainLooper())
     private val gameLoop = object : Runnable {
@@ -109,6 +114,7 @@ class SnakeGameView @JvmOverloads constructor(
         highScore = ScoreManager.getHighScore(context, gameKey)
         score = 0
         spawnFood()
+        particles.clear()
         
         bgType = listOf(GameEnvironment.BackgroundType.CHECKERBOARD, GameEnvironment.BackgroundType.GRID, GameEnvironment.BackgroundType.DOTS).random()
         isNight = Random().nextBoolean()
@@ -172,6 +178,7 @@ class SnakeGameView @JvmOverloads constructor(
             score += 10
             SoundManager.playScore()
             spawnFood()
+            spawnBiteParticles(newHead)
         } else {
             snake.removeAt(snake.size - 1)
         }
@@ -179,19 +186,37 @@ class SnakeGameView @JvmOverloads constructor(
 
     private fun handleGameOver() {
         SoundManager.playError()
+        screenShake.trigger(15, 20f)
         val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
         if (isNewHigh) {
             highScore = score
             gameOverReason = "NEW HIGH SCORE!"
         }
+        onGameOver?.invoke(score)
     }
 
     private fun spawnFood() {
         if (snake.size >= gridSize * gridSize) return
-        val random = Random()
         do {
             food = Point(random.nextInt(gridSize), random.nextInt(gridSize))
         } while (snake.contains(food))
+    }
+
+    private fun spawnBiteParticles(head: Point) {
+        val centerX = head.x.toFloat()
+        val centerY = head.y.toFloat()
+        repeat(12) {
+            val angle = random.nextDouble() * 2.0 * Math.PI
+            val speed = random.nextFloat() * 0.5f + 0.2f
+            particles.add(GameEnvironment.Particle(
+                centerX, 
+                centerY, 
+                speed, 
+                Math.cos(angle).toFloat() * speed,
+                random.nextFloat() * 5f + 2f,
+                Color.parseColor("#FFD700") // Gold particles for eating
+            ))
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -225,6 +250,7 @@ class SnakeGameView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        val needsInvalidate = screenShake.apply(canvas)
         super.onDraw(canvas)
         // Increase divisor to gridSize + 8 to provide safe margins for TV screens
         cellSize = width.coerceAtMost(height).toFloat() / (gridSize + 8)
@@ -233,6 +259,22 @@ class SnakeGameView @JvmOverloads constructor(
 
         // Draw background
         GameEnvironment.draw(canvas, bgType, GameEnvironment.SceneType.FIELD, isNight = isNight, paint = paint)
+
+        // Draw particles
+        val iterator = particles.iterator()
+        while (iterator.hasNext()) {
+            val p = iterator.next()
+            paint.color = p.color
+            paint.alpha = (p.speed * 500).toInt().coerceIn(0, 255)
+            canvas.drawCircle(offsetX + p.x * cellSize + cellSize/2, offsetY + p.y * cellSize + cellSize/2, p.size, paint)
+            p.x += p.vx
+            p.y += (random.nextFloat() - 0.5f) * 0.1f // slight jitter
+            p.speed *= 0.9f // decelerate
+            if (p.speed < 0.05f) iterator.remove()
+        }
+        paint.alpha = 255
+        
+        if (needsInvalidate) invalidate()
 
         // Draw grid border
         paint.color = Color.GRAY

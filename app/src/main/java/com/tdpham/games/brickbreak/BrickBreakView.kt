@@ -22,6 +22,7 @@ class BrickBreakView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView, Choreographer.FrameCallback {
     override var gameKey: String = "brick_break"
+    override var onGameOver: ((Int) -> Unit)? = null
 
     private val paint = Paint().apply {
         isAntiAlias = true
@@ -300,6 +301,7 @@ class BrickBreakView @JvmOverloads constructor(
                 val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
                 if (isNewHigh) highScore = score
                 SoundManager.playSuccess()
+                onGameOver?.invoke(score)
                 Choreographer.getInstance().removeFrameCallback(this)
             }
         }
@@ -312,6 +314,7 @@ class BrickBreakView @JvmOverloads constructor(
                 isPaused = true
                 val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
                 if (isNewHigh) highScore = score
+                onGameOver?.invoke(score)
                 Choreographer.getInstance().removeFrameCallback(this)
             } else {
                 resetBall()

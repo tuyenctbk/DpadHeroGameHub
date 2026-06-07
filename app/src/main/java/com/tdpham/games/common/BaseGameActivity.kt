@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
+import com.google.firebase.Firebase
 import com.tdpham.games.R
 import com.tdpham.games.hub.GuideManager
 
@@ -15,6 +18,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     protected abstract val gameInstructions: String
     
     protected lateinit var gameView: GameView
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var btnHelp: View
     private var isGuideShowing = false
     private var hasStarted = false
@@ -24,11 +28,19 @@ abstract class BaseGameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutId())
+
+        firebaseAnalytics = Firebase.analytics
         
         val view = findViewById<View>(getGameViewId())
         if (view is GameView) {
             gameView = view
             gameView.gameKey = gameKey
+            gameView.onGameOver = { score ->
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
+                bundle.putInt(FirebaseAnalytics.Param.SCORE, score)
+                firebaseAnalytics.logEvent("level_end", bundle)
+            }
         } else {
             throw IllegalStateException("View must implement GameView interface")
         }
@@ -49,12 +61,19 @@ abstract class BaseGameActivity : AppCompatActivity() {
         if (GuideManager.shouldShowGuide(this, gameKey)) {
             showGameGuide()
         } else {
-            hasStarted = true
-            gameView.startGame()
+            startGameWithAnalytics()
             (view as View).requestFocus()
         }
 
         saveLastPlayed()
+    }
+
+    private fun startGameWithAnalytics() {
+        hasStarted = true
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LEVEL_START, bundle)
+        gameView.startGame()
     }
 
     private fun saveLastPlayed() {
@@ -74,8 +93,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
             onDismiss = {
                 isGuideShowing = false
                 if (!hasStarted) {
-                    hasStarted = true
-                    gameView.startGame()
+                    startGameWithAnalytics()
                 } else {
                     AdManager.showInterstitial(this) {
                         gameView.resume()

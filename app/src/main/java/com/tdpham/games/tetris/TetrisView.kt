@@ -22,6 +22,7 @@ class TetrisView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr), GameView {
 
     override var gameKey: String = "tetris"
+    override var onGameOver: ((Int) -> Unit)? = null
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val rows = 20
@@ -34,6 +35,8 @@ class TetrisView @JvmOverloads constructor(
     private var paused = true
     private var gameOver = false
     private var flashFrames = 0
+    private val particles = mutableListOf<GameEnvironment.Particle>()
+    private val screenShake = com.tdpham.games.common.ScreenShake()
     private val handler = Handler(Looper.getMainLooper())
 
     private val tick = object : Runnable {
@@ -91,6 +94,8 @@ class TetrisView @JvmOverloads constructor(
         next = spawnPieceData()
         gameOver = false
         paused = true
+        flashFrames = 0
+        particles.clear()
         handler.removeCallbacks(tick)
         bgType = listOf(GameEnvironment.BackgroundType.GRADIENT, GameEnvironment.BackgroundType.GRID, GameEnvironment.BackgroundType.STRIPES).random()
         isNight = Random.nextBoolean()
@@ -193,12 +198,14 @@ class TetrisView @JvmOverloads constructor(
             handler.removeCallbacks(tick)
             ScoreManager.updateHighScore(context, gameKey, score)
             SoundManager.playError()
+            onGameOver?.invoke(score)
         }
     }
 
     private fun clearLines() {
         var linesCleared = 0
         var r = rows - 1
+        val fullLines = mutableListOf<Int>()
         while (r >= 0) {
             var full = true
             for (c in 0 until cols) {
@@ -209,6 +216,7 @@ class TetrisView @JvmOverloads constructor(
             }
             if (full) {
                 linesCleared++
+                fullLines.add(r)
                 for (rr in r downTo 1) {
                     for (cc in 0 until cols) board[rr][cc] = board[rr - 1][cc]
                 }
@@ -219,7 +227,27 @@ class TetrisView @JvmOverloads constructor(
             }
         }
         if (linesCleared > 0) {
-            flashFrames = 2
+            flashFrames = 3
+            screenShake.trigger(10, 8f + linesCleared * 4f)
+            
+            // Spawn particles for cleared lines
+            val cellSize = (height / (rows + 2)).coerceAtMost(width / (cols + 8)).toFloat()
+            for (lineY in fullLines) {
+                for (c in 0 until cols) {
+                    repeat(2) {
+                        val angle = Random.nextDouble() * 2.0 * Math.PI
+                        val speed = Random.nextFloat() * 0.4f + 0.1f
+                        particles.add(GameEnvironment.Particle(
+                            c.toFloat(), lineY.toFloat(), 
+                            speed,
+                            Math.cos(angle).toFloat() * speed,
+                            Random.nextFloat() * 4f + 2f,
+                            colorFor(Random.nextInt(7) + 1)
+                        ))
+                    }
+                }
+            }
+
             score += when (linesCleared) {
                 1 -> 100
                 2 -> 300
@@ -286,12 +314,29 @@ class TetrisView @JvmOverloads constructor(
     private val blockPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     override fun onDraw(canvas: Canvas) {
+        val needsInvalidate = screenShake.apply(canvas)
         val size = (height / (rows + 2)).coerceAtMost(width / (cols + 8)).toFloat()
         val offsetX = (width - cols * size) / 2f
         val offsetY = (height - rows * size) / 2f
 
+        if (needsInvalidate) invalidate()
+
         // Draw background
         GameEnvironment.draw(canvas, bgType, isNight = isNight, paint = paint)
+
+        // Draw particles
+        val iterator = particles.iterator()
+        while (iterator.hasNext()) {
+            val p = iterator.next()
+            paint.color = p.color
+            paint.alpha = (p.speed * 400).toInt().coerceIn(0, 255)
+            canvas.drawCircle(offsetX + p.x * size + size / 2, offsetY + p.y * size + size / 2, p.size, paint)
+            p.y += (p.speed * 0.5f) // gravity-like
+            p.x += p.vx
+            p.speed *= 0.92f
+            if (p.speed < 0.05f) iterator.remove()
+        }
+        paint.alpha = 255
 
         // Draw board area
         boardPaint.color = Color.argb(150, 0, 0, 0)
@@ -367,13 +412,21 @@ class TetrisView @JvmOverloads constructor(
     }
 
     private fun drawBlock(canvas: Canvas, x: Float, y: Float, size: Float, color: Int, isGhost: Boolean = false) {
-        blockPaint.color = color
         if (isGhost) {
-            blockPaint.style = Paint.Style.STROKE
-            blockPaint.strokeWidth = 2f
-            canvas.drawRect(x + 2, y + 2, x + size - 2, y + size - 2, blockPaint)
+            blockPaint.color = color
             blockPaint.style = Paint.Style.FILL
+            blockPaint.alpha = 40 // Very transparent fill
+            canvas.drawRect(x + 2, y + 2, x + size - 2, y + size - 2, blockPaint)
+            
+            blockPaint.style = Paint.Style.STROKE
+            blockPaint.strokeWidth = 1.5f
+            blockPaint.alpha = 150 // Stronger outline
+            canvas.drawRect(x + 2, y + 2, x + size - 2, y + size - 2, blockPaint)
+            
+            blockPaint.style = Paint.Style.FILL
+            blockPaint.alpha = 255
         } else {
+            blockPaint.color = color
             blockPaint.style = Paint.Style.FILL
             canvas.drawRect(x + 1, y + 1, x + size - 1, y + size - 1, blockPaint)
             // Bevel effect

@@ -19,6 +19,7 @@ class SudokuView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "sudoku"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val puzzleBaseA: Array<IntArray> = arrayOf(
@@ -68,6 +69,25 @@ class SudokuView @JvmOverloads constructor(
     private var solved = false
     private var best = 0
 
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val pressedKeys = mutableSetOf<Int>()
+    private val moveRunnable = object : Runnable {
+        override fun run() {
+            if (pressedKeys.isNotEmpty() && !solved) {
+                var moved = false
+                if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_UP)) { cursorR = (cursorR + 8) % 9; moved = true }
+                if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_DOWN)) { cursorR = (cursorR + 1) % 9; moved = true }
+                if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) { cursorC = (cursorC + 8) % 9; moved = true }
+                if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) { cursorC = (cursorC + 1) % 9; moved = true }
+                
+                if (moved) {
+                    invalidate()
+                    handler.postDelayed(this, 150) // Repeat speed
+                }
+            }
+        }
+    }
+
     init {
         isFocusable = true
         isFocusableInTouchMode = true
@@ -104,17 +124,49 @@ class SudokuView @JvmOverloads constructor(
             loadPuzzle(puzzleIndex + 1)
             return true
         }
+        
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> cursorR = (cursorR + 8) % 9
-            KeyEvent.KEYCODE_DPAD_DOWN -> cursorR = (cursorR + 1) % 9
-            KeyEvent.KEYCODE_DPAD_LEFT -> cursorC = (cursorC + 8) % 9
-            KeyEvent.KEYCODE_DPAD_RIGHT -> cursorC = (cursorC + 1) % 9
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> cycleCell()
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
-            else -> return super.onKeyDown(keyCode, event)
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN, 
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                if (pressedKeys.isEmpty()) {
+                    // First press: move immediately
+                    when (keyCode) {
+                        KeyEvent.KEYCODE_DPAD_UP -> cursorR = (cursorR + 8) % 9
+                        KeyEvent.KEYCODE_DPAD_DOWN -> cursorR = (cursorR + 1) % 9
+                        KeyEvent.KEYCODE_DPAD_LEFT -> cursorC = (cursorC + 8) % 9
+                        KeyEvent.KEYCODE_DPAD_RIGHT -> cursorC = (cursorC + 1) % 9
+                    }
+                    invalidate()
+                    handler.removeCallbacks(moveRunnable)
+                    handler.postDelayed(moveRunnable, 400) // Delay before auto-repeat
+                }
+                pressedKeys.add(keyCode)
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+                cycleCell()
+                invalidate()
+                return true
+            }
+            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> {
+                toggleSound()
+                return true
+            }
         }
-        invalidate()
-        return true
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        pressedKeys.remove(keyCode)
+        if (pressedKeys.isEmpty()) {
+            handler.removeCallbacks(moveRunnable)
+        }
+        return super.onKeyUp(keyCode, event)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(moveRunnable)
     }
 
     /** Cycle 0 (empty) → 1 → … → 9 → 0 on editable cells. */
@@ -127,6 +179,7 @@ class SudokuView @JvmOverloads constructor(
             val score = (600 + (puzzles.size - puzzleIndex) * 25).coerceAtLeast(100)
             if (ScoreManager.updateHighScore(context, gameKey, score)) best = score
             SoundManager.playSuccess()
+            onGameOver?.invoke(score)
         }
     }
 
