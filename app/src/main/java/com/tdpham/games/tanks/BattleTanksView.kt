@@ -18,6 +18,7 @@ class BattleTanksView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "battle_tanks"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val rows = 13
@@ -126,6 +127,45 @@ class BattleTanksView @JvmOverloads constructor(
         }
         invalidate()
         return true
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (gameOver) {
+                resetGame(); resume(); return true
+            }
+            if (gamePaused) {
+                resume(); return true
+            }
+
+            // Quadrant based moves
+            val centerX = width / 2f
+            val centerY = height / 2f
+            val x = event.x
+            val y = event.y
+
+            val dir = if (Math.abs(x - centerX) > Math.abs(y - centerY)) {
+                if (x > centerX) 1 else 3
+            } else {
+                if (y > centerY) 2 else 0
+            }
+            
+            // Move if changed, or shoot if same
+            if (player.dir == dir) {
+                fire(player)
+            } else {
+                moveTank(player, dir)
+            }
+            invalidate()
+            return true
+        }
+        return super.onTouchEvent(event)
     }
 
     private fun moveTank(tank: Tank, dir: Int) {
@@ -275,6 +315,7 @@ class BattleTanksView @JvmOverloads constructor(
                 if (tile == 1) grid[by][bx] = 0 // Break brick
                 if (tile == 3) {
                     gameOver = true; gamePaused = true; SoundManager.playError()
+                    onGameOver?.invoke(score)
                 }
                 bIter.remove(); continue
             }
@@ -299,6 +340,7 @@ class BattleTanksView @JvmOverloads constructor(
             } else {
                 if (player.x == bx && player.y == by) {
                     gameOver = true; gamePaused = true; SoundManager.playError()
+                    onGameOver?.invoke(score)
                     bIter.remove(); continue
                 }
             }

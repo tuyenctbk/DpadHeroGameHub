@@ -18,6 +18,7 @@ class SlidePuzzleView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "slide_puzzle"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     
     private var gridSize = 3
@@ -157,6 +158,40 @@ class SlidePuzzleView @JvmOverloads constructor(
         return true
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (gameOver) {
+                resetGame()
+                return true
+            }
+
+            // Calculate grid bounds (must match onDraw)
+            val margin = 60f
+            val topArea = 140f
+            val boardSize = (width - margin * 2).coerceAtMost(height - topArea - margin)
+            val left = (width - boardSize) / 2f
+            val top = topArea + (height - topArea - margin - boardSize) / 2f
+            val tileSize = boardSize / gridSize
+
+            if (event.x in left..(left + boardSize) && event.y in top..(top + boardSize)) {
+                val c = ((event.x - left) / tileSize).toInt().coerceIn(0, gridSize - 1)
+                val r = ((event.y - top) / tileSize).toInt().coerceIn(0, gridSize - 1)
+                
+                cursorIdx = r * gridSize + c
+                tryMove(cursorIdx)
+                invalidate()
+                return true
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
     private fun tryMove(idx: Int) {
         if (isAdjacent(idx, emptyIdx)) {
             swap(idx, emptyIdx)
@@ -179,6 +214,7 @@ class SlidePuzzleView @JvmOverloads constructor(
             SoundManager.playSuccess()
             val score = (10000 - moves).coerceAtLeast(0)
             if (ScoreManager.updateHighScore(context, gameKey, score)) bestMoves = moves
+            onGameOver?.invoke(score)
         }
     }
 

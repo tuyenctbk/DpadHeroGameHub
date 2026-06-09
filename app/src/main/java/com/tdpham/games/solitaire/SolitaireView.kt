@@ -16,6 +16,7 @@ class SolitaireView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr), GameView {
 
     override var gameKey: String = "solitaire"
+    override var onGameOver: ((Int) -> Unit)? = null
     
     private val deck = mutableListOf<Card>()
     private val stock = mutableListOf<Card>()
@@ -128,6 +129,62 @@ class SolitaireView @JvmOverloads constructor(
         }
         invalidate()
         return true
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (isGameOver) {
+                resetGame()
+                return true
+            }
+
+            // Calculate card bounds (must match onDraw)
+            val w = width.toFloat()
+            val h = height.toFloat()
+            val cardW = w * cardWidthRatio
+            val cardH = h * cardHeightRatio
+            val spacing = (w - 7 * cardW) / 8f
+            
+            val x = event.x
+            val y = event.y
+
+            // Top Row
+            if (y >= spacing && y <= spacing + cardH) {
+                // Stock
+                if (x >= spacing && x <= spacing + cardW) {
+                    cursorX = 0; cursorY = 0; handleSelection(); invalidate(); return true
+                }
+                // Waste
+                if (x >= 2 * spacing + cardW && x <= 2 * spacing + 2 * cardW) {
+                    cursorX = 1; cursorY = 0; handleSelection(); invalidate(); return true
+                }
+                // Foundations
+                for (i in 0 until 4) {
+                    val fx = 4 * spacing + 3 * cardW + i * (spacing + cardW)
+                    if (x >= fx && x <= fx + cardW) {
+                        cursorX = 3 + i; cursorY = 0; handleSelection(); invalidate(); return true
+                    }
+                }
+            }
+            
+            // Tableaus
+            val ty = 2 * spacing + cardH
+            if (y >= ty) {
+                for (i in 0 until 7) {
+                    val tx = spacing + i * (spacing + cardW)
+                    if (x >= tx && x <= tx + cardW) {
+                        cursorX = i; cursorY = 1; handleSelection(); invalidate(); return true
+                    }
+                }
+            }
+        }
+        return super.onTouchEvent(event)
     }
 
     private fun moveCursor(dx: Int, dy: Int) {
@@ -325,6 +382,7 @@ class SolitaireView @JvmOverloads constructor(
         if (foundations.all { it.size == 13 }) {
             isGameOver = true
             SoundManager.playSuccess()
+            onGameOver?.invoke(score)
         }
     }
 

@@ -18,6 +18,7 @@ class SokobanView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "sokoban"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val levels = listOf(
@@ -151,6 +152,36 @@ class SokobanView @JvmOverloads constructor(
         return true
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (solved || allLevelsDone) {
+                if (allLevelsDone) resetGame() else advanceOrRestart()
+                return true
+            }
+
+            // Quadrant based moves
+            val centerX = width / 2f
+            val centerY = height / 2f
+            val x = event.x
+            val y = event.y
+
+            if (Math.abs(x - centerX) > Math.abs(y - centerY)) {
+                if (x > centerX) move(0, 1) else move(0, -1)
+            } else {
+                if (y > centerY) move(1, 0) else move(-1, 0)
+            }
+            invalidate()
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
+
     private fun move(dr: Int, dc: Int) {
         if (solved || allLevelsDone) return
         val nr = playerR + dr
@@ -182,6 +213,7 @@ class SokobanView @JvmOverloads constructor(
                 allLevelsDone = true
                 val score = (5000 - totalPushesAllLevels * 5).coerceAtLeast(50)
                 if (ScoreManager.updateHighScore(context, gameKey, score)) best = score
+                onGameOver?.invoke(score)
             }
             SoundManager.playSuccess()
         }

@@ -18,6 +18,7 @@ class MazeView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "maze"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private var stage = 1
@@ -370,6 +371,7 @@ class MazeView @JvmOverloads constructor(
                     generateStage()
                 } else {
                     gameOver = true
+                    onGameOver?.invoke(score)
                 }
                 invalidate()
                 return true

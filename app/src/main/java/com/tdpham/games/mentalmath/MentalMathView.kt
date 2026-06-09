@@ -20,6 +20,7 @@ class MentalMathView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "mental_math"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private var stage = 1
@@ -188,6 +189,7 @@ class MentalMathView @JvmOverloads constructor(
                     generateQuestion()
                 } else {
                     gameOver = true
+                    onGameOver?.invoke(score)
                 }
                 invalidate()
                 return true
@@ -206,6 +208,58 @@ class MentalMathView @JvmOverloads constructor(
         }
         invalidate()
         return true
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (gameOver) {
+                resetGame()
+                return true
+            }
+            if (isPaused) return true
+
+            if (isReviewing) {
+                if (isCorrect) {
+                    stage++
+                    generateQuestion()
+                } else {
+                    gameOver = true
+                    onGameOver?.invoke(score)
+                }
+                invalidate()
+                return true
+            }
+
+            // Options layout (must match onDraw)
+            val optW = 280f
+            val optH = 120f
+            val centerX = width / 2f
+            val centerY = height / 2f + 150f
+            
+            val x = event.x
+            val y = event.y
+
+            for (i in 0 until 4) {
+                val r = i / 2
+                val c = i % 2
+                val ox = centerX + (c - 0.5f) * (optW + 40f)
+                val oy = centerY + (r - 0.5f) * (optH + 40f)
+                
+                if (x in (ox - optW/2)..(ox + optW/2) && y in (oy - optH/2)..(oy + optH/2)) {
+                    selectedOptionIdx = i
+                    checkAnswer()
+                    invalidate()
+                    return true
+                }
+            }
+        }
+        return super.onTouchEvent(event)
     }
 
     private fun checkAnswer() {

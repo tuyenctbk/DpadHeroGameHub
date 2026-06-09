@@ -109,6 +109,34 @@ class RoadRacerView @JvmOverloads constructor(
         return true
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (isGameOver) {
+                resetGame(); startGame(); return true
+            }
+            if (isPaused) {
+                startGame(); return true
+            }
+
+            if (event.x < width / 3f) {
+                if (playerLane > 0) { playerLane--; SoundManager.playClick() }
+            } else if (event.x > width * 2/3f) {
+                if (playerLane < 2) { playerLane++; SoundManager.playClick() }
+            } else {
+                pause()
+            }
+            invalidate()
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
+
     private fun update() {
         if (isPaused || isGameOver) return
 

@@ -21,6 +21,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr), GameView {
 
     override var gameKey: String = "4096"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val gridSize = 5 // 5x5 for "4096" on larger TV screens
     private var board = Array(gridSize) { IntArray(gridSize) { 0 } }
     private var score = 0
@@ -119,6 +120,41 @@ class TwentyFortyEightView @JvmOverloads constructor(
         return super.onKeyDown(keyCode, event)
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (isGameOver || isWin) {
+                resetGame()
+                return true
+            }
+
+            // Quadrant based swipe-tap for TV Mouse
+            val centerX = width / 2f
+            val centerY = height / 2f
+            val x = event.x
+            val y = event.y
+
+            val moved = if (Math.abs(x - centerX) > Math.abs(y - centerY)) {
+                if (x > centerX) move(1, 0) else move(-1, 0)
+            } else {
+                if (y > centerY) move(0, 1) else move(0, -1)
+            }
+
+            if (moved) {
+                addRandomTile()
+                checkGameState()
+                invalidate()
+            }
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
+
     private fun move(dx: Int, dy: Int): Boolean {
         var moved = false
         mergedTiles.clear()
@@ -174,7 +210,10 @@ class TwentyFortyEightView @JvmOverloads constructor(
     private fun checkGameState() {
         for (r in 0 until gridSize) {
             for (c in 0 until gridSize) {
-                if (board[r][c] >= 4096) isWin = true
+                if (board[r][c] >= 4096) {
+                    isWin = true
+                    onGameOver?.invoke(score)
+                }
             }
         }
 
@@ -193,6 +232,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
             val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
             if (isNewHigh) highScore = score
             SoundManager.playError()
+            onGameOver?.invoke(score)
         } else if (isWin) {
             SoundManager.playSuccess()
         }

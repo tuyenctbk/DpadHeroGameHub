@@ -249,6 +249,31 @@ class SnakeGameView @JvmOverloads constructor(
         }
     }
 
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            if (isGameOver || isPaused) {
+                togglePause()
+                return true
+            }
+
+            // Mouse/Touch control: Divide screen into 4 quadrants
+            val centerX = width / 2f
+            val centerY = height / 2f
+            val x = event.x
+            val y = event.y
+
+            if (Math.abs(x - centerX) > Math.abs(y - centerY)) {
+                if (x > centerX) updateDirection(Direction.RIGHT)
+                else updateDirection(Direction.LEFT)
+            } else {
+                if (y > centerY) updateDirection(Direction.DOWN)
+                else updateDirection(Direction.UP)
+            }
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
+
     override fun onDraw(canvas: Canvas) {
         val needsInvalidate = screenShake.apply(canvas)
         super.onDraw(canvas)

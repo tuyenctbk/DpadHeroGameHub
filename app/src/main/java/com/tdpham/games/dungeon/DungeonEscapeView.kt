@@ -17,6 +17,7 @@ class DungeonEscapeView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "dungeon_escape"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val rows = 12
@@ -137,6 +138,41 @@ class DungeonEscapeView @JvmOverloads constructor(
         return true
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (gameOver) {
+                resetGame()
+                resume()
+                return true
+            }
+            if (gamePaused) {
+                resume()
+                return true
+            }
+
+            // Quadrant based moves
+            val centerX = width / 2f
+            val centerY = height / 2f
+            val x = event.x
+            val y = event.y
+
+            if (Math.abs(x - centerX) > Math.abs(y - centerY)) {
+                if (x > centerX) movePlayer(1, 0) else movePlayer(-1, 0)
+            } else {
+                if (y > centerY) movePlayer(0, 1) else movePlayer(0, -1)
+            }
+            invalidate()
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
+
     private fun movePlayer(dx: Int, dy: Int) {
         if (gamePaused || gameOver) return
         val nx = playerX + dx
@@ -150,10 +186,7 @@ class DungeonEscapeView @JvmOverloads constructor(
             playerY = ny
             
             if (cell == 2) { // Spike
-                SoundManager.playError()
-                gameOver = true
-                gamePaused = true
-                ScoreManager.updateHighScore(context, gameKey, score)
+                die()
             } else if (cell == 3) { // Key
                 hasKey = true
                 grid[ny][nx] = 0
@@ -295,6 +328,7 @@ class DungeonEscapeView @JvmOverloads constructor(
         gameOver = true
         gamePaused = true
         ScoreManager.updateHighScore(context, gameKey, score)
+        onGameOver?.invoke(score)
     }
 
     private fun drawSpike(canvas: Canvas, x: Float, y: Float) {

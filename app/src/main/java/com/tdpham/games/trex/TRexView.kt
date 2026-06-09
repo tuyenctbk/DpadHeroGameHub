@@ -18,6 +18,7 @@ class TRexView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr), GameView {
 
     override var gameKey: String = "trex"
+    override var onGameOver: ((Int) -> Unit)? = null
     
     // Game State
     private var score = 0
@@ -138,6 +139,43 @@ class TRexView @JvmOverloads constructor(
             }
             else -> super.onKeyDown(keyCode, event)
         }
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (isGameOver) {
+                resetGame()
+                startGame()
+                return true
+            }
+            if (isPaused) {
+                resume()
+                return true
+            }
+
+            if (event.y < height * 0.5f) {
+                if (!isJumping && !isDucking) jump()
+            } else {
+                if (!isJumping) {
+                    isDucking = true
+                    invalidate()
+                }
+            }
+            return true
+        } else if (event.action == android.view.MotionEvent.ACTION_UP) {
+            if (isDucking) {
+                isDucking = false
+                invalidate()
+            }
+            return true
+        }
+        return super.onTouchEvent(event)
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
@@ -284,6 +322,7 @@ class TRexView @JvmOverloads constructor(
         SoundManager.playError()
         val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
         if (isNewHigh) highScore = score
+        onGameOver?.invoke(score)
     }
 
     override fun onDraw(canvas: Canvas) {

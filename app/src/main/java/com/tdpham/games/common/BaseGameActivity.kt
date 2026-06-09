@@ -2,7 +2,9 @@ package com.tdpham.games.common
 
 import android.content.Context
 import android.os.Bundle
+import android.view.InputDevice
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -47,8 +49,14 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
         btnHelp = findViewById(R.id.btn_show_guide)
         btnHelp.setOnClickListener { showGameGuide() }
-        btnHelp.isFocusable = false
-        btnHelp.isFocusableInTouchMode = false
+        btnHelp.isFocusable = true
+        btnHelp.isFocusableInTouchMode = true
+        btnHelp.setOnHoverListener { view, event ->
+            if (event.action == MotionEvent.ACTION_HOVER_ENTER) {
+                view.requestFocus()
+            }
+            false
+        }
         
         // Hide or show the help UI container based on game preference
         val helpContainer = (btnHelp.parent as? View)
@@ -62,6 +70,8 @@ abstract class BaseGameActivity : AppCompatActivity() {
             showGameGuide()
         } else {
             startGameWithAnalytics()
+            (view as View).alpha = 0f
+            (view as View).animate().alpha(1f).setDuration(400).start()
             (view as View).requestFocus()
         }
 
@@ -114,6 +124,32 @@ abstract class BaseGameActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         gameView.pause()
+    }
+
+    override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
+        val view = gameView as View
+        if (event.isFromSource(InputDevice.SOURCE_MOUSE) || event.isFromSource(InputDevice.SOURCE_CLASS_POINTER)) {
+            if (event.action == MotionEvent.ACTION_HOVER_ENTER || event.action == MotionEvent.ACTION_HOVER_MOVE) {
+                view.requestFocus()
+            }
+            if (event.action == MotionEvent.ACTION_BUTTON_PRESS || event.action == MotionEvent.ACTION_BUTTON_RELEASE) {
+                if (event.buttonState and MotionEvent.BUTTON_PRIMARY != 0) {
+                    val action = if (event.action == MotionEvent.ACTION_BUTTON_PRESS) MotionEvent.ACTION_DOWN else MotionEvent.ACTION_UP
+                    val pointerEvent = MotionEvent.obtain(
+                        event.downTime,
+                        event.eventTime,
+                        action,
+                        event.x,
+                        event.y,
+                        event.metaState
+                    )
+                    val handled = view.dispatchTouchEvent(pointerEvent)
+                    pointerEvent.recycle()
+                    return handled
+                }
+            }
+        }
+        return super.dispatchGenericMotionEvent(event)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {

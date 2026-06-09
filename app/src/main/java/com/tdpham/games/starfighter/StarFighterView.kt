@@ -145,6 +145,30 @@ class StarFighterView @JvmOverloads constructor(
         return super.onKeyDown(keyCode, event)
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_MOVE || event.action == android.view.MotionEvent.ACTION_DOWN) {
+            if (gameOver || isPaused) {
+                if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+                    performClick()
+                    if (gameOver) resetGame()
+                    startGame()
+                }
+                return true
+            }
+            
+            // Ship follows mouse/touch
+            playerX = event.x.coerceIn(playerSize, width - playerSize)
+            playerY = event.y.coerceIn(playerSize, height - playerSize)
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
+
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         pressedKeys.remove(keyCode)
         return super.onKeyUp(keyCode, event)

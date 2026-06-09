@@ -18,6 +18,7 @@ class FlappyHeroView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "flappy_hero"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private var birdY = 0f
@@ -116,6 +117,31 @@ class FlappyHeroView @JvmOverloads constructor(
         }
         
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (gameOver) {
+                resetGame()
+                resume()
+                return true
+            }
+            if (gamePaused) {
+                resume()
+                return true
+            }
+
+            birdV = jump
+            SoundManager.playClick()
+            return true
+        }
+        return super.onTouchEvent(event)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -323,6 +349,7 @@ class FlappyHeroView @JvmOverloads constructor(
         gameOver = true
         gamePaused = true
         SoundManager.playError()
+        onGameOver?.invoke(score)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, sub: String) {

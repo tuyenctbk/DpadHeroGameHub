@@ -19,6 +19,7 @@ class SimonSaysView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "simon_says"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val handler = Handler(Looper.getMainLooper())
 
@@ -124,6 +125,52 @@ class SimonSaysView @JvmOverloads constructor(
         return true
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (gameOver) {
+                resetGame()
+                startGame()
+                return true
+            }
+            if (gamePaused) {
+                startGame()
+                return true
+            }
+
+            if (isShowingSequence) return true
+
+            val cx = width / 2f
+            val cy = height / 2f
+            val x = event.x
+            val y = event.y
+            
+            val size = width.coerceAtMost(height) * 0.8f
+            val left = (width - size) / 2f
+            val top = (height - size) / 2f
+            val padding = 20f
+            
+            val quadrant = when {
+                x in (left + padding)..(cx - padding) && y in top..(cy - padding) -> 0
+                x in (cx + padding)..(left + size) && y in (top + padding)..(cy - padding) -> 1
+                x in (cx + padding)..(left + size - padding) && y in (cy + padding)..(top + size) -> 2
+                x in left..(cx - padding) && y in (cy + padding)..(top + size - padding) -> 3
+                else -> -1
+            }
+
+            if (quadrant != -1) {
+                handleInput(quadrant)
+            }
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
+
     private fun handleInput(input: Int) {
         if (input == sequence[playerIdx]) {
             activeQuadrant = input
@@ -147,6 +194,7 @@ class SimonSaysView @JvmOverloads constructor(
             gameOver = true
             gamePaused = true
             SoundManager.playError()
+            onGameOver?.invoke(score)
             invalidate()
         }
     }

@@ -22,6 +22,7 @@ class MemoryView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "memory"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     
     private val rows = 4
@@ -103,6 +104,43 @@ class MemoryView @JvmOverloads constructor(
         return true
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (gameOver) {
+                resetGame()
+                return true
+            }
+
+            if (isProcessing) return true
+
+            // Calculate grid bounds (must match onDraw)
+            val margin = 40f
+            val topArea = 120f
+            val boardW = width - margin * 2
+            val boardH = height - topArea - margin
+            val cellSize = (boardW / cols).coerceAtMost(boardH / rows)
+            val left = (width - cellSize * cols) / 2f
+            val top = topArea + (boardH - cellSize * rows) / 2f
+
+            if (event.x in left..(left + cellSize * cols) && event.y in top..(top + cellSize * rows)) {
+                val c = ((event.x - left) / cellSize).toInt().coerceIn(0, cols - 1)
+                val r = ((event.y - top) / cellSize).toInt().coerceIn(0, rows - 1)
+                
+                cursorR = r
+                cursorC = c
+                flipCard(r * cols + c)
+                return true
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         handler.removeCallbacksAndMessages(null)
@@ -148,6 +186,7 @@ class MemoryView @JvmOverloads constructor(
                     bestMoves = moves
                 }
                 SoundManager.playSuccess()
+                onGameOver?.invoke(currentScore)
             }
         } else {
             card1.isFlipped = false

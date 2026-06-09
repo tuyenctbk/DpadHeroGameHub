@@ -327,6 +327,47 @@ class MinesweeperView @JvmOverloads constructor(
         return super.onKeyDown(keyCode, event)
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (isGameOver || isWin) {
+                setupGame()
+                return true
+            }
+
+            cellSize = width.coerceAtMost(height).toFloat() / (rows + 5)
+            val offsetX = (width - cellSize * cols) / 2
+            val offsetY = (height - cellSize * rows) / 2 + cellSize * 1.5f
+            
+            val x = event.x
+            val y = event.y
+            
+            if (x >= offsetX && x < offsetX + cols * cellSize && y >= offsetY && y < offsetY + rows * cellSize) {
+                val c = ((x - offsetX) / cellSize).toInt().coerceIn(0, cols - 1)
+                val r = ((y - offsetY) / cellSize).toInt().coerceIn(0, rows - 1)
+                
+                // If clicking same cell that was focused, reveal it. Otherwise focus it.
+                if (r == cursorY && c == cursorX) {
+                    // For mouse, we can differentiate with buttons if we want, 
+                    // but for simplicity: Reveal on click.
+                    revealCell(r, c)
+                } else {
+                    cursorX = c
+                    cursorY = r
+                    SoundManager.playClick()
+                    invalidate()
+                }
+                return true
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         pressedKeys.remove(keyCode)
         if (pressedKeys.isEmpty()) {

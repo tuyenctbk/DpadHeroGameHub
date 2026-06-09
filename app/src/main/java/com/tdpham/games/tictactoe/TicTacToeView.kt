@@ -125,6 +125,40 @@ class TicTacToeView @JvmOverloads constructor(
         return true
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (gameOver) {
+                turnStarter = if (turnStarter == 1) 2 else 1
+                resetGame()
+                return true
+            }
+
+            // Calculate grid bounds (must match onDraw)
+            val size = width.coerceAtMost(height) * 0.65f
+            val left = (width - size) / 2f
+            val top = (height - size) / 2f + 60f
+            val cell = size / gridSize
+
+            if (event.x in left..(left + size) && event.y in top..(top + size)) {
+                val c = ((event.x - left) / cell).toInt().coerceIn(0, gridSize - 1)
+                val r = ((event.y - top) / cell).toInt().coerceIn(0, gridSize - 1)
+                
+                cursorR = r
+                cursorC = c
+                if (isPlayerTurn) playerMove()
+                invalidate()
+                return true
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
     private fun playerMove() {
         if (gameOver || !isPlayerTurn || board[cursorR][cursorC] != 0) return
         handler.removeCallbacks(cpuMoveRunnable)

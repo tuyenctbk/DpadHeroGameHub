@@ -378,6 +378,49 @@ class BrickBreakView @JvmOverloads constructor(
         }
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_MOVE || event.action == android.view.MotionEvent.ACTION_DOWN) {
+            if (isGameOver || isWin) {
+                if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+                    performClick()
+                    resetGame()
+                    resume()
+                    requestFocus()
+                }
+                return true
+            }
+
+            if (isPaused) {
+                if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+                    performClick()
+                    resume()
+                    launchBall()
+                }
+                return true
+            }
+
+            if (!isBallLaunched) {
+                if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+                    performClick()
+                    launchBall()
+                }
+            }
+
+            // Paddle follows mouse/touch
+            val targetX = event.x
+            paddle.offsetTo(targetX - paddle.width() / 2f, paddle.top)
+            clampPaddleHorizontal()
+            invalidate()
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         // Always try to keep focus on the game view

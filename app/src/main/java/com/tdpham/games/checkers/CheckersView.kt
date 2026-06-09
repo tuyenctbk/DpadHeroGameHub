@@ -24,6 +24,7 @@ class CheckersView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "checkers"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val board = Array(8) { IntArray(8) }
     private var cursorR = 5
@@ -84,6 +85,39 @@ class CheckersView @JvmOverloads constructor(
         return true
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (gameOver) {
+                resetGame()
+                return true
+            }
+
+            // Calculate grid bounds (must match onDraw)
+            val size = width.coerceAtMost(height) * 0.8f
+            val left = (width - size) / 2f
+            val top = (height - size) / 2f + 28f
+            val cell = size / 8f
+
+            if (event.x in left..(left + size) && event.y in top..(top + size)) {
+                val c = ((event.x - left) / cell).toInt().coerceIn(0, 7)
+                val r = ((event.y - top) / cell).toInt().coerceIn(0, 7)
+                
+                cursorR = r
+                cursorC = c
+                onSelect()
+                invalidate()
+                return true
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
     private fun onSelect() {
         if (gameOver) return
         val cont = mustContinueFrom
@@ -130,6 +164,7 @@ class CheckersView @JvmOverloads constructor(
             gameOver = true
             status = "NO MOVES - CPU WINS"
             SoundManager.playError()
+            onGameOver?.invoke(wins)
             invalidate()
             return
         }
@@ -174,6 +209,7 @@ class CheckersView @JvmOverloads constructor(
         val newWins = wins + 1
         if (ScoreManager.updateHighScore(context, gameKey, newWins)) wins = newWins
         SoundManager.playSuccess()
+        onGameOver?.invoke(wins)
     }
 
     private fun tryPlayerMove(fr: Int, fc: Int, tr: Int, tc: Int): Boolean {
@@ -240,6 +276,7 @@ class CheckersView @JvmOverloads constructor(
                 val newWins = wins + 1
                 if (ScoreManager.updateHighScore(context, gameKey, newWins)) wins = newWins
                 SoundManager.playSuccess()
+                onGameOver?.invoke(wins)
                 invalidate()
                 return@postDelayed
             }
@@ -278,6 +315,7 @@ class CheckersView @JvmOverloads constructor(
                 }
                 else -> status = "YOUR TURN"
             }
+            if (gameOver) onGameOver?.invoke(wins)
             invalidate()
         }, 600)
     }

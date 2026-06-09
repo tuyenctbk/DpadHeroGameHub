@@ -156,6 +156,43 @@ class SudokuView @JvmOverloads constructor(
         return super.onKeyDown(keyCode, event)
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (solved) {
+                loadPuzzle(puzzleIndex + 1)
+                return true
+            }
+
+            // Calculate grid bounds (must match onDraw)
+            val grid = width.coerceAtMost(height) * 0.78f
+            val left = (width - grid) / 2f
+            val top = (height - grid) / 2f + 32f
+            val cell = grid / 9f
+
+            if (event.x in left..(left + grid) && event.y in top..(top + grid)) {
+                val c = ((event.x - left) / cell).toInt().coerceIn(0, 8)
+                val r = ((event.y - top) / cell).toInt().coerceIn(0, 8)
+                
+                if (r == cursorR && c == cursorC) {
+                    cycleCell()
+                } else {
+                    cursorR = r
+                    cursorC = c
+                    SoundManager.playClick()
+                }
+                invalidate()
+                return true
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         pressedKeys.remove(keyCode)
         if (pressedKeys.isEmpty()) {

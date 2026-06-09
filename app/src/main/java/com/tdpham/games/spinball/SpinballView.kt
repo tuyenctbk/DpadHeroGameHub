@@ -14,6 +14,7 @@ import kotlin.math.*
 class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs), GameView {
 
     override var gameKey: String = "spinball"
+    override var onGameOver: ((Int) -> Unit)? = null
     private var isPaused = true
     private var score = 0
     private var highScore = 0
@@ -163,8 +164,10 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
     private fun gameOver() {
         isPaused = true
         SoundManager.playError()
-        ScoreManager.updateHighScore(context, gameKey, score)
+        val finalScore = score
+        ScoreManager.updateHighScore(context, gameKey, finalScore)
         highScore = ScoreManager.getHighScore(context, gameKey)
+        onGameOver?.invoke(finalScore)
         
         // Auto-restart for now
         resetBall()

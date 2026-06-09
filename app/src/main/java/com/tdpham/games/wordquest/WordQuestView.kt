@@ -17,6 +17,7 @@ class WordQuestView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "word_quest"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val words = listOf(
@@ -100,6 +101,51 @@ class WordQuestView @JvmOverloads constructor(
         return true
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (gameOver) {
+                resetGame()
+                return true
+            }
+
+            // Keyboard layout (must match onDraw)
+            val cellS = 80f
+            val margin = 10f
+            val startY = 80f
+            val keyS = 60f
+            val keyM = 8f
+            val kStartY = startY + 6 * (cellS + margin) + 40f
+            
+            val x = event.x
+            val y = event.y
+
+            for (r in keyboard.indices) {
+                val kRow = keyboard[r]
+                val rowW = kRow.length * (keyS + keyM)
+                val rowX = (width - rowW) / 2f
+                for (c in kRow.indices) {
+                    val kx = rowX + c * (keyS + keyM)
+                    val ky = kStartY + r * (keyS + keyM)
+                    
+                    if (x >= kx && x <= kx + keyS && y >= ky && y <= ky + keyS) {
+                        keyR = r
+                        keyC = c
+                        selectKey()
+                        invalidate()
+                        return true
+                    }
+                }
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
     private fun selectKey() {
         val key = keyboard[keyR][keyC]
         if (key == '⌫') {
@@ -138,9 +184,11 @@ class WordQuestView @JvmOverloads constructor(
                 ScoreManager.updateHighScore(context, gameKey, best)
             }
             SoundManager.playSuccess()
+            onGameOver?.invoke(score)
         } else if (guesses.size == 6) {
             gameOver = true
             SoundManager.playError()
+            onGameOver?.invoke(score)
         } else {
             SoundManager.playScore()
         }

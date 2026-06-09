@@ -18,6 +18,7 @@ class HangmanView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr), GameView {
 
     override var gameKey: String = "hangman"
+    override var onGameOver: ((Int) -> Unit)? = null
 
     private val words = mapOf(
         "ANIMALS" to listOf("ELEPHANT", "GIRAFFE", "KANGAROO", "PENGUIN", "HAMSTER", "LEOPARD", "DOLPHIN"),
@@ -106,6 +107,45 @@ class HangmanView @JvmOverloads constructor(
         return true
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (isGameOver || isWin) {
+                resetGame(); startGame(); return true
+            }
+            if (isPaused) {
+                startGame(); return true
+            }
+
+            // Keyboard layout (must match drawKeyboard)
+            val topH = height * 0.45f
+            val startY = topH + 30f
+            val kW = 90f; val kH = 75f; val s = 15f
+            val totalW = 9 * kW + 8 * s
+            val sX = (width - totalW) / 2f
+            
+            val x = event.x
+            val y = event.y
+
+            if (x >= sX && x <= sX + totalW && y >= startY && y <= startY + 3 * (kH + s)) {
+                val c = ((x - sX) / (kW + s)).toInt().coerceIn(0, 8)
+                val r = ((y - startY) / (kH + s)).toInt().coerceIn(0, 2)
+                
+                cursorRow = r
+                cursorCol = c
+                makeGuess()
+                invalidate()
+                return true
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
     private fun makeGuess() {
         val index = cursorRow * 9 + cursorCol
         if (index < alphabet.size) {
@@ -115,7 +155,10 @@ class HangmanView @JvmOverloads constructor(
                 if (letter !in targetWord) {
                     remainingAttempts--
                     SoundManager.playError()
-                    if (remainingAttempts == 0) isGameOver = true
+                    if (remainingAttempts == 0) {
+                        isGameOver = true
+                        onGameOver?.invoke(score)
+                    }
                 } else {
                     SoundManager.playClick()
                     if (targetWord.all { it in guessedLetters }) {
@@ -123,6 +166,7 @@ class HangmanView @JvmOverloads constructor(
                         score += 10 + remainingAttempts
                         ScoreManager.updateHighScore(context, gameKey, score)
                         SoundManager.playSuccess()
+                        onGameOver?.invoke(score)
                     }
                 }
             }

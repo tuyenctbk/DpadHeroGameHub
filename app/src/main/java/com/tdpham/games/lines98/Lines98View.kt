@@ -16,6 +16,7 @@ class Lines98View @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr), GameView {
 
     override var gameKey: String = "lines98"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val gridSize = 9
     private var board = Array(gridSize) { IntArray(gridSize) { 0 } }
     private var selectedX = -1
@@ -127,7 +128,10 @@ class Lines98View @JvmOverloads constructor(
             }
             if (hasEmpty) break
         }
-        if (!hasEmpty) isGameOver = true
+        if (!hasEmpty) {
+            isGameOver = true
+            onGameOver?.invoke(score)
+        }
     }
 
     private fun checkLines(r: Int, c: Int): Boolean {
@@ -231,6 +235,41 @@ class Lines98View @JvmOverloads constructor(
         }
         invalidate()
         return true
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (isGameOver) {
+                resetGame()
+                return true
+            }
+
+            // Calculate grid bounds (must match onDraw)
+            val cellSize = Math.min(width, height) / (gridSize + 1f)
+            val offsetX = (width - cellSize * gridSize) / 2f
+            val offsetY = (height - cellSize * gridSize) / 2f
+            
+            val x = event.x
+            val y = event.y
+
+            if (x >= offsetX && x < offsetX + gridSize * cellSize && y >= offsetY && y < offsetY + gridSize * cellSize) {
+                val cx = ((x - offsetX) / cellSize).toInt().coerceIn(0, gridSize - 1)
+                val ry = ((y - offsetY) / cellSize).toInt().coerceIn(0, gridSize - 1)
+                
+                cursorX = cx
+                cursorY = ry
+                handleSelection()
+                invalidate()
+                return true
+            }
+        }
+        return super.onTouchEvent(event)
     }
 
     private fun handleSelection() {

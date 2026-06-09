@@ -17,6 +17,7 @@ class FroggyCrossView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
     override var gameKey: String = "froggy_cross"
+    override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val rows = 11 // Start, 4 Road lanes, Grass, 4 River lanes, End
@@ -118,6 +119,41 @@ class FroggyCrossView @JvmOverloads constructor(
         return true
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (gameOver) {
+                resetGame()
+                resume()
+                return true
+            }
+            if (gamePaused) {
+                resume()
+                return true
+            }
+
+            // Quadrant based moves
+            val centerX = width / 2f
+            val centerY = height / 2f
+            val x = event.x
+            val y = event.y
+
+            if (Math.abs(x - centerX) > Math.abs(y - centerY)) {
+                if (x > centerX) moveFrog(0, 1) else moveFrog(0, -1)
+            } else {
+                if (y > centerY) moveFrog(1, 0) else moveFrog(-1, 0)
+            }
+            invalidate()
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
+
     private fun moveFrog(dr: Int, dc: Int) {
         if (gamePaused || gameOver) return
         frogR = (frogR + dr).coerceIn(0, rows - 1)
@@ -137,6 +173,7 @@ class FroggyCrossView @JvmOverloads constructor(
             gameOver = true
             gamePaused = true
             ScoreManager.updateHighScore(context, gameKey, score)
+            onGameOver?.invoke(score)
         } else {
             resetFrog()
         }

@@ -3,6 +3,7 @@ package com.tdpham.games.hub
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MotionEvent
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
@@ -46,6 +47,11 @@ class MainActivity : AppCompatActivity() {
 
         firebaseAnalytics = Firebase.analytics
 
+        val title = findViewById<android.view.View>(R.id.main_title)
+        title.alpha = 0f
+        title.translationY = -50f
+        title.animate().alpha(1f).translationY(0f).setDuration(800).setStartDelay(300).start()
+
         findViewById<ImageButton>(R.id.btn_settings).apply {
             setOnClickListener {
                 startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
@@ -56,6 +62,12 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
                 }
+            }
+            setOnHoverListener { view, event ->
+                if (event.action == MotionEvent.ACTION_HOVER_ENTER) {
+                    view.requestFocus()
+                }
+                false
             }
         }
 
@@ -217,6 +229,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupGameButton(button: Button, action: () -> Unit) {
+        button.isFocusableInTouchMode = true
         button.setOnClickListener { 
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, button.text.toString())
@@ -228,13 +241,32 @@ class MainActivity : AppCompatActivity() {
         button.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
                 // Brighter (handled by selector) + Scale Up
-                view.animate().scaleX(1.15f).scaleY(1.15f).setDuration(200).start()
+                view.animate()
+                    .scaleX(1.15f)
+                    .scaleY(1.15f)
+                    .translationZ(12f)
+                    .setDuration(200)
+                    .start()
                 view.elevation = 20f
             } else {
                 // Back to normal
-                view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                view.animate()
+                    .scaleX(1.0f)
+                    .scaleY(1.0f)
+                    .translationZ(0f)
+                    .setDuration(200)
+                    .start()
                 view.elevation = 8f
             }
+        }
+
+        button.setOnHoverListener { view, event ->
+            when (event.action) {
+                MotionEvent.ACTION_HOVER_ENTER -> {
+                    view.requestFocus()
+                }
+            }
+            false
         }
     }
 

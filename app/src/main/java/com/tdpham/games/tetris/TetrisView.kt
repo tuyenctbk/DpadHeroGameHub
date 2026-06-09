@@ -137,6 +137,39 @@ class TetrisView @JvmOverloads constructor(
         return true
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (gameOver || paused) {
+                if (gameOver) resetGame()
+                startGame()
+                return true
+            }
+
+            val x = event.x
+            val y = event.y
+            
+            // Mouse controls:
+            // Top 1/4: Rotate
+            // Left 1/4: Left
+            // Right 1/4: Right
+            // Bottom 1/4: Hard drop
+            if (y < height * 0.25f) rotate()
+            else if (y > height * 0.75f) hardDrop()
+            else if (x < width * 0.5f) tryMove(current.r, current.c - 1, current.rot, playSound = true)
+            else tryMove(current.r, current.c + 1, current.rot, playSound = true)
+            
+            invalidate()
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
+
     private fun rotate() {
         val nextRot = (current.rot + 1) % 4
         if (tryMove(current.r, current.c, nextRot, playSound = true)) {
