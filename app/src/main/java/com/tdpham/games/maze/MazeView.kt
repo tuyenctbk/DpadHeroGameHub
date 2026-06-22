@@ -401,6 +401,70 @@ class MazeView @JvmOverloads constructor(
         return super.onKeyDown(keyCode, event)
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
+            if (gameOver) {
+                resetGame()
+                return true
+            }
+
+            if (isReviewing) {
+                if (isCorrect) {
+                    stage++
+                    score += 10
+                    if (score > best) {
+                        best = score
+                        ScoreManager.updateHighScore(context, gameKey, best)
+                    }
+                    generateStage()
+                } else {
+                    gameOver = true
+                    onGameOver?.invoke(score)
+                }
+                invalidate()
+                return true
+            }
+
+            // Options layout (must match onDraw)
+            val mazeH = (width - 160f / mazeWidth * mazeWidth).coerceAtMost(height - 120f - 80f - 220f)
+            // Wait, let's just use the drawn buttons at the bottom.
+            
+            val topArea = 120f
+            val margin = 80f
+            val availableW = width - margin * 2
+            val availableH = height - topArea - margin - 220f 
+            val cellSize = (availableW / mazeWidth).coerceAtMost(availableH / mazeHeight)
+            val actualMazeH = cellSize * mazeHeight
+            val top = topArea + (availableH - actualMazeH) / 2f + 20f
+            
+            val optionsY = top + actualMazeH + 60f
+            val optionSpacing = width / 5f
+            val startOptionsX = (width - (options.size - 1) * optionSpacing) / 2f
+            
+            val x = event.x
+            val y = event.y
+            
+            for (i in options.indices) {
+                val ox = startOptionsX + i * optionSpacing
+                if (x in (ox - 60)..(ox + 60) && y in (optionsY - 60)..(optionsY + 60)) {
+                    selectedOptionIdx = i
+                    isReviewing = true
+                    isCorrect = (options[selectedOptionIdx] == correctOption)
+                    calculateCorrectPath()
+                    invalidate()
+                    return true
+                }
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(GamePalette.BACKGROUND)
         

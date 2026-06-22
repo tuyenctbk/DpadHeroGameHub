@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.view.MotionEvent
+import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.CheckBox
@@ -42,7 +44,26 @@ object GuideManager {
             onDismiss()
         }
 
+        setupFocusEffect(btnClose)
+        setupFocusEffect(checkBox)
+
         dialog.show()
         btnClose.requestFocus()
+    }
+
+    private fun setupFocusEffect(view: View) {
+        view.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                v.animate().scaleX(1.05f).scaleY(1.05f).setDuration(200).start()
+            } else {
+                v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+            }
+        }
+        view.setOnHoverListener { v, event ->
+            if (event.action == MotionEvent.ACTION_HOVER_ENTER) {
+                v.requestFocus()
+            }
+            false
+        }
     }
 }

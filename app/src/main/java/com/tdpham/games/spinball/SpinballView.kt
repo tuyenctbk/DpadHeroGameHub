@@ -232,4 +232,30 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
         }
         return super.onKeyDown(keyCode, event)
     }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_MOVE || event.action == android.view.MotionEvent.ACTION_DOWN) {
+            if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+                performClick()
+                if (isPaused) {
+                    resume()
+                    return true
+                }
+            }
+            
+            // Mouse/Touch controls: Rotate shield towards touch angle
+            val dx = event.x - width / 2f
+            val dy = event.y - height / 2f
+            val angle = Math.toDegrees(atan2(dy.toDouble(), dx.toDouble())).toFloat()
+            currentRotation = angle
+            invalidate()
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
 }

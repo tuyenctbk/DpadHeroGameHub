@@ -249,8 +249,14 @@ class SnakeGameView @JvmOverloads constructor(
         }
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
     override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
         if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            performClick()
             if (isGameOver || isPaused) {
                 togglePause()
                 return true
