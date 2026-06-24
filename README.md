@@ -71,7 +71,7 @@ To generate a signed release APK or App Bundle, use the following keystore infor
 
 *   **Keystore Path**: `common_release_key.jks` (Project Root)
 *   **Keystore Password**: `dpadhero123`
-*   **Alias**: `release_alias`
+*   **Alias**: `dpad_hero_alias`
 *   **Key Password**: `dpadhero123`
 
 ---

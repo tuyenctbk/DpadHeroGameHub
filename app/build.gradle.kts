@@ -9,11 +9,11 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.tdpham.games"
+        applicationId = "com.tdpham.dpadarcade"
         minSdk = 23
         targetSdk = 34
-        versionCode = 7
-        versionName = "1.1"
+        versionCode = 1
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -22,7 +22,7 @@ android {
         create("release") {
             storeFile = rootProject.file("common_release_key.jks")
             storePassword = "dpadhero123"
-            keyAlias = "release_alias"
+            keyAlias = "dpad_hero_alias"
             keyPassword = "dpadhero123"
         }
     }

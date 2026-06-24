@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:755629936292:android:ae1cd0a66db407d3d52031",
+        "android_client_info": {
+          "package_name": "com.tdpham.dpadarcade"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs6b9lZIqPGMkzAEFcow1kvAT4m6T8u2Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:755629936292:android:563111bd83e87f16d52031",
         "android_client_info": {
           "package_name": "com.tdpham.games"
