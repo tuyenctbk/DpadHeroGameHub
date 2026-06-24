@@ -20,7 +20,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     protected abstract val gameInstructions: String
     
     protected lateinit var gameView: GameView
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private var firebaseAnalytics: FirebaseAnalytics? = null
     private lateinit var btnHelp: View
     private var isGuideShowing = false
     private var hasStarted = false
@@ -31,7 +31,12 @@ abstract class BaseGameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutId())
 
-        firebaseAnalytics = Firebase.analytics
+        firebaseAnalytics = try {
+            Firebase.analytics
+        } catch (e: Exception) {
+            android.util.Log.e("BaseGameActivity", "Failed to initialize Firebase Analytics: ${e.message}", e)
+            null
+        }
         
         val view = findViewById<View>(getGameViewId())
         if (view is GameView) {
@@ -41,7 +46,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
                 bundle.putInt(FirebaseAnalytics.Param.SCORE, score)
-                firebaseAnalytics.logEvent("level_end", bundle)
+                firebaseAnalytics?.logEvent("level_end", bundle)
             }
         } else {
             throw IllegalStateException("View must implement GameView interface")
@@ -82,7 +87,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
         hasStarted = true
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LEVEL_START, bundle)
+        firebaseAnalytics?.logEvent(FirebaseAnalytics.Event.LEVEL_START, bundle)
         gameView.startGame()
     }
 

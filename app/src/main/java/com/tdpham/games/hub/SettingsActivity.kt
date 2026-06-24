@@ -32,9 +32,12 @@ class SettingsActivity : AppCompatActivity() {
         setupFocusEffect(soundToggleLayout)
 
         privacyPolicyLayout.setOnClickListener {
-            // Replace with your actual Privacy Policy URL
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/tuyenctbk/DpadHeroGameHub/blob/main/PRIVACY_POLICY.md"))
-            startActivity(browserIntent)
+            try {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/tuyenctbk/DpadHeroGameHub/blob/main/PRIVACY_POLICY.md"))
+                startActivity(browserIntent)
+            } catch (e: Exception) {
+                android.widget.Toast.makeText(this, "URL: https://github.com/tuyenctbk/DpadHeroGameHub", android.widget.Toast.LENGTH_LONG).show()
+            }
         }
         setupFocusEffect(privacyPolicyLayout)
 

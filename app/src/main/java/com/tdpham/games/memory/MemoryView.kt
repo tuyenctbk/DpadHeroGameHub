@@ -39,7 +39,15 @@ class MemoryView @JvmOverloads constructor(
     private var isProcessing = false
     private val handler = Handler(Looper.getMainLooper())
 
-    private val symbols = listOf("🍎", "🍌", "🍒", "🍇", "🍓", "🍍", "🥝", "🍉")
+    private val symbolThemes = listOf(
+        listOf("🍎", "🍌", "🍒", "🍇", "🍓", "🍍", "🥝", "🍉"), // Fruits
+        listOf("🐶", "🐱", "🦁", "🐯", "🐼", "🐻", "🐨", "🦊"), // Animals
+        listOf("⚽", "🏀", "🏈", "⚾", "🎾", "🏐", "🏉", "🎱"), // Sports
+        listOf("🚗", "🚲", "✈️", "🚀", "⛵", "🚁", "🚂", "🛸"), // Vehicles
+        listOf("🍕", "🍔", "🍟", "🌭", "🍿", "🍩", "🍪", "🍫")  // Foods
+    )
+    private var currentThemeIndex = -1
+    private val random = java.util.Random()
 
     data class Card(val symbol: String, var isFlipped: Boolean = false, var isMatched: Boolean = false)
 
@@ -63,7 +71,15 @@ class MemoryView @JvmOverloads constructor(
 
     override fun resetGame() {
         cards.clear()
-        val deck = (symbols + symbols).shuffled()
+        
+        var nextThemeIndex = random.nextInt(symbolThemes.size)
+        while (nextThemeIndex == currentThemeIndex && symbolThemes.size > 1) {
+            nextThemeIndex = random.nextInt(symbolThemes.size)
+        }
+        currentThemeIndex = nextThemeIndex
+        val activeSymbols = symbolThemes[currentThemeIndex]
+
+        val deck = (activeSymbols + activeSymbols).shuffled()
         for (symbol in deck) {
             cards.add(Card(symbol))
         }
@@ -179,7 +195,7 @@ class MemoryView @JvmOverloads constructor(
             card2.isMatched = true
             matches++
             SoundManager.playScore()
-            if (matches == symbols.size) {
+            if (matches == (cards.size / 2)) {
                 gameOver = true
                 val currentScore = (1000 - moves).coerceAtLeast(0)
                 if (ScoreManager.updateHighScore(context, gameKey, currentScore)) {

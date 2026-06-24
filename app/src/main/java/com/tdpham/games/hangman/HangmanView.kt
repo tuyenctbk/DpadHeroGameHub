@@ -29,6 +29,7 @@ class HangmanView @JvmOverloads constructor(
 
     private var currentCategory = ""
     private var targetWord = ""
+    private val usedWords = mutableSetOf<String>()
     private var guessedLetters = mutableSetOf<Char>()
     private var remainingAttempts = 6
     private var score = 0
@@ -63,9 +64,22 @@ class HangmanView @JvmOverloads constructor(
     override fun resume() { isPaused = false; invalidate() }
 
     override fun resetGame() {
-        val categories = words.keys.toList()
-        currentCategory = categories.random()
-        targetWord = words[currentCategory]!!.random()
+        // Collect all available words that haven't been used yet
+        var availableWords = words.flatMap { (cat, wList) -> wList.map { cat to it } }
+            .filter { (_, word) -> word !in usedWords }
+
+        // If all words are used, reset the history
+        if (availableWords.isEmpty()) {
+            usedWords.clear()
+            availableWords = words.flatMap { (cat, wList) -> wList.map { cat to it } }
+        }
+
+        // Randomly pick one
+        val chosen = availableWords.random()
+        currentCategory = chosen.first
+        targetWord = chosen.second
+        usedWords.add(targetWord)
+
         guessedLetters.clear()
         remainingAttempts = 6
         isGameOver = false

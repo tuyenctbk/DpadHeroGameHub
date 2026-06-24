@@ -21,10 +21,14 @@ object ScoreManager {
             prefs.edit().putInt("high_score_$gameKey", newScore).apply()
 
             // Log high score to Firebase
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
-            bundle.putLong(FirebaseAnalytics.Param.SCORE, newScore.toLong())
-            Firebase.analytics.logEvent(FirebaseAnalytics.Event.POST_SCORE, bundle)
+            try {
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
+                bundle.putLong(FirebaseAnalytics.Param.SCORE, newScore.toLong())
+                Firebase.analytics.logEvent(FirebaseAnalytics.Event.POST_SCORE, bundle)
+            } catch (e: Exception) {
+                android.util.Log.e("ScoreManager", "Failed to log high score to Firebase: ${e.message}", e)
+            }
 
             return true
         }

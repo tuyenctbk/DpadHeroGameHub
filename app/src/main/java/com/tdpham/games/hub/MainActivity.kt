@@ -39,13 +39,18 @@ import com.google.firebase.Firebase
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private var firebaseAnalytics: FirebaseAnalytics? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        firebaseAnalytics = Firebase.analytics
+        firebaseAnalytics = try {
+            Firebase.analytics
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Failed to initialize Firebase Analytics: ${e.message}", e)
+            null
+        }
 
         val title = findViewById<android.view.View>(R.id.main_title)
         title.alpha = 0f
@@ -192,7 +197,18 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, HangmanActivity::class.java))
         }
 
-        focusLastPlayed()
+        RatingGuideManager.incrementPlayCount(this)
+        UpdateManager.checkForUpdates(this) { hasUpdate ->
+            if (!hasUpdate) {
+                if (RatingGuideManager.shouldShowRating(this)) {
+                    RatingGuideManager.showRatingDialog(this) {
+                        focusLastPlayed()
+                    }
+                } else {
+                    focusLastPlayed()
+                }
+            }
+        }
     }
 
     private fun focusLastPlayed() {
@@ -234,7 +250,7 @@ class MainActivity : AppCompatActivity() {
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, button.text.toString())
             bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "game")
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+            firebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
             action() 
         }
         

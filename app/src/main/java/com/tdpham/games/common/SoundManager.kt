@@ -6,7 +6,7 @@ import android.media.AudioManager
 import android.media.ToneGenerator
 
 object SoundManager {
-    private var toneGenerator: ToneGenerator? = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
+    private var toneGenerator: ToneGenerator? = null
     private var isSoundEnabled = true
     private var prefs: SharedPreferences? = null
     private const val PREFS_NAME = "game_settings"
@@ -15,6 +15,14 @@ object SoundManager {
     fun init(context: Context) {
         prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         isSoundEnabled = prefs?.getBoolean(KEY_SOUND_ENABLED, true) ?: true
+
+        if (toneGenerator == null) {
+            try {
+                toneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
+            } catch (e: Exception) {
+                android.util.Log.e("SoundManager", "Failed to initialize ToneGenerator: ${e.message}", e)
+            }
+        }
     }
 
     fun toggleSound(): Boolean {

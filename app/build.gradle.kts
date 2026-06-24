@@ -12,16 +12,26 @@ android {
         applicationId = "com.tdpham.games"
         minSdk = 23
         targetSdk = 34
-        versionCode = 6
-        versionName = "1.0"
+        versionCode = 7
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = rootProject.file("common_release_key.jks")
+            storePassword = "dpadhero123"
+            keyAlias = "release_alias"
+            keyPassword = "dpadhero123"
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

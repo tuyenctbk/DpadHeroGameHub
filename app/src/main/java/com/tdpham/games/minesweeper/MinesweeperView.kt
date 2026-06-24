@@ -37,6 +37,7 @@ class MinesweeperView @JvmOverloads constructor(
     private var isWin = false
     private var isFirstClick = true
     private var totalWins = 0
+    private var lastBoardConfig = ""
     
     private val pressedKeys = mutableSetOf<Int>()
     private val moveHandler = Handler(Looper.getMainLooper())
@@ -141,22 +142,40 @@ class MinesweeperView @JvmOverloads constructor(
         isProcessingQueue = false
         totalWins = ScoreManager.getHighScore(context, gameKey)
         
-        for (r in 0 until rows) {
-            for (c in 0 until cols) {
-                grid[r][c] = Cell()
-            }
-        }
-        
         val random = Random()
-        var placedMines = 0
-        while (placedMines < minesCount) {
-            val r = random.nextInt(rows)
-            val c = random.nextInt(cols)
-            if (!grid[r][c].isMine) {
-                grid[r][c].isMine = true
-                placedMines++
+        var attempts = 0
+        var currentConfig = ""
+        
+        do {
+            for (r in 0 until rows) {
+                for (c in 0 until cols) {
+                    grid[r][c] = Cell()
+                }
             }
-        }
+            
+            var placedMines = 0
+            while (placedMines < minesCount) {
+                val r = random.nextInt(rows)
+                val c = random.nextInt(cols)
+                if (!grid[r][c].isMine) {
+                    grid[r][c].isMine = true
+                    placedMines++
+                }
+            }
+            
+            val configList = mutableListOf<String>()
+            for (r in 0 until rows) {
+                for (c in 0 until cols) {
+                    if (grid[r][c].isMine) {
+                        configList.add("$r,$c")
+                    }
+                }
+            }
+            currentConfig = configList.sorted().joinToString(";")
+            attempts++
+        } while (currentConfig == lastBoardConfig && attempts < 10)
+        
+        lastBoardConfig = currentConfig
         
         for (r in 0 until rows) {
             for (c in 0 until cols) {
