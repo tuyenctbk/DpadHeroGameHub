@@ -10,6 +10,8 @@ import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import kotlin.random.Random
 
 class BattleTanksView @JvmOverloads constructor(
@@ -38,6 +40,8 @@ class BattleTanksView @JvmOverloads constructor(
     private var gamePaused = true
     private var level = 1
     private var isLevelLoading = false
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
     
     private var bgType = GameEnvironment.BackgroundType.SOLID
     private var isNight = false
@@ -90,6 +94,7 @@ class BattleTanksView @JvmOverloads constructor(
         best = ScoreManager.getHighScore(context, gameKey)
         gameOver = false
         gamePaused = true
+        celebrationManager.start(0f, 0f)
         setupLevel()
         invalidate()
     }
@@ -281,14 +286,17 @@ class BattleTanksView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.LEFT
         val hudX = Math.round(20f).toFloat()
         val hudY = Math.round(40f).toFloat()
-        canvas.drawText("SCORE: $score  LVL: $level", hudX, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.level_label)}: $level", hudX, hudY, paint)
         
         paint.textAlign = Paint.Align.RIGHT
         val bestX = Math.round(width - 20f).toFloat()
-        canvas.drawText("BEST: $best", bestX, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", bestX, hudY, paint)
 
-        if (gameOver) drawOverlay(canvas, "MISSION FAILED", "Score: $score | Center to Restart")
-        else if (gamePaused) drawOverlay(canvas, "BATTLE TANKS", "Level $level | Center to Start")
+        if (gameOver) drawOverlay(canvas, context.getString(R.string.mission_failed_label), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+        else if (gamePaused) drawOverlay(canvas, context.getString(R.string.game_tanks), "${context.getString(R.string.level_label)} $level\n${context.getString(R.string.start_game)}")
+
+        celebrationManager.update()
+        celebrationManager.draw(canvas)
 
         if (!gamePaused && !gameOver) invalidate()
     }
@@ -372,6 +380,8 @@ class BattleTanksView @JvmOverloads constructor(
                             SoundManager.playScore()
                             if (score % 1000 == 0) {
                                 level++
+                                currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+                                celebrationManager.start(width.toFloat(), height.toFloat())
                                 // Defer setupLevel to avoid ConcurrentModificationException
                                 handler.post { setupLevel() }
                                 return // Exit update immediately as lists are about to be cleared
@@ -407,8 +417,12 @@ class BattleTanksView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.WHITE
         paint.textSize = 80f
-        canvas.drawText(title, width / 2f, height / 2f, paint)
+        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+        
         paint.textSize = 30f
-        canvas.drawText(sub, width / 2f, height / 2f + 60f, paint)
+        val lines = sub.split("\n")
+        lines.forEachIndexed { i, s ->
+            canvas.drawText(s, width / 2f, height / 2f + 40f + i * 40f, paint)
+        }
     }
 }

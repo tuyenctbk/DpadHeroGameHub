@@ -5,70 +5,230 @@
     <string name="snake">스네이크</string>
     <string name="minesweeper">지뢰찾기</string>
     <string name="game_4096">4096</string>
-    <string name="game_trex">T-렉스 런</string>
-    <string name="game_brick_break">벽돌깨기</string>
+    <string name="game_trex">T-REX RUN</string>
+    <string name="game_brick_break">벽돌 깨기</string>
     <string name="game_tictactoe">틱택토</string>
     <string name="game_checkers">체커</string>
     <string name="game_sokoban">소코반</string>
     <string name="game_sudoku">스도쿠</string>
     <string name="game_tetris">테트리스</string>
-    <string name="game_starfighter">스타파이터</string>
-    <string name="game_memory">카드 뒤집기</string>
+    <string name="game_starfighter">스타 파이터</string>
+    <string name="game_memory">카드 맞추기</string>
     <string name="game_slide_puzzle">슬라이드 퍼즐</string>
     <string name="game_maze">미로</string>
     <string name="game_mental_math">암산</string>
     <string name="game_froggy">프로기 크로스</string>
-    <string name="game_simon">사이몬 세즈</string>
-    <string name="game_tanks">배틀 탱크</string>
+    <string name="game_simon">사이먼 세즈</string>
+    <string name="game_tanks">탱크 대전</string>
     <string name="game_word_quest">워드 퀘스트</string>
     <string name="game_dungeon">던전 탈출</string>
     <string name="game_flappy">플래피 히어로</string>
-    <string name="game_lines98">라인즈 98</string>
+    <string name="game_lines98">라인 98</string>
     <string name="game_solitaire">솔리테어</string>
     <string name="game_road_racer">로드 레이서</string>
     <string name="game_hangman">행맨</string>
     <string name="game_spinball">스핀볼</string>
-    <string name="game_spinball_instructions">좌우 키로 원을 회전시킵니다. 별을 모으고 가시를 피하세요. 공이 나가지 않게 하세요!</string>
+    <string name="game_spinball_instructions">좌우로 회전하세요. 별을 모으고 가시를 피하세요. 공이 나가지 않게 하세요!</string>
     <string name="how_to_play_guide">%s 가이드</string>
-    <string name="snake_instructions">• 방향키로 스네이크를 움직입니다.\n• 빨간 사과를 먹어 몸집을 키우세요.\n• 벽이나 자기 몸에 부딪히지 마세요!\n• \'S\' 키로 소리를 끕니다.\n• CENTER 키로 일시 정지합니다.</string>
-    <string name="minesweeper_instructions">• 방향키로 커서를 이동합니다.\n• CENTER 키로 타일을 엽니다.\n• MENU 또는 \'S\' 키로 깃발을 꽂습니다.\n• 안전한 타일을 모두 열면 승리!</string>
-    <string name="game_4096_instructions">• 방향키로 타일을 슬라이드합니다.\n• 같은 숫자 타일이 합쳐집니다.\n• 4096 타일을 만들면 승리!\n• CENTER 키로 다시 시작할 수 있습니다.</string>
-    <string name="game_trex_instructions">• 위 키 또는 CENTER 키로 점프합니다.\n• 선인장과 새를 피하세요!\n• 시간이 지날수록 속도가 빨라집니다.</string>
-    <string name="game_brick_break_instructions">• 좌우 키로 패들을 움직입니다.\n• CENTER 키로 공을 발사하거나 일시 정지.\n• 모든 벽돌을 깨면 승리!\n• 목숨은 3개입니다.</string>
-    <string name="game_tictactoe_instructions">• 방향키로 커서 이동, CENTER 키로 배치.\n• 한 줄을 먼저 완성하여 승리하세요!\n• 종료 후 위/아래 키로 판 크기를 변경 가능.</string>
-    <string name="game_checkers_instructions">• 방향키로 이동, CENTER 키로 선택.\n• 빨간색(플레이어)이 위로 이동합니다.\n• 상대방 말을 뛰어넘어 잡으세요.\n• 맨 끝줄에 도달하면 킹이 됩니다.</string>
-    <string name="game_sokoban_instructions">• 방향키로 이동. 상자($)를 목적지로 밉니다.\n• 한 번에 하나만 밀 수 있습니다. 당길 수는 없습니다.\n• CENTER 키로 레벨을 재시작할 수 있습니다.</string>
-    <string name="game_sudoku_instructions">• 방향키로 이동, CENTER 키로 숫자 변경.\n• 흰색 숫자는 고정되어 있습니다.\n• 가로, 세로, 3x3 박스에 중복 숫자가 없어야 합니다.</string>
-    <string name="game_tetris_instructions">• 좌우 키로 이동, 위 키로 회전.\n• 아래 키로 천천히 내리기, CENTER 키로 즉시 내리기.\n• 가로 한 줄을 채우면 점수를 얻습니다.</string>
-    <string name="game_starfighter_instructions">• 방향키로 기체를 조종합니다. 탄환은 자동 발사.\n• 적을 처치하여 점수를 얻으세요.\n• 적에게 부딪히지 않게 주의하세요!</string>
-    <string name="game_memory_instructions">• 방향키로 이동, CENTER 키로 카드 뒤집기.\n• 모든 짝을 맞추면 승리!\n• 적은 횟수로 클리어해 보세요.</string>
-    <string name="game_slide_puzzle_instructions">• 방향키로 커서 이동, CENTER 키로 슬라이드.\n• 타일을 정렬하여 그림을 완성하세요.\n• 숫자는 올바른 순서를 나타냅니다.</string>
-    <string name="game_maze_instructions">• 미로를 잘 관찰하세요.\n• 초록색 점과 연결된 출구(그림)를 찾으세요.\n• 좌우 키로 선택, CENTER 키로 확정.\n• 기회는 한 번뿐입니다!</string>
-    <string name="game_mental_math_instructions">• 계산 문제를 푸세요.\n• 방향키로 답을 선택하고 CENTER 키로 확정.\n• 빠르게 대답하세요! 틀리면 게임 종료.</string>
-    <string name="game_froggy_instructions">• 도로와 강을 건너세요.\n• 도로의 차를 피하고 강의 통나무를 밟으세요.\n• 위쪽 목적지에 도달하면 득점합니다.\n• 방향키로 움직입니다.</string>
-    <string name="game_simon_instructions">• 색상 순서를 잘 기억하세요.\n• 방향키로 순서대로 입력하세요.\n• 매 라운드마다 순서가 길어집니다!</string>
-    <string name="game_tanks_instructions">• 방향키로 탱크 조종, 탄환은 자동 발사.\n• 모든 적 탱크를 파괴하세요.\n• 당신의 기지(별)를 지키세요.</string>
-    <string name="game_word_quest_instructions">• 5글자 단어를 6회 이내에 맞추세요.\n• 방향키로 키보드 이동, CENTER 키로 입력.\n• 초록: 글자와 위치 정답.\n• 노랑: 글자 정답, 위치 오답.\n• 회색: 없는 글자.</string>
-    <string name="game_dungeon_instructions">• 방향키로 이동하며 황금 열쇠를 모으세요.\n• 탈출구에 도달하면 클리어.\n• 빨간 가시 함정을 조심하세요!</string>
-    <string name="game_flappy_instructions">• CENTER 키로 날개를 짓습니다.\n• 파이프 사이를 통과하세요.\n• 파이프나 바닥에 닿으면 게임 오버!</string>
-    <string name="game_lines98_instructions">• 방향키로 이동, CENTER 키로 공 이동.\n• 같은 색 공을 5개 이상 정렬하세요.\n• 판이 가득 차면 게임 종료.</string>
-    <string name="game_solitaire_instructions">• 방향키로 이동, CENTER 키로 선택/배치.\n• 같은 무늬를 A부터 K까지 순서대로 쌓으세요.</string>
-    <string name="game_road_racer_instructions">• 장애물을 피해 운전하세요.\n• 가능한 오래 살아남으세요!\n• CENTER 키로 일시 정지.</string>
-    <string name="game_hangman_instructions">• 글자를 골라 단어를 맞추세요.\n• 6번의 기회가 주어집니다.\n• CENTER 키로 선택.</string>
+    <string name="snake_instructions">• 방향키로 이동하세요.\n• 사과를 먹어 길이를 늘리세요.\n• 벽이나 자신에게 부딪히지 마세요!\n• \'S\'로 소리 켜기/끄기.\n• 확인 키로 일시정지.</string>
+    <string name="minesweeper_instructions">• 방향키로 커서를 이동하세요.\n• 확인 키로 칸을 엽니다.\n• 메뉴나 \'S\'로 깃발을 꽂으세요.\n• 안전한 칸을 모두 찾아 승리하세요!</string>
+    <string name="game_4096_instructions">• 방향키로 타일을 밀어보세요.\n• 같은 숫자가 합쳐집니다.\n• 4096을 달성하면 승리!</string>
+    <string name="game_trex_instructions">• 위 키나 확인 키로 점프하세요.\n• 선인장과 새를 피하세요!\n• 속도는 점점 빨라집니다.</string>
+    <string name="game_brick_break_instructions">• 좌우로 패들을 움직이세요.\n• 확인 키로 발사하거나 멈춥니다.\n• 모든 벽돌을 깨면 승리!\n• 생명은 3개입니다.</string>
+    <string name="game_tictactoe_instructions">• 방향키로 커서를 이동하세요.\n• 확인 키로 X를 놓습니다.\n• 3개를 일렬로 나열하여 승리하세요.</string>
+    <string name="game_checkers_instructions">• 방향키:이동. 확인:선택.\n• 빨간색(본인)은 위로 이동. 어두운 칸만 가능.\n• 상대 말을 잡을 수 있으면 반드시 잡아야 합니다.\n• 끝까지 가면 킹이 됩니다.</string>
+    <string name="game_sokoban_instructions">• 방향키:이동. 상자($)를 목표지점으로 미세요.\n• 한 번에 하나씩만 가능합니다.\n• 확인:레벨 재시작.</string>
+    <string name="game_sudoku_instructions">• 방향키:이동. 확인:숫자 변경.\n• 흰색 숫자는 고정입니다.\n• 가로, 세로, 3x3 박스 내 중복 불가.</string>
+    <string name="game_tetris_instructions">• 좌우로 이동.\n• 위로 회전.\n• 아래로 소프트 드롭.\n• 확인 키로 하드 드롭.</string>
+    <string name="game_starfighter_instructions">• 방향키로 이동.\n• 자동 발사.\n• 적을 파괴하여 점수를 얻으세요.\n• 공격을 피하세요!\n• \'S\'로 소리 조절.</string>
+    <string name="game_memory_instructions">• 방향키로 이동.\n• 확인 키로 카드를 뒤집으세요.\n• 모든 쌍을 맞추면 승리.\n• 적은 횟수가 좋습니다!</string>
+    <string name="game_slide_puzzle_instructions">• 방향키로 이동.\n• 확인 키로 슬라이드.\n• 그림을 완성하세요.</string>
+    <string name="game_maze_instructions">• 미로를 잘 보세요.\n• 초록색 점에 연결된 출구를 찾으세요.\n• 좌우로 선택.\n• 확인 키로 결정.</string>
+    <string name="game_mental_math_instructions">• 계산 문제를 푸세요.\n• 방향키로 정답 선택.\n• 확인 키로 결정.\n• 서두르세요! 시간이 없습니다.</string>
+    <string name="game_froggy_instructions">• 길과 강을 건너세요.\n• 자동차를 피하세요.\n• 통나무를 타세요.\n• 목표 지점에 도달하세요!</string>
+    <string name="game_simon_instructions">• 색상 순서를 기억하세요.\n• 방향키로 따라하세요.\n• 매 라운드 순서가 길어집니다!</string>
+    <string name="game_tanks_instructions">• 방향키로 탱크 조종.\n• 자동 발사.\n• 적 탱크를 파괴하세요.\n• 기지를 지키세요.</string>
+    <string name="game_word_quest_instructions">• 5글자 단어를 6번 안에 맞추세요.\n• 방향키로 키보드 조작.\n• 확인 키로 선택.\n• 초록: 글자와 위치 정답.</string>
+    <string name="game_dungeon_instructions">• 방향키로 던전 탐험.\n• 황금 열쇠를 찾으세요.\n• 출구로 나가세요.\n• 빨간 가시를 피하세요!</string>
+    <string name="game_flappy_instructions">• 확인 키로 날갯짓.\n• 파이프 사이를 통과하세요.\n• 부딪히면 끝!\n• 하나 통과할 때마다 1점.</string>
+    <string name="game_lines98_instructions">• 방향키로 커서 이동.\n• 확인 키로 공 이동.\n• 같은 색 공 5개를 정렬하세요.\n• 꽉 차면 종료됩니다.</string>
+    <string name="game_solitaire_instructions">• 방향키로 커서 이동.\n• 확인 키로 카드 선택/놓기.\n• 무늬별로 A부터 K까지 나열하세요.</string>
+    <string name="game_road_racer_instructions">• 자동차를 피하세요.\n• 최대한 오래 살아남으세요!\n• 확인 키로 일시정지.</string>
+    <string name="game_hangman_instructions">• 글자를 골라 단어를 맞추세요.\n• 기회는 6번입니다.\n• 확인 키로 선택.</string>
     <string name="select_game_hint">DpadHero: 방향키로 게임 선택</string>
     <string name="settings">설정</string>
     <string name="settings_button_description">설정</string>
     <string name="sound_effects">효과음</string>
-    <string name="sound_effects_description">게임 내 효과음을 켜거나 끕니다.</string>
+    <string name="sound_effects_description">효과음 켜기/끄기.</string>
     <string name="privacy_policy">개인정보 처리방침</string>
     <string name="back">뒤로</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">지원: 방향키 / 리모컨</string>
     <string name="help">도움말</string>
-    <string name="guide_hint_keys">[INFO] 또는 [H]를 누르세요</string>
+    <string name="guide_hint_keys">[정보] 또는 [H]</string>
     <string name="guide_title_default">게임 방법</string>
     <string name="guide_content_default">가이드가 여기에 표시됩니다.</string>
     <string name="dont_show_again">다시 보지 않기</string>
     <string name="start_game">게임 시작</string>
-    <string name="resume">재개</string>
+    <string name="resume">계속하기</string>
+    <string name="score_label">점수</string>
+    <string name="best_label">최고기록</string>
+    <string name="next_label">다음</string>
+    <string name="game_over">GAME OVER</string>
+    <string name="paused">일시정지</string>
+    <string name="win_4096_label">4096 달성!</string>
+    <string name="restart_hint">확인 키로 재시작</string>
+    <string name="exit_hint">뒤로 키로 나가기</string>
+    <string name="resume_hint">확인 키로 재개</string>
+
+    <string-array name="win_generic">
+        <item>승리!</item>
+        <item>잘했어요!</item>
+        <item>놀라워요!</item>
+        <item>훌륭합니다!</item>
+        <item>최고예요!</item>
+        <item>당신이 최고입니다!</item>
+        <item>우수합니다!</item>
+        <item>환상적이에요!</item>
+        <item>대단합니다!</item>
+        <item>수고하셨습니다!</item>
+    </string-array>
+
+    <string-array name="win_highscore">
+        <item>신기록 달성!</item>
+        <item>거침없네요!</item>
+        <item>역대 최고!</item>
+        <item>신의 경지!</item>
+        <item>하이스코어!</item>
+    </string-array>
+
+    <string-array name="win_minesweeper">
+        <item>정화 완료!</item>
+        <item>지뢰 마스터!</item>
+        <item>안전 통과!</item>
+        <item>해체 전문가!</item>
+    </string-array>
+
+    <string-array name="win_sudoku">
+        <item>판면 정복!</item>
+        <item>논리왕!</item>
+        <item>해결 완료!</item>
+        <item>명석한 두뇌!</item>
+    </string-array>
+
+    <string-array name="win_tictactoe">
+        <item>압승!</item>
+        <item>3연속 성공!</item>
+        <item>전략적 승리!</item>
+        <item>천하무적!</item>
+    </string-array>
+
+    <string-array name="win_4096">
+        <item>수학 천재!</item>
+        <item>4096 도달!</item>
+        <item>숫자 제패!</item>
+        <item>궁극의 타일!</item>
+    </string-array>
+
+    <string-array name="win_memory">
+        <item>완벽한 기억력!</item>
+        <item>매칭 달인!</item>
+        <item>예리한 직감!</item>
+        <item>다 맞췄어요!</item>
+    </string-array>
+
+    <string-array name="win_hangman">
+        <item>단어 구출!</item>
+        <item>어휘의 마스터!</item>
+        <item>기적의 생존!</item>
+        <item>사전의 왕!</item>
+    </string-array>
+
+    <string-array name="win_brick_break">
+        <item>스테이지 클리어!</item>
+        <item>벽돌 분쇄기!</item>
+        <item>파괴자!</item>
+        <item>패들 프로!</item>
+    </string-array>
+
+    <string-array name="win_word_quest">
+        <item>단어 발견!</item>
+        <item>철자 마스터!</item>
+        <item>언어의 영웅!</item>
+        <item>퀘스트 완료!</item>
+    </string-array>
+
+    <string-array name="win_solitaire">
+        <item>전부 수거!</item>
+        <item>에이스의 승리!</item>
+        <item>무늬 완성!</item>
+        <item>카드의 제왕!</item>
+    </string-array>
+
+    <string-array name="win_maze">
+        <item>트로피 발견!</item>
+        <item>미로 주파!</item>
+        <item>경로 개척!</item>
+        <item>탈출 성공!</item>
+    </string-array>
+
+    <string-array name="win_sokoban">
+        <item>창고의 영웅!</item>
+        <item>운반의 달인!</item>
+        <item>미션 완료!</item>
+        <item>소코반 마스터!</item>
+    </string-array>
+
+    <string-array name="win_checkers">
+        <item>CPU 격파!</item>
+        <item>판 위의 제왕!</item>
+        <item>그랜드 마스터!</item>
+        <item>전략가!</item>
+    </string-array>
+
+    <string-array name="win_slide_puzzle">
+        <item>복원 완료!</item>
+        <item>퍼즐 해결!</item>
+        <item>완벽한 배치!</item>
+        <item>슬라이드 달인!</item>
+    </string-array>
+
+    <string-array name="win_dungeon">
+        <item>던전 탈출!</item>
+        <item>전설의 탐험가!</item>
+        <item>층 점령!</item>
+        <item>보물 발견!</item>
+    </string-array>
+
+    <string-array name="win_tanks">
+        <item>기지 방어!</item>
+        <item>섬멸 완료!</item>
+        <item>탱크 사령관!</item>
+        <item>전쟁 영웅!</item>
+    </string-array>
+
+    <string-array name="win_mental_math">
+        <item>수학 천재!</item>
+        <item>뇌섹남녀!</item>
+        <item>계산왕!</item>
+        <item>숫자 마스터!</item>
+    </string-array>
+
+    <string-array name="win_froggy">
+        <item>목표 도달!</item>
+        <item>무사 횡단!</item>
+        <item>프로기 히어로!</item>
+        <item>강의 지배자!</item>
+    </string-array>
+    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
+    <string name="trex_daddy">아빠 T-Rex</string>
+    <string name="trex_mummy">엄마 T-Rex</string>
+    <string name="trex_baby">아기 T-Rex</string>
+    <string name="trex_grandpa">할아버지 T-Rex</string>
+    <string name="trex_teenager">십대 T-Rex</string>
+    <string name="trex_scientist">과학자 T-Rex</string>
+    <string name="trex_athlete">운동선수 T-Rex</string>
+    <string name="trex_pirate">해적 T-Rex</string>
+    <string name="trex_chef">요리사 T-Rex</string>
+    <string name="trex_astronaut">우주비행사 T-Rex</string>
 </resources>

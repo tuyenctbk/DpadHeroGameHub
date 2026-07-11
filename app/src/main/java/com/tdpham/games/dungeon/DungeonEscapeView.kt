@@ -9,6 +9,8 @@ import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import kotlin.random.Random
 
 class DungeonEscapeView @JvmOverloads constructor(
@@ -34,6 +36,8 @@ class DungeonEscapeView @JvmOverloads constructor(
     private var best = 0
     private var gameOver = false
     private var gamePaused = true
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
     private val spikePath = Path()
     private var lastUpdate = 0L
     
@@ -85,6 +89,7 @@ class DungeonEscapeView @JvmOverloads constructor(
         level = 1
         score = 0
         best = ScoreManager.getHighScore(context, gameKey)
+        celebrationManager.start(0f, 0f)
         setupLevel()
         gamePaused = true
         gameOver = false
@@ -218,6 +223,8 @@ class DungeonEscapeView @JvmOverloads constructor(
                 if (hasKey) {
                     level++
                     score += 100 * level
+                    currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+                    celebrationManager.start(width.toFloat(), height.toFloat())
                     SoundManager.playSuccess()
                     setupLevel()
                 }
@@ -313,15 +320,18 @@ class DungeonEscapeView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
         val hudY = Math.round(40f).toFloat()
-        canvas.drawText("LEVEL: $level  SCORE: $score", 20f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.level_label)}: $level  ${context.getString(R.string.score_label)}: $score", 20f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 20f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 20f, hudY, paint)
 
         if (gameOver) {
-            drawOverlay(canvas, "TRAPPED!", "Final Level: $level\nPress Center to Restart")
+            drawOverlay(canvas, context.getString(R.string.trapped_label), "${context.getString(R.string.final_score_label)}: $level\n${context.getString(R.string.restart_hint)}")
         } else if (gamePaused) {
-            drawOverlay(canvas, "DUNGEON ESCAPE", "Press Center to Start")
+            drawOverlay(canvas, context.getString(R.string.game_dungeon), context.getString(R.string.start_game))
         }
+
+        celebrationManager.update()
+        celebrationManager.draw(canvas)
 
         if (!gamePaused && !gameOver) invalidate()
     }

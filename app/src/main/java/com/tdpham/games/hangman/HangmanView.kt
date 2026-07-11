@@ -9,6 +9,8 @@ import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import java.util.*
 
 class HangmanView @JvmOverloads constructor(
@@ -38,6 +40,8 @@ class HangmanView @JvmOverloads constructor(
     private var isWin = false
     private var isPaused = true
 
+    private val celebrationManager = CelebrationManager()
+    private var currentVictoryWord = ""
     private var cursorRow = 0
     private var cursorCol = 0
     private val alphabet = ('A'..'Z').toList()
@@ -65,6 +69,7 @@ class HangmanView @JvmOverloads constructor(
 
     override fun resetGame() {
         // Collect all available words that haven't been used yet
+        celebrationManager.start(0f, 0f)
         var availableWords = words.flatMap { (cat, wList) -> wList.map { cat to it } }
             .filter { (_, word) -> word !in usedWords }
 
@@ -76,7 +81,14 @@ class HangmanView @JvmOverloads constructor(
 
         // Randomly pick one
         val chosen = availableWords.random()
-        currentCategory = chosen.first
+        val catKey = when(chosen.first) {
+            "ANIMALS" -> R.string.cat_animals
+            "FRUITS" -> R.string.cat_fruits
+            "COUNTRIES" -> R.string.cat_countries
+            "SPORTS" -> R.string.cat_sports
+            else -> R.string.help
+        }
+        currentCategory = context.getString(catKey)
         targetWord = chosen.second
         usedWords.add(targetWord)
 
@@ -177,6 +189,8 @@ class HangmanView @JvmOverloads constructor(
                     SoundManager.playClick()
                     if (targetWord.all { it in guessedLetters }) {
                         isWin = true
+                        currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+                        celebrationManager.start(width.toFloat(), height.toFloat())
                         score += 10 + remainingAttempts
                         ScoreManager.updateHighScore(context, gameKey, score)
                         SoundManager.playSuccess()
@@ -201,7 +215,7 @@ class HangmanView @JvmOverloads constructor(
         paint.color = Color.WHITE
         paint.textSize = 40f
         paint.textAlign = Paint.Align.CENTER
-        canvas.drawText("CATEGORY: $currentCategory", width / 2f + 150f, 100f, paint)
+        canvas.drawText("${context.getString(R.string.category_label)}: $currentCategory", width / 2f + 150f, 100f, paint)
 
         paint.textSize = 70f
         val displayWord = targetWord.map { if (it in guessedLetters) it else '_' }.joinToString(" ")
@@ -217,13 +231,18 @@ class HangmanView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
         val hudY = Math.round(60f).toFloat()
-        canvas.drawText("SCORE: $score", 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $highScore", width - 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", width - 40f, hudY, paint)
 
-        if (isGameOver) drawOverlay(canvas, "GAME OVER", "The word was: $targetWord")
-        else if (isWin) drawOverlay(canvas, "YOU WON!", "Press Center to Next Word")
-        else if (isPaused) drawOverlay(canvas, "HANGMAN", "Press Center to Start")
+        if (isGameOver) drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.answer_was_label)}: $targetWord\n${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+        else if (isWin) {
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+            drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.next_word_hint)}")
+        }
+        else if (isPaused) drawOverlay(canvas, context.getString(R.string.game_hangman), context.getString(R.string.start_game))
     }
 
     private fun drawHangman(canvas: Canvas, x: Float, y: Float, h: Float) {
@@ -266,8 +285,15 @@ class HangmanView @JvmOverloads constructor(
     private fun drawOverlay(canvas: Canvas, title: String, sub: String) {
         paint.color = Color.argb(200, 0, 0, 0)
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
-        paint.textAlign = Paint.Align.CENTER; paint.color = Color.WHITE
-        paint.textSize = 90f; canvas.drawText(title, width / 2f, height / 2f, paint)
-        paint.textSize = 35f; canvas.drawText(sub, width / 2f, height / 2f + 80f, paint)
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.WHITE
+        paint.textSize = 90f
+        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+        
+        paint.textSize = 35f
+        val lines = sub.split("\n")
+        lines.forEachIndexed { i, s ->
+            canvas.drawText(s, width / 2f, height / 2f + 50f + i * 45f, paint)
+        }
     }
 }

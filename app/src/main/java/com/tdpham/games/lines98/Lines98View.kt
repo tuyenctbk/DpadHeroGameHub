@@ -5,10 +5,13 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
+import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import java.util.*
 
 class Lines98View @JvmOverloads constructor(
@@ -30,6 +33,8 @@ class Lines98View @JvmOverloads constructor(
     private var score = 0
     private var isGameOver = false
     private var isPaused = false
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
     
     private val ballColors = intArrayOf(
         Color.parseColor("#F44336"), // Red
@@ -71,6 +76,7 @@ class Lines98View @JvmOverloads constructor(
         board = Array(gridSize) { IntArray(gridSize) { 0 } }
         score = 0
         isGameOver = false
+        celebrationManager.start(0f, 0f)
         selectedX = -1
         selectedY = -1
         nextBalls.clear()
@@ -130,6 +136,12 @@ class Lines98View @JvmOverloads constructor(
         }
         if (!hasEmpty) {
             isGameOver = true
+            if (ScoreManager.updateHighScore(context, gameKey, score)) {
+                currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
+                celebrationManager.start(width.toFloat(), height.toFloat())
+            } else {
+                currentVictoryWord = ""
+            }
             onGameOver?.invoke(score)
         }
     }
@@ -417,25 +429,29 @@ class Lines98View @JvmOverloads constructor(
         paint.textSize = 40f
         val hudY1 = Math.round(80f).toFloat()
         val hudY2 = Math.round(130f).toFloat()
-        canvas.drawText("Score: $score", 50f, hudY1, paint)
-        canvas.drawText("High Score: ${ScoreManager.getHighScore(context, gameKey)}", 50f, hudY2, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", 50f, hudY1, paint)
+        canvas.drawText("${context.getString(R.string.high_score_label)}: ${ScoreManager.getHighScore(context, gameKey)}", 50f, hudY2, paint)
 
         // Next Balls
-        canvas.drawText("Next:", width - 300f, hudY1, paint)
+        canvas.drawText("${context.getString(R.string.next_label)}:", width - 300f, hudY1, paint)
         for (i in nextBalls.indices) {
             paint.color = ballColors[nextBalls[i] - 1]
             canvas.drawCircle(width - 150f + i * 60f, hudY1 - 10f, 20f, paint)
         }
 
         if (isGameOver) {
-            drawOverlay(canvas, "GAME OVER", "Final Score: $score\nPress CENTER to Restart")
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+            val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.game_over)
+            drawOverlay(canvas, title, "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         } else if (isPaused) {
-            drawOverlay(canvas, "PAUSED", "Press BACK to Resume")
+            drawOverlay(canvas, context.getString(R.string.paused), context.getString(R.string.resume_hint))
         }
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {
-        paint.color = Color.parseColor("#AA000000")
+        paint.color = GamePalette.OVERLAY
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
 
         paint.color = Color.WHITE

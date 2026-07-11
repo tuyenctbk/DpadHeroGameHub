@@ -6,11 +6,10 @@ import androidx.work.Configuration
 import com.google.firebase.FirebaseApp
 
 class GameApplication : Application(), Configuration.Provider {
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setMinimumLoggingLevel(Log.INFO)
             .build()
-    }
 
     override fun onCreate() {
         super.onCreate()

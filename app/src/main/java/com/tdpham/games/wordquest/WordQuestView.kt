@@ -9,6 +9,8 @@ import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import kotlin.random.Random
 
 class WordQuestView @JvmOverloads constructor(
@@ -34,6 +36,8 @@ class WordQuestView @JvmOverloads constructor(
     private var won = false
     private var score = 0
     private var best = 0
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
 
     private val usedKeys = mutableMapOf<Char, Int>() // 0:gray, 1:yellow, 2:green
 
@@ -66,6 +70,7 @@ class WordQuestView @JvmOverloads constructor(
         usedKeys.clear()
         gameOver = false
         won = false
+        celebrationManager.start(0f, 0f)
         best = ScoreManager.getHighScore(context, gameKey)
         keyR = 0
         keyC = 0
@@ -181,6 +186,8 @@ class WordQuestView @JvmOverloads constructor(
         if (currentGuess == targetWord) {
             won = true
             gameOver = true
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+            celebrationManager.start(width.toFloat(), height.toFloat())
             score = (6 - guesses.size + 1) * 1000
             if (score > best) {
                 best = score
@@ -314,14 +321,19 @@ class WordQuestView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
         val hudY = Math.round(40f).toFloat()
-        canvas.drawText("SCORE: $score", 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
         if (gameOver) {
-            val title = if (won) "WELL DONE!" else "OUT OF TRIES"
-            val sub = if (won) "Word: $targetWord" else "Answer: $targetWord"
-            drawOverlay(canvas, title, "$sub\nPress Center to Restart")
+            if (won) {
+                celebrationManager.update()
+                celebrationManager.draw(canvas)
+                invalidate()
+            }
+            val title = if (won) currentVictoryWord else context.getString(R.string.out_of_tries)
+            val sub = if (won) "${context.getString(R.string.game_word_quest)}: $targetWord" else "${context.getString(R.string.answer_was_label)}: $targetWord"
+            drawOverlay(canvas, title, "$sub\n${context.getString(R.string.restart_hint)}")
         }
     }
 

@@ -1,0 +1,234 @@
+<resources>
+    <string name="app_name">Dpad Arcade</string>
+    <string name="app_name_full">Dpad Arcade: ألعاب قديمة</string>
+    <string name="game_center">DPAD ARCADE</string>
+    <string name="snake">الثعبان</string>
+    <string name="minesweeper">كنس الألغام</string>
+    <string name="game_4096">4096</string>
+    <string name="game_trex">T-REX RUN</string>
+    <string name="game_brick_break">كسر الطوب</string>
+    <string name="game_tictactoe">إكس-أو</string>
+    <string name="game_checkers">الداما</string>
+    <string name="game_sokoban">سوكوبان</string>
+    <string name="game_sudoku">سودوكو</string>
+    <string name="game_tetris">تتريس</string>
+    <string name="game_starfighter">المقاتل النجمي</string>
+    <string name="game_memory">الذاكرة</string>
+    <string name="game_slide_puzzle">لغز الانزلاق</string>
+    <string name="game_maze">المتاهة</string>
+    <string name="game_mental_math">الحساب الذهني</string>
+    <string name="game_froggy">عبور الضفدع</string>
+    <string name="game_simon">سيمون يقول</string>
+    <string name="game_tanks">حرب الدبابات</string>
+    <string name="game_word_quest">البحث عن الكلمات</string>
+    <string name="game_dungeon">الهروب من السجن</string>
+    <string name="game_flappy">فلابي هيرو</string>
+    <string name="game_lines98">لاينز 98</string>
+    <string name="game_solitaire">سوليتير</string>
+    <string name="game_road_racer">سباق الطرق</string>
+    <string name="game_hangman">الرجل المشنوق</string>
+    <string name="game_spinball">سبينبول</string>
+    <string name="game_spinball_instructions">استخدم يسار/يمين لتدوير الدائرة. اجمع النجوم وتجنب المسامير. لا تدع الكرة تخرج!</string>
+    <string name="how_to_play_guide">دليل %s</string>
+    <string name="snake_instructions">• استخدم D-PAD لتحريك الثعبان.\n• تناول التفاح الأحمر لتكبر.\n• لا تصطدم بالجدران أو بنفسك!\n• اضغط \'S\' لكتم الصوت.\n• اضغط CENTER للإيقاف المؤقت.</string>
+    <string name="minesweeper_instructions">• استخدم D-PAD لتحريك المؤشر.\n• اضغط CENTER للكشف عن الخانة.\n• اضغط MENU أو \'S\' لوضع علم.\n• اكشف كل الخانات الآمنة للفوز!</string>
+    <string name="game_4096_instructions">• استخدم D-PAD لتحريك البلاط.\n• الأرقام المتشابهة تندمج.\n• صل إلى 4096 للفوز!</string>
+    <string name="game_trex_instructions">• اضغط للأعلى أو CENTER للقفز.\n• تجنب الصبار والطيور!\n• تزداد السرعة مع الوقت.</string>
+    <string name="game_brick_break_instructions">• حرك المضرب بليسار/يمين.\n• اضغط CENTER للإطلاق أو الإيقاف.\n• اكسر كل الطوب للفوز.\n• لديك 3 أرواح.</string>
+    <string name="game_tictactoe_instructions">• حرك المؤشر بـ D-PAD.\n• اضغط CENTER لوضع X.\n• اهزم الكمبيوتر بتكوين خط من 3.</string>
+    <string name="game_checkers_instructions">• D-PAD: تحريك. CENTER: اختيار.\n• الأحمر (أنت) للأعلى. الخانات الغامقة فقط.\n• الأكل إجباري.\n• صل للنهاية لترقية الملك.\n• اهزم كل قطع الخصم.</string>
+    <string name="game_sokoban_instructions">• D-PAD: تحريك. ادفع الصناديق ($) للأهداف.\n• صندوق واحد في كل مرة؛ لا يمكنك السحب.\n• CENTER: إعادة تشغيل المستوى.</string>
+    <string name="game_sudoku_instructions">• D-PAD: تحريك. CENTER: تغيير الرقم.\n• الأرقام البيضاء ثابتة.\n• لا تكرار في الصف/العمود/المربع.</string>
+    <string name="game_tetris_instructions">• يسار/يمين للتحريك.\n• أعلى للتدوير.\n• أسفل للنزول البطيء.\n• CENTER للنزول السريع.</string>
+    <string name="game_starfighter_instructions">• حرك السفينة بـ D-PAD.\n• إطلاق نار تلقائي.\n• دمر الأعداء لجمع النقاط.\n• تجنب الإصابة!\n• اضغط \'S\' للصوت.</string>
+    <string name="game_memory_instructions">• تنقل بـ DPAD.\n• اقلب البطاقة بـ CENTER.\n• طابق الأزواج للفوز.\n• حركات أقل تعني فوز أفضل!</string>
+    <string name="game_slide_puzzle_instructions">• استخدم DPAD للتحريك.\n• اضغط CENTER للانزلاق.\n• رتب القطع لتكوين الصورة.</string>
+    <string name="game_maze_instructions">• ادرس المتاهة جيداً.\n• ابحث عن المخرج المتصل بالنقطة الخضراء.\n• يسار/يمين للاختيار.\n• CENTER للتأكيد.</string>
+    <string name="game_mental_math_instructions">• حل المسألة الحسابية.\n• استخدم DPAD لاختيار الإجابة.\n• اضغط CENTER للتأكيد.\n• أسرع! الوقت ينفد.</string>
+    <string name="game_froggy_instructions">• اعبر الطريق والنهر.\n• تجنب السيارات.\n• اقفز على جذوع الأشجار.\n• صل للنهاية للتسجيل!</string>
+    <string name="game_simon_instructions">• شاهد تسلسل الألوان.\n• كررها باستخدام D-PAD.\n• التسلسل يزداد طولاً كل جولة!</string>
+    <string name="game_tanks_instructions">• تحكم بالدبابة بـ D-PAD.\n• إطلاق نار تلقائي.\n• دمر دبابات الأعداء.\n• احمِ القاعدة.</string>
+    <string name="game_word_quest_instructions">• خمن الكلمة المكونة من 5 أحرف.\n• استخدم D-PAD للوحة المفاتيح.\n• CENTER للاختيار.\n• أخضر: الحرف والمكان صحيحان.</string>
+    <string name="game_dungeon_instructions">• تنقل في السجن بـ D-PAD.\n• اجمع المفتاح الذهبي.\n• صل لباب الخروج.\n• تجنب المسامير الحمراء!</string>
+    <string name="game_flappy_instructions">• اضغط CENTER للرفرفة.\n• طر عبر فتحات الأنابيب.\n• لا تلمس شيئاً!\n• نقطة لكل أنبوب تعبره.</string>
+    <string name="game_lines98_instructions">• استخدم D-PAD للمؤشر.\n• CENTER لتحريك الكرة.\n• رتب 5 كرات أو أكثر.\n• تنتهي اللعبة إذا امتلأت اللوحة.</string>
+    <string name="game_solitaire_instructions">• استخدم D-PAD للمؤشر.\n• CENTER للاختيار/الوضع.\n• رتب من الآص إلى الملك.</string>
+    <string name="game_road_racer_instructions">• تجنب الزحام.\n• ابقَ حياً لأطول فترة!\n• اضغط CENTER للإيقاف.</string>
+    <string name="game_hangman_instructions">• اختر الحروف لتخمين الكلمة.\n• لديك 6 محاولات.\n• اضغط CENTER للاختيار.</string>
+    <string name="select_game_hint">DpadHero: اختر لعبة باستخدام D-Pad</string>
+    <string name="settings">الإعدادات</string>
+    <string name="settings_button_description">الإعدادات</string>
+    <string name="sound_effects">المؤثرات الصوتية</string>
+    <string name="sound_effects_description">تفعيل أو تعطيل أصوات اللعبة.</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="back">رجوع</string>
+    <string name="retro_game_studio">DPADHERO STUDIO</string>
+    <string name="supported_devices_hint">يدعم: D-pad / جهاز التحكم</string>
+    <string name="help">مساعدة</string>
+    <string name="guide_hint_keys">اضغط [INFO] أو [H]</string>
+    <string name="guide_title_default">طريقة اللعب</string>
+    <string name="guide_content_default">يظهر الدليل هنا.</string>
+    <string name="dont_show_again">لا تظهر ثانية</string>
+    <string name="start_game">ابدأ اللعبة</string>
+    <string name="resume">استئناف</string>
+    <string name="score_label">النتيجة</string>
+    <string name="best_label">الأفضل</string>
+    <string name="next_label">التالي</string>
+    <string name="game_over">انتهت اللعبة</string>
+    <string name="paused">متوقف مؤقتاً</string>
+    <string name="win_4096_label">تم الوصول لـ 4096!</string>
+    <string name="restart_hint">اضغط Center لإعادة التشغيل</string>
+    <string name="exit_hint">رجوع للخروج</string>
+    <string name="resume_hint">اضغط Center للاستئناف</string>
+
+    <string-array name="win_generic">
+        <item>انتصار!</item>
+        <item>أحسنت!</item>
+        <item>مذهل!</item>
+        <item>رائع!</item>
+        <item>مبهر!</item>
+        <item>أنت بطل!</item>
+        <item>ممتاز!</item>
+        <item>خرافي!</item>
+        <item>عمل عظيم!</item>
+        <item>عبقري!</item>
+    </string-array>
+
+    <string-array name="win_highscore">
+        <item>رقم قياسي جديد!</item>
+        <item>لا يمكن إيقافك!</item>
+        <item>الأفضل على الإطلاق!</item>
+        <item>أداء أسطوري!</item>
+        <item>أعلى نتيجة!</item>
+    </string-array>
+
+    <string-array name="win_minesweeper">
+        <item>تم تطهير المنطقة!</item>
+        <item>سيد الألغام!</item>
+        <item>عبور آمن!</item>
+        <item>خبير كنس!</item>
+    </string-array>
+
+    <string-array name="win_sudoku">
+        <item>إتقان الشبكة!</item>
+        <item>ملك المنطق!</item>
+        <item>تم حل اللغز!</item>
+        <item>عقل عبقري!</item>
+    </string-array>
+
+    <string-array name="win_tictactoe">
+        <item>ذكاء خارق!</item>
+        <item>3 على التوالي!</item>
+        <item>فوز استراتيجي!</item>
+        <item>لا يقهر!</item>
+    </string-array>
+
+    <string-array name="win_4096">
+        <item>عبقري رياضيات!</item>
+        <item>4096 وصل!</item>
+        <item>قاهر الأرقام!</item>
+        <item>البلاطة النهائية!</item>
+    </string-array>
+
+    <string-array name="win_memory">
+        <item>ذاكرة مثالية!</item>
+        <item>سيد التطابق!</item>
+        <item>عقل حاد!</item>
+        <item>تذكر كامل!</item>
+    </string-array>
+
+    <string-array name="win_hangman">
+        <item>تم إنقاذ الكلمة!</item>
+        <item>سيد المفردات!</item>
+        <item>نجاة بكلمة!</item>
+        <item>ملك المعجم!</item>
+    </string-array>
+
+    <string-array name="win_brick_break">
+        <item>تم إنهاء المرحلة!</item>
+        <item>ساحق الطوب!</item>
+        <item>محطم الجدران!</item>
+        <item>محترف المضرب!</item>
+    </string-array>
+
+    <string-array name="win_word_quest">
+        <item>تم العثور على الكلمة!</item>
+        <item>نجم الهجاء!</item>
+        <item>بطل القاموس!</item>
+        <item>اكتملت المهمة!</item>
+    </string-array>
+
+    <string-array name="win_solitaire">
+        <item>تم إنهاء المجموعة!</item>
+        <item>آص الفوز!</item>
+        <item>اكتمل اللون!</item>
+        <item>ملك الورق!</item>
+    </string-array>
+
+    <string-array name="win_maze">
+        <item>تم العثور على الكأس!</item>
+        <item>عداء المتاهة!</item>
+        <item>خبير المسارات!</item>
+        <item>تم الوصول للمخرج!</item>
+    </string-array>
+
+    <string-array name="win_sokoban">
+        <item>بطل المستودع!</item>
+        <item>دافع الصناديق!</item>
+        <item>تحققت الأهداف!</item>
+        <item>سيد سوكو!</item>
+    </string-array>
+
+    <string-array name="win_checkers">
+        <item>هزيمة الكمبيوتر!</item>
+        <item>ملك الرقعة!</item>
+        <item>أستاذ كبير!</item>
+        <item>خبير استراتيجي!</item>
+    </string-array>
+
+    <string-array name="win_slide_puzzle">
+        <item>تم استعادة الصورة!</item>
+        <item>تم حل اللغز!</item>
+        <item>تطابق مثالي!</item>
+        <item>سيد الانزلاق!</item>
+    </string-array>
+
+    <string-array name="win_dungeon">
+        <item>تم الهروب!</item>
+        <item>مستكشف أسطوري!</item>
+        <item>تم تطهير الدور!</item>
+        <item>تم العثور على الكنز!</item>
+    </string-array>
+
+    <string-array name="win_tanks">
+        <item>تمت حماية القاعدة!</item>
+        <item>تم إبادة الأعداء!</item>
+        <item>قائد الدبابات!</item>
+        <item>بطل حرب!</item>
+    </string-array>
+
+    <string-array name="win_mental_math">
+        <item>عبقري رياضيات!</item>
+        <item>قوة ذهنية!</item>
+        <item>ملك الحساب!</item>
+        <item>سيد الأرقام!</item>
+    </string-array>
+
+    <string-array name="win_froggy">
+        <item>صل للهدف!</item>
+        <item>عبور آمن!</item>
+        <item>بطل فروجي!</item>
+        <item>سيد النهر!</item>
+    </string-array>
+    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
+    <string name="trex_daddy">بابا تي ريكس</string>
+    <string name="trex_mummy">ماما تي ريكس</string>
+    <string name="trex_baby">بيبي تي ريكس</string>
+    <string name="trex_grandpa">جدو تي ريكس</string>
+    <string name="trex_teenager">المراهق تي ريكس</string>
+    <string name="trex_scientist">العالم تي ريكس</string>
+    <string name="trex_athlete">الرياضي تي ريكس</string>
+    <string name="trex_pirate">القرصان تي ريكس</string>
+    <string name="trex_chef">الشيف تي ريكس</string>
+    <string name="trex_astronaut">رائد الفضاء تي ريكس</string>
+</resources>

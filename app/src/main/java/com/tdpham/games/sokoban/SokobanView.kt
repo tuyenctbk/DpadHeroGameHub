@@ -11,6 +11,8 @@ import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 
 class SokobanView @JvmOverloads constructor(
     context: Context,
@@ -80,6 +82,8 @@ class SokobanView @JvmOverloads constructor(
     private var best = 0
     private var pushes = 0
     private var totalPushesAllLevels = 0
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
 
     init {
         isFocusable = true
@@ -104,6 +108,7 @@ class SokobanView @JvmOverloads constructor(
 
     private fun loadLevel(index: Int) {
         levelIndex = index.coerceIn(0, levels.lastIndex)
+        celebrationManager.start(0f, 0f)
         val map = levels[levelIndex]
         rows = map.size
         cols = map[0].length
@@ -209,6 +214,8 @@ class SokobanView @JvmOverloads constructor(
         board[playerR][playerC] = if (board[playerR][playerC] == '.') '+' else '@'
         if (isSolved()) {
             solved = true
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+            celebrationManager.start(width.toFloat(), height.toFloat())
             if (levelIndex >= levels.lastIndex) {
                 allLevelsDone = true
                 val score = (5000 - totalPushesAllLevels * 5).coerceAtLeast(50)
@@ -282,28 +289,54 @@ class SokobanView @JvmOverloads constructor(
         paint.textSize = 36f
         paint.textAlign = Paint.Align.LEFT
         val hudY = Math.round(52f).toFloat()
-        canvas.drawText("LEVEL ${levelIndex + 1}/${levels.size}  PUSHES: $pushes", 30f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.level_label)} ${levelIndex + 1}/${levels.size}  ${context.getString(R.string.pushes_label)}: $pushes", 30f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 30f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 30f, hudY, paint)
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 30f
         val centerX = Math.round(width / 2f).toFloat()
         val textY = Math.round(top - 16f).toFloat()
         when {
             allLevelsDone -> {
-                canvas.drawText("ALL LEVELS CLEARED! CENTER TO PLAY AGAIN", centerX, textY, paint)
+                canvas.drawText(currentVictoryWord, centerX, textY, paint)
             }
             solved -> {
                 canvas.drawText(
-                    if (levelIndex >= levels.lastIndex) "FINAL LEVEL - CENTER TO FINISH" else "CLEARED - CENTER FOR NEXT",
+                    if (levelIndex >= levels.lastIndex) currentVictoryWord else context.getString(R.string.grid_mastered_label),
                     centerX,
                     textY,
                     paint
                 )
             }
             else -> {
-                canvas.drawText("CENTER: RESTART LEVEL", centerX, textY, paint)
+                canvas.drawText(context.getString(R.string.sokoban_restart_hint), centerX, textY, paint)
             }
+        }
+
+        if (solved || allLevelsDone) {
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+            
+            if (allLevelsDone) {
+                drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.pushes_label)}: $totalPushesAllLevels\n${context.getString(R.string.restart_hint)}")
+            } else if (solved) {
+                drawOverlay(canvas, context.getString(R.string.grid_mastered_label), context.getString(R.string.play_again_hint))
+            }
+        }
+    }
+
+    private fun drawOverlay(canvas: Canvas, title: String, sub: String) {
+        paint.color = GamePalette.OVERLAY
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.WHITE
+        paint.textSize = 80f
+        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+        paint.textSize = 35f
+        val lines = sub.split("\n")
+        lines.forEachIndexed { i, s ->
+            canvas.drawText(s, width / 2f, height / 2f + 50f + i * 45f, paint)
         }
     }
 }

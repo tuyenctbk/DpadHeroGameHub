@@ -12,6 +12,8 @@ import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import java.util.*
 
 class StarFighterView @JvmOverloads constructor(
@@ -28,6 +30,8 @@ class StarFighterView @JvmOverloads constructor(
     private var best = 0
     private var gameOver = false
     private var isPaused = true
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
 
     private var playerX = 0f
     private var playerY = 0f
@@ -93,6 +97,7 @@ class StarFighterView @JvmOverloads constructor(
         best = ScoreManager.getHighScore(context, gameKey)
         gameOver = false
         isPaused = true
+        celebrationManager.start(0f, 0f)
         gunLevel = 1
         lives = 3
         invulnerableUntil = 0L
@@ -333,7 +338,10 @@ class StarFighterView @JvmOverloads constructor(
 
     private fun endGame() {
         gameOver = true
-        ScoreManager.updateHighScore(context, gameKey, score)
+        if (ScoreManager.updateHighScore(context, gameKey, score)) {
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
+            celebrationManager.start(width.toFloat(), height.toFloat())
+        }
         onGameOver?.invoke(score)
     }
 
@@ -415,23 +423,28 @@ class StarFighterView @JvmOverloads constructor(
 
         // HUD
         paint.reset()
-        paint.isAntiAlias = true
         paint.color = Color.WHITE
         paint.textSize = 40f
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
         val hudY = Math.round(60f).toFloat()
-        canvas.drawText("SCORE: $score", 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
         
         paint.textAlign = Paint.Align.LEFT
         paint.color = Color.RED
         val livesStr = "❤ ".repeat(lives)
         canvas.drawText(livesStr, 40f, Math.round(110f).toFloat(), paint)
 
-        if (gameOver) drawOverlay(canvas, "MISSION FAILED", "Score: $score\nPress Center to Restart")
-        else if (isPaused) drawOverlay(canvas, "STAR FIGHTER", "Use DPAD to move\nPress Center to Start")
+        if (gameOver) {
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+            val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.mission_failed_label)
+            drawOverlay(canvas, title, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+        }
+        else if (isPaused) drawOverlay(canvas, context.getString(R.string.game_starfighter), context.getString(R.string.start_game))
         
         if (needsInvalidate) invalidate()
     }

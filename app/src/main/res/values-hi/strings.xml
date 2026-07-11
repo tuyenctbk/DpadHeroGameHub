@@ -1,0 +1,234 @@
+<resources>
+    <string name="app_name">Dpad Arcade</string>
+    <string name="app_name_full">Dpad Arcade: रेट्रो गेम्स</string>
+    <string name="game_center">DPAD ARCADE</string>
+    <string name="snake">साँप</string>
+    <string name="minesweeper">माइनस्वीपर</string>
+    <string name="game_4096">4096</string>
+    <string name="game_trex">T-REX RUN</string>
+    <string name="game_brick_break">ईंट तोड़ो</string>
+    <string name="game_tictactoe">टिक-टैक-टो</string>
+    <string name="game_checkers">चेकर्स</string>
+    <string name="game_sokoban">सोकोबान</string>
+    <string name="game_sudoku">सुडोकू</string>
+    <string name="game_tetris">टेट्रिस</string>
+    <string name="game_starfighter">स्टार फाइटर</string>
+    <string name="game_memory">याददाश्त</string>
+    <string name="game_slide_puzzle">स्लाइड पहेली</string>
+    <string name="game_maze">भूलभुलैया</string>
+    <string name="game_mental_math">गणित</string>
+    <string name="game_froggy">मेंढक पार</string>
+    <string name="game_simon">साइमन कहता है</string>
+    <string name="game_tanks">टैंक युद्ध</string>
+    <string name="game_word_quest">शब्द खोज</string>
+    <string name="game_dungeon">कालकोठरी से भागना</string>
+    <string name="game_flappy">फ्लैपी हीरो</string>
+    <string name="game_lines98">लाइन्स 98</string>
+    <string name="game_solitaire">सॉलिटेयर</string>
+    <string name="game_road_racer">रोड रेसर</string>
+    <string name="game_hangman">हैंगमैन</string>
+    <string name="game_spinball">स्पिनबॉल</string>
+    <string name="game_spinball_instructions">घूमने के लिए बाएँ/दाएँ का उपयोग करें। तारे इकट्ठा करें और कांटों से बचें। गेंद को बाहर न जाने दें!</string>
+    <string name="how_to_play_guide">%s गाइड</string>
+    <string name="snake_instructions">• साँप को चलाने के लिए D-PAD का उपयोग करें।\n• बढ़ने के लिए लाल सेब खाएं।\n• दीवारों से न टकराएं!\n• आवाज़ के लिए \'S\' दबाएं।\n• रोकने के लिए CENTER दबाएं।</string>
+    <string name="minesweeper_instructions">• कर्सर के लिए D-PAD का उपयोग करें।\n• खोलने के लिए CENTER दबाएं।\n• निशान लगाने के लिए MENU या \'S\' दबाएं।\n• जीतने के लिए सुरक्षित जगह खोजें!</string>
+    <string name="game_4096_instructions">• स्लाइड करने के लिए D-PAD का उपयोग करें।\n• एक जैसे नंबर जुड़ जाते हैं।\n• जीतने के लिए 4096 तक पहुँचें!</string>
+    <string name="game_trex_instructions">• कूदने के लिए ऊपर या CENTER दबाएं।\n• कैक्टस और पक्षियों से बचें!\n• खेल समय के साथ तेज़ होता जाता है।</string>
+    <string name="game_brick_break_instructions">• बाएँ/दाएँ से पैडल चलाएं।\n• लॉन्च करने या रोकने के लिए CENTER दबाएं।\n• जीतने के लिए ईंटें तोड़ें।\n• आपके पास 3 जीवन हैं।</string>
+    <string name="game_tictactoe_instructions">• कर्सर के लिए D-PAD का उपयोग करें।\n• X रखने के लिए CENTER दबाएं।\n• 3 की लाइन बनाकर जीतें।</string>
+    <string name="game_checkers_instructions">• D-PAD: हिलना। CENTER: चुनना।\n• लाल (आप) ऊपर जाएँ। केवल गहरे खाने।\n• गोटी काटना अनिवार्य है।\n• राजा बनने के लिए अंत तक पहुँचें।\n• दुश्मन की सभी गोटियाँ काटें।</string>
+    <string name="game_sokoban_instructions">• D-PAD: हिलना। बक्सों ($) को लक्ष्य पर धकेलें।\n• एक बार में एक बक्सा; खींच नहीं सकते।\n• CENTER: लेवल दोबारा शुरू करें।</string>
+    <string name="game_sudoku_instructions">• D-PAD: हिलना। CENTER: नंबर बदलें।\n• सफेद नंबर लॉक हैं।\n• लाइन/कॉलम में नंबर न दोहराएं।</string>
+    <string name="game_tetris_instructions">• बाएँ/दाएँ से हिलें।\n• ऊपर से घुमाएं।\n• नीचे से धीरे गिराएं।\n• CENTER से तेज़ी से गिराएं।</string>
+    <string name="game_starfighter_instructions">• जहाज़ चलाने के लिए D-PAD का उपयोग करें।\n• ऑटो फ़ायर।\n• दुश्मनों को मारें।\n• गोली से बचें!\n• आवाज़ के लिए \'S\' दबाएं।</string>
+    <string name="game_memory_instructions">• DPAD से चलें।\n• कार्ड पलटने के लिए CENTER दबाएं।\n• जोड़ियाँ मिलाएँ।\n• कम चालें बेहतर हैं!</string>
+    <string name="game_slide_puzzle_instructions">• हिलने के लिए DPAD का उपयोग करें।\n• स्लाइड के लिए CENTER दबाएं।\n• चित्र पूरा करने के लिए गोटियाँ सजाएं।</string>
+    <string name="game_maze_instructions">• भूलभुलैया को ध्यान से देखें।\n• हरे बिंदु से जुड़े निकास को खोजें।\n• बाएँ/दाएँ से चुनें।\n• CENTER से पक्का करें।</string>
+    <string name="game_mental_math_instructions">• गणित हल करें।\n• उत्तर चुनने के लिए DPAD का उपयोग करें।\n• CENTER से पक्का करें।\n• जल्दी करें! समय कम है।</string>
+    <string name="game_froggy_instructions">• सड़क और नदी पार करें।\n• कारों से बचें।\n• लकड़ी के लट्ठों पर कूदें।\n• लक्ष्य तक पहुँचें!</string>
+    <string name="game_simon_instructions">• रंगों का क्रम देखें।\n• D-PAD से दोहराएं।\n• हर दौर में क्रम लंबा होगा!</string>
+    <string name="game_tanks_instructions">• D-PAD से टैंक चलाएं।\n• ऑटो फ़ायर।\n• दुश्मन टैंक नष्ट करें।\n• बेस की रक्षा करें।</string>
+    <string name="game_word_quest_instructions">• 6 बार में 5 अक्षरों का शब्द पहचानें।\n• कीबोर्ड के लिए D-PAD का उपयोग करें।\n• चुनने के लिए CENTER दबाएं।\n• हरा: अक्षर और स्थान सही।</string>
+    <string name="game_dungeon_instructions">• D-PAD से कालकोठरी में चलें।\n• सुनहरी चाबी उठाएं।\n• निकास तक पहुँचें।\n• लाल कांटों से बचें!</string>
+    <string name="game_flappy_instructions">• पंख फड़फड़ाने के लिए CENTER दबाएं।\n• पाइपों के बीच से निकलें।\n• किसी चीज़ को न छुएं!\n• हर पाइप पार करने पर 1 अंक।</string>
+    <string name="game_lines98_instructions">• कर्सर के लिए D-PAD का उपयोग करें।\n• गेंद चलाने के लिए CENTER दबाएं।\n• एक ही रंग की 5 गेंदें जमाएँ।\n• बोर्ड भरने पर खेल खत्म।</string>
+    <string name="game_solitaire_instructions">• कर्सर के लिए D-PAD का उपयोग करें।\n• कार्ड के लिए CENTER दबाएं।\n• A से K तक क्रम में लगाएं।</string>
+    <string name="game_road_racer_instructions">• ट्रैफिक से बचें।\n• ज़िंदा रहें!\n• रोकने के लिए CENTER दबाएं।</string>
+    <string name="game_hangman_instructions">• शब्द पहचानने के लिए अक्षर चुनें।\n• आपके पास 6 मौके हैं।\n• चुनने के लिए CENTER दबाएं।</string>
+    <string name="select_game_hint">DpadHero: D-Pad से खेल चुनें</string>
+    <string name="settings">सेटिंग्स</string>
+    <string name="settings_button_description">सेटिंग्स</string>
+    <string name="sound_effects">आवाज़</string>
+    <string name="sound_effects_description">खेल की आवाज़ चालू या बंद करें।</string>
+    <string name="privacy_policy">गोपनीयता नीति</string>
+    <string name="back">पीछे</string>
+    <string name="retro_game_studio">DPADHERO STUDIO</string>
+    <string name="supported_devices_hint">सपोर्ट: D-pad / रिमोट कंट्रोल</string>
+    <string name="help">मदद</string>
+    <string name="guide_hint_keys">[INFO] या [H] दबाएं</string>
+    <string name="guide_title_default">कैसे खेलें</string>
+    <string name="guide_content_default">गाइड यहाँ दिखेगी।</string>
+    <string name="dont_show_again">दोबारा न दिखाएं</string>
+    <string name="start_game">खेल शुरू करें</string>
+    <string name="resume">जारी रखें</string>
+    <string name="score_label">अंक</string>
+    <string name="best_label">सर्वश्रेष्ठ</string>
+    <string name="next_label">अगला</string>
+    <string name="game_over">खेल खत्म</string>
+    <string name="paused">रुका हुआ</string>
+    <string name="win_4096_label">4096 मिला!</string>
+    <string name="restart_hint">दोबारा शुरू करने के लिए CENTER दबाएं</string>
+    <string name="exit_hint">बाहर निकलने के लिए पीछे दबाएं</string>
+    <string name="resume_hint">जारी रखने के लिए CENTER दबाएं</string>
+
+    <string-array name="win_generic">
+        <item>जीत!</item>
+        <item>शाबाश!</item>
+        <item>अद्भुत!</item>
+        <item>शानदार!</item>
+        <item>बेहतरीन!</item>
+        <item>आप महान हैं!</item>
+        <item>उत्कृष्ट!</item>
+        <item>लाजवाब!</item>
+        <item>कमाल कर दिया!</item>
+        <item>बहुत बढ़िया!</item>
+    </string-array>
+
+    <string-array name="win_highscore">
+        <item>नया रिकॉर्ड!</item>
+        <item>अजेय!</item>
+        <item>सबसे अच्छा!</item>
+        <item>दिव्य!</item>
+        <item>हाई-स्कोर!</item>
+    </string-array>
+
+    <string-array name="win_minesweeper">
+        <item>जगह साफ!</item>
+        <item>माइन मास्टर!</item>
+        <item>सुरक्षित रास्ता!</item>
+        <item>एक्सपर्ट स्वीपर!</item>
+    </string-array>
+
+    <string-array name="win_sudoku">
+        <item>ग्रिड फतेह!</item>
+        <item>लॉजिक किंग!</item>
+        <item>पहेली हल!</item>
+        <item>तेज़ दिमाग!</item>
+    </string-array>
+
+    <string-array name="win_tictactoe">
+        <item>मात दी!</item>
+        <item>3 एक साथ!</item>
+        <item>रणनीतिक जीत!</item>
+        <item>नाकाबिले बर्दाश्त!</item>
+    </string-array>
+
+    <string-array name="win_4096">
+        <item>गणित के जादूगर!</item>
+        <item>4096 तक पहुँचे!</item>
+        <item>नंबर क्रशर!</item>
+        <item>अंतिम टाइल!</item>
+    </string-array>
+
+    <string-array name="win_memory">
+        <item>परफेक्ट मेमोरी!</item>
+        <item>मैच मास्टर!</item>
+        <item>तेज़ तर्रार!</item>
+        <item>सब याद है!</item>
+    </string-array>
+
+    <string-array name="win_hangman">
+        <item>शब्द बचाया!</item>
+        <item>शब्दों के मालिक!</item>
+        <item>शब्द ने बचाया!</item>
+        <item>भाषा के राजा!</item>
+    </string-array>
+
+    <string-array name="win_brick_break">
+        <item>लेवल पूरा!</item>
+        <item>ईंट तोड़ने वाले!</item>
+        <item>दीवार तोड़ने वाले!</item>
+        <item>पैडल प्रो!</item>
+    </string-array>
+
+    <string-array name="win_word_quest">
+        <item>शब्द मिला!</item>
+        <item>स्पेलिंग एक्सपर्ट!</item>
+        <item>डिक्शनरी हीरो!</item>
+        <item>क्वेस्ट पूरा!</item>
+    </string-array>
+
+    <string-array name="win_solitaire">
+        <item>ताश साफ!</item>
+        <item>ऐस की जीत!</item>
+        <item>रंग पूरा!</item>
+        <item>कार्ड किंग!</item>
+    </string-array>
+
+    <string-array name="win_maze">
+        <item>ट्रॉफी मिली!</item>
+        <item>भूलभुलैया पार!</item>
+        <item>रास्ता खोजा!</item>
+        <item>निकास मिला!</item>
+    </string-array>
+
+    <string-array name="win_sokoban">
+        <item>गोदाम के हीरो!</item>
+        <item>बक्सा धकेलने वाले!</item>
+        <item>लक्ष्य पूरा!</item>
+        <item>सोको-मास्टर!</item>
+    </string-array>
+
+    <string-array name="win_checkers">
+        <item>कंप्यूटर को हराया!</item>
+        <item>बोर्ड के राजा!</item>
+        <item>ग्रैंडमास्टर!</item>
+        <item>रणनीति के उस्ताद!</item>
+    </string-array>
+
+    <string-array name="win_slide_puzzle">
+        <item>चित्र ठीक हुआ!</item>
+        <item>पहेली हल हुई!</item>
+        <item>बिल्कुल सही!</item>
+        <item>स्लाइड मास्टर!</item>
+    </string-array>
+
+    <string-array name="win_dungeon">
+        <item>कालकोठरी से बाहर!</item>
+        <item>महान खोजी!</item>
+        <item>मंज़िल साफ!</item>
+        <item>खज़ाना मिला!</item>
+    </string-array>
+
+    <string-array name="win_tanks">
+        <item>बेस सुरक्षित!</item>
+        <item>दुश्मन साफ!</item>
+        <item>टैंक कमांडर!</item>
+        <item>युद्ध के नायक!</item>
+    </string-array>
+
+    <string-array name="win_mental_math">
+        <item>गणित के जीनियस!</item>
+        <item>दिमागी शक्ति!</item>
+        <item>कैलकुलेशन किंग!</item>
+        <item>नंबरों के मास्टर!</item>
+    </string-array>
+
+    <string-array name="win_froggy">
+        <item>लक्ष्य तक पहुँचे!</item>
+        <item>सुरक्षित पार किया!</item>
+        <item>मेंढक हीरो!</item>
+        <item>नदी के राजा!</item>
+    </string-array>
+    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
+    <string name="trex_daddy">डैडी टी-रेक्स</string>
+    <string name="trex_mummy">मम्मी टी-रेक्स</string>
+    <string name="trex_baby">बेबी टी-रेक्स</string>
+    <string name="trex_grandpa">दादाजी टी-रेक्स</string>
+    <string name="trex_teenager">टीनएजर टी-रेक्स</string>
+    <string name="trex_scientist">वैज्ञानिक टी-रेक्स</string>
+    <string name="trex_athlete">एथलीट टी-रेक्स</string>
+    <string name="trex_pirate">समुद्री डाकू टी-रेक्स</string>
+    <string name="trex_chef">शेफ टी-रेक्स</string>
+    <string name="trex_astronaut">अंतरिक्ष यात्री टी-रेक्स</string>
+</resources>

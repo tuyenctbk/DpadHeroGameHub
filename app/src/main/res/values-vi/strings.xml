@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Dpad Arcade</string>
-    <string name="app_name_full">Dpad Arcade: Trò chơi Retro</string>
+    <string name="app_name_full">Dpad Arcade: Trò Chơi Retro</string>
     <string name="game_center">DPAD ARCADE</string>
     <string name="snake">RẮN SĂN MỒI</string>
     <string name="minesweeper">DÒ MÌN</string>
@@ -12,63 +12,223 @@
     <string name="game_sokoban">SOKOBAN</string>
     <string name="game_sudoku">SUDOKU</string>
     <string name="game_tetris">TETRIS</string>
-    <string name="game_starfighter">PHI THUYỀN</string>
+    <string name="game_starfighter">STAR FIGHTER</string>
     <string name="game_memory">TRÚC XANH</string>
     <string name="game_slide_puzzle">XẾP HÌNH</string>
     <string name="game_maze">MÊ CUNG</string>
     <string name="game_mental_math">TÍNH NHẨM</string>
-    <string name="game_froggy">PHẾCH QUA ĐƯỜNG</string>
+    <string name="game_froggy">ẾCH QUA ĐƯỜNG</string>
     <string name="game_simon">SIMON SAYS</string>
-    <string name="game_tanks">BẮN XE TĂNG</string>
-    <string name="game_word_quest">TÌM CHỮ</string>
-    <string name="game_dungeon">THOÁT KHỎI HẦM NGỤC</string>
+    <string name="game_tanks">BẮN TĂNG</string>
+    <string name="game_word_quest">WORD QUEST</string>
+    <string name="game_dungeon">HẦM NGỤC</string>
     <string name="game_flappy">FLAPPY HERO</string>
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLITAIRE</string>
     <string name="game_road_racer">ĐUA XE</string>
     <string name="game_hangman">NGƯỜI TREO CỔ</string>
     <string name="game_spinball">SPINBALL</string>
-    <string name="game_spinball_instructions">Sử dụng TRÁI/PHẢI để xoay vòng tròn. Thu thập sao và tránh gai. Đừng để bóng rơi ra ngoài!</string>
+    <string name="game_spinball_instructions">Dùng TRÁI/PHẢI để xoay vòng tròn. Thu thập sao và tránh gai. Đừng để bóng rơi ra ngoài!</string>
     <string name="how_to_play_guide">HƯỚNG DẪN %s</string>
-    <string name="snake_instructions">• Sử dụng D-PAD để di chuyển rắn.\n• Ăn táo đỏ để lớn lên và ghi điểm.\n• Đừng đâm vào tường hoặc chính mình!\n• Nhấn \'S\' để bật/tắt âm thanh.\n• Nhấn CENTER để tạm dừng.</string>
-    <string name="minesweeper_instructions">• Sử dụng D-PAD để di chuyển con trỏ.\n• Nhấn CENTER để mở ô.\n• Nhấn MENU hoặc \'S\' để cắm cờ.\n• Mở hết các ô an toàn để chiến thắng!</string>
-    <string name="game_4096_instructions">• Sử dụng D-PAD để trượt các ô.\n• Các ô cùng số sẽ kết hợp lại.\n• Đạt đến ô 4096 để chiến thắng!\n• Nhấn CENTER để chơi lại.</string>
-    <string name="game_trex_instructions">• Nhấn LÊN hoặc CENTER để nhảy.\n• Tránh xương rồng và chim!\n• Tốc độ game sẽ tăng dần theo thời gian.</string>
-    <string name="game_brick_break_instructions">• Di chuyển thanh đỡ bằng TRÁI/PHẢI.\n• Nhấn CENTER để bắn bóng hoặc tạm dừng.\n• Phá hết gạch để thắng.\n• Bạn có 3 mạng.</string>
-    <string name="game_tictactoe_instructions">• Sử dụng D-PAD để chọn ô.\n• Nhấn CENTER để đặt dấu.\n• Xếp 3 dấu thẳng hàng để thắng!\n• Có thể đổi kích thước bàn cờ sau khi chơi xong.</string>
-    <string name="game_checkers_instructions">• D-PAD: di chuyển. CENTER: chọn.\n• Quân đỏ (bạn) đi lên. Chỉ đi ô đen.\n• Bắt quân là bắt buộc.\n• Đến hàng cuối để phong Vua.\n• Loại bỏ hết quân đối phương.</string>
-    <string name="game_sokoban_instructions">• D-PAD: di chuyển. Đẩy hộp ($) vào mục tiêu.\n• Chỉ đẩy được một hộp; không thể kéo.\n• CENTER: chơi lại màn nếu bị kẹt.</string>
-    <string name="game_sudoku_instructions">• D-PAD: di chuyển. CENTER: đổi số.\n• Các số trắng là cố định.\n• Không trùng số trong hàng, cột hoặc ô 3x3.</string>
-    <string name="game_tetris_instructions">• TRÁI/PHẢI để di chuyển, LÊN để xoay.\n• XUỐNG để rơi chậm, CENTER để rơi ngay.\n• Xóa hàng ngang để ghi điểm.</string>
-    <string name="game_starfighter_instructions">• Điều khiển phi thuyền bằng D-PAD.\n• Đạn bắn tự động. Tiêu diệt địch để ghi điểm.\n• Đừng để địch đâm trúng bạn!</string>
-    <string name="game_memory_instructions">• Sử dụng D-PAD để chọn bài.\n• Nhấn CENTER để lật bài.\n• Tìm hết các cặp giống nhau để thắng.\n• Càng ít lượt đi càng tốt!</string>
-    <string name="game_slide_puzzle_instructions">• Sử dụng D-PAD để di chuyển con trỏ.\n• Nhấn CENTER để trượt mảnh hình.\n• Sắp xếp các mảnh để hoàn thành hình.\n• Các con số cho biết thứ tự đúng.</string>
-    <string name="game_maze_instructions">• Quan sát mê cung cẩn thận.\n• Tìm lối ra (hình ảnh) nối với chấm xanh.\n• TRÁI/PHẢI để chọn, CENTER để xác nhận.</string>
-    <string name="game_mental_math_instructions">• Giải các phép tính thật nhanh.\n• Sử dụng D-PAD để chọn đáp án.\n• Nhấn CENTER để xác nhận. Sai là thua!</string>
-    <string name="game_froggy_instructions">• Băng qua đường và sông.\n• Tránh xe cộ và đừng để chết đuối.\n• Nhảy lên các khúc gỗ trên sông.\n• Đến đích phía trên để ghi điểm!</string>
-    <string name="game_simon_instructions">• Quan sát thứ tự màu sắc.\n• Lặp lại bằng D-PAD.\n• Chuỗi sẽ dài hơn sau mỗi vòng!</string>
-    <string name="game_tanks_instructions">• Điều khiển xe tăng bằng D-PAD.\n• Đạn bắn tự động. Tiêu diệt xe tăng địch.\n• Bảo vệ căn cứ (ngôi sao) của bạn.</string>
-    <string name="game_word_quest_instructions">• Đoán từ có 5 chữ cái trong 6 lần thử.\n• D-PAD để di chuyển bàn phím, CENTER để chọn.\n• XANH LÁ: Đúng chữ và đúng vị trí.\n• VÀNG: Đúng chữ nhưng sai vị trí.\n• XÁM: Chữ không có trong từ.</string>
-    <string name="game_dungeon_instructions">• Di chuyển bằng D-PAD và thu thập chìa vàng.\n• Đến cửa thoát để qua màn.\n• Tránh các bẫy chông đỏ!</string>
-    <string name="game_flappy_instructions">• Nhấn CENTER để bay lên.\n• Bay qua các khe hở ống nước.\n• Đừng chạm vào ống hoặc mặt đất!</string>
-    <string name="game_lines98_instructions">• D-PAD để di chuyển, CENTER để chọn bóng.\n• Xếp 5 hoặc nhiều bóng cùng màu thẳng hàng.\n• Thua khi bàn cờ đầy bóng.</string>
-    <string name="game_solitaire_instructions">• D-PAD để di chuyển, CENTER để chọn bài.\n• Xếp các quân bài cùng chất từ A đến K.</string>
-    <string name="game_road_racer_instructions">• Né tránh xe cộ trên đường.\n• Sống sót càng lâu càng tốt!\n• Nhấn CENTER để tạm dừng.</string>
-    <string name="game_hangman_instructions">• Chọn chữ cái để đoán từ.\n• Bạn có 6 lần thử.\n• Nhấn CENTER để chọn chữ cái.</string>
-    <string name="select_game_hint">DpadHero: Chọn trò chơi bằng D-Pad</string>
+    <string name="snake_instructions">• Dùng D-PAD để di chuyển rắn.\n• Ăn táo đỏ để lớn hơn.\n• Đừng đâm vào tường hoặc chính mình!\n• Nhấn \'S\' để tắt/mở âm thanh.\n• Nhấn CENTER để tạm dừng.</string>
+    <string name="minesweeper_instructions">• Dùng D-PAD để di chuyển con trỏ.\n• Nhấn CENTER để mở ô.\n• Nhấn MENU hoặc \'S\' để cắm cờ.\n• Mở hết các ô an toàn để thắng!</string>
+    <string name="game_4096_instructions">• Dùng D-PAD để trượt các ô.\n• Các ô cùng số sẽ gộp lại.\n• Đạt đến ô 4096 để thắng!</string>
+    <string name="game_trex_instructions">• Nhấn LÊN hoặc CENTER để nhảy.\n• Tránh xương rồng và chim!\n• Trò chơi sẽ nhanh dần theo thời gian.</string>
+    <string name="game_brick_break_instructions">• Di chuyển thanh ngang bằng TRÁI/PHẢI.\n• Nhấn CENTER để bắn bóng hoặc tạm dừng.\n• Phá hết gạch để qua màn.\n• Bạn có 3 mạng.</string>
+    <string name="game_tictactoe_instructions">• Di chuyển con trỏ bằng D-PAD.\n• Nhấn CENTER để đánh X.\n• Thắng máy bằng cách tạo hàng 3.</string>
+    <string name="game_checkers_instructions">• D-PAD: di chuyển. CENTER: chọn.\n• Quân đỏ (bạn) đi lên. Chỉ đi ô đen.\n• Bắt buộc phải ăn quân.\n• Đến hàng cuối để phong Vua.\n• Ăn hết quân đối phương.</string>
+    <string name="game_sokoban_instructions">• D-PAD: di chuyển. Đẩy thùng ($) vào mục tiêu.\n• Mỗi lần chỉ đẩy một thùng.\n• CENTER: chơi lại màn này.</string>
+    <string name="game_sudoku_instructions">• D-PAD: di chuyển. CENTER: thay đổi số.\n• Các số màu trắng là cố định.\n• Không trùng lặp trong hàng/cột/ô 3x3.</string>
+    <string name="game_tetris_instructions">• TRÁI/PHẢI để di chuyển.\n• LÊN để xoay.\n• XUỐNG để rơi chậm.\n• CENTER để rơi nhanh.</string>
+    <string name="game_starfighter_instructions">• Di chuyển phi thuyền bằng D-PAD.\n• Tự động bắn.\n• Tiêu diệt kẻ địch để ghi điểm.\n• Nhấn \'S\' để tắt/mở âm thanh.</string>
+    <string name="game_memory_instructions">• Dùng DPAD để di chuyển.\n• Nhấn CENTER để lật bài.\n• Tìm hết các cặp giống nhau.\n• Ít lượt đi hơn là tốt hơn!</string>
+    <string name="game_slide_puzzle_instructions">• Dùng DPAD để di chuyển.\n• Nhấn CENTER để trượt ô.\n• Sắp xếp lại để hoàn thành hình.</string>
+    <string name="game_maze_instructions">• Quan sát mê cung thật kỹ.\n• Tìm lối ra nối với chấm xanh.\n• TRÁI/PHẢI để chọn.\n• CENTER để xác nhận.</string>
+    <string name="game_mental_math_instructions">• Giải phép tính.\n• Dùng DPAD chọn đáp án.\n• Nhấn CENTER để xác nhận.\n• Nhanh lên! Thời gian đang trôi.</string>
+    <string name="game_froggy_instructions">• Băng qua đường và sông.\n• Tránh xe cộ.\n• Nhảy lên các khúc gỗ.\n• Về đích để ghi điểm!</string>
+    <string name="game_simon_instructions">• Quan sát dãy màu.\n• Lặp lại bằng D-PAD.\n• Dãy màu sẽ dài hơn sau mỗi vòng!</string>
+    <string name="game_tanks_instructions">• Điều khiển xe tăng bằng D-PAD.\n• Tự động bắn.\n• Tiêu diệt xe tăng địch.\n• Bảo vệ CĂN CỨ.</string>
+    <string name="game_word_quest_instructions">• Đoán từ 5 chữ cái trong 6 lượt.\n• Dùng D-PAD để chọn chữ.\n• XANH LÁ: Đúng chữ và vị trí.</string>
+    <string name="game_dungeon_instructions">• Di chuyển bằng D-PAD.\n• Thu thập CHÌA KHÓA VÀNG.\n• Tìm CỬA RA để qua màn.\n• TRÁNH CHÔNG ĐỎ!</string>
+    <string name="game_flappy_instructions">• Nhấn CENTER để bay lên.\n• Bay qua khe hở giữa các ống.\n• Đừng chạm vào bất cứ thứ gì!\n• Mỗi ống vượt qua được 1 điểm.</string>
+    <string name="game_lines98_instructions">• Dùng D-PAD để di chuyển.\n• CENTER để chọn/di chuyển bóng.\n• Xếp 5 quả bóng cùng màu thành hàng.\n• Thua nếu bảng đầy bóng.</string>
+    <string name="game_solitaire_instructions">• Dùng D-PAD để di chuyển.\n• CENTER để chọn/đặt bài.\n• Xếp từ Át đến Già theo chất.</string>
+    <string name="game_road_racer_instructions">• Tránh xe cộ.\n• Sống sót lâu nhất có thể!\n• Nhấn CENTER để tạm dừng.</string>
+    <string name="game_hangman_instructions">• Chọn chữ cái để đoán từ.\n• Bạn có 6 lần thử.\n• Nhấn CENTER để chọn.</string>
+    <string name="select_game_hint">DpadHero: Dùng D-Pad để chọn trò chơi</string>
     <string name="settings">Cài đặt</string>
     <string name="settings_button_description">Cài đặt</string>
     <string name="sound_effects">Âm thanh</string>
-    <string name="sound_effects_description">Bật hoặc tắt hiệu ứng âm thanh trong trò chơi.</string>
+    <string name="sound_effects_description">Bật hoặc tắt hiệu ứng âm thanh.</string>
     <string name="privacy_policy">Chính sách bảo mật</string>
     <string name="back">Quay lại</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
-    <string name="supported_devices_hint">Hỗ trợ: D-pad / Điều khiển từ xa</string>
+    <string name="supported_devices_hint">Hỗ trợ: D-pad / Remote control</string>
     <string name="help">TRỢ GIÚP</string>
     <string name="guide_hint_keys">Nhấn [INFO] hoặc [H]</string>
     <string name="guide_title_default">CÁCH CHƠI</string>
     <string name="guide_content_default">Hướng dẫn sẽ hiện ở đây.</string>
-    <string name="dont_show_again">Đừng hiện lại</string>
+    <string name="dont_show_again">Đừng hiện lại nữa</string>
     <string name="start_game">BẮT ĐẦU</string>
     <string name="resume">TIẾP TỤC</string>
+    <string name="score_label">ĐIỂM</string>
+    <string name="best_label">KỶ LỤC</string>
+    <string name="next_label">TIẾP</string>
+    <string name="game_over">KẾT THÚC</string>
+    <string name="paused">TẠM DỪNG</string>
+    <string name="win_4096_label">ĐẠT 4096!</string>
+    <string name="restart_hint">Nhấn Center để chơi lại</string>
+    <string name="exit_hint">Trở ra màn hình chính</string>
+    <string name="resume_hint">Nhấn Center để tiếp tục</string>
+
+    <string-array name="win_generic">
+        <item>CHIẾN THẮNG!</item>
+        <item>LÀM TỐT LẮM!</item>
+        <item>THẬT KHÔNG TIN ĐƯỢC!</item>
+        <item>XUẤT SẮC!</item>
+        <item>QUÁ TUYỆT VỜI!</item>
+        <item>BẠN QUÁ ĐỈNH!</item>
+        <item>HÀO HỨNG!</item>
+        <item>PHI THƯỜNG!</item>
+        <item>KỲ DIỆU!</item>
+        <item>CỐ GẮNG LẮM!</item>
+    </string-array>
+
+    <string-array name="win_highscore">
+        <item>KỶ LỤC MỚI!</item>
+        <item>KHÔNG THỂ CẢN PHÁ!</item>
+        <item>ĐỈNH CAO!</item>
+        <item>QUÁ KHỦNG!</item>
+        <item>ĐIỂM CAO!</item>
+    </string-array>
+
+    <string-array name="win_minesweeper">
+        <item>ĐÃ DỌN SẠCH!</item>
+        <item>BẬC THẦY DÒ MÌN!</item>
+        <item>LỐI ĐI AN TOÀN!</item>
+        <item>CHUYÊN GIA DÒ MÌN!</item>
+    </string-array>
+
+    <string-array name="win_sudoku">
+        <item>LÀM CHỦ BẢNG SỐ!</item>
+        <item>VUA LOGIC!</item>
+        <item>ĐÃ GIẢI XONG!</item>
+        <item>TRÍ TUỆ SIÊU PHÀM!</item>
+    </string-array>
+
+    <string-array name="win_tictactoe">
+        <item>THẮNG ÁP ĐẢO!</item>
+        <item>3 Ô LIÊN TIẾP!</item>
+        <item>THẮNG CHIẾN THUẬT!</item>
+        <item>BẤT KHẢ CHIẾN BẠI!</item>
+    </string-array>
+
+    <string-array name="win_4096">
+        <item>THIÊN TÀI TOÁN HỌC!</item>
+        <item>ĐẠT 4096!</item>
+        <item>BẬC THẦY CON SỐ!</item>
+        <item>Ô CUỐI CÙNG!</item>
+    </string-array>
+
+    <string-array name="win_memory">
+        <item>TRÍ NHỚ TUYỆT VỜI!</item>
+        <item>TRÚC XANH ĐẠI SƯ!</item>
+        <item>ĐẦU ÓC SẮC BÉN!</item>
+        <item>NHỚ TẤT TẦN TẬT!</item>
+    </string-array>
+
+    <string-array name="win_hangman">
+        <item>CỨU THÀNH CÔNG!</item>
+        <item>VUA TỪ VỰNG!</item>
+        <item>THẮNG KỲ TÍCH!</item>
+        <item>BẬC THẦY NGÔN NGỮ!</item>
+    </string-array>
+
+    <string-array name="win_brick_break">
+        <item>HOÀN THÀNH MÀN!</item>
+        <item>MÁY NGHIỀN GẠCH!</item>
+        <item>KẺ PHÁ TƯỜNG!</item>
+        <item>TAY VỢT ĐỈNH CAO!</item>
+    </string-array>
+
+    <string-array name="win_word_quest">
+        <item>ĐÃ TÌM THẤY TỪ!</item>
+        <item>BẬC THẦY ĐÁNH VẦN!</item>
+        <item>ANH HÙNG TỪ ĐIỂN!</item>
+        <item>NHIỆM VỤ HOÀN THÀNH!</item>
+    </string-array>
+
+    <string-array name="win_solitaire">
+        <item>ĐÃ DỌN BÀI!</item>
+        <item>ÁT CHỦ BÀI!</item>
+        <item>XONG BỘ BÀI!</item>
+        <item>VUA BÀI!</item>
+    </string-array>
+
+    <string-array name="win_maze">
+        <item>ĐÃ THẤY CÚP!</item>
+        <item>VƯỢT MÊ CUNG!</item>
+        <item>THÔNG THẠO ĐƯỜNG ĐI!</item>
+        <item>LỐI RA ĐÂY RỒI!</item>
+    </string-array>
+
+    <string-array name="win_sokoban">
+        <item>ANH HÙNG KHO BÃI!</item>
+        <item>VUA ĐẨY THÙNG!</item>
+        <item>ĐÃ VÀO MỤC TIÊU!</item>
+        <item>BẬC THẦY SOKOBAN!</item>
+    </string-array>
+
+    <string-array name="win_checkers">
+        <item>THẮNG MÁY TÍNH!</item>
+        <item>VUA BÀN CỜ!</item>
+        <item>ĐẠI KIỆN TƯỚNG!</item>
+        <item>BẬC THẦY CHIẾN THUẬT!</item>
+    </string-array>
+
+    <string-array name="win_slide_puzzle">
+        <item>HÌNH ĐÃ KHỚP!</item>
+        <item>GIẢI XONG ĐỐ VUI!</item>
+        <item>HOÀN HẢO!</item>
+        <item>BẬC THẦY XẾP HÌNH!</item>
+    </string-array>
+
+    <string-array name="win_dungeon">
+        <item>ĐÃ THOÁT HẦM NGỤC!</item>
+        <item>NHÀ THÁM HIỂM HUYỀN THOẠI!</item>
+        <item>DỌN SẠCH TẦNG!</item>
+        <item>TÌM THẤY KHO BÁU!</item>
+    </string-array>
+
+    <string-array name="win_tanks">
+        <item>BẢO VỆ CĂN CỨ!</item>
+        <item>QUÉT SẠCH KẺ ĐỊCH!</item>
+        <item>CHỈ HUY XE TĂNG!</item>
+        <item>ANH HÙNG CHIẾN TRANH!</item>
+    </string-array>
+
+    <string-array name="win_mental_math">
+        <item>THIÊN TÀI TOÁN HỌC!</item>
+        <item>SỨC MẠNH TRÍ TUỆ!</item>
+        <item>VUA TÍNH TOÁN!</item>
+        <item>TRÙM CON SỐ!</item>
+    </string-array>
+
+    <string-array name="win_froggy">
+        <item>ĐÃ VỀ ĐÍCH!</item>
+        <item>QUA ĐƯỜNG AN TOÀN!</item>
+        <item>ANH HÙNG ẾCH!</item>
+        <item>LÀM CHỦ DÒNG SÔNG!</item>
+    </string-array>
+    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
+    <string name="trex_daddy">Bố Khủng Long</string>
+    <string name="trex_mummy">Mẹ Khủng Long</string>
+    <string name="trex_baby">Khủng Long Con</string>
+    <string name="trex_grandpa">Ông Khủng Long</string>
+    <string name="trex_teenager">Khủng Long Teen</string>
+    <string name="trex_scientist">Khủng Long Bác Học</string>
+    <string name="trex_athlete">Khủng Long Vận Động Viên</string>
+    <string name="trex_pirate">Khủng Long Cướp Biển</string>
+    <string name="trex_chef">Khủng Long Đầu Bếp</string>
+    <string name="trex_astronaut">Khủng Long Phi Hành Gia</string>
 </resources>

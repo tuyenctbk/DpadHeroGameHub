@@ -15,6 +15,8 @@ import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 
 class BrickBreakView @JvmOverloads constructor(
     context: Context,
@@ -60,6 +62,8 @@ class BrickBreakView @JvmOverloads constructor(
     private var isPaused = true
     private var isGameOver = false
     private var isWin = false
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
 
     private var score = 0
     private var highScore = 0
@@ -107,6 +111,7 @@ class BrickBreakView @JvmOverloads constructor(
         isWin = false
         isPaused = true
         isBallLaunched = false
+        celebrationManager.start(0f, 0f)
         highScore = ScoreManager.getHighScore(context, gameKey)
         brickFlashes.clear()
         initializeBoard()
@@ -298,6 +303,8 @@ class BrickBreakView @JvmOverloads constructor(
             if (bricks.isEmpty()) {
                 isWin = true
                 isPaused = true
+                currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+                celebrationManager.start(width.toFloat(), height.toFloat())
                 val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
                 if (isNewHigh) highScore = score
                 SoundManager.playSuccess()
@@ -469,11 +476,14 @@ class BrickBreakView @JvmOverloads constructor(
         drawHud(canvas)
 
         if (isPaused && !isGameOver && !isWin) {
-            drawOverlay(canvas, "BRICK BREAK", "Press Center to Launch")
+            drawOverlay(canvas, context.getString(R.string.game_brick_break), context.getString(R.string.launch_hint))
         } else if (isGameOver) {
-            drawOverlay(canvas, "GAME OVER", "Press Center to Restart")
+            drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         } else if (isWin) {
-            drawOverlay(canvas, "STAGE CLEAR!", "Press Center to Play Again")
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+            drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.play_again_hint)}")
         }
     }
 
@@ -511,15 +521,15 @@ class BrickBreakView @JvmOverloads constructor(
         paint.textSize = width / 35f
         paint.textAlign = Paint.Align.LEFT
         paint.color = GamePalette.TEXT_PRIMARY
-        canvas.drawText("SCORE: $score", 40f, 60f, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, 60f, paint)
 
         paint.textAlign = Paint.Align.CENTER
         paint.color = GamePalette.WARNING
-        canvas.drawText("LIVES: $lives", width / 2f, 60f, paint)
+        canvas.drawText("${context.getString(R.string.lives_label)}: $lives", width / 2f, 60f, paint)
 
         paint.textAlign = Paint.Align.RIGHT
         paint.color = GamePalette.SCORE
-        canvas.drawText("BEST: $highScore", width - 40f, 60f, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", width - 40f, 60f, paint)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {
@@ -534,7 +544,12 @@ class BrickBreakView @JvmOverloads constructor(
 
         paint.color = Color.LTGRAY
         paint.textSize = width / 36f
-        canvas.drawText(subtitle, width / 2f, height / 2f + 60f, paint)
+        val lines = subtitle.split("\n")
+        var yOffset = 60f
+        for (line in lines) {
+            canvas.drawText(line, width / 2f, height / 2f + yOffset, paint)
+            yOffset += paint.textSize + 10f
+        }
     }
 
     companion object {

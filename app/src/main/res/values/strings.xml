@@ -76,8 +76,230 @@
     <string name="next_label">NEXT</string>
     <string name="game_over">GAME OVER</string>
     <string name="paused">PAUSED</string>
-    <string name="win_4096">4096 REACHED!</string>
+    <string name="win_4096_label">4096 REACHED!</string>
     <string name="restart_hint">Press Center to Restart</string>
     <string name="exit_hint">Back to Exit</string>
     <string name="resume_hint">Press Center to Resume</string>
+    <string name="lives_label">LIVES</string>
+    <string name="wins_label">WINS</string>
+    <string name="level_label">LEVEL</string>
+    <string name="stage_label">STAGE</string>
+    <string name="category_label">CATEGORY</string>
+    <string name="puzzle_label">PUZZLE</string>
+    <string name="mode_label">MODE</string>
+    <string name="watch_hint">WATCH...</string>
+    <string name="your_turn_hint">YOUR TURN!</string>
+    <string name="pushes_label">PUSHES</string>
+    <string name="moves_label">MOVES</string>
+    <string name="final_score_label">Final Score</string>
+    <string name="trapped_label">TRAPPED!</string>
+    <string name="mission_failed_label">MISSION FAILED</string>
+    <string name="boom_game_over_label">BOOM! GAME OVER</string>
+    <string name="out_of_tries_label">OUT OF TRIES</string>
+    <string name="play_again_hint">Press Center to Play Again</string>
+    <string name="next_word_hint">Press Center to Next Word</string>
+    <string name="launch_hint">Press Center to Launch</string>
+    <string name="flap_hint">Press Center to Flap</string>
+    <string name="next_stage_hint">Press Center to Next Stage</string>
+    <string name="continue_hint">Press Center to Continue</string>
+    <string name="finish_hint">Press Center to Finish</string>
+    <string name="tictactoe_size_hint">UP/DOWN to change Board Size</string>
+    <string name="sokoban_restart_hint">CENTER: RESTART LEVEL</string>
+    <string name="sudoku_controls_hint">CENTER: 0-9 CYCLE (0 CLEAR) GIVENS LOCKED</string>
+    <string name="total_wins_label">Total Wins</string>
+    <string name="mines_label">MINES</string>
+    <string name="flags_label">FLAGS</string>
+    <string name="high_score_prefix">HI</string>
+    <string name="cpu_wins_label">CPU WINS</string>
+    <string name="your_turn_label">YOUR TURN</string>
+    <string name="watch_label">WATCH...</string>
+    <string name="grid_mastered_label">GRID MASTERED!</string>
+    <string name="puzzle_solved_label">PUZZLE SOLVED!</string>
+    <string name="picture_restored_label">PICTURE RESTORED!</string>
+    <string name="crashed_label">CRASHED!</string>
+    <string name="score_prefix">Score</string>
+    <string name="high_score_label">High Score</string>
+    <string name="wrong_path_label">WRONG PATH!</string>
+    <string name="wrong_label">WRONG!</string>
+    <string name="answer_was_label">Answer was</string>
+    <string name="finish_label">Finish</string>
+    <string name="continue_label">Continue</string>
+    <string name="next_stage_label">Next Stage</string>
+    <string name="out_of_tries">OUT OF TRIES</string>
+    <string name="cpu_thinking_label">CPU THINKING...</string>
+    <string name="no_moves_label">NO MOVES</string>
+    <string name="victory_label">VICTORY!</string>
+    <string name="draw_label">DRAW</string>
+    <string name="hit_wall_label">HIT THE WALL!</string>
+    <string name="bit_self_label">BIT YOURSELF!</string>
+    <string name="cpu_starting_label">CPU STARTING...</string>
+    <string name="jump_again_label">JUMP AGAIN</string>
+    <string name="draw_status">DRAW</string>
+    <string name="cat_animals">ANIMALS</string>
+    <string name="cat_fruits">FRUITS</string>
+    <string name="cat_countries">COUNTRIES</string>
+    <string name="cat_sports">SPORTS</string>
+    <string name="cat_flowers">FLOWERS</string>
+    <string name="cat_vehicles">VEHICLES</string>
+    <string name="cat_games">GAMES</string>
+    <string name="cat_foods">FOODS</string>
+    <string name="rating_title">Enjoying Dpad Arcade?</string>
+    <string name="rating_content">We love creating retro games for Android TV! If you are having fun, please rate us on the Play Store. Your support means everything to us!</string>
+    <string name="rate_now">Rate on Play Store</string>
+    <string name="rate_later">Later</string>
+    <string name="rate_never">No, thanks</string>
+    <string name="update_title">New Update Available!</string>
+    <string name="update_content">A new version of Dpad Arcade: Retro Game Hub is available. Update now to get the latest games, features, and stability fixes.</string>
+    <string name="update_now">Update Now</string>
+    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
+    <string name="trex_daddy">Daddy T-Rex</string>
+    <string name="trex_mummy">Mummy T-Rex</string>
+    <string name="trex_baby">Baby T-Rex</string>
+    <string name="trex_grandpa">Grandpa T-Rex</string>
+    <string name="trex_teenager">Teenager T-Rex</string>
+    <string name="trex_scientist">Scientist T-Rex</string>
+    <string name="trex_athlete">Athlete T-Rex</string>
+    <string name="trex_pirate">Pirate T-Rex</string>
+    <string name="trex_chef">Chef T-Rex</string>
+    <string name="trex_astronaut">Astronaut T-Rex</string>
+
+    <string-array name="win_generic">
+        <item>VICTORY!</item>
+        <item>WELL DONE!</item>
+        <item>AMAZING!</item>
+        <item>BRILLIANT!</item>
+        <item>SPECTACULAR!</item>
+        <item>YOU ROCK!</item>
+        <item>EXCELLENT!</item>
+        <item>FANTASTIC!</item>
+        <item>AWESOME!</item>
+        <item>GREAT JOB!</item>
+    </string-array>
+
+    <string-array name="win_highscore">
+        <item>NEW RECORD!</item>
+        <item>UNSTOPPABLE!</item>
+        <item>BEST EVER!</item>
+        <item>GODLIKE!</item>
+        <item>HIGHSCORE!</item>
+    </string-array>
+
+    <string-array name="win_minesweeper">
+        <item>AREA CLEARED!</item>
+        <item>MINE MASTER!</item>
+        <item>SAFE PASSAGE!</item>
+        <item>EXPERT SWEEPER!</item>
+    </string-array>
+
+    <string-array name="win_sudoku">
+        <item>GRID MASTERED!</item>
+        <item>LOGIC KING!</item>
+        <item>PUZZLE SOLVED!</item>
+        <item>BRILLIANT MIND!</item>
+    </string-array>
+
+    <string-array name="win_tictactoe">
+        <item>OUTSMARTED!</item>
+        <item>3 IN A ROW!</item>
+        <item>STRATEGY WIN!</item>
+        <item>UNSTOPPABLE!</item>
+    </string-array>
+
+    <string-array name="win_4096">
+        <item>MATH WIZARD!</item>
+        <item>4096 REACHED!</item>
+        <item>NUMBER CRUSHER!</item>
+        <item>ULTIMATE TILE!</item>
+    </string-array>
+
+    <string-array name="win_memory">
+        <item>PERFECT MEMORY!</item>
+        <item>MATCH MASTER!</item>
+        <item>SHARP MIND!</item>
+        <item>TOTAL RECALL!</item>
+    </string-array>
+
+    <string-array name="win_hangman">
+        <item>WORD SAVED!</item>
+        <item>VOCAB MASTER!</item>
+        <item>SAVED BY A WORD!</item>
+        <item>LEXICON KING!</item>
+    </string-array>
+
+    <string-array name="win_brick_break">
+        <item>STAGE CLEAR!</item>
+        <item>BRICK CRUSHER!</item>
+        <item>WALL BREAKER!</item>
+        <item>PADDLE PRO!</item>
+    </string-array>
+
+    <string-array name="win_word_quest">
+        <item>WORD FOUND!</item>
+        <item>SPELLING BEE!</item>
+        <item>DICTIONARY HERO!</item>
+        <item>MASTER QUEST!</item>
+    </string-array>
+
+    <string-array name="win_solitaire">
+        <item>DECK CLEARED!</item>
+        <item>ACE HIGH!</item>
+        <item>SUIT COMPLETE!</item>
+        <item>CARD KING!</item>
+    </string-array>
+
+    <string-array name="win_maze">
+        <item>TROPHY FOUND!</item>
+        <item>MAZE RUNNER!</item>
+        <item>PATH FINDER!</item>
+        <item>EXIT REACHED!</item>
+    </string-array>
+
+    <string-array name="win_sokoban">
+        <item>WAREHOUSE HERO!</item>
+        <item>BOX PUSHER PRO!</item>
+        <item>ALL TARGETS MET!</item>
+        <item>SOKO-MASTER!</item>
+    </string-array>
+
+    <string-array name="win_checkers">
+        <item>CPU DEFEATED!</item>
+        <item>KING OF THE BOARD!</item>
+        <item>GRANDMASTER!</item>
+        <item>STRATEGY MASTER!</item>
+    </string-array>
+
+    <string-array name="win_slide_puzzle">
+        <item>PICTURE RESTORED!</item>
+        <item>PUZZLE SOLVED!</item>
+        <item>PERFECT FIT!</item>
+        <item>SLIDE MASTER!</item>
+    </string-array>
+
+    <string-array name="win_dungeon">
+        <item>DUNGEON ESCAPED!</item>
+        <item>LEGENDARY EXPLORER!</item>
+        <item>FLOOR CLEARED!</item>
+        <item>TREASURE FOUND!</item>
+    </string-array>
+
+    <string-array name="win_tanks">
+        <item>BASE DEFENDED!</item>
+        <item>ENEMIES WIPED OUT!</item>
+        <item>TANK COMMANDER!</item>
+        <item>WAR HERO!</item>
+    </string-array>
+
+    <string-array name="win_mental_math">
+        <item>MATH GENIUS!</item>
+        <item>BRAIN POWER!</item>
+        <item>CALCULATION KING!</item>
+        <item>NUMBERS MASTER!</item>
+    </string-array>
+
+    <string-array name="win_froggy">
+        <item>GOAL REACHED!</item>
+        <item>SAFE CROSSING!</item>
+        <item>FROGGY HERO!</item>
+        <item>RIVER MASTER!</item>
+    </string-array>
 </resources>

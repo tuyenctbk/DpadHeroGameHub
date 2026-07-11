@@ -11,6 +11,8 @@ import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import kotlin.random.Random
 
 /**
@@ -32,8 +34,10 @@ class CheckersView @JvmOverloads constructor(
     private var selected: Pair<Int, Int>? = null
     private var mustContinueFrom: Pair<Int, Int>? = null
     private var gameOver = false
-    private var status = "YOUR TURN"
+    private var status = ""
     private var wins = 0
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
     private val cpuRunnable = Runnable { cpuTurnLogic() }
 
@@ -53,6 +57,7 @@ class CheckersView @JvmOverloads constructor(
 
     override fun resetGame() {
         handler.removeCallbacks(cpuRunnable)
+        celebrationManager.start(0f, 0f)
         for (r in 0..7) for (c in 0..7) board[r][c] = EMPTY
         for (r in 0..2) for (c in 0..7) {
             if (darkSquare(r, c)) board[r][c] = CPU_MAN
@@ -65,7 +70,7 @@ class CheckersView @JvmOverloads constructor(
         selected = null
         mustContinueFrom = null
         gameOver = false
-        status = "YOUR TURN"
+        status = context.getString(R.string.your_turn_label)
         wins = ScoreManager.getHighScore(context, gameKey)
         invalidate()
     }
@@ -142,7 +147,7 @@ class CheckersView @JvmOverloads constructor(
                     }
                     if (mustContinueFrom != null) {
                         selected = mustContinueFrom
-                        status = "JUMP AGAIN"
+                        status = context.getString(R.string.jump_again_label)
                         invalidate()
                         return
                     }
@@ -170,7 +175,7 @@ class CheckersView @JvmOverloads constructor(
         // Case 2: Standard selection or move
         if (!playerHasAnyMove()) {
             gameOver = true
-            status = "NO MOVES - CPU WINS"
+            status = "${context.getString(R.string.no_moves_label)} - ${context.getString(R.string.cpu_wins_label)}"
             SoundManager.playError()
             onGameOver?.invoke(wins)
             invalidate()
@@ -192,7 +197,7 @@ class CheckersView @JvmOverloads constructor(
                 }
                 if (mustContinueFrom != null) {
                     selected = mustContinueFrom
-                    status = "JUMP AGAIN"
+                    status = context.getString(R.string.jump_again_label)
                     invalidate()
                     return
                 }
@@ -213,11 +218,19 @@ class CheckersView @JvmOverloads constructor(
 
     private fun endPlayerWin() {
         gameOver = true
-        status = "YOU WIN - CENTER TO RESTART"
+        currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+        celebrationManager.start(width.toFloat(), height.toFloat())
+        status = currentVictoryWord
         val newWins = wins + 1
         if (ScoreManager.updateHighScore(context, gameKey, newWins)) wins = newWins
         SoundManager.playSuccess()
         onGameOver?.invoke(wins)
+    }
+
+    private fun endCpuWin() {
+        gameOver = true
+        status = context.getString(R.string.cpu_wins_label)
+        SoundManager.playError()
     }
 
     private fun tryPlayerMove(fr: Int, fc: Int, tr: Int, tc: Int): Boolean {
@@ -267,7 +280,7 @@ class CheckersView @JvmOverloads constructor(
     private fun cpuTurn() {
         mustContinueFrom = null
         selected = null
-        status = "CPU THINKING..."
+        status = context.getString(R.string.cpu_thinking_label)
         invalidate()
         handler.postDelayed(cpuRunnable, 600)
     }
@@ -282,12 +295,7 @@ class CheckersView @JvmOverloads constructor(
             }
         }
         if (allMoves.isEmpty()) {
-            gameOver = true
-            status = "YOU WIN - CENTER TO RESTART"
-            val newWins = wins + 1
-            if (ScoreManager.updateHighScore(context, gameKey, newWins)) wins = newWins
-            SoundManager.playSuccess()
-            onGameOver?.invoke(wins)
+            endPlayerWin()
             invalidate()
             return
         }
@@ -315,16 +323,14 @@ class CheckersView @JvmOverloads constructor(
         }
         when {
             countPlayerPieces() == 0 -> {
-                gameOver = true
-                status = "CPU WINS - CENTER TO RESTART"
-                SoundManager.playError()
+                endCpuWin()
             }
             !playerHasAnyMove() -> {
                 gameOver = true
-                status = "NO MOVES - CPU WINS"
+                status = "${context.getString(R.string.no_moves_label)} - ${context.getString(R.string.cpu_wins_label)}"
                 SoundManager.playError()
             }
-            else -> status = "YOUR TURN"
+            else -> status = context.getString(R.string.your_turn_label)
         }
         if (gameOver) onGameOver?.invoke(wins)
         invalidate()
@@ -533,10 +539,36 @@ class CheckersView @JvmOverloads constructor(
         paint.color = Color.WHITE
         paint.textSize = 38f
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("WINS: $wins", 30f, 52f, paint)
+        canvas.drawText("${context.getString(R.string.wins_label)}: $wins", 30f, 52f, paint)
+        
+        if (gameOver && status.contains("!")) {
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+        }
+
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 32f
         canvas.drawText(status, width / 2f, top - 16f, paint)
+
+        if (gameOver) {
+            val isWin = !board.any { r -> r.any { it == 2 || it == 4 } }
+            drawOverlay(canvas, if (isWin) currentVictoryWord else context.getString(R.string.cpu_wins_label), context.getString(R.string.restart_hint))
+        }
+    }
+
+    private fun drawOverlay(canvas: Canvas, title: String, sub: String) {
+        paint.color = GamePalette.OVERLAY
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.WHITE
+        paint.textSize = 80f
+        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+        paint.textSize = 35f
+        val lines = sub.split("\n")
+        lines.forEachIndexed { i, s ->
+            canvas.drawText(s, width / 2f, height / 2f + 50f + i * 45f, paint)
+        }
     }
 
     data class Move(

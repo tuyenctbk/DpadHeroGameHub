@@ -14,6 +14,8 @@ import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import kotlin.random.Random
 
 class TicTacToeView @JvmOverloads constructor(
@@ -34,6 +36,9 @@ class TicTacToeView @JvmOverloads constructor(
     private var wins = 0
     private val winningCells = mutableListOf<Pair<Int, Int>>()
     
+    private val celebrationManager = CelebrationManager()
+    private var isWinCelebration = false
+    private var currentVictoryWord = ""
     private var turnStarter = 1 // 1 for Player, 2 for CPU
     private var isPlayerTurn = true
     private var animationFrame = 0
@@ -41,6 +46,7 @@ class TicTacToeView @JvmOverloads constructor(
     private val animationRunnable = object : Runnable {
         override fun run() {
             animationFrame++
+            if (isWinCelebration) celebrationManager.update()
             invalidate()
             animationHandler.postDelayed(this, 50)
         }
@@ -71,11 +77,12 @@ class TicTacToeView @JvmOverloads constructor(
         cursorR = gridSize / 2
         cursorC = gridSize / 2
         gameOver = false
+        isWinCelebration = false
         winningCells.clear()
         wins = ScoreManager.getHighScore(context, gameKey)
         
         isPlayerTurn = (turnStarter == 1)
-        status = if (isPlayerTurn) "YOUR TURN" else "CPU STARTING..."
+        status = if (isPlayerTurn) context.getString(R.string.your_turn_label) else context.getString(R.string.cpu_starting_label)
         
         invalidate()
         
@@ -164,13 +171,16 @@ class TicTacToeView @JvmOverloads constructor(
         handler.removeCallbacks(cpuMoveRunnable)
         board[cursorR][cursorC] = 1
         SoundManager.playClick()
-        if (resolveEnd("YOU WIN")) {
+        if (resolveEnd(context.getString(R.string.victory_label))) {
             val newScore = wins + 1
+            isWinCelebration = true
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+            celebrationManager.start(width.toFloat(), height.toFloat())
             if (ScoreManager.updateHighScore(context, gameKey, newScore)) wins = newScore
             return
         }
         isPlayerTurn = false
-        status = "CPU TURN"
+        status = context.getString(R.string.cpu_thinking_label)
         invalidate()
         handler.postDelayed(cpuMoveRunnable, 600)
     }
@@ -187,9 +197,9 @@ class TicTacToeView @JvmOverloads constructor(
         
         board[move.first][move.second] = 2
         SoundManager.playClick()
-        if (!resolveEnd("CPU WINS")) {
+        if (!resolveEnd(context.getString(R.string.cpu_wins_label))) {
             isPlayerTurn = true
-            status = "YOUR TURN"
+            status = context.getString(R.string.your_turn_label)
         }
         invalidate()
     }
@@ -238,13 +248,13 @@ class TicTacToeView @JvmOverloads constructor(
         val win = winner()
         return if (win != 0) {
             gameOver = true
-            status = "$winLabel - CENTER TO RESTART"
+            status = winLabel
             SoundManager.playSuccess()
             onGameOver?.invoke(wins)
             true
         } else if (isDraw()) {
             gameOver = true
-            status = "DRAW - CENTER TO RESTART"
+            status = context.getString(R.string.draw_label)
             SoundManager.playError()
             onGameOver?.invoke(wins)
             true
@@ -358,21 +368,35 @@ class TicTacToeView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.LEFT
         paint.textSize = 38f
         val hudY1 = Math.round(60f).toFloat()
-        canvas.drawText("WINS: $wins", 40f, hudY1, paint)
+        canvas.drawText("${context.getString(R.string.wins_label)}: $wins", 40f, hudY1, paint)
         
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("MODE: ${gridSize}x$gridSize", width - 40f, hudY1, paint)
+        canvas.drawText("${context.getString(R.string.mode_label)}: ${gridSize}x$gridSize", width - 40f, hudY1, paint)
 
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 42f
         val centerX = Math.round(width / 2f).toFloat()
         val hudY2 = Math.round(top - 30f).toFloat()
-        canvas.drawText(status, centerX, hudY2, paint)
+        canvas.drawText(if (isWinCelebration) currentVictoryWord else status, centerX, hudY2, paint)
         
+        if (isWinCelebration) celebrationManager.draw(canvas)
+
         if (gameOver) {
-            paint.textSize = 32f
-            paint.color = Color.LTGRAY
-            canvas.drawText("UP/DOWN to change Board Size", width / 2f, height - 60f, paint)
+            drawOverlay(canvas, if (isWinCelebration) currentVictoryWord else status, context.getString(R.string.restart_hint))
+        }
+    }
+
+    private fun drawOverlay(canvas: Canvas, title: String, sub: String) {
+        paint.color = GamePalette.OVERLAY
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.WHITE
+        paint.textSize = 80f
+        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+        paint.textSize = 35f
+        val lines = sub.split("\n")
+        lines.forEachIndexed { i, s ->
+            canvas.drawText(s, width / 2f, height / 2f + 50f + i * 45f, paint)
         }
     }
 }

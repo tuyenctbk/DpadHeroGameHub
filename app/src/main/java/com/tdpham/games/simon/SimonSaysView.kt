@@ -11,6 +11,8 @@ import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import kotlin.random.Random
 
 class SimonSaysView @JvmOverloads constructor(
@@ -31,6 +33,8 @@ class SimonSaysView @JvmOverloads constructor(
     private var best = 0
     private var gameOver = false
     private var gamePaused = true
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
 
     private val colors = arrayOf(
         Color.YELLOW, // Up
@@ -58,6 +62,7 @@ class SimonSaysView @JvmOverloads constructor(
     override fun resetGame() {
         handler.removeCallbacksAndMessages(null)
         sequence.clear()
+        celebrationManager.start(0f, 0f)
         score = 0
         best = ScoreManager.getHighScore(context, gameKey)
         gameOver = false
@@ -189,7 +194,10 @@ class SimonSaysView @JvmOverloads constructor(
                 score++
                 if (score > best) {
                     best = score
-                    ScoreManager.updateHighScore(context, gameKey, best)
+                    if (ScoreManager.updateHighScore(context, gameKey, best)) {
+                        currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
+                        celebrationManager.start(width.toFloat(), height.toFloat())
+                    }
                 }
                 handler.postDelayed({ startNextRound() }, 800)
             }
@@ -226,24 +234,30 @@ class SimonSaysView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
         val hudY = Math.round(60f).toFloat()
-        canvas.drawText("SCORE: $score", 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
         paint.textAlign = Paint.Align.CENTER
         val centerX = Math.round(width / 2f).toFloat()
         if (isShowingSequence) {
             paint.color = Color.YELLOW
-            canvas.drawText("WATCH...", centerX, hudY, paint)
+            canvas.drawText(context.getString(R.string.watch_hint), centerX, hudY, paint)
         } else if (!gamePaused && !gameOver) {
             paint.color = Color.GREEN
-            canvas.drawText("YOUR TURN!", centerX, hudY, paint)
+            canvas.drawText(context.getString(R.string.your_turn_hint), centerX, hudY, paint)
         }
 
         if (gameOver) {
-            drawOverlay(canvas, "GAME OVER", "Press Center to Restart")
+            drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         } else if (gamePaused) {
-            drawOverlay(canvas, "SIMON SAYS", "Press Center to Start")
+            drawOverlay(canvas, context.getString(R.string.game_simon), context.getString(R.string.start_game))
+        }
+
+        if (score > 0 && currentVictoryWord.isNotEmpty()) {
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
         }
     }
 
@@ -285,9 +299,13 @@ class SimonSaysView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 80f
         paint.color = Color.WHITE
-        canvas.drawText(title, width / 2f, height / 2f, paint)
+        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+        
         paint.textSize = 30f
-        canvas.drawText(sub, width / 2f, height / 2f + 60f, paint)
+        val lines = sub.split("\n")
+        lines.forEachIndexed { i, s ->
+            canvas.drawText(s, width / 2f, height / 2f + 40f + i * 40f, paint)
+        }
     }
 
     override fun onDetachedFromWindow() {

@@ -13,6 +13,7 @@ import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
 import kotlin.random.Random
 
 class TetrisView @JvmOverloads constructor(
@@ -34,8 +35,10 @@ class TetrisView @JvmOverloads constructor(
     private var best = 0
     private var paused = true
     private var gameOver = false
+    private var currentVictoryWord = ""
     private var flashFrames = 0
     private val particles = mutableListOf<GameEnvironment.Particle>()
+    private val celebrationManager = CelebrationManager()
     private val screenShake = com.tdpham.games.common.ScreenShake()
     private val handler = Handler(Looper.getMainLooper())
 
@@ -89,6 +92,7 @@ class TetrisView @JvmOverloads constructor(
             for (c in 0 until cols) board[r][c] = 0
         }
         score = 0
+        celebrationManager.start(0f, 0f)
         best = ScoreManager.getHighScore(context, gameKey)
         current = spawnPieceData()
         next = spawnPieceData()
@@ -229,7 +233,10 @@ class TetrisView @JvmOverloads constructor(
         if (!isValid(current.r, current.c, current.rot)) {
             gameOver = true
             handler.removeCallbacks(tick)
-            ScoreManager.updateHighScore(context, gameKey, score)
+            if (ScoreManager.updateHighScore(context, gameKey, score)) {
+                currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+                celebrationManager.start(width.toFloat(), height.toFloat())
+            }
             SoundManager.playError()
             onGameOver?.invoke(score)
         }
@@ -436,7 +443,13 @@ class TetrisView @JvmOverloads constructor(
             drawBlock(canvas, offsetX + (cols + 3 + cell.second) * size, offsetY + (6 + cell.first) * size, size, colorFor(next.shape + 1))
         }
 
-        if (gameOver) drawOverlay(canvas, context.getString(R.string.game_over), "Score: $score\n${context.getString(R.string.restart_hint)}")
+        if (gameOver) {
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+            val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.game_over)
+            drawOverlay(canvas, title, "Score: $score\n${context.getString(R.string.restart_hint)}")
+        }
         else if (paused) drawOverlay(canvas, context.getString(R.string.paused), context.getString(R.string.resume_hint))
     }
 
@@ -449,7 +462,13 @@ class TetrisView @JvmOverloads constructor(
         canvas.drawText(title, width / 2f, height / 2f - 40, overlayPaint)
         overlayPaint.textSize = 30f
         overlayPaint.color = Color.LTGRAY
-        canvas.drawText(subtitle, width / 2f, height / 2f + 40, overlayPaint)
+        
+        val lines = subtitle.split("\n")
+        var y = height / 2f + 40
+        for (line in lines) {
+            canvas.drawText(line, width / 2f, y, overlayPaint)
+            y += overlayPaint.textSize + 10
+        }
     }
 
     private fun drawBlock(canvas: Canvas, x: Float, y: Float, size: Float, color: Int, isGhost: Boolean = false) {

@@ -14,6 +14,7 @@ import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
 import java.util.*
 
 class SnakeGameView @JvmOverloads constructor(
@@ -40,6 +41,8 @@ class SnakeGameView @JvmOverloads constructor(
     private var highScore = 0
 
     private val particles = mutableListOf<GameEnvironment.Particle>()
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
     private val random = Random()
 
     private val gridSize = 20
@@ -102,6 +105,7 @@ class SnakeGameView @JvmOverloads constructor(
 
     override fun resetGame() {
         snake.clear()
+        celebrationManager.start(0f, 0f)
         snake.add(Point(10, 10))
         snake.add(Point(9, 10))
         snake.add(Point(8, 10))
@@ -159,7 +163,7 @@ class SnakeGameView @JvmOverloads constructor(
 
         if (newHead.x !in 0 until gridSize || newHead.y !in 0 until gridSize) {
             isGameOver = true
-            gameOverReason = "HIT THE WALL!"
+            gameOverReason = context.getString(R.string.hit_wall_label)
             handleGameOver()
             return
         }
@@ -174,7 +178,7 @@ class SnakeGameView @JvmOverloads constructor(
         }
         if (selfHit) {
             isGameOver = true
-            gameOverReason = "BIT YOURSELF!"
+            gameOverReason = context.getString(R.string.bit_self_label)
             handleGameOver()
             return
         }
@@ -199,7 +203,9 @@ class SnakeGameView @JvmOverloads constructor(
         val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
         if (isNewHigh) {
             highScore = score
-            gameOverReason = "NEW HIGH SCORE!"
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+            celebrationManager.start(width.toFloat(), height.toFloat())
+            gameOverReason = currentVictoryWord
         }
         onGameOver?.invoke(score)
     }
@@ -421,6 +427,11 @@ class SnakeGameView @JvmOverloads constructor(
         if (isGameOver) {
             val restartHint = context.getString(R.string.restart_hint)
             val exitHint = context.getString(R.string.exit_hint)
+            
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+
             drawOverlay(canvas, gameOverReason, "$restartHint\n$exitHint")
         } else if (isPaused) {
             val resumeHint = context.getString(R.string.resume_hint)
@@ -493,7 +504,7 @@ class SnakeGameView @JvmOverloads constructor(
         paint.color = Color.LTGRAY
         paint.textSize = width / 35f
         val lines = subtitle.split("\n")
-        var yOffset = 80f
+        var yOffset = 60f
         for (line in lines) {
             canvas.drawText(line, width / 2f, height / 2f + yOffset, paint)
             yOffset += paint.textSize + 10f

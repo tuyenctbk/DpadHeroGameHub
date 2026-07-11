@@ -6,69 +6,229 @@
     <string name="minesweeper">САПЕР</string>
     <string name="game_4096">4096</string>
     <string name="game_trex">T-REX RUN</string>
-    <string name="game_brick_break">BRICK BREAK</string>
+    <string name="game_brick_break">АРКАНОИД</string>
     <string name="game_tictactoe">КРЕСТИКИ-НОЛИКИ</string>
     <string name="game_checkers">ШАШКИ</string>
     <string name="game_sokoban">СОКОБАН</string>
     <string name="game_sudoku">СУДОКУ</string>
     <string name="game_tetris">ТЕТРИС</string>
-    <string name="game_starfighter">STAR FIGHTER</string>
+    <string name="game_starfighter">ЗВЕЗДНЫЙ ИСТРЕБИТЕЛЬ</string>
     <string name="game_memory">ПАМЯТЬ</string>
     <string name="game_slide_puzzle">ПЯТНАШКИ</string>
     <string name="game_maze">ЛАБИРИНТ</string>
-    <string name="game_mental_math">СЧЕТ В УМЕ</string>
+    <string name="game_mental_math">МЕНТАЛЬНАЯ АРИФМЕТИКА</string>
     <string name="game_froggy">FROGGY CROSS</string>
     <string name="game_simon">САЙМОН ГОВОРИТ</string>
-    <string name="game_tanks">ТАНЧИКИ</string>
-    <string name="game_word_quest">ПОИСК СЛОВ</string>
+    <string name="game_tanks">ТАНКИ</string>
+    <string name="game_word_quest">WORD QUEST</string>
     <string name="game_dungeon">ПОБЕГ ИЗ ПОДЗЕМЕЛЬЯ</string>
     <string name="game_flappy">FLAPPY HERO</string>
-    <string name="game_lines98">LINES 98</string>
-    <string name="game_solitaire">ПАСЬЯНС</string>
+    <string name="game_lines98">ЛИНИИ 98</string>
+    <string name="game_solitaire">КОСЫНКА</string>
     <string name="game_road_racer">ROAD RACER</string>
     <string name="game_hangman">ВИСЕЛИЦА</string>
     <string name="game_spinball">СПИНБОЛ</string>
-    <string name="game_spinball_instructions">Используйте ВЛЕВО/ВПРАВО для вращения круга. Собирайте звезды и избегайте шипов. Не дайте мячу улететь!</string>
-    <string name="how_to_play_guide">КАК ИГРАТЬ В %s</string>
-    <string name="snake_instructions">• Используйте D-PAD для движения.\n• Ешьте красные яблоки, чтобы расти.\n• Не врезайтесь в стены или в себя!\n• Нажмите \'S\' для вкл/выкл звука.\n• Нажмите CENTER для паузы.</string>
-    <string name="minesweeper_instructions">• Используйте D-PAD для перемещения курсора.\n• Нажмите CENTER, чтобы открыть ячейку.\n• Нажмите MENU или \'S\', чтобы поставить флаг.\n• Откройте все пустые ячейки для победы!</string>
-    <string name="game_4096_instructions">• Используйте D-PAD для сдвига плиток.\n• Плитки с одинаковыми числами сливаются.\n• Соберите плитку 4096 для победы!\n• Нажмите CENTER для перезапуска.</string>
-    <string name="game_trex_instructions">• Нажмите ВВЕРХ или CENTER для прыжка.\n• Избегайте кактусов и птиц!\n• Скорость игры увеличивается со временем.</string>
-    <string name="game_brick_break_instructions">• Двигайте платформу ВЛЕВО/ВПРАВО.\n• Нажмите CENTER для запуска мяча или паузы.\n• Разбейте все кирпичи для победы.\n• У вас 3 жизни.</string>
-    <string name="game_tictactoe_instructions">• Используйте D-PAD для выбора клетки.\n• Нажмите CENTER, чтобы поставить знак.\n• Соберите 3 в ряд для победы!\n• Можно изменить размер поля после игры.</string>
-    <string name="game_checkers_instructions">• D-PAD: движение курсора. CENTER: выбор.\n• Красные (вы) ходят вверх. Только темные клетки.\n• Бить обязательно.\n• Дойдите до конца для дамки.\n• Уберите все фигуры противника.</string>
-    <string name="game_sokoban_instructions">• D-PAD: движение. Толкайте ящики ($) на цели.\n• Только один ящик за раз; тянуть нельзя.\n• CENTER: перезапуск уровня при застревании.</string>
-    <string name="game_sudoku_instructions">• D-PAD: движение по клеткам. CENTER: смена цифры.\n• Белые цифры изменять нельзя.\n• Числа не должны повторяться в ряду, столбце или блоке 3x3.</string>
-    <string name="game_tetris_instructions">• ВЛЕВО/ВПРАВО для движения, ВВЕРХ для поворота.\n• ВНИЗ для медленного спуска, CENTER для падения.\n• Очищайте линии для набора очков.</string>
-    <string name="game_starfighter_instructions">• Управляйте кораблем с D-PAD. Огонь автоматический.\n• Уничтожайте врагов для набора очков.\n• Не давайте врагам протаранить вас!</string>
-    <string name="game_memory_instructions">• Используйте D-PAD для выбора карт.\n• Переворачивайте карты кнопкой CENTER.\n• Найдите все пары для победы.\n• Чем меньше ходов, тем лучше!</string>
-    <string name="game_slide_puzzle_instructions">• Используйте DPAD для выбора детали.\n• Нажмите CENTER, чтобы сдвинуть её.\n• Соберите картинку правильно.\n• Цифры показывают верный порядок.</string>
-    <string name="game_maze_instructions">• Внимательно изучите лабиринт.\n• Найдите выход (картинку), связанный с зеленой точкой.\n• ВЛЕВО/ВПРАВО для выбора, CENTER для подтверждения.</string>
-    <string name="game_mental_math_instructions">• Решите математический пример.\n• Выберите ответ кнопками ВЛЕВО/ВПРАВО.\n• Нажмите CENTER для подтверждения.\n• Ошибка завершает игру.</string>
-    <string name="game_froggy_instructions">• Пересеките дорогу и реку.\n• Избегайте машин и не утоните.\n• Прыгайте по бревнам на реке.\n• Доберитесь до финиша для очков!</string>
-    <string name="game_simon_instructions">• Запоминайте последовательность цветов.\n• Повторите её с помощью D-PAD.\n• С каждым раундом цепочка удлиняется!</string>
-    <string name="game_tanks_instructions">• Управляйте танком с D-PAD. Огонь автоматический.\n• Уничтожьте все вражеские танки.\n• Защищайте свою БАЗУ (звезду).</string>
-    <string name="game_word_quest_instructions">• Угадайте слово из 5 букв за 6 попыток.\n• D-PAD для выбора букв, CENTER для ввода.\n• ЗЕЛЕНЫЙ: буква и место верны.\n• ЖЕЛТЫЙ: буква верна, место - нет.\n• СЕРЫЙ: буквы нет в слове.</string>
-    <string name="game_dungeon_instructions">• Двигайтесь с D-PAD и собирайте ключи.\n• Дойдите до двери выхода для победы.\n• Избегайте ловушек и красных шипов!</string>
-    <string name="game_flappy_instructions">• Нажмите CENTER для взмаха.\n• Летите сквозь проемы в трубах.\n• Не задевайте трубы и землю!</string>
-    <string name="game_lines98_instructions">• D-PAD для курсора, CENTER для хода.\n• Соберите 5 и более шаров одного цвета в линию.\n• Игра окончена, когда поле заполнено.</string>
-    <string name="game_solitaire_instructions">• D-PAD для курсора, CENTER для карт.\n• Соберите стопки по масти от Туза до Короля.</string>
-    <string name="game_road_racer_instructions">• Маневрируйте, чтобы избежать столкновений.\n• Продержитесь как можно дольше!\n• CENTER для паузы.</string>
-    <string name="game_hangman_instructions">• Выбирайте буквы, чтобы угадать слово.\n• У вас есть 6 попыток.\n• CENTER для выбора буквы.</string>
-    <string name="select_game_hint">DpadHero: Выберите игру с помощью D-Pad</string>
+    <string name="game_spinball_instructions">Используйте ВЛЕВО/ВПРАВО для вращения. Собирайте звезды и избегайте шипов. Не дайте шарику вылететь!</string>
+    <string name="how_to_play_guide">ГИД %s</string>
+    <string name="snake_instructions">• Используйте D-PAD для движения.\n• Ешьте яблоки, чтобы расти.\n• Не врезайтесь в стены!\n• \'S\' для звука.\n• CENTER для паузы.</string>
+    <string name="minesweeper_instructions">• Используйте D-PAD для курсора.\n• CENTER, чтобы открыть ячейку.\n• MENU или \'S\' для флага.\n• Откройте все пустые ячейки!</string>
+    <string name="game_4096_instructions">• Используйте D-PAD для сдвига.\n• Одинаковые числа складываются.\n• Дойдите до 4096!</string>
+    <string name="game_trex_instructions">• ВВЕРХ или CENTER для прыжка.\n• Избегайте кактусов и птиц!\n• Скорость растет со временем.</string>
+    <string name="game_brick_break_instructions">• Двигайте платформу ВЛЕВО/ВПРАВО.\n• CENTER для старта или паузы.\n• Разбейте все кирпичи.\n• У вас 3 жизни.</string>
+    <string name="game_tictactoe_instructions">• Двигайте курсор кнопками D-PAD.\n• CENTER, чтобы поставить X.\n• Победите компьютер!</string>
+    <string name="game_checkers_instructions">• D-PAD: движение. CENTER: выбор.\n• Красные (вы) идут вверх. Только темные поля.\n• Бить обязательно.\n• Дойдите до края для дамки.\n• Сбейте все фигуры врага.</string>
+    <string name="game_sokoban_instructions">• D-PAD: движение. Толкайте ящики ($) на цели.\n• Один ящик за раз; тянуть нельзя.\n• CENTER: сброс уровня.</string>
+    <string name="game_sudoku_instructions">• D-PAD: движение. CENTER: смена цифры.\n• Белые цифры закреплены.\n• Без повторов в строке/столбце/блоке.</string>
+    <string name="game_tetris_instructions">• ВЛЕВО/ВПРАВО для движения.\n• ВВЕРХ для поворота.\n• ВНИЗ для спуска.\n• CENTER для падения.</string>
+    <string name="game_starfighter_instructions">• Двигайте корабль кнопками D-PAD.\n• Автострельба.\n• Уничтожайте врагов.\n• Не подставляйтесь под огонь!\n• \'S\' для звука.</string>
+    <string name="game_memory_instructions">• Используйте D-PAD.\n• CENTER, чтобы перевернуть карту.\n• Найдите все пары.\n• Меньше ходов — лучше!</string>
+    <string name="game_slide_puzzle_instructions">• Используйте D-PAD.\n• CENTER для сдвига.\n• Соберите картинку.</string>
+    <string name="game_maze_instructions">• Изучите лабиринт.\n• Найдите выход к зеленой точке.\n• ВЛЕВО/ВПРАВО для выбора.\n• CENTER для подтверждения.</string>
+    <string name="game_mental_math_instructions">• Решите задачу.\n• D-PAD для выбора ответа.\n• CENTER для подтверждения.\n• Быстрее! Время идет.</string>
+    <string name="game_froggy_instructions">• Перейдите дорогу и реку.\n• Избегайте машин.\n• Прыгайте по бревнам.\n• Доберитесь до финиша!</string>
+    <string name="game_simon_instructions">• Запомните цвета.\n• Повторите кнопками D-PAD.\n• Последовательность растет!</string>
+    <string name="game_tanks_instructions">• Управляйте танком через D-PAD.\n• Автострельба.\n• Уничтожьте врагов.\n• Защитите БАЗУ.</string>
+    <string name="game_word_quest_instructions">• Угадайте слово из 5 букв за 6 попыток.\n• D-PAD для клавиатуры.\n• CENTER для выбора.\n• ЗЕЛЕНЫЙ: буква и место верны.</string>
+    <string name="game_dungeon_instructions">• Используйте D-PAD.\n• Соберите КЛЮЧ.\n• Дойдите до ДВЕРИ.\n• ИЗБЕГАЙТЕ ШИПОВ!</string>
+    <string name="game_flappy_instructions">• CENTER для взмаха крыльев.\n• Летите между трубами.\n• Ни обо что не ударяйтесь!\n• 1 очко за трубу.</string>
+    <string name="game_lines98_instructions">• Используйте D-PAD.\n• CENTER для перемещения.\n• Соберите 5 шаров в ряд.\n• Конец, если поле полно.</string>
+    <string name="game_solitaire_instructions">• Используйте D-PAD.\n• CENTER для карт.\n• Разложите от Туза до Короля.</string>
+    <string name="game_road_racer_instructions">• Избегайте машин.\n• Выживайте!\n• CENTER для паузы.</string>
+    <string name="game_hangman_instructions">• Угадайте буквы в слове.\n• У вас 6 попыток.\n• CENTER для выбора.</string>
+    <string name="select_game_hint">DpadHero: Выберите игру стрелками</string>
     <string name="settings">Настройки</string>
     <string name="settings_button_description">Настройки</string>
-    <string name="sound_effects">Звуковые эффекты</string>
-    <string name="sound_effects_description">Включить или выключить звуковые эффекты.</string>
-    <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="sound_effects">Звуки</string>
+    <string name="sound_effects_description">Включить или выключить звуки.</string>
+    <string name="privacy_policy">Конфиденциальность</string>
     <string name="back">Назад</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
-    <string name="supported_devices_hint">Поддержка: D-pad / Пульт ДУ</string>
+    <string name="supported_devices_hint">Поддержка: D-pad / Пульт</string>
     <string name="help">ПОМОЩЬ</string>
     <string name="guide_hint_keys">Нажмите [INFO] или [H]</string>
-    <string name="guide_title_default">ИНСТРУКЦИЯ</string>
-    <string name="guide_content_default">Здесь будет описание игры.</string>
-    <string name="dont_show_again">Больше не показывать</string>
+    <string name="guide_title_default">КАК ИГРАТЬ</string>
+    <string name="guide_content_default">Инструкция здесь.</string>
+    <string name="dont_show_again">Не показывать снова</string>
     <string name="start_game">ИГРАТЬ</string>
     <string name="resume">ПРОДОЛЖИТЬ</string>
+    <string name="score_label">СЧЕТ</string>
+    <string name="best_label">РЕКОРД</string>
+    <string name="next_label">СЛЕД.</string>
+    <string name="game_over">ИГРА ОКОНЧЕНА</string>
+    <string name="paused">ПАУЗА</string>
+    <string name="win_4096_label">4096 ДОСТИГНУТО!</string>
+    <string name="restart_hint">CENTER для перезапуска</string>
+    <string name="exit_hint">Назад для выхода</string>
+    <string name="resume_hint">CENTER для продолжения</string>
+
+    <string-array name="win_generic">
+        <item>ПОБЕДА!</item>
+        <item>ОТЛИЧНО!</item>
+        <item>НЕВЕРОЯТНО!</item>
+        <item>БЛЕСТЯЩЕ!</item>
+        <item>ВПЕЧАТЛЯЮЩЕ!</item>
+        <item>ТЫ КРУТ!</item>
+        <item>ПРЕВОСХОДНО!</item>
+        <item>ФАНТАСТИКА!</item>
+        <item>ПОТРЯСАЮЩЕ!</item>
+        <item>ХОРОШАЯ РАБОТА!</item>
+    </string-array>
+
+    <string-array name="win_highscore">
+        <item>НОВЫЙ РЕКОРД!</item>
+        <item>НЕОСТАНОВИМ!</item>
+        <item>ЛУЧШИЙ!</item>
+        <item>БОЖЕСТВЕННО!</item>
+        <item>РЕКОРД!</item>
+    </string-array>
+
+    <string-array name="win_minesweeper">
+        <item>РАЗМИНИРОВАНО!</item>
+        <item>МАСТЕР САПЕР!</item>
+        <item>БЕЗОПАСНЫЙ ПУТЬ!</item>
+        <item>ЭКСПЕРТ!</item>
+    </string-array>
+
+    <string-array name="win_sudoku">
+        <item>СЕТКА ПОКОРЕНА!</item>
+        <item>КОРОЛЬ ЛОГИКИ!</item>
+        <item>РЕШЕНО!</item>
+        <item>БЛЕСТЯЩИЙ УМ!</item>
+    </string-array>
+
+    <string-array name="win_tictactoe">
+        <item>ПЕРЕХИТРИЛ!</item>
+        <item>ТРИ В РЯД!</item>
+        <item>ТАКТИЧЕСКАЯ ПОБЕДА!</item>
+        <item>НЕПОБЕДИМ!</item>
+    </string-array>
+
+    <string-array name="win_4096">
+        <item>МАТЕМАТИК!</item>
+        <item>4096 ВЗЯТО!</item>
+        <item>МАСТЕР ЧИСЕЛ!</item>
+        <item>ФИНАЛЬНЫЙ ТАЙЛ!</item>
+    </string-array>
+
+    <string-array name="win_memory">
+        <item>ИДЕАЛЬНАЯ ПАМЯТЬ!</item>
+        <item>МАСТЕР ПАР!</item>
+        <item>ОСТРЫЙ УМ!</item>
+        <item>ВСЕ ВСПОМНИЛ!</item>
+    </string-array>
+
+    <string-array name="win_hangman">
+        <item>СЛОВО СПАСЕНО!</item>
+        <item>ЗНАТОК СЛОВ!</item>
+        <item>СПАСЕН!</item>
+        <item>КОРОЛЬ ЛЕКСИКИ!</item>
+    </string-array>
+
+    <string-array name="win_brick_break">
+        <item>УРОВЕНЬ ПРОЙДЕН!</item>
+        <item>РАЗРУШИТЕЛЬ!</item>
+        <item>СТЕНОБИТ!</item>
+        <item>ПРО-ПЛАТФОРМА!</item>
+    </string-array>
+
+    <string-array name="win_word_quest">
+        <item>СЛОВО НАЙДЕНО!</item>
+        <item>МАСТЕР БУКВ!</item>
+        <item>ГЕРОЙ СЛОВАРЯ!</item>
+        <item>КВЕСТ ВЫПОЛНЕН!</item>
+    </string-array>
+
+    <string-array name="win_solitaire">
+        <item>КОЛОДА ПУСТА!</item>
+        <item>ТУЗОВОЙ ХОД!</item>
+        <item>МАСТЬ СОБРАНА!</item>
+        <item>КАРТОЧНЫЙ КОРОЛЬ!</item>
+    </string-array>
+
+    <string-array name="win_maze">
+        <item>ТРОФЕЙ НАЙДЕН!</item>
+        <item>БЕГУЩИЙ В ЛАБИРИНТЕ!</item>
+        <item>СЛЕДОПЫТ!</item>
+        <item>ВЫХОД НАЙДЕН!</item>
+    </string-array>
+
+    <string-array name="win_sokoban">
+        <item>ГЕРОЙ СКЛАДА!</item>
+        <item>ПРОФИ-ГРУЗЧИК!</item>
+        <item>ЦЕЛИ ДОСТИГНУТЫ!</item>
+        <item>СОКО-МАСТЕР!</item>
+    </string-array>
+
+    <string-array name="win_checkers">
+        <item>CPU ПОВЕРЖЕН!</item>
+        <item>КОРОЛЬ ДОСКИ!</item>
+        <item>ГРОССМЕЙСТЕР!</item>
+        <item>МАСТЕР СТРАТЕГИИ!</item>
+    </string-array>
+
+    <string-array name="win_slide_puzzle">
+        <item>КАРТИНКА СОБРАНА!</item>
+        <item>ГОЛОВОЛОМКА РЕШЕНА!</item>
+        <item>ИДЕАЛЬНО!</item>
+        <item>МАСТЕР СДВИГА!</item>
+    </string-array>
+
+    <string-array name="win_dungeon">
+        <item>ПОБЕГ УДАЛСЯ!</item>
+        <item>ЛЕГЕНДАРНЫЙ ИССЛЕДОВАТЕЛЬ!</item>
+        <item>ЭТАЖ ЗАЧИЩЕН!</item>
+        <item>КЛАД НАЙДЕН!</item>
+    </string-array>
+
+    <string-array name="win_tanks">
+        <item>БАЗА ЗАЩИЩЕНА!</item>
+        <item>ВРАГИ РАЗБИТЫ!</item>
+        <item>КОМАНДИР!</item>
+        <item>ГЕРОЙ ВОЙНЫ!</item>
+    </string-array>
+
+    <string-array name="win_mental_math">
+        <item>ГЕНИЙ МАТЕМАТИКИ!</item>
+        <item>СИЛА МЫСЛИ!</item>
+        <item>КОРОЛЬ СЧЕТА!</item>
+        <item>МАСТЕР ЧИСЕЛ!</item>
+    </string-array>
+
+    <string-array name="win_froggy">
+        <item>ЦЕЛЬ ДОСТИГНУТА!</item>
+        <item>БЕЗОПАСНЫЙ ПЕРЕХОД!</item>
+        <item>ГЕРОЙ-ЛЯГУШКА!</item>
+        <item>ХОЗЯИН РЕКИ!</item>
+    </string-array>
+    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
+    <string name="trex_daddy">Папа Ти-Рекс</string>
+    <string name="trex_mummy">Мама Ти-Рекс</string>
+    <string name="trex_baby">Малыш Ти-Рекс</string>
+    <string name="trex_grandpa">Дедушка Ти-Рекс</string>
+    <string name="trex_teenager">Ти-Рекс Подросток</string>
+    <string name="trex_scientist">Ти-Рекс Ученый</string>
+    <string name="trex_athlete">Ти-Рекс Атлет</string>
+    <string name="trex_pirate">Ти-Рекс Пират</string>
+    <string name="trex_chef">Ти-Рекс Повар</string>
+    <string name="trex_astronaut">Ти-Рекс Астронавт</string>
 </resources>

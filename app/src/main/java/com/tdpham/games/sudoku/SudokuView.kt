@@ -4,6 +4,9 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Typeface
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
@@ -12,6 +15,8 @@ import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 
 class SudokuView @JvmOverloads constructor(
     context: Context,
@@ -68,8 +73,21 @@ class SudokuView @JvmOverloads constructor(
     private var cursorC = 0
     private var solved = false
     private var best = 0
+    private var currentVictoryWord = ""
 
-    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val celebrationManager = CelebrationManager()
+    private val animationHandler = Handler(Looper.getMainLooper())
+    private val animationRunnable = object : Runnable {
+        override fun run() {
+            if (solved) {
+                celebrationManager.update()
+                invalidate()
+                animationHandler.postDelayed(this, 50)
+            }
+        }
+    }
+
+    private val handler = Handler(Looper.getMainLooper())
     private val pressedKeys = mutableSetOf<Int>()
     private val moveRunnable = object : Runnable {
         override fun run() {
@@ -108,6 +126,7 @@ class SudokuView @JvmOverloads constructor(
     }
 
     private fun loadPuzzle(index: Int) {
+        animationHandler.removeCallbacks(animationRunnable)
         puzzleIndex = index % puzzles.size
         val p = puzzles[puzzleIndex]
         board = Array(9) { r -> p[r].clone() }
@@ -204,6 +223,7 @@ class SudokuView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         handler.removeCallbacks(moveRunnable)
+        animationHandler.removeCallbacks(animationRunnable)
     }
 
     /** Cycle 0 (empty) → 1 → … → 9 → 0 on editable cells. */
@@ -213,6 +233,9 @@ class SudokuView @JvmOverloads constructor(
         SoundManager.playClick()
         if (isCompleteAndValid()) {
             solved = true
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+            celebrationManager.start(width.toFloat(), height.toFloat())
+            animationHandler.post(animationRunnable)
             val score = (600 + (puzzles.size - puzzleIndex) * 25).coerceAtLeast(100)
             if (ScoreManager.updateHighScore(context, gameKey, score)) best = score
             SoundManager.playSuccess()
@@ -317,6 +340,8 @@ class SudokuView @JvmOverloads constructor(
             canvas.drawLine(left + i * cell, top, left + i * cell, top + grid, paint)
         }
 
+        if (solved) celebrationManager.draw(canvas)
+
         paint.reset()
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
@@ -324,15 +349,15 @@ class SudokuView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.LEFT
         paint.textSize = 34f
         val hudY1 = Math.round(52f).toFloat()
-        canvas.drawText("PUZZLE ${puzzleIndex + 1}/${puzzles.size}  BEST: $best", 30f, hudY1, paint)
+        canvas.drawText("${context.getString(R.string.puzzle_label)} ${puzzleIndex + 1}/${puzzles.size}  ${context.getString(R.string.best_label)}: $best", 30f, hudY1, paint)
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 28f
         val centerX = Math.round(width / 2f).toFloat()
         val hudY2 = Math.round(top - 14f).toFloat()
         canvas.drawText(
             when {
-                solved -> "SOLVED! CENTER FOR NEXT PUZZLE"
-                else -> "CENTER: 0-9 CYCLE (0 CLEAR)  GIVENS LOCKED"
+                solved -> currentVictoryWord
+                else -> context.getString(R.string.sudoku_controls_hint)
             },
             centerX,
             hudY2,

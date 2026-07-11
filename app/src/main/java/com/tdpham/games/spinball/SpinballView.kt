@@ -5,9 +5,12 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
+import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import java.util.*
 import kotlin.math.*
 
@@ -18,6 +21,9 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
     private var isPaused = true
     private var score = 0
     private var highScore = 0
+    private var isGameOver = false
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
 
     // Physics constants
     private val radius = 300f
@@ -86,7 +92,9 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
 
     override fun startGame() {
         isPaused = false
+        isGameOver = false
         score = 0
+        celebrationManager.start(0f, 0f)
         resetBall()
         spawnItems()
         mainHandler.post(updateRunnable)
@@ -165,21 +173,35 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
 
     private fun gameOver() {
         isPaused = true
+        isGameOver = true
         SoundManager.playError()
         val finalScore = score
-        ScoreManager.updateHighScore(context, gameKey, finalScore)
+        if (ScoreManager.updateHighScore(context, gameKey, finalScore)) {
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
+            celebrationManager.start(width.toFloat(), height.toFloat())
+        } else {
+            currentVictoryWord = ""
+        }
         highScore = ScoreManager.getHighScore(context, gameKey)
         onGameOver?.invoke(finalScore)
-        
-        // Auto-restart for now
-        resetBall()
-        score = 0
-        spawnItems()
-        isPaused = false 
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        
+        if (isGameOver || isPaused) {
+            val title = if (isGameOver) (if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.game_over)) else context.getString(R.string.paused)
+            val sub = if (isGameOver) "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}" else context.getString(R.string.resume_hint)
+            
+            drawOverlay(canvas, title, sub)
+            
+            if (isGameOver && currentVictoryWord.isNotEmpty()) {
+                celebrationManager.update()
+                celebrationManager.draw(canvas)
+                invalidate()
+            }
+        }
+
         canvas.translate(width / 2f, height / 2f)
 
         // Draw Boundary
@@ -220,10 +242,39 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.CENTER
         val hudY = Math.round(-radius - 40f).toFloat()
-        canvas.drawText("Score: $score  Best: $highScore", 0f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.best_label)}: $highScore", 0f, hudY, paint)
+    }
+
+    private fun drawOverlay(canvas: Canvas, title: String, sub: String) {
+        paint.color = GamePalette.OVERLAY
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.WHITE
+        paint.textSize = 80f
+        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+        paint.textSize = 35f
+        val lines = sub.split("\n")
+        lines.forEachIndexed { i, s ->
+            canvas.drawText(s, width / 2f, height / 2f + 50f + i * 45f, paint)
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (isGameOver) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                startGame()
+                return true
+            }
+            return super.onKeyDown(keyCode, event)
+        }
+        if (isPaused) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                resume()
+                return true
+            }
+            return super.onKeyDown(keyCode, event)
+        }
+
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 currentRotation -= rotationSpeed

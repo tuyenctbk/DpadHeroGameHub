@@ -9,6 +9,8 @@ import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import java.util.*
 import kotlin.random.Random
 
@@ -28,6 +30,8 @@ class MazeView @JvmOverloads constructor(
     private var isReviewing = false 
     private var isCorrect = false
     private var correctPath = mutableListOf<Pair<Int, Int>>()
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
 
     private var mazeWidth = 9
     private var mazeHeight = 9
@@ -72,6 +76,7 @@ class MazeView @JvmOverloads constructor(
         best = ScoreManager.getHighScore(context, gameKey)
         gameOver = false
         isReviewing = false
+        celebrationManager.start(0f, 0f)
         generateStage()
         invalidate()
     }
@@ -368,6 +373,7 @@ class MazeView @JvmOverloads constructor(
                         best = score
                         ScoreManager.updateHighScore(context, gameKey, best)
                     }
+                    celebrationManager.start(0f, 0f)
                     generateStage()
                 } else {
                     gameOver = true
@@ -393,6 +399,13 @@ class MazeView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
                 isReviewing = true
                 isCorrect = (options[selectedOptionIdx] == correctOption)
+                if (isCorrect) {
+                    currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+                    celebrationManager.start(width.toFloat(), height.toFloat())
+                    SoundManager.playSuccess()
+                } else {
+                    SoundManager.playError()
+                }
                 calculateCorrectPath()
                 invalidate()
                 return true
@@ -486,9 +499,9 @@ class MazeView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
         val hudY = Math.round(60f).toFloat()
-        canvas.drawText("STAGE: $stage", 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.stage_label)}: $stage", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("SCORE: $score  BEST: $best", width - 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
         // Draw maze background once
         paint.color = Color.BLACK
@@ -591,28 +604,32 @@ class MazeView @JvmOverloads constructor(
         }
 
         if (isReviewing) {
-            paint.color = Color.argb(200, 0, 0, 0)
-            canvas.drawRect(0f, height / 2f - 100f, width.toFloat(), height / 2f + 100f, paint)
-            paint.color = if (isCorrect) Color.GREEN else Color.RED
-            paint.textSize = 60f
-            paint.textAlign = Paint.Align.CENTER
-            canvas.drawText(if (isCorrect) "CORRECT!" else "WRONG PATH!", width / 2f, height / 2f, paint)
-            paint.textSize = 30f
-            paint.color = Color.WHITE
-            canvas.drawText("Press Center to ${if (isCorrect) "Next Stage" else "Finish"}", width / 2f, height / 2f + 60f, paint)
+            if (isCorrect) {
+                celebrationManager.update()
+                celebrationManager.draw(canvas)
+                invalidate()
+            }
+            val title = if (isCorrect) currentVictoryWord else context.getString(R.string.wrong_path_label)
+            val sub = if (isCorrect) context.getString(R.string.next_stage_hint) else context.getString(R.string.finish_hint)
+            drawOverlay(canvas, title, sub)
         }
 
         if (gameOver) {
-            paint.color = GamePalette.OVERLAY
-            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
-            paint.color = Color.WHITE
-            paint.textAlign = Paint.Align.CENTER
-            paint.textSize = 80f
-            canvas.drawText("GAME OVER", width / 2f, height / 2f, paint)
-            paint.textSize = 40f
-            canvas.drawText("Final Score: $score", width / 2f, height / 2f + 80f, paint)
-            paint.textSize = 30f
-            canvas.drawText("Press Center to Restart", width / 2f, height / 2f + 140f, paint)
+            drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+        }
+    }
+
+    private fun drawOverlay(canvas: Canvas, title: String, sub: String) {
+        paint.color = GamePalette.OVERLAY
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.WHITE
+        paint.textSize = 80f
+        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+        paint.textSize = 35f
+        val lines = sub.split("\n")
+        lines.forEachIndexed { i, s ->
+            canvas.drawText(s, width / 2f, height / 2f + 50f + i * 45f, paint)
         }
     }
 }

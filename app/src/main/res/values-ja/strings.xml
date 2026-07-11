@@ -3,11 +3,11 @@
     <string name="app_name_full">Dpad Arcade: レトロゲーム</string>
     <string name="game_center">DPAD ARCADE</string>
     <string name="snake">スネーク</string>
-    <string name="minesweeper">マインスイーパ</string>
+    <string name="minesweeper">マインスイーパー</string>
     <string name="game_4096">4096</string>
-    <string name="game_trex">T-レックス ラン</string>
+    <string name="game_trex">T-REX RUN</string>
     <string name="game_brick_break">ブロック崩し</string>
-    <string name="game_tictactoe">○×ゲーム</string>
+    <string name="game_tictactoe">三目並べ</string>
     <string name="game_checkers">チェッカー</string>
     <string name="game_sokoban">倉庫番</string>
     <string name="game_sudoku">数独</string>
@@ -17,58 +17,218 @@
     <string name="game_slide_puzzle">スライドパズル</string>
     <string name="game_maze">迷路</string>
     <string name="game_mental_math">暗算</string>
-    <string name="game_froggy">フロッギークロス</string>
+    <string name="game_froggy">フロギークロス</string>
     <string name="game_simon">サイモンセズ</string>
-    <string name="game_tanks">戦車大隊</string>
+    <string name="game_tanks">戦車大戦</string>
     <string name="game_word_quest">ワードクエスト</string>
     <string name="game_dungeon">ダンジョン脱出</string>
     <string name="game_flappy">フラッピーヒーロー</string>
-    <string name="game_lines98">ラインズ 98</string>
+    <string name="game_lines98">ライン98</string>
     <string name="game_solitaire">ソリティア</string>
     <string name="game_road_racer">ロードレーサー</string>
     <string name="game_hangman">ハングマン</string>
     <string name="game_spinball">スピンボール</string>
-    <string name="game_spinball_instructions">左右キーで円を回転させます。星を集め、トゲを避けてください。ボールを外に出さないように！</string>
-    <string name="how_to_play_guide">%s の遊び方</string>
-    <string name="snake_instructions">• 十字キーでスネークを動かします。\n• 赤いリンゴを食べて成長させます。\n• 壁や自分の体に当たらないように！\n• \'S\'キーで消音の切り替え。\n• 決定キーで一時停止。</string>
-    <string name="minesweeper_instructions">• 十字キーでカーソルを移動します。\n• 決定キーでパネルを開きます。\n• MENUまたは\'S\'キーで旗を立てます。\n• 全ての安全なパネルを開けば勝利！</string>
-    <string name="game_4096_instructions">• 十字キーでタイルをスライドさせます。\n• 同じ数字のタイルが重なると合体します。\n• 4096タイルを作れば勝利です！\n• 詰まったら決定キーで再起動。</string>
-    <string name="game_trex_instructions">• 上キーまたは決定キーでジャンプします。\n• サボテンや鳥を避けてください！\n• 時間とともに速度が上がります。</string>
-    <string name="game_brick_break_instructions">• 左右キーでパドルを動かします。\n• 決定キーでボール発射、または一時停止。\n• 全てのブロックを壊せば勝利です。\n• ライフは3つ。ボールを落とさないで！</string>
-    <string name="game_tictactoe_instructions">• 十字キーでカーソル移動、決定キーで配置。\n• 縦・横・斜めのいずれかを揃えて勝利！\n• 終了後に上下キーで盤面サイズを変更可能。</string>
-    <string name="game_checkers_instructions">• 十字キーで移動、決定キーで選択。\n• 赤（あなた）は上へ進みます。黒いマスのみ移動可。\n• 相手の駒を飛び越えて取ります。\n• 最奥列に到達すると「キング」になります。</string>
-    <string name="game_sokoban_instructions">• 十字キーで移動。荷物($)を目的地に運びます。\n• 一度に押せるのは1つだけ。引くことはできません。\n• 決定キーでレベルをやり直せます。</string>
-    <string name="game_sudoku_instructions">• 十字キーで移動、決定キーで数字を入力。\n• 白い数字は固定されています。\n• 行・列・3x3ブロックで数字が重ならないように入力。</string>
-    <string name="game_tetris_instructions">• 左右キーで移動、上キーで回転。\n• 下キーでゆっくり落下、決定キーで即落下。\n• 横一列を揃えて消すと得点です。</string>
-    <string name="game_starfighter_instructions">• 十字キーで自機を操作。弾は自動で発射。\n• 敵を倒して得点を稼ぎましょう。\n• 敵に当たらないように注意！</string>
-    <string name="game_memory_instructions">• 十字キーで移動、決定キーでカードをめくります。\n• 全てのペアを揃えれば勝利です。\n• 少ない手数でクリアしましょう！</string>
-    <string name="game_slide_puzzle_instructions">• 十字キーでカーソル移動、決定キーでスライド。\n• タイルを並べ替えて絵を完成させます。\n• 数字は正しい順序を示しています。</string>
-    <string name="game_maze_instructions">• 迷路をよく観察してください。\n• 緑の点と繋がっている出口(絵)を当てます。\n• 左右キーで選択、決定キーで確定。\n• チャンスは一度きりです！</string>
-    <string name="game_mental_math_instructions">• 計算問題を解いてください。\n• 十字キーで答えを選び、決定キーで確定。\n• 素早く答えましょう！ミスすると終了です。</string>
-    <string name="game_froggy_instructions">• 道路と川を渡ります。\n• 車や水没に注意してください。\n• 川では丸太の上をジャンプして渡ります。\n• 上の目的地に到達すれば得点です。</string>
-    <string name="game_simon_instructions">• 光る順序をよく覚えてください。\n• 覚えた順に十字キーで入力します。\n• 正解するたびに順序が長くなります！</string>
-    <string name="game_tanks_instructions">• 十字キーで戦車を操作、弾は自動発射。\n• 全ての敵戦車を破壊してください。\n• 自分の基地（星）を守りましょう。</string>
-    <string name="game_word_quest_instructions">• 5文字の単語を6回以内で当てます。\n• 十字キーで移動、決定キーで入力。\n• 緑：文字も位置も正解。\n• 黄：文字は正解、位置が不正解。\n• 灰：含まれない文字。</string>
-    <string name="game_dungeon_instructions">• 十字キーで移動し、金の鍵を集めます。\n• 出口の扉に到達すればクリアです。\n• 赤いトゲなどのトラップを避けてください。</string>
-    <string name="game_flappy_instructions">• 決定キーで羽ばたきます。\n• 土管の間を通り抜けてください。\n• 土管や地面に当たるとゲームオーバーです。</string>
-    <string name="game_lines98_instructions">• 十字キーでカーソル移動、決定キーでボール移動。\n• 同じ色のボールを5つ以上並べます。\n• 盤面が埋まると終了です。</string>
-    <string name="game_solitaire_instructions">• 十字キーで移動、決定キーで選択/配置。\n• AからKまで同じマークを順番に重ねます。</string>
-    <string name="game_road_racer_instructions">• 左右に避けて車に当たらないように進みます。\n• できるだけ長く生き残ってください！\n• 決定キーで一時停止。</string>
-    <string name="game_hangman_instructions">• 文字を選んで単語を当てます。\n• 6回ミスする前に完成させましょう。\n• 決定キーで文字を選択。</string>
-    <string name="select_game_hint">DpadHero: 十字キーでゲームを選択</string>
+    <string name="game_spinball_instructions">左右で回転。星を集めてトゲを避けよう。ボールを出すな！</string>
+    <string name="how_to_play_guide">%s ガイド</string>
+    <string name="snake_instructions">• 十字キーで移動。\n• リンゴを食べて成長。\n• 壁や自分にぶつかるな！\n• \'S\'で消音。\n• 決定ボタンで一時停止。</string>
+    <string name="minesweeper_instructions">• 十字キーでカーソル移動。\n• 決定ボタンで開く。\n• MENUか\'S\'で旗立て。\n• 全ての安全なマスを開け！</string>
+    <string name="game_4096_instructions">• 十字キーでスライド。\n• 同じ数字が合体。\n• 4096を目指せ！</string>
+    <string name="game_trex_instructions">• 上か決定ボタンでジャンプ。\n• サボテンと鳥を避けよう！\n• 速度は徐々に上がる。</string>
+    <string name="game_brick_break_instructions">• 左右でパドル移動。\n• 決定ボタンで発射/停止。\n• 全てのブロックを壊せ。\n• ライフは3つ。</string>
+    <string name="game_tictactoe_instructions">• 十字キーでカーソル移動。\n• 決定ボタンで配置。\n• 3つ並べてCPUに勝とう。</string>
+    <string name="game_checkers_instructions">• 十字キー:移動。決定:選択。\n• 赤(あなた)は上へ。黒いマスのみ。\n• 取れる時は必ず取る。\n• 端まで行くとキング。\n• 全ての敵を倒せ。</string>
+    <string name="game_sokoban_instructions">• 十字キー:移動。荷物($)を的に押す。\n• 一度に1つだけ。引くことは不可。\n• 決定:やり直し。</string>
+    <string name="game_sudoku_instructions">• 十字キー:移動。決定:数字変更。\n• 白い数字は固定。\n• 行・列・3x3内で重複禁止。</string>
+    <string name="game_tetris_instructions">• 左右で移動。\n• 上で回転。\n• 下でソフトドロップ。\n• 決定でハードドロップ。</string>
+    <string name="game_starfighter_instructions">• 十字キーで自機移動。\n• 自動連射。\n• 敵を倒してスコア稼ぎ。\n• 被弾するな！\n• \'S\'で消音。</string>
+    <string name="game_memory_instructions">• 十字キーで移動。\n• 決定でカードをめくる。\n• 全てのペアを揃えろ。\n• 手数は少ないほど良い！</string>
+    <string name="game_slide_puzzle_instructions">• 十字キーで移動。\n• 決定でスライド。\n• 絵を完成させろ。</string>
+    <string name="game_maze_instructions">• 迷路をよく見て。\n• 緑の点に繋がる出口を選べ。\n• 左右で選択。\n• 決定で確定。</string>
+    <string name="game_mental_math_instructions">• 計算を解け。\n• 十字キーで回答選択。\n• 決定で確定。\n• 急げ！時間制限あり。</string>
+    <string name="game_froggy_instructions">• 道路と川を渡れ。\n• 車を避けろ。\n• 丸太に飛び乗れ。\n• ゴールを目指せ！</string>
+    <string name="game_simon_instructions">• 色の順序を覚えろ。\n• 十字キーで再現。\n• 順序は毎ラウンド長くなる！</string>
+    <string name="game_tanks_instructions">• 十字キーで操作。\n• 自動連射。\n• 敵戦車を破壊せよ。\n• 拠点を守れ。</string>
+    <string name="game_word_quest_instructions">• 5文字の単語を6回で当てろ。\n• 十字キーでキーボード操作。\n• 決定で入力。\n• 緑: 文字と位置が正解。</string>
+    <string name="game_dungeon_instructions">• 十字キーで探索。\n• 鍵を拾え。\n• 出口を目指せ。\n• トゲに触れるな！</string>
+    <string name="game_flappy_instructions">• 決定ボタンで羽ばたく。\n• 土管の間を抜けろ。\n• 何にも触れるな！\n• 土管を抜けると1点。</string>
+    <string name="game_lines98_instructions">• 十字キーでカーソル。\n• 決定で移動。\n• 同じ色を5つ並べろ。\n• 満杯で終了。</string>
+    <string name="game_solitaire_instructions">• 十字キーでカーソル。\n• 決定で選択/配置。\n• AからKまで揃えろ。</string>
+    <string name="game_road_racer_instructions">• 車を避けろ。\n• 生き残れ！\n• 決定ボタンで停止。</string>
+    <string name="game_hangman_instructions">• 文字を選んで単語を当てろ。\n• 6回間違えると終了。\n• 決定で選択。</string>
+    <string name="select_game_hint">DpadHero: 十字キーでゲーム選択</string>
     <string name="settings">設定</string>
     <string name="settings_button_description">設定</string>
     <string name="sound_effects">効果音</string>
-    <string name="sound_effects_description">ゲーム内の効果音をオン/オフにします。</string>
+    <string name="sound_effects_description">効果音のON/OFF。</string>
     <string name="privacy_policy">プライバシーポリシー</string>
     <string name="back">戻る</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">対応: 十字キー / リモコン</string>
     <string name="help">ヘルプ</string>
-    <string name="guide_hint_keys">[INFO] または [H] を押す</string>
+    <string name="guide_hint_keys">[INFO] または [H]</string>
     <string name="guide_title_default">遊び方</string>
-    <string name="guide_content_default">ガイドがここに表示されます。</string>
+    <string name="guide_content_default">ガイドが表示されます。</string>
     <string name="dont_show_again">次回から表示しない</string>
-    <string name="start_game">スタート</string>
+    <string name="start_game">ゲーム開始</string>
     <string name="resume">再開</string>
+    <string name="score_label">スコア</string>
+    <string name="best_label">記録</string>
+    <string name="next_label">次</string>
+    <string name="game_over">GAME OVER</string>
+    <string name="paused">一時停止</string>
+    <string name="win_4096_label">4096 達成！</string>
+    <string name="restart_hint">決定ボタンで再試行</string>
+    <string name="exit_hint">戻るボタンで終了</string>
+    <string name="resume_hint">決定ボタンで再開</string>
+
+    <string-array name="win_generic">
+        <item>勝利！</item>
+        <item>お見事！</item>
+        <item>信じられない！</item>
+        <item>素晴らしい！</item>
+        <item>最高！</item>
+        <item>君は最高だ！</item>
+        <item>優秀！</item>
+        <item>ファンタスティック！</item>
+        <item>見事な腕前！</item>
+        <item>よくやった！</item>
+    </string-array>
+
+    <string-array name="win_highscore">
+        <item>新記録達成！</item>
+        <item>止められない！</item>
+        <item>史上最高！</item>
+        <item>神業！</item>
+        <item>ハイスコア！</item>
+    </string-array>
+
+    <string-array name="win_minesweeper">
+        <item>制圧完了！</item>
+        <item>マインマスター！</item>
+        <item>安全確保！</item>
+        <item>開拓の達人！</item>
+    </string-array>
+
+    <string-array name="win_sudoku">
+        <item>盤面支配！</item>
+        <item>ロジック王！</item>
+        <item>解明完了！</item>
+        <item>明晰な頭脳！</item>
+    </string-array>
+
+    <string-array name="win_tictactoe">
+        <item>完全勝利！</item>
+        <item>三連達成！</item>
+        <item>知略の勝利！</item>
+        <item>圧倒的！</item>
+    </string-array>
+
+    <string-array name="win_4096">
+        <item>数学の天才！</item>
+        <item>4096 到達！</item>
+        <item>数字の覇者！</item>
+        <item>究極のタイル！</item>
+    </string-array>
+
+    <string-array name="win_memory">
+        <item>完璧な記憶！</item>
+        <item>一致の達人！</item>
+        <item>鋭い直感！</item>
+        <item>全正解！</item>
+    </string-array>
+
+    <string-array name="win_hangman">
+        <item>救出成功！</item>
+        <item>言葉の主！</item>
+        <item>奇跡の救出！</item>
+        <item>語彙の王！</item>
+    </string-array>
+
+    <string-array name="win_brick_break">
+        <item>ステージクリア！</item>
+        <item>粉砕者！</item>
+        <item>鉄壁破壊！</item>
+        <item>パドルプロ！</item>
+    </string-array>
+
+    <string-array name="win_word_quest">
+        <item>単語発見！</item>
+        <item>綴りの達人！</item>
+        <item>辞書の英雄！</item>
+        <item>クエスト達成！</item>
+    </string-array>
+
+    <string-array name="win_solitaire">
+        <item>全回収！</item>
+        <item>勝利のエース！</item>
+        <item>組札完成！</item>
+        <item>カードの王！</item>
+    </string-array>
+
+    <string-array name="win_maze">
+        <item>トロフィー発見！</item>
+        <item>迷路走破！</item>
+        <item>正解到達！</item>
+        <item>脱出成功！</item>
+    </string-array>
+
+    <string-array name="win_sokoban">
+        <item>倉庫の英雄！</item>
+        <item>配置の達人！</item>
+        <item>ミッション完了！</item>
+        <item>倉庫番マスター！</item>
+    </string-array>
+
+    <string-array name="win_checkers">
+        <item>CPU撃破！</item>
+        <item>盤上の王！</item>
+        <item>グランドマスター！</item>
+        <item>戦略の大家！</item>
+    </string-array>
+
+    <string-array name="win_slide_puzzle">
+        <item>修復完了！</item>
+        <item>パズル解明！</item>
+        <item>完璧な配置！</item>
+        <item>スライドの達人！</item>
+    </string-array>
+
+    <string-array name="win_dungeon">
+        <item>脱出成功！</item>
+        <item>伝説の探検家！</item>
+        <item>フロア制覇！</item>
+        <item>秘宝発見！</item>
+    </string-array>
+
+    <string-array name="win_tanks">
+        <item>拠点防衛！</item>
+        <item>殲滅完了！</item>
+        <item>戦車隊長！</item>
+        <item>英雄の証！</item>
+    </string-array>
+
+    <string-array name="win_mental_math">
+        <item>数学の天才！</item>
+        <item>脳力全開！</item>
+        <item>計算王！</item>
+        <item>数字の達人！</item>
+    </string-array>
+
+    <string-array name="win_froggy">
+        <item>ゴール到達！</item>
+        <item>無事横断！</item>
+        <item>フロギーヒーロー！</item>
+        <item>川の覇者！</item>
+    </string-array>
+    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
+    <string name="trex_daddy">パパ T-Rex</string>
+    <string name="trex_mummy">ママ T-Rex</string>
+    <string name="trex_baby">ベビー T-Rex</string>
+    <string name="trex_grandpa">おじいちゃん T-Rex</string>
+    <string name="trex_teenager">ティーネージャー T-Rex</string>
+    <string name="trex_scientist">科学者 T-Rex</string>
+    <string name="trex_athlete">アスリート T-Rex</string>
+    <string name="trex_pirate">海賊 T-Rex</string>
+    <string name="trex_chef">シェフ T-Rex</string>
+    <string name="trex_astronaut">宇宙飛行士 T-Rex</string>
 </resources>

@@ -15,6 +15,8 @@ import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 
 class MemoryView @JvmOverloads constructor(
     context: Context,
@@ -37,6 +39,8 @@ class MemoryView @JvmOverloads constructor(
     private var bestMoves = Int.MAX_VALUE
     private var gameOver = false
     private var isProcessing = false
+    private val celebrationManager = CelebrationManager()
+    private var currentVictoryWord = ""
     private val handler = Handler(Looper.getMainLooper())
 
     private val symbolThemes = listOf(
@@ -72,6 +76,7 @@ class MemoryView @JvmOverloads constructor(
     override fun resetGame() {
         handler.removeCallbacksAndMessages(null)
         cards.clear()
+        celebrationManager.start(0f, 0f)
         
         var nextThemeIndex = random.nextInt(symbolThemes.size)
         while (nextThemeIndex == currentThemeIndex && symbolThemes.size > 1) {
@@ -198,6 +203,8 @@ class MemoryView @JvmOverloads constructor(
             SoundManager.playScore()
             if (matches == (cards.size / 2)) {
                 gameOver = true
+                currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+                celebrationManager.start(width.toFloat(), height.toFloat())
                 val currentScore = (1000 - moves).coerceAtLeast(0)
                 if (ScoreManager.updateHighScore(context, gameKey, currentScore)) {
                     bestMoves = moves
@@ -235,9 +242,9 @@ class MemoryView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
         val hudY = Math.round(60f).toFloat()
-        canvas.drawText("MOVES: $moves", 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.moves_label)}: $moves", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: ${if (bestMoves == Int.MAX_VALUE) "-" else bestMoves}", width - 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: ${if (bestMoves == Int.MAX_VALUE) "-" else bestMoves}", width - 40f, hudY, paint)
 
         // Board
         for (r in 0 until rows) {
@@ -252,16 +259,24 @@ class MemoryView @JvmOverloads constructor(
         }
 
         if (gameOver) {
-            paint.color = GamePalette.OVERLAY
-            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
-            paint.color = Color.WHITE
-            paint.textAlign = Paint.Align.CENTER
-            paint.textSize = 60f
-            canvas.drawText("WELL DONE!", width / 2f, height / 2f, paint)
-            paint.textSize = 36f
-            canvas.drawText("Moves: $moves", width / 2f, height / 2f + 60f, paint)
-            paint.textSize = 30f
-            canvas.drawText("Press Center to Restart", width / 2f, height / 2f + 110f, paint)
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+            drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.moves_label)}: $moves\n${context.getString(R.string.restart_hint)}")
+        }
+    }
+
+    private fun drawOverlay(canvas: Canvas, title: String, sub: String) {
+        paint.color = GamePalette.OVERLAY
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.WHITE
+        paint.textSize = 80f
+        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+        paint.textSize = 35f
+        val lines = sub.split("\n")
+        lines.forEachIndexed { i, s ->
+            canvas.drawText(s, width / 2f, height / 2f + 50f + i * 45f, paint)
         }
     }
 

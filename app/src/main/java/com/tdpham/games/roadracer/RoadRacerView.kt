@@ -9,6 +9,8 @@ import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import java.util.*
 
 class RoadRacerView @JvmOverloads constructor(
@@ -24,6 +26,8 @@ class RoadRacerView @JvmOverloads constructor(
     private var highScore = 0
     private var isGameOver = false
     private var isPaused = true
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
     private var gameSpeed = 10f
     
     private val playerWidth = 80f
@@ -91,6 +95,7 @@ class RoadRacerView @JvmOverloads constructor(
         highScore = ScoreManager.getHighScore(context, gameKey)
         isGameOver = false
         isPaused = true
+        celebrationManager.start(0f, 0f)
         gameSpeed = 10f
         playerLane = 1
         obstacles.clear()
@@ -225,7 +230,12 @@ class RoadRacerView @JvmOverloads constructor(
     private fun gameOver() {
         isGameOver = true
         SoundManager.playError()
-        ScoreManager.updateHighScore(context, gameKey, score)
+        if (ScoreManager.updateHighScore(context, gameKey, score)) {
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
+            celebrationManager.start(width.toFloat(), height.toFloat())
+        } else {
+            currentVictoryWord = ""
+        }
         onGameOver?.invoke(score)
     }
 
@@ -276,13 +286,22 @@ class RoadRacerView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.LEFT
         val hudX = Math.round(40f).toFloat()
         val hudY = Math.round(60f).toFloat()
-        canvas.drawText("SCORE: $score", hudX, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", hudX, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
         val bestX = Math.round(width - 40f).toFloat()
-        canvas.drawText("BEST: $highScore", bestX, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", bestX, hudY, paint)
 
-        if (isGameOver) drawOverlay(canvas, "C R A S H E D !", "Final Score: $score")
-        else if (isPaused) drawOverlay(canvas, "R O A D  R A C E R", "Press Center to Start")
+        if (isGameOver) {
+            val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.crashed_label)
+            drawOverlay(canvas, title, "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+        }
+        else if (isPaused) drawOverlay(canvas, context.getString(R.string.game_road_racer), context.getString(R.string.start_game))
+
+        if (score > 0 && currentVictoryWord.isNotEmpty()) {
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+        }
     }
 
     private fun drawObstacle(canvas: Canvas, x: Float, y: Float, obs: Obstacle, theme: RoadTheme) {
@@ -361,8 +380,12 @@ class RoadRacerView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.WHITE
         paint.textSize = 80f
-        canvas.drawText(title, width / 2f, height / 2f, paint)
+        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+        
         paint.textSize = 30f
-        canvas.drawText(sub, width / 2f, height / 2f + 70f, paint)
+        val lines = sub.split("\n")
+        lines.forEachIndexed { i, s ->
+            canvas.drawText(s, width / 2f, height / 2f + 40f + i * 40f, paint)
+        }
     }
 }

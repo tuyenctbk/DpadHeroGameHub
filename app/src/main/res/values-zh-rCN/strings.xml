@@ -1,60 +1,60 @@
 <resources>
     <string name="app_name">Dpad Arcade</string>
-    <string name="app_name_full">Dpad Arcade: 经典复古游戏</string>
+    <string name="app_name_full">Dpad Arcade: 复古游戏</string>
     <string name="game_center">DPAD ARCADE</string>
     <string name="snake">贪吃蛇</string>
     <string name="minesweeper">扫雷</string>
     <string name="game_4096">4096</string>
-    <string name="game_trex">恐龙快跑</string>
-    <string name="game_brick_break">打砖块</string>
+    <string name="game_trex">T-REX RUN</string>
+    <string name="game_brick_break">弹球消砖块</string>
     <string name="game_tictactoe">井字棋</string>
     <string name="game_checkers">西洋跳棋</string>
     <string name="game_sokoban">推箱子</string>
     <string name="game_sudoku">数独</string>
     <string name="game_tetris">俄罗斯方块</string>
     <string name="game_starfighter">星际战斗机</string>
-    <string name="game_memory">记忆翻牌</string>
-    <string name="game_slide_puzzle">数字推盘</string>
+    <string name="game_memory">记忆力</string>
+    <string name="game_slide_puzzle">滑块拼图</string>
     <string name="game_maze">迷宫</string>
-    <string name="game_mental_math">心算训练</string>
+    <string name="game_mental_math">心算</string>
     <string name="game_froggy">青蛙过河</string>
     <string name="game_simon">西蒙说</string>
     <string name="game_tanks">坦克大战</string>
-    <string name="game_word_quest">单词搜索</string>
+    <string name="game_word_quest">词汇探险</string>
     <string name="game_dungeon">地牢逃脱</string>
-    <string name="game_flappy">飞扬的小鸟</string>
-    <string name="game_lines98">彩色连珠</string>
-    <string name="game_solitaire">纸牌</string>
+    <string name="game_flappy">笨鸟先飞</string>
+    <string name="game_lines98">连珠五子</string>
+    <string name="game_solitaire">接龙</string>
     <string name="game_road_racer">公路赛车</string>
-    <string name="game_hangman">猜词游戏</string>
+    <string name="game_hangman">吊死鬼</string>
     <string name="game_spinball">旋转球</string>
-    <string name="game_spinball_instructions">使用左右键旋转圆环。收集星星并避开尖刺。不要让球掉出去！</string>
+    <string name="game_spinball_instructions">左右旋转圆圈。收集星星，避开尖刺。不要让球掉出来！</string>
     <string name="how_to_play_guide">%s 指南</string>
-    <string name="snake_instructions">• 使用方向键控制蛇。 \n• 吃掉红色苹果来增长。 \n• 不要撞到墙壁或自己！ \n• 按 \'S\' 键切换声音。 \n• 按确认键暂停。</string>
-    <string name="minesweeper_instructions">• 使用方向键移动光标。 \n• 按确认键打开方格。 \n• 按菜单或 \'S\' 键标记地雷。 \n• 找出所有安全区域即获胜！ \n• 第一步总是安全的。</string>
-    <string name="game_4096_instructions">• 使用方向键滑动数字。 \n• 相同的数字会合并。 \n• 达到 4096 即获胜！ \n• 若卡住，按确认键重新开始。</string>
-    <string name="game_trex_instructions">• 按上键或确认键跳跃。 \n• 避开仙人掌和小鸟！ \n• 游戏速度会随时间加快。</string>
-    <string name="game_brick_break_instructions">• 使用左右键移动挡板。 \n• 按确认键发射球或暂停。 \n• 打掉所有砖块即获胜。 \n• 共有3次生命。</string>
-    <string name="game_tictactoe_instructions">• 使用方向键移动，确认键落子。 \n• 先连成一线即可获胜！ \n• 结束后可按上下键更改棋盘大小。</string>
-    <string name="game_checkers_instructions">• 使用方向键移动，确认键选择。 \n• 红色（你）向上移动。只能走深色格。 \n• 必须吃掉能跳过的棋子。 \n• 到达底线可升级为王。</string>
-    <string name="game_sokoban_instructions">• 使用方向键移动。将箱子($)推到目标位。 \n• 一次只能推一个箱子。不能拉。 \n• 若卡住，按确认键重玩本关。</string>
-    <string name="game_sudoku_instructions">• 使用方向键移动，确认键更改数字。 \n• 白色数字是固定的。 \n• 每行、每列和每个3x3宫格内不能重复。</string>
-    <string name="game_tetris_instructions">• 左右键移动，上键旋转。 \n• 下键加速下落，确认键直接掉落。 \n• 消掉完整的一行即得分。</string>
-    <string name="game_starfighter_instructions">• 使用方向键移动战机。自动开火。 \n• 摧毁敌人得分。 \n• 不要被敌人撞到！</string>
-    <string name="game_memory_instructions">• 使用方向键移动，确认键翻牌。 \n• 匹配所有对子即获胜！ \n• 步数越少越好。</string>
-    <string name="game_slide_puzzle_instructions">• 使用方向键移动光标，确认键滑动。 \n• 重新排列方块以还原图片。 \n• 数字代表正确顺序。</string>
-    <string name="game_maze_instructions">• 仔细观察迷宫。 \n• 找出与绿点相连的出口（图案）。 \n• 左右键选择，确认键提交。 \n• 每关只有一次机会！</string>
-    <string name="game_mental_math_instructions">• 解决数学题。 \n• 使用方向键选择答案，确认键提交。 \n• 回答要快！出错即游戏结束。</string>
-    <string name="game_froggy_instructions">• 穿越马路和河流。 \n• 避开车辆，踩着木头过河。 \n• 到达顶部终点即得分。 \n• 使用方向键移动。</string>
-    <string name="game_simon_instructions">• 观察颜色闪烁的序列。 \n• 按照相同顺序按方向键。 \n• 每一轮序列都会变长！</string>
-    <string name="game_tanks_instructions">• 使用方向键移动，自动开火。 \n• 摧毁所有敌方坦克。 \n• 保护你的基地（星星）。</string>
-    <string name="game_word_quest_instructions">• 6次机会内猜出5位单词。 \n• 使用方向键选择，确认键输入。 \n• 绿色：字母和位置均正确。 \n• 黄色：字母正确但位置错误。 \n• 灰色：字母不在单词中。</string>
-    <string name="game_dungeon_instructions">• 使用方向键移动并收集金钥匙。 \n• 到达出口大门即过关。 \n• 避开红色尖刺等陷阱！</string>
-    <string name="game_flappy_instructions">• 按确认键振翅。 \n• 飞过水管空隙。 \n• 不要撞到水管或地面！</string>
-    <string name="game_lines98_instructions">• 使用方向键移动光标，确认键移动球。 \n• 将5个或更多同色球连成线。 \n• 棋盘填满则游戏结束。</string>
-    <string name="game_solitaire_instructions">• 使用方向键移动，确认键选择。 \n• 按花色将牌从 A 到 K 排序。</string>
-    <string name="game_road_racer_instructions">• 左右移动躲避车流。 \n• 尽可能生存更久！ \n• 按确认键暂停。</string>
-    <string name="game_hangman_instructions">• 选择字母来猜出单词。 \n• 共有6次机会。 \n• 按确认键选择。</string>
+    <string name="snake_instructions">• 使用方向键移动蛇。\n• 吃红苹果得分并变长。\n• 不要撞墙或咬到自己！\n• 按 \'S\' 切换音效。\n• 按确定键暂停。</string>
+    <string name="minesweeper_instructions">• 使用方向键移动光标。\n• 按确定键翻开格子。\n• 按菜单或 \'S\' 标记地雷。\n• 清除所有安全格子获胜！</string>
+    <string name="game_4096_instructions">• 使用方向键滑动方块。\n• 相同数字方块合并。\n• 达到 4096 获胜！</string>
+    <string name="game_trex_instructions">• 按上键或确定键跳跃。\n• 避开仙人掌和鸟！\n• 游戏速度会越来越快。</string>
+    <string name="game_brick_break_instructions">• 左右移动挡板。\n• 按确定键发射或暂停。\n• 摧毁所有砖块过关。\n• 你有 3 次机会。</string>
+    <string name="game_tictactoe_instructions">• 使用方向键移动光标。\n• 按确定键落子。\n• 连成 3 子获胜。</string>
+    <string name="game_checkers_instructions">• 方向键:移动。确定:选择。\n• 红色(你)向上。仅限深色格。\n• 必须吃子。\n• 到达底线升王。\n• 吃掉所有敌方棋子。</string>
+    <string name="game_sokoban_instructions">• 方向键:移动。将箱子($)推到目标点。\n• 一次推一个，不可拉。\n• 确定:重置关卡。</string>
+    <string name="game_sudoku_instructions">• 方向键:移动。确定:循环数字。\n• 白色数字已固定。\n• 行、列、3x3 宫格内不可重复。</string>
+    <string name="game_tetris_instructions">• 左右移动方块。\n• 上键旋转。\n• 下键软降。\n• 确定键硬降。</string>
+    <string name="game_starfighter_instructions">• 使用方向键移动飞船。\n• 自动射击。\n• 摧毁敌人得分。\n• 避开子弹！\n• 按 \'S\' 切换音效。</string>
+    <string name="game_memory_instructions">• 使用方向键导航。\n• 按确定键翻牌。\n• 匹配所有对子获胜。\n• 步数越少越好！</string>
+    <string name="game_slide_puzzle_instructions">• 使用方向键移动。\n• 按确定键滑动。\n• 将图片恢复原状。</string>
+    <string name="game_maze_instructions">• 仔细观察迷宫。\n• 找到与绿点相连的出口。\n• 左右选择。\n• 确定键确认。</string>
+    <string name="game_mental_math_instructions">• 解决数学题。\n• 使用方向键选择答案。\n• 确定键确认。\n• 动作要快！时间有限。</string>
+    <string name="game_froggy_instructions">• 穿过马路和河流。\n• 避开车辆。\n• 跳上木头。\n• 到达终点得分！</string>
+    <string name="game_simon_instructions">• 观察颜色序列。\n• 使用方向键复现。\n• 每回合序列会变长！</string>
+    <string name="game_tanks_instructions">• 使用方向键控制坦克。\n• 自动射击。\n• 摧毁敌方坦克。\n• 保护基地（星号）。</string>
+    <string name="game_word_quest_instructions">• 6 次机会猜出 5 字母单词。\n• 使用方向键操作键盘。\n• 确定键选择。\n• 绿色: 字母和位置正确。</string>
+    <string name="game_dungeon_instructions">• 使用方向键探索。\n• 收集金钥匙。\n• 到达出口过关。\n• 避开红尖刺！</string>
+    <string name="game_flappy_instructions">• 按确定键振翅。\n• 飞过管道缝隙。\n• 撞到即失败！\n• 每过一个管子得 1 分。</string>
+    <string name="game_lines98_instructions">• 使用方向键移动。\n• 确定键移动球。\n• 5 个同色球连线消除。\n• 满屏游戏结束。</string>
+    <string name="game_solitaire_instructions">• 使用方向键移动。\n• 确定键选择/放置牌。\n• 按花色从 A 排序到 K。</string>
+    <string name="game_road_racer_instructions">• 避开交通。\n• 尽可能生存！\n• 按确定键暂停。</string>
+    <string name="game_hangman_instructions">• 选择字母猜词。\n• 你有 6 次机会。\n• 确定键选择。</string>
     <string name="select_game_hint">DpadHero: 使用方向键选择游戏</string>
     <string name="settings">设置</string>
     <string name="settings_button_description">设置</string>
@@ -65,10 +65,170 @@
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">支持: 方向键 / 遥控器</string>
     <string name="help">帮助</string>
-    <string name="guide_hint_keys">按 [INFO] 或 [H]</string>
-    <string name="guide_title_default">如何游玩</string>
-    <string name="guide_content_default">指南将在此显示。</string>
+    <string name="guide_hint_keys">按 [信息] 或 [H]</string>
+    <string name="guide_title_default">玩法介绍</string>
+    <string name="guide_content_default">指南将显示在这里。</string>
     <string name="dont_show_again">不再显示</string>
     <string name="start_game">开始游戏</string>
-    <string name="resume">继续游戏</string>
+    <string name="resume">继续</string>
+    <string name="score_label">得分</string>
+    <string name="best_label">最佳</string>
+    <string name="next_label">下个</string>
+    <string name="game_over">游戏结束</string>
+    <string name="paused">已暂停</string>
+    <string name="win_4096_label">达到 4096！</string>
+    <string name="restart_hint">按确定键重新开始</string>
+    <string name="exit_hint">按返回键退出</string>
+    <string name="resume_hint">按确定键继续</string>
+
+    <string-array name="win_generic">
+        <item>获胜！</item>
+        <item>干得漂亮！</item>
+        <item>不可思议！</item>
+        <item>精彩！</item>
+        <item>壮观！</item>
+        <item>你真棒！</item>
+        <item>优秀！</item>
+        <item>太棒了！</item>
+        <item>令人惊叹！</item>
+        <item>好样儿的！</item>
+    </string-array>
+
+    <string-array name="win_highscore">
+        <item>新纪录！</item>
+        <item>无人能挡！</item>
+        <item>史上最佳！</item>
+        <item>神级表现！</item>
+        <item>最高分！</item>
+    </string-array>
+
+    <string-array name="win_minesweeper">
+        <item>清除完毕！</item>
+        <item>排雷专家！</item>
+        <item>安全通行！</item>
+        <item>拆弹大师！</item>
+    </string-array>
+
+    <string-array name="win_sudoku">
+        <item>征服数独！</item>
+        <item>逻辑之王！</item>
+        <item>破解成功！</item>
+        <item>天才大脑！</item>
+    </string-array>
+
+    <string-array name="win_tictactoe">
+        <item>智取！</item>
+        <item>三连！</item>
+        <item>策略致胜！</item>
+        <item>不可战胜！</item>
+    </string-array>
+
+    <string-array name="win_4096">
+        <item>数学奇才！</item>
+        <item>达到 4096！</item>
+        <item>数字终结者！</item>
+        <item>终极方块！</item>
+    </string-array>
+
+    <string-array name="win_memory">
+        <item>完美记忆！</item>
+        <item>配对达人！</item>
+        <item>思维敏捷！</item>
+        <item>全记住了！</item>
+    </string-array>
+
+    <string-array name="win_hangman">
+        <item>拯救成功！</item>
+        <item>词汇达人！</item>
+        <item>一词定乾坤！</item>
+        <item>词库之王！</item>
+    </string-array>
+
+    <string-array name="win_brick_break">
+        <item>关卡清除！</item>
+        <item>砖块粉碎机！</item>
+        <item>破墙者！</item>
+        <item>球板高手！</item>
+    </string-array>
+
+    <string-array name="win_word_quest">
+        <item>单词找到！</item>
+        <item>拼写专家！</item>
+        <item>词典英雄！</item>
+        <item>探险完成！</item>
+    </string-array>
+
+    <string-array name="win_solitaire">
+        <item>清空牌堆！</item>
+        <item>王牌！</item>
+        <item>花色凑齐！</item>
+        <item>卡牌之王！</item>
+    </string-array>
+
+    <string-array name="win_maze">
+        <item>找到奖杯！</item>
+        <item>迷宫行者！</item>
+        <item>寻路专家！</item>
+        <item>到达出口！</item>
+    </string-array>
+
+    <string-array name="win_sokoban">
+        <item>仓库英雄！</item>
+        <item>推箱高手！</item>
+        <item>目标达成！</item>
+        <item>推箱子大师！</item>
+    </string-array>
+
+    <string-array name="win_checkers">
+        <item>击败电脑！</item>
+        <item>棋盘之王！</item>
+        <item>特级大师！</item>
+        <item>战略家！</item>
+    </string-array>
+
+    <string-array name="win_slide_puzzle">
+        <item>图片复原！</item>
+        <item>拼图完成！</item>
+        <item>丝严缝合！</item>
+        <item>滑动大师！</item>
+    </string-array>
+
+    <string-array name="win_dungeon">
+        <item>逃出地牢！</item>
+        <item>传奇探险家！</item>
+        <item>清空此层！</item>
+        <item>发现宝藏！</item>
+    </string-array>
+
+    <string-array name="win_tanks">
+        <item>基地保卫！</item>
+        <item>全歼敌军！</item>
+        <item>坦克指挥官！</item>
+        <item>战争英雄！</item>
+    </string-array>
+
+    <string-array name="win_mental_math">
+        <item>数学天才！</item>
+        <item>脑力无限！</item>
+        <item>心算王！</item>
+        <item>数字达人！</item>
+    </string-array>
+
+    <string-array name="win_froggy">
+        <item>到达终点！</item>
+        <item>安全过河！</item>
+        <item>青蛙英雄！</item>
+        <item>河流大师！</item>
+    </string-array>
+    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
+    <string name="trex_daddy">霸王龙爸爸</string>
+    <string name="trex_mummy">霸王龙妈妈</string>
+    <string name="trex_baby">霸王龙宝宝</string>
+    <string name="trex_grandpa">霸王龙爷爷</string>
+    <string name="trex_teenager">少年霸王龙</string>
+    <string name="trex_scientist">霸王龙科学家</string>
+    <string name="trex_athlete">霸王龙运动员</string>
+    <string name="trex_pirate">霸王龙海盗</string>
+    <string name="trex_chef">霸王龙厨师</string>
+    <string name="trex_astronaut">霸王龙宇航员</string>
 </resources>

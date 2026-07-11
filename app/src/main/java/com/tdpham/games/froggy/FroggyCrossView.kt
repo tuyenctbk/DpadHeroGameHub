@@ -9,6 +9,8 @@ import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import kotlin.random.Random
 
 class FroggyCrossView @JvmOverloads constructor(
@@ -32,6 +34,8 @@ class FroggyCrossView @JvmOverloads constructor(
     private var gameOver = false
     private var gamePaused = true
     private var lives = 3
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
 
     private val lanes = mutableListOf<Lane>()
     private var lastUpdate = 0L
@@ -84,6 +88,7 @@ class FroggyCrossView @JvmOverloads constructor(
         best = ScoreManager.getHighScore(context, gameKey)
         gameOver = false
         gamePaused = true
+        celebrationManager.start(0f, 0f)
         resetFrog()
         setupLanes()
         invalidate()
@@ -184,6 +189,8 @@ class FroggyCrossView @JvmOverloads constructor(
         
         if (frogR == 0) {
             score += 1000
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+            celebrationManager.start(width.toFloat(), height.toFloat())
             SoundManager.playSuccess()
             resetFrog()
         }
@@ -282,15 +289,18 @@ class FroggyCrossView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
         val hudY = Math.round(40f).toFloat()
-        canvas.drawText("SCORE: $score  LIVES: $lives", 20f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.lives_label)}: $lives", 20f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 20f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 20f, hudY, paint)
 
         if (gameOver) {
-            drawOverlay(canvas, "GAME OVER", "Press Center to Restart")
+            drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         } else if (gamePaused) {
-            drawOverlay(canvas, "FROGGY CROSS", "Press Center to Start")
+            drawOverlay(canvas, context.getString(R.string.game_froggy), context.getString(R.string.start_game))
         }
+
+        celebrationManager.update()
+        celebrationManager.draw(canvas)
 
         if (!gamePaused && !gameOver) invalidate()
     }
@@ -346,8 +356,12 @@ class FroggyCrossView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 80f
         paint.color = Color.WHITE
-        canvas.drawText(title, width / 2f, height / 2f, paint)
+        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+        
         paint.textSize = 30f
-        canvas.drawText(sub, width / 2f, height / 2f + 60f, paint)
+        val lines = sub.split("\n")
+        lines.forEachIndexed { i, s ->
+            canvas.drawText(s, width / 2f, height / 2f + 40f + i * 40f, paint)
+        }
     }
 }

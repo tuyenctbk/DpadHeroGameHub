@@ -12,6 +12,8 @@ import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import kotlin.random.Random
 
 class MentalMathView @JvmOverloads constructor(
@@ -30,6 +32,8 @@ class MentalMathView @JvmOverloads constructor(
     private var isReviewing = false
     private var isCorrect = false
     private var isPaused = false
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
 
     private var question = ""
     private var correctAnswer = 0
@@ -76,6 +80,7 @@ class MentalMathView @JvmOverloads constructor(
         gameOver = false
         isReviewing = false
         isPaused = false
+        celebrationManager.start(0f, 0f)
         generateQuestion()
         invalidate()
     }
@@ -271,6 +276,8 @@ class MentalMathView @JvmOverloads constructor(
                 best = score
                 ScoreManager.updateHighScore(context, gameKey, score)
             }
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+            celebrationManager.start(width.toFloat(), height.toFloat())
             SoundManager.playSuccess()
         } else {
             SoundManager.playError()
@@ -288,9 +295,9 @@ class MentalMathView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
         val hudY = Math.round(60f).toFloat()
-        canvas.drawText("STAGE: $stage", 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.stage_label)}: $stage", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("SCORE: $score  BEST: $best", width - 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
         // Timer bar
         if (!isReviewing && !gameOver && !isPaused) {
@@ -373,31 +380,32 @@ class MentalMathView @JvmOverloads constructor(
         }
 
         if (isReviewing) {
-            paint.style = Paint.Style.FILL
-            paint.color = Color.argb(200, 0, 0, 0)
-            canvas.drawRect(0f, 0f, width.toFloat(), 160f, paint)
-            
-            paint.textAlign = Paint.Align.CENTER
-            paint.textSize = 50f
-            paint.color = if (isCorrect) Color.GREEN else Color.RED
-            canvas.drawText(if (isCorrect) "CORRECT!" else "WRONG! Answer was $correctAnswer", width / 2f, 90f, paint)
-            
-            paint.textSize = 30f
-            paint.color = Color.WHITE
-            canvas.drawText("Press Center to ${if (isCorrect) "Continue" else "Finish"}", width / 2f, 135f, paint)
+            if (isCorrect) {
+                celebrationManager.update()
+                celebrationManager.draw(canvas)
+                invalidate()
+            }
+            val title = if (isCorrect) currentVictoryWord else "${context.getString(R.string.wrong_label)} ${context.getString(R.string.answer_was_label)} $correctAnswer"
+            val sub = if (isCorrect) context.getString(R.string.continue_hint) else context.getString(R.string.finish_hint)
+            drawOverlay(canvas, title, sub)
         }
 
         if (gameOver) {
-            paint.color = GamePalette.OVERLAY
-            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
-            paint.color = Color.WHITE
-            paint.textAlign = Paint.Align.CENTER
-            paint.textSize = 80f
-            canvas.drawText("GAME OVER", width / 2f, height / 2f, paint)
-            paint.textSize = 40f
-            canvas.drawText("Final Score: $score", width / 2f, height / 2f + 80f, paint)
-            paint.textSize = 30f
-            canvas.drawText("Press Center to Restart", width / 2f, height / 2f + 140f, paint)
+            drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+        }
+    }
+
+    private fun drawOverlay(canvas: Canvas, title: String, sub: String) {
+        paint.color = GamePalette.OVERLAY
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.WHITE
+        paint.textSize = 60f // Smaller title for long math labels
+        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+        paint.textSize = 35f
+        val lines = sub.split("\n")
+        lines.forEachIndexed { i, s ->
+            canvas.drawText(s, width / 2f, height / 2f + 50f + i * 45f, paint)
         }
     }
 }

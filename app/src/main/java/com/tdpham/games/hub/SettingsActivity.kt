@@ -36,7 +36,7 @@ class SettingsActivity : AppCompatActivity() {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/tuyenctbk/DpadHeroGameHub/blob/main/PRIVACY_POLICY.md"))
                 startActivity(browserIntent)
             } catch (e: Exception) {
-                android.widget.Toast.makeText(this, "URL: https://github.com/tuyenctbk/DpadHeroGameHub", android.widget.Toast.LENGTH_LONG).show()
+                android.widget.Toast.makeText(this, getString(R.string.privacy_policy_url), android.widget.Toast.LENGTH_LONG).show()
             }
         }
         setupFocusEffect(privacyPolicyLayout)

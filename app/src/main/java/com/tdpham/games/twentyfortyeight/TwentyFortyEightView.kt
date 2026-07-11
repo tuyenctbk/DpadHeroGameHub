@@ -12,6 +12,7 @@ import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
 import java.util.*
 
 class TwentyFortyEightView @JvmOverloads constructor(
@@ -30,11 +31,13 @@ class TwentyFortyEightView @JvmOverloads constructor(
     private var isWin = false
     private var cellSize = 0f
 
+    private val celebrationManager = CelebrationManager()
     private var animationFrame = 0
     private val animationHandler = Handler(Looper.getMainLooper())
     private val animationRunnable = object : Runnable {
         override fun run() {
             animationFrame++
+            if (isWin) celebrationManager.update()
             invalidate()
             animationHandler.postDelayed(this, 50)
         }
@@ -71,6 +74,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
         score = 0
         isGameOver = false
         isWin = false
+        celebrationManager.start(0f, 0f) // Just clear/reset
         highScore = ScoreManager.getHighScore(context, gameKey)
         mergedTiles.clear()
         addRandomTile()
@@ -234,6 +238,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
             SoundManager.playError()
             onGameOver?.invoke(score)
         } else if (isWin) {
+            celebrationManager.start(width.toFloat(), height.toFloat())
             SoundManager.playSuccess()
         }
     }
@@ -286,6 +291,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
         }
 
         if (isGameOver || isWin) {
+            if (isWin) celebrationManager.draw(canvas)
             drawOverlay(canvas)
         }
     }
@@ -331,13 +337,15 @@ class TwentyFortyEightView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = width / 15f
         paint.color = if (isWin) Color.GREEN else GamePalette.WARNING
-        canvas.drawText(if (isWin) context.getString(R.string.win_4096) else context.getString(R.string.game_over), width / 2f, height / 2f, paint)
+        canvas.drawText(if (isWin) context.getString(R.string.win_4096_label) else context.getString(R.string.game_over), width / 2f, height / 2f - 20f, paint)
         
         paint.textSize = width / 40f
         paint.color = GamePalette.TEXT_PRIMARY
         val restartHint = context.getString(R.string.restart_hint)
         val exitHint = context.getString(R.string.exit_hint)
-        canvas.drawText("$restartHint | $exitHint", width / 2f, height / 2f + 80f, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", width / 2f, height / 2f + 50f, paint)
+        canvas.drawText(restartHint, width / 2f, height / 2f + 100f, paint)
+        canvas.drawText(exitHint, width / 2f, height / 2f + 140f, paint)
     }
 
     private fun getTileColor(value: Int): Int {

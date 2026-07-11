@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Dpad Arcade</string>
-    <string name="app_name_full">Dpad Arcade : Jeux Rétro</string>
+    <string name="app_name_full">Dpad Arcade: Jeux Rétro</string>
     <string name="game_center">DPAD ARCADE</string>
-    <string name="snake">SNAKE</string>
+    <string name="snake">SERPENT</string>
     <string name="minesweeper">DÉMINEUR</string>
     <string name="game_4096">4096</string>
     <string name="game_trex">T-REX RUN</string>
@@ -21,45 +21,45 @@
     <string name="game_simon">SIMON SAYS</string>
     <string name="game_tanks">BATAILLE DE TANKS</string>
     <string name="game_word_quest">WORD QUEST</string>
-    <string name="game_dungeon">DUNGEON ESCAPE</string>
+    <string name="game_dungeon">ÉVASION DU DONJON</string>
     <string name="game_flappy">FLAPPY HERO</string>
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLITAIRE</string>
     <string name="game_road_racer">ROAD RACER</string>
-    <string name="game_hangman">PENDU</string>
+    <string name="game_hangman">LE PENDU</string>
     <string name="game_spinball">SPINBALL</string>
-    <string name="game_spinball_instructions">Utilisez GAUCHE/DROITE pour faire tourner le cercle. Collectez les étoiles et évitez les pointes. Ne laissez pas la balle s\'échapper !</string>
-    <string name="how_to_play_guide">GUIDE DE %s</string>
-    <string name="snake_instructions">• Utilisez le D-PAD pour déplacer le serpent.\n• Mangez les pommes rouges pour grandir.\n• Ne heurtez pas les murs ou vous-même !\n• Appuyez sur \'S\' ou MUET pour le son.\n• Appuyez sur CENTER pour mettre en pause.</string>
-    <string name="minesweeper_instructions">• Utilisez le D-PAD pour déplacer le curseur.\n• Appuyez sur CENTER pour révéler une case.\n• Appuyez sur MENU ou \'S\' pour marquer une mine.\n• Videz toutes les cases sûres pour gagner !\n• Le premier mouvement est toujours sûr !</string>
-    <string name="game_4096_instructions">• Utilisez le D-PAD pour faire glisser les tuiles.\n• Les tuiles de même numéro fusionnent.\n• Atteignez la tuile 4096 pour gagner !\n• La partie se termine quand le plateau est plein.\n• Appuyez sur CENTER pour recommencer.</string>
-    <string name="game_trex_instructions">• Appuyez sur HAUT ou CENTER pour sauter.\n• Évitez les cactus et les oiseaux !\n• Le jeu s\'accélère avec le temps.\n• Essayez de battre votre record.</string>
-    <string name="game_brick_break_instructions">• Déplacez la raquette avec GAUCHE/DROITE.\n• Appuyez sur CENTER pour lancer la balle ou mettre en pause.\n• Cassez toutes les briques pour gagner.\n• Vous avez 3 vies. Ne laissez pas tomber la balle.</string>
-    <string name="game_tictactoe_instructions">• Déplacez le curseur avec le D-PAD.\n• Appuyez sur CENTER pour placer X.\n• Battez l\'ordinateur en alignant une rangée.\n• Changez la taille du plateau avec HAUT/BAS à la fin.</string>
-    <string name="game_checkers_instructions">• D-PAD : déplacer le curseur. CENTER : sélectionner.\n• Les rouges (vous) montent. Cases sombres uniquement.\n• Les captures sont obligatoires.\n• Atteignez la dernière rangée pour avoir une dame.\n• Éliminez toutes les pièces adverses pour gagner.</string>
-    <string name="game_sokoban_instructions">• D-PAD : déplacer. Poussez les caisses ($) sur les cibles.\n• Une seule caisse à la fois ; vous ne pouvez pas tirer.\n• CENTER : recommencer le niveau en cas de blocage.</string>
-    <string name="game_sudoku_instructions">• D-PAD : déplacer. CENTER : changer la valeur.\n• Les chiffres blancs sont verrouillés.\n• Pas de répétition en ligne, colonne ou bloc 3x3.\n• Complétez la grille pour gagner.</string>
-    <string name="game_tetris_instructions">• GAUCHE/DROITE pour déplacer.\n• HAUT pour pivoter.\n• BAS pour descente lente.\n• CENTER pour chute rapide.\n• Appuyez sur H pour le guide.</string>
-    <string name="game_starfighter_instructions">• Déplacez le vaisseau avec le D-PAD.\n• Les lasers tirent automatiquement.\n• Détruisez les ennemis pour marquer.\n• Ne vous laissez pas toucher !\n• Appuyez sur \'S\' pour le son.</string>
+    <string name="game_spinball_instructions">Utilisez GAUCHE/DROITE pour faire tourner le cercle. Collectez des étoiles et évitez les pics. Ne laissez pas la balle s\'échapper !</string>
+    <string name="how_to_play_guide">GUIDE %s</string>
+    <string name="snake_instructions">• Utilisez le D-PAD pour déplacer le serpent.\n• Mangez des pommes rouges pour grandir.\n• Ne heurtez pas les murs ni vous-même !\n• Appuyez sur \'S\' pour le son.\n• Appuyez sur CENTER pour pause.</string>
+    <string name="minesweeper_instructions">• Utilisez le D-PAD pour le curseur.\n• Appuyez sur CENTER pour révéler.\n• Appuyez sur MENU ou \'S\' pour marquer une mine.\n• Videz toutes les cases sûres pour gagner !</string>
+    <string name="game_4096_instructions">• Utilisez le D-PAD pour glisser.\n• Les chiffres identiques fusionnent.\n• Atteignez 4096 pour gagner !</string>
+    <string name="game_trex_instructions">• Appuyez sur HAUT ou CENTER pour sauter.\n• Évitez les cactus et les oiseaux !\n• Le jeu s\'accélère avec le temps.</string>
+    <string name="game_brick_break_instructions">• Déplacez la raquette avec GAUCHE/DROITE.\n• Appuyez sur CENTER pour lancer ou pause.\n• Cassez toutes les briques pour gagner.\n• Vous avez 3 vies.</string>
+    <string name="game_tictactoe_instructions">• Déplacez le curseur avec le D-PAD.\n• Appuyez sur CENTER pour placer X.\n• Battez l\'ordinateur en alignant 3 symboles.</string>
+    <string name="game_checkers_instructions">• D-PAD : déplacer. CENTER : sélectionner.\n• Rouge (vous) monte. Cases sombres uniquement.\n• Les captures sont obligatoires.\n• Atteignez le bout pour couronner un roi.\n• Capturez toutes les pièces ennemies.</string>
+    <string name="game_sokoban_instructions">• D-PAD : déplacer. Poussez les caisses ($) sur les cibles.\n• Une seule caisse à la fois ; pas de traction.\n• CENTER : recommencer le niveau si bloqué.</string>
+    <string name="game_sudoku_instructions">• D-PAD : déplacer. CENTER : changer la valeur.\n• Les chiffres blancs sont verrouillés.\n• Pas de doublons en ligne, colonne ou carré 3x3.</string>
+    <string name="game_tetris_instructions">• GAUCHE/DROITE pour déplacer.\n• HAUT pour tourner.\n• BAS pour descente lente.\n• CENTER pour chute rapide.</string>
+    <string name="game_starfighter_instructions">• Déplacez le vaisseau avec le D-PAD.\n• Tir automatique.\n• Détruisez les ennemis pour marquer.\n• Ne vous faites pas toucher !\n• Appuyez sur \'S\' pour le son.</string>
     <string name="game_memory_instructions">• Naviguez avec le DPAD.\n• Retournez les cartes avec CENTER.\n• Associez toutes les paires pour gagner.\n• Moins de coups, c\'est mieux !</string>
-    <string name="game_slide_puzzle_instructions">• Utilisez le DPAD pour déplacer le curseur.\n• Appuyez sur CENTER pour faire glisser la pièce.\n• Ordonnez les pièces pour former l\'image.\n• Les chiffres indiquent l\'ordre correct.</string>
-    <string name="game_maze_instructions">• Étudiez attentivement le labyrinthe.\n• Trouvez quelle sortie (image) est reliée au point vert.\n• GAUCHE/DROITE pour choisir.\n• CENTER pour confirmer.\n• Une seule chance par niveau !</string>
-    <string name="game_mental_math_instructions">• Résolvez le problème mathématique.\n• Utilisez le DPAD pour choisir la réponse.\n• Appuyez sur CENTER pour confirmer.\n• Soyez rapide ! Le temps presse.\n• Une mauvaise réponse met fin au jeu.</string>
-    <string name="game_froggy_instructions">• Traversez la route et la rivière.\n• Évitez les voitures sur la route.\n• Sautez sur les bûches dans la rivière.\n• Atteignez le sommet pour marquer !\n• Utilisez le D-PAD pour vous déplacer.</string>
-    <string name="game_simon_instructions">• Observez la séquence de couleurs.\n• Répétez-la avec le D-PAD.\n• La séquence s\'allonge à chaque tour !</string>
-    <string name="game_tanks_instructions">• Contrôlez votre tank avec le D-PAD.\n• Le tank tire automatiquement.\n• Détruisez les tanks ennemis.\n• Protégez votre BASE (l\'étoile).\n• Les briques peuvent être détruites.</string>
-    <string name="game_word_quest_instructions">• Devinez le mot de 5 lettres en 6 essais.\n• Utilisez le D-PAD pour naviguer sur le clavier.\n• CENTER pour choisir une lettre.\n• VERT : Lettre et position correctes.\n• JAUNE : Lettre correcte, mauvaise position.\n• GRIS : Lettre absente du mot.</string>
-    <string name="game_dungeon_instructions">• Naviguez dans le donjon avec le D-PAD.\n• Récupérez la CLÉ DORÉE.\n• Atteignez la PORTE DE SORTIE.\n• ÉVITEZ LES POINTES ROUGES !\n• Les niveaux deviennent plus difficiles.</string>
-    <string name="game_flappy_instructions">• Appuyez sur CENTER pour battre des ailes.\n• Volez entre les tuyaux.\n• Ne touchez ni les tuyaux ni le sol !\n• Marquez 1 point par tuyau franchi.</string>
-    <string name="game_lines98_instructions">• Utilisez le D-PAD pour déplacer le curseur.\n• CENTER pour déplacer les billes.\n• Alignez 5 billes ou plus de même couleur.\n• Le jeu finit quand le plateau est plein.</string>
-    <string name="game_solitaire_instructions">• Utilisez le D-PAD pour déplacer le curseur.\n• CENTER pour choisir/placer les cartes.\n• Empilez les cartes par couleur de l\'As au Roi.</string>
-    <string name="game_road_racer_instructions">• Déplacez-vous pour éviter le trafic.\n• Survivez le plus longtemps possible !\n• Appuyez sur CENTER pour Pause.</string>
-    <string name="game_hangman_instructions">• Choisissez des lettres pour deviner le mot.\n• Vous avez 6 essais.\n• Appuyez sur CENTER pour choisir.</string>
+    <string name="game_slide_puzzle_instructions">• Utilisez le DPAD pour déplacer.\n• Appuyez sur CENTER pour glisser.\n• Réordonnez les pièces pour former l\'image.</string>
+    <string name="game_maze_instructions">• Étudiez le labyrinthe.\n• Trouvez la sortie connectée au point vert.\n• GAUCHE/DROITE pour choisir.\n• CENTER pour confirmer.</string>
+    <string name="game_mental_math_instructions">• Résolvez l\'opération.\n• Utilisez le DPAD pour la réponse.\n• Appuyez sur CENTER pour confirmer.\n• Vite ! Le temps presse.</string>
+    <string name="game_froggy_instructions">• Traversez route et rivière.\n• Évitez les voitures.\n• Sautez sur les bûches dans la rivière.\n• Atteignez l\'arrivée pour marquer !</string>
+    <string name="game_simon_instructions">• Regardez la séquence de couleurs.\n• Répétez-la avec le D-PAD.\n• La séquence s\'allonge à chaque tour !</string>
+    <string name="game_tanks_instructions">• Contrôlez votre tank avec le D-PAD.\n• Tir automatique.\n• Détruisez les tanks ennemis.\n• Protégez votre BASE (l\'étoile).</string>
+    <string name="game_word_quest_instructions">• Devinez le mot de 5 lettres en 6 essais.\n• Utilisez le D-PAD pour le clavier.\n• CENTER pour choisir une lettre.\n• VERT : Lettre et position correctes.\n• JAUNE : Lettre correcte, position fausse.\n• GRIS : Lettre absente du mot.</string>
+    <string name="game_dungeon_instructions">• Naviguez dans le donjon avec le D-PAD.\n• Collectez la CLÉ DORÉE.\n• Atteignez la PORTE DE SORTIE.\n• ÉVITEZ LES PICS ROUGES !</string>
+    <string name="game_flappy_instructions">• Appuyez sur CENTER pour battre des ailes.\n• Volez à travers les tuyaux.\n• Ne touchez rien !\n• 1 point par tuyau franchi.</string>
+    <string name="game_lines98_instructions">• Utilisez le D-PAD pour le curseur.\n• CENTER pour déplacer les balles.\n• Alignez 5 balles ou plus de même couleur.\n• Le jeu s\'arrête si le plateau est plein.</string>
+    <string name="game_solitaire_instructions">• Utilisez le D-PAD pour le curseur.\n• CENTER pour choisir/poser des cartes.\n• Triez les cartes par couleur de l\'As au Roi.</string>
+    <string name="game_road_racer_instructions">• Évitez le trafic.\n• Survivez aussi longtemps que possible !\n• Appuyez sur CENTER pour pause.</string>
+    <string name="game_hangman_instructions">• Choisissez des lettres pour deviner.\n• Vous avez 6 essais.\n• Appuyez sur CENTER pour choisir.</string>
     <string name="select_game_hint">DpadHero : Choisissez un jeu avec le D-Pad</string>
     <string name="settings">Paramètres</string>
     <string name="settings_button_description">Paramètres</string>
     <string name="sound_effects">Effets Sonores</string>
-    <string name="sound_effects_description">Activer ou désactiver les effets sonores.</string>
+    <string name="sound_effects_description">Activer ou désactiver les sons.</string>
     <string name="privacy_policy">Politique de Confidentialité</string>
     <string name="back">Retour</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
@@ -67,8 +67,168 @@
     <string name="help">AIDE</string>
     <string name="guide_hint_keys">Appuyez sur [INFO] ou [H]</string>
     <string name="guide_title_default">COMMENT JOUER</string>
-    <string name="guide_content_default">Le guide s\'affichera ici.</string>
+    <string name="guide_content_default">Le guide s\'affiche ici.</string>
     <string name="dont_show_again">Ne plus afficher</string>
     <string name="start_game">LANCER LE JEU</string>
     <string name="resume">REPRENDRE</string>
+    <string name="score_label">SCORE</string>
+    <string name="best_label">RECORD</string>
+    <string name="next_label">SUIVANT</string>
+    <string name="game_over">GAME OVER</string>
+    <string name="paused">PAUSE</string>
+    <string name="win_4096_label">4096 ATTEINT !</string>
+    <string name="restart_hint">Appuyez sur Center pour recommencer</string>
+    <string name="exit_hint">Retour pour quitter</string>
+    <string name="resume_hint">Appuyez sur Center pour reprendre</string>
+
+    <string-array name="win_generic">
+        <item>VICTOIRE !</item>
+        <item>BIEN JOUÉ !</item>
+        <item>INCROYABLE !</item>
+        <item>BRILLANT !</item>
+        <item>SPECTACULAIRE !</item>
+        <item>T\'ES GÉNIAL !</item>
+        <item>EXCELLENT !</item>
+        <item>FANTASTIQUE !</item>
+        <item>ÉPOUSTOUFLANT !</item>
+        <item>BEAU TRAVAIL !</item>
+    </string-array>
+
+    <string-array name="win_highscore">
+        <item>NOUVEAU RECORD !</item>
+        <item>INARRÊTABLE !</item>
+        <item>LE MEILLEUR !</item>
+        <item>LÉGENDAIRE !</item>
+        <item>RECORD !</item>
+    </string-array>
+
+    <string-array name="win_minesweeper">
+        <item>ZONE DÉGAGÉE !</item>
+        <item>MAÎTRE DES MINES !</item>
+        <item>PASSAGE SÛR !</item>
+        <item>EXPERT !</item>
+    </string-array>
+
+    <string-array name="win_sudoku">
+        <item>GRILLE MAÎTRISÉE !</item>
+        <item>ROI DE LA LOGIQUE !</item>
+        <item>RÉSOLU !</item>
+        <item>ESPRIT BRILLANT !</item>
+    </string-array>
+
+    <string-array name="win_tictactoe">
+        <item>SURCLASSÉ !</item>
+        <item>3 DE SUITE !</item>
+        <item>VICTOIRE STRATÉGIQUE !</item>
+        <item>INARRÊTABLE !</item>
+    </string-array>
+
+    <string-array name="win_4096">
+        <item>GÉNIE DES MATHS !</item>
+        <item>4096 ATTEINT !</item>
+        <item>ROI DES CHIFFRES !</item>
+        <item>TUILE FINALE !</item>
+    </string-array>
+
+    <string-array name="win_memory">
+        <item>MÉMOIRE PARFAITE !</item>
+        <item>MAÎTRE DES PAIRES !</item>
+        <item>ESPRIT VIF !</item>
+        <item>SANS FAUTE !</item>
+    </string-array>
+
+    <string-array name="win_hangman">
+        <item>MOT SAUVÉ !</item>
+        <item>MAÎTRE DES MOTS !</item>
+        <item>SAUVÉ !</item>
+        <item>ROI DU LEXIQUE !</item>
+    </string-array>
+
+    <string-array name="win_brick_break">
+        <item>NIVEAU RÉUSSI !</item>
+        <item>BRISEUR DE MURS !</item>
+        <item>DESTRUCTEUR !</item>
+        <item>PRO DU PADDLE !</item>
+    </string-array>
+
+    <string-array name="win_word_quest">
+        <item>MOT TROUVÉ !</item>
+        <item>PRO DE L\'ORTHOGRAPHE !</item>
+        <item>HÉROS DU DICTIONNAIRE !</item>
+        <item>MAÎTRE QUEST !</item>
+    </string-array>
+
+    <string-array name="win_solitaire">
+        <item>PAQUET VIDÉ !</item>
+        <item>AS GAGNANT !</item>
+        <item>COULEUR COMPLÈTE !</item>
+        <item>ROI DES CARTES !</item>
+    </string-array>
+
+    <string-array name="win_maze">
+        <item>TROPHÉE TROUVÉ !</item>
+        <item>MAZE RUNNER !</item>
+        <item>GUIDE EXPERT !</item>
+        <item>SORTIE ATTEINTE !</item>
+    </string-array>
+
+    <string-array name="win_sokoban">
+        <item>HÉROS DE L\'ENTREPÔT !</item>
+        <item>PRO DU POUSSAGE !</item>
+        <item>OBJECTIFS ATTEINTS !</item>
+        <item>SOKO-MASTER !</item>
+    </string-array>
+
+    <string-array name="win_checkers">
+        <item>CPU BATTU !</item>
+        <item>ROI DU PLATEAU !</item>
+        <item>GRAND MAÎTRE !</item>
+        <item>MAÎTRE STRATÈGE !</item>
+    </string-array>
+
+    <string-array name="win_slide_puzzle">
+        <item>IMAGE RESTAURÉE !</item>
+        <item>PUZZLE RÉSOLU !</item>
+        <item>PERFECTION !</item>
+        <item>MAÎTRE DU GLISSEMENT !</item>
+    </string-array>
+
+    <string-array name="win_dungeon">
+        <item>DONJON QUITTÉ !</item>
+        <item>EXPLORATEUR LÉGENDAIRE !</item>
+        <item>ÉTAGE VIDÉ !</item>
+        <item>TRÉSOR TROUVÉ !</item>
+    </string-array>
+
+    <string-array name="win_tanks">
+        <item>BASE DÉFENDUE !</item>
+        <item>ENNEMIS ÉLIMINÉS !</item>
+        <item>COMMANDANT !</item>
+        <item>HÉROS DE GUERRE !</item>
+    </string-array>
+
+    <string-array name="win_mental_math">
+        <item>GÉNIE DES MATHS !</item>
+        <item>PUISSANCE MENTALE !</item>
+        <item>ROI DU CALCUL !</item>
+        <item>MAÎTRE DES CHIFFRES !</item>
+    </string-array>
+
+    <string-array name="win_froggy">
+        <item>ARRIVÉE ATTEINTE !</item>
+        <item>TRAVERSÉE RÉUSSIE !</item>
+        <item>HÉROS FROGGY !</item>
+        <item>MAÎTRE DE LA RIVIÈRE !</item>
+    </string-array>
+    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
+    <string name="trex_daddy">Papa T-Rex</string>
+    <string name="trex_mummy">Maman T-Rex</string>
+    <string name="trex_baby">Bébé T-Rex</string>
+    <string name="trex_grandpa">Papy T-Rex</string>
+    <string name="trex_teenager">T-Rex Ado</string>
+    <string name="trex_scientist">T-Rex Scientifique</string>
+    <string name="trex_athlete">T-Rex Athlète</string>
+    <string name="trex_pirate">T-Rex Pirate</string>
+    <string name="trex_chef">T-Rex Chef</string>
+    <string name="trex_astronaut">T-Rex Astronaute</string>
 </resources>

@@ -5,10 +5,13 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
+import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import java.util.*
 
 class SolitaireView @JvmOverloads constructor(
@@ -34,6 +37,8 @@ class SolitaireView @JvmOverloads constructor(
     private var score = 0
     private var isGameOver = false
     private var isPaused = false
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
 
     private var pulseFactor = 1.0f
     private var pulseDirection = 1
@@ -76,6 +81,7 @@ class SolitaireView @JvmOverloads constructor(
 
     override fun resetGame() {
         deck.clear()
+        celebrationManager.start(0f, 0f)
         for (suit in Suit.entries) {
             for (rank in Rank.entries) {
                 deck.add(Card(suit, rank))
@@ -381,6 +387,8 @@ class SolitaireView @JvmOverloads constructor(
     private fun checkWin() {
         if (foundations.all { it.size == 13 }) {
             isGameOver = true
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+            celebrationManager.start(width.toFloat(), height.toFloat())
             SoundManager.playSuccess()
             onGameOver?.invoke(score)
         }
@@ -481,9 +489,14 @@ class SolitaireView @JvmOverloads constructor(
         paint.color = Color.WHITE
         paint.textSize = 30f
         val hudY = Math.round(h - 20).toFloat()
-        canvas.drawText("Score: $score", 20f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", 20f, hudY, paint)
 
-        if (isGameOver) drawOverlay(canvas, "YOU WIN!", "Score: $score\nPress CENTER to Restart")
+        if (isGameOver) {
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+            drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+        }
     }
 
     private fun drawCardPile(canvas: Canvas, card: Card?, x: Float, y: Float, w: Float, h: Float, faceUp: Boolean) {
@@ -584,7 +597,7 @@ class SolitaireView @JvmOverloads constructor(
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {
-        paint.color = Color.parseColor("#AA000000")
+        paint.color = GamePalette.OVERLAY
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
         paint.color = Color.WHITE
         paint.textAlign = Paint.Align.CENTER

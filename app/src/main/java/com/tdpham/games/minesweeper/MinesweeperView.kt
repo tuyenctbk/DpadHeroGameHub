@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.Typeface
 import android.os.Handler
 import android.os.Looper
@@ -15,6 +16,8 @@ import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import java.util.*
 
 class MinesweeperView @JvmOverloads constructor(
@@ -38,6 +41,10 @@ class MinesweeperView @JvmOverloads constructor(
     private var isFirstClick = true
     private var totalWins = 0
     private var lastBoardConfig = ""
+
+    private val celebrationManager = CelebrationManager()
+    private var currentVictoryWord = ""
+    private val random = Random()
     
     private val pressedKeys = mutableSetOf<Int>()
     private val moveHandler = Handler(Looper.getMainLooper())
@@ -67,6 +74,7 @@ class MinesweeperView @JvmOverloads constructor(
     private val animationRunnable = object : Runnable {
         override fun run() {
             animationFrame++
+            if (isWin) celebrationManager.update()
             invalidate()
             animationHandler.postDelayed(this, 50)
         }
@@ -143,7 +151,6 @@ class MinesweeperView @JvmOverloads constructor(
         isProcessingQueue = false
         totalWins = ScoreManager.getHighScore(context, gameKey)
         
-        val random = Random()
         var attempts = 0
         var currentConfig = ""
         
@@ -334,6 +341,8 @@ class MinesweeperView @JvmOverloads constructor(
         }
         if (revealedCount == (rows * cols - minesCount)) {
             isWin = true
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+            celebrationManager.start(width.toFloat(), height.toFloat())
             totalWins++
             ScoreManager.updateHighScore(context, gameKey, totalWins)
             SoundManager.playSuccess()
@@ -467,15 +476,15 @@ class MinesweeperView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
         paint.color = GamePalette.TEXT_PRIMARY
-        canvas.drawText("MINES: $minesCount", Math.round(offsetX).toFloat(), headerY, paint)
+        canvas.drawText("${context.getString(R.string.mines_label)}: $minesCount", Math.round(offsetX).toFloat(), headerY, paint)
         
         paint.textAlign = Paint.Align.RIGHT
         paint.color = GamePalette.TEXT_SECONDARY
-        canvas.drawText("WINS: $totalWins", Math.round(offsetX + cols * cellSize).toFloat(), headerY, paint)
+        canvas.drawText("${context.getString(R.string.wins_label)}: $totalWins", Math.round(offsetX + cols * cellSize).toFloat(), headerY, paint)
         
         paint.textAlign = Paint.Align.CENTER
         paint.color = GamePalette.SCORE
-        canvas.drawText("FLAGS: ${getFlaggedCount()}", Math.round(width / 2f).toFloat(), headerY, paint)
+        canvas.drawText("${context.getString(R.string.flags_label)}: ${getFlaggedCount()}", Math.round(width / 2f).toFloat(), headerY, paint)
 
         for (r in 0 until rows) {
             for (c in 0 until cols) {
@@ -556,19 +565,27 @@ class MinesweeperView @JvmOverloads constructor(
             }
         }
 
+        if (isWin) celebrationManager.draw(canvas)
+
         if (isGameOver || isWin) {
+            paint.reset()
+            paint.isAntiAlias = true
+            paint.typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+
             paint.color = GamePalette.OVERLAY
             paint.style = Paint.Style.FILL
-            canvas.drawRect(0f, height / 2f - 100f, width.toFloat(), height / 2f + 140f, paint)
+            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
             
             paint.color = if (isWin) Color.GREEN else GamePalette.WARNING
             paint.textAlign = Paint.Align.CENTER
             paint.textSize = width / 18f
-            canvas.drawText(if (isWin) "MISSION ACCOMPLISHED!" else "BOOM! GAME OVER", width / 2f, height / 2f, paint)
+            canvas.drawText(if (isWin) currentVictoryWord else "BOOM! GAME OVER", width / 2f, height / 2f - 20f, paint)
             
             paint.color = GamePalette.TEXT_PRIMARY
             paint.textSize = width / 45f
-            canvas.drawText("Press Center to Play Again | Press Back to Exit", width / 2f, height / 2f + 80f, paint)
+            canvas.drawText("${context.getString(R.string.total_wins_label)}: $totalWins", width / 2f, height / 2f + 50f, paint)
+            canvas.drawText(context.getString(R.string.play_again_hint), width / 2f, height / 2f + 90f, paint)
+            canvas.drawText(context.getString(R.string.exit_hint), width / 2f, height / 2f + 130f, paint)
         }
     }
 

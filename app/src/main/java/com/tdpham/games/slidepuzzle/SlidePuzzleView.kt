@@ -10,6 +10,8 @@ import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import kotlin.random.Random
 
 class SlidePuzzleView @JvmOverloads constructor(
@@ -28,6 +30,8 @@ class SlidePuzzleView @JvmOverloads constructor(
     private var moves = 0
     private var bestMoves = Int.MAX_VALUE
     private var gameOver = false
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
     private var puzzleBitmap: Bitmap? = null
 
     init {
@@ -52,6 +56,7 @@ class SlidePuzzleView @JvmOverloads constructor(
         emptyIdx = gridSize * gridSize - 1
         shuffleTiles()
         
+        celebrationManager.start(0f, 0f)
         moves = 0
         gameOver = false
         val highScore = ScoreManager.getHighScore(context, gameKey)
@@ -211,6 +216,8 @@ class SlidePuzzleView @JvmOverloads constructor(
     private fun checkWin() {
         if (tiles.withIndex().all { it.value == it.index }) {
             gameOver = true
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+            celebrationManager.start(width.toFloat(), height.toFloat())
             SoundManager.playSuccess()
             val score = (10000 - moves).coerceAtLeast(0)
             if (ScoreManager.updateHighScore(context, gameKey, score)) bestMoves = moves
@@ -232,9 +239,9 @@ class SlidePuzzleView @JvmOverloads constructor(
         paint.color = Color.WHITE
         paint.textSize = 38f
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("MOVES: $moves", 40f, 70f, paint)
+        canvas.drawText("${context.getString(R.string.moves_label)}: $moves", 40f, 70f, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: ${if (bestMoves == Int.MAX_VALUE) "-" else bestMoves}", width - 40f, 70f, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: ${if (bestMoves == Int.MAX_VALUE) "-" else bestMoves}", width - 40f, 70f, paint)
 
         // Draw Tiles
         for (i in 0 until tiles.size) {
@@ -259,14 +266,25 @@ class SlidePuzzleView @JvmOverloads constructor(
         }
 
         if (gameOver) {
-            paint.color = GamePalette.OVERLAY
-            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
-            paint.color = Color.WHITE
-            paint.textAlign = Paint.Align.CENTER
-            paint.textSize = 70f
-            canvas.drawText("PUZZLE SOLVED!", width / 2f, height / 2f, paint)
-            paint.textSize = 30f
-            canvas.drawText("Moves: $moves | Center to Restart", width / 2f, height / 2f + 70f, paint)
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+
+            drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.moves_label)}: $moves\n${context.getString(R.string.restart_hint)}")
+        }
+    }
+
+    private fun drawOverlay(canvas: Canvas, title: String, sub: String) {
+        paint.color = GamePalette.OVERLAY
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.WHITE
+        paint.textSize = 80f
+        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+        paint.textSize = 35f
+        val lines = sub.split("\n")
+        lines.forEachIndexed { i, s ->
+            canvas.drawText(s, width / 2f, height / 2f + 50f + i * 45f, paint)
         }
     }
 

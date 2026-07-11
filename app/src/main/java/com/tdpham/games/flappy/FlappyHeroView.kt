@@ -10,6 +10,8 @@ import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 import kotlin.random.Random
 
 class FlappyHeroView @JvmOverloads constructor(
@@ -39,6 +41,8 @@ class FlappyHeroView @JvmOverloads constructor(
     private var best = 0
     private var gameOver = false
     private var gamePaused = true
+    private var currentVictoryWord = ""
+    private val celebrationManager = CelebrationManager()
     private var lastUpdate = 0L
     private val beakPath = Path()
     private val sunsetPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -96,6 +100,7 @@ class FlappyHeroView @JvmOverloads constructor(
         birdV = 0f
         pipes.clear()
         clouds.clear()
+        celebrationManager.start(0f, 0f)
         score = 0
         best = ScoreManager.getHighScore(context, gameKey)
         gameOver = false
@@ -287,14 +292,21 @@ class FlappyHeroView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
         val hudY = Math.round(60f).toFloat()
-        canvas.drawText("SCORE: $score", 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
         if (gameOver) {
-            drawOverlay(canvas, "CRASHED!", "Score: $score\nPress Center to Restart")
+            val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.crashed_label)
+            drawOverlay(canvas, title, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         } else if (gamePaused) {
-            drawOverlay(canvas, "FLAPPY HERO", "Press Center to Flap")
+            drawOverlay(canvas, context.getString(R.string.game_flappy), context.getString(R.string.flap_hint))
+        }
+
+        if (score > 0 && currentVictoryWord.isNotEmpty()) {
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
         }
 
         if (!gamePaused && !gameOver) invalidate()
@@ -375,6 +387,12 @@ class FlappyHeroView @JvmOverloads constructor(
     private fun die() {
         gameOver = true
         gamePaused = true
+        if (ScoreManager.updateHighScore(context, gameKey, score)) {
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
+            celebrationManager.start(width.toFloat(), height.toFloat())
+        } else {
+            currentVictoryWord = ""
+        }
         SoundManager.playError()
         onGameOver?.invoke(score)
     }

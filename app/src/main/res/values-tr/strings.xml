@@ -1,0 +1,234 @@
+<resources>
+    <string name="app_name">Dpad Arcade</string>
+    <string name="app_name_full">Dpad Arcade: Retro Oyunlar</string>
+    <string name="game_center">DPAD ARCADE</string>
+    <string name="snake">YILAN</string>
+    <string name="minesweeper">MAYIN TARLASI</string>
+    <string name="game_4096">4096</string>
+    <string name="game_trex">T-REX RUN</string>
+    <string name="game_brick_break">TUĞLA KIRMA</string>
+    <string name="game_tictactoe">SOS OYUNU</string>
+    <string name="game_checkers">DAMA</string>
+    <string name="game_sokoban">SOKOBAN</string>
+    <string name="game_sudoku">SUDOKU</string>
+    <string name="game_tetris">TETRIS</string>
+    <string name="game_starfighter">YILDIZ SAVAŞÇISI</string>
+    <string name="game_memory">HAFIZA KARTI</string>
+    <string name="game_slide_puzzle">KAYDIRMALI BULMACA</string>
+    <string name="game_maze">LABİRENT</string>
+    <string name="game_mental_math">ZİHİNDEN MATEMATİK</string>
+    <string name="game_froggy">FROGGY CROSS</string>
+    <string name="game_simon">SİMON DİYOR Kİ</string>
+    <string name="game_tanks">TANK SAVAŞI</string>
+    <string name="game_word_quest">KELİME AVI</string>
+    <string name="game_dungeon">ZİNDANDAN KAÇIŞ</string>
+    <string name="game_flappy">FLAPPY HERO</string>
+    <string name="game_lines98">LINES 98</string>
+    <string name="game_solitaire">SOLİTAİRE</string>
+    <string name="game_road_racer">YOL YARIŞÇISI</string>
+    <string name="game_hangman">ADAM ASMACA</string>
+    <string name="game_spinball">SPINBALL</string>
+    <string name="game_spinball_instructions">Döndürmek için SOL/SAĞ kullanın. Yıldızları toplayın ve dikenlerden kaçının. Topu dışarı kaçırmayın!</string>
+    <string name="how_to_play_guide">%s REHBERİ</string>
+    <string name="snake_instructions">• Yılanı hareket ettirmek için D-PAD kullanın.\n• Büyümek için kırmızı elmaları yeyin.\n• Duvarlara veya kendinize çarpmayın!\n• Ses için \'S\'ye basın.\n• Duraklatmak için CENTER\'a basın.</string>
+    <string name="minesweeper_instructions">• İmleç için D-PAD kullanın.\n• Açmak için CENTER\'a basın.\n• Bayrak koymak için MENU veya \'S\'ye basın.\n• Tüm güvenli alanları açarak kazanın!</string>
+    <string name="game_4096_instructions">• Karoları kaydırmak için D-PAD kullanın.\n• Aynı sayılar birleşir.\n• Kazanmak için 4096\'ya ulaşın!</string>
+    <string name="game_trex_instructions">• Zıplamak için YUKARI veya CENTER\'a basın.\n• Kaktüslerden ve kuşlardan kaçının!\n• Oyun zamanla hızlanır.</string>
+    <string name="game_brick_break_instructions">• Raketi SOL/SAĞ ile hareket ettirin.\n• Topu fırlatmak veya duraklatmak için CENTER\'a basın.\n• Tüm tuğlaları kırın.\n• 3 canınız var.</string>
+    <string name="game_tictactoe_instructions">• İmleci D-PAD ile hareket ettirin.\n• X koymak için CENTER\'a basın.\n• 3\'lü sıra yaparak bilgisayarı yenin.</string>
+    <string name="game_checkers_instructions">• D-PAD: hareket. CENTER: seç.\n• Kırmızı (siz) yukarı gider. Sadece koyu kareler.\n• Taş yemek zorunludur.\n• Sona ulaşarak dama yapın.\n• Rakibin tüm taşlarını toplayın.</string>
+    <string name="game_sokoban_instructions">• D-PAD: hareket. Kutuları ($) hedeflere itin.\n• Her seferinde tek kutu; çekme yapılamaz.\n• CENTER: bölümü sıfırla.</string>
+    <string name="game_sudoku_instructions">• D-PAD: hareket. CENTER: sayı değiştir.\n• Beyaz sayılar sabittir.\n• Satır/sütun/blokta sayı tekrarı yapılamaz.</string>
+    <string name="game_tetris_instructions">• SOL/SAĞ ile hareket ettir.\n• YUKARI ile döndür.\n• AŞAĞI ile yavaş düşür.\n• CENTER ile hızlı düşür.</string>
+    <string name="game_starfighter_instructions">• Gemiyi D-PAD ile hareket ettirin.\n• Otomatik ateş.\n• Düşmanları yok ederek puan kazanın.\n• Vurulmamaya çalışın!\n• Ses için \'S\'ye basın.</string>
+    <string name="game_memory_instructions">• DPAD ile gezinin.\n• CENTER ile kartı çevirin.\n• Tüm eşleri bulun.\n• Az hamle daha iyidir!</string>
+    <string name="game_slide_puzzle_instructions">• Hareket için DPAD kullanın.\n• Kaydırmak için CENTER\'a basın.\n• Parçaları düzenleyip resmi tamamlayın.</string>
+    <string name="game_maze_instructions">• Labirenti dikkatlice inceleyin.\n• Yeşil noktaya bağlı olan çıkışı bulun.\n• SOL/SAĞ ile seçin.\n• CENTER ile onaylayın.</string>
+    <string name="game_mental_math_instructions">• İşlemi çözün.\n• DPAD ile cevabı seçin.\n• CENTER ile onaylayın.\n• Çabuk olun! Zaman daralıyor.</string>
+    <string name="game_froggy_instructions">• Yolu ve nehri geçin.\n• Arabalardan kaçının.\n• Kütüklere zıplayın.\n• Hedefe ulaşın!</string>
+    <string name="game_simon_instructions">• Renk sırasını izleyin.\n• D-PAD ile tekrar edin.\n• Sıra her turda uzar!</string>
+    <string name="game_tanks_instructions">• Tankı D-PAD ile kontrol edin.\n• Otomatik ateş.\n• Düşman tanklarını yok edin.\n• Üssü koruyun.</string>
+    <string name="game_word_quest_instructions">• 5 harfli kelimeyi 6 hakta bulun.\n• Klavye için D-PAD kullanın.\n• Harf seçmek için CENTER\'a basın.\n• YEŞİL: Harf ve yer doğru.</string>
+    <string name="game_dungeon_instructions">• Zindanda D-PAD ile ilerleyin.\n• Altın anahtarı toplayın.\n• Çıkış kapısına ulaşın.\n• KIRMIZI DİKENLERE DİKKAT!</string>
+    <string name="game_flappy_instructions">• Kanat çırpmak için CENTER\'a basın.\n• Boruların arasından geçin.\n• Hiçbir yere çarpmayın!\n• Her boru geçişi 1 puan.</string>
+    <string name="game_lines98_instructions">• İmleç için D-PAD kullanın.\n• Topu taşımak için CENTER\'a basın.\n• 5 veya daha fazla aynı renk topu dizin.\n• Ekran dolarsa oyun biter.</string>
+    <string name="game_solitaire_instructions">• İmleç için D-PAD kullanın.\n• Kart seçmek/koymak için CENTER\'a basın.\n• A\'dan K\'ya serileri tamamlayın.</string>
+    <string name="game_road_racer_instructions">• Trafikten kaçının.\n• Hayatta kalın!\n• Duraklatmak için CENTER\'a basın.</string>
+    <string name="game_hangman_instructions">• Harf seçerek kelimeyi bulun.\n• 6 hakkınız var.\n• Seçmek için CENTER\'a basın.</string>
+    <string name="select_game_hint">DpadHero: D-Pad ile oyun seçin</string>
+    <string name="settings">Ayarlar</string>
+    <string name="settings_button_description">Ayarlar</string>
+    <string name="sound_effects">Ses Efektleri</string>
+    <string name="sound_effects_description">Oyun seslerini açın veya kapatın.</string>
+    <string name="privacy_policy">Gizlilik Politikası</string>
+    <string name="back">Geri</string>
+    <string name="retro_game_studio">DPADHERO STUDIO</string>
+    <string name="supported_devices_hint">Destekler: D-pad / Uzaktan Kumanda</string>
+    <string name="help">YARDIM</string>
+    <string name="guide_hint_keys">[INFO] veya [H] tuşuna basın</string>
+    <string name="guide_title_default">NASIL OYNANIR</string>
+    <string name="guide_content_default">Rehber burada görüntülenir.</string>
+    <string name="dont_show_again">Bir daha gösterme</string>
+    <string name="start_game">OYUNU BAŞLAT</string>
+    <string name="resume">DEVAM ET</string>
+    <string name="score_label">PUAN</string>
+    <string name="best_label">REKOR</string>
+    <string name="next_label">SIRADAKİ</string>
+    <string name="game_over">OYUN BİTTİ</string>
+    <string name="paused">DURAKLATILDI</string>
+    <string name="win_4096_label">4096\'YA ULAŞILDI!</string>
+    <string name="restart_hint">Yeniden başlatmak için Center</string>
+    <string name="exit_hint">Çıkmak için Geri</string>
+    <string name="resume_hint">Devam etmek için Center</string>
+
+    <string-array name="win_generic">
+        <item>ZAFER!</item>
+        <item>TEBRİKLER!</item>
+        <item>İNANILMAZ!</item>
+        <item>HARİKA!</item>
+        <item>MUHTEŞEM!</item>
+        <item>SÜPERSİN!</item>
+        <item>MÜKEMMEL!</item>
+        <item>FANTASTİK!</item>
+        <item>HARİKULADE!</item>
+        <item>İYİ İŞ!</item>
+    </string-array>
+
+    <string-array name="win_highscore">
+        <item>YENİ REKOR!</item>
+        <item>DURDURULAMAZ!</item>
+        <item>EN İYİSİ!</item>
+        <item>EFSANEVİ!</item>
+        <item>REKOR!</item>
+    </string-array>
+
+    <string-array name="win_minesweeper">
+        <item>ALAN TEMİZLENDİ!</item>
+        <item>MAYIN USTASI!</item>
+        <item>GÜVENLİ GEÇİŞ!</item>
+        <item>UZMAN TARAYICI!</item>
+    </string-array>
+
+    <string-array name="win_sudoku">
+        <item>IZGARA TAMAMLANDI!</item>
+        <item>MANTIK KRALI!</item>
+        <item>BULMACA ÇÖZÜLDÜ!</item>
+        <item>KESKİN ZEKA!</item>
+    </string-array>
+
+    <string-array name="win_tictactoe">
+        <item>AKIL OYUNU!</item>
+        <item>3\'LÜ SIRA!</item>
+        <item>STRATEJİK ZAFER!</item>
+        <item>RAKİPSİZ!</item>
+    </string-array>
+
+    <string-array name="win_4096">
+        <item>MATEMATİK DAHİSİ!</item>
+        <item>4096\'YA ULAŞILDI!</item>
+        <item>SAYI CANAVARI!</item>
+        <item>FİNAL KAROSU!</item>
+    </string-array>
+
+    <string-array name="win_memory">
+        <item>KUSURSUZ HAFIZA!</item>
+        <item>EŞLEŞTİRME USTASI!</item>
+        <item>KESKİN ZİHİN!</item>
+        <item>HER ŞEY AKLIMDA!</item>
+    </string-array>
+
+    <string-array name="win_hangman">
+        <item>KELİME KURTARILDI!</item>
+        <item>KELİME USTASI!</item>
+        <item>KURTULUŞ!</item>
+        <item>SÖZLÜK KRALI!</item>
+    </string-array>
+
+    <string-array name="win_brick_break">
+        <item>BÖLÜM TAMAM!</item>
+        <item>TUĞLA KIRICI!</item>
+        <item>DUVAR YIKICI!</item>
+        <item>RAKET PROFESÖRÜ!</item>
+    </string-array>
+
+    <string-array name="win_word_quest">
+        <item>KELİME BULUNDU!</item>
+        <item>HECELEME USTASI!</item>
+        <item>SÖZLÜK KAHRAMANI!</item>
+        <item>GÖREV TAMAMLANDI!</item>
+    </string-array>
+
+    <string-array name="win_solitaire">
+        <item>DESTE BİTTİ!</item>
+        <item>AS KAZANDIRDI!</item>
+        <item>SERİ TAMAM!</item>
+        <item>KART KRALI!</item>
+    </string-array>
+
+    <string-array name="win_maze">
+        <item>KUPA BULUNDU!</item>
+        <item>LABİRENT KOŞUCUSU!</item>
+        <item>İZ SÜRÜCÜ!</item>
+        <item>ÇIKIŞA ULAŞILDI!</item>
+    </string-array>
+
+    <string-array name="win_sokoban">
+        <item>DEPO KAHRAMANI!</item>
+        <item>KUTU İTİCİ PRO!</item>
+        <item>HEDEFLER TAMAM!</item>
+        <item>SOKO-MASTER!</item>
+    </string-array>
+
+    <string-array name="win_checkers">
+        <item>BİLGİSAYAR YENİLDİ!</item>
+        <item>TAHTANIN KRALI!</item>
+        <item>BÜYÜK USTA!</item>
+        <item>STRATEJİ USTASI!</item>
+    </string-array>
+
+    <string-array name="win_slide_puzzle">
+        <item>RESİM ONARILDI!</item>
+        <item>BULMACA BİTTİ!</item>
+        <item>MÜKEMMEL UYUM!</item>
+        <item>KAYDIRMA USTASI!</item>
+    </string-array>
+
+    <string-array name="win_dungeon">
+        <item>ZİNDANDAN ÇIKILDI!</item>
+        <item>EFSANEVİ KAŞİF!</item>
+        <item>KAT TEMİZLENDİ!</item>
+        <item>HAZİNE BULUNDU!</item>
+    </string-array>
+
+    <string-array name="win_tanks">
+        <item>ÜS KORUNDU!</item>
+        <item>DÜŞMANLAR YOK EDİLDİ!</item>
+        <item>TANK KOMUTANI!</item>
+        <item>SAVAŞ KAHRAMANI!</item>
+    </string-array>
+
+    <string-array name="win_mental_math">
+        <item>MATEMATİK DAHİSİ!</item>
+        <item>ZİHİN GÜCÜ!</item>
+        <item>HESAP KRALI!</item>
+        <item>SAYI USTASI!</item>
+    </string-array>
+
+    <string-array name="win_froggy">
+        <item>HEDEFE ULAŞILDI!</item>
+        <item>GÜVENLİ GEÇİŞ!</item>
+        <item>KURBAĞA KAHRAMAN!</item>
+        <item>NEHİR USTASI!</item>
+    </string-array>
+    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
+    <string name="trex_daddy">Baba T-Rex</string>
+    <string name="trex_mummy">Anne T-Rex</string>
+    <string name="trex_baby">Bebek T-Rex</string>
+    <string name="trex_grandpa">Dede T-Rex</string>
+    <string name="trex_teenager">Genç T-Rex</string>
+    <string name="trex_scientist">Bilim İnsanı T-Rex</string>
+    <string name="trex_athlete">Sporcu T-Rex</string>
+    <string name="trex_pirate">Korsan T-Rex</string>
+    <string name="trex_chef">Şef T-Rex</string>
+    <string name="trex_astronaut">Astronot T-Rex</string>
+</resources>
