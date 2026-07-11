@@ -338,10 +338,13 @@ class StarFighterView @JvmOverloads constructor(
 
     private fun endGame() {
         gameOver = true
-        if (ScoreManager.updateHighScore(context, gameKey, score)) {
+        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+        if (isNewHigh) {
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
-            celebrationManager.start(width.toFloat(), height.toFloat())
+        } else {
+            currentVictoryWord = ""
         }
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, best)
         onGameOver?.invoke(score)
     }
 

@@ -234,10 +234,10 @@ class SudokuView @JvmOverloads constructor(
         if (isCompleteAndValid()) {
             solved = true
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-            celebrationManager.start(width.toFloat(), height.toFloat())
-            animationHandler.post(animationRunnable)
             val score = (600 + (puzzles.size - puzzleIndex) * 25).coerceAtLeast(100)
             if (ScoreManager.updateHighScore(context, gameKey, score)) best = score
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, best)
+            animationHandler.post(animationRunnable)
             SoundManager.playSuccess()
             onGameOver?.invoke(score)
         }

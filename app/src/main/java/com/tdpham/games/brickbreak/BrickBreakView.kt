@@ -304,9 +304,10 @@ class BrickBreakView @JvmOverloads constructor(
                 isWin = true
                 isPaused = true
                 currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-                celebrationManager.start(width.toFloat(), height.toFloat())
+                val oldHighScore = ScoreManager.getHighScore(context, gameKey)
                 val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
                 if (isNewHigh) highScore = score
+                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, oldHighScore)
                 SoundManager.playSuccess()
                 onGameOver?.invoke(score)
                 Choreographer.getInstance().removeFrameCallback(this)
@@ -321,6 +322,7 @@ class BrickBreakView @JvmOverloads constructor(
                 isPaused = true
                 val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
                 if (isNewHigh) highScore = score
+                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, score, highScore)
                 onGameOver?.invoke(score)
                 Choreographer.getInstance().removeFrameCallback(this)
             } else {
@@ -477,13 +479,16 @@ class BrickBreakView @JvmOverloads constructor(
 
         if (isPaused && !isGameOver && !isWin) {
             drawOverlay(canvas, context.getString(R.string.game_brick_break), context.getString(R.string.launch_hint))
-        } else if (isGameOver) {
-            drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
-        } else if (isWin) {
+        } else if (isGameOver || isWin) {
             celebrationManager.update()
             celebrationManager.draw(canvas)
             invalidate()
-            drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.play_again_hint)}")
+            
+            if (isGameOver) {
+                drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+            } else {
+                drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.play_again_hint)}")
+            }
         }
     }
 

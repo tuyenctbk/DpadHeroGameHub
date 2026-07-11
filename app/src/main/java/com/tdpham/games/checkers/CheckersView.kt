@@ -219,10 +219,11 @@ class CheckersView @JvmOverloads constructor(
     private fun endPlayerWin() {
         gameOver = true
         currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-        celebrationManager.start(width.toFloat(), height.toFloat())
-        status = currentVictoryWord
+        val oldWins = wins
         val newWins = wins + 1
         if (ScoreManager.updateHighScore(context, gameKey, newWins)) wins = newWins
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, wins, oldWins)
+        status = currentVictoryWord
         SoundManager.playSuccess()
         onGameOver?.invoke(wins)
     }
@@ -230,6 +231,7 @@ class CheckersView @JvmOverloads constructor(
     private fun endCpuWin() {
         gameOver = true
         status = context.getString(R.string.cpu_wins_label)
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, 0, 100)
         SoundManager.playError()
     }
 
@@ -541,7 +543,7 @@ class CheckersView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.LEFT
         canvas.drawText("${context.getString(R.string.wins_label)}: $wins", 30f, 52f, paint)
         
-        if (gameOver && status.contains("!")) {
+        if (gameOver) {
             celebrationManager.update()
             celebrationManager.draw(canvas)
             invalidate()

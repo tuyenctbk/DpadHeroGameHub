@@ -14,12 +14,14 @@ class CelebrationManager {
     enum class CelebrationType {
         FIREWORKS, FLOWERS, BALLOONS, STARS, CONFETTI,
         HEARTS, DIAMONDS, SNOWFLAKES, MUSIC_NOTES, SPARKLES,
-        SMILEYS, RAIN_COINS
+        SMILEYS, RAIN_COINS, 
+        RAIN_CLOUDS, GHOSTS, THUMBS_DOWN, BROKEN_HEARTS, BUBBLES,
+        POOP_EMOJI, FALLING_LEAVES, FIRE_FLAMES, LIGHTNING_BOLTS, CLOUDS
     }
 
     private class Particle(
         var x: Float, var y: Float, var vx: Float, var vy: Float,
-        val color: Int, val size: Float, val type: CelebrationType
+        val color: Int, var size: Float, val type: CelebrationType
     ) {
         var life = 1.0f
         var alpha = 255
@@ -93,6 +95,55 @@ class CelebrationManager {
                     rotation += 8f
                     life -= 0.005f
                 }
+                CelebrationType.RAIN_CLOUDS -> {
+                    vy += 4.0f
+                    vx = (sin(y * 0.1).toFloat() * 0.5f)
+                    life -= 0.008f
+                }
+                CelebrationType.GHOSTS -> {
+                    vy -= 1.5f
+                    vx += (sin(y * 0.05).toFloat() * 2.0f)
+                    life -= 0.005f
+                }
+                CelebrationType.THUMBS_DOWN -> {
+                    vy += 2.0f
+                    rotation += vr
+                    life -= 0.006f
+                }
+                CelebrationType.BROKEN_HEARTS -> {
+                    vy += 1.5f
+                    rotation += 2f
+                    life -= 0.007f
+                }
+                CelebrationType.BUBBLES -> {
+                    vy -= 1.2f
+                    vx += (sin(y * 0.08).toFloat() * 1.5f)
+                    life -= 0.004f
+                }
+                CelebrationType.POOP_EMOJI -> {
+                    vy += 1.8f
+                    rotation += vr * 0.2f
+                    life -= 0.005f
+                }
+                CelebrationType.FALLING_LEAVES -> {
+                    vy += 0.8f
+                    vx += (sin(y * 0.03 + randomFactor * 5).toFloat() * 2.5f)
+                    rotation += vr * 0.8f
+                    life -= 0.003f
+                }
+                CelebrationType.FIRE_FLAMES -> {
+                    vy -= 2.5f
+                    vx += (Math.random().toFloat() - 0.5f) * 2f
+                    size *= 0.97f
+                    life -= 0.02f
+                }
+                CelebrationType.LIGHTNING_BOLTS -> {
+                    life -= 0.04f
+                }
+                CelebrationType.CLOUDS -> {
+                    vx -= 0.5f
+                    life -= 0.002f
+                }
             }
             alpha = (life * 255).toInt().coerceIn(0, 255)
         }
@@ -110,9 +161,23 @@ class CelebrationManager {
     fun start(width: Float, height: Float, type: CelebrationType? = null) {
         this.width = width
         this.height = height
-        this.currentType = type ?: CelebrationType.values().random()
+        this.currentType = type ?: listOf(CelebrationType.FIREWORKS, CelebrationType.RAIN_COINS, CelebrationType.CONFETTI, CelebrationType.BALLOONS, CelebrationType.STARS).random()
         particles.clear()
         initParticles()
+    }
+
+    fun startOutcome(width: Float, height: Float, isSuccess: Boolean, score: Int = 0, highScore: Int = 0) {
+        val winEpic = listOf(CelebrationType.FIREWORKS, CelebrationType.RAIN_COINS, CelebrationType.STARS, CelebrationType.DIAMONDS)
+        val winNormal = listOf(CelebrationType.CONFETTI, CelebrationType.BALLOONS, CelebrationType.SMILEYS, CelebrationType.MUSIC_NOTES, CelebrationType.FLOWERS, CelebrationType.SPARKLES)
+        val lossMild = listOf(CelebrationType.BUBBLES, CelebrationType.CLOUDS, CelebrationType.FALLING_LEAVES, CelebrationType.SNOWFLAKES)
+        val lossEpic = listOf(CelebrationType.RAIN_CLOUDS, CelebrationType.THUMBS_DOWN, CelebrationType.POOP_EMOJI, CelebrationType.GHOSTS, CelebrationType.BROKEN_HEARTS, CelebrationType.FIRE_FLAMES, CelebrationType.LIGHTNING_BOLTS)
+
+        val type = if (isSuccess) {
+            if (score > highScore && highScore > 0) winEpic.random() else winNormal.random()
+        } else {
+            if (score > highScore * 0.75f && highScore > 0) lossMild.random() else lossEpic.random()
+        }
+        start(width, height, type)
     }
 
     private fun initParticles() {
@@ -184,6 +249,56 @@ class CelebrationManager {
                     particles.add(createFallingParticle(currentType))
                 }
             }
+            CelebrationType.RAIN_CLOUDS -> {
+                repeat(40) {
+                    particles.add(Particle(random.nextFloat() * width, -random.nextFloat() * height, 0f, random.nextFloat() * 5 + 5, Color.parseColor("#90CAF9"), random.nextFloat() * 5 + 5, currentType))
+                }
+            }
+            CelebrationType.GHOSTS -> {
+                repeat(15) {
+                    particles.add(Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 2 - 1, Color.argb(180, 255, 255, 255), random.nextFloat() * 30 + 30, currentType))
+                }
+            }
+            CelebrationType.THUMBS_DOWN -> {
+                repeat(30) {
+                    particles.add(Particle(random.nextFloat() * width, -random.nextFloat() * height, random.nextFloat() * 2 - 1, random.nextFloat() * 3 + 2, Color.parseColor("#EF5350"), random.nextFloat() * 20 + 20, currentType))
+                }
+            }
+            CelebrationType.BROKEN_HEARTS -> {
+                repeat(25) {
+                    particles.add(Particle(random.nextFloat() * width, -random.nextFloat() * height, random.nextFloat() * 2 - 1, random.nextFloat() * 2 + 2, Color.RED, random.nextFloat() * 20 + 20, currentType))
+                }
+            }
+            CelebrationType.BUBBLES -> {
+                repeat(40) {
+                    particles.add(Particle(random.nextFloat() * width, height + random.nextFloat() * 100, random.nextFloat() * 2 - 1, -random.nextFloat() * 2 - 1, Color.argb(100, 174, 234, 255), random.nextFloat() * 15 + 5, currentType))
+                }
+            }
+            CelebrationType.POOP_EMOJI -> {
+                repeat(20) {
+                    particles.add(Particle(random.nextFloat() * width, -random.nextFloat() * height, random.nextFloat() * 2 - 1, random.nextFloat() * 3 + 1, Color.parseColor("#795548"), random.nextFloat() * 35 + 25, currentType))
+                }
+            }
+            CelebrationType.FALLING_LEAVES -> {
+                repeat(40) {
+                    particles.add(createFallingParticle(currentType))
+                }
+            }
+            CelebrationType.FIRE_FLAMES -> {
+                repeat(60) {
+                    particles.add(Particle(random.nextFloat() * width, height, (random.nextFloat() - 0.5f) * 4f, -random.nextFloat() * 5 - 2, Color.parseColor("#FF5722"), random.nextFloat() * 20 + 10, currentType))
+                }
+            }
+            CelebrationType.LIGHTNING_BOLTS -> {
+                repeat(10) {
+                    particles.add(Particle(random.nextFloat() * width, random.nextFloat() * height * 0.5f, 0f, 0f, Color.YELLOW, random.nextFloat() * 40 + 40, currentType))
+                }
+            }
+            CelebrationType.CLOUDS -> {
+                repeat(10) {
+                    particles.add(Particle(width + random.nextFloat() * width, random.nextFloat() * height * 0.4f, -random.nextFloat() * 1 - 0.5f, 0f, Color.argb(200, 189, 189, 189), random.nextFloat() * 60 + 60, currentType))
+                }
+            }
         }
     }
 
@@ -194,6 +309,7 @@ class CelebrationManager {
             CelebrationType.DIAMONDS -> Color.CYAN
             CelebrationType.SNOWFLAKES -> Color.WHITE
             CelebrationType.RAIN_COINS -> Color.parseColor("#FFD700")
+            CelebrationType.FALLING_LEAVES -> listOf(Color.parseColor("#F57C00"), Color.parseColor("#EF6C00"), Color.parseColor("#D84315")).random()
             else -> randomColor()
         }
         return Particle(random.nextFloat() * width, -random.nextFloat() * height, random.nextFloat() * 4 - 2, random.nextFloat() * 5 + 2, color, random.nextFloat() * 15 + 10, type)
@@ -249,6 +365,35 @@ class CelebrationManager {
                         particles.add(Particle(random.nextFloat() * width, random.nextFloat() * height, 0f, 0f, Color.WHITE, random.nextFloat() * 10 + 5, currentType))
                     }
                 }
+                CelebrationType.FALLING_LEAVES -> {
+                    particles.add(createFallingParticle(currentType).apply { y = -50f })
+                }
+                CelebrationType.RAIN_CLOUDS -> {
+                    particles.add(Particle(random.nextFloat() * width, -50f, 0f, random.nextFloat() * 5 + 5, Color.parseColor("#90CAF9"), random.nextFloat() * 5 + 5, currentType))
+                }
+                CelebrationType.FIRE_FLAMES -> {
+                    particles.add(Particle(random.nextFloat() * width, height, (random.nextFloat() - 0.5f) * 4f, -random.nextFloat() * 5 - 2, Color.parseColor("#FF5722"), random.nextFloat() * 20 + 10, currentType))
+                }
+                CelebrationType.LIGHTNING_BOLTS -> {
+                    if (random.nextFloat() > 0.9f) {
+                        particles.add(Particle(random.nextFloat() * width, random.nextFloat() * height * 0.5f, 0f, 0f, Color.YELLOW, random.nextFloat() * 40 + 40, currentType))
+                    }
+                }
+                CelebrationType.BUBBLES -> {
+                    particles.add(Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 2 - 1, Color.argb(100, 174, 234, 255), random.nextFloat() * 15 + 5, currentType))
+                }
+                CelebrationType.GHOSTS, CelebrationType.THUMBS_DOWN, CelebrationType.BROKEN_HEARTS, CelebrationType.POOP_EMOJI, CelebrationType.CLOUDS -> {
+                    if (random.nextFloat() > 0.85f) {
+                        val p = when (currentType) {
+                            CelebrationType.GHOSTS -> Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 2 - 1, Color.argb(180, 255, 255, 255), random.nextFloat() * 30 + 30, currentType)
+                            CelebrationType.THUMBS_DOWN -> Particle(random.nextFloat() * width, -50f, random.nextFloat() * 2 - 1, random.nextFloat() * 3 + 2, Color.parseColor("#EF5350"), random.nextFloat() * 20 + 20, currentType)
+                            CelebrationType.BROKEN_HEARTS -> Particle(random.nextFloat() * width, -50f, random.nextFloat() * 2 - 1, random.nextFloat() * 2 + 2, Color.RED, random.nextFloat() * 20 + 20, currentType)
+                            CelebrationType.POOP_EMOJI -> Particle(random.nextFloat() * width, -50f, random.nextFloat() * 2 - 1, random.nextFloat() * 3 + 1, Color.parseColor("#795548"), random.nextFloat() * 35 + 25, currentType)
+                            else -> Particle(width + 50f, random.nextFloat() * height * 0.4f, -random.nextFloat() * 1 - 0.5f, 0f, Color.argb(200, 189, 189, 189), random.nextFloat() * 60 + 60, currentType)
+                        }
+                        particles.add(p)
+                    }
+                }
             }
         }
     }
@@ -262,7 +407,7 @@ class CelebrationManager {
             paint.style = Paint.Style.FILL
 
             when (p.type) {
-                CelebrationType.FIREWORKS, CelebrationType.CONFETTI -> {
+                CelebrationType.CONFETTI -> {
                     if (p.type == CelebrationType.CONFETTI) {
                         canvas.save()
                         canvas.translate(p.x, p.y)
@@ -316,6 +461,42 @@ class CelebrationManager {
                 CelebrationType.RAIN_COINS -> {
                     drawCoin(canvas, p.x, p.y, p.size, p.rotation)
                 }
+                CelebrationType.FIREWORKS -> {
+                    canvas.drawCircle(p.x, p.y, p.size, paint)
+                }
+                CelebrationType.RAIN_CLOUDS -> {
+                    canvas.drawLine(p.x, p.y, p.x, p.y + p.size, paint)
+                }
+                CelebrationType.GHOSTS -> {
+                    drawGhost(canvas, p.x, p.y, p.size)
+                }
+                CelebrationType.THUMBS_DOWN -> {
+                    drawThumbsDown(canvas, p.x, p.y, p.size, p.rotation)
+                }
+                CelebrationType.BROKEN_HEARTS -> {
+                    drawBrokenHeart(canvas, p.x, p.y, p.size, p.rotation)
+                }
+                CelebrationType.BUBBLES -> {
+                    paint.style = Paint.Style.STROKE
+                    paint.strokeWidth = 2f
+                    canvas.drawCircle(p.x, p.y, p.size, paint)
+                }
+                CelebrationType.POOP_EMOJI -> {
+                    drawPoop(canvas, p.x, p.y, p.size, p.rotation)
+                }
+                CelebrationType.FALLING_LEAVES -> {
+                    drawLeaf(canvas, p.x, p.y, p.size, p.rotation)
+                }
+                CelebrationType.FIRE_FLAMES -> {
+                    paint.color = if (Math.random() > 0.5) Color.parseColor("#FF9800") else Color.parseColor("#F44336")
+                    canvas.drawCircle(p.x, p.y, p.size * p.life, paint)
+                }
+                CelebrationType.LIGHTNING_BOLTS -> {
+                    drawLightning(canvas, p.x, p.y, p.size)
+                }
+                CelebrationType.CLOUDS -> {
+                    canvas.drawRoundRect(p.x, p.y, p.x + p.size * 2, p.y + p.size, p.size * 0.5f, p.size * 0.5f, paint)
+                }
             }
         }
     }
@@ -344,6 +525,113 @@ class CelebrationManager {
         }
         val words = context.resources.getStringArray(resId)
         return words.random()
+    }
+
+    private fun drawGhost(canvas: Canvas, x: Float, y: Float, size: Float) {
+        path.reset()
+        path.moveTo(x - size, y + size)
+        path.lineTo(x - size, y - size * 0.5f)
+        rectF.set(x - size, y - size, x + size, y)
+        path.arcTo(rectF, 180f, 180f)
+        path.lineTo(x + size, y + size)
+        path.lineTo(x + size * 0.5f, y + size * 0.7f)
+        path.lineTo(x, y + size)
+        path.lineTo(x - size * 0.5f, y + size * 0.7f)
+        path.close()
+        canvas.drawPath(path, paint)
+        
+        paint.color = Color.BLACK
+        canvas.drawCircle(x - size * 0.3f, y - size * 0.3f, size * 0.15f, paint)
+        canvas.drawCircle(x + size * 0.3f, y - size * 0.3f, size * 0.15f, paint)
+    }
+
+    private fun drawThumbsDown(canvas: Canvas, x: Float, y: Float, size: Float, rotation: Float) {
+        canvas.save()
+        canvas.translate(x, y)
+        canvas.rotate(rotation)
+        // Main fist
+        canvas.drawRoundRect(-size, -size * 0.5f, size, size * 0.5f, 5f, 5f, paint)
+        // Thumb
+        path.reset()
+        path.moveTo(-size, 0f)
+        path.lineTo(-size * 1.5f, size * 1.2f)
+        path.lineTo(-size * 0.5f, size * 1.2f)
+        path.close()
+        canvas.drawPath(path, paint)
+        canvas.restore()
+    }
+
+    private fun drawBrokenHeart(canvas: Canvas, x: Float, y: Float, size: Float, rotation: Float) {
+        canvas.save()
+        canvas.translate(x, y)
+        canvas.rotate(rotation)
+        
+        // Left half
+        path.reset()
+        path.moveTo(0f, size / 4)
+        path.cubicTo(0f, -size / 2, -size, -size / 2, -size, size / 4)
+        path.cubicTo(-size, size, 0f, size * 1.5f, 0f, size * 2)
+        path.lineTo(-5f, size) // Zigzag break
+        path.lineTo(5f, size * 0.5f)
+        path.close()
+        canvas.drawPath(path, paint)
+        
+        // Right half
+        canvas.translate(5f, 5f) // Separate a bit
+        path.reset()
+        path.moveTo(0f, size / 4)
+        path.cubicTo(0f, -size / 2, size, -size / 2, size, size / 4)
+        path.cubicTo(size, size, 0f, size * 1.5f, 0f, size * 2)
+        path.lineTo(-5f, size)
+        path.lineTo(5f, size * 0.5f)
+        path.close()
+        canvas.drawPath(path, paint)
+        
+        canvas.restore()
+    }
+
+    private fun drawPoop(canvas: Canvas, x: Float, y: Float, size: Float, rotation: Float) {
+        canvas.save()
+        canvas.translate(x, y)
+        canvas.rotate(rotation)
+        // Base tier
+        canvas.drawRoundRect(-size, 0f, size, size * 0.6f, 15f, 15f, paint)
+        // Middle tier
+        canvas.drawRoundRect(-size * 0.7f, -size * 0.5f, size * 0.7f, 0f, 12f, 12f, paint)
+        // Top tier
+        canvas.drawCircle(0f, -size * 0.7f, size * 0.4f, paint)
+        
+        // Eyes
+        paint.color = Color.WHITE
+        canvas.drawCircle(-size * 0.25f, -size * 0.2f, size * 0.15f, paint)
+        canvas.drawCircle(size * 0.25f, -size * 0.2f, size * 0.15f, paint)
+        paint.color = Color.BLACK
+        canvas.drawCircle(-size * 0.25f, -size * 0.2f, size * 0.08f, paint)
+        canvas.drawCircle(size * 0.25f, -size * 0.2f, size * 0.08f, paint)
+        canvas.restore()
+    }
+
+    private fun drawLeaf(canvas: Canvas, x: Float, y: Float, size: Float, rotation: Float) {
+        canvas.save()
+        canvas.translate(x, y)
+        canvas.rotate(rotation)
+        path.reset()
+        path.moveTo(0f, -size)
+        path.quadTo(size, 0f, 0f, size)
+        path.quadTo(-size, 0f, 0f, -size)
+        canvas.drawPath(path, paint)
+        paint.style = Paint.Style.STROKE
+        canvas.drawLine(0f, -size, 0f, size * 1.2f, paint)
+        canvas.restore()
+    }
+
+    private fun drawLightning(canvas: Canvas, x: Float, y: Float, size: Float) {
+        path.reset()
+        path.moveTo(x + size * 0.5f, y - size)
+        path.lineTo(x - size * 0.5f, y)
+        path.lineTo(x + size * 0.2f, y)
+        path.lineTo(x - size * 0.5f, y + size)
+        canvas.drawPath(path, paint)
     }
 
     private fun drawStar(canvas: Canvas, x: Float, y: Float, size: Float, rotation: Float) {

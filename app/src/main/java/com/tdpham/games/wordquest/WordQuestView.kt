@@ -187,16 +187,18 @@ class WordQuestView @JvmOverloads constructor(
             won = true
             gameOver = true
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-            celebrationManager.start(width.toFloat(), height.toFloat())
             score = (6 - guesses.size + 1) * 1000
-            if (score > best) {
+            val isNewHigh = if (score > best) {
                 best = score
                 ScoreManager.updateHighScore(context, gameKey, best)
-            }
+                true
+            } else false
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, if (isNewHigh) score - 1 else best)
             SoundManager.playSuccess()
             onGameOver?.invoke(score)
         } else if (guesses.size == 6) {
             gameOver = true
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, score, best)
             SoundManager.playError()
             onGameOver?.invoke(score)
         } else {
@@ -326,11 +328,10 @@ class WordQuestView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
         if (gameOver) {
-            if (won) {
-                celebrationManager.update()
-                celebrationManager.draw(canvas)
-                invalidate()
-            }
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+
             val title = if (won) currentVictoryWord else context.getString(R.string.out_of_tries)
             val sub = if (won) "${context.getString(R.string.game_word_quest)}: $targetWord" else "${context.getString(R.string.answer_was_label)}: $targetWord"
             drawOverlay(canvas, title, "$sub\n${context.getString(R.string.restart_hint)}")

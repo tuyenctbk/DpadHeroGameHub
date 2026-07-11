@@ -183,6 +183,7 @@ class HangmanView @JvmOverloads constructor(
                     SoundManager.playError()
                     if (remainingAttempts == 0) {
                         isGameOver = true
+                        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, score, highScore)
                         onGameOver?.invoke(score)
                     }
                 } else {
@@ -190,9 +191,9 @@ class HangmanView @JvmOverloads constructor(
                     if (targetWord.all { it in guessedLetters }) {
                         isWin = true
                         currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-                        celebrationManager.start(width.toFloat(), height.toFloat())
                         score += 10 + remainingAttempts
-                        ScoreManager.updateHighScore(context, gameKey, score)
+                        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+                        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, if (isNewHigh) score - 1 else highScore)
                         SoundManager.playSuccess()
                         onGameOver?.invoke(score)
                     }
@@ -235,12 +236,13 @@ class HangmanView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $highScore", width - 40f, hudY, paint)
 
-        if (isGameOver) drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.answer_was_label)}: $targetWord\n${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
-        else if (isWin) {
+        if (isGameOver || isWin) {
             celebrationManager.update()
             celebrationManager.draw(canvas)
             invalidate()
-            drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.next_word_hint)}")
+            
+            if (isGameOver) drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.answer_was_label)}: $targetWord\n${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+            else drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.next_word_hint)}")
         }
         else if (isPaused) drawOverlay(canvas, context.getString(R.string.game_hangman), context.getString(R.string.start_game))
     }

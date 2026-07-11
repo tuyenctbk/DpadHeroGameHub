@@ -176,12 +176,13 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
         isGameOver = true
         SoundManager.playError()
         val finalScore = score
-        if (ScoreManager.updateHighScore(context, gameKey, finalScore)) {
+        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, finalScore)
+        if (isNewHigh) {
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
-            celebrationManager.start(width.toFloat(), height.toFloat())
         } else {
             currentVictoryWord = ""
         }
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, finalScore, highScore)
         highScore = ScoreManager.getHighScore(context, gameKey)
         onGameOver?.invoke(finalScore)
     }
@@ -193,13 +194,13 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
             val title = if (isGameOver) (if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.game_over)) else context.getString(R.string.paused)
             val sub = if (isGameOver) "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}" else context.getString(R.string.resume_hint)
             
-            drawOverlay(canvas, title, sub)
-            
-            if (isGameOver && currentVictoryWord.isNotEmpty()) {
+            if (isGameOver) {
                 celebrationManager.update()
                 celebrationManager.draw(canvas)
                 invalidate()
             }
+            
+            drawOverlay(canvas, title, sub)
         }
 
         canvas.translate(width / 2f, height / 2f)

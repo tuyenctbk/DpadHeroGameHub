@@ -192,12 +192,13 @@ class SimonSaysView @JvmOverloads constructor(
             playerIdx++
             if (playerIdx == sequence.size) {
                 score++
-                if (score > best) {
+                val isNewHigh = if (score > best) {
                     best = score
-                    if (ScoreManager.updateHighScore(context, gameKey, best)) {
-                        currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
-                        celebrationManager.start(width.toFloat(), height.toFloat())
-                    }
+                    ScoreManager.updateHighScore(context, gameKey, best)
+                } else false
+                if (isNewHigh) {
+                    currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
+                    celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, best)
                 }
                 handler.postDelayed({ startNextRound() }, 800)
             }
@@ -205,6 +206,7 @@ class SimonSaysView @JvmOverloads constructor(
             gameOver = true
             gamePaused = true
             SoundManager.playError()
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, score, best)
             onGameOver?.invoke(score)
             invalidate()
         }
@@ -254,7 +256,7 @@ class SimonSaysView @JvmOverloads constructor(
             drawOverlay(canvas, context.getString(R.string.game_simon), context.getString(R.string.start_game))
         }
 
-        if (score > 0 && currentVictoryWord.isNotEmpty()) {
+        if (gameOver || (score > 0 && currentVictoryWord.isNotEmpty())) {
             celebrationManager.update()
             celebrationManager.draw(canvas)
             invalidate()

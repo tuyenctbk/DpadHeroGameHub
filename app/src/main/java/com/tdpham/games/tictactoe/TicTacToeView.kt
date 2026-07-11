@@ -37,7 +37,7 @@ class TicTacToeView @JvmOverloads constructor(
     private val winningCells = mutableListOf<Pair<Int, Int>>()
     
     private val celebrationManager = CelebrationManager()
-    private var isWinCelebration = false
+    private var isEndCelebration = false
     private var currentVictoryWord = ""
     private var turnStarter = 1 // 1 for Player, 2 for CPU
     private var isPlayerTurn = true
@@ -46,7 +46,7 @@ class TicTacToeView @JvmOverloads constructor(
     private val animationRunnable = object : Runnable {
         override fun run() {
             animationFrame++
-            if (isWinCelebration) celebrationManager.update()
+            if (isEndCelebration) celebrationManager.update()
             invalidate()
             animationHandler.postDelayed(this, 50)
         }
@@ -77,7 +77,7 @@ class TicTacToeView @JvmOverloads constructor(
         cursorR = gridSize / 2
         cursorC = gridSize / 2
         gameOver = false
-        isWinCelebration = false
+        isEndCelebration = false
         winningCells.clear()
         wins = ScoreManager.getHighScore(context, gameKey)
         
@@ -173,10 +173,11 @@ class TicTacToeView @JvmOverloads constructor(
         SoundManager.playClick()
         if (resolveEnd(context.getString(R.string.victory_label))) {
             val newScore = wins + 1
-            isWinCelebration = true
+            isEndCelebration = true
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-            celebrationManager.start(width.toFloat(), height.toFloat())
-            if (ScoreManager.updateHighScore(context, gameKey, newScore)) wins = newScore
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, newScore)
+            if (isNewHigh) wins = newScore
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, newScore, wins)
             return
         }
         isPlayerTurn = false
@@ -200,6 +201,9 @@ class TicTacToeView @JvmOverloads constructor(
         if (!resolveEnd(context.getString(R.string.cpu_wins_label))) {
             isPlayerTurn = true
             status = context.getString(R.string.your_turn_label)
+        } else {
+            isEndCelebration = true
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, 0, 100)
         }
         invalidate()
     }
@@ -255,6 +259,8 @@ class TicTacToeView @JvmOverloads constructor(
         } else if (isDraw()) {
             gameOver = true
             status = context.getString(R.string.draw_label)
+            isEndCelebration = true
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, wins, wins)
             SoundManager.playError()
             onGameOver?.invoke(wins)
             true
@@ -377,12 +383,12 @@ class TicTacToeView @JvmOverloads constructor(
         paint.textSize = 42f
         val centerX = Math.round(width / 2f).toFloat()
         val hudY2 = Math.round(top - 30f).toFloat()
-        canvas.drawText(if (isWinCelebration) currentVictoryWord else status, centerX, hudY2, paint)
+        canvas.drawText(if (isEndCelebration && status == context.getString(R.string.victory_label)) currentVictoryWord else status, centerX, hudY2, paint)
         
-        if (isWinCelebration) celebrationManager.draw(canvas)
+        if (isEndCelebration) celebrationManager.draw(canvas)
 
         if (gameOver) {
-            drawOverlay(canvas, if (isWinCelebration) currentVictoryWord else status, context.getString(R.string.restart_hint))
+            drawOverlay(canvas, if (isEndCelebration && status == context.getString(R.string.victory_label)) currentVictoryWord else status, context.getString(R.string.restart_hint))
         }
     }
 

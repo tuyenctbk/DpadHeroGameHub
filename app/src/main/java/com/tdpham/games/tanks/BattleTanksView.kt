@@ -361,6 +361,8 @@ class BattleTanksView @JvmOverloads constructor(
                 if (tile == 1) grid[by][bx] = 0 // Break brick
                 if (tile == 3) {
                     gameOver = true; gamePaused = true; SoundManager.playError()
+                    val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+                    celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, best)
                     onGameOver?.invoke(score)
                 }
                 bIter.remove()
@@ -381,7 +383,7 @@ class BattleTanksView @JvmOverloads constructor(
                             if (score % 1000 == 0) {
                                 level++
                                 currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-                                celebrationManager.start(width.toFloat(), height.toFloat())
+                                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, best)
                                 // Defer setupLevel to avoid ConcurrentModificationException
                                 handler.post { setupLevel() }
                                 return // Exit update immediately as lists are about to be cleared
@@ -397,6 +399,8 @@ class BattleTanksView @JvmOverloads constructor(
             } else {
                 if (player.x == bx && player.y == by) {
                     gameOver = true; gamePaused = true; SoundManager.playError()
+                    val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+                    celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, best)
                     onGameOver?.invoke(score)
                     bIter.remove()
                     continue

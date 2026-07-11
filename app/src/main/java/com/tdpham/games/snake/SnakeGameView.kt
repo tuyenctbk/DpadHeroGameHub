@@ -204,9 +204,9 @@ class SnakeGameView @JvmOverloads constructor(
         if (isNewHigh) {
             highScore = score
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-            celebrationManager.start(width.toFloat(), height.toFloat())
             gameOverReason = currentVictoryWord
         }
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, highScore)
         onGameOver?.invoke(score)
     }
 

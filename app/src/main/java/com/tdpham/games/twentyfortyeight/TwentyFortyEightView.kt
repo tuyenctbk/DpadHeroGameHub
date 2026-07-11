@@ -37,7 +37,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
     private val animationRunnable = object : Runnable {
         override fun run() {
             animationFrame++
-            if (isWin) celebrationManager.update()
+            if (isGameOver || isWin) celebrationManager.update()
             invalidate()
             animationHandler.postDelayed(this, 50)
         }
@@ -236,9 +236,10 @@ class TwentyFortyEightView @JvmOverloads constructor(
             val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
             if (isNewHigh) highScore = score
             SoundManager.playError()
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, score, highScore)
             onGameOver?.invoke(score)
         } else if (isWin) {
-            celebrationManager.start(width.toFloat(), height.toFloat())
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, highScore)
             SoundManager.playSuccess()
         }
     }
@@ -291,7 +292,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
         }
 
         if (isGameOver || isWin) {
-            if (isWin) celebrationManager.draw(canvas)
+            celebrationManager.draw(canvas)
             drawOverlay(canvas)
         }
     }

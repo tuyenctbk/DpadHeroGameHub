@@ -233,10 +233,13 @@ class TetrisView @JvmOverloads constructor(
         if (!isValid(current.r, current.c, current.rot)) {
             gameOver = true
             handler.removeCallbacks(tick)
-            if (ScoreManager.updateHighScore(context, gameKey, score)) {
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            if (isNewHigh) {
                 currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-                celebrationManager.start(width.toFloat(), height.toFloat())
+            } else {
+                currentVictoryWord = ""
             }
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, best)
             SoundManager.playError()
             onGameOver?.invoke(score)
         }

@@ -204,11 +204,13 @@ class MemoryView @JvmOverloads constructor(
             if (matches == (cards.size / 2)) {
                 gameOver = true
                 currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-                celebrationManager.start(width.toFloat(), height.toFloat())
                 val currentScore = (1000 - moves).coerceAtLeast(0)
-                if (ScoreManager.updateHighScore(context, gameKey, currentScore)) {
+                val oldHighScore = ScoreManager.getHighScore(context, gameKey)
+                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, currentScore)
+                if (isNewHigh) {
                     bestMoves = moves
                 }
+                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, currentScore, oldHighScore)
                 SoundManager.playSuccess()
                 onGameOver?.invoke(currentScore)
             }

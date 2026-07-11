@@ -190,7 +190,7 @@ class FroggyCrossView @JvmOverloads constructor(
         if (frogR == 0) {
             score += 1000
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-            celebrationManager.start(width.toFloat(), height.toFloat())
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, best)
             SoundManager.playSuccess()
             resetFrog()
         }
@@ -202,7 +202,8 @@ class FroggyCrossView @JvmOverloads constructor(
         if (lives <= 0) {
             gameOver = true
             gamePaused = true
-            ScoreManager.updateHighScore(context, gameKey, score)
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, best)
             onGameOver?.invoke(score)
         } else {
             resetFrog()

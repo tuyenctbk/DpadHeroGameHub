@@ -217,10 +217,12 @@ class SlidePuzzleView @JvmOverloads constructor(
         if (tiles.withIndex().all { it.value == it.index }) {
             gameOver = true
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-            celebrationManager.start(width.toFloat(), height.toFloat())
-            SoundManager.playSuccess()
             val score = (10000 - moves).coerceAtLeast(0)
-            if (ScoreManager.updateHighScore(context, gameKey, score)) bestMoves = moves
+            val oldHighScore = ScoreManager.getHighScore(context, gameKey)
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            if (isNewHigh) bestMoves = moves
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, oldHighScore)
+            SoundManager.playSuccess()
             onGameOver?.invoke(score)
         }
     }

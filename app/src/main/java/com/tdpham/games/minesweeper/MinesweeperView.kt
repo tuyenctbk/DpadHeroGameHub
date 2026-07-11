@@ -74,7 +74,7 @@ class MinesweeperView @JvmOverloads constructor(
     private val animationRunnable = object : Runnable {
         override fun run() {
             animationFrame++
-            if (isWin) celebrationManager.update()
+            if (isWin || isGameOver) celebrationManager.update()
             invalidate()
             animationHandler.postDelayed(this, 50)
         }
@@ -250,6 +250,7 @@ class MinesweeperView @JvmOverloads constructor(
             isGameOver = true
             SoundManager.playError()
             revealAllMines(r, c)
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, 0, 100)
             onGameOver?.invoke(totalWins)
             invalidate()
             return
@@ -342,9 +343,10 @@ class MinesweeperView @JvmOverloads constructor(
         if (revealedCount == (rows * cols - minesCount)) {
             isWin = true
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-            celebrationManager.start(width.toFloat(), height.toFloat())
+            val oldWins = totalWins
             totalWins++
             ScoreManager.updateHighScore(context, gameKey, totalWins)
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, totalWins, oldWins)
             SoundManager.playSuccess()
             onGameOver?.invoke(totalWins)
             invalidate()
@@ -565,7 +567,7 @@ class MinesweeperView @JvmOverloads constructor(
             }
         }
 
-        if (isWin) celebrationManager.draw(canvas)
+        if (isWin || isGameOver) celebrationManager.draw(canvas)
 
         if (isGameOver || isWin) {
             paint.reset()

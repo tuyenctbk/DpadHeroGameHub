@@ -297,16 +297,13 @@ class FlappyHeroView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
         if (gameOver) {
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
             val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.crashed_label)
             drawOverlay(canvas, title, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         } else if (gamePaused) {
             drawOverlay(canvas, context.getString(R.string.game_flappy), context.getString(R.string.flap_hint))
-        }
-
-        if (score > 0 && currentVictoryWord.isNotEmpty()) {
-            celebrationManager.update()
-            celebrationManager.draw(canvas)
-            invalidate()
         }
 
         if (!gamePaused && !gameOver) invalidate()
@@ -387,12 +384,13 @@ class FlappyHeroView @JvmOverloads constructor(
     private fun die() {
         gameOver = true
         gamePaused = true
-        if (ScoreManager.updateHighScore(context, gameKey, score)) {
+        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+        if (isNewHigh) {
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
-            celebrationManager.start(width.toFloat(), height.toFloat())
         } else {
             currentVictoryWord = ""
         }
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, best)
         SoundManager.playError()
         onGameOver?.invoke(score)
     }

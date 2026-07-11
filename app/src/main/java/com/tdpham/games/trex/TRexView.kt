@@ -681,13 +681,14 @@ class TRexView @JvmOverloads constructor(
     private fun gameOver() {
         isGameOver = true
         SoundManager.playError()
-        if (ScoreManager.updateHighScore(context, gameKey, score)) {
+        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+        if (isNewHigh) {
             highScore = score
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
-            celebrationManager.start(width.toFloat(), height.toFloat())
         } else {
             currentVictoryWord = ""
         }
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, highScore)
         onGameOver?.invoke(score)
     }
 

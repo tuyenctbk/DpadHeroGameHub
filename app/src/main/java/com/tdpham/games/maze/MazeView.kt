@@ -401,9 +401,10 @@ class MazeView @JvmOverloads constructor(
                 isCorrect = (options[selectedOptionIdx] == correctOption)
                 if (isCorrect) {
                     currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-                    celebrationManager.start(width.toFloat(), height.toFloat())
+                    celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, stage * 10, best)
                     SoundManager.playSuccess()
                 } else {
+                    celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, score, best)
                     SoundManager.playError()
                 }
                 calculateCorrectPath()
@@ -603,15 +604,16 @@ class MazeView @JvmOverloads constructor(
             paint.isFakeBoldText = false
         }
 
-        if (isReviewing) {
-            if (isCorrect) {
-                celebrationManager.update()
-                celebrationManager.draw(canvas)
-                invalidate()
+        if (isReviewing || gameOver) {
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+            
+            if (isReviewing) {
+                val title = if (isCorrect) currentVictoryWord else context.getString(R.string.wrong_path_label)
+                val sub = if (isCorrect) context.getString(R.string.next_stage_hint) else context.getString(R.string.finish_hint)
+                drawOverlay(canvas, title, sub)
             }
-            val title = if (isCorrect) currentVictoryWord else context.getString(R.string.wrong_path_label)
-            val sub = if (isCorrect) context.getString(R.string.next_stage_hint) else context.getString(R.string.finish_hint)
-            drawOverlay(canvas, title, sub)
         }
 
         if (gameOver) {

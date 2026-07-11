@@ -136,12 +136,14 @@ class Lines98View @JvmOverloads constructor(
         }
         if (!hasEmpty) {
             isGameOver = true
-            if (ScoreManager.updateHighScore(context, gameKey, score)) {
+            val oldHighScore = ScoreManager.getHighScore(context, gameKey)
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            if (isNewHigh) {
                 currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
-                celebrationManager.start(width.toFloat(), height.toFloat())
             } else {
                 currentVictoryWord = ""
             }
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, oldHighScore)
             onGameOver?.invoke(score)
         }
     }

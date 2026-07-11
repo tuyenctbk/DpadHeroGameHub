@@ -277,9 +277,10 @@ class MentalMathView @JvmOverloads constructor(
                 ScoreManager.updateHighScore(context, gameKey, score)
             }
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-            celebrationManager.start(width.toFloat(), height.toFloat())
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, best)
             SoundManager.playSuccess()
         } else {
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, score, best)
             SoundManager.playError()
         }
     }
@@ -379,15 +380,16 @@ class MentalMathView @JvmOverloads constructor(
             }
         }
 
-        if (isReviewing) {
-            if (isCorrect) {
-                celebrationManager.update()
-                celebrationManager.draw(canvas)
-                invalidate()
+        if (isReviewing || gameOver) {
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
+            
+            if (isReviewing) {
+                val title = if (isCorrect) currentVictoryWord else "${context.getString(R.string.wrong_label)} ${context.getString(R.string.answer_was_label)} $correctAnswer"
+                val sub = if (isCorrect) context.getString(R.string.continue_hint) else context.getString(R.string.finish_hint)
+                drawOverlay(canvas, title, sub)
             }
-            val title = if (isCorrect) currentVictoryWord else "${context.getString(R.string.wrong_label)} ${context.getString(R.string.answer_was_label)} $correctAnswer"
-            val sub = if (isCorrect) context.getString(R.string.continue_hint) else context.getString(R.string.finish_hint)
-            drawOverlay(canvas, title, sub)
         }
 
         if (gameOver) {

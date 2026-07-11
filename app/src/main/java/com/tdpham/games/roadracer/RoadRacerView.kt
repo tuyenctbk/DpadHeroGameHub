@@ -230,12 +230,13 @@ class RoadRacerView @JvmOverloads constructor(
     private fun gameOver() {
         isGameOver = true
         SoundManager.playError()
-        if (ScoreManager.updateHighScore(context, gameKey, score)) {
+        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+        if (isNewHigh) {
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
-            celebrationManager.start(width.toFloat(), height.toFloat())
         } else {
             currentVictoryWord = ""
         }
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, highScore)
         onGameOver?.invoke(score)
     }
 
@@ -292,16 +293,13 @@ class RoadRacerView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.best_label)}: $highScore", bestX, hudY, paint)
 
         if (isGameOver) {
+            celebrationManager.update()
+            celebrationManager.draw(canvas)
+            invalidate()
             val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.crashed_label)
             drawOverlay(canvas, title, "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         }
         else if (isPaused) drawOverlay(canvas, context.getString(R.string.game_road_racer), context.getString(R.string.start_game))
-
-        if (score > 0 && currentVictoryWord.isNotEmpty()) {
-            celebrationManager.update()
-            celebrationManager.draw(canvas)
-            invalidate()
-        }
     }
 
     private fun drawObstacle(canvas: Canvas, x: Float, y: Float, obs: Obstacle, theme: RoadTheme) {
