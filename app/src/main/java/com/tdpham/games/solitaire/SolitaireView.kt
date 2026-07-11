@@ -388,7 +388,7 @@ class SolitaireView @JvmOverloads constructor(
         if (foundations.all { it.size == 13 }) {
             isGameOver = true
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, score)
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, score = score, highScore = score)
             SoundManager.playSuccess()
             onGameOver?.invoke(score)
         }

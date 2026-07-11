@@ -224,7 +224,7 @@ class DungeonEscapeView @JvmOverloads constructor(
                     level++
                     score += 100 * level
                     currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-                    celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, best)
+                    celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, score = score, highScore = best)
                     SoundManager.playSuccess()
                     setupLevel()
                 }
@@ -365,7 +365,7 @@ class DungeonEscapeView @JvmOverloads constructor(
         gameOver = true
         gamePaused = true
         val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
-        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, best)
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, isNewHigh = isNewHigh, score = score, highScore = best)
         onGameOver?.invoke(score)
     }
 

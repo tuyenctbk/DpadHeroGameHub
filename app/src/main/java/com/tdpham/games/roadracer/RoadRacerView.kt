@@ -230,15 +230,13 @@ class RoadRacerView @JvmOverloads constructor(
     private fun gameOver() {
         isGameOver = true
         SoundManager.playError()
-        val oldBest = highScore
         val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
         if (isNewHigh) {
-            highScore = score
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
         } else {
             currentVictoryWord = ""
         }
-        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, isNewHigh = isNewHigh, score = score, highScore = oldBest)
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, highScore)
         onGameOver?.invoke(score)
     }
 

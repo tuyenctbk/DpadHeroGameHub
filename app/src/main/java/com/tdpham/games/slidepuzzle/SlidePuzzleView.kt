@@ -221,7 +221,7 @@ class SlidePuzzleView @JvmOverloads constructor(
             val oldHighScore = ScoreManager.getHighScore(context, gameKey)
             val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
             if (isNewHigh) bestMoves = moves
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, oldHighScore)
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, score = score, highScore = oldHighScore)
             SoundManager.playSuccess()
             onGameOver?.invoke(score)
         }

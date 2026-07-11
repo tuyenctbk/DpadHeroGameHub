@@ -307,7 +307,7 @@ class BrickBreakView @JvmOverloads constructor(
                 val oldHighScore = ScoreManager.getHighScore(context, gameKey)
                 val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
                 if (isNewHigh) highScore = score
-                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, oldHighScore)
+                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, isNewHigh = isNewHigh, score = score, highScore = oldHighScore)
                 SoundManager.playSuccess()
                 onGameOver?.invoke(score)
                 Choreographer.getInstance().removeFrameCallback(this)
@@ -320,9 +320,10 @@ class BrickBreakView @JvmOverloads constructor(
             if (lives <= 0) {
                 isGameOver = true
                 isPaused = true
+                val oldHighScore = ScoreManager.getHighScore(context, gameKey)
                 val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
                 if (isNewHigh) highScore = score
-                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, score, highScore)
+                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, isNewHigh = isNewHigh, score = score, highScore = oldHighScore)
                 onGameOver?.invoke(score)
                 Choreographer.getInstance().removeFrameCallback(this)
             } else {

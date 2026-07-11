@@ -210,7 +210,7 @@ class MemoryView @JvmOverloads constructor(
                 if (isNewHigh) {
                     bestMoves = moves
                 }
-                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, currentScore, oldHighScore)
+                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, score = currentScore, highScore = oldHighScore)
                 SoundManager.playSuccess()
                 onGameOver?.invoke(currentScore)
             }

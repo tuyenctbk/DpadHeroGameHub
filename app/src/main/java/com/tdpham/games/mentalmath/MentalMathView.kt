@@ -277,10 +277,10 @@ class MentalMathView @JvmOverloads constructor(
                 ScoreManager.updateHighScore(context, gameKey, score)
             }
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, best)
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, score = score, highScore = best)
             SoundManager.playSuccess()
         } else {
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, score, best)
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, score = score, highScore = best)
             SoundManager.playError()
         }
     }

@@ -222,7 +222,7 @@ class CheckersView @JvmOverloads constructor(
         val oldWins = wins
         val newWins = wins + 1
         if (ScoreManager.updateHighScore(context, gameKey, newWins)) wins = newWins
-        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, wins, oldWins)
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, score = wins, highScore = oldWins)
         status = currentVictoryWord
         SoundManager.playSuccess()
         onGameOver?.invoke(wins)
@@ -231,7 +231,7 @@ class CheckersView @JvmOverloads constructor(
     private fun endCpuWin() {
         gameOver = true
         status = context.getString(R.string.cpu_wins_label)
-        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, 0, 100)
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, score = 0, highScore = 100)
         SoundManager.playError()
     }
 

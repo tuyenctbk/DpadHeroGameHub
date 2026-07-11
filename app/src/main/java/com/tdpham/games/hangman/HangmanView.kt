@@ -183,7 +183,7 @@ class HangmanView @JvmOverloads constructor(
                     SoundManager.playError()
                     if (remainingAttempts == 0) {
                         isGameOver = true
-                        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, score, highScore)
+                        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, score = score, highScore = highScore)
                         onGameOver?.invoke(score)
                     }
                 } else {
