@@ -216,14 +216,15 @@ class SokobanView @JvmOverloads constructor(
             solved = true
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
             val score = (5000 - totalPushesAllLevels * 5).coerceAtLeast(50)
+            val oldBest = best
             if (levelIndex >= levels.lastIndex) {
                 allLevelsDone = true
                 val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
                 if (isNewHigh) best = score
-                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, best)
+                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, isNewHigh = isNewHigh, score = score, highScore = oldBest)
                 onGameOver?.invoke(score)
             } else {
-                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, best)
+                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, score = score, highScore = oldBest)
             }
             SoundManager.playSuccess()
         }

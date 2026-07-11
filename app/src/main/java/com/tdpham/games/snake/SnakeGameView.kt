@@ -200,13 +200,14 @@ class SnakeGameView @JvmOverloads constructor(
     private fun handleGameOver() {
         SoundManager.playError()
         screenShake.trigger(15, 20f)
+        val oldBest = highScore
         val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
         if (isNewHigh) {
             highScore = score
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
             gameOverReason = currentVictoryWord
         }
-        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, highScore)
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh = isNewHigh, score = score, highScore = oldBest)
         onGameOver?.invoke(score)
     }
 

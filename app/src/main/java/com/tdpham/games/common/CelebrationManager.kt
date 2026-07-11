@@ -166,16 +166,17 @@ class CelebrationManager {
         initParticles()
     }
 
-    fun startOutcome(width: Float, height: Float, isSuccess: Boolean, score: Int = 0, highScore: Int = 0) {
+    fun startOutcome(width: Float, height: Float, isWin: Boolean = false, isNewHigh: Boolean = false, score: Int = 0, highScore: Int = 0) {
         val winEpic = listOf(CelebrationType.FIREWORKS, CelebrationType.RAIN_COINS, CelebrationType.STARS, CelebrationType.DIAMONDS)
         val winNormal = listOf(CelebrationType.CONFETTI, CelebrationType.BALLOONS, CelebrationType.SMILEYS, CelebrationType.MUSIC_NOTES, CelebrationType.FLOWERS, CelebrationType.SPARKLES)
         val lossMild = listOf(CelebrationType.BUBBLES, CelebrationType.CLOUDS, CelebrationType.FALLING_LEAVES, CelebrationType.SNOWFLAKES)
         val lossEpic = listOf(CelebrationType.RAIN_CLOUDS, CelebrationType.THUMBS_DOWN, CelebrationType.POOP_EMOJI, CelebrationType.GHOSTS, CelebrationType.BROKEN_HEARTS, CelebrationType.FIRE_FLAMES, CelebrationType.LIGHTNING_BOLTS)
 
-        val type = if (isSuccess) {
-            if (score > highScore && highScore > 0) winEpic.random() else winNormal.random()
-        } else {
-            if (score > highScore * 0.75f && highScore > 0) lossMild.random() else lossEpic.random()
+        val type = when {
+            isNewHigh -> winEpic.random()
+            isWin -> winNormal.random()
+            highScore > 0 && score > highScore * 0.75f -> lossMild.random()
+            else -> lossEpic.random()
         }
         start(width, height, type)
     }
@@ -408,15 +409,11 @@ class CelebrationManager {
 
             when (p.type) {
                 CelebrationType.CONFETTI -> {
-                    if (p.type == CelebrationType.CONFETTI) {
-                        canvas.save()
-                        canvas.translate(p.x, p.y)
-                        canvas.rotate(p.rotation)
-                        canvas.drawRect(-p.size / 2, -p.size / 4, p.size / 2, p.size / 4, paint)
-                        canvas.restore()
-                    } else {
-                        canvas.drawCircle(p.x, p.y, p.size, paint)
-                    }
+                    canvas.save()
+                    canvas.translate(p.x, p.y)
+                    canvas.rotate(p.rotation)
+                    canvas.drawRect(-p.size / 2, -p.size / 4, p.size / 2, p.size / 4, paint)
+                    canvas.restore()
                 }
                 CelebrationType.FLOWERS -> {
                     canvas.save()

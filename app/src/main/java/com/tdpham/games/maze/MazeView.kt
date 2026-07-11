@@ -401,10 +401,10 @@ class MazeView @JvmOverloads constructor(
                 isCorrect = (options[selectedOptionIdx] == correctOption)
                 if (isCorrect) {
                     currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-                    celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, stage * 10, best)
+                    celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, score = stage * 10, highScore = best)
                     SoundManager.playSuccess()
                 } else {
-                    celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, score, best)
+                    celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, score = score, highScore = best)
                     SoundManager.playError()
                 }
                 calculateCorrectPath()

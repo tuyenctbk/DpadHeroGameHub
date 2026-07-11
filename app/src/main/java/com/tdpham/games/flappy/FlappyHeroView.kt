@@ -384,13 +384,15 @@ class FlappyHeroView @JvmOverloads constructor(
     private fun die() {
         gameOver = true
         gamePaused = true
+        val oldBest = best
         val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
         if (isNewHigh) {
+            best = score
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
         } else {
             currentVictoryWord = ""
         }
-        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, best)
+        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, isNewHigh = isNewHigh, score = score, highScore = oldBest)
         SoundManager.playError()
         onGameOver?.invoke(score)
     }

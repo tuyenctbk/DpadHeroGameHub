@@ -143,7 +143,7 @@ class Lines98View @JvmOverloads constructor(
             } else {
                 currentVictoryWord = ""
             }
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh, score, oldHighScore)
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, isNewHigh = isNewHigh, score = score, highScore = oldHighScore)
             onGameOver?.invoke(score)
         }
     }

@@ -233,13 +233,17 @@ class TwentyFortyEightView @JvmOverloads constructor(
         
         if (!movePossible) {
             isGameOver = true
+            val oldBest = highScore
             val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
             if (isNewHigh) highScore = score
             SoundManager.playError()
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, score, highScore)
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, isNewHigh = isNewHigh, score = score, highScore = oldBest)
             onGameOver?.invoke(score)
         } else if (isWin) {
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, highScore)
+            val oldBest = highScore
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            if (isNewHigh) highScore = score
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, isNewHigh = isNewHigh, score = score, highScore = oldBest)
             SoundManager.playSuccess()
         }
     }

@@ -192,8 +192,10 @@ class HangmanView @JvmOverloads constructor(
                         isWin = true
                         currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
                         score += 10 + remainingAttempts
+                        val oldBest = highScore
                         val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
-                        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, if (isNewHigh) score - 1 else highScore)
+                        if (isNewHigh) highScore = score
+                        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, isNewHigh = isNewHigh, score = score, highScore = oldBest)
                         SoundManager.playSuccess()
                         onGameOver?.invoke(score)
                     }

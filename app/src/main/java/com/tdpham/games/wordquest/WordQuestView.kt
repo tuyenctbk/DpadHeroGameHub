@@ -188,17 +188,15 @@ class WordQuestView @JvmOverloads constructor(
             gameOver = true
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
             score = (6 - guesses.size + 1) * 1000
-            val isNewHigh = if (score > best) {
-                best = score
-                ScoreManager.updateHighScore(context, gameKey, best)
-                true
-            } else false
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), true, score, if (isNewHigh) score - 1 else best)
+            val oldBest = best
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            if (isNewHigh) best = score
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, isNewHigh = isNewHigh, score = score, highScore = oldBest)
             SoundManager.playSuccess()
             onGameOver?.invoke(score)
         } else if (guesses.size == 6) {
             gameOver = true
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), false, score, best)
+            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, score = score, highScore = best)
             SoundManager.playError()
             onGameOver?.invoke(score)
         } else {
