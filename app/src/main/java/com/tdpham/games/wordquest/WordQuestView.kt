@@ -191,12 +191,25 @@ class WordQuestView @JvmOverloads constructor(
             val oldBest = best
             val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
             if (isNewHigh) best = score
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, isNewHigh = isNewHigh, score = score, highScore = oldBest)
+            celebrationManager.startOutcome(
+                width = width.toFloat(),
+                height = height.toFloat(),
+                isWin = true,
+                isNewHigh = isNewHigh,
+                score = score,
+                highScore = oldBest
+            )
             SoundManager.playSuccess()
             onGameOver?.invoke(score)
         } else if (guesses.size == 6) {
             gameOver = true
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, score = score, highScore = best)
+            celebrationManager.startOutcome(
+                width = width.toFloat(),
+                height = height.toFloat(),
+                isWin = false,
+                score = score,
+                highScore = best
+            )
             SoundManager.playError()
             onGameOver?.invoke(score)
         } else {

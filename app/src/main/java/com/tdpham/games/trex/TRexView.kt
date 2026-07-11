@@ -689,7 +689,13 @@ class TRexView @JvmOverloads constructor(
         } else {
             currentVictoryWord = ""
         }
-        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh = isNewHigh, score = score, highScore = oldBest)
+        celebrationManager.startOutcome(
+            width = width.toFloat(),
+            height = height.toFloat(),
+            isNewHigh = isNewHigh,
+            score = score,
+            highScore = oldBest
+        )
         onGameOver?.invoke(score)
     }
 

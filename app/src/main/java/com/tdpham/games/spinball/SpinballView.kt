@@ -182,7 +182,13 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
         } else {
             currentVictoryWord = ""
         }
-        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh = isNewHigh, score = finalScore, highScore = highScore)
+        celebrationManager.startOutcome(
+            width = width.toFloat(),
+            height = height.toFloat(),
+            isNewHigh = isNewHigh,
+            score = finalScore,
+            highScore = highScore
+        )
         highScore = ScoreManager.getHighScore(context, gameKey)
         onGameOver?.invoke(finalScore)
     }

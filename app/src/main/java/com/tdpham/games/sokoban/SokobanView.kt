@@ -221,10 +221,23 @@ class SokobanView @JvmOverloads constructor(
                 allLevelsDone = true
                 val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
                 if (isNewHigh) best = score
-                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, isNewHigh = isNewHigh, score = score, highScore = oldBest)
+                celebrationManager.startOutcome(
+                    width = width.toFloat(),
+                    height = height.toFloat(),
+                    isWin = true,
+                    isNewHigh = isNewHigh,
+                    score = score,
+                    highScore = oldBest
+                )
                 onGameOver?.invoke(score)
             } else {
-                celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, score = score, highScore = oldBest)
+                celebrationManager.startOutcome(
+                    width = width.toFloat(),
+                    height = height.toFloat(),
+                    isWin = true,
+                    score = score,
+                    highScore = oldBest
+                )
             }
             SoundManager.playSuccess()
         }

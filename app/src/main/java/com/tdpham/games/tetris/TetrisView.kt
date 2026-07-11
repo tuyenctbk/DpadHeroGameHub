@@ -239,7 +239,13 @@ class TetrisView @JvmOverloads constructor(
             } else {
                 currentVictoryWord = ""
             }
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isNewHigh = isNewHigh, score = score, highScore = best)
+            celebrationManager.startOutcome(
+                width = width.toFloat(),
+                height = height.toFloat(),
+                isNewHigh = isNewHigh,
+                score = score,
+                highScore = best
+            )
             SoundManager.playError()
             onGameOver?.invoke(score)
         }

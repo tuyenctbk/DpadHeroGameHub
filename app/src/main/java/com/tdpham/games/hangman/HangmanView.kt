@@ -183,7 +183,13 @@ class HangmanView @JvmOverloads constructor(
                     SoundManager.playError()
                     if (remainingAttempts == 0) {
                         isGameOver = true
-                        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, score = score, highScore = highScore)
+                        celebrationManager.startOutcome(
+                            width = width.toFloat(),
+                            height = height.toFloat(),
+                            isWin = false,
+                            score = score,
+                            highScore = highScore
+                        )
                         onGameOver?.invoke(score)
                     }
                 } else {
@@ -195,7 +201,14 @@ class HangmanView @JvmOverloads constructor(
                         val oldBest = highScore
                         val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
                         if (isNewHigh) highScore = score
-                        celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, isNewHigh = isNewHigh, score = score, highScore = oldBest)
+                        celebrationManager.startOutcome(
+                            width = width.toFloat(),
+                            height = height.toFloat(),
+                            isWin = true,
+                            isNewHigh = isNewHigh,
+                            score = score,
+                            highScore = oldBest
+                        )
                         SoundManager.playSuccess()
                         onGameOver?.invoke(score)
                     }

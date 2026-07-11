@@ -250,7 +250,14 @@ class MinesweeperView @JvmOverloads constructor(
             isGameOver = true
             SoundManager.playError()
             revealAllMines(r, c)
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, isNewHigh = false, score = 0, highScore = 100)
+            celebrationManager.startOutcome(
+                width = width.toFloat(),
+                height = height.toFloat(),
+                isWin = false,
+                isNewHigh = false,
+                score = 0,
+                highScore = 100
+            )
             onGameOver?.invoke(totalWins)
             invalidate()
             return
@@ -346,7 +353,14 @@ class MinesweeperView @JvmOverloads constructor(
             val oldWins = totalWins
             totalWins++
             val isNewHigh = ScoreManager.updateHighScore(context, gameKey, totalWins)
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, isNewHigh = isNewHigh, score = totalWins, highScore = oldWins)
+            celebrationManager.startOutcome(
+                width = width.toFloat(),
+                height = height.toFloat(),
+                isWin = true,
+                isNewHigh = isNewHigh,
+                score = totalWins,
+                highScore = oldWins
+            )
             SoundManager.playSuccess()
             onGameOver?.invoke(totalWins)
             invalidate()
