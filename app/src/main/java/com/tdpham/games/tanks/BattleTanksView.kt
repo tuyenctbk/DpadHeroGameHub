@@ -37,9 +37,21 @@ class BattleTanksView @JvmOverloads constructor(
     private var gameOver = false
     private var gamePaused = true
     private var level = 1
+    private var isLevelLoading = false
     
     private var bgType = GameEnvironment.BackgroundType.SOLID
     private var isNight = false
+
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val gameLoop = object : Runnable {
+        override fun run() {
+            if (!gamePaused && !gameOver) {
+                update()
+                invalidate()
+                handler.postDelayed(this, 30) // Tanks update a bit slower for retro feel
+            }
+        }
+    }
 
     data class Tank(var x: Int, var y: Int, var dir: Int, val isPlayer: Boolean, var lastFire: Long = 0, var hp: Int = 1)
     data class Bullet(var fx: Float, var fy: Float, var dir: Int, val isPlayer: Boolean)
@@ -56,9 +68,21 @@ class BattleTanksView @JvmOverloads constructor(
         invalidate()
     }
 
-    override fun pause() { gamePaused = true }
-    override fun resume() { gamePaused = false; invalidate() }
+    override fun pause() {
+        gamePaused = true
+        handler.removeCallbacks(gameLoop)
+    }
+    override fun resume() {
+        gamePaused = false
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+    }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(gameLoop)
+    }
 
     override fun resetGame() {
         score = 0
@@ -71,6 +95,7 @@ class BattleTanksView @JvmOverloads constructor(
     }
 
     private fun setupLevel() {
+        isLevelLoading = true
         for (r in 0 until rows) for (c in 0 until cols) grid[r][c] = 0
         
         bgType = listOf(GameEnvironment.BackgroundType.SOLID, GameEnvironment.BackgroundType.GRID, GameEnvironment.BackgroundType.DOTS).random()
@@ -97,6 +122,7 @@ class BattleTanksView @JvmOverloads constructor(
         particles.clear()
         repeat(20) { particles.add(GameEnvironment.Particle(Random.nextFloat() * 2000, Random.nextFloat() * 2000, Random.nextFloat() * 5)) }
         spawnEnemy()
+        isLevelLoading = false
     }
 
     private fun spawnEnemy() {
@@ -197,7 +223,7 @@ class BattleTanksView @JvmOverloads constructor(
         cellW = width.toFloat() / cols
         cellH = height.toFloat() / rows
 
-        if (!gamePaused && !gameOver) update()
+        // update() - Moved to gameLoop
 
         GameEnvironment.draw(canvas, bgType, isNight = isNight, paint = paint, particles = particles)
 
@@ -247,12 +273,19 @@ class BattleTanksView @JvmOverloads constructor(
         }
 
         // HUD
+        paint.reset()
+        paint.isAntiAlias = true
         paint.color = Color.WHITE
         paint.textSize = 36f
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("SCORE: $score  LVL: $level", 20f, 40f, paint)
+        val hudX = Math.round(20f).toFloat()
+        val hudY = Math.round(40f).toFloat()
+        canvas.drawText("SCORE: $score  LVL: $level", hudX, hudY, paint)
+        
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 20f, 40f, paint)
+        val bestX = Math.round(width - 20f).toFloat()
+        canvas.drawText("BEST: $best", bestX, hudY, paint)
 
         if (gameOver) drawOverlay(canvas, "MISSION FAILED", "Score: $score | Center to Restart")
         else if (gamePaused) drawOverlay(canvas, "BATTLE TANKS", "Level $level | Center to Start")
@@ -261,6 +294,7 @@ class BattleTanksView @JvmOverloads constructor(
     }
 
     private fun drawTank(canvas: Canvas, tank: Tank, color: Int) {
+        paint.style = Paint.Style.FILL
         val x = tank.x * cellW
         val y = tank.y * cellH
         val centerX = x + cellW / 2
@@ -292,6 +326,7 @@ class BattleTanksView @JvmOverloads constructor(
     }
 
     private fun update() {
+        if (isLevelLoading) return
         fire(player)
 
         val bIter = bullets.iterator()
@@ -308,7 +343,10 @@ class BattleTanksView @JvmOverloads constructor(
             val bx = b.fx.toInt()
             val by = b.fy.toInt()
 
-            if (bx !in 0 until cols || by !in 0 until rows) { bIter.remove(); continue }
+            if (bx !in 0 until cols || by !in 0 until rows) {
+                bIter.remove()
+                continue
+            }
 
             val tile = grid[by][bx]
             if (tile != 0 && tile != 4) { // Hits something solid
@@ -317,7 +355,8 @@ class BattleTanksView @JvmOverloads constructor(
                     gameOver = true; gamePaused = true; SoundManager.playError()
                     onGameOver?.invoke(score)
                 }
-                bIter.remove(); continue
+                bIter.remove()
+                continue
             }
 
             if (b.isPlayer) {
@@ -331,17 +370,26 @@ class BattleTanksView @JvmOverloads constructor(
                             eIter.remove()
                             score += 100
                             SoundManager.playScore()
-                            if (score % 1000 == 0) { level++; setupLevel() }
+                            if (score % 1000 == 0) {
+                                level++
+                                // Defer setupLevel to avoid ConcurrentModificationException
+                                handler.post { setupLevel() }
+                                return // Exit update immediately as lists are about to be cleared
+                            }
                         }
                         hit = true; break
                     }
                 }
-                if (hit) { bIter.remove(); continue }
+                if (hit) {
+                    bIter.remove()
+                    continue
+                }
             } else {
                 if (player.x == bx && player.y == by) {
                     gameOver = true; gamePaused = true; SoundManager.playError()
                     onGameOver?.invoke(score)
-                    bIter.remove(); continue
+                    bIter.remove()
+                    continue
                 }
             }
         }

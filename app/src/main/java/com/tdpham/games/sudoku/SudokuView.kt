@@ -264,9 +264,11 @@ class SudokuView @JvmOverloads constructor(
             canvas.drawRect(x, y, x + cell, y + cell, paint)
 
             // Highlight selected row and column (crosshair effect)
-            if (!solved && (r == cursorR || c == cursorC)) {
-                paint.color = Color.argb(40, 255, 255, 255) // Subtle white highlight
-                canvas.drawRect(x, y, x + cell, y + cell, paint)
+            if (!solved) {
+                if (r == cursorR || c == cursorC || (r / 3 == cursorR / 3 && c / 3 == cursorC / 3)) {
+                    paint.color = Color.argb(35, 255, 255, 255) // Subtle highlight for axis and box
+                    canvas.drawRect(x, y, x + cell, y + cell, paint)
+                }
             }
 
             // Conflict warning
@@ -315,20 +317,25 @@ class SudokuView @JvmOverloads constructor(
             canvas.drawLine(left + i * cell, top, left + i * cell, top + grid, paint)
         }
 
+        paint.reset()
+        paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
         paint.textAlign = Paint.Align.LEFT
         paint.textSize = 34f
-        canvas.drawText("PUZZLE ${puzzleIndex + 1}/${puzzles.size}  BEST: $best", 30f, 52f, paint)
+        val hudY1 = Math.round(52f).toFloat()
+        canvas.drawText("PUZZLE ${puzzleIndex + 1}/${puzzles.size}  BEST: $best", 30f, hudY1, paint)
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 28f
+        val centerX = Math.round(width / 2f).toFloat()
+        val hudY2 = Math.round(top - 14f).toFloat()
         canvas.drawText(
             when {
                 solved -> "SOLVED! CENTER FOR NEXT PUZZLE"
                 else -> "CENTER: 0-9 CYCLE (0 CLEAR)  GIVENS LOCKED"
             },
-            width / 2f,
-            top - 14f,
+            centerX,
+            hudY2,
             paint
         )
     }

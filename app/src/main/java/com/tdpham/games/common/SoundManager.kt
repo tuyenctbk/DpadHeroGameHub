@@ -19,7 +19,7 @@ object SoundManager {
         if (toneGenerator == null) {
             try {
                 toneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 android.util.Log.e("SoundManager", "Failed to initialize ToneGenerator: ${e.message}", e)
             }
         }
@@ -41,7 +41,7 @@ object SoundManager {
         if (isSoundEnabled) {
             try {
                 toneGenerator?.startTone(toneType, 100)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 // Fallback or ignore
             }
         }

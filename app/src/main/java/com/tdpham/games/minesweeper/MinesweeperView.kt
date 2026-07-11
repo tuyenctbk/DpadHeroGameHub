@@ -74,8 +74,9 @@ class MinesweeperView @JvmOverloads constructor(
 
     private val processQueueRunnable = object : Runnable {
         override fun run() {
-            if (revealQueue.isEmpty()) {
+            if (revealQueue.isEmpty() || isGameOver || isWin) {
                 isProcessingQueue = false
+                revealQueue.clear()
                 return
             }
             
@@ -221,7 +222,17 @@ class MinesweeperView @JvmOverloads constructor(
     }
 
     private fun revealCell(r: Int, c: Int) {
-        if (r !in 0 until rows || c !in 0 until cols || grid[r][c].isRevealed || grid[r][c].isFlagged) return
+        if (r !in 0 until rows || c !in 0 until cols) return
+        val cell = grid[r][c]
+        
+        if (cell.isRevealed) {
+            if (cell.neighborMines > 0) {
+                chordCell(r, c)
+            }
+            return
+        }
+
+        if (cell.isFlagged) return
         
         if (isFirstClick) {
             isFirstClick = false
@@ -276,6 +287,41 @@ class MinesweeperView @JvmOverloads constructor(
                     grid[row][col].neighborMines = countMinesAround(row, col)
                 }
             }
+        }
+    }
+
+    private fun countFlagsAround(r: Int, c: Int): Int {
+        var count = 0
+        for (dr in -1..1) {
+            for (dc in -1..1) {
+                val nr = r + dr
+                val nc = c + dc
+                if (nr in 0 until rows && nc in 0 until cols && grid[nr][nc].isFlagged) {
+                    count++
+                }
+            }
+        }
+        return count
+    }
+
+    private fun chordCell(r: Int, c: Int) {
+        if (countFlagsAround(r, c) == grid[r][c].neighborMines) {
+            var anyRevealed = false
+            for (dr in -1..1) {
+                for (dc in -1..1) {
+                    if (dr == 0 && dc == 0) continue
+                    val nr = r + dr
+                    val nc = c + dc
+                    if (nr in 0 until rows && nc in 0 until cols && !grid[nr][nc].isRevealed && !grid[nr][nc].isFlagged) {
+                        revealCell(nr, nc)
+                        anyRevealed = true
+                    }
+                }
+            }
+            if (anyRevealed) SoundManager.playClick()
+        } else {
+            // Visual feedback that chord is not ready? Maybe shake or sound?
+            // Standard minesweeper usually does nothing or a minor click.
         }
     }
 
@@ -413,19 +459,23 @@ class MinesweeperView @JvmOverloads constructor(
 
         GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.GRID, paint = paint)
 
-        val headerY = offsetY - cellSize * 1.0f
+        paint.reset()
+        paint.isAntiAlias = true
+        paint.typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+        val headerY = Math.round(offsetY - cellSize * 1.0f).toFloat()
         paint.textSize = cellSize * 0.55f
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
         paint.color = GamePalette.TEXT_PRIMARY
-        canvas.drawText("MINES: $minesCount", offsetX, headerY, paint)
+        canvas.drawText("MINES: $minesCount", Math.round(offsetX).toFloat(), headerY, paint)
         
         paint.textAlign = Paint.Align.RIGHT
         paint.color = GamePalette.TEXT_SECONDARY
-        canvas.drawText("WINS: $totalWins", offsetX + cols * cellSize, headerY, paint)
+        canvas.drawText("WINS: $totalWins", Math.round(offsetX + cols * cellSize).toFloat(), headerY, paint)
         
         paint.textAlign = Paint.Align.CENTER
         paint.color = GamePalette.SCORE
-        canvas.drawText("FLAGS: ${getFlaggedCount()}", width / 2f, headerY, paint)
+        canvas.drawText("FLAGS: ${getFlaggedCount()}", Math.round(width / 2f).toFloat(), headerY, paint)
 
         for (r in 0 until rows) {
             for (c in 0 until cols) {
@@ -446,6 +496,10 @@ class MinesweeperView @JvmOverloads constructor(
                 canvas.drawRect(rectLeft + margin, rectTop + margin, rectRight - margin, rectBottom - margin, paint)
                 
                 if (!cell.isRevealed) {
+                    // Constant stroke for uniform 3D bevel look
+                    paint.style = Paint.Style.STROKE
+                    paint.strokeWidth = 3f 
+                    
                     paint.color = Color.parseColor("#616161")
                     canvas.drawLine(rectLeft + 2, rectTop + 2, rectRight - 2, rectTop + 2, paint)
                     canvas.drawLine(rectLeft + 2, rectTop + 2, rectLeft + 2, rectBottom - 2, paint)
@@ -482,9 +536,9 @@ class MinesweeperView @JvmOverloads constructor(
                         canvas.drawLine(rectRight - 5, rectTop + 5, rectLeft + 5, rectBottom - 5, paint)
                     } else {
                         paint.color = Color.RED
-                        paint.textSize = cellSize * 0.7f
+                        paint.textSize = cellSize * 0.6f
                         paint.textAlign = Paint.Align.CENTER
-                        canvas.drawText("F", rectLeft + cellSize / 2, rectTop + cellSize * 0.75f, paint)
+                        canvas.drawText("🚩", rectLeft + cellSize / 2, rectTop + cellSize * 0.72f, paint)
                     }
                 }
 
@@ -494,6 +548,10 @@ class MinesweeperView @JvmOverloads constructor(
                     paint.style = Paint.Style.STROKE
                     paint.strokeWidth = 6f + pulse
                     canvas.drawRect(rectLeft - pulse/2, rectTop - pulse/2, rectRight + pulse/2, rectBottom + pulse/2, paint)
+                    
+                    // Crucial: Reset both style AND width to prevent state leaking to next cells
+                    paint.style = Paint.Style.FILL 
+                    paint.strokeWidth = 1f
                 }
             }
         }

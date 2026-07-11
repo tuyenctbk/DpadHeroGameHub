@@ -18,6 +18,8 @@ import com.tdpham.games.tetris.TetrisActivity
 import com.tdpham.games.starfighter.StarFighterActivity
 import com.tdpham.games.memory.MemoryActivity
 import com.tdpham.games.slidepuzzle.SlidePuzzleActivity
+import com.tdpham.games.maze.MazeActivity
+import com.tdpham.games.spinball.SpinballActivity
 import com.tdpham.games.mentalmath.MentalMathActivity
 import com.tdpham.games.simon.SimonSaysActivity
 import com.tdpham.games.froggy.FroggyCrossActivity
@@ -47,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         firebaseAnalytics = try {
             Firebase.analytics
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             android.util.Log.e("MainActivity", "Failed to initialize Firebase Analytics: ${e.message}", e)
             null
         }
@@ -141,6 +143,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SlidePuzzleActivity::class.java))
         }
 
+        val btnMaze = findViewById<Button>(R.id.btn_maze)
+        setupGameButton(btnMaze) {
+            startActivity(Intent(this, MazeActivity::class.java))
+        }
+
 
         val btnMentalMath = findViewById<Button>(R.id.btn_mental_math)
         setupGameButton(btnMentalMath) {
@@ -197,16 +204,25 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, HangmanActivity::class.java))
         }
 
+        val btnSpinball = findViewById<Button>(R.id.btn_spinball)
+        setupGameButton(btnSpinball) {
+            startActivity(Intent(this, SpinballActivity::class.java))
+        }
+
         RatingGuideManager.incrementPlayCount(this)
         UpdateManager.checkForUpdates(this) { hasUpdate ->
+            if (isFinishing || isDestroyed) return@checkForUpdates
+            
             if (!hasUpdate) {
                 if (RatingGuideManager.shouldShowRating(this)) {
                     RatingGuideManager.showRatingDialog(this) {
-                        focusLastPlayed()
+                        if (!isFinishing && !isDestroyed) focusLastPlayed()
                     }
                 } else {
                     focusLastPlayed()
                 }
+            } else {
+                focusLastPlayed()
             }
         }
     }
@@ -240,6 +256,8 @@ class MainActivity : AppCompatActivity() {
             "road_racer" -> findViewById<Button>(R.id.btn_road_racer).requestFocus()
             "lines98" -> findViewById<Button>(R.id.btn_lines98).requestFocus()
             "solitaire" -> findViewById<Button>(R.id.btn_solitaire).requestFocus()
+            "maze" -> findViewById<Button>(R.id.btn_maze).requestFocus()
+            "spinball" -> findViewById<Button>(R.id.btn_spinball).requestFocus()
             else -> findViewById<Button>(R.id.btn_snake).requestFocus()
         }
     }
@@ -261,7 +279,8 @@ class MainActivity : AppCompatActivity() {
                     .scaleX(1.15f)
                     .scaleY(1.15f)
                     .translationZ(12f)
-                    .setDuration(200)
+                    .setInterpolator(android.view.animation.OvershootInterpolator())
+                    .setDuration(300)
                     .start()
                 view.elevation = 20f
             } else {
@@ -270,7 +289,7 @@ class MainActivity : AppCompatActivity() {
                     .scaleX(1.0f)
                     .scaleY(1.0f)
                     .translationZ(0f)
-                    .setDuration(200)
+                    .setDuration(250)
                     .start()
                 view.elevation = 8f
             }

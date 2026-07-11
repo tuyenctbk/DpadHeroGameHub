@@ -57,6 +57,17 @@ class TRexView @JvmOverloads constructor(
     private val random = Random()
     private var nextObstacleDistance = 0f
 
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val gameLoop = object : Runnable {
+        override fun run() {
+            if (!isGameOver && !isPaused) {
+                update()
+                invalidate()
+                handler.postDelayed(this, 16)
+            }
+        }
+    }
+
     private val paint = Paint().apply {
         isAntiAlias = true
         typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
@@ -78,11 +89,18 @@ class TRexView @JvmOverloads constructor(
 
     override fun pause() {
         isPaused = true
+        handler.removeCallbacks(gameLoop)
     }
 
     override fun resume() {
         isPaused = false
-        invalidate()
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(gameLoop)
     }
 
     override fun resetGame() {
@@ -327,7 +345,7 @@ class TRexView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        update()
+        // update() - Moved to gameLoop
 
         val theme = getEnvironmentTheme()
         val envWeather = when(currentWeather) {
@@ -336,6 +354,10 @@ class TRexView @JvmOverloads constructor(
             else -> GameEnvironment.WeatherType.NONE
         }
 
+        // Draw background theme first
+        canvas.drawColor(theme.bgColor)
+
+        // Then draw environment details
         GameEnvironment.draw(
             canvas, 
             GameEnvironment.BackgroundType.SOLID, 
@@ -345,9 +367,8 @@ class TRexView @JvmOverloads constructor(
             particles = particles
         )
 
-        canvas.drawColor(theme.bgColor)
-
         // Draw Sun/Moon
+        paint.style = Paint.Style.FILL
         paint.color = theme.secondaryColor
         if (isNightMode) {
             canvas.drawCircle(width - 150f, 150f, 50f, paint) // Moon
@@ -377,10 +398,16 @@ class TRexView @JvmOverloads constructor(
         drawDino(canvas, 100f, dinoY, theme.dinoColor, theme.bgColor)
 
         // Score
+        paint.reset()
+        paint.isAntiAlias = true
+        paint.typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
         paint.textAlign = Paint.Align.RIGHT
         paint.textSize = 45f
         paint.color = theme.textColor
-        canvas.drawText("HI ${String.format("%05d", highScore)}  ${String.format("%05d", score)}", width - 50f, 80f, paint)
+        paint.style = Paint.Style.FILL
+        val scoreX = Math.round(width - 50f).toFloat()
+        val scoreY = Math.round(80f).toFloat()
+        canvas.drawText("HI ${String.format("%05d", highScore)}  ${String.format("%05d", score)}", scoreX, scoreY, paint)
 
         if (isGameOver) drawOverlay(canvas, "G A M E  O V E R", theme.textColor)
         else if (isPaused) drawOverlay(canvas, "T - R E X  R U N", theme.textColor)

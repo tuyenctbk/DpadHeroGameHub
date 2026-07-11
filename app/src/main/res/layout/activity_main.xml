@@ -278,7 +278,22 @@
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
-
+            <Button
+                android:id="@+id/btn_maze"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="@color/btn_maze_color"
+                android:elevation="8dp"
+                android:focusable="true"
+                android:nextFocusUp="@id/btn_settings"
+                android:text="@string/game_maze"
+                android:drawableTop="@drawable/ic_game_maze"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/btn_mental_math"
@@ -462,6 +477,23 @@
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_hangman"
                 android:drawableTop="@drawable/ic_game_hangman"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btn_spinball"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="@color/btn_spinball_color"
+                android:elevation="8dp"
+                android:focusable="true"
+                android:nextFocusUp="@id/btn_settings"
+                android:text="@string/game_spinball"
+                android:drawableTop="@drawable/ic_game_spinball"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"

@@ -37,6 +37,17 @@ class DungeonEscapeView @JvmOverloads constructor(
     private val spikePath = Path()
     private var lastUpdate = 0L
     
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val gameLoop = object : Runnable {
+        override fun run() {
+            if (!gamePaused && !gameOver) {
+                update()
+                invalidate()
+                handler.postDelayed(this, 20)
+            }
+        }
+    }
+
     private var offsetX = 0f
     private var offsetY = 0f
 
@@ -54,9 +65,21 @@ class DungeonEscapeView @JvmOverloads constructor(
         invalidate()
     }
 
-    override fun pause() { gamePaused = true }
-    override fun resume() { gamePaused = false; invalidate() }
+    override fun pause() {
+        gamePaused = true
+        handler.removeCallbacks(gameLoop)
+    }
+    override fun resume() {
+        gamePaused = false
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+    }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(gameLoop)
+    }
 
     override fun resetGame() {
         level = 1
@@ -207,7 +230,7 @@ class DungeonEscapeView @JvmOverloads constructor(
         offsetX = (width - cols * cellS) / 2f
         offsetY = (height - rows * cellS) / 2f
 
-        if (!gamePaused && !gameOver) update()
+        // update() - Moved to gameLoop
 
         canvas.drawColor(Color.parseColor("#1A1A1A"))
 
@@ -283,12 +306,16 @@ class DungeonEscapeView @JvmOverloads constructor(
         }
 
         // HUD
+        paint.reset()
+        paint.isAntiAlias = true
         paint.color = Color.WHITE
         paint.textSize = 36f
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("LEVEL: $level  SCORE: $score", 20f, 40f, paint)
+        val hudY = Math.round(40f).toFloat()
+        canvas.drawText("LEVEL: $level  SCORE: $score", 20f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 20f, 40f, paint)
+        canvas.drawText("BEST: $best", width - 20f, hudY, paint)
 
         if (gameOver) {
             drawOverlay(canvas, "TRAPPED!", "Final Level: $level\nPress Center to Restart")

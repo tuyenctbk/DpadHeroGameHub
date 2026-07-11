@@ -343,6 +343,7 @@ class StarFighterView @JvmOverloads constructor(
         
         GameEnvironment.draw(canvas, bgType, isNight = true, paint = paint, particles = bgParticles)
 
+        paint.style = Paint.Style.FILL
         particles.forEach { 
             paint.color = it.color
             paint.alpha = (it.life * 255).toInt()
@@ -412,18 +413,22 @@ class StarFighterView @JvmOverloads constructor(
             canvas.drawText(label, pu.x, pu.y + 10f, paint)
         }
 
+        // HUD
+        paint.reset()
+        paint.isAntiAlias = true
         paint.color = Color.WHITE
         paint.textSize = 40f
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("SCORE: $score", 40f, 60f, paint)
+        val hudY = Math.round(60f).toFloat()
+        canvas.drawText("SCORE: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 40f, 60f, paint)
+        canvas.drawText("BEST: $best", width - 40f, hudY, paint)
         
         paint.textAlign = Paint.Align.LEFT
         paint.color = Color.RED
         val livesStr = "❤ ".repeat(lives)
-        canvas.drawText(livesStr, 40f, 110f, paint)
+        canvas.drawText(livesStr, 40f, Math.round(110f).toFloat(), paint)
 
         if (gameOver) drawOverlay(canvas, "MISSION FAILED", "Score: $score\nPress Center to Restart")
         else if (isPaused) drawOverlay(canvas, "STAR FIGHTER", "Use DPAD to move\nPress Center to Start")
@@ -432,6 +437,14 @@ class StarFighterView @JvmOverloads constructor(
     }
 
     private fun drawPlayerShip(canvas: Canvas, x: Float, y: Float) {
+        canvas.save()
+        
+        // Tilt effect based on horizontal movement
+        var tilt = 0f
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) tilt = -15f
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) tilt = 15f
+        canvas.rotate(tilt, x, y)
+
         paint.style = Paint.Style.FILL
         paint.color = Color.parseColor("#455A64")
         playerPath.reset()
@@ -459,6 +472,8 @@ class StarFighterView @JvmOverloads constructor(
             paint.color = Color.RED
             canvas.drawCircle(x, y + 55, 6f, paint)
         }
+        
+        canvas.restore()
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, sub: String) {

@@ -210,7 +210,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
     private fun checkGameState() {
         for (r in 0 until gridSize) {
             for (c in 0 until gridSize) {
-                if (board[r][c] >= 4096) {
+                if (board[r][c] >= 4096 && !isWin) {
                     isWin = true
                     onGameOver?.invoke(score)
                 }
@@ -247,22 +247,33 @@ class TwentyFortyEightView @JvmOverloads constructor(
         canvas.drawColor(GamePalette.BACKGROUND)
 
         // Draw Score (Left Side)
+        paint.reset()
+        paint.isAntiAlias = true
+        paint.typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
         paint.textAlign = Paint.Align.LEFT
+        paint.style = Paint.Style.FILL
+        
         paint.textSize = cellSize * 0.3f
         paint.color = GamePalette.TEXT_SECONDARY
-        canvas.drawText(context.getString(R.string.score_label), offsetX, offsetY - cellSize * 0.8f, paint)
+        val scoreLabelY = Math.round(offsetY - cellSize * 0.8f).toFloat()
+        val scoreNumY = Math.round(offsetY - cellSize * 0.3f).toFloat()
+        val labelX = Math.round(offsetX).toFloat()
+        canvas.drawText(context.getString(R.string.score_label), labelX, scoreLabelY, paint)
+        
         paint.textSize = cellSize * 0.5f
         paint.color = GamePalette.TEXT_PRIMARY
-        canvas.drawText("$score", offsetX, offsetY - cellSize * 0.3f, paint)
+        canvas.drawText("$score", labelX, scoreNumY, paint)
         
         // Draw Best (Right Side)
         paint.textAlign = Paint.Align.RIGHT
         paint.textSize = cellSize * 0.3f
         paint.color = GamePalette.TEXT_SECONDARY
-        canvas.drawText(context.getString(R.string.best_label), offsetX + gridSize * cellSize, offsetY - cellSize * 0.8f, paint)
+        val bestX = Math.round(offsetX + gridSize * cellSize).toFloat()
+        canvas.drawText(context.getString(R.string.best_label), bestX, scoreLabelY, paint)
+
         paint.textSize = cellSize * 0.5f
         paint.color = GamePalette.SCORE
-        canvas.drawText("$highScore", offsetX + gridSize * cellSize, offsetY - cellSize * 0.3f, paint)
+        canvas.drawText("$highScore", bestX, scoreNumY, paint)
 
         // Draw Grid Background
         paint.color = Color.parseColor("#333333")

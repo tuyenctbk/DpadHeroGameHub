@@ -415,13 +415,21 @@ class TetrisView @JvmOverloads constructor(
         }
 
         // HUD
+        textPaint.reset()
+        textPaint.isAntiAlias = true
+        textPaint.typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD)
         textPaint.color = GamePalette.TEXT_PRIMARY
+        textPaint.style = Paint.Style.FILL
         textPaint.textSize = size * 0.8f
         textPaint.textAlign = Paint.Align.LEFT
-        canvas.drawText("${context.getString(R.string.score_label)}: $score", offsetX + cols * size + 40, offsetY + size, textPaint)
+        val hudX = Math.round(offsetX + cols * size + 40).toFloat()
+        val hudY1 = Math.round(offsetY + size).toFloat()
+        val hudY2 = Math.round(offsetY + size * 2.5f).toFloat()
+        val hudY3 = Math.round(offsetY + size * 4.5f).toFloat()
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", hudX, hudY1, textPaint)
         textPaint.color = GamePalette.TEXT_SECONDARY
-        canvas.drawText("${context.getString(R.string.best_label)}: $best", offsetX + cols * size + 40, offsetY + size * 2.5f, textPaint)
-        canvas.drawText("${context.getString(R.string.next_label)}:", offsetX + cols * size + 40, offsetY + size * 4.5f, textPaint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", hudX, hudY2, textPaint)
+        canvas.drawText("${context.getString(R.string.next_label)}:", hudX, hudY3, textPaint)
 
         // Draw next piece
         for (cell in shapeCells(next.shape, next.rot)) {
@@ -447,16 +455,14 @@ class TetrisView @JvmOverloads constructor(
     private fun drawBlock(canvas: Canvas, x: Float, y: Float, size: Float, color: Int, isGhost: Boolean = false) {
         if (isGhost) {
             blockPaint.color = color
-            blockPaint.style = Paint.Style.FILL
-            blockPaint.alpha = 40 // Very transparent fill
-            canvas.drawRect(x + 2, y + 2, x + size - 2, y + size - 2, blockPaint)
-            
             blockPaint.style = Paint.Style.STROKE
-            blockPaint.strokeWidth = 1.5f
-            blockPaint.alpha = 150 // Stronger outline
-            canvas.drawRect(x + 2, y + 2, x + size - 2, y + size - 2, blockPaint)
+            blockPaint.strokeWidth = 3f // Thicker stroke for ghost
+            blockPaint.alpha = 180 // More visible ghost
+            canvas.drawRect(x + 4, y + 4, x + size - 4, y + size - 4, blockPaint)
             
             blockPaint.style = Paint.Style.FILL
+            blockPaint.alpha = 40
+            canvas.drawRect(x + 4, y + 4, x + size - 4, y + size - 4, blockPaint)
             blockPaint.alpha = 255
         } else {
             blockPaint.color = color

@@ -22,8 +22,8 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.tdpham.games" />
-                  <option name="mobileSdkAppId" value="1:755629936292:android:563111bd83e87f16d52031" />
+                  <option name="appId" value="com.tdpham.dpadarcade" />
+                  <option name="mobileSdkAppId" value="1:755629936292:android:ae1cd0a66db407d3d52031" />
                   <option name="projectId" value="dpad-hero" />
                   <option name="projectNumber" value="755629936292" />
                 </ConnectionSetting>

@@ -10,7 +10,7 @@ object ConfigManager {
     private val remoteConfig: FirebaseRemoteConfig? by lazy {
         try {
             Firebase.remoteConfig
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e("ConfigManager", "Failed to obtain Firebase RemoteConfig: ${e.message}")
             null
         }
@@ -26,21 +26,21 @@ object ConfigManager {
             rc.setDefaultsAsync(mapOf(
                 "is_ads_enabled" to true,
                 "snake_speed" to 150L,
-                "latest_version_code" to 7L
+                "latest_version_code" to 1L
             ))
             rc.fetchAndActivate()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e("ConfigManager", "Failed to initialize RemoteConfig: ${e.message}")
         }
     }
 
     fun getLatestVersionCode(): Long {
-        val rc = remoteConfig ?: return 7L
+        val rc = remoteConfig ?: return 0L
         return try {
             rc.getLong("latest_version_code")
         } catch (e: Exception) {
             Log.e("ConfigManager", "Failed to get latest_version_code: ${e.message}")
-            7L
+            0L
         }
     }
 

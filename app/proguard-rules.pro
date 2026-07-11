@@ -35,3 +35,6 @@
 # Fix R8 missing classes
 -dontwarn android.media.LoudnessCodecController$OnLoudnessCodecUpdateListener
 -dontwarn android.media.LoudnessCodecController
+
+# WorkManager
+-keep class androidx.work.** { *; }

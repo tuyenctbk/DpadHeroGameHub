@@ -36,6 +36,17 @@ class FroggyCrossView @JvmOverloads constructor(
     private val lanes = mutableListOf<Lane>()
     private var lastUpdate = 0L
 
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val gameLoop = object : Runnable {
+        override fun run() {
+            if (!gamePaused && !gameOver) {
+                update()
+                invalidate()
+                handler.postDelayed(this, 20)
+            }
+        }
+    }
+
     data class Entity(var c: Float, val length: Int, val color: Int, val isLog: Boolean = false)
     data class Lane(val r: Int, val speed: Float, val entities: MutableList<Entity>, val isRiver: Boolean)
 
@@ -51,9 +62,21 @@ class FroggyCrossView @JvmOverloads constructor(
         invalidate()
     }
 
-    override fun pause() { gamePaused = true }
-    override fun resume() { gamePaused = false; invalidate() }
+    override fun pause() {
+        gamePaused = true
+        handler.removeCallbacks(gameLoop)
+    }
+    override fun resume() {
+        gamePaused = false
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+    }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(gameLoop)
+    }
 
     override fun resetGame() {
         score = 0
@@ -193,7 +216,7 @@ class FroggyCrossView @JvmOverloads constructor(
             canvas.drawRect(0f, r * cellH, width.toFloat(), (r + 1) * cellH, paint)
         }
 
-        if (!gamePaused && !gameOver) update()
+        // update() - Moved to gameLoop
 
     // Draw Entities
         for (lane in lanes) {
@@ -252,12 +275,16 @@ class FroggyCrossView @JvmOverloads constructor(
         canvas.drawCircle(fx + frogRadius * 0.4f, fy - frogRadius * 0.5f, frogRadius * 0.1f, paint)
 
         // HUD
+        paint.reset()
+        paint.isAntiAlias = true
         paint.color = Color.WHITE
         paint.textSize = 36f
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("SCORE: $score  LIVES: $lives", 20f, 40f, paint)
+        val hudY = Math.round(40f).toFloat()
+        canvas.drawText("SCORE: $score  LIVES: $lives", 20f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 20f, 40f, paint)
+        canvas.drawText("BEST: $best", width - 20f, hudY, paint)
 
         if (gameOver) {
             drawOverlay(canvas, "GAME OVER", "Press Center to Restart")

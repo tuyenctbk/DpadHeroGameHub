@@ -56,6 +56,7 @@ class SimonSaysView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
+        handler.removeCallbacksAndMessages(null)
         sequence.clear()
         score = 0
         best = ScoreManager.getHighScore(context, gameKey)
@@ -172,6 +173,8 @@ class SimonSaysView @JvmOverloads constructor(
     }
 
     private fun handleInput(input: Int) {
+        if (playerIdx >= sequence.size || isShowingSequence || gameOver || gamePaused) return
+
         if (input == sequence[playerIdx]) {
             activeQuadrant = input
             SoundManager.playClick()
@@ -216,20 +219,25 @@ class SimonSaysView @JvmOverloads constructor(
         drawQuadrant(canvas, 3, left, cy + padding, cx - padding, top + size - padding) // Left
 
         // HUD
+        paint.reset()
+        paint.isAntiAlias = true
         paint.color = Color.WHITE
         paint.textSize = 40f
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("SCORE: $score", 40f, 60f, paint)
+        val hudY = Math.round(60f).toFloat()
+        canvas.drawText("SCORE: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 40f, 60f, paint)
+        canvas.drawText("BEST: $best", width - 40f, hudY, paint)
 
         paint.textAlign = Paint.Align.CENTER
+        val centerX = Math.round(width / 2f).toFloat()
         if (isShowingSequence) {
             paint.color = Color.YELLOW
-            canvas.drawText("WATCH...", width / 2f, 60f, paint)
+            canvas.drawText("WATCH...", centerX, hudY, paint)
         } else if (!gamePaused && !gameOver) {
             paint.color = Color.GREEN
-            canvas.drawText("YOUR TURN!", width / 2f, 60f, paint)
+            canvas.drawText("YOUR TURN!", centerX, hudY, paint)
         }
 
         if (gameOver) {

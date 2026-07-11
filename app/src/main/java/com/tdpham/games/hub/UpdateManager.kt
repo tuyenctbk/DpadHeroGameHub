@@ -22,7 +22,9 @@ object UpdateManager {
         val latestVersionCode = ConfigManager.getLatestVersionCode()
         val currentVersionCode = getCurrentVersionCode(context)
         
-        if (latestVersionCode > currentVersionCode) {
+        // Don't show update dialog if we're on the initial version (prevents review issues)
+        // or if we're already up to date
+        if (currentVersionCode > 1 && latestVersionCode > currentVersionCode) {
             showUpdateDialog(context) {
                 onComplete(true)
             }
@@ -45,7 +47,7 @@ object UpdateManager {
                 @Suppress("DEPRECATION")
                 packageInfo.versionCode.toLong()
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e("UpdateManager", "Failed to get version code: ${e.message}")
             0L
         }
@@ -88,8 +90,13 @@ object UpdateManager {
         setupFocusEffect(btnUpdate)
         setupFocusEffect(btnLater)
 
-        dialog.show()
-        btnUpdate.requestFocus()
+        try {
+            dialog.show()
+            btnUpdate.requestFocus()
+        } catch (t: Throwable) {
+            Log.e("UpdateManager", "Failed to show update dialog: ${t.message}")
+            onDismiss()
+        }
     }
 
     private fun setupFocusEffect(view: View) {

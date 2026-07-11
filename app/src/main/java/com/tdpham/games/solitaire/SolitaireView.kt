@@ -76,8 +76,8 @@ class SolitaireView @JvmOverloads constructor(
 
     override fun resetGame() {
         deck.clear()
-        for (suit in Suit.values()) {
-            for (rank in Rank.values()) {
+        for (suit in Suit.entries) {
+            for (rank in Rank.entries) {
                 deck.add(Card(suit, rank))
             }
         }
@@ -475,10 +475,13 @@ class SolitaireView @JvmOverloads constructor(
         }
 
         // Draw Score
+        paint.reset()
+        paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
         paint.textSize = 30f
-        canvas.drawText("Score: $score", 20f, h - 20, paint)
+        val hudY = Math.round(h - 20).toFloat()
+        canvas.drawText("Score: $score", 20f, hudY, paint)
 
         if (isGameOver) drawOverlay(canvas, "YOU WIN!", "Score: $score\nPress CENTER to Restart")
     }

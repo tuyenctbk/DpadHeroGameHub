@@ -275,29 +275,34 @@ class SokobanView @JvmOverloads constructor(
                 canvas.drawCircle(x + cell / 2, y + cell / 2, cell * 0.35f, paint)
             }
         }
+        paint.reset()
+        paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
         paint.textSize = 36f
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("LEVEL ${levelIndex + 1}/${levels.size}  PUSHES: $pushes", 30f, 52f, paint)
+        val hudY = Math.round(52f).toFloat()
+        canvas.drawText("LEVEL ${levelIndex + 1}/${levels.size}  PUSHES: $pushes", 30f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 30f, 52f, paint)
+        canvas.drawText("BEST: $best", width - 30f, hudY, paint)
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 30f
+        val centerX = Math.round(width / 2f).toFloat()
+        val textY = Math.round(top - 16f).toFloat()
         when {
             allLevelsDone -> {
-                canvas.drawText("ALL LEVELS CLEARED! CENTER TO PLAY AGAIN", width / 2f, top - 16f, paint)
+                canvas.drawText("ALL LEVELS CLEARED! CENTER TO PLAY AGAIN", centerX, textY, paint)
             }
             solved -> {
                 canvas.drawText(
                     if (levelIndex >= levels.lastIndex) "FINAL LEVEL - CENTER TO FINISH" else "CLEARED - CENTER FOR NEXT",
-                    width / 2f,
-                    top - 16f,
+                    centerX,
+                    textY,
                     paint
                 )
             }
             else -> {
-                canvas.drawText("CENTER: RESTART LEVEL", width / 2f, top - 16f, paint)
+                canvas.drawText("CENTER: RESTART LEVEL", centerX, textY, paint)
             }
         }
     }

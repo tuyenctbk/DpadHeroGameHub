@@ -15,6 +15,12 @@ import com.tdpham.games.common.ConfigManager
 import com.tdpham.games.common.AdManager
 
 class SplashActivity : AppCompatActivity() {
+    private val handler = Handler(Looper.getMainLooper())
+    private val startMainRunnable = Runnable {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -23,13 +29,29 @@ class SplashActivity : AppCompatActivity() {
         ConfigManager.init()
         AdManager.init(this)
 
+        // Animation for splash content
+        findViewById<android.view.View>(R.id.splash_content).apply {
+            alpha = 0f
+            scaleX = 0.8f
+            scaleY = 0.8f
+            animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(1000)
+                .setInterpolator(android.view.animation.DecelerateInterpolator())
+                .start()
+        }
+
         // Hide system UI with modern approach for API 30+, fallback for older versions
         hideSystemUI()
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }, 2000)
+        handler.postDelayed(startMainRunnable, 2500) // Slightly longer to appreciate animation
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(startMainRunnable)
     }
 
     private fun hideSystemUI() {

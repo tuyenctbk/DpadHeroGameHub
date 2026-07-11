@@ -410,17 +410,21 @@ class Lines98View @JvmOverloads constructor(
         )
 
         // Draw Info
+        paint.reset()
+        paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
         paint.textSize = 40f
-        canvas.drawText("Score: $score", 50f, 80f, paint)
-        canvas.drawText("High Score: ${ScoreManager.getHighScore(context, gameKey)}", 50f, 130f, paint)
+        val hudY1 = Math.round(80f).toFloat()
+        val hudY2 = Math.round(130f).toFloat()
+        canvas.drawText("Score: $score", 50f, hudY1, paint)
+        canvas.drawText("High Score: ${ScoreManager.getHighScore(context, gameKey)}", 50f, hudY2, paint)
 
         // Next Balls
-        canvas.drawText("Next:", width - 300f, 80f, paint)
+        canvas.drawText("Next:", width - 300f, hudY1, paint)
         for (i in nextBalls.indices) {
             paint.color = ballColors[nextBalls[i] - 1]
-            canvas.drawCircle(width - 150f + i * 60f, 70f, 20f, paint)
+            canvas.drawCircle(width - 150f + i * 60f, hudY1 - 10f, 20f, paint)
         }
 
         if (isGameOver) {

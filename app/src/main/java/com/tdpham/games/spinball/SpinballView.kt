@@ -148,6 +148,7 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
 
         // Star collection
         val iterator = stars.iterator()
+        var needsSpawn = false
         while (iterator.hasNext()) {
             val star = iterator.next()
             val dx = ballX - star.x
@@ -156,9 +157,10 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
                 iterator.remove()
                 score += 10
                 SoundManager.playScore()
-                if (stars.isEmpty()) spawnItems()
+                if (stars.isEmpty()) needsSpawn = true
             }
         }
+        if (needsSpawn) spawnItems()
     }
 
     private fun gameOver() {
@@ -211,10 +213,14 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
         canvas.drawCircle(ballX, ballY, ballRadius, paint)
 
         // Score
+        paint.reset()
+        paint.isAntiAlias = true
         paint.color = Color.WHITE
         paint.textSize = 40f
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.CENTER
-        canvas.drawText("Score: $score  Best: $highScore", 0f, -radius - 40f, paint)
+        val hudY = Math.round(-radius - 40f).toFloat()
+        canvas.drawText("Score: $score  Best: $highScore", 0f, hudY, paint)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {

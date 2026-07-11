@@ -281,12 +281,16 @@ class MentalMathView @JvmOverloads constructor(
         canvas.drawColor(GamePalette.BACKGROUND)
 
         // HUD
+        paint.reset()
+        paint.isAntiAlias = true
         paint.color = Color.WHITE
         paint.textSize = 38f
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("STAGE: $stage", 40f, 60f, paint)
+        val hudY = Math.round(60f).toFloat()
+        canvas.drawText("STAGE: $stage", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("SCORE: $score  BEST: $best", width - 40f, 60f, paint)
+        canvas.drawText("SCORE: $score  BEST: $best", width - 40f, hudY, paint)
 
         // Timer bar
         if (!isReviewing && !gameOver && !isPaused) {

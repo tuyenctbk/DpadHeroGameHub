@@ -23,10 +23,10 @@ class WordQuestView @JvmOverloads constructor(
     private val words = listOf(
         "BRAIN", "STORM", "LIGHT", "SPACE", "GAMES", "PIXEL", "CLOCK", "POWER", "BOARD", "MUSIC",
         "HEART", "DREAM", "WORLD", "PILOT", "SHINE", "LEVEL", "TRACK", "STAGE", "MATCH", "BRICK",
-        "POINT", "SNAKE", "ROBOT", "SUPER", "HERO", "DUNGE", "SOUND", "GUIDE", "MAZE", "QUICK",
-        "FLASH", "TIMER", "SMART", "COLOR", "ROUND", "QUEST", "Brave", "Clear", "Earth", "Final",
-        "Great", "House", "Image", "Joint", "Knife", "Large", "Model", "North", "Ocean", "Plant"
-    ).map { it.uppercase() }
+        "POINT", "SNAKE", "ROBOT", "SUPER", "SOUND", "GUIDE", "QUICK", "FLASH", "TIMER", "SMART",
+        "COLOR", "ROUND", "QUEST", "BRAVE", "CLEAR", "EARTH", "FINAL", "GREAT", "HOUSE", "IMAGE",
+        "JOINT", "KNIFE", "LARGE", "MODEL", "NORTH", "OCEAN", "PLANT", "SPACE", "TOUCH", "VALVE"
+    ).map { it.uppercase() }.filter { it.length == 5 }
     private var targetWord = ""
     private val guesses = mutableListOf<String>()
     private var currentGuess = ""
@@ -168,7 +168,10 @@ class WordQuestView @JvmOverloads constructor(
         // Update keyboard colors
         for (i in currentGuess.indices) {
             val char = currentGuess[i]
-            val status = if (char == targetWord[i]) 2 else if (targetWord.contains(char)) 1 else 0
+            // Safety check for targetWord length
+            val status = if (i < targetWord.length && char == targetWord[i]) 2 
+                        else if (targetWord.contains(char)) 1 
+                        else 0
             val currentStatus = usedKeys[char] ?: -1
             if (status > currentStatus) {
                 usedKeys[char] = status
@@ -223,20 +226,33 @@ class WordQuestView @JvmOverloads constructor(
                 canvas.drawRect(x + 5, y + 5, x + cellS - 5, y + 12, paint)
 
                 if (char != ' ') {
-                    // Subtle "pop" animation by slight scaling (simulated)
+                    // Subtle "pop" animation by slight scaling
                     val isCurrentChar = (r == guesses.size && c == word.length - 1)
                     val charScale = if (isCurrentChar) 1.2f else 1.0f
                     
                     paint.color = Color.WHITE
-                    paint.textSize = 44f * charScale
+                    paint.textSize = 44f
                     paint.textAlign = Paint.Align.CENTER
                     
-                    // Shadow
-                    paint.color = Color.BLACK
-                    canvas.drawText(char.toString(), x + cellS / 2 + 2, y + cellS / 2 + 17f, paint)
+                    val textX = x + cellS / 2
+                    val textY = y + cellS / 2 + 15f
                     
-                    paint.color = Color.WHITE
-                    canvas.drawText(char.toString(), x + cellS / 2, y + cellS / 2 + 15f, paint)
+                    if (charScale > 1.0f) {
+                        canvas.save()
+                        canvas.scale(charScale, charScale, textX, textY)
+                        // Shadow
+                        paint.color = Color.BLACK
+                        canvas.drawText(char.toString(), textX + 2, textY + 2, paint)
+                        paint.color = Color.WHITE
+                        canvas.drawText(char.toString(), textX, textY, paint)
+                        canvas.restore()
+                    } else {
+                        // Shadow
+                        paint.color = Color.BLACK
+                        canvas.drawText(char.toString(), textX + 2, textY + 2, paint)
+                        paint.color = Color.WHITE
+                        canvas.drawText(char.toString(), textX, textY, paint)
+                    }
                 } else {
                     // Empty cell border
                     paint.style = Paint.Style.STROKE
@@ -291,12 +307,16 @@ class WordQuestView @JvmOverloads constructor(
         }
 
         // HUD
+        paint.reset()
+        paint.isAntiAlias = true
         paint.color = Color.WHITE
         paint.textSize = 30f
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("SCORE: $score", 40f, 40f, paint)
+        val hudY = Math.round(40f).toFloat()
+        canvas.drawText("SCORE: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 40f, 40f, paint)
+        canvas.drawText("BEST: $best", width - 40f, hudY, paint)
 
         if (gameOver) {
             val title = if (won) "WELL DONE!" else "OUT OF TRIES"
@@ -306,7 +326,7 @@ class WordQuestView @JvmOverloads constructor(
     }
 
     private fun getCharColor(char: Char, pos: Int, guess: String): Int {
-        if (char == targetWord[pos]) return Color.parseColor("#4CAF50") // Green
+        if (pos < targetWord.length && char == targetWord[pos]) return Color.parseColor("#4CAF50") // Green
         
         // Count how many times this char appears in target word
         val targetCount = targetWord.count { it == char }
@@ -314,14 +334,14 @@ class WordQuestView @JvmOverloads constructor(
 
         // Count how many times it was already marked Green in this guess
         var greenCount = 0
-        for (i in 0 until 5) {
-            if (guess[i] == char && targetWord[i] == char) greenCount++
+        for (i in 0 until guess.length) {
+            if (i < targetWord.length && guess[i] == char && targetWord[i] == char) greenCount++
         }
 
         // Count how many times it appeared BEFORE this position in the guess and was not Green
         var beforeCount = 0
         for (i in 0 until pos) {
-            if (guess[i] == char && targetWord[i] != char) beforeCount++
+            if (i < targetWord.length && guess[i] == char && targetWord[i] != char) beforeCount++
         }
 
         return if (greenCount + beforeCount < targetCount) {

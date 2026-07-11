@@ -210,11 +210,16 @@ class HangmanView @JvmOverloads constructor(
         drawKeyboard(canvas, topH + 30f)
 
         // HUD
+        paint.reset()
+        paint.isAntiAlias = true
+        paint.typeface = Typeface.MONOSPACE
         paint.textSize = 30f
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("SCORE: $score", 40f, 60f, paint)
+        val hudY = Math.round(60f).toFloat()
+        canvas.drawText("SCORE: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $highScore", width - 40f, 60f, paint)
+        canvas.drawText("BEST: $highScore", width - 40f, hudY, paint)
 
         if (isGameOver) drawOverlay(canvas, "GAME OVER", "The word was: $targetWord")
         else if (isWin) drawOverlay(canvas, "YOU WON!", "Press Center to Next Word")

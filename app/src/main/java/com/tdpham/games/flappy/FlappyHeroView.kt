@@ -43,6 +43,17 @@ class FlappyHeroView @JvmOverloads constructor(
     private val beakPath = Path()
     private val sunsetPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val gameLoop = object : Runnable {
+        override fun run() {
+            if (!gamePaused && !gameOver) {
+                update()
+                invalidate()
+                handler.postDelayed(this, 16)
+            }
+        }
+    }
+
     // Themes & Stages
     private enum class FlappyTheme { DAY, NIGHT, SUNSET, WINTER }
     private var currentTheme = FlappyTheme.DAY
@@ -64,9 +75,21 @@ class FlappyHeroView @JvmOverloads constructor(
         invalidate()
     }
 
-    override fun pause() { gamePaused = true }
-    override fun resume() { gamePaused = false; invalidate() }
+    override fun pause() {
+        gamePaused = true
+        handler.removeCallbacks(gameLoop)
+    }
+    override fun resume() {
+        gamePaused = false
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+    }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(gameLoop)
+    }
 
     override fun resetGame() {
         birdY = height / 2f
@@ -168,7 +191,7 @@ class FlappyHeroView @JvmOverloads constructor(
         
         super.onDraw(canvas)
 
-        if (!gamePaused && !gameOver) update()
+        // update() - Moved to gameLoop
 
         // Draw Clouds (not in Night/Winter)
         if (currentTheme == FlappyTheme.DAY || currentTheme == FlappyTheme.SUNSET) {
@@ -257,12 +280,16 @@ class FlappyHeroView @JvmOverloads constructor(
         canvas.restore()
 
         // HUD
+        paint.reset()
+        paint.isAntiAlias = true
         paint.color = Color.WHITE
         paint.textSize = 40f
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("SCORE: $score", 40f, 60f, paint)
+        val hudY = Math.round(60f).toFloat()
+        canvas.drawText("SCORE: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $best", width - 40f, 60f, paint)
+        canvas.drawText("BEST: $best", width - 40f, hudY, paint)
 
         if (gameOver) {
             drawOverlay(canvas, "CRASHED!", "Score: $score\nPress Center to Restart")

@@ -34,6 +34,8 @@ class CheckersView @JvmOverloads constructor(
     private var gameOver = false
     private var status = "YOUR TURN"
     private var wins = 0
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val cpuRunnable = Runnable { cpuTurnLogic() }
 
     init {
         isFocusable = true
@@ -50,6 +52,7 @@ class CheckersView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
+        handler.removeCallbacks(cpuRunnable)
         for (r in 0..7) for (c in 0..7) board[r][c] = EMPTY
         for (r in 0..2) for (c in 0..7) {
             if (darkSquare(r, c)) board[r][c] = CPU_MAN
@@ -65,6 +68,11 @@ class CheckersView @JvmOverloads constructor(
         status = "YOUR TURN"
         wins = ScoreManager.getHighScore(context, gameKey)
         invalidate()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(cpuRunnable)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -261,63 +269,65 @@ class CheckersView @JvmOverloads constructor(
         selected = null
         status = "CPU THINKING..."
         invalidate()
-        postDelayed({
-            if (gameOver) return@postDelayed
-            val jumpsOnly = cpuMustJump()
-            val allMoves = mutableListOf<Move>()
-            for (r in 0..7) for (c in 0..7) {
-                if (isCpuPiece(board[r][c])) {
-                    allMoves.addAll(legalMovesForSquare(r, c, CPU, jumpsOnly))
-                }
+        handler.postDelayed(cpuRunnable, 600)
+    }
+
+    private fun cpuTurnLogic() {
+        if (gameOver) return
+        val jumpsOnly = cpuMustJump()
+        val allMoves = mutableListOf<Move>()
+        for (r in 0..7) for (c in 0..7) {
+            if (isCpuPiece(board[r][c])) {
+                allMoves.addAll(legalMovesForSquare(r, c, CPU, jumpsOnly))
             }
-            if (allMoves.isEmpty()) {
-                gameOver = true
-                status = "YOU WIN - CENTER TO RESTART"
-                val newWins = wins + 1
-                if (ScoreManager.updateHighScore(context, gameKey, newWins)) wins = newWins
-                SoundManager.playSuccess()
-                onGameOver?.invoke(wins)
-                invalidate()
-                return@postDelayed
-            }
-            val captures = allMoves.filter { it.isJump }
-            val pickFrom = if (captures.isNotEmpty()) captures else allMoves
-            val m = pickFrom[Random.nextInt(pickFrom.size)]
-            applyMove(m)
-            var promoted = promoteIfNeeded(m.tr, m.tc, CPU)
-            if (m.isJump) SoundManager.playScore() else SoundManager.playClick()
-            
-            var cr = m.tr
-            var cc = m.tc
-            if (m.isJump && !promoted) {
-                while (true) {
-                    val nextJumps = legalMovesForSquare(cr, cc, CPU, true).filter { it.isJump }
-                    if (nextJumps.isEmpty()) break
-                    val j = nextJumps[Random.nextInt(nextJumps.size)]
-                    applyMove(j)
-                    promoted = promoteIfNeeded(j.tr, j.tc, CPU)
-                    SoundManager.playScore()
-                    cr = j.tr
-                    cc = j.tc
-                    if (promoted) break
-                }
-            }
-            when {
-                countPlayerPieces() == 0 -> {
-                    gameOver = true
-                    status = "CPU WINS - CENTER TO RESTART"
-                    SoundManager.playError()
-                }
-                !playerHasAnyMove() -> {
-                    gameOver = true
-                    status = "NO MOVES - CPU WINS"
-                    SoundManager.playError()
-                }
-                else -> status = "YOUR TURN"
-            }
-            if (gameOver) onGameOver?.invoke(wins)
+        }
+        if (allMoves.isEmpty()) {
+            gameOver = true
+            status = "YOU WIN - CENTER TO RESTART"
+            val newWins = wins + 1
+            if (ScoreManager.updateHighScore(context, gameKey, newWins)) wins = newWins
+            SoundManager.playSuccess()
+            onGameOver?.invoke(wins)
             invalidate()
-        }, 600)
+            return
+        }
+        val captures = allMoves.filter { it.isJump }
+        val pickFrom = if (captures.isNotEmpty()) captures else allMoves
+        val m = pickFrom[Random.nextInt(pickFrom.size)]
+        applyMove(m)
+        var promoted = promoteIfNeeded(m.tr, m.tc, CPU)
+        if (m.isJump) SoundManager.playScore() else SoundManager.playClick()
+        
+        var cr = m.tr
+        var cc = m.tc
+        if (m.isJump && !promoted) {
+            while (true) {
+                val nextJumps = legalMovesForSquare(cr, cc, CPU, true).filter { it.isJump }
+                if (nextJumps.isEmpty()) break
+                val j = nextJumps[Random.nextInt(nextJumps.size)]
+                applyMove(j)
+                promoted = promoteIfNeeded(j.tr, j.tc, CPU)
+                SoundManager.playScore()
+                cr = j.tr
+                cc = j.tc
+                if (promoted) break
+            }
+        }
+        when {
+            countPlayerPieces() == 0 -> {
+                gameOver = true
+                status = "CPU WINS - CENTER TO RESTART"
+                SoundManager.playError()
+            }
+            !playerHasAnyMove() -> {
+                gameOver = true
+                status = "NO MOVES - CPU WINS"
+                SoundManager.playError()
+            }
+            else -> status = "YOUR TURN"
+        }
+        if (gameOver) onGameOver?.invoke(wins)
+        invalidate()
     }
 
     private fun playerMustJump(): Boolean {

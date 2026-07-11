@@ -479,12 +479,16 @@ class MazeView @JvmOverloads constructor(
         val left = (width - mazeW) / 2f
         val top = topArea + (availableH - mazeH) / 2f + 20f
 
+        paint.reset()
+        paint.isAntiAlias = true
         paint.color = Color.WHITE
         paint.textSize = 38f
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("STAGE: $stage", 40f, 60f, paint)
+        val hudY = Math.round(60f).toFloat()
+        canvas.drawText("STAGE: $stage", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("SCORE: $score  BEST: $best", width - 40f, 60f, paint)
+        canvas.drawText("SCORE: $score  BEST: $best", width - 40f, hudY, paint)
 
         // Draw maze background once
         paint.color = Color.BLACK

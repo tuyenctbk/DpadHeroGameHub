@@ -24,11 +24,12 @@ object AdManager {
             }
             if (isInitialized) return
             
-            MobileAds.initialize(context) { status ->
+            val appContext = context.applicationContext
+            MobileAds.initialize(appContext) { status ->
                 isInitialized = true
-                loadInterstitial(context)
+                loadInterstitial(appContext)
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e(TAG, "Failed to initialize MobileAds: ${e.message}", e)
         }
     }
@@ -50,7 +51,7 @@ object AdManager {
                         mInterstitialAd = interstitialAd
                     }
                 })
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e(TAG, "Failed to load interstitial ad: ${e.message}", e)
             mInterstitialAd = null
         }
@@ -79,7 +80,7 @@ object AdManager {
                 }
             }
             mInterstitialAd?.show(activity)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e(TAG, "Failed to show interstitial ad: ${e.message}", e)
             onAdDismissed()
         }

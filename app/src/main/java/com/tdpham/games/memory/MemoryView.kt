@@ -70,6 +70,7 @@ class MemoryView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
+        handler.removeCallbacksAndMessages(null)
         cards.clear()
         
         var nextThemeIndex = random.nextInt(symbolThemes.size)
@@ -227,12 +228,16 @@ class MemoryView @JvmOverloads constructor(
         val top = topArea + (boardH - cellSize * rows) / 2f
 
         // HUD
+        paint.reset()
+        paint.isAntiAlias = true
         paint.color = Color.WHITE
         paint.textSize = 38f
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("MOVES: $moves", 40f, 60f, paint)
+        val hudY = Math.round(60f).toFloat()
+        canvas.drawText("MOVES: $moves", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: ${if (bestMoves == Int.MAX_VALUE) "-" else bestMoves}", width - 40f, 60f, paint)
+        canvas.drawText("BEST: ${if (bestMoves == Int.MAX_VALUE) "-" else bestMoves}", width - 40f, hudY, paint)
 
         // Board
         for (r in 0 until rows) {

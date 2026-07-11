@@ -202,11 +202,17 @@ class TicTacToeView @JvmOverloads constructor(
 
     private fun findBestMove(): Pair<Int, Int>? {
         // Simple Win/Block logic
+        val originalWinningCells = winningCells.toList()
         // Try to win
         for (r in 0 until gridSize) for (c in 0 until gridSize) {
             if (board[r][c] == 0) {
                 board[r][c] = 2
-                if (winner() == 2) { board[r][c] = 0; return r to c }
+                if (winner() == 2) { 
+                    board[r][c] = 0
+                    winningCells.clear()
+                    winningCells.addAll(originalWinningCells)
+                    return r to c 
+                }
                 board[r][c] = 0
             }
         }
@@ -214,10 +220,17 @@ class TicTacToeView @JvmOverloads constructor(
         for (r in 0 until gridSize) for (c in 0 until gridSize) {
             if (board[r][c] == 0) {
                 board[r][c] = 1
-                if (winner() == 1) { board[r][c] = 0; return r to c }
+                if (winner() == 1) { 
+                    board[r][c] = 0
+                    winningCells.clear()
+                    winningCells.addAll(originalWinningCells)
+                    return r to c 
+                }
                 board[r][c] = 0
             }
         }
+        winningCells.clear()
+        winningCells.addAll(originalWinningCells)
         return null
     }
 
@@ -241,6 +254,7 @@ class TicTacToeView @JvmOverloads constructor(
     }
 
     private fun winner(): Int {
+        winningCells.clear()
         // Rows
         for (r in 0 until gridSize) {
             if (board[r][0] != 0) {
@@ -337,18 +351,23 @@ class TicTacToeView @JvmOverloads constructor(
         }
 
         // HUD
+        paint.reset()
+        paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
         paint.textAlign = Paint.Align.LEFT
         paint.textSize = 38f
-        canvas.drawText("WINS: $wins", 40f, 60f, paint)
+        val hudY1 = Math.round(60f).toFloat()
+        canvas.drawText("WINS: $wins", 40f, hudY1, paint)
         
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("MODE: ${gridSize}x$gridSize", width - 40f, 60f, paint)
+        canvas.drawText("MODE: ${gridSize}x$gridSize", width - 40f, hudY1, paint)
 
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 42f
-        canvas.drawText(status, width / 2f, top - 30f, paint)
+        val centerX = Math.round(width / 2f).toFloat()
+        val hudY2 = Math.round(top - 30f).toFloat()
+        canvas.drawText(status, centerX, hudY2, paint)
         
         if (gameOver) {
             paint.textSize = 32f

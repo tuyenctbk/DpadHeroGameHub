@@ -62,7 +62,7 @@ object RatingGuideManager {
             } catch (e: ActivityNotFoundException) {
                 try {
                     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
-                } catch (ex: Exception) {
+                } catch (ex: Throwable) {
                     Log.e("RatingGuideManager", "Could not launch Play Store link", ex)
                 }
             }
@@ -84,8 +84,13 @@ object RatingGuideManager {
         setupFocusEffect(btnLater)
         setupFocusEffect(btnNever)
 
-        dialog.show()
-        btnRate.requestFocus()
+        try {
+            dialog.show()
+            btnRate.requestFocus()
+        } catch (t: Throwable) {
+            Log.e("RatingGuideManager", "Failed to show rating dialog: ${t.message}")
+            onDismiss()
+        }
     }
 
     private fun setupFocusEffect(view: View) {

@@ -37,6 +37,17 @@ class RoadRacerView @JvmOverloads constructor(
     private var roadOffset = 0f
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val gameLoop = object : Runnable {
+        override fun run() {
+            if (!isGameOver && !isPaused) {
+                update()
+                invalidate()
+                handler.postDelayed(this, 16)
+            }
+        }
+    }
+
     // Environment
     private var isNightMode = false
     private var currentScene = Scene.FIELD
@@ -60,8 +71,20 @@ class RoadRacerView @JvmOverloads constructor(
         invalidate()
     }
 
-    override fun pause() { isPaused = true }
-    override fun resume() { isPaused = false; invalidate() }
+    override fun pause() {
+        isPaused = true
+        handler.removeCallbacks(gameLoop)
+    }
+    override fun resume() {
+        isPaused = false
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(gameLoop)
+    }
 
     override fun resetGame() {
         score = 0
@@ -162,7 +185,6 @@ class RoadRacerView @JvmOverloads constructor(
             }
             if (obs.y > height) iterator.remove()
         }
-        invalidate()
     }
 
     private fun updateEnvironment() {
@@ -209,7 +231,7 @@ class RoadRacerView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        update()
+        // update() - Moved to gameLoop
 
         val theme = getTheme()
         GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.SOLID, isNight = isNightMode, weather = currentWeather, paint = paint, particles = particles)
@@ -246,12 +268,18 @@ class RoadRacerView @JvmOverloads constructor(
         drawCar(canvas, px, py, Color.parseColor("#4CAF50"), false)
 
         // HUD
+        paint.reset()
+        paint.isAntiAlias = true
         paint.color = Color.WHITE
         paint.textSize = 40f
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("SCORE: $score", 40f, 60f, paint)
+        val hudX = Math.round(40f).toFloat()
+        val hudY = Math.round(60f).toFloat()
+        canvas.drawText("SCORE: $score", hudX, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("BEST: $highScore", width - 40f, 60f, paint)
+        val bestX = Math.round(width - 40f).toFloat()
+        canvas.drawText("BEST: $highScore", bestX, hudY, paint)
 
         if (isGameOver) drawOverlay(canvas, "C R A S H E D !", "Final Score: $score")
         else if (isPaused) drawOverlay(canvas, "R O A D  R A C E R", "Press Center to Start")

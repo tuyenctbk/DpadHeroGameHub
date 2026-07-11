@@ -1,10 +1,7 @@
 package com.tdpham.games.snake
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Typeface
+import android.graphics.*
 import android.media.ToneGenerator
 import android.os.Handler
 import android.os.Looper
@@ -48,6 +45,8 @@ class SnakeGameView @JvmOverloads constructor(
     private val gridSize = 20
     private var cellSize = 0f
     private var animationFrame = 0
+    private var headScale = 1.0f
+    private var scorePopScale = 1.0f
     private val screenShake = com.tdpham.games.common.ScreenShake()
 
     private val handler = Handler(Looper.getMainLooper())
@@ -126,11 +125,11 @@ class SnakeGameView @JvmOverloads constructor(
             return
         }
 
-        // Prevent 180 degree turns by checking against current moving direction
-        if ((direction == Direction.UP && newDirection != Direction.DOWN) ||
-            (direction == Direction.DOWN && newDirection != Direction.UP) ||
-            (direction == Direction.LEFT && newDirection != Direction.RIGHT) ||
-            (direction == Direction.RIGHT && newDirection != Direction.LEFT)) {
+        // Prevent 180 degree turns by checking against the planned direction
+        if ((nextDirection == Direction.UP && newDirection != Direction.DOWN) ||
+            (nextDirection == Direction.DOWN && newDirection != Direction.UP) ||
+            (nextDirection == Direction.LEFT && newDirection != Direction.RIGHT) ||
+            (nextDirection == Direction.RIGHT && newDirection != Direction.LEFT)) {
             nextDirection = newDirection
         }
     }
@@ -165,7 +164,15 @@ class SnakeGameView @JvmOverloads constructor(
             return
         }
         
-        if (snake.contains(newHead)) {
+        // Check for self-collision (excluding the tail as it will move forward)
+        var selfHit = false
+        for (i in 0 until snake.size - 1) {
+            if (snake[i] == newHead) {
+                selfHit = true
+                break
+            }
+        }
+        if (selfHit) {
             isGameOver = true
             gameOverReason = "BIT YOURSELF!"
             handleGameOver()
@@ -176,6 +183,8 @@ class SnakeGameView @JvmOverloads constructor(
 
         if (newHead == food) {
             score += 10
+            headScale = 1.4f
+            scorePopScale = 1.3f
             SoundManager.playScore()
             spawnFood()
             spawnBiteParticles(newHead)
@@ -292,6 +301,7 @@ class SnakeGameView @JvmOverloads constructor(
         GameEnvironment.draw(canvas, bgType, GameEnvironment.SceneType.FIELD, isNight = isNight, paint = paint)
 
         // Draw particles
+        paint.style = Paint.Style.FILL
         val iterator = particles.iterator()
         while (iterator.hasNext()) {
             val p = iterator.next()
@@ -329,16 +339,18 @@ class SnakeGameView @JvmOverloads constructor(
             val rectRight = offsetX + (point.x + 1) * cellSize - 1
             val rectBottom = offsetY + (point.y + 1) * cellSize - 1
             
-            val cornerRadius = if (i == 0) cellSize / 2f else 8f
-            canvas.drawRoundRect(rectLeft, rectTop, rectRight, rectBottom, cornerRadius, cornerRadius, paint)
-
-            // Draw eyes for the head
-            if (i == 0) {
+            if (i == 0 && headScale > 1.01f) {
+                canvas.save()
+                val cx = rectLeft + cellSize / 2f
+                val cy = rectTop + cellSize / 2f
+                canvas.scale(headScale, headScale, cx, cy)
+                val cornerRadius = cellSize / 2f
+                canvas.drawRoundRect(rectLeft, rectTop, rectRight, rectBottom, cornerRadius, cornerRadius, paint)
+                
+                // Draw eyes inside the scaled head
                 paint.color = Color.WHITE
                 val eyeSize = cellSize / 6f
                 val eyeOffset = cellSize / 4f
-                
-                // Position eyes based on direction
                 when (direction) {
                     Direction.UP -> {
                         canvas.drawCircle(rectLeft + eyeOffset, rectTop + eyeOffset, eyeSize, paint)
@@ -355,6 +367,39 @@ class SnakeGameView @JvmOverloads constructor(
                     Direction.RIGHT -> {
                         canvas.drawCircle(rectRight - eyeOffset, rectTop + eyeOffset, eyeSize, paint)
                         canvas.drawCircle(rectRight - eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                    }
+                }
+                canvas.restore()
+                headScale *= 0.9f
+                invalidate()
+            } else {
+                val cornerRadius = if (i == 0) cellSize / 2f else 8f
+                canvas.drawRoundRect(rectLeft, rectTop, rectRight, rectBottom, cornerRadius, cornerRadius, paint)
+
+                // Draw eyes for the head (non-scaled)
+                if (i == 0) {
+                    paint.color = Color.WHITE
+                    val eyeSize = cellSize / 6f
+                    val eyeOffset = cellSize / 4f
+                    
+                    // Position eyes based on direction
+                    when (direction) {
+                        Direction.UP -> {
+                            canvas.drawCircle(rectLeft + eyeOffset, rectTop + eyeOffset, eyeSize, paint)
+                            canvas.drawCircle(rectRight - eyeOffset, rectTop + eyeOffset, eyeSize, paint)
+                        }
+                        Direction.DOWN -> {
+                            canvas.drawCircle(rectLeft + eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                            canvas.drawCircle(rectRight - eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                        }
+                        Direction.LEFT -> {
+                            canvas.drawCircle(rectLeft + eyeOffset, rectTop + eyeOffset, eyeSize, paint)
+                            canvas.drawCircle(rectLeft + eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                        }
+                        Direction.RIGHT -> {
+                            canvas.drawCircle(rectRight - eyeOffset, rectTop + eyeOffset, eyeSize, paint)
+                            canvas.drawCircle(rectRight - eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                        }
                     }
                 }
             }
@@ -384,18 +429,48 @@ class SnakeGameView @JvmOverloads constructor(
         }
 
         // Draw Score Header
-        paint.textSize = cellSize * 1.0f
+        val labelSize = cellSize * 1.0f
+        paint.reset()
+        paint.isAntiAlias = true
+        paint.typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+        paint.textSize = labelSize
         paint.textAlign = Paint.Align.LEFT
         paint.color = GamePalette.TEXT_SECONDARY
-        val scoreLabel = context.getString(R.string.score_label) + ": "
-        canvas.drawText(scoreLabel, offsetX, offsetY - cellSize * 1.2f, paint)
-        val scoreWidth = paint.measureText(scoreLabel)
-        paint.color = GamePalette.SCORE
-        canvas.drawText("$score", offsetX + scoreWidth, offsetY - cellSize * 1.2f, paint)
+        paint.style = Paint.Style.FILL
         
+        val scoreLabel = context.getString(R.string.score_label) + ": "
+        val labelX = Math.round(offsetX).toFloat()
+        val labelY = Math.round(offsetY - cellSize * 1.2f).toFloat()
+        canvas.drawText(scoreLabel, labelX, labelY, paint)
+        val scoreLabelWidth = paint.measureText(scoreLabel)
+        
+        // Only the score number pops, scaling from its center
+        val scoreStr = "$score"
+        val scoreNumX = labelX + scoreLabelWidth
+        
+        if (scorePopScale > 1.01f) {
+            canvas.save()
+            // Approximate center for scaling
+            val pivotX = scoreNumX + (scoreStr.length * paint.textSize * 0.3f)
+            val pivotY = labelY - (paint.textSize * 0.4f)
+            canvas.scale(scorePopScale, scorePopScale, pivotX, pivotY)
+            paint.color = GamePalette.SCORE
+            canvas.drawText(scoreStr, scoreNumX, labelY, paint)
+            canvas.restore()
+            
+            scorePopScale *= 0.9f
+            invalidate()
+        } else {
+            paint.color = GamePalette.SCORE
+            canvas.drawText(scoreStr, scoreNumX, labelY, paint)
+            scorePopScale = 1.0f
+        }
+        
+        paint.textSize = labelSize
         paint.textAlign = Paint.Align.RIGHT
         paint.color = GamePalette.TEXT_SECONDARY
-        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", offsetX + gridSize * cellSize, offsetY - cellSize * 1.2f, paint)
+        val bestX = Math.round(offsetX + gridSize * cellSize).toFloat()
+        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", bestX, labelY, paint)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {
