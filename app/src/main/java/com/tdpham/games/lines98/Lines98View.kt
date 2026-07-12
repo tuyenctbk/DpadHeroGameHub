@@ -324,17 +324,15 @@ class Lines98View @JvmOverloads constructor(
         GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.SOLID, paint = paint)
         
         // Update pulse animation
-        if (selectedX != -1 || !isGameOver) {
-            pulseFactor += 0.02f * pulseDirection
-            if (pulseFactor > 1.1f) {
-                pulseFactor = 1.1f
-                pulseDirection = -1
-            } else if (pulseFactor < 0.9f) {
-                pulseFactor = 0.9f
-                pulseDirection = 1
-            }
-            invalidate()
+        pulseFactor += 0.015f * pulseDirection
+        if (pulseFactor > 1.15f) {
+            pulseFactor = 1.15f
+            pulseDirection = -1
+        } else if (pulseFactor < 0.85f) {
+            pulseFactor = 0.85f
+            pulseDirection = 1
         }
+        if (!isGameOver && !isPaused) invalidate()
 
         val cellSize = Math.min(width, height) / (gridSize + 1f)
         val offsetX = (width - cellSize * gridSize) / 2f
@@ -377,20 +375,29 @@ class Lines98View @JvmOverloads constructor(
                     val cx = offsetX + c * cellSize + cellSize / 2
                     val cy = offsetY + r * cellSize + cellSize / 2
                     
+                    val isSelected = (c == selectedX && r == selectedY)
+                    val isFocused = (c == cursorX && r == cursorY)
+                    
+                    // Pulse logic: selected ball pulses strongly, focused ball pulses subtly
+                    val drawRadius = when {
+                        isSelected -> cellSize * 0.4f * pulseFactor
+                        isFocused -> cellSize * 0.4f * (1f + (pulseFactor - 1f) * 0.4f)
+                        else -> cellSize * 0.4f
+                    }
+
                     // Shadow
                     paint.color = Color.BLACK
                     paint.alpha = 50
-                    canvas.drawCircle(cx + 4, cy + 4, cellSize * 0.4f, paint)
+                    canvas.drawCircle(cx + 4, cy + 4, drawRadius, paint)
                     paint.alpha = 255
 
                     // Ball
                     paint.color = ballColors[ballColorIdx - 1]
-                    val drawRadius = if (c == selectedX && r == selectedY) cellSize * 0.4f * pulseFactor else cellSize * 0.4f
                     canvas.drawCircle(cx, cy, drawRadius, paint)
 
                     // Highlight (3D effect)
                     val gradient = RadialGradient(
-                        cx - cellSize * 0.15f, cy - cellSize * 0.15f, cellSize * 0.3f,
+                        cx - drawRadius * 0.4f, cy - drawRadius * 0.4f, drawRadius * 0.8f,
                         Color.WHITE, Color.TRANSPARENT, Shader.TileMode.CLAMP
                     )
                     paint.shader = gradient
@@ -399,7 +406,7 @@ class Lines98View @JvmOverloads constructor(
                     paint.shader = null
                     paint.alpha = 255
 
-                    if (c == selectedX && r == selectedY) {
+                    if (isSelected) {
                         paint.style = Paint.Style.STROKE
                         paint.strokeWidth = 4f
                         paint.color = Color.WHITE
