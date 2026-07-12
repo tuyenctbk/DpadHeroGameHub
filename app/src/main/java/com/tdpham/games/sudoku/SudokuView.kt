@@ -27,6 +27,14 @@ class SudokuView @JvmOverloads constructor(
     override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    enum class Difficulty(val clues: Int) {
+        LEVEL_1(42),
+        LEVEL_2(32),
+        LEVEL_3(24)
+    }
+
+    private var currentDifficulty = Difficulty.LEVEL_2
+
     private val puzzleBaseA: Array<IntArray> = arrayOf(
         intArrayOf(5, 3, 0, 0, 7, 0, 0, 0, 0),
         intArrayOf(6, 0, 0, 1, 9, 5, 0, 0, 0),
@@ -129,13 +137,40 @@ class SudokuView @JvmOverloads constructor(
         animationHandler.removeCallbacks(animationRunnable)
         puzzleIndex = index % puzzles.size
         val p = puzzles[puzzleIndex]
-        board = Array(9) { r -> p[r].clone() }
-        given = Array(9) { r -> BooleanArray(9) { c -> p[r][c] != 0 } }
+        
+        // Find all non-zero positions in the full puzzle
+        val fullPositions = mutableListOf<Pair<Int, Int>>()
+        for (r in 0 until 9) for (c in 0 until 9) {
+            if (p[r][c] != 0) fullPositions.add(r to c)
+        }
+        
+        // Shuffle and take only the required number of clues for the difficulty
+        fullPositions.shuffle()
+        val cluesToShow = fullPositions.take(currentDifficulty.clues)
+        
+        board = Array(9) { IntArray(9) { 0 } }
+        given = Array(9) { BooleanArray(9) { false } }
+        
+        for ((r, c) in cluesToShow) {
+            board[r][c] = p[r][c]
+            given[r][c] = true
+        }
+        
         cursorR = 0
         cursorC = 0
         solved = false
         best = ScoreManager.getHighScore(context, gameKey)
         invalidate()
+    }
+
+    private fun cycleDifficulty(next: Boolean) {
+        val values = Difficulty.entries
+        var idx = values.indexOf(currentDifficulty)
+        if (next) idx++ else idx--
+        if (idx >= values.size) idx = 0
+        if (idx < 0) idx = values.size - 1
+        currentDifficulty = values[idx]
+        loadPuzzle(puzzleIndex)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -144,6 +179,11 @@ class SudokuView @JvmOverloads constructor(
             return true
         }
         
+        if (solved && (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN)) {
+            cycleDifficulty(keyCode == KeyEvent.KEYCODE_DPAD_UP)
+            return true
+        }
+
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN, 
             KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT -> {
@@ -165,6 +205,10 @@ class SudokuView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
                 cycleCell()
                 invalidate()
+                return true
+            }
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB -> {
+                cycleDifficulty(true)
                 return true
             }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> {
@@ -352,6 +396,10 @@ class SudokuView @JvmOverloads constructor(
         paint.textSize = 34f
         val hudY1 = Math.round(52f).toFloat()
         canvas.drawText("${context.getString(R.string.puzzle_label)} ${puzzleIndex + 1}/${puzzles.size}  ${context.getString(R.string.best_label)}: $best", 30f, hudY1, paint)
+        
+        paint.textAlign = Paint.Align.RIGHT
+        canvas.drawText("${context.getString(R.string.level_label)} ${currentDifficulty.ordinal + 1}", width - 30f, hudY1, paint)
+
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 28f
         val centerX = Math.round(width / 2f).toFloat()

@@ -28,13 +28,13 @@ class MemoryView @JvmOverloads constructor(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     
     enum class Difficulty(val rows: Int, val cols: Int) {
-        EASY(3, 4),
-        MEDIUM(4, 4),
-        HARD(5, 6),
-        EXPERT(6, 6)
+        LEVEL_1(3, 4),
+        LEVEL_2(4, 4),
+        LEVEL_3(5, 6),
+        LEVEL_4(6, 6)
     }
 
-    private var currentDifficulty = Difficulty.MEDIUM
+    private var currentDifficulty = Difficulty.LEVEL_2
     private var rows = currentDifficulty.rows
     private var cols = currentDifficulty.cols
     private var cards = mutableListOf<Card>()
@@ -293,7 +293,7 @@ class MemoryView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.best_label)}: ${if (bestMoves == Int.MAX_VALUE) "-" else bestMoves}", width - 40f, hudY, paint)
 
         paint.textAlign = Paint.Align.CENTER
-        canvas.drawText("${context.getString(R.string.mode_label)}: ${currentDifficulty.name}", width / 2f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.level_label)} ${currentDifficulty.ordinal + 1}", width / 2f, hudY, paint)
 
         // Board
         for (r in 0 until rows) {

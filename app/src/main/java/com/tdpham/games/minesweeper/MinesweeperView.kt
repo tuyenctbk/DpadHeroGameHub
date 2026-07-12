@@ -29,12 +29,12 @@ class MinesweeperView @JvmOverloads constructor(
     override var onGameOver: ((Int) -> Unit)? = null
 
     enum class Difficulty(val rows: Int, val cols: Int, val mines: Int) {
-        EASY(10, 10, 12),
-        MEDIUM(16, 16, 40),
-        HARD(16, 30, 99)
+        LEVEL_1(10, 10, 12),
+        LEVEL_2(16, 16, 40),
+        LEVEL_3(16, 30, 99)
     }
 
-    private var currentDifficulty = Difficulty.EASY
+    private var currentDifficulty = Difficulty.LEVEL_1
     private var rows = currentDifficulty.rows
     private var cols = currentDifficulty.cols
     private var minesCount = currentDifficulty.mines
@@ -525,7 +525,7 @@ class MinesweeperView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.wins_label)}: $totalWins", Math.round(offsetX + cols * cellSize).toFloat(), headerY, paint)
         
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("${context.getString(R.string.mode_label)}: ${currentDifficulty.name}", Math.round(offsetX).toFloat(), headerY + cellSize * 0.7f, paint)
+        canvas.drawText("${context.getString(R.string.level_label)} ${currentDifficulty.ordinal + 1}", Math.round(offsetX).toFloat(), headerY + cellSize * 0.7f, paint)
 
         paint.textAlign = Paint.Align.CENTER
         paint.color = GamePalette.SCORE

@@ -26,12 +26,12 @@ class SnakeGameView @JvmOverloads constructor(
     override var onGameOver: ((Int) -> Unit)? = null
 
     enum class Difficulty(val speed: Long, val wallsLethal: Boolean) {
-        EASY(150L, false),
-        MEDIUM(120L, true),
-        HARD(80L, true)
+        LEVEL_1(150L, false),
+        LEVEL_2(120L, true),
+        LEVEL_3(80L, true)
     }
 
-    private var currentDifficulty = Difficulty.MEDIUM
+    private var currentDifficulty = Difficulty.LEVEL_2
 
     private val paint = Paint().apply {
         isAntiAlias = true
@@ -538,7 +538,7 @@ class SnakeGameView @JvmOverloads constructor(
         paint.textSize = labelSize * 0.7f
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.LTGRAY
-        canvas.drawText("${context.getString(R.string.mode_label)}: ${currentDifficulty.name}", width / 2f, labelY, paint)
+        canvas.drawText("${context.getString(R.string.level_label)} ${currentDifficulty.ordinal + 1}", width / 2f, labelY, paint)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {

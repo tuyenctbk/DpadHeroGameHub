@@ -23,7 +23,14 @@ class SlidePuzzleView @JvmOverloads constructor(
     override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     
-    private var gridSize = 3
+    enum class Difficulty(val size: Int) {
+        LEVEL_1(3),
+        LEVEL_2(4),
+        LEVEL_3(5)
+    }
+
+    private var currentDifficulty = Difficulty.LEVEL_1
+    private var gridSize = currentDifficulty.size
     private var tiles = mutableListOf<Int>()
     private var emptyIdx = 8
     private var cursorIdx = 0
@@ -52,6 +59,7 @@ class SlidePuzzleView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
+        gridSize = currentDifficulty.size
         tiles = (0 until gridSize * gridSize).toMutableList()
         emptyIdx = gridSize * gridSize - 1
         shuffleTiles()
@@ -140,9 +148,15 @@ class SlidePuzzleView @JvmOverloads constructor(
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (gameOver && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
-            resetGame()
-            return true
+        if (gameOver) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                resetGame()
+                return true
+            }
+            if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                cycleDifficulty(keyCode == KeyEvent.KEYCODE_DPAD_UP)
+                return true
+            }
         }
 
         if (gameOver) return true
@@ -156,11 +170,25 @@ class SlidePuzzleView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_LEFT -> if (c > 0) cursorIdx -= 1
             KeyEvent.KEYCODE_DPAD_RIGHT -> if (c < gridSize - 1) cursorIdx += 1
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> tryMove(cursorIdx)
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB -> {
+                cycleDifficulty(true)
+                return true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
+    }
+
+    private fun cycleDifficulty(next: Boolean) {
+        val values = Difficulty.entries
+        var idx = values.indexOf(currentDifficulty)
+        if (next) idx++ else idx--
+        if (idx >= values.size) idx = 0
+        if (idx < 0) idx = values.size - 1
+        currentDifficulty = values[idx]
+        resetGame()
     }
 
     override fun performClick(): Boolean {
@@ -250,6 +278,9 @@ class SlidePuzzleView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.moves_label)}: $moves", 40f, 70f, paint)
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: ${if (bestMoves == Int.MAX_VALUE) "-" else bestMoves}", width - 40f, 70f, paint)
+
+        paint.textAlign = Paint.Align.CENTER
+        canvas.drawText("${context.getString(R.string.level_label)} ${currentDifficulty.ordinal + 1}", width / 2f, 70f, paint)
 
         // Draw Tiles
         for (i in 0 until tiles.size) {
