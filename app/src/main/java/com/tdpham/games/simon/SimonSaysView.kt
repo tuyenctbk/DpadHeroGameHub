@@ -34,6 +34,7 @@ class SimonSaysView @JvmOverloads constructor(
     private var gameOver = false
     private var gamePaused = true
     private var currentVictoryWord = ""
+    private var celebrationTimer = 0
     private val celebrationManager = CelebrationManager()
 
     private val colors = arrayOf(
@@ -68,6 +69,7 @@ class SimonSaysView @JvmOverloads constructor(
         gameOver = false
         gamePaused = true
         activeQuadrant = -1
+        celebrationTimer = 0
         invalidate()
     }
 
@@ -159,13 +161,13 @@ class SimonSaysView @JvmOverloads constructor(
             val size = width.coerceAtMost(height) * 0.8f
             val left = (width - size) / 2f
             val top = (height - size) / 2f
-            val padding = 20f
             
+            val gap = 15f
             val quadrant = when {
-                x in (left + padding)..(cx - padding) && y in top..(cy - padding) -> 0
-                x in (cx + padding)..(left + size) && y in (top + padding)..(cy - padding) -> 1
-                x in (cx + padding)..(left + size - padding) && y in (cy + padding)..(top + size) -> 2
-                x in left..(cx - padding) && y in (cy + padding)..(top + size - padding) -> 3
+                x in left..(cx - gap) && y in top..(cy - gap) -> 0
+                x in (cx + gap)..(left + size) && y in top..(cy - gap) -> 1
+                x in (cx + gap)..(left + size) && y in (cy + gap)..(top + size) -> 2
+                x in left..(cx - gap) && y in (cy + gap)..(top + size) -> 3
                 else -> -1
             }
 
@@ -197,7 +199,15 @@ class SimonSaysView @JvmOverloads constructor(
                 if (isNewHigh) {
                     best = score
                     currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
-                    celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, isNewHigh = isNewHigh, score = score, highScore = oldBest)
+                    celebrationManager.startOutcome(
+                        width = width.toFloat(),
+                        height = height.toFloat(),
+                        isWin = true,
+                        isNewHigh = isNewHigh,
+                        score = score,
+                        highScore = oldBest
+                    )
+                    celebrationTimer = 180 // ~3 seconds at 60fps or similar
                 }
                 handler.postDelayed({ startNextRound() }, 800)
             }
@@ -205,7 +215,13 @@ class SimonSaysView @JvmOverloads constructor(
             gameOver = true
             gamePaused = true
             SoundManager.playError()
-            celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, score = score, highScore = best)
+            celebrationManager.startOutcome(
+                width = width.toFloat(),
+                height = height.toFloat(),
+                isWin = false,
+                score = score,
+                highScore = best
+            )
             onGameOver?.invoke(score)
             invalidate()
         }
@@ -219,13 +235,29 @@ class SimonSaysView @JvmOverloads constructor(
         val top = (height - size) / 2f
         val cx = width / 2f
         val cy = height / 2f
-        val padding = 20f
+        val gap = 15f
 
         // Draw Quadrants
-        drawQuadrant(canvas, 0, left + padding, top, cx - padding, cy - padding) // Up
-        drawQuadrant(canvas, 1, cx + padding, top + padding, left + size, cy - padding) // Right
-        drawQuadrant(canvas, 2, cx + padding, cy + padding, left + size - padding, top + size) // Down
-        drawQuadrant(canvas, 3, left, cy + padding, cx - padding, top + size - padding) // Left
+        drawQuadrant(canvas, 0, left, top, cx - gap, cy - gap) // Top-Left (Up)
+        drawQuadrant(canvas, 1, cx + gap, top, left + size, cy - gap) // Top-Right (Right)
+        drawQuadrant(canvas, 2, cx + gap, cy + gap, left + size, top + size) // Bottom-Right (Down)
+        drawQuadrant(canvas, 3, left, cy + gap, cx - gap, top + size) // Bottom-Left (Left)
+
+        // Center hub
+        paint.reset()
+        paint.isAntiAlias = true
+        paint.color = Color.BLACK
+        canvas.drawCircle(cx, cy, size * 0.15f, paint)
+        paint.color = Color.WHITE
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = 5f
+        canvas.drawCircle(cx, cy, size * 0.15f, paint)
+        
+        paint.style = Paint.Style.FILL
+        paint.textAlign = Paint.Align.CENTER
+        paint.textSize = size * 0.05f
+        paint.typeface = Typeface.MONOSPACE
+        canvas.drawText("SIMON", cx, cy + size * 0.02f, paint)
 
         // HUD
         paint.reset()
@@ -255,9 +287,10 @@ class SimonSaysView @JvmOverloads constructor(
             drawOverlay(canvas, context.getString(R.string.game_simon), context.getString(R.string.start_game))
         }
 
-        if (gameOver || (score > 0 && currentVictoryWord.isNotEmpty())) {
+        if (gameOver || (score > 0 && celebrationTimer > 0)) {
             celebrationManager.update()
             celebrationManager.draw(canvas)
+            if (celebrationTimer > 0) celebrationTimer--
             invalidate()
         }
     }

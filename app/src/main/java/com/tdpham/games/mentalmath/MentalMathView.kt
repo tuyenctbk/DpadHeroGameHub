@@ -272,17 +272,19 @@ class MentalMathView @JvmOverloads constructor(
         isReviewing = true
         if (isCorrect) {
             score += (100 * stage) + (timeLeft / 100).toInt()
-            if (score > best) {
+            val oldBest = best
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            if (isNewHigh) {
                 best = score
-                ScoreManager.updateHighScore(context, gameKey, score)
             }
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
             celebrationManager.startOutcome(
                 width = width.toFloat(),
                 height = height.toFloat(),
                 isWin = true,
+                isNewHigh = isNewHigh,
                 score = score,
-                highScore = best
+                highScore = oldBest
             )
             SoundManager.playSuccess()
         } else {
