@@ -25,6 +25,14 @@ class SnakeGameView @JvmOverloads constructor(
     override var gameKey: String = "snake"
     override var onGameOver: ((Int) -> Unit)? = null
 
+    enum class Difficulty(val speed: Long, val wallsLethal: Boolean) {
+        EASY(150L, false),
+        MEDIUM(120L, true),
+        HARD(80L, true)
+    }
+
+    private var currentDifficulty = Difficulty.MEDIUM
+
     private val paint = Paint().apply {
         isAntiAlias = true
         typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
@@ -65,8 +73,8 @@ class SnakeGameView @JvmOverloads constructor(
                 invalidate()
             }
             if (!isGameOver) {
-                // Speed up game slightly as score increases
-                val delay = (150 - (score / 20) * 5).coerceAtLeast(80).toLong()
+                // Speed up game slightly as score increases, starting from difficulty base speed
+                val delay = (currentDifficulty.speed - (score / 20) * 5).coerceAtLeast(60).toLong()
                 handler.postDelayed(this, delay)
             }
         }
@@ -148,25 +156,46 @@ class SnakeGameView @JvmOverloads constructor(
         invalidate()
     }
 
+    private fun cycleDifficulty(next: Boolean) {
+        val values = Difficulty.entries
+        var idx = values.indexOf(currentDifficulty)
+        if (next) idx++ else idx--
+        if (idx >= values.size) idx = 0
+        if (idx < 0) idx = values.size - 1
+        currentDifficulty = values[idx]
+        resetGame()
+    }
+
     override fun toggleSound(): Boolean {
         return SoundManager.toggleSound()
     }
 
     private fun moveSnake() {
         val head = snake.first()
-        val newHead = when (direction) {
-            Direction.UP -> Point(head.x, head.y - 1)
-            Direction.DOWN -> Point(head.x, head.y + 1)
-            Direction.LEFT -> Point(head.x - 1, head.y)
-            Direction.RIGHT -> Point(head.x + 1, head.y)
+        var nx = when (direction) {
+            Direction.LEFT -> head.x - 1
+            Direction.RIGHT -> head.x + 1
+            else -> head.x
+        }
+        var ny = when (direction) {
+            Direction.UP -> head.y - 1
+            Direction.DOWN -> head.y + 1
+            else -> head.y
         }
 
-        if (newHead.x !in 0 until gridSize || newHead.y !in 0 until gridSize) {
-            isGameOver = true
-            gameOverReason = context.getString(R.string.hit_wall_label)
-            handleGameOver()
-            return
+        if (nx !in 0 until gridSize || ny !in 0 until gridSize) {
+            if (currentDifficulty.wallsLethal) {
+                isGameOver = true
+                gameOverReason = context.getString(R.string.hit_wall_label)
+                handleGameOver()
+                return
+            } else {
+                nx = (nx + gridSize) % gridSize
+                ny = (ny + gridSize) % gridSize
+            }
         }
+        
+        val newHead = Point(nx, ny)
         
         // Check for self-collision (excluding the tail as it will move forward)
         var selfHit = false
@@ -242,6 +271,17 @@ class SnakeGameView @JvmOverloads constructor(
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (isGameOver) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                resetGame()
+                return true
+            }
+            if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                cycleDifficulty(keyCode == KeyEvent.KEYCODE_DPAD_UP)
+                return true
+            }
+        }
+
         return when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> {
                 updateDirection(Direction.UP)
@@ -261,6 +301,10 @@ class SnakeGameView @JvmOverloads constructor(
             }
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
                 togglePause()
+                true
+            }
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB -> {
+                cycleDifficulty(true)
                 true
             }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> {
@@ -489,6 +533,12 @@ class SnakeGameView @JvmOverloads constructor(
         paint.color = GamePalette.TEXT_SECONDARY
         val bestX = Math.round(offsetX + gridSize * cellSize).toFloat()
         canvas.drawText("${context.getString(R.string.best_label)}: $highScore", bestX, labelY, paint)
+
+        // Draw Difficulty Mode
+        paint.textSize = labelSize * 0.7f
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.LTGRAY
+        canvas.drawText("${context.getString(R.string.mode_label)}: ${currentDifficulty.name}", width / 2f, labelY, paint)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {

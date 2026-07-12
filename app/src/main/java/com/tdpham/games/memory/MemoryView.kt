@@ -27,8 +27,16 @@ class MemoryView @JvmOverloads constructor(
     override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     
-    private val rows = 4
-    private val cols = 4
+    enum class Difficulty(val rows: Int, val cols: Int) {
+        EASY(3, 4),
+        MEDIUM(4, 4),
+        HARD(5, 6),
+        EXPERT(6, 6)
+    }
+
+    private var currentDifficulty = Difficulty.MEDIUM
+    private var rows = currentDifficulty.rows
+    private var cols = currentDifficulty.cols
     private var cards = mutableListOf<Card>()
     private var cursorR = 0
     private var cursorC = 0
@@ -74,6 +82,9 @@ class MemoryView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
+        rows = currentDifficulty.rows
+        cols = currentDifficulty.cols
+        
         handler.removeCallbacksAndMessages(null)
         cards.clear()
         celebrationManager.start(0f, 0f)
@@ -83,7 +94,15 @@ class MemoryView @JvmOverloads constructor(
             nextThemeIndex = random.nextInt(symbolThemes.size)
         }
         currentThemeIndex = nextThemeIndex
-        val activeSymbols = symbolThemes[currentThemeIndex]
+        val allSymbols = symbolThemes[currentThemeIndex].shuffled()
+        
+        val pairCount = (rows * cols) / 2
+        val activeSymbols = if (allSymbols.size >= pairCount) {
+            allSymbols.take(pairCount)
+        } else {
+            // Fallback if theme doesn't have enough symbols
+            allSymbols + allSymbols.take(pairCount - allSymbols.size)
+        }
 
         val deck = (activeSymbols + activeSymbols).shuffled()
         for (symbol in deck) {
@@ -104,12 +123,17 @@ class MemoryView @JvmOverloads constructor(
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (gameOver && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
-            resetGame()
+        if (gameOver) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                resetGame()
+                return true
+            }
+            if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                cycleDifficulty(keyCode == KeyEvent.KEYCODE_DPAD_UP)
+                return true
+            }
             return true
         }
-
-        if (gameOver) return true
 
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> cursorR = (cursorR - 1).coerceAtLeast(0)
@@ -119,11 +143,25 @@ class MemoryView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
                 if (!isProcessing) flipCard(cursorR * cols + cursorC)
             }
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB -> {
+                cycleDifficulty(true)
+                return true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
+    }
+
+    private fun cycleDifficulty(next: Boolean) {
+        val values = Difficulty.entries
+        var idx = values.indexOf(currentDifficulty)
+        if (next) idx++ else idx--
+        if (idx >= values.size) idx = 0
+        if (idx < 0) idx = values.size - 1
+        currentDifficulty = values[idx]
+        resetGame()
     }
 
     override fun performClick(): Boolean {
@@ -253,6 +291,9 @@ class MemoryView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.moves_label)}: $moves", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: ${if (bestMoves == Int.MAX_VALUE) "-" else bestMoves}", width - 40f, hudY, paint)
+
+        paint.textAlign = Paint.Align.CENTER
+        canvas.drawText("${context.getString(R.string.mode_label)}: ${currentDifficulty.name}", width / 2f, hudY, paint)
 
         // Board
         for (r in 0 until rows) {

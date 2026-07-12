@@ -28,12 +28,19 @@ class MinesweeperView @JvmOverloads constructor(
     override var gameKey: String = "minesweeper"
     override var onGameOver: ((Int) -> Unit)? = null
 
-    private val rows = 10
-    private val cols = 10
-    private val minesCount = 12
+    enum class Difficulty(val rows: Int, val cols: Int, val mines: Int) {
+        EASY(10, 10, 12),
+        MEDIUM(16, 16, 40),
+        HARD(16, 30, 99)
+    }
+
+    private var currentDifficulty = Difficulty.EASY
+    private var rows = currentDifficulty.rows
+    private var cols = currentDifficulty.cols
+    private var minesCount = currentDifficulty.mines
     private var cellSize = 0f
 
-    private val grid = Array(rows) { Array(cols) { Cell() } }
+    private var grid = Array(rows) { Array(cols) { Cell() } }
     private var cursorX = 0
     private var cursorY = 0
     private var isGameOver = false
@@ -146,6 +153,11 @@ class MinesweeperView @JvmOverloads constructor(
     }
 
     private fun setupGame() {
+        rows = currentDifficulty.rows
+        cols = currentDifficulty.cols
+        minesCount = currentDifficulty.mines
+        grid = Array(rows) { Array(cols) { Cell() } }
+
         revealHandler.removeCallbacks(processQueueRunnable)
         revealQueue.clear()
         isProcessingQueue = false
@@ -340,6 +352,16 @@ class MinesweeperView @JvmOverloads constructor(
         }
     }
 
+    private fun cycleDifficulty(next: Boolean) {
+        val values = Difficulty.entries
+        var idx = values.indexOf(currentDifficulty)
+        if (next) idx++ else idx--
+        if (idx >= values.size) idx = 0
+        if (idx < 0) idx = values.size - 1
+        currentDifficulty = values[idx]
+        setupGame()
+    }
+
     private fun checkWin() {
         var revealedCount = 0
         for (r in 0 until rows) {
@@ -379,6 +401,10 @@ class MinesweeperView @JvmOverloads constructor(
         if (isGameOver || isWin) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
                 setupGame()
+                return true
+            }
+            if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                cycleDifficulty(keyCode == KeyEvent.KEYCODE_DPAD_UP)
                 return true
             }
             return super.onKeyDown(keyCode, event)
@@ -498,6 +524,9 @@ class MinesweeperView @JvmOverloads constructor(
         paint.color = GamePalette.TEXT_SECONDARY
         canvas.drawText("${context.getString(R.string.wins_label)}: $totalWins", Math.round(offsetX + cols * cellSize).toFloat(), headerY, paint)
         
+        paint.textAlign = Paint.Align.LEFT
+        canvas.drawText("${context.getString(R.string.mode_label)}: ${currentDifficulty.name}", Math.round(offsetX).toFloat(), headerY + cellSize * 0.7f, paint)
+
         paint.textAlign = Paint.Align.CENTER
         paint.color = GamePalette.SCORE
         canvas.drawText("${context.getString(R.string.flags_label)}: ${getFlaggedCount()}", Math.round(width / 2f).toFloat(), headerY, paint)
