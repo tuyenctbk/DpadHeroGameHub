@@ -53,7 +53,7 @@
     <string name="game_solitaire_instructions">• Utilisez le D-PAD pour le curseur.\n• CENTER pour choisir/poser des cartes.\n• Triez les cartes par couleur de l\'As au Roi.</string>
     <string name="game_road_racer_instructions">• Évitez le trafic.\n• Survivez aussi longtemps que possible !\n• Appuyez sur CENTER pour pause.</string>
     <string name="game_hangman_instructions">• Choisissez des lettres pour deviner.\n• Vous avez 6 essais.\n• Appuyez sur CENTER pour choisir.</string>
-    <string name="select_game_hint">DpadHero : Choisissez un jeu avec le D-Pad</string>
+    <string name="select_game_hint">UTILISEZ ◄ ► POUR PARCOURIR • APPUYEZ SUR [OK] POUR JOUER</string>
     <string name="settings">Paramètres</string>
     <string name="settings_button_description">Paramètres</string>
     <string name="sound_effects">Effets Sonores</string>

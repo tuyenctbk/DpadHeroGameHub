@@ -53,7 +53,7 @@
     <string name="game_solitaire_instructions">• Use D-PAD to move the cursor.\n• Press CENTER to select/pick up cards, and CENTER to place them.\n• Build foundations by suit from Ace to King.\n• Build tableaus by alternating color and descending rank.\n• Press \'S\' or MUTE to toggle sound.</string>
     <string name="game_road_racer_instructions">• Move Left/Right to avoid traffic.\n• Survive as long as you can!\n• Press Center to Start/Pause.</string>
     <string name="game_hangman_instructions">• Select letters to guess the word.\n• You have 6 attempts.\n• Press Center to Guess.</string>
-    <string name="select_game_hint">DpadHero: Select a game with D-Pad</string>
+    <string name="select_game_hint">USE ◄ ► TO BROWSE • PRESS [OK] TO PLAY</string>
     <string name="settings">Settings</string>
     <string name="settings_button_description">Settings</string>
     <string name="sound_effects">Sound Effects</string>

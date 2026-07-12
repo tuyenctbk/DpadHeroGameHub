@@ -53,7 +53,7 @@
     <string name="game_solitaire_instructions">• İmleç için D-PAD kullanın.\n• Kart seçmek/koymak için CENTER\'a basın.\n• A\'dan K\'ya serileri tamamlayın.</string>
     <string name="game_road_racer_instructions">• Trafikten kaçının.\n• Hayatta kalın!\n• Duraklatmak için CENTER\'a basın.</string>
     <string name="game_hangman_instructions">• Harf seçerek kelimeyi bulun.\n• 6 hakkınız var.\n• Seçmek için CENTER\'a basın.</string>
-    <string name="select_game_hint">DpadHero: D-Pad ile oyun seçin</string>
+    <string name="select_game_hint">GEZİNMEK İÇİN ◄ ► KULLANIN • OYNAMAK İÇİN [OK] BASIN</string>
     <string name="settings">Ayarlar</string>
     <string name="settings_button_description">Ayarlar</string>
     <string name="sound_effects">Ses Efektleri</string>

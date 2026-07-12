@@ -53,7 +53,7 @@
     <string name="game_solitaire_instructions">• 使用方向键移动。\n• 确定键选择/放置牌。\n• 按花色从 A 排序到 K。</string>
     <string name="game_road_racer_instructions">• 避开交通。\n• 尽可能生存！\n• 按确定键暂停。</string>
     <string name="game_hangman_instructions">• 选择字母猜词。\n• 你有 6 次机会。\n• 确定键选择。</string>
-    <string name="select_game_hint">DpadHero: 使用方向键选择游戏</string>
+    <string name="select_game_hint">使用 ◄ ► 选择游戏 • 按 [OK] 开始</string>
     <string name="settings">设置</string>
     <string name="settings_button_description">设置</string>
     <string name="sound_effects">音效</string>

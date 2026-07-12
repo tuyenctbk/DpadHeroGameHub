@@ -53,7 +53,7 @@
     <string name="game_solitaire_instructions">• 十字キーでカーソル。\n• 決定で選択/配置。\n• AからKまで揃えろ。</string>
     <string name="game_road_racer_instructions">• 車を避けろ。\n• 生き残れ！\n• 決定ボタンで停止。</string>
     <string name="game_hangman_instructions">• 文字を選んで単語を当てろ。\n• 6回間違えると終了。\n• 決定で選択。</string>
-    <string name="select_game_hint">DpadHero: 十字キーでゲーム選択</string>
+    <string name="select_game_hint">◄ ► でゲームを選択 • [OK] でプレイ</string>
     <string name="settings">設定</string>
     <string name="settings_button_description">設定</string>
     <string name="sound_effects">効果音</string>

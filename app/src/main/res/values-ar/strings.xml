@@ -53,7 +53,7 @@
     <string name="game_solitaire_instructions">• استخدم D-PAD للمؤشر.\n• CENTER للاختيار/الوضع.\n• رتب من الآص إلى الملك.</string>
     <string name="game_road_racer_instructions">• تجنب الزحام.\n• ابقَ حياً لأطول فترة!\n• اضغط CENTER للإيقاف.</string>
     <string name="game_hangman_instructions">• اختر الحروف لتخمين الكلمة.\n• لديك 6 محاولات.\n• اضغط CENTER للاختيار.</string>
-    <string name="select_game_hint">DpadHero: اختر لعبة باستخدام D-Pad</string>
+    <string name="select_game_hint">استخدم ◄ ► للتصفح • اضغط [OK] للعب</string>
     <string name="settings">الإعدادات</string>
     <string name="settings_button_description">الإعدادات</string>
     <string name="sound_effects">المؤثرات الصوتية</string>

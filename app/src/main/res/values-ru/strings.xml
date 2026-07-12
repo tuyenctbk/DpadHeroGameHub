@@ -53,7 +53,7 @@
     <string name="game_solitaire_instructions">• Используйте D-PAD.\n• CENTER для карт.\n• Разложите от Туза до Короля.</string>
     <string name="game_road_racer_instructions">• Избегайте машин.\n• Выживайте!\n• CENTER для паузы.</string>
     <string name="game_hangman_instructions">• Угадайте буквы в слове.\n• У вас 6 попыток.\n• CENTER для выбора.</string>
-    <string name="select_game_hint">DpadHero: Выберите игру стрелками</string>
+    <string name="select_game_hint">ИСПОЛЬЗУЙТЕ ◄ ► ДЛЯ ВЫБОРА • НАЖМИТЕ [OK] ДЛЯ ИГРЫ</string>
     <string name="settings">Настройки</string>
     <string name="settings_button_description">Настройки</string>
     <string name="sound_effects">Звуки</string>

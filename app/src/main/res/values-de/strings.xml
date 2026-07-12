@@ -53,7 +53,7 @@
     <string name="game_solitaire_instructions">• Benutze das D-PAD für den Cursor.\n• CENTER zum Wählen/Ablegen von Karten.\n• Sortiere Karten nach Farbe von Ass bis König.</string>
     <string name="game_road_racer_instructions">• Weiche dem Verkehr aus.\n• Überlebe so lange wie möglich!\n• Drücke CENTER für Pause.</string>
     <string name="game_hangman_instructions">• Wähle Buchstaben, um das Wort zu erraten.\n• Du hast 6 Versuche.\n• Drücke CENTER zum Wählen.</string>
-    <string name="select_game_hint">DpadHero: Wähle ein Spiel mit dem D-Pad</string>
+    <string name="select_game_hint">NUTZE ◄ ► ZUM STÖBERN • DRÜCKE [OK] ZUM SPIELEN</string>
     <string name="settings">Einstellungen</string>
     <string name="settings_button_description">Einstellungen</string>
     <string name="sound_effects">Soundeffekte</string>
