@@ -159,7 +159,7 @@ class SudokuView @JvmOverloads constructor(
         cursorR = 0
         cursorC = 0
         solved = false
-        best = ScoreManager.getHighScore(context, gameKey)
+        best = ScoreManager.getHighScore(context, gameKey, currentDifficulty.ordinal)
         invalidate()
     }
 
@@ -280,7 +280,7 @@ class SudokuView @JvmOverloads constructor(
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
             val score = (600 + (puzzles.size - puzzleIndex) * 25).coerceAtLeast(100)
             val oldBest = best
-            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, currentDifficulty.ordinal)
             if (isNewHigh) best = score
             celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, isNewHigh = isNewHigh, score = score, highScore = oldBest)
             animationHandler.post(animationRunnable)

@@ -715,14 +715,14 @@ else if (obs.type == ObstacleType.PTEROSAUR) {
         val reactionDistance = gameSpeed * 25f // Buffer for the player to react
         
         // Minimum gap: T-Rex has landing buffer + time to perform the next jump
-        val minGap = maxJumpDistance + reactionDistance
+        val minGap = (maxJumpDistance + reactionDistance) * 0.9f
         
         // Maximum gap: Ensures the game stays engaging without long empty stretches
-        val maxExtraGap = 700f 
+        val maxExtraGap = 630f // 700f reduced by 10%
         
         val skyBuffer = if (baseType == ObstacleType.METEOR || baseType == ObstacleType.THUNDERBOLT) 300f else 0f
         
-        nextObstacleDistance = (minGap + random.nextFloat() * maxExtraGap + skyBuffer + currentGroupWidth).coerceAtLeast(600f)
+        nextObstacleDistance = (minGap + random.nextFloat() * maxExtraGap + skyBuffer + currentGroupWidth).coerceAtLeast(540f)
         
         lastObstacleHeight = maxHeightInGroup
     }
@@ -1035,10 +1035,11 @@ else if (obs.type == ObstacleType.PTEROSAUR) {
             }
         } else {
             // Daytime condition: sky is dimmed for less brightness, ground remains significantly darker
+            // All colors here reduced by 20% brightness for "darker air/ground" request
             val cloudColor = when {
-                isRainy -> Color.parseColor("#B0BEC5") 
-                isSnowy -> Color.WHITE
-                else -> Color.parseColor("#F5F5F5") 
+                isRainy -> Color.parseColor("#8C989E") // B0BEC5 -20%
+                isSnowy -> Color.parseColor("#CCCCCC") // White -20%
+                else -> Color.parseColor("#C4C4C4") // F5F5F5 -20%
             }
             
             // All seasons: Cacti and Trees are GREEN
@@ -1047,20 +1048,20 @@ else if (obs.type == ObstacleType.PTEROSAUR) {
 
             when (currentSeason) {
                 Season.SPRING -> {
-                    val bg = if (isRainy) Color.parseColor("#B2DFDB") else Color.parseColor("#C8E6C9")
-                    Theme(bg, Color.BLACK, Color.parseColor("#1B5E20"), cloudColor, Color.parseColor("#689F38"), Color.parseColor("#FFD600"), cac, tree, Color.parseColor("#EC407A"), Color.parseColor("#64B5F6"))
+                    val bg = if (isRainy) Color.parseColor("#8FB2AF") else Color.parseColor("#A0B8A1")
+                    Theme(bg, Color.BLACK, Color.parseColor("#1B5E20"), cloudColor, Color.parseColor("#53802D"), Color.parseColor("#CCAB00"), cac, tree, Color.parseColor("#BD3362"), Color.parseColor("#5091C5"))
                 }
                 Season.SUMMER -> {
-                    val bg = if (isRainy) Color.parseColor("#C5E1A5") else Color.parseColor("#E6EE9C")
-                    Theme(bg, Color.BLACK, Color.parseColor("#F9A825"), cloudColor, Color.parseColor("#F57F17"), Color.parseColor("#FFD600"), cac, tree, Color.parseColor("#D81B60"), Color.parseColor("#FFEB3B"))
+                    val bg = if (isRainy) Color.parseColor("#9DB584") else Color.parseColor("#B8BE7D")
+                    Theme(bg, Color.BLACK, Color.parseColor("#C99A24"), cloudColor, Color.parseColor("#C46612"), Color.parseColor("#CCAB00"), cac, tree, Color.parseColor("#AD164D"), Color.parseColor("#CCBC2F"))
                 }
                 Season.AUTUMN -> {
-                    val bg = if (isRainy) Color.parseColor("#FFCC80") else Color.parseColor("#FFE0B2")
-                    Theme(bg, Color.BLACK, Color.parseColor("#D84315"), cloudColor, Color.parseColor("#BF360C"), Color.parseColor("#FFD600"), cac, tree, Color.parseColor("#C62828"), Color.parseColor("#FF9800"))
+                    val bg = if (isRainy) Color.parseColor("#CCA366") else Color.parseColor("#CCB38E")
+                    Theme(bg, Color.BLACK, Color.parseColor("#AD3611"), cloudColor, Color.parseColor("#992B0A"), Color.parseColor("#CCAB00"), cac, tree, Color.parseColor("#9E2020"), Color.parseColor("#CC7A00"))
                 }
                 Season.WINTER -> {
-                    val bg = if (isSnowy) Color.parseColor("#B0BEC5") else Color.parseColor("#BBDEFB")
-                    Theme(bg, Color.BLACK, Color.parseColor("#0277BD"), cloudColor, Color.parseColor("#1976D2"), Color.parseColor("#FFD600"), cac, tree, Color.parseColor("#C2185B"), Color.WHITE)
+                    val bg = if (isSnowy) Color.parseColor("#8C989E") else Color.parseColor("#96B2C9")
+                    Theme(bg, Color.BLACK, Color.parseColor("#025F96"), cloudColor, Color.parseColor("#145EA8"), Color.parseColor("#CCAB00"), cac, tree, Color.parseColor("#9B1349"), Color.parseColor("#CCCCCC"))
                 }
             }
         }

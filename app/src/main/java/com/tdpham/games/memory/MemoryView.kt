@@ -117,7 +117,7 @@ class MemoryView @JvmOverloads constructor(
         gameOver = false
         isProcessing = false
         // For Best Moves, we store (1000 - moves) to use higherIsBetter logic of ScoreManager
-        val highScore = ScoreManager.getHighScore(context, gameKey)
+        val highScore = ScoreManager.getHighScore(context, gameKey, currentDifficulty.ordinal)
         bestMoves = if (highScore == 0) Int.MAX_VALUE else (1000 - highScore)
         invalidate()
     }
@@ -243,8 +243,8 @@ class MemoryView @JvmOverloads constructor(
                 gameOver = true
                 currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
                 val currentScore = (1000 - moves).coerceAtLeast(0)
-                val oldHighScore = ScoreManager.getHighScore(context, gameKey)
-                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, currentScore)
+                val oldHighScore = ScoreManager.getHighScore(context, gameKey, currentDifficulty.ordinal)
+                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, currentScore, currentDifficulty.ordinal)
                 if (isNewHigh) {
                     bestMoves = moves
                 }

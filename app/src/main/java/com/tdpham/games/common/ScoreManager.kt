@@ -9,21 +9,24 @@ import com.google.firebase.analytics.analytics
 object ScoreManager {
     private const val PREFS_NAME = "game_scores"
 
-    fun getHighScore(context: Context, gameKey: String): Int {
+    fun getHighScore(context: Context, gameKey: String, level: Int = -1): Int {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        return prefs.getInt("high_score_$gameKey", 0)
+        val key = if (level >= 0) "high_score_${gameKey}_l$level" else "high_score_$gameKey"
+        return prefs.getInt(key, 0)
     }
 
-    fun updateHighScore(context: Context, gameKey: String, newScore: Int): Boolean {
-        val currentHigh = getHighScore(context, gameKey)
+    fun updateHighScore(context: Context, gameKey: String, newScore: Int, level: Int = -1): Boolean {
+        val currentHigh = getHighScore(context, gameKey, level)
         if (newScore > currentHigh) {
             val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            prefs.edit().putInt("high_score_$gameKey", newScore).apply()
+            val key = if (level >= 0) "high_score_${gameKey}_l$level" else "high_score_$gameKey"
+            prefs.edit().putInt(key, newScore).apply()
 
             // Log high score to Firebase
             try {
                 val bundle = Bundle()
-                bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
+                val firebaseKey = if (level >= 0) "${gameKey}_l$level" else gameKey
+                bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, firebaseKey)
                 bundle.putLong(FirebaseAnalytics.Param.SCORE, newScore.toLong())
                 Firebase.analytics.logEvent(FirebaseAnalytics.Event.POST_SCORE, bundle)
             } catch (e: Exception) {

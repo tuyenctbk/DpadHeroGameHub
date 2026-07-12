@@ -161,7 +161,7 @@ class MinesweeperView @JvmOverloads constructor(
         revealHandler.removeCallbacks(processQueueRunnable)
         revealQueue.clear()
         isProcessingQueue = false
-        totalWins = ScoreManager.getHighScore(context, gameKey)
+        totalWins = ScoreManager.getHighScore(context, gameKey, currentDifficulty.ordinal)
         
         var attempts = 0
         var currentConfig = ""
@@ -374,7 +374,7 @@ class MinesweeperView @JvmOverloads constructor(
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
             val oldWins = totalWins
             totalWins++
-            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, totalWins)
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, totalWins, currentDifficulty.ordinal)
             celebrationManager.startOutcome(
                 width = width.toFloat(),
                 height = height.toFloat(),

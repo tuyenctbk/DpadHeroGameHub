@@ -67,7 +67,7 @@ class SlidePuzzleView @JvmOverloads constructor(
         celebrationManager.start(0f, 0f)
         moves = 0
         gameOver = false
-        val highScore = ScoreManager.getHighScore(context, gameKey)
+        val highScore = ScoreManager.getHighScore(context, gameKey, currentDifficulty.ordinal)
         bestMoves = if (highScore == 0) Int.MAX_VALUE else (10000 - highScore)
         
         if (puzzleBitmap == null) createPuzzleBitmap()
@@ -246,8 +246,8 @@ class SlidePuzzleView @JvmOverloads constructor(
             gameOver = true
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
             val score = (10000 - moves).coerceAtLeast(0)
-            val oldHighScore = ScoreManager.getHighScore(context, gameKey)
-            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            val oldHighScore = ScoreManager.getHighScore(context, gameKey, currentDifficulty.ordinal)
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, currentDifficulty.ordinal)
             if (isNewHigh) bestMoves = moves
             celebrationManager.startOutcome(
                 width = width.toFloat(),

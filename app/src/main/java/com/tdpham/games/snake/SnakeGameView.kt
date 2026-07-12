@@ -122,7 +122,7 @@ class SnakeGameView @JvmOverloads constructor(
         isGameOver = false
         gameOverReason = ""
         isPaused = true // Start paused
-        highScore = ScoreManager.getHighScore(context, gameKey)
+        highScore = ScoreManager.getHighScore(context, gameKey, currentDifficulty.ordinal)
         score = 0
         spawnFood()
         particles.clear()
@@ -230,7 +230,7 @@ class SnakeGameView @JvmOverloads constructor(
         SoundManager.playError()
         screenShake.trigger(15, 20f)
         val oldBest = highScore
-        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, currentDifficulty.ordinal)
         if (isNewHigh) {
             highScore = score
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)

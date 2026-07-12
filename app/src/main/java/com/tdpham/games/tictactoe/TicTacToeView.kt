@@ -79,7 +79,13 @@ class TicTacToeView @JvmOverloads constructor(
         gameOver = false
         isEndCelebration = false
         winningCells.clear()
-        wins = ScoreManager.getHighScore(context, gameKey)
+        
+        val level = when(gridSize) {
+            4 -> 1
+            5 -> 2
+            else -> 0
+        }
+        wins = ScoreManager.getHighScore(context, gameKey, level)
         
         isPlayerTurn = (turnStarter == 1)
         status = if (isPlayerTurn) context.getString(R.string.your_turn_label) else context.getString(R.string.cpu_starting_label)
@@ -175,7 +181,13 @@ class TicTacToeView @JvmOverloads constructor(
             val newScore = wins + 1
             isEndCelebration = true
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, newScore)
+            
+            val level = when(gridSize) {
+                4 -> 1
+                5 -> 2
+                else -> 0
+            }
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, newScore, level)
             if (isNewHigh) wins = newScore
             celebrationManager.startOutcome(
                 width = width.toFloat(),
