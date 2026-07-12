@@ -31,30 +31,29 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        // Use lifecycleScope for safer, structured background initialization
+        // Run heavy initializations in background
         lifecycleScope.launch(Dispatchers.IO) {
-            // Warm up SharedPreferences and SoundManager
+            // Warm up SharedPreferences and SoundManager immediately
             SoundManager.init(this@SplashActivity)
             
-            // Wait slightly for system to stabilize before hitting GMS services
-            delay(500)
-            ConfigManager.init()
-            
-            // AdMob init can be heavy on Binder, give it another gap
-            delay(300)
-            AdManager.init(this@SplashActivity)
+            // Parallel init for Firebase and Ads to save time
+            launch { ConfigManager.init() }
+            launch { 
+                delay(200) // Minimal gap for Binder stabilization
+                AdManager.init(this@SplashActivity) 
+            }
         }
 
-        // Animation for splash content
+        // Animation for splash content (Snappier duration)
         findViewById<android.view.View>(R.id.splash_content).apply {
             alpha = 0f
-            scaleX = 0.8f
-            scaleY = 0.8f
+            scaleX = 0.9f
+            scaleY = 0.9f
             animate()
                 .alpha(1f)
                 .scaleX(1f)
                 .scaleY(1f)
-                .setDuration(1000)
+                .setDuration(600) // Faster animation
                 .setInterpolator(android.view.animation.DecelerateInterpolator())
                 .start()
         }
@@ -62,7 +61,8 @@ class SplashActivity : AppCompatActivity() {
         // Hide system UI with modern approach for API 30+, fallback for older versions
         hideSystemUI()
 
-        handler.postDelayed(startMainRunnable, 2500) // Slightly longer to appreciate animation
+        // Reduced from 2500ms to 1200ms for a much faster entry
+        handler.postDelayed(startMainRunnable, 1200)
     }
 
     override fun onDestroy() {
