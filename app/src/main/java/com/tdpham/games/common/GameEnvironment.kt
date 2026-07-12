@@ -13,6 +13,7 @@ object GameEnvironment {
     data class Particle(var x: Float, var y: Float, var speed: Float, var vx: Float = 0f, var size: Float = 4f, var color: Int = Color.WHITE)
 
     private val gradientPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val vignettePaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var lastGradientHeight = -1f
     private var lastIsNight = false
 
@@ -40,7 +41,7 @@ object GameEnvironment {
                     val colors = if (isNight)
                         intArrayOf(Color.parseColor("#1A237E"), Color.BLACK)
                     else
-                        intArrayOf(Color.parseColor("#0D47A1"), Color.parseColor("#1976D2"))
+                        intArrayOf(Color.parseColor("#0D47A1"), Color.parseColor("#001030"))
                     gradientPaint.shader = LinearGradient(0f, 0f, 0f, height, colors[0], colors[1], Shader.TileMode.CLAMP)
                     lastGradientHeight = height
                     lastIsNight = isNight
@@ -48,8 +49,8 @@ object GameEnvironment {
                 canvas.drawRect(0f, 0f, width, height, gradientPaint)
             }
             BackgroundType.CHECKERBOARD -> {
-                val c1 = dimColor(if (scene == SceneType.FIELD) Color.parseColor("#1B5E20") else Color.parseColor("#212121"), nightDim)
-                val c2 = dimColor(if (scene == SceneType.FIELD) Color.parseColor("#144E18") else Color.parseColor("#121212"), nightDim)
+                val c1 = dimColor(if (scene == SceneType.FIELD) Color.parseColor("#1B5E20") else Color.parseColor("#121212"), nightDim)
+                val c2 = dimColor(if (scene == SceneType.FIELD) Color.parseColor("#144E18") else Color.parseColor("#0A0A0A"), nightDim)
                 canvas.drawColor(c1)
                 paint.color = c2
                 val size = 120f
@@ -60,40 +61,40 @@ object GameEnvironment {
                 }
             }
             BackgroundType.GRID -> {
-                canvas.drawColor(dimColor(Color.parseColor("#263238"), nightDim))
-                paint.color = dimColor(Color.parseColor("#37474F"), nightDim)
+                canvas.drawColor(dimColor(Color.parseColor("#101820"), nightDim))
+                paint.color = dimColor(Color.parseColor("#1A2A3A"), nightDim)
                 paint.strokeWidth = 2f
-                val spacing = 80f
+                val spacing = 100f
                 for (i in 0..(width / spacing).toInt()) canvas.drawLine(i * spacing, 0f, i * spacing, height, paint)
                 for (i in 0..(height / spacing).toInt()) canvas.drawLine(0f, i * spacing, width, i * spacing, paint)
             }
             BackgroundType.WOOD -> {
-                canvas.drawColor(dimColor(Color.parseColor("#4E342E"), nightDim))
-                paint.color = dimColor(Color.parseColor("#3E2723"), nightDim)
+                canvas.drawColor(dimColor(Color.parseColor("#3E2723"), nightDim))
+                paint.color = dimColor(Color.parseColor("#21130D"), nightDim)
                 paint.strokeWidth = 4f
-                for (i in 0..(height / 50).toInt()) canvas.drawLine(0f, i * 50f, width, i * 50f, paint)
+                for (i in 0..(height / 60).toInt()) canvas.drawLine(0f, i * 60f, width, i * 60f, paint)
             }
             BackgroundType.FELT -> {
-                canvas.drawColor(dimColor(Color.parseColor("#1B5E20"), nightDim))
-                paint.color = dimColor(Color.parseColor("#144E18"), nightDim)
+                canvas.drawColor(dimColor(Color.parseColor("#0D3B11"), nightDim))
+                paint.color = dimColor(Color.parseColor("#08260B"), nightDim)
                 paint.style = Paint.Style.STROKE
-                paint.strokeWidth = 5f
-                for (i in 0..width.toInt() step 250) canvas.drawCircle(i.toFloat(), height / 2f, 1500f, paint)
+                paint.strokeWidth = 8f
+                for (i in 0..width.toInt() step 300) canvas.drawCircle(i.toFloat(), height / 2f, 1500f, paint)
                 paint.style = Paint.Style.FILL
             }
             BackgroundType.STRIPES -> {
-                canvas.drawColor(dimColor(Color.parseColor("#212121"), nightDim))
-                paint.color = dimColor(Color.parseColor("#263238"), nightDim)
-                val sw = 70f
+                canvas.drawColor(dimColor(Color.parseColor("#1A1A1B"), nightDim))
+                paint.color = dimColor(Color.parseColor("#000000"), nightDim)
+                val sw = 80f
                 for (i in 0..(width / (sw * 2)).toInt()) {
                     canvas.drawRect(i * sw * 2, 0f, i * sw * 2 + sw, height, paint)
                 }
             }
             BackgroundType.DOTS -> {
-                canvas.drawColor(dimColor(Color.parseColor("#121212"), nightDim))
-                paint.color = dimColor(Color.parseColor("#333333"), nightDim)
-                val r = 4f
-                val step = 60f
+                canvas.drawColor(dimColor(Color.parseColor("#0A0A0A"), nightDim))
+                paint.color = dimColor(Color.parseColor("#1A237E"), nightDim)
+                val r = 3f
+                val step = 80f
                 for (x in 0..(width/step).toInt()) {
                     for (y in 0..(height/step).toInt()) {
                         canvas.drawCircle(x * step, y * step, r, paint)
@@ -101,9 +102,9 @@ object GameEnvironment {
                 }
             }
             BackgroundType.DIAMONDS -> {
-                canvas.drawColor(dimColor(Color.parseColor("#212121"), nightDim))
-                paint.color = dimColor(Color.parseColor("#2C2C2C"), nightDim)
-                val size = 100f
+                canvas.drawColor(dimColor(Color.parseColor("#121212"), nightDim))
+                paint.color = dimColor(Color.parseColor("#0A0A0A"), nightDim)
+                val size = 120f
                 val path = Path()
                 for (x in 0..(width / size).toInt() + 1) {
                     val cx = x * size
@@ -123,17 +124,26 @@ object GameEnvironment {
                 canvas.drawColor(Color.BLACK)
                 paint.color = Color.WHITE
                 val r = Random(42)
-                for (i in 0..100) {
+                for (i in 0..150) {
                     val x = r.nextFloat() * width
                     val y = r.nextFloat() * height
-                    val s = r.nextFloat() * 3f
-                    paint.alpha = r.nextInt(150) + 100
+                    val s = r.nextFloat() * 2.5f
+                    paint.alpha = r.nextInt(180) + 75
                     canvas.drawCircle(x, y, s, paint)
                 }
                 paint.alpha = 255
             }
             BackgroundType.NONE -> {}
         }
+
+        // Add Vignette effect to all backgrounds
+        vignettePaint.shader = RadialGradient(
+            width / 2f, height / 2f, height * 1.2f,
+            intArrayOf(Color.TRANSPARENT, Color.BLACK),
+            floatArrayOf(0.4f, 1.0f),
+            Shader.TileMode.CLAMP
+        )
+        canvas.drawRect(0f, 0f, width, height, vignettePaint)
 
         // 2. Weather
         if (weather != WeatherType.NONE && particles != null) {

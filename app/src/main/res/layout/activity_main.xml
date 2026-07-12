@@ -3,17 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
+    android:background="#0A0A0A"
     android:padding="32dp">
 
+    <!-- Deep Gradient Background -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/main_background_gradient" />
+
+    <!-- Animated Dynamic Background -->
     <com.tdpham.games.hub.BackgroundView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:alpha="0.7" />
+
+    <!-- Retro Scanline Overlay -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/scanline_pattern"
+        android:alpha="0.15" />
 
     <ImageButton
         android:id="@+id/btn_settings"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:background="?attr/selectableItemBackgroundBorderless"
@@ -22,7 +37,7 @@
         android:nextFocusDown="@id/btn_snake"
         android:scaleType="centerInside"
         android:src="@android:drawable/ic_menu_preferences"
-        app:tint="#FFFFFF" />
+        app:tint="#CCFFFFFF" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,8 +53,13 @@
             android:layout_height="wrap_content"
             android:text="@string/game_center"
             android:textColor="#FFFFFF"
-            android:textSize="48sp"
+            android:textSize="56sp"
             android:textStyle="bold"
+            android:letterSpacing="0.1"
+            android:shadowColor="#AA000000"
+            android:shadowDx="4"
+            android:shadowDy="4"
+            android:shadowRadius="8"
             android:layout_marginBottom="48dp" />
 
         <HorizontalScrollView
@@ -63,16 +83,18 @@
                 android:layout_height="240dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_snake_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/snake"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_snake"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_tetris"
@@ -81,15 +103,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_tetris_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_tetris"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_tetris"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_minesweeper"
@@ -98,15 +122,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_minesweeper_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/minesweeper"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_minesweeper"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_trex"
@@ -115,15 +141,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_trex_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_trex"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_trex"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_4096"
@@ -132,15 +160,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_4096_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_4096"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_4096"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_flappy"
@@ -149,15 +179,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_flappy_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_flappy"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_flappy"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_memory"
@@ -166,15 +198,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_memory_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_memory"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_memory"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_brick_break"
@@ -183,15 +217,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_brick_break_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_brick_break"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_brick_break"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_solitaire"
@@ -200,15 +236,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_solitaire_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_solitaire"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_solitaire"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_lines98"
@@ -217,15 +255,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_lines98_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_lines98"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_lines98"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_mental_math"
@@ -234,15 +274,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_mental_math_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_mental_math"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_mental_math"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_sudoku"
@@ -251,15 +293,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_sudoku_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_sudoku"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_sudoku"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_tictactoe"
@@ -268,15 +312,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_tictactoe_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_tictactoe"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_tictactoe"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_word_quest"
@@ -285,15 +331,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_word_quest_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_word_quest"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_word_quest"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_road_racer"
@@ -302,15 +350,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_road_racer_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_road_racer"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_road_racer"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_sokoban"
@@ -319,15 +369,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_sokoban_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_sokoban"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_sokoban"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_tanks"
@@ -336,15 +388,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_tanks_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_tanks"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_tanks"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_starfighter"
@@ -353,15 +407,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_starfighter_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_starfighter"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_starfighter"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_dungeon"
@@ -370,15 +426,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_dungeon_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_dungeon"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_dungeon"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_froggy"
@@ -387,15 +445,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_froggy_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_froggy"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_froggy"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_slide_puzzle"
@@ -404,15 +464,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_slide_puzzle_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_slide_puzzle"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_slide_puzzle"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_hangman"
@@ -421,15 +483,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_hangman_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_hangman"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_hangman"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_simon"
@@ -438,15 +502,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_simon_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_simon"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_simon"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_checkers"
@@ -455,15 +521,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_checkers_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_checkers"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_checkers"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_spinball"
@@ -472,15 +540,17 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="@color/btn_spinball_color"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:focusable="true"
                 android:nextFocusUp="@id/btn_settings"
                 android:text="@string/game_spinball"
+                android:textAllCaps="true"
                 android:drawableTop="@drawable/ic_game_spinball"
                 android:paddingTop="32dp"
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </HorizontalScrollView>
@@ -490,8 +560,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:text="@string/select_game_hint"
-        android:textColor="#AAAAAA"
-        android:textSize="18sp" />
+        android:textColor="#99FFFFFF"
+        android:textSize="18sp"
+        android:shadowColor="#80000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2" />
 
     </LinearLayout>
 </RelativeLayout>
