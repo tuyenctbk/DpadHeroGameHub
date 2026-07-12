@@ -1,57 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="64dp"
-    android:height="64dp"
-    android:viewportWidth="64"
-    android:viewportHeight="64">
-    <!-- Bricks -->
-    <path
-        android:fillColor="#F06292"
-        android:pathData="M8,10h14v8h-14z" />
-    <path
-        android:fillColor="#F8BBD0"
-        android:pathData="M8,10h14v2h-14z M8,10h2v8h-2z" />
-    <path
-        android:fillColor="#E91E63"
-        android:pathData="M8,16h14v2h-14z M20,10h2v8h-2z" />
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
 
+    <!-- Red Bricks (Upscaled) -->
     <path
-        android:fillColor="#BA68C8"
-        android:pathData="M25,10h14v8h-14z" />
-    <path
-        android:fillColor="#E1BEE7"
-        android:pathData="M25,10h14v2h-14z M25,10h2v8h-2z" />
-    <path
-        android:fillColor="#9C27B0"
-        android:pathData="M25,16h14v2h-14z M37,10h2v8h-2z" />
-
-    <path
-        android:fillColor="#9575CD"
-        android:pathData="M42,10h14v8h-14z" />
-    <path
-        android:fillColor="#D1C4E9"
-        android:pathData="M42,10h14v2h-14z M42,10h2v8h-2z" />
-    <path
-        android:fillColor="#673AB7"
-        android:pathData="M42,16h14v2h-14z M54,10h2v8h-2z" />
-
-    <!-- Paddle -->
-    <path
-        android:fillColor="#2196F3"
-        android:pathData="M24,48h16v5h-16z" />
-    <path
-        android:fillColor="#BBDEFB"
-        android:pathData="M24,48h16v1h-16z M24,48h1v5h-1z" />
-    <path
-        android:fillColor="#1976D2"
-        android:pathData="M24,52h16v1h-16z M39,48h1v5h-1z" />
-
-    <!-- Ball -->
+        android:fillColor="#F44336"
+        android:pathData="M5,10 H38 V32 H5 Z M42,10 H78 V32 H42 Z M82,10 H115 V32 H82 Z" />
+    <!-- Yellow Bricks -->
     <path
         android:fillColor="#FFEB3B"
-        android:pathData="M32,40a4,4 0 1,0 0.01,0z" />
+        android:pathData="M5,38 H38 V60 H5 Z M42,38 H78 V60 H42 Z M82,38 H115 V60 H82 Z" />
+
+    <!-- Ball (Glowy Yellow & Larger) -->
+    <path
+        android:fillColor="#FFEA00"
+        android:pathData="M60,82 A10,10 0 1,1 80,82 A10,10 0 1,1 60,82" />
+
+    <!-- Paddle (Bright White & Wider) -->
     <path
         android:fillColor="#FFFFFF"
-        android:fillAlpha="0.5"
-        android:pathData="M31,38a1.5,1.5 0 1,0 0.01,0z" />
+        android:pathData="M20,105 H100 V118 H20 Z" />
+
 </vector>

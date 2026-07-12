@@ -15,7 +15,6 @@
     <string name="game_starfighter">ЗВЕЗДНЫЙ ИСТРЕБИТЕЛЬ</string>
     <string name="game_memory">ПАМЯТЬ</string>
     <string name="game_slide_puzzle">ПЯТНАШКИ</string>
-    <string name="game_maze">ЛАБИРИНТ</string>
     <string name="game_mental_math">МЕНТАЛЬНАЯ АРИФМЕТИКА</string>
     <string name="game_froggy">FROGGY CROSS</string>
     <string name="game_simon">САЙМОН ГОВОРИТ</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• Двигайте корабль кнопками D-PAD.\n• Автострельба.\n• Уничтожайте врагов.\n• Не подставляйтесь под огонь!\n• \'S\' для звука.</string>
     <string name="game_memory_instructions">• Используйте D-PAD.\n• CENTER, чтобы перевернуть карту.\n• Найдите все пары.\n• Меньше ходов — лучше!</string>
     <string name="game_slide_puzzle_instructions">• Используйте D-PAD.\n• CENTER для сдвига.\n• Соберите картинку.</string>
-    <string name="game_maze_instructions">• Изучите лабиринт.\n• Найдите выход к зеленой точке.\n• ВЛЕВО/ВПРАВО для выбора.\n• CENTER для подтверждения.</string>
     <string name="game_mental_math_instructions">• Решите задачу.\n• D-PAD для выбора ответа.\n• CENTER для подтверждения.\n• Быстрее! Время идет.</string>
     <string name="game_froggy_instructions">• Перейдите дорогу и реку.\n• Избегайте машин.\n• Прыгайте по бревнам.\n• Доберитесь до финиша!</string>
     <string name="game_simon_instructions">• Запомните цвета.\n• Повторите кнопками D-PAD.\n• Последовательность растет!</string>
@@ -163,13 +161,6 @@
         <item>ТУЗОВОЙ ХОД!</item>
         <item>МАСТЬ СОБРАНА!</item>
         <item>КАРТОЧНЫЙ КОРОЛЬ!</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>ТРОФЕЙ НАЙДЕН!</item>
-        <item>БЕГУЩИЙ В ЛАБИРИНТЕ!</item>
-        <item>СЛЕДОПЫТ!</item>
-        <item>ВЫХОД НАЙДЕН!</item>
     </string-array>
 
     <string-array name="win_sokoban">

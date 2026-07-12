@@ -15,7 +15,6 @@
     <string name="game_starfighter">المقاتل النجمي</string>
     <string name="game_memory">الذاكرة</string>
     <string name="game_slide_puzzle">لغز الانزلاق</string>
-    <string name="game_maze">المتاهة</string>
     <string name="game_mental_math">الحساب الذهني</string>
     <string name="game_froggy">عبور الضفدع</string>
     <string name="game_simon">سيمون يقول</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• حرك السفينة بـ D-PAD.\n• إطلاق نار تلقائي.\n• دمر الأعداء لجمع النقاط.\n• تجنب الإصابة!\n• اضغط \'S\' للصوت.</string>
     <string name="game_memory_instructions">• تنقل بـ DPAD.\n• اقلب البطاقة بـ CENTER.\n• طابق الأزواج للفوز.\n• حركات أقل تعني فوز أفضل!</string>
     <string name="game_slide_puzzle_instructions">• استخدم DPAD للتحريك.\n• اضغط CENTER للانزلاق.\n• رتب القطع لتكوين الصورة.</string>
-    <string name="game_maze_instructions">• ادرس المتاهة جيداً.\n• ابحث عن المخرج المتصل بالنقطة الخضراء.\n• يسار/يمين للاختيار.\n• CENTER للتأكيد.</string>
     <string name="game_mental_math_instructions">• حل المسألة الحسابية.\n• استخدم DPAD لاختيار الإجابة.\n• اضغط CENTER للتأكيد.\n• أسرع! الوقت ينفد.</string>
     <string name="game_froggy_instructions">• اعبر الطريق والنهر.\n• تجنب السيارات.\n• اقفز على جذوع الأشجار.\n• صل للنهاية للتسجيل!</string>
     <string name="game_simon_instructions">• شاهد تسلسل الألوان.\n• كررها باستخدام D-PAD.\n• التسلسل يزداد طولاً كل جولة!</string>
@@ -163,13 +161,6 @@
         <item>آص الفوز!</item>
         <item>اكتمل اللون!</item>
         <item>ملك الورق!</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>تم العثور على الكأس!</item>
-        <item>عداء المتاهة!</item>
-        <item>خبير المسارات!</item>
-        <item>تم الوصول للمخرج!</item>
     </string-array>
 
     <string-array name="win_sokoban">

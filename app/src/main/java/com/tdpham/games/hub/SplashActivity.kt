@@ -25,9 +25,12 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        SoundManager.init(this)
-        ConfigManager.init()
-        AdManager.init(this)
+        // Run heavy initializations in background to avoid blocking transition to MainActivity
+        Thread {
+            SoundManager.init(this)
+            ConfigManager.init()
+            AdManager.init(this)
+        }.start()
 
         // Animation for splash content
         findViewById<android.view.View>(R.id.splash_content).apply {

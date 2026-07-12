@@ -1,32 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Focused state with a bright border and subtle scaling effect (handled via elevation/scale in code or just visual border here) -->
+    <!-- Focused state: Light up with white glow and bold border -->
     <item android:state_focused="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@android:color/transparent" />
-            <corners android:radius="16dp" />
-            <stroke
-                android:width="4dp"
-                android:color="#FFFFFF" />
-        </shape>
+        <layer-list>
+            <!-- Inner Glow -->
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="16dp" />
+                    <gradient
+                        android:type="radial"
+                        android:gradientRadius="150dp"
+                        android:centerX="50%"
+                        android:centerY="40%"
+                        android:startColor="#40FFFFFF"
+                        android:endColor="#00FFFFFF" />
+                </shape>
+            </item>
+            <!-- Border -->
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/transparent" />
+                    <corners android:radius="16dp" />
+                    <stroke
+                        android:width="4dp"
+                        android:color="#FFFFFF" />
+                </shape>
+            </item>
+        </layer-list>
     </item>
+
     <item android:state_hovered="true">
         <shape android:shape="rectangle">
-            <solid android:color="@android:color/transparent" />
+            <solid android:color="#20FFFFFF" />
             <corners android:radius="16dp" />
             <stroke
-                android:width="4dp"
+                android:width="2dp"
                 android:color="#FFFFFF" />
         </shape>
     </item>
-    <!-- Default state -->
+
+    <!-- Default state: Subtle translucent border -->
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@android:color/transparent" />
             <corners android:radius="16dp" />
             <stroke
                 android:width="1dp"
-                android:color="#44FFFFFF" />
+                android:color="#33FFFFFF" />
         </shape>
     </item>
 </selector>

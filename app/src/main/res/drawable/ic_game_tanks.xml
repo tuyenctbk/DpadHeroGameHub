@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="48dp"
-    android:height="48dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-    <!-- Tank Body -->
-    <path
-        android:fillColor="#558B2F"
-        android:pathData="M6,8h12v10h-12z" />
-    <!-- Tracks -->
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Tank Tracks -->
     <path
         android:fillColor="#212121"
-        android:pathData="M4,7h2v12h-2z M18,7h2v12h-2z" />
+        android:pathData="M15,25 H35 V105 H15 Z M85,25 H105 V105 H85 Z" />
+    <path
+        android:fillColor="#333333"
+        android:pathData="M15,35 H35 V40 H15 Z M15,55 H35 V60 H15 Z M15,75 H35 V80 H15 Z M15,95 H35 V100 H15 Z
+                          M85,35 H105 V40 H85 Z M85,55 H105 V60 H85 Z M85,75 H105 V80 H85 Z M85,95 H105 V100 H85 Z" />
+
+    <!-- Main Body -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M30,35 H90 V95 H30 Z" />
+    <!-- Bevel highlight -->
+    <path
+        android:fillColor="#81C784"
+        android:pathData="M30,35 H90 V40 H30 Z" />
+
     <!-- Turret -->
     <path
-        android:fillColor="#33691E"
-        android:pathData="M9,10h6v6h-6z" />
+        android:fillColor="#388E3C"
+        android:pathData="M45,45 A15,15 0 1,1 75,45 A15,15 0 1,1 45,45" />
+    <!-- Hatch -->
+    <path
+        android:fillColor="#1B5E20"
+        android:pathData="M55,50 A5,5 0 1,1 65,50 A5,5 0 1,1 55,50" />
+
     <!-- Barrel -->
     <path
-        android:fillColor="#33691E"
-        android:pathData="M11,4h2v6h-2z" />
-    <!-- Detail/Hatch -->
+        android:fillColor="#1B5E20"
+        android:pathData="M55,5 H65 V50 H55 Z" />
+    <!-- Muzzle brake -->
     <path
-        android:fillColor="#689F38"
-        android:pathData="M11,12h2v2h-2z" />
-    <!-- Aim Reticle (Partial from original icon feel) -->
-    <path
-        android:fillColor="#FF5252"
-        android:fillAlpha="0.6"
-        android:pathData="M20,18V15H18V18H15V20H18V23H20V20H23V18H20" />
+        android:fillColor="#1B5E20"
+        android:pathData="M52,5 H68 V12 H52 Z" />
+
 </vector>

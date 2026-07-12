@@ -15,7 +15,6 @@
     <string name="game_starfighter">스타 파이터</string>
     <string name="game_memory">카드 맞추기</string>
     <string name="game_slide_puzzle">슬라이드 퍼즐</string>
-    <string name="game_maze">미로</string>
     <string name="game_mental_math">암산</string>
     <string name="game_froggy">프로기 크로스</string>
     <string name="game_simon">사이먼 세즈</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• 방향키로 이동.\n• 자동 발사.\n• 적을 파괴하여 점수를 얻으세요.\n• 공격을 피하세요!\n• \'S\'로 소리 조절.</string>
     <string name="game_memory_instructions">• 방향키로 이동.\n• 확인 키로 카드를 뒤집으세요.\n• 모든 쌍을 맞추면 승리.\n• 적은 횟수가 좋습니다!</string>
     <string name="game_slide_puzzle_instructions">• 방향키로 이동.\n• 확인 키로 슬라이드.\n• 그림을 완성하세요.</string>
-    <string name="game_maze_instructions">• 미로를 잘 보세요.\n• 초록색 점에 연결된 출구를 찾으세요.\n• 좌우로 선택.\n• 확인 키로 결정.</string>
     <string name="game_mental_math_instructions">• 계산 문제를 푸세요.\n• 방향키로 정답 선택.\n• 확인 키로 결정.\n• 서두르세요! 시간이 없습니다.</string>
     <string name="game_froggy_instructions">• 길과 강을 건너세요.\n• 자동차를 피하세요.\n• 통나무를 타세요.\n• 목표 지점에 도달하세요!</string>
     <string name="game_simon_instructions">• 색상 순서를 기억하세요.\n• 방향키로 따라하세요.\n• 매 라운드 순서가 길어집니다!</string>
@@ -163,13 +161,6 @@
         <item>에이스의 승리!</item>
         <item>무늬 완성!</item>
         <item>카드의 제왕!</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>트로피 발견!</item>
-        <item>미로 주파!</item>
-        <item>경로 개척!</item>
-        <item>탈출 성공!</item>
     </string-array>
 
     <string-array name="win_sokoban">

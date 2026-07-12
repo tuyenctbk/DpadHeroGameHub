@@ -15,7 +15,6 @@
     <string name="game_starfighter">YILDIZ SAVAŞÇISI</string>
     <string name="game_memory">HAFIZA KARTI</string>
     <string name="game_slide_puzzle">KAYDIRMALI BULMACA</string>
-    <string name="game_maze">LABİRENT</string>
     <string name="game_mental_math">ZİHİNDEN MATEMATİK</string>
     <string name="game_froggy">FROGGY CROSS</string>
     <string name="game_simon">SİMON DİYOR Kİ</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• Gemiyi D-PAD ile hareket ettirin.\n• Otomatik ateş.\n• Düşmanları yok ederek puan kazanın.\n• Vurulmamaya çalışın!\n• Ses için \'S\'ye basın.</string>
     <string name="game_memory_instructions">• DPAD ile gezinin.\n• CENTER ile kartı çevirin.\n• Tüm eşleri bulun.\n• Az hamle daha iyidir!</string>
     <string name="game_slide_puzzle_instructions">• Hareket için DPAD kullanın.\n• Kaydırmak için CENTER\'a basın.\n• Parçaları düzenleyip resmi tamamlayın.</string>
-    <string name="game_maze_instructions">• Labirenti dikkatlice inceleyin.\n• Yeşil noktaya bağlı olan çıkışı bulun.\n• SOL/SAĞ ile seçin.\n• CENTER ile onaylayın.</string>
     <string name="game_mental_math_instructions">• İşlemi çözün.\n• DPAD ile cevabı seçin.\n• CENTER ile onaylayın.\n• Çabuk olun! Zaman daralıyor.</string>
     <string name="game_froggy_instructions">• Yolu ve nehri geçin.\n• Arabalardan kaçının.\n• Kütüklere zıplayın.\n• Hedefe ulaşın!</string>
     <string name="game_simon_instructions">• Renk sırasını izleyin.\n• D-PAD ile tekrar edin.\n• Sıra her turda uzar!</string>
@@ -163,13 +161,6 @@
         <item>AS KAZANDIRDI!</item>
         <item>SERİ TAMAM!</item>
         <item>KART KRALI!</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>KUPA BULUNDU!</item>
-        <item>LABİRENT KOŞUCUSU!</item>
-        <item>İZ SÜRÜCÜ!</item>
-        <item>ÇIKIŞA ULAŞILDI!</item>
     </string-array>
 
     <string-array name="win_sokoban">

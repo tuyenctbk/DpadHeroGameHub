@@ -15,7 +15,6 @@
     <string name="game_starfighter">STAR FIGHTER</string>
     <string name="game_memory">MEMORI</string>
     <string name="game_slide_puzzle">PUZEL GESER</string>
-    <string name="game_maze">LABIRIN</string>
     <string name="game_mental_math">MATEMATIKA CEPAT</string>
     <string name="game_froggy">FROGGY CROSS</string>
     <string name="game_simon">SIMON BERKATA</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• Gerakkan kapal dengan D-PAD.\n• Tembak otomatis.\n• Hancurkan musuh untuk skor.\n• Jangan sampai tertembak!\n• Tekan \'S\' untuk suara.</string>
     <string name="game_memory_instructions">• Navigasi dengan DPAD.\n• Balik kartu dengan CENTER.\n• Cocokkan semua pasangan.\n• Langkah lebih sedikit lebih baik!</string>
     <string name="game_slide_puzzle_instructions">• Gunakan DPAD untuk gerak.\n• Tekan CENTER untuk geser.\n• Susun potongan gambar sampai benar.</string>
-    <string name="game_maze_instructions">• Perhatikan labirin.\n• Cari pintu keluar yang terhubung ke titik hijau.\n• KIRI/KANAN untuk pilih.\n• CENTER untuk konfirmasi.</string>
     <string name="game_mental_math_instructions">• Jawab soal matematika.\n• Gunakan DPAD untuk pilih jawaban.\n• Tekan CENTER untuk konfirmasi.\n• Cepat! Waktu terus berjalan.</string>
     <string name="game_froggy_instructions">• Seberangi jalan dan sungai.\n• Hindari mobil.\n• Lompat ke kayu di sungai.\n• Capai garis finish!</string>
     <string name="game_simon_instructions">• Lihat urutan warna.\n• Ulangi dengan D-PAD.\n• Urutan semakin panjang tiap ronde!</string>
@@ -163,13 +161,6 @@
         <item>AS MENANG!</item>
         <item>WARNA LENGKAP!</item>
         <item>RAJA KARTU!</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>PIALA KETEMU!</item>
-        <item>PELARI LABIRIN!</item>
-        <item>AHLI JALAN!</item>
-        <item>SAMPAI KELUAR!</item>
     </string-array>
 
     <string-array name="win_sokoban">

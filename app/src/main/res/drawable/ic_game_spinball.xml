@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="64dp"
-    android:height="64dp"
-    android:viewportWidth="64"
-    android:viewportHeight="64">
-    <!-- Outer Circle -->
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Glowing Outer Ring -->
     <path
-        android:strokeColor="#FFFFFF"
+        android:fillColor="#00000000"
+        android:strokeColor="#2196F3"
         android:strokeWidth="2"
-        android:pathData="M32,8 A24,24 0 1,1 31.99,8" />
-    <!-- Center Spin -->
+        android:strokeAlpha="0.3"
+        android:pathData="M60,10 A50,50 0 1,1 60,110 A50,50 0 1,1 60,10" />
+
+    <!-- Rotating Shield Segment -->
     <path
-        android:fillColor="#BA68C8"
-        android:pathData="M32,32 m-8,0 a8,8 0 1,1 16,0 a8,8 0 1,1 -16,0" />
-    <!-- Ball -->
+        android:fillColor="#00000000"
+        android:strokeColor="#2196F3"
+        android:strokeWidth="10"
+        android:strokeLineCap="round"
+        android:pathData="M60,15 A45,45 0 0,1 105,60" />
+
+    <!-- Ball inside -->
     <path
         android:fillColor="#FFEB3B"
-        android:pathData="M44,20 m-4,0 a4,4 0 1,1 8,0 a4,4 0 1,1 -8,0" />
+        android:pathData="M52.5,52.5 A7.5,7.5 0 1,1 67.5,52.5 A7.5,7.5 0 1,1 52.5,52.5" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M55,55 A3,3 0 1,1 58,55 A3,3 0 1,1 55,55"
+        android:fillAlpha="0.5" />
+
+    <!-- Hazards (Red Spikes outside) -->
+    <path
+        android:fillColor="#F44336"
+        android:pathData="M10,60 L5,55 L5,65 Z M60,110 L55,115 L65,115 Z" />
+
 </vector>

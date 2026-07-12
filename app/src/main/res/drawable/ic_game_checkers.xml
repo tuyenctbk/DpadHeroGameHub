@@ -1,41 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="96dp"
-    android:height="96dp"
-    android:viewportWidth="96"
-    android:viewportHeight="96">
-    <!-- Board Shadow/Border -->
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Checkerboard Base (Upscaled) -->
     <path
-        android:fillColor="#4E342E"
-        android:pathData="M10,18h76v60h-76z" />
-    <!-- Board -->
+        android:fillColor="#3E2723"
+        android:pathData="M5,5 H115 V115 H5 Z" />
+    <!-- Light Squares (partial view) -->
+    <path android:fillColor="#5D4037" android:pathData="M5,5 H32.5 V32.5 H5 Z" />
+    <path android:fillColor="#5D4037" android:pathData="M60,5 H87.5 V32.5 H60 Z" />
+    <path android:fillColor="#5D4037" android:pathData="M32.5,32.5 H60 V60 H32.5 Z" />
+    <path android:fillColor="#5D4037" android:pathData="M87.5,32.5 H115 V60 H87.5 Z" />
+    <path android:fillColor="#5D4037" android:pathData="M5,60 H32.5 V87.5 H5 Z" />
+    <path android:fillColor="#5D4037" android:pathData="M60,60 H87.5 V87.5 H60 Z" />
+    <path android:fillColor="#5D4037" android:pathData="M32.5,87.5 H60 V115 H32.5 Z" />
+    <path android:fillColor="#5D4037" android:pathData="M87.5,87.5 H115 V115 H87.5 Z" />
+
+    <!-- Red Pieces (Player) -->
+    <path android:fillColor="#F44336" android:pathData="M18.75,73.75 A10,10 0 1,1 18.75,93.75 A10,10 0 1,1 18.75,73.75" />
+    <path android:fillColor="#F44336" android:pathData="M73.75,73.75 A10,10 0 1,1 73.75,93.75 A10,10 0 1,1 73.75,73.75" />
+    <path android:fillColor="#F44336" android:pathData="M46.25,101.25 A10,10 0 1,1 46.25,121.25 A10,10 0 1,1 46.25,101.25" />
+
+    <!-- Black Pieces (CPU) -->
+    <path android:fillColor="#212121" android:pathData="M46.25,18.75 A10,10 0 1,1 46.25,38.75 A10,10 0 1,1 46.25,18.75" />
+    <path android:fillColor="#212121" android:pathData="M101.25,18.75 A10,10 0 1,1 101.25,38.75 A10,10 0 1,1 101.25,18.75" />
+    <path android:fillColor="#212121" android:pathData="M73.75,46.25 A10,10 0 1,1 73.75,66.25 A10,10 0 1,1 73.75,46.25" />
+
+    <!-- Piece Highlights -->
     <path
-        android:fillColor="#6D4C41"
-        android:pathData="M12,20h72v56h-72z" />
-    <!-- Light Squares -->
-    <path
-        android:fillColor="#D7CCC8"
-        android:pathData="M12,20h18v14h-18zM48,20h18v14h-18zM30,34h18v14h-18zM66,34h18v14h-18zM12,48h18v14h-18zM48,48h18v14h-18zM30,62h18v14h-18zM66,62h18v14h-18z" />
-    <!-- Red Piece -->
-    <path
-        android:fillColor="#C62828"
-        android:pathData="M34,64m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0" />
-    <path
-        android:fillColor="#EF5350"
-        android:pathData="M34,62m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0" />
-    <path
-        android:fillColor="#FFCDD2"
-        android:fillAlpha="0.3"
-        android:pathData="M34,60m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
-    <!-- White Piece -->
-    <path
-        android:fillColor="#9E9E9E"
-        android:pathData="M62,36m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0" />
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M62,34m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0" />
-    <path
-        android:fillColor="#BDBDBD"
-        android:fillAlpha="0.2"
-        android:pathData="M62,32m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+        android:fillColor="#40FFFFFF"
+        android:pathData="M15,78 A5,5 0 1,1 15,88" />
+
 </vector>

@@ -15,7 +15,6 @@
     <string name="game_starfighter">星际战斗机</string>
     <string name="game_memory">记忆力</string>
     <string name="game_slide_puzzle">滑块拼图</string>
-    <string name="game_maze">迷宫</string>
     <string name="game_mental_math">心算</string>
     <string name="game_froggy">青蛙过河</string>
     <string name="game_simon">西蒙说</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• 使用方向键移动飞船。\n• 自动射击。\n• 摧毁敌人得分。\n• 避开子弹！\n• 按 \'S\' 切换音效。</string>
     <string name="game_memory_instructions">• 使用方向键导航。\n• 按确定键翻牌。\n• 匹配所有对子获胜。\n• 步数越少越好！</string>
     <string name="game_slide_puzzle_instructions">• 使用方向键移动。\n• 按确定键滑动。\n• 将图片恢复原状。</string>
-    <string name="game_maze_instructions">• 仔细观察迷宫。\n• 找到与绿点相连的出口。\n• 左右选择。\n• 确定键确认。</string>
     <string name="game_mental_math_instructions">• 解决数学题。\n• 使用方向键选择答案。\n• 确定键确认。\n• 动作要快！时间有限。</string>
     <string name="game_froggy_instructions">• 穿过马路和河流。\n• 避开车辆。\n• 跳上木头。\n• 到达终点得分！</string>
     <string name="game_simon_instructions">• 观察颜色序列。\n• 使用方向键复现。\n• 每回合序列会变长！</string>
@@ -163,13 +161,6 @@
         <item>王牌！</item>
         <item>花色凑齐！</item>
         <item>卡牌之王！</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>找到奖杯！</item>
-        <item>迷宫行者！</item>
-        <item>寻路专家！</item>
-        <item>到达出口！</item>
     </string-array>
 
     <string-array name="win_sokoban">

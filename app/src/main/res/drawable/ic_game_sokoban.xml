@@ -1,52 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="96dp"
-    android:height="96dp"
-    android:viewportWidth="96"
-    android:viewportHeight="96">
-    <!-- Walls -->
-    <path
-        android:fillColor="#455A64"
-        android:pathData="M10,14h76v68h-76z" />
-    <path
-        android:fillColor="#546E7A"
-        android:pathData="M10,14h76v2h-76z M10,14h2v68h-2z" />
-    <path
-        android:fillColor="#455A64"
-        android:pathData="M18,22h60v52h-60z" />
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
 
-    <!-- Crate -->
+    <!-- Warehouse Walls (Upscaled Standard) -->
     <path
-        android:fillColor="#8D6E63"
-        android:pathData="M34,40h20v20h-20z" />
-    <path
-        android:fillColor="#A1887F"
-        android:pathData="M34,40h20v2h-20z M34,40h2v20h-2z" />
-    <path
-        android:fillColor="#8D6E63"
-        android:pathData="M34,58h20v2h-20z M52,40h2v20h-2z" />
-    <path
-        android:fillColor="#8D6E63"
-        android:pathData="M38,44h12v12h-12z" />
-    <path
-        android:fillColor="#8D6E63"
-        android:pathData="M40,46h8v8h-8z" />
+        android:fillColor="#37474F"
+        android:pathData="M5,5 H115 V115 H5 Z" />
 
-    <!-- Player -->
+    <!-- Targets (Cyan Rings - Bold) -->
     <path
-        android:fillColor="#43A047"
-        android:pathData="M62,40m-7,0a7,7 0,1 1,14 0a7,7 0,1 1,-14 0" />
-    <path
-        android:fillColor="#66BB6A"
-        android:pathData="M62,38m-7,0a7,7 0,1 1,14 0a7,7 0,1 1,-14 0" />
-    <!-- Hat/Hair -->
-    <path
-        android:fillColor="#43A047"
-        android:pathData="M55,38a7,7 0 0,1 14,0" />
+        android:fillColor="#00E5FF"
+        android:pathData="M30,30 A15,15 0 1,1 30,60 A15,15 0 1,1 30,30 M30,37 A8,8 0 1,0 30,53 A8,8 0 1,0 30,37" />
 
-    <!-- Targets -->
+    <!-- Boxes (Large Wooden Brown) -->
     <path
-        android:fillColor="#FFD54F"
-        android:fillAlpha="0.6"
-        android:pathData="M24,28m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M72,68m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+        android:fillColor="#8D6E63"
+        android:pathData="M65,30 H105 V70 H65 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#5D4037"
+        android:strokeWidth="3"
+        android:pathData="M65,30 L105,70 M65,70 L105,30" />
+
+    <!-- Character (Upscaled Hero) -->
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M30,70 A20,20 0 1,1 70,70 A20,20 0 1,1 30,70" />
+
 </vector>

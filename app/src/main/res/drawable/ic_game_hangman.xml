@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="96dp"
-    android:height="96dp"
-    android:viewportWidth="96"
-    android:viewportHeight="96">
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Gallows (Upscaled Standard) -->
     <path
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="4"
-        android:pathData="M20,80h40 M30,80v-60h20 M50,20v10" />
+        android:fillColor="#5D4037"
+        android:pathData="M10,110 H110 V120 H10 Z M20,110 V10 H90 V25 H35 V110 Z" />
     <path
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="2"
-        android:pathData="M50,35m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0 M50,40v15 M50,45l-5,5 M50,45l5,5 M50,55l-5,5 M50,55l5,5" />
+        android:fillColor="#5D4037"
+        android:pathData="M90,10 V35 H82 V10 Z" />
+
+    <!-- Character (Upscaled Hero) -->
+    <!-- Head -->
+    <path
+        android:fillColor="#FFCCBC"
+        android:pathData="M86,40 A12,12 0 1,1 86,64 A12,12 0 1,1 86,40" />
+    <!-- Body -->
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M78,64 H94 V95 H78 Z" />
+    <!-- Legs -->
+    <path
+        android:fillColor="#212121"
+        android:pathData="M78,95 H84 V115 H78 Z M88,95 H94 V115 H88 Z" />
+    <!-- Arms -->
+    <path
+        android:fillColor="#FFCCBC"
+        android:pathData="M70,70 H78 V85 H70 Z M94,70 H102 V85 H94 Z" />
+
 </vector>

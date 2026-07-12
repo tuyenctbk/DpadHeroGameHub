@@ -1,42 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="48dp"
-    android:height="48dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-    <!-- Top Left (Green) -->
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Green (Top-Left - Upscaled) -->
     <path
-        android:fillColor="#2E7D32"
-        android:pathData="M11,3 A9,9 0 0 0 3,11 L11,11 Z" />
+        android:fillColor="#4CAF50"
+        android:pathData="M55,5 A55,55 0 0,0 5,55 H55 Z" />
     <path
-        android:fillColor="#43A047"
-        android:pathData="M11,4 A8,8 0 0 0 4,11 L11,11 Z" />
-    <!-- Top Right (Red) -->
-    <path
-        android:fillColor="#C62828"
-        android:pathData="M13,3 L13,11 L21,11 A9,9 0 0 0 13,3 Z" />
-    <path
-        android:fillColor="#E53935"
-        android:pathData="M13,4 L13,11 L20,11 A8,8 0 0 0 13,4 Z" />
-    <!-- Bottom Left (Yellow) -->
-    <path
-        android:fillColor="#FBC02D"
-        android:pathData="M3,13 A9,9 0 0 0 11,21 L11,13 Z" />
+        android:fillColor="#81C784"
+        android:pathData="M55,10 A50,50 0 0,0 10,55 H55 Z"
+        android:fillAlpha="0.3" />
+
+    <!-- Yellow (Top-Right) -->
     <path
         android:fillColor="#FFEB3B"
-        android:pathData="M4,13 A8,8 0 0 0 11,20 L11,13 Z" />
-    <!-- Bottom Right (Blue) -->
+        android:pathData="M65,5 A55,55 0 0,1 115,55 H65 Z" />
     <path
-        android:fillColor="#1565C0"
-        android:pathData="M13,13 L13,21 A9,9 0 0 0 21,13 Z" />
+        android:fillColor="#FFF176"
+        android:pathData="M65,10 A50,50 0 0,1 110,55 H65 Z"
+        android:fillAlpha="0.3" />
+
+    <!-- Red (Bottom-Right) -->
     <path
-        android:fillColor="#1E88E5"
-        android:pathData="M13,13 L13,20 A8,8 0 0 0 20,13 Z" />
-    <!-- Center Button -->
+        android:fillColor="#F44336"
+        android:pathData="M65,115 A55,55 0 0,0 115,65 H65 Z" />
+    <path
+        android:fillColor="#E57373"
+        android:pathData="M65,110 A50,50 0 0,0 110,65 H65 Z"
+        android:fillAlpha="0.3" />
+
+    <!-- Blue (Bottom-Left) -->
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M55,115 A55,55 0 0,1 5,65 H55 Z" />
+    <path
+        android:fillColor="#64B5F6"
+        android:pathData="M55,110 A50,50 0 0,1 10,65 H55 Z"
+        android:fillAlpha="0.3" />
+
+    <!-- Center Black Hub -->
     <path
         android:fillColor="#212121"
-        android:pathData="M12,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+        android:pathData="M60,40 A20,20 0 1,1 60,80 A20,20 0 1,1 60,40" />
+    <!-- Center Button Rim -->
     <path
-        android:fillColor="#424242"
-        android:pathData="M12,11.5m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
+        android:fillColor="#00000000"
+        android:strokeColor="#424242"
+        android:strokeWidth="3"
+        android:pathData="M60,45 A15,15 0 1,1 60,75 A15,15 0 1,1 60,45" />
+
 </vector>

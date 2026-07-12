@@ -1,27 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="64dp"
-    android:height="64dp"
-    android:viewportWidth="64"
-    android:viewportHeight="64">
-    <!-- Snake Body -->
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background Grid -->
     <path
-        android:fillColor="#4CAF50"
-        android:pathData="M16,40 L32,40 L32,24 L48,24 L48,16 L56,16 L56,32 L40,32 L40,48 L16,48 Z" />
-    <!-- Body Highlights -->
+        android:fillColor="#1A1A1A"
+        android:pathData="M0,0h120v120h-120z" />
     <path
-        android:fillColor="#81C784"
-        android:pathData="M16,40 L32,40 L32,24 L34,24 L34,42 L16,42 Z" />
-    <!-- Snake Head -->
+        android:strokeColor="#252525"
+        android:strokeWidth="1"
+        android:pathData="M0,15h120 M0,30h120 M0,45h120 M0,60h120 M0,75h120 M0,90h120 M0,105h120
+                          M15,0v120 M30,0v120 M45,0v120 M60,0v120 M75,0v120 M90,0v120 M105,0v120" />
+
+    <!-- Retro Pixel Snake (Green #8BC34A) -->
+    <!-- Shaped like a "5", Head is 2 segments long, Tail is full cell -->
     <path
-        android:fillColor="#388E3C"
-        android:pathData="M12,36 L20,36 L20,44 L12,44 Z" />
-    <!-- Eye -->
+        android:fillColor="#8BC34A"
+        android:pathData="
+            M16,76 h12 v12 h-12z
+            M31,76 h12 v12 h-12z
+            M46,76 h12 v12 h-12z
+            M61,76 h12 v12 h-12z
+            M76,76 h12 v12 h-12z
+            M76,61 h12 v12 h-12z
+            M76,46 h12 v12 h-12z
+            M61,46 h12 v12 h-12z
+            M46,46 h12 v12 h-12z
+            M31,46 h12 v12 h-12z
+            M16,46 h12 v12 h-12z
+            M16,31 h12 v12 h-12z
+            M16,16 h12 v12 h-12z
+            M31,16 h12 v12 h-12z
+            M46,16 h12 v12 h-12z
+            M61,16 h12 v12 h-12z
+            M76,16 h12 v12 h-12z" />
+
+    <!-- Red Pixel Apple (Food) -->
+    <!-- 1 cell gap from the snake head (which is at 76,16) -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M14,38 L16,38 L16,40 L14,40 Z" />
-    <!-- Pupil -->
-    <path
-        android:fillColor="#000000"
-        android:pathData="M15,39 L16,39 L16,40 L15,40 Z" />
+        android:fillColor="#F44336"
+        android:pathData="M106,16 h12 v12 h-12z" />
+
 </vector>

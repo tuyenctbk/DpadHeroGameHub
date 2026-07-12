@@ -6,7 +6,7 @@ import java.util.*
 object GameEnvironment {
     private val random = Random()
 
-    enum class BackgroundType { GRID, CHECKERBOARD, GRADIENT, STRIPES, WOOD, FELT, SOLID, DOTS, DIAMONDS, STARRY }
+    enum class BackgroundType { GRID, CHECKERBOARD, GRADIENT, STRIPES, WOOD, FELT, SOLID, DOTS, DIAMONDS, STARRY, NONE }
     enum class WeatherType { NONE, RAIN, SNOW, STORM, SANDSTORM, FOG }
     enum class SceneType { FIELD, CITY, DESERT, SPACE, NONE }
 
@@ -132,6 +132,7 @@ object GameEnvironment {
                 }
                 paint.alpha = 255
             }
+            BackgroundType.NONE -> {}
         }
 
         // 2. Weather

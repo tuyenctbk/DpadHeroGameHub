@@ -7,22 +7,24 @@
 The hub features a diverse library of classic games:
 
 *   **Snake**: The timeless classic - grow your snake without hitting obstacles.
+*   **Tetris**: The ultimate block-stacking puzzle.
 *   **Minesweeper**: Strategic puzzle solving with a visual reveal system.
-*   **4096**: A high-stakes variant of the popular 2048 merge puzzle.
 *   **T-Rex Run**: Dynamic endless runner with day/night cycles and seasonal weather (Rain/Snow).
+*   **4096**: A high-stakes variant of the popular 2048 merge puzzle.
 *   **Flappy Hero**: Navigate through challenging obstacles with multiple themes (Day, Night, Sunset, Winter).
 *   **Brick Break**: Action-packed paddle-and-ball arcade fun.
-*   **Tic-Tac-Toe & Checkers**: Essential board games against a smart CPU.
-*   **Sokoban & Sudoku**: Challenging logic and spatial puzzles.
-*   **Tetris**: The ultimate block-stacking puzzle.
-*   **Star Fighter**: Retro space shooter with wave-based combat.
-*   **Lines 98**: Strategic color-matching ball game with refined visuals.
-*   **Hangman**: Classic word-guessing game.
-*   **Road Racer**: High-speed traffic dodging game.
+*   **Solitaire**: The classic card sorting challenge.
+*   **Sudoku**: Challenging logic number puzzle.
+*   **Tic-Tac-Toe**: Essential board game against a smart CPU.
+*   **Word Quest**: A 5-letter word guessing challenge.
 *   **Memory**: Traditional card-matching game to test your recall.
-*   **Slide Puzzle**: Classic number/image sliding challenge.
-*   **Maze**: Find the correct exit in complex connected paths.
-*   **And many more**: Froggy Cross, Battle Tanks, Word Quest, Dungeon Escape, Solitaire, Simon Says, Mental Math, etc.
+*   **Road Racer**: High-speed traffic dodging game.
+*   **Lines 98**: Strategic color-matching ball game with refined visuals.
+*   **Sokoban**: Spatial logic puzzle involving pushing boxes.
+*   **Battle Tanks**: Defensive tank combat arcade action.
+*   **Star Fighter**: Retro space shooter with wave-based combat.
+*   **Dungeon Escape**: Navigate trap-filled dungeons to find the exit.
+*   **And many more**: Froggy Cross, Slide Puzzle, Hangman, Simon Says, Mental Math, Checkers, and Spinball.
 
 ## ⌨️ Controls & Accessibility
 

@@ -15,7 +15,6 @@
     <string name="game_starfighter">สตาร์ ไฟเตอร์</string>
     <string name="game_memory">ความจำ</string>
     <string name="game_slide_puzzle">สไลด์พัซเซิล</string>
-    <string name="game_maze">เขาวงกต</string>
     <string name="game_mental_math">คิดเลขเร็ว</string>
     <string name="game_froggy">กบข้ามถนน</string>
     <string name="game_simon">ไซมอน เซย์</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• เลื่อนยานด้วย D-PAD\n• ยิงอัตโนมัติ\n• ทำลายศัตรูเพื่อคะแนน\n• หลบกระสุนและยานศัตรู!\n• กด \'S\' เพื่อเปิด/ปิดเสียง</string>
     <string name="game_memory_instructions">• เลื่อนด้วย D-PAD\n• พลิกการ์ดด้วย CENTER\n• จับคู่ให้ครบเพื่อชนะ\n• ใช้จำนวนครั้งน้อยที่สุด!</string>
     <string name="game_slide_puzzle_instructions">• ใช้ D-PAD เพื่อเลื่อน\n• กด CENTER เพื่อสลับช่อง\n• เรียงรูปภาพให้ถูกต้อง</string>
-    <string name="game_maze_instructions">• ดูเขาวงกตให้ดี\n• หาว่าทางออกไหนเชื่อมกับจุดเขียว\n• ใช้ ซ้าย/ขวา เพื่อเลือก\n• กด CENTER เพื่อยืนยัน</string>
     <string name="game_mental_math_instructions">• แก้โจทย์คณิตศาสตร์\n• ใช้ D-PAD เลือกคำตอบ\n• กด CENTER เพื่อยืนยัน\n• เร็วเข้า! เวลากำลังหมด</string>
     <string name="game_froggy_instructions">• ข้ามถนนและแม่น้ำ\n• หลบรถบนถนน\n• กระโดดขอนไม้ในแม่น้ำ\n• ถึงเป้าหมายเพื่อคะแนน!</string>
     <string name="game_simon_instructions">• ดูลำดับสี\n• ทำตามด้วย D-PAD\n• ลำดับจะยาวขึ้นเรื่อยๆ!</string>
@@ -211,13 +209,6 @@
         <item>เอซสูงสุด!</item>
         <item>เรียงดอกครบ!</item>
         <item>ราชาไพ่!</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>พบถ้วยรางวัล!</item>
-        <item>นักวิ่งเขาวงกต!</item>
-        <item>ผู้ค้นพบทาง!</item>
-        <item>ถึงทางออกแล้ว!</item>
     </string-array>
 
     <string-array name="win_sokoban">

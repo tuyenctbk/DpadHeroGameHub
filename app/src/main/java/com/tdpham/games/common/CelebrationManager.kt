@@ -509,7 +509,6 @@ class CelebrationManager {
             "brick_break" -> R.array.win_brick_break
             "word_quest" -> R.array.win_word_quest
             "solitaire" -> R.array.win_solitaire
-            "game_maze", "maze" -> R.array.win_maze
             "sokoban" -> R.array.win_sokoban
             "win_highscore" -> R.array.win_highscore
             "checkers" -> R.array.win_checkers

@@ -15,7 +15,6 @@
     <string name="game_starfighter">STAR FIGHTER</string>
     <string name="game_memory">MEMORY</string>
     <string name="game_slide_puzzle">SLIDE PUZZLE</string>
-    <string name="game_maze">MAZE</string>
     <string name="game_mental_math">MENTAL MATH</string>
     <string name="game_froggy">FROGGY CROSS</string>
     <string name="game_simon">SIMON SAYS</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• Move ship with D-PAD.\n• Triple lasers fire automatically.\n• Destroy enemies to score.\n• Collect green power-ups to upgrade weapons (5, 7 guns).\n• Avoid enemy ships and red bullets!\n• Press \'S\' to toggle sound.</string>
     <string name="game_memory_instructions">• Navigate with DPAD.\n• Flip card with CENTER.\n• Match all pairs to win.\n• Fewer moves is better!</string>
     <string name="game_slide_puzzle_instructions">• Use DPAD to move cursor.\n• Press CENTER to slide tile.\n• Reorder pieces to form picture.\n• Numbers show correct order.</string>
-    <string name="game_maze_instructions">• Study the maze carefully.\n• Find which exit (image) is connected to the green dot.\n• Use LEFT/RIGHT to select.\n• Press CENTER to confirm.\n• One chance per stage!</string>
     <string name="game_mental_math_instructions">• Solve the math problem.\n• Use DPAD to select answer.\n• Press CENTER to confirm.\n• Be quick! Timer is running.\n• Wrong answer ends game.</string>
     <string name="game_froggy_instructions">• Cross the road and river.\n• Avoid cars on the road.\n• Jump on logs in the river.\n• Reach the top to score!\n• Use D-PAD to move.</string>
     <string name="game_simon_instructions">• Watch the sequence of colors.\n• Repeat it using the D-PAD:\n  - UP: Yellow\n  - RIGHT: Green\n  - DOWN: Red\n  - LEFT: Blue\n• Sequence gets longer each round!</string>
@@ -119,7 +117,6 @@
     <string name="crashed_label">CRASHED!</string>
     <string name="score_prefix">Score</string>
     <string name="high_score_label">High Score</string>
-    <string name="wrong_path_label">WRONG PATH!</string>
     <string name="wrong_label">WRONG!</string>
     <string name="answer_was_label">Answer was</string>
     <string name="finish_label">Finish</string>
@@ -245,13 +242,6 @@
         <item>ACE HIGH!</item>
         <item>SUIT COMPLETE!</item>
         <item>CARD KING!</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>TROPHY FOUND!</item>
-        <item>MAZE RUNNER!</item>
-        <item>PATH FINDER!</item>
-        <item>EXIT REACHED!</item>
     </string-array>
 
     <string-array name="win_sokoban">

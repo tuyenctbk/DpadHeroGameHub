@@ -1,26 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="48dp"
-    android:height="48dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-    <!-- Bird Body -->
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Sky Background (Full Viewport) -->
+    <path
+        android:fillColor="#81D4FA"
+        android:pathData="M0,0 H120 V120 H0 Z" />
+
+    <!-- Cloud (Upscaled) -->
+    <path
+        android:fillColor="#E1F5FE"
+        android:pathData="M100,30 A20,15 0 1,0 75,30 A20,15 0 1,0 100,30" />
+
+    <!-- Green Pipes (Bold) -->
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M10,0 H40 V45 H10 Z M5,45 H45 V58 H5 Z" />
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M10,120 H40 V80 H10 Z M5,80 H45 V67 H5 Z" />
+
+    <!-- Yellow Bird (Upscaled Hero) -->
     <path
         android:fillColor="#FFEB3B"
-        android:pathData="M12,12m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0" />
+        android:pathData="M65,45 A20,16 0 1,1 105,45 A20,16 0 1,1 65,45" />
     <!-- Wing -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M8,12a4,3 0 0,0 8,0" />
-    <!-- Eye -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M14,10a2,2 0 1,1 4,0a2,2 0,1 1,-4,0" />
-    <path
-        android:fillColor="#000000"
-        android:pathData="M16,10a1,1 0 1,1 2,0a1,1 0,1 1,-2,0" />
+        android:pathData="M70,55 L55,40 L80,50 Z" />
     <!-- Beak -->
     <path
         android:fillColor="#FF9800"
-        android:pathData="M18,11l4,1l-4,1z" />
+        android:pathData="M105,52 L118,58 L105,64 Z" />
+    <!-- Eye -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M92,45 A3,3 0 1,1 98,45 A3,3 0 1,1 92,45" />
+
 </vector>

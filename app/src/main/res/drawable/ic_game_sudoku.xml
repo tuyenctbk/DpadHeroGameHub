@@ -1,28 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="96dp"
-    android:height="96dp"
-    android:viewportWidth="96"
-    android:viewportHeight="96">
-    <!-- Grid Background -->
-    <path
-        android:fillColor="#F5F5F5"
-        android:pathData="M12,12h72v72h-72z" />
-    <!-- Subgrid Borders (Thick) -->
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Sudoku Grid (9x9 simplified feel) -->
     <path
         android:fillColor="#212121"
-        android:pathData="M12,36h72v2h-72zM12,60h72v2h-72zM36,12h2v72h-2zM60,12h2v72h-2z" />
-    <!-- Cell Borders (Thin) -->
+        android:pathData="M5,5 H115 V115 H5 Z" />
+
+    <!-- Main 3x3 dividers (Bold) -->
     <path
-        android:fillColor="#BDBDBD"
-        android:pathData="M12,24h72v1h-72zM12,48h72v1h-72zM12,72h72v1h-72zM24,12h1v72h-1zM48,12h1v72h-1zM72,12h1v72h-1z" />
-    <!-- Numbers/Placeholders -->
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:pathData="M41,5 V115 M79,5 V115 M5,41 H115 M5,79 H115" />
+
+    <!-- Sub-grid lines (Thin) -->
     <path
-        android:fillColor="#3F51B5"
-        android:pathData="M20,30h8v10h-8zM44,42h8v10h-8zM68,54h8v10h-8z" />
-    <!-- Highlight Selection -->
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1"
+        android:strokeAlpha="0.3"
+        android:pathData="M17,5 V115 M29,5 V115 M53,5 V115 M65,5 V115 M89,5 V115 M101,5 V115
+                          M5,17 H115 M5,29 H115 M5,53 H115 M5,65 H115 M5,89 H115 M5,101 H115" />
+
+    <!-- Focused Cell (Vibrant Selection) -->
     <path
         android:fillColor="#2196F3"
-        android:fillAlpha="0.2"
-        android:pathData="M36,36h24v24h-24z" />
+        android:pathData="M43,43 H77 V77 H43 Z" />
+
+    <!-- Large Number "5" for clarity -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M52,50 H68 V56 H58 V62 C58,62 68,62 68,68 C68,74 58,74 52,74"
+        android:strokeWidth="3"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+
 </vector>

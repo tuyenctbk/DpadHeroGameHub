@@ -1,46 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="64dp"
-    android:height="64dp"
-    android:viewportWidth="64"
-    android:viewportHeight="64">
-    <!-- Grid Lines -->
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Grid Lines (Standardized Upscale) -->
     <path
-        android:pathData="M22,16 L22,48"
+        android:fillColor="#00000000"
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="2" />
+        android:strokeWidth="6"
+        android:strokeLineCap="round"
+        android:pathData="M40,10 V110 M80,10 V110 M10,40 H110 M10,80 H110" />
+
+    <!-- X (Vibrant Red) -->
     <path
-        android:pathData="M42,16 L42,48"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="2" />
-    <path
-        android:pathData="M16,26 L48,26"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="2" />
-    <path
-        android:pathData="M16,38 L48,38"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="2" />
-    <!-- X in top-left (Red) -->
-    <path
-        android:pathData="M18,20 L26,28 M26,20 L18,28"
+        android:fillColor="#00000000"
         android:strokeColor="#F44336"
-        android:strokeWidth="3"
-        android:strokeLineCap="round" />
-    <!-- O in top-right (Blue) -->
+        android:strokeWidth="12"
+        android:strokeLineCap="round"
+        android:pathData="M15,15 L35,35 M35,15 L15,35" />
+
+    <!-- O (Vibrant Blue) -->
     <path
-        android:pathData="M45,22m-3.5,0a3.5,3.5 0,1 1,7 0a3.5,3.5 0,1 1,-7 0"
+        android:fillColor="#00000000"
         android:strokeColor="#2196F3"
-        android:strokeWidth="3" />
-    <!-- X in bottom-right (Red) -->
+        android:strokeWidth="12"
+        android:pathData="M60,45 A15,15 0 1,1 60,75 A15,15 0 1,1 60,45" />
+
+    <!-- Another X (Red - Winning Move) -->
     <path
-        android:pathData="M38,42 L46,50 M46,42 L38,50"
+        android:fillColor="#00000000"
         android:strokeColor="#F44336"
-        android:strokeWidth="3"
-        android:strokeLineCap="round" />
-    <!-- O in center (Blue) -->
-    <path
-        android:pathData="M32,32m-3.5,0a3.5,3.5 0,1 1,7 0a3.5,3.5 0,1 1,-7 0"
-        android:strokeColor="#2196F3"
-        android:strokeWidth="3" />
+        android:strokeWidth="12"
+        android:strokeLineCap="round"
+        android:pathData="M85,85 L105,105 M105,85 L85,105" />
+
 </vector>

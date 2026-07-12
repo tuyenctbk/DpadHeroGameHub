@@ -18,7 +18,6 @@ import com.tdpham.games.tetris.TetrisActivity
 import com.tdpham.games.starfighter.StarFighterActivity
 import com.tdpham.games.memory.MemoryActivity
 import com.tdpham.games.slidepuzzle.SlidePuzzleActivity
-import com.tdpham.games.maze.MazeActivity
 import com.tdpham.games.spinball.SpinballActivity
 import com.tdpham.games.mentalmath.MentalMathActivity
 import com.tdpham.games.simon.SimonSaysActivity
@@ -78,136 +77,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val btnSnake = findViewById<Button>(R.id.btn_snake)
-        setupGameButton(btnSnake) {
-            startActivity(Intent(this, SnakeActivity::class.java))
-        }
-
-        val btnMinesweeper = findViewById<Button>(R.id.btn_minesweeper)
-        setupGameButton(btnMinesweeper) {
-            startActivity(Intent(this, MinesweeperActivity::class.java))
-        }
-
-        val btn4096 = findViewById<Button>(R.id.btn_4096)
-        setupGameButton(btn4096) {
-            startActivity(Intent(this, TwentyFortyEightActivity::class.java))
-        }
-
-        val btnTRex = findViewById<Button>(R.id.btn_trex)
-        setupGameButton(btnTRex) {
-            startActivity(Intent(this, TRexActivity::class.java))
-        }
-
-        val btnBrickBreak = findViewById<Button>(R.id.btn_brick_break)
-        setupGameButton(btnBrickBreak) {
-            startActivity(Intent(this, BrickBreakActivity::class.java))
-        }
-
-        val btnTicTacToe = findViewById<Button>(R.id.btn_tictactoe)
-        setupGameButton(btnTicTacToe) {
-            startActivity(Intent(this, TicTacToeActivity::class.java))
-        }
-
-        val btnCheckers = findViewById<Button>(R.id.btn_checkers)
-        setupGameButton(btnCheckers) {
-            startActivity(Intent(this, CheckersActivity::class.java))
-        }
-
-        val btnSokoban = findViewById<Button>(R.id.btn_sokoban)
-        setupGameButton(btnSokoban) {
-            startActivity(Intent(this, SokobanActivity::class.java))
-        }
-
-        val btnSudoku = findViewById<Button>(R.id.btn_sudoku)
-        setupGameButton(btnSudoku) {
-            startActivity(Intent(this, SudokuActivity::class.java))
-        }
-
-        val btnTetris = findViewById<Button>(R.id.btn_tetris)
-        setupGameButton(btnTetris) {
-            startActivity(Intent(this, TetrisActivity::class.java))
-        }
-
-        val btnStarFighter = findViewById<Button>(R.id.btn_starfighter)
-        setupGameButton(btnStarFighter) {
-            startActivity(Intent(this, StarFighterActivity::class.java))
-        }
-
-        val btnMemory = findViewById<Button>(R.id.btn_memory)
-        setupGameButton(btnMemory) {
-            startActivity(Intent(this, MemoryActivity::class.java))
-        }
-
-        val btnSlidePuzzle = findViewById<Button>(R.id.btn_slide_puzzle)
-        setupGameButton(btnSlidePuzzle) {
-            startActivity(Intent(this, SlidePuzzleActivity::class.java))
-        }
-
-        val btnMaze = findViewById<Button>(R.id.btn_maze)
-        setupGameButton(btnMaze) {
-            startActivity(Intent(this, MazeActivity::class.java))
-        }
-
-
-        val btnMentalMath = findViewById<Button>(R.id.btn_mental_math)
-        setupGameButton(btnMentalMath) {
-            startActivity(Intent(this, MentalMathActivity::class.java))
-        }
-
-        val btnFroggy = findViewById<Button>(R.id.btn_froggy)
-        setupGameButton(btnFroggy) {
-            startActivity(Intent(this, FroggyCrossActivity::class.java))
-        }
-
-        val btnSimon = findViewById<Button>(R.id.btn_simon)
-        setupGameButton(btnSimon) {
-            startActivity(Intent(this, SimonSaysActivity::class.java))
-        }
-
-        val btnTanks = findViewById<Button>(R.id.btn_tanks)
-        setupGameButton(btnTanks) {
-            startActivity(Intent(this, BattleTanksActivity::class.java))
-        }
-
-        val btnWordQuest = findViewById<Button>(R.id.btn_word_quest)
-        setupGameButton(btnWordQuest) {
-            startActivity(Intent(this, WordQuestActivity::class.java))
-        }
-
-        val btnDungeon = findViewById<Button>(R.id.btn_dungeon)
-        setupGameButton(btnDungeon) {
-            startActivity(Intent(this, DungeonEscapeActivity::class.java))
-        }
-
-        val btnFlappy = findViewById<Button>(R.id.btn_flappy)
-        setupGameButton(btnFlappy) {
-            startActivity(Intent(this, FlappyHeroActivity::class.java))
-        }
-
-        val btnLines98 = findViewById<Button>(R.id.btn_lines98)
-        setupGameButton(btnLines98) {
-            startActivity(Intent(this, Lines98Activity::class.java))
-        }
-
-        val btnSolitaire = findViewById<Button>(R.id.btn_solitaire)
-        setupGameButton(btnSolitaire) {
-            startActivity(Intent(this, SolitaireActivity::class.java))
-        }
-
-        val btnRoadRacer = findViewById<Button>(R.id.btn_road_racer)
-        setupGameButton(btnRoadRacer) {
-            startActivity(Intent(this, RoadRacerActivity::class.java))
-        }
-
-        val btnHangman = findViewById<Button>(R.id.btn_hangman)
-        setupGameButton(btnHangman) {
-            startActivity(Intent(this, HangmanActivity::class.java))
-        }
-
-        val btnSpinball = findViewById<Button>(R.id.btn_spinball)
-        setupGameButton(btnSpinball) {
-            startActivity(Intent(this, SpinballActivity::class.java))
-        }
+        setupGameButtons()
 
         RatingGuideManager.incrementPlayCount(this)
         UpdateManager.checkForUpdates(this) { hasUpdate ->
@@ -227,36 +97,72 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupGameButtons() {
+        val games = mapOf(
+            R.id.btn_snake to SnakeActivity::class.java,
+            R.id.btn_tetris to TetrisActivity::class.java,
+            R.id.btn_minesweeper to MinesweeperActivity::class.java,
+            R.id.btn_trex to TRexActivity::class.java,
+            R.id.btn_4096 to TwentyFortyEightActivity::class.java,
+            R.id.btn_flappy to FlappyHeroActivity::class.java,
+            R.id.btn_memory to MemoryActivity::class.java,
+            R.id.btn_brick_break to BrickBreakActivity::class.java,
+            R.id.btn_solitaire to SolitaireActivity::class.java,
+            R.id.btn_lines98 to Lines98Activity::class.java,
+            R.id.btn_mental_math to MentalMathActivity::class.java,
+            R.id.btn_sudoku to SudokuActivity::class.java,
+            R.id.btn_tictactoe to TicTacToeActivity::class.java,
+            R.id.btn_word_quest to WordQuestActivity::class.java,
+            R.id.btn_road_racer to RoadRacerActivity::class.java,
+            R.id.btn_sokoban to SokobanActivity::class.java,
+            R.id.btn_tanks to BattleTanksActivity::class.java,
+            R.id.btn_starfighter to StarFighterActivity::class.java,
+            R.id.btn_dungeon to DungeonEscapeActivity::class.java,
+            R.id.btn_froggy to FroggyCrossActivity::class.java,
+            R.id.btn_slide_puzzle to SlidePuzzleActivity::class.java,
+            R.id.btn_hangman to HangmanActivity::class.java,
+            R.id.btn_simon to SimonSaysActivity::class.java,
+            R.id.btn_checkers to CheckersActivity::class.java,
+            R.id.btn_spinball to SpinballActivity::class.java
+        )
+
+        for ((id, activityClass) in games) {
+            val button = findViewById<Button>(id) ?: continue
+            setupGameButton(button) {
+                startActivity(Intent(this, activityClass))
+            }
+        }
+    }
+
     private fun focusLastPlayed() {
         val prefs = getSharedPreferences("game_settings", Context.MODE_PRIVATE)
         val lastPlayed = prefs.getString("last_played", "snake")
         
         when (lastPlayed) {
             "snake" -> findViewById<Button>(R.id.btn_snake).requestFocus()
-            "minesweeper" -> findViewById<Button>(R.id.btn_minesweeper).requestFocus()
-            "4096" -> findViewById<Button>(R.id.btn_4096).requestFocus()
-            "trex" -> findViewById<Button>(R.id.btn_trex).requestFocus()
-            "brick_break" -> findViewById<Button>(R.id.btn_brick_break).requestFocus()
-            "tic_tac_toe" -> findViewById<Button>(R.id.btn_tictactoe).requestFocus()
-            "checkers" -> findViewById<Button>(R.id.btn_checkers).requestFocus()
-            "sokoban" -> findViewById<Button>(R.id.btn_sokoban).requestFocus()
-            "sudoku" -> findViewById<Button>(R.id.btn_sudoku).requestFocus()
             "tetris" -> findViewById<Button>(R.id.btn_tetris).requestFocus()
-            "star_fighter" -> findViewById<Button>(R.id.btn_starfighter).requestFocus()
-            "memory" -> findViewById<Button>(R.id.btn_memory).requestFocus()
-            "slide_puzzle" -> findViewById<Button>(R.id.btn_slide_puzzle).requestFocus()
-            "mental_math" -> findViewById<Button>(R.id.btn_mental_math).requestFocus()
-            "froggy_cross" -> findViewById<Button>(R.id.btn_froggy).requestFocus()
-            "simon_says" -> findViewById<Button>(R.id.btn_simon).requestFocus()
-            "battle_tanks" -> findViewById<Button>(R.id.btn_tanks).requestFocus()
-            "word_quest" -> findViewById<Button>(R.id.btn_word_quest).requestFocus()
-            "dungeon_escape" -> findViewById<Button>(R.id.btn_dungeon).requestFocus()
+            "minesweeper" -> findViewById<Button>(R.id.btn_minesweeper).requestFocus()
+            "trex" -> findViewById<Button>(R.id.btn_trex).requestFocus()
+            "4096" -> findViewById<Button>(R.id.btn_4096).requestFocus()
             "flappy_hero" -> findViewById<Button>(R.id.btn_flappy).requestFocus()
-            "hangman" -> findViewById<Button>(R.id.btn_hangman).requestFocus()
-            "road_racer" -> findViewById<Button>(R.id.btn_road_racer).requestFocus()
-            "lines98" -> findViewById<Button>(R.id.btn_lines98).requestFocus()
+            "memory" -> findViewById<Button>(R.id.btn_memory).requestFocus()
+            "brick_break" -> findViewById<Button>(R.id.btn_brick_break).requestFocus()
             "solitaire" -> findViewById<Button>(R.id.btn_solitaire).requestFocus()
-            "maze" -> findViewById<Button>(R.id.btn_maze).requestFocus()
+            "lines98" -> findViewById<Button>(R.id.btn_lines98).requestFocus()
+            "mental_math" -> findViewById<Button>(R.id.btn_mental_math).requestFocus()
+            "sudoku" -> findViewById<Button>(R.id.btn_sudoku).requestFocus()
+            "tic_tac_toe" -> findViewById<Button>(R.id.btn_tictactoe).requestFocus()
+            "word_quest" -> findViewById<Button>(R.id.btn_word_quest).requestFocus()
+            "road_racer" -> findViewById<Button>(R.id.btn_road_racer).requestFocus()
+            "sokoban" -> findViewById<Button>(R.id.btn_sokoban).requestFocus()
+            "battle_tanks" -> findViewById<Button>(R.id.btn_tanks).requestFocus()
+            "star_fighter" -> findViewById<Button>(R.id.btn_starfighter).requestFocus()
+            "dungeon_escape" -> findViewById<Button>(R.id.btn_dungeon).requestFocus()
+            "froggy_cross" -> findViewById<Button>(R.id.btn_froggy).requestFocus()
+            "slide_puzzle" -> findViewById<Button>(R.id.btn_slide_puzzle).requestFocus()
+            "hangman" -> findViewById<Button>(R.id.btn_hangman).requestFocus()
+            "simon_says" -> findViewById<Button>(R.id.btn_simon).requestFocus()
+            "checkers" -> findViewById<Button>(R.id.btn_checkers).requestFocus()
             "spinball" -> findViewById<Button>(R.id.btn_spinball).requestFocus()
             else -> findViewById<Button>(R.id.btn_snake).requestFocus()
         }
@@ -274,24 +180,22 @@ class MainActivity : AppCompatActivity() {
         
         button.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
-                // Brighter (handled by selector) + Scale Up
+                // "Light Up" Animation: Scale up + Elevation + Overshoot for punchy feel
                 view.animate()
                     .scaleX(1.15f)
                     .scaleY(1.15f)
-                    .translationZ(12f)
+                    .translationZ(24f)
                     .setInterpolator(android.view.animation.OvershootInterpolator())
-                    .setDuration(300)
+                    .setDuration(350)
                     .start()
-                view.elevation = 20f
             } else {
-                // Back to normal
+                // Return to normal
                 view.animate()
                     .scaleX(1.0f)
                     .scaleY(1.0f)
                     .translationZ(0f)
                     .setDuration(250)
                     .start()
-                view.elevation = 8f
             }
         }
 

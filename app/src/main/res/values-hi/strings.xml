@@ -15,7 +15,6 @@
     <string name="game_starfighter">स्टार फाइटर</string>
     <string name="game_memory">याददाश्त</string>
     <string name="game_slide_puzzle">स्लाइड पहेली</string>
-    <string name="game_maze">भूलभुलैया</string>
     <string name="game_mental_math">गणित</string>
     <string name="game_froggy">मेंढक पार</string>
     <string name="game_simon">साइमन कहता है</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• जहाज़ चलाने के लिए D-PAD का उपयोग करें।\n• ऑटो फ़ायर।\n• दुश्मनों को मारें।\n• गोली से बचें!\n• आवाज़ के लिए \'S\' दबाएं।</string>
     <string name="game_memory_instructions">• DPAD से चलें।\n• कार्ड पलटने के लिए CENTER दबाएं।\n• जोड़ियाँ मिलाएँ।\n• कम चालें बेहतर हैं!</string>
     <string name="game_slide_puzzle_instructions">• हिलने के लिए DPAD का उपयोग करें।\n• स्लाइड के लिए CENTER दबाएं।\n• चित्र पूरा करने के लिए गोटियाँ सजाएं।</string>
-    <string name="game_maze_instructions">• भूलभुलैया को ध्यान से देखें।\n• हरे बिंदु से जुड़े निकास को खोजें।\n• बाएँ/दाएँ से चुनें।\n• CENTER से पक्का करें।</string>
     <string name="game_mental_math_instructions">• गणित हल करें।\n• उत्तर चुनने के लिए DPAD का उपयोग करें।\n• CENTER से पक्का करें।\n• जल्दी करें! समय कम है।</string>
     <string name="game_froggy_instructions">• सड़क और नदी पार करें।\n• कारों से बचें।\n• लकड़ी के लट्ठों पर कूदें।\n• लक्ष्य तक पहुँचें!</string>
     <string name="game_simon_instructions">• रंगों का क्रम देखें।\n• D-PAD से दोहराएं।\n• हर दौर में क्रम लंबा होगा!</string>
@@ -163,13 +161,6 @@
         <item>ऐस की जीत!</item>
         <item>रंग पूरा!</item>
         <item>कार्ड किंग!</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>ट्रॉफी मिली!</item>
-        <item>भूलभुलैया पार!</item>
-        <item>रास्ता खोजा!</item>
-        <item>निकास मिला!</item>
     </string-array>
 
     <string-array name="win_sokoban">

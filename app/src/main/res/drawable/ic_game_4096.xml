@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="64dp"
-    android:height="64dp"
-    android:viewportWidth="64"
-    android:viewportHeight="64">
-    <!-- Big Tile Background -->
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Board Background -->
     <path
-        android:fillColor="#D7CCC8"
-        android:pathData="M4,8 A4,4 0 0 1 8,4 L56,4 A4,4 0 0 1 60,8 L60,56 A4,4 0 0 1 56,60 L8,60 A4,4 0 0 1 4,56 Z" />
-    <!-- Mini Tiles inside for detail -->
+        android:fillColor="#BBADA0"
+        android:pathData="M5,5h110v110h-110z" />
+
+    <!-- 2x2 Grid of Valid Tiles -->
+    <!-- Tile 2 (Cream) -->
     <path
         android:fillColor="#EEE4DA"
-        android:pathData="M10,10 A2,2 0 0 1 12,8 L28,8 A2,2 0 0 1 30,10 L30,26 A2,2 0 0 1 28,28 L12,28 A2,2 0 0 1 10,26 Z" />
+        android:pathData="M10,10h50v50h-50z" />
+
+    <!-- Tile 4 (Tan) -->
     <path
         android:fillColor="#EDE0C8"
-        android:pathData="M34,10 A2,2 0 0 1 36,8 L52,8 A2,2 0 0 1 54,10 L54,26 A2,2 0 0 1 52,28 L36,28 A2,2 0 0 1 34,26 Z" />
+        android:pathData="M65,10h45v50h-45z" />
+
+    <!-- Tile 8 (Orange) -->
     <path
         android:fillColor="#F2B179"
-        android:pathData="M10,34 A2,2 0 0 1 12,32 L28,32 A2,2 0 0 1 30,34 L30,50 A2,2 0 0 1 28,52 L12,52 A2,2 0 0 1 10,50 Z" />
+        android:pathData="M10,65h50v45h-50z" />
+
+    <!-- Tile 2048 (Large Hero Gold) -->
     <path
-        android:fillColor="#F59563"
-        android:pathData="M34,34 A2,2 0 0 1 36,32 L52,32 A2,2 0 0 1 54,34 L54,50 A2,2 0 0 1 52,52 L36,52 A2,2 0 0 1 34,50 Z" />
+        android:fillColor="#EDC22E"
+        android:pathData="M65,65h45v45h-45z" />
+
 </vector>

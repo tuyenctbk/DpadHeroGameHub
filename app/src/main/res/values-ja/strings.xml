@@ -15,7 +15,6 @@
     <string name="game_starfighter">スターファイター</string>
     <string name="game_memory">神経衰弱</string>
     <string name="game_slide_puzzle">スライドパズル</string>
-    <string name="game_maze">迷路</string>
     <string name="game_mental_math">暗算</string>
     <string name="game_froggy">フロギークロス</string>
     <string name="game_simon">サイモンセズ</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• 十字キーで自機移動。\n• 自動連射。\n• 敵を倒してスコア稼ぎ。\n• 被弾するな！\n• \'S\'で消音。</string>
     <string name="game_memory_instructions">• 十字キーで移動。\n• 決定でカードをめくる。\n• 全てのペアを揃えろ。\n• 手数は少ないほど良い！</string>
     <string name="game_slide_puzzle_instructions">• 十字キーで移動。\n• 決定でスライド。\n• 絵を完成させろ。</string>
-    <string name="game_maze_instructions">• 迷路をよく見て。\n• 緑の点に繋がる出口を選べ。\n• 左右で選択。\n• 決定で確定。</string>
     <string name="game_mental_math_instructions">• 計算を解け。\n• 十字キーで回答選択。\n• 決定で確定。\n• 急げ！時間制限あり。</string>
     <string name="game_froggy_instructions">• 道路と川を渡れ。\n• 車を避けろ。\n• 丸太に飛び乗れ。\n• ゴールを目指せ！</string>
     <string name="game_simon_instructions">• 色の順序を覚えろ。\n• 十字キーで再現。\n• 順序は毎ラウンド長くなる！</string>
@@ -163,13 +161,6 @@
         <item>勝利のエース！</item>
         <item>組札完成！</item>
         <item>カードの王！</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>トロフィー発見！</item>
-        <item>迷路走破！</item>
-        <item>正解到達！</item>
-        <item>脱出成功！</item>
     </string-array>
 
     <string-array name="win_sokoban">

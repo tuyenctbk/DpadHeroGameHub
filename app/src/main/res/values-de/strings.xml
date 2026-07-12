@@ -15,7 +15,6 @@
     <string name="game_starfighter">STAR FIGHTER</string>
     <string name="game_memory">MEMORY</string>
     <string name="game_slide_puzzle">SCHIEBEPUZZLE</string>
-    <string name="game_maze">LABYRINTH</string>
     <string name="game_mental_math">KOPFRECHNEN</string>
     <string name="game_froggy">FROGGY CROSS</string>
     <string name="game_simon">SIMON SAYS</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• Bewege das Schiff mit dem D-PAD.\n• Laser feuern automatisch.\n• Zerstöre Gegner für Punkte.\n• Lass dich nicht treffen!\n• Drücke \'S\' für Ton.</string>
     <string name="game_memory_instructions">• Navigiere mit dem DPAD.\n• Karten wenden mit CENTER.\n• Finde alle Paare, um zu gewinnen.\n• Weniger Züge sind besser!</string>
     <string name="game_slide_puzzle_instructions">• Benutze das DPAD zum Bewegen.\n• Drücke CENTER zum Schieben.\n• Ordne die Teile zum Bild.\n• Zahlen zeigen die richtige Reihenfolge.</string>
-    <string name="game_maze_instructions">• Studiere das Labyrinth genau.\n• Finde den Ausgang (Bild), der mit dem grünen Punkt verbunden ist.\n• LINKS/RECHTS zum Wählen.\n• CENTER zum Bestätigen.</string>
     <string name="game_mental_math_instructions">• Löse die Rechenaufgabe.\n• Benutze das DPAD für die Antwort.\n• Drücke CENTER zum Bestätigen.\n• Sei schnell! Die Zeit läuft.\n• Falsche Antwort beendet das Spiel.</string>
     <string name="game_froggy_instructions">• Überquerre Straße und Fluss.\n• Weiche Autos aus.\n• Springe auf Baumstämme im Fluss.\n• Erreiche das Ziel für Punkte!\n• Benutze das D-PAD zum Bewegen.</string>
     <string name="game_simon_instructions">• Beobachte die Farbreihenfolge.\n• Wiederhole sie mit dem D-PAD.\n• Die Sequenz wird jede Runde länger!</string>
@@ -226,13 +224,6 @@
         <item>ASS HOCH!</item>
         <item>FARBE KOMPLETT!</item>
         <item>KARTEN-KÖNIG!</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>TROPHÄE GEFUNDEN!</item>
-        <item>LABYRINTH-LÄUFER!</item>
-        <item>PFADFINDER!</item>
-        <item>AUSGANG ERREICHT!</item>
     </string-array>
 
     <string-array name="win_sokoban">

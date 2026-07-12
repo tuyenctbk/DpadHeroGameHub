@@ -15,7 +15,6 @@
     <string name="game_starfighter">STAR FIGHTER</string>
     <string name="game_memory">MEMÓRIA</string>
     <string name="game_slide_puzzle">PUZZLE DESLIZANTE</string>
-    <string name="game_maze">LABIRINTO</string>
     <string name="game_mental_math">CÁLCULO MENTAL</string>
     <string name="game_froggy">FROGGY CROSS</string>
     <string name="game_simon">SIMON SAYS</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• Mova a nave com o D-PAD.\n• Tiro automático.\n• Destrua inimigos.\n• Não seja atingido!\n• Pressione \'S\' para som.</string>
     <string name="game_memory_instructions">• Navegue com o DPAD.\n• Vire cartas com CENTER.\n• Encontre os pares.\n• Menos jogadas é melhor!</string>
     <string name="game_slide_puzzle_instructions">• Use o DPAD para mover.\n• Pressione CENTER para deslizar.\n• Reordene as peças para a imagem.</string>
-    <string name="game_maze_instructions">• Estude o labirinto.\n• Encontre a saída ligada ao ponto verde.\n• ESQUERDA/DIREITA para escolher.\n• CENTER para confirmar.</string>
     <string name="game_mental_math_instructions">• Resolva a operação.\n• Use o DPAD para a resposta.\n• Pressione CENTER para confirmar.\n• Rápido! O tempo corre.</string>
     <string name="game_froggy_instructions">• Cruze estrada e rio.\n• Evite os carros.\n• Pule nos troncos.\n• Chegue à meta!</string>
     <string name="game_simon_instructions">• Veja as cores.\n• Repita com o D-PAD.\n• A sequência aumenta!</string>
@@ -163,13 +161,6 @@
         <item>ÁS VENCEDOR!</item>
         <item>NAIPE COMPLETO!</item>
         <item>REI DAS CARTAS!</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>TROFÉU ENCONTRADO!</item>
-        <item>MAZE RUNNER!</item>
-        <item>GUIA EXPERIENTE!</item>
-        <item>SAÍDA ALCANÇADA!</item>
     </string-array>
 
     <string-array name="win_sokoban">

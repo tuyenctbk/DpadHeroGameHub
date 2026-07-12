@@ -1,26 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="48dp"
-    android:height="48dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-    <!-- Keyboard Base -->
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Hero Letters (Classic Word Puzzle Feel) -->
+    <!-- 'W' in Green (Correct) -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M10,20 H40 V50 H10 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M18,30 L22,43 L25,35 L28,43 L32,30" />
+
+    <!-- 'O' in Yellow (Present) -->
+    <path
+        android:fillColor="#FFEB3B"
+        android:pathData="M45,20 H75 V50 H45 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:pathData="M52,35 A8,8 0 1,1 68,35 A8,8 0 1,1 52,35" />
+
+    <!-- 'R' in Grey (Absent) -->
     <path
         android:fillColor="#757575"
-        android:pathData="M2,2h20v20h-20z" />
+        android:pathData="M80,20 H110 V50 H80 Z" />
     <path
-        android:fillColor="#9E9E9E"
-        android:pathData="M2,2h20v1h-20z M2,2h1v20h-1z" />
-    <!-- Keys -->
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M88,43 V27 H95 C98,27 102,30 102,33 C102,36 98,38 95,38 H88 M95,38 L102,43" />
+
+    <!-- Secondary Row -->
     <path
-        android:fillColor="#EEEEEE"
-        android:pathData="M18,15H16V17H18V15M14,15H12V17H14V15M10,15H8V17H10V15M6,15H4V17H6V15M20,15H22V17H20V15M18,11H16V13H18V11M14,11H12V13H14V11M10,11H8V13H10V11M6,11H4V13H6V11M20,11H22V13H20V11M18,7H16V9H18V7M14,7H12V9H14V7M10,7H8V9H10V7M6,7H4V9H6V7M20,7H22V9H20V7M18,3H16V5H18V3M14,3H12V5H14V3M10,3H8V5H10V3M6,3H4V5H6V3M20,3H22V5H20V3" />
-    <!-- Spacebar -->
-    <path
-        android:fillColor="#EEEEEE"
-        android:pathData="M6,19h12v2h-12z" />
-    <!-- Selection/Highlight -->
-    <path
-        android:fillColor="#2196F3"
-        android:pathData="M12,11h2v2h-2z" />
+        android:fillColor="#424242"
+        android:pathData="M10,60 H40 V90 H10 Z M45,60 H75 V90 H45 Z M80,60 H110 V90 H80 Z"
+        android:fillAlpha="0.3" />
+
 </vector>

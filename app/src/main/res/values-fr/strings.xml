@@ -15,7 +15,6 @@
     <string name="game_starfighter">STAR FIGHTER</string>
     <string name="game_memory">MÉMOIRE</string>
     <string name="game_slide_puzzle">PUZZLE COULISSANT</string>
-    <string name="game_maze">LABYRINTHE</string>
     <string name="game_mental_math">CALCUL MENTAL</string>
     <string name="game_froggy">FROGGY CROSS</string>
     <string name="game_simon">SIMON SAYS</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• Déplacez le vaisseau avec le D-PAD.\n• Tir automatique.\n• Détruisez les ennemis pour marquer.\n• Ne vous faites pas toucher !\n• Appuyez sur \'S\' pour le son.</string>
     <string name="game_memory_instructions">• Naviguez avec le DPAD.\n• Retournez les cartes avec CENTER.\n• Associez toutes les paires pour gagner.\n• Moins de coups, c\'est mieux !</string>
     <string name="game_slide_puzzle_instructions">• Utilisez le DPAD pour déplacer.\n• Appuyez sur CENTER pour glisser.\n• Réordonnez les pièces pour former l\'image.</string>
-    <string name="game_maze_instructions">• Étudiez le labyrinthe.\n• Trouvez la sortie connectée au point vert.\n• GAUCHE/DROITE pour choisir.\n• CENTER pour confirmer.</string>
     <string name="game_mental_math_instructions">• Résolvez l\'opération.\n• Utilisez le DPAD pour la réponse.\n• Appuyez sur CENTER pour confirmer.\n• Vite ! Le temps presse.</string>
     <string name="game_froggy_instructions">• Traversez route et rivière.\n• Évitez les voitures.\n• Sautez sur les bûches dans la rivière.\n• Atteignez l\'arrivée pour marquer !</string>
     <string name="game_simon_instructions">• Regardez la séquence de couleurs.\n• Répétez-la avec le D-PAD.\n• La séquence s\'allonge à chaque tour !</string>
@@ -163,13 +161,6 @@
         <item>AS GAGNANT !</item>
         <item>COULEUR COMPLÈTE !</item>
         <item>ROI DES CARTES !</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>TROPHÉE TROUVÉ !</item>
-        <item>MAZE RUNNER !</item>
-        <item>GUIDE EXPERT !</item>
-        <item>SORTIE ATTEINTE !</item>
     </string-array>
 
     <string-array name="win_sokoban">

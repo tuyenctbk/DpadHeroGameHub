@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="96dp"
-    android:height="96dp"
-    android:viewportWidth="96"
-    android:viewportHeight="96">
-    <!-- Road Background -->
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Asphalt Road (Full Viewport Perspective) -->
     <path
-        android:fillColor="#455A64"
-        android:pathData="M10,10h76v76h-76z" />
-    <!-- Lane Marker -->
+        android:fillColor="#263238"
+        android:pathData="M15,0 L105,0 L120,120 L0,120 Z" />
+    <!-- Road Lines -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M46,20h4v15h-4z M46,45h4v15h-4z M46,70h4v15h-4z" />
-    <!-- Car Shape -->
+        android:pathData="M56,0 H64 V25 H56 Z M56,45 H64 V75 H56 Z M56,95 H64 V125 H56 Z" />
+
+    <!-- Red Sports Car (Upscaled) -->
     <path
-        android:fillColor="#4CAF50"
-        android:pathData="M35,40h26v40h-26z" />
+        android:fillColor="#FF1744"
+        android:pathData="M70,60 H100 V105 H70 Z" />
+    <!-- Tire Detail -->
     <path
         android:fillColor="#212121"
-        android:pathData="M38,45h20v20h-20z" />
+        android:pathData="M66,65 H70 V80 H66 Z M100,65 H104 V80 H100 Z M66,90 H70 V105 H66 Z M100,90 H104 V105 H100 Z" />
+    <!-- Windshield Shine -->
     <path
         android:fillColor="#BBDEFB"
-        android:pathData="M40,48h16v8h-16z" />
+        android:pathData="M74,65 H96 V80 H74 Z" />
+
 </vector>

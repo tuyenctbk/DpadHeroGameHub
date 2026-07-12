@@ -1,53 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="64dp"
-    android:height="64dp"
-    android:viewportWidth="64"
-    android:viewportHeight="64">
-    <!-- Grid Base -->
-    <path
-        android:fillColor="#333333"
-        android:pathData="M8,8 h48 v48 h-48 z" />
-    <path
-        android:fillColor="#444444"
-        android:pathData="M8,8 h48 v2 h-48 z M8,24 h48 v2 h-48 z M8,40 h48 v2 h-48 z M8,54 h48 v2 h-48 z" />
-    <path
-        android:fillColor="#444444"
-        android:pathData="M8,8 v48 h2 v-48 z M24,8 v48 h2 v-48 z M40,8 v48 h2 v-48 z M54,8 v48 h2 v-48 z" />
-    
-    <!-- Red Ball -->
-    <path
-        android:fillColor="#F44336"
-        android:pathData="M16,16 m-6,0 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0" />
-    <path
-        android:fillColor="#FFCDD2"
-        android:fillAlpha="0.5"
-        android:pathData="M14,14 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" />
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
 
-    <!-- Blue Ball -->
+    <!-- Grid Layout (Upscaled Standard) -->
     <path
-        android:fillColor="#2196F3"
-        android:pathData="M48,16 m-6,0 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0" />
+        android:fillColor="#212121"
+        android:pathData="M5,5 H115 V115 H5 Z" />
     <path
-        android:fillColor="#BBDEFB"
-        android:fillAlpha="0.5"
-        android:pathData="M46,14 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" />
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.2"
+        android:pathData="M5,40 H115 M5,80 H115 M40,5 V115 M80,5 V115" />
 
-    <!-- Green Ball -->
+    <!-- Bold Colorful Balls -->
     <path
-        android:fillColor="#4CAF50"
-        android:pathData="M32,32 m-6,0 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0" />
+        android:fillColor="#FF1744"
+        android:pathData="M22.5,22.5 A15,15 0 1,1 22.5,52.5 A15,15 0 1,1 22.5,22.5" />
     <path
-        android:fillColor="#C8E6C9"
-        android:fillAlpha="0.5"
-        android:pathData="M30,30 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" />
+        android:fillColor="#00E676"
+        android:pathData="M60,60 A15,15 0 1,1 60,90 A15,15 0 1,1 60,60" />
+    <path
+        android:fillColor="#2979FF"
+        android:pathData="M97.5,97.5 A15,15 0 1,1 97.5,127.5 A15,15 0 1,1 97.5,97.5" />
 
-    <!-- Yellow Ball -->
+    <!-- Glossy Shine -->
     <path
-        android:fillColor="#FFEB3B"
-        android:pathData="M16,48 m-6,0 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0" />
-    <path
-        android:fillColor="#FFF9C4"
-        android:fillAlpha="0.5"
-        android:pathData="M14,46 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" />
+        android:fillColor="#40FFFFFF"
+        android:pathData="M15,30 A7,7 0 1,1 15,44 M52,68 A7,7 0 1,1 52,82" />
+
 </vector>

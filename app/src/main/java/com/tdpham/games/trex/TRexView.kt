@@ -27,6 +27,7 @@ class TRexView @JvmOverloads constructor(
     private var highScore = 0
     private var isGameOver = false
     private var isPaused = false
+    private var causeOfDeath: ObstacleType? = null
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
     private var gameSpeed = 16f
@@ -53,10 +54,15 @@ class TRexView @JvmOverloads constructor(
     private var isNewHighScoreBroken = false
     
     // Environment State
-    private var isNightMode = false
+    private var isNightMode = Random().nextBoolean()
     private var lastNightToggle = 0
     private var currentSeason = Season.SPRING
     private var currentWeather = Weather.SUNNY
+    private var seasonOffset = 0
+    private var weatherOffset = 0
+    private var nightOffset = 0
+    private var lastEnvironmentChangeTime = 0L
+    private val ENVIRONMENT_CHANGE_INTERVAL = 90000L // 90 seconds
     
     // Particles/Decorations
     private val clouds = mutableListOf<PointF>()
@@ -133,6 +139,7 @@ class TRexView @JvmOverloads constructor(
         highScore = ScoreManager.getHighScore(context, gameKey)
         isGameOver = false
         isPaused = true
+        causeOfDeath = null
         celebrationManager.start(0f, 0f)
         
         // Pick random family member for this run
@@ -154,10 +161,11 @@ class TRexView @JvmOverloads constructor(
 
         earthquakeShake = 0f
         earthquakeTimer = 0
-        isNightMode = false
-        lastNightToggle = 0
-        currentSeason = Season.SPRING
-        currentWeather = Weather.SUNNY
+        
+        // Set initial state before game starts
+        lastEnvironmentChangeTime = System.currentTimeMillis()
+        updateEnvironment(force = true)
+        
         gameSpeed = 16f
         distanceTravelled = 0f
         dinoY = 0f
@@ -318,7 +326,7 @@ class TRexView @JvmOverloads constructor(
         dinoVelocityY += gravity
         dinoY += dinoVelocityY
         
-        val dinoHeight = if (isDucking) 15 * dinoScale else 21 * dinoScale
+        val dinoHeight = if (isDucking) 16 * dinoScale else 23 * dinoScale
         val actualGroundY = height * groundY - dinoHeight
         if (dinoY >= actualGroundY) {
             dinoY = actualGroundY
@@ -356,6 +364,18 @@ class TRexView @JvmOverloads constructor(
         // Craters and Earthquake
         updateEvents()
 
+        // Randomly trigger conditions/events (not obstacles)
+        if (score > 1500 && currentWeather == Weather.RAINY && random.nextInt(400) == 0) {
+            // Spawn Thunderbolt (Strike ground/obstacles)
+            val tx = random.nextFloat() * width + 200f
+            obstacles.add(Obstacle(tx, -100f, 30f, 100f, ObstacleType.THUNDERBOLT, random.nextInt(4)))
+        }
+        if (score > 3000 && isNightMode && random.nextInt(800) == 0) {
+            // Spawn Meteor (Create craters)
+            val mx = random.nextFloat() * width + 400f
+            obstacles.add(Obstacle(mx, -200f, 80f, 80f, ObstacleType.METEOR, random.nextInt(4)))
+        }
+
         nextObstacleDistance -= gameSpeed
         if (nextObstacleDistance <= 0) spawnObstacle()
 
@@ -364,63 +384,57 @@ class TRexView @JvmOverloads constructor(
             val obs = iterator.next()
             
             if (obs.type == ObstacleType.METEOR || obs.type == ObstacleType.THUNDERBOLT) {
-                // Diagonal trajectory - tuned to ensure they can actually reach and hit the Dino
-                val fallSpeed = when(obs.type) {
-                    ObstacleType.THUNDERBOLT -> 20f
-                    ObstacleType.METEOR -> 12f + (obs.variant * 2f) // Varied fall speed
-                    else -> 10f
-                }
-                // Randomize horizontal speed slightly per obstacle (using variant) to vary landing angles
-                val horizontalFactor = 1.2f + (obs.variant * 0.2f)
+                // Diagonal trajectory
+                val fallSpeed = if (obs.type == ObstacleType.THUNDERBOLT) 22f else 14f
+                val horizontalFactor = 1.3f + (obs.variant * 0.1f)
                 obs.x -= gameSpeed * horizontalFactor
                 obs.y += fallSpeed
                 
                 if (obs.y >= height * groundY - obs.height / 2) {
                     // Impact!
-                    val color = when(obs.type) {
-                        ObstacleType.METEOR -> Color.parseColor("#FF5722")
-                        ObstacleType.THUNDERBOLT -> Color.parseColor("#FFEA00")
-                        else -> Color.parseColor("#424242")
-                    }
-                    explosions.add(Explosion(obs.x + obs.width / 2, height * groundY, color, 15f, 255))
+                    val color = if (obs.type == ObstacleType.METEOR) Color.parseColor("#FF5722") else Color.parseColor("#FFEA00")
+                    explosions.add(Explosion(obs.x + obs.width / 2, height * groundY, color, 20f, 255))
                     
                     if (obs.type == ObstacleType.METEOR) {
-                        craters.add(Crater(obs.x + obs.width / 4, obs.width * 1.5f, 255))
-                    } else if (obs.type == ObstacleType.THUNDERBOLT) {
-                        // Lightning strikes! Check for ground obstacles to transform
-                        var targetFound = false
-                        for (other in obstacles) {
-                            if (other != obs && (other.type == ObstacleType.CACTUS || other.type == ObstacleType.TREE || other.type == ObstacleType.ROCK)) {
-                                // Hit detection: if lightning lands within the horizontal bounds of the obstacle
-                                val midX = obs.x + obs.width / 2f
-                                if (midX > other.x && midX < other.x + other.width) {
-                                    targetFound = true
-                                    if (other.type == ObstacleType.ROCK) {
-                                        other.variant = 3 // Shattered variant
-                                        other.width *= 1.8f
-                                    } else {
-                                        // Burn Tree or Cactus
-                                        other.type = ObstacleType.FIRE
-                                        other.width = 180f // Grow wider
-                                        other.height = 180f // and higher than the tree
-                                        other.y = height * groundY - 180f
-                                    }
-                                    break
+                        craters.add(Crater(obs.x + obs.width / 4, obs.width * 1.8f, 255))
+                    }
+
+                    // Shared Impact Logic: Transform nearby obstacles to increase difficulty
+                    var targetsFound = 0
+                    val strikeX = obs.x + obs.width / 2f
+                    val impactRange = if (obs.type == ObstacleType.METEOR) 200f else 150f
+                    
+                    for (other in obstacles) {
+                        if (other != obs && (other.type == ObstacleType.CACTUS || other.type == ObstacleType.TREE || other.type == ObstacleType.ROCK)) {
+                            if (Math.abs(strikeX - (other.x + other.width / 2f)) < impactRange) {
+                                targetsFound++
+                                if (other.type == ObstacleType.ROCK) {
+                                    other.variant = 3 // Shattered/Cracked
+                                    other.width *= 1.5f // Increase difficulty (larger kill zone)
+                                } else {
+                                    // Burn Trees/Cacti
+                                    other.type = ObstacleType.FIRE
+                                    other.width = 240f
+                                    other.height = 240f
+                                    other.y = height * groundY - 240f
                                 }
                             }
                         }
-                        
-                        if (!targetFound) {
-                            // Standard fire on empty ground
-                            obstacles.add(Obstacle(obs.x, height * groundY - 120f, 120f, 120f, ObstacleType.FIRE, random.nextInt(3)))
-                        }
                     }
                     
-                    SoundManager.playClick() // Thud/Impact
+                    // Lightning strike on empty ground creates fire; Meteor creates Crater (already handled)
+                    if (targetsFound == 0 && obs.type == ObstacleType.THUNDERBOLT) {
+                        obstacles.add(Obstacle(obs.x - 100f, height * groundY - 200f, 200f, 200f, ObstacleType.FIRE, 0))
+                    }
+                    SoundManager.playClick()
                     iterator.remove()
                     continue
                 }
-            } else if (obs.type == ObstacleType.PTEROSAUR) {
+                
+                // Events don't kill while in the air (don't check collision yet)
+                continue 
+            }
+else if (obs.type == ObstacleType.PTEROSAUR) {
                 obs.x -= gameSpeed * 1.2f
                 
                 // Dynamic oscillation: frequency and amplitude increase with score
@@ -439,12 +453,16 @@ class TRexView @JvmOverloads constructor(
                         obs.y += 4f // Sudden dip
                     }
                 }
+            } else if (obs.type == ObstacleType.BIG_DINO) {
+                // Moving big dino: relatively slow movement relative to game speed
+                val dinoSpeed = if (obs.variant % 2 == 0) 2f else -2f // Some move left faster, some move right
+                obs.x -= (gameSpeed + dinoSpeed)
             } else {
                 obs.x -= gameSpeed
             }
 
             if (checkCollision(obs)) {
-                gameOver()
+                gameOver(obs.type)
                 break
             }
             if (obs.x + obs.width < -100) iterator.remove()
@@ -460,11 +478,11 @@ class TRexView @JvmOverloads constructor(
             c.x -= gameSpeed
             c.alpha -= 1
             
-            // Check collision with lethal crater
+            // Check collision with lethal canyon
             if (!isJumping && !isDucking) {
                 val dinoCenter = 100f + 12 * dinoScale
                 if (dinoCenter > c.x && dinoCenter < c.x + c.width && c.alpha > 50) {
-                    gameOver()
+                    gameOver(ObstacleType.CANYON)
                 }
             }
             
@@ -472,8 +490,8 @@ class TRexView @JvmOverloads constructor(
         }
 
         // Earthquakes
-        if (score > 500 && random.nextInt(1000) == 0 && earthquakeTimer <= 0) {
-            earthquakeTimer = 180 // ~3 seconds
+        if (score > 6000 && random.nextInt(4000) == 0 && earthquakeTimer <= 0) {
+            earthquakeTimer = 240 // ~4 seconds
             SoundManager.playError() // Rumble start
         }
 
@@ -481,42 +499,80 @@ class TRexView @JvmOverloads constructor(
             earthquakeTimer--
             earthquakeShake = (random.nextFloat() - 0.5f) * 20f
             
+            // Randomly transform existing obstacles during earthquake
+            if (earthquakeTimer % 20 == 0) {
+                for (other in obstacles) {
+                    if (other.x > 0 && other.x < width && random.nextInt(10) == 0) {
+                        when(other.type) {
+                            ObstacleType.TREE -> {
+                                other.type = ObstacleType.FALLEN_TREE
+                                other.width = 180f
+                                other.height = 40f
+                                other.y = height * groundY - 40f
+                            }
+                            ObstacleType.ROCK -> {
+                                other.variant = 3 // Shattered
+                                other.width *= 1.4f
+                            }
+                            else -> {}
+                        }
+                    }
+                }
+            }
+
             // Randomly spawn Earthquake-induced obstacles
             if (earthquakeTimer % 40 == 0) {
-                val etype = if (random.nextBoolean()) ObstacleType.CRATER else ObstacleType.RAISED_EDGE
-                val ew = 150f + random.nextInt(100)
+                val etype = if (random.nextInt(3) == 0) ObstacleType.CANYON else ObstacleType.RAISED_EDGE
+                val ew = if (etype == ObstacleType.CANYON) 250f + random.nextInt(200) else 150f + random.nextInt(100)
                 val eh = if (etype == ObstacleType.RAISED_EDGE) 40f + random.nextInt(40) else 30f
                 obstacles.add(Obstacle(width.toFloat() + 200f, height * groundY - eh, ew, eh, etype, random.nextInt(4)))
             }
-            if (earthquakeTimer % 60 == 0) {
-                obstacles.add(Obstacle(width.toFloat() + 300f, height * groundY - 40f, 180f, 40f, ObstacleType.FALLEN_TREE, random.nextInt(2)))
+            if (earthquakeTimer % 80 == 0) {
+                obstacles.add(Obstacle(width.toFloat() + 300f, height * groundY - 40f, 220f, 40f, ObstacleType.FALLEN_TREE, random.nextInt(2)))
             }
         } else {
             earthquakeShake = 0f
         }
     }
 
-    private fun updateEnvironment() {
-        // Night every 700
-        if (score > 0 && score % 700 == 0 && score != lastNightToggle) {
-            isNightMode = !isNightMode
-            lastNightToggle = score
-            SoundManager.playSuccess()
-        }
+    private fun updateEnvironment(force: Boolean = false) {
+        val now = System.currentTimeMillis()
+        if (!force && now - lastEnvironmentChangeTime < ENVIRONMENT_CHANGE_INTERVAL) return
         
-        // Seasons every 1500
-        currentSeason = when ((score / 1500) % 4) {
-            0 -> Season.SPRING
-            1 -> Season.SUMMER
-            2 -> Season.AUTUMN
-            else -> Season.WINTER
-        }
-        
-        // Weather change every 1000
-        currentWeather = when ((score / 1000) % 3) {
-            0 -> Weather.SUNNY
-            1 -> Weather.RAINY
-            else -> Weather.SNOWY
+        if (!force) {
+            // Cycle one property at a time for a "logical" change
+            when(random.nextInt(3)) {
+                0 -> { // Toggle Day/Night
+                    isNightMode = !isNightMode
+                    if (isNightMode) SoundManager.playSuccess()
+                }
+                1 -> { // Change Season
+                    currentSeason = Season.entries[(currentSeason.ordinal + 1) % Season.entries.size]
+                }
+                2 -> { // Change Weather
+                    currentWeather = Weather.entries[(currentWeather.ordinal + 1) % Weather.entries.size]
+                }
+            }
+            lastEnvironmentChangeTime = now
+        } else {
+            // Randomize but ENSURE at least one major component is different from previous run
+            // and favor a light/bright start if it was dark before
+            val prevNight = isNightMode
+            val prevSeason = currentSeason
+            val prevWeather = currentWeather
+            
+            // Forced change on reset
+            isNightMode = !prevNight
+            currentSeason = Season.entries.random()
+            currentWeather = Weather.entries.random()
+            
+            // If somehow they are still the same (unlikely with night toggle), randomize until different
+            while (isNightMode == prevNight && currentSeason == prevSeason && currentWeather == prevWeather) {
+                isNightMode = random.nextBoolean()
+                currentSeason = Season.entries.random()
+                currentWeather = Weather.entries.random()
+            }
+            lastEnvironmentChangeTime = now
         }
     }
 
@@ -536,19 +592,19 @@ class TRexView @JvmOverloads constructor(
     private fun spawnGroundDot(x: Float) = groundDots.add(PointF(x, height * groundY + 5 + random.nextInt(40)))
 
     private fun spawnObstacle() {
-        val type = when (random.nextInt(25)) {
+        var baseType = when (random.nextInt(30)) {
             in 0..1 -> if (score > 400) ObstacleType.PTEROSAUR else ObstacleType.CACTUS
             in 2..5 -> ObstacleType.TREE
             in 6..7 -> ObstacleType.ROCK
-            in 8..10 -> ObstacleType.CRATER
+            in 8..10 -> ObstacleType.CANYON
             in 11..12 -> ObstacleType.STUMP
-            13 -> if (score > 200) ObstacleType.STUMP else ObstacleType.ROCK
-            in 14..18 -> if (score > 600) ObstacleType.METEOR else ObstacleType.CACTUS
-            19 -> if (score > 1000) ObstacleType.THUNDERBOLT else ObstacleType.CRATER
+            in 13..14 -> if (score > 1000) ObstacleType.BIG_DINO else ObstacleType.ROCK
             else -> ObstacleType.CACTUS
         }
         
-        val isGroupable = type == ObstacleType.CACTUS || type == ObstacleType.TREE || type == ObstacleType.ROCK
+        val isGroupable = baseType == ObstacleType.CACTUS || baseType == ObstacleType.TREE || 
+                         baseType == ObstacleType.ROCK || baseType == ObstacleType.BIG_DINO || 
+                         baseType == ObstacleType.PTEROSAUR
         // Progressive group logic: more groups as score increases, up to 4 items
         val groupChance = when {
             score > 2500 -> 55
@@ -565,6 +621,7 @@ class TRexView @JvmOverloads constructor(
 
         val count = if (isGroupable && random.nextInt(100) < groupChance) {
             when {
+                baseType == ObstacleType.BIG_DINO || baseType == ObstacleType.PTEROSAUR -> random.nextInt(2) + 2 // 2 to 3
                 score > 3000 -> random.nextInt(3) + 2 // 2 to 4
                 score > 2000 -> random.nextInt(2) + 2 // 2 to 3
                 else -> 2
@@ -575,6 +632,12 @@ class TRexView @JvmOverloads constructor(
         var maxHeightInGroup = 0f
 
         for (i in 0 until count) {
+            // Allow mixed obstacles in a group
+            val type = if (i > 0 && isGroupable && random.nextBoolean()) {
+                val mixed = listOf(ObstacleType.CACTUS, ObstacleType.TREE, ObstacleType.ROCK, ObstacleType.STUMP)
+                mixed.random()
+            } else baseType
+
             val variant = random.nextInt(4)
             var width = 0f
             var height = 0f
@@ -583,18 +646,21 @@ class TRexView @JvmOverloads constructor(
             val sizeBoost = (score / 1500f).coerceAtMost(1f) * 30f
 
             when(type) {
-                ObstacleType.PTEROSAUR -> { width = 90f; height = 60f }
+                ObstacleType.PTEROSAUR -> { 
+                    val s = 1.0f + (random.nextFloat() * 0.5f) // Variety in size
+                    width = 90f * s; height = 60f * s 
+                }
                 ObstacleType.TREE -> {
                     height = 140f + random.nextInt(60) + sizeBoost
                     width = 60f + random.nextInt(40) + sizeBoost * 0.5f
                 }
-                ObstacleType.CRATER -> { 
-                    width = 100f + random.nextInt(150) + sizeBoost * 2f
+                ObstacleType.CANYON -> { 
+                    width = 200f + random.nextInt(250) + sizeBoost * 2f
                     height = 35f 
                 }
                 ObstacleType.ROCK -> { 
-                    width = 70f + random.nextInt(50) + sizeBoost
-                    height = 40f + random.nextInt(40) + sizeBoost * 0.5f
+                    width = 100f + random.nextInt(60) + sizeBoost
+                    height = 60f + random.nextInt(60) + sizeBoost * 0.5f
                 }
                 ObstacleType.CACTUS -> { 
                     width = 40f + random.nextInt(40)
@@ -609,9 +675,15 @@ class TRexView @JvmOverloads constructor(
                 ObstacleType.FIRE -> { width = 120f; height = 120f }
                 ObstacleType.FALLEN_TREE -> { width = 180f; height = 40f }
                 ObstacleType.RAISED_EDGE -> { width = 150f; height = 60f }
+                ObstacleType.BIG_DINO -> {
+                    // Big Dino should be no shorter than T-Rex (approx 140f)
+                    val s = 1.0f + (random.nextFloat() * 0.8f) // Variety in scale
+                    width = 160f * s
+                    height = 130f * s // Base 130 + scaling ensures tallness
+                }
             }
             
-            // Check if adding this obstacle exceeds safe jump width
+            // Spacing for group members
             val groupSpacing = if (i > 0) 5f + random.nextInt(15) else 0f
             if (i > 0 && currentGroupWidth + groupSpacing + width > safeJumpWidth) {
                 break // Stop adding to this group
@@ -629,7 +701,7 @@ class TRexView @JvmOverloads constructor(
                 val meteorOx = this.width.toFloat() * 0.8f + random.nextInt(400)
                 obstacles.add(Obstacle(meteorOx, -200f, width, height, type, variant))
                 continue // Meteor spawning is different, don't add to ground group logic
-            } else if (type == ObstacleType.CRATER) {
+            } else if (type == ObstacleType.CANYON) {
                 this.height * groundY - 10f 
             } else {
                 (this.height * groundY) - height
@@ -640,24 +712,25 @@ class TRexView @JvmOverloads constructor(
         }
         
         // --- Wise Difficulty Calculation ---
-        val reactionDistance = gameSpeed * 20f // Increased reaction window for large groups
+        val reactionDistance = gameSpeed * 25f // Buffer for the player to react
         
-        val baseGap = if (maxHeightInGroup > 120f || lastObstacleHeight > 120f || currentGroupWidth > 200f) {
-            maxJumpDistance + reactionDistance
-        } else {
-            maxJumpDistance * 0.85f + reactionDistance
-        }
-
-        val skyBuffer = if (type == ObstacleType.METEOR || type == ObstacleType.THUNDERBOLT) 300f else 0f
-        nextObstacleDistance = (baseGap + skyBuffer + random.nextInt(600) + currentGroupWidth).coerceAtLeast(500f)
+        // Minimum gap: T-Rex has landing buffer + time to perform the next jump
+        val minGap = maxJumpDistance + reactionDistance
+        
+        // Maximum gap: Ensures the game stays engaging without long empty stretches
+        val maxExtraGap = 700f 
+        
+        val skyBuffer = if (baseType == ObstacleType.METEOR || baseType == ObstacleType.THUNDERBOLT) 300f else 0f
+        
+        nextObstacleDistance = (minGap + random.nextFloat() * maxExtraGap + skyBuffer + currentGroupWidth).coerceAtLeast(600f)
         
         lastObstacleHeight = maxHeightInGroup
     }
 
     private fun checkCollision(obs: Obstacle): Boolean {
-        if (obs.type == ObstacleType.CRATER) {
-            // Special collision for craters: lethal if Dino is on ground within crater X bounds
-            val dinoHeight = if (isDucking) 15 * dinoScale else 21 * dinoScale
+        if (obs.type == ObstacleType.CANYON) {
+            // Special collision for canyons: lethal if Dino is on ground within canyon X bounds
+            val dinoHeight = if (isDucking) 16 * dinoScale else 23 * dinoScale
             val actualGroundY = height * groundY - dinoHeight
             val isOnGround = dinoY >= actualGroundY - 5f
             
@@ -670,7 +743,7 @@ class TRexView @JvmOverloads constructor(
             return false
         }
         
-        val dinoHeight = if (isDucking) 15 * dinoScale else 21 * dinoScale
+        val dinoHeight = if (isDucking) 16 * dinoScale else 23 * dinoScale
         val dinoRect = RectF(100f, dinoY, 100f + 25 * dinoScale, dinoY + dinoHeight)
         val obsRect = RectF(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height)
         dinoRect.inset(15f, 10f)
@@ -678,7 +751,8 @@ class TRexView @JvmOverloads constructor(
         return RectF.intersects(dinoRect, obsRect)
     }
 
-    private fun gameOver() {
+    private fun gameOver(type: ObstacleType? = null) {
+        causeOfDeath = type
         isGameOver = true
         SoundManager.playError()
         val oldBest = highScore
@@ -721,7 +795,7 @@ class TRexView @JvmOverloads constructor(
         // Then draw environment details
         GameEnvironment.draw(
             canvas, 
-            GameEnvironment.BackgroundType.SOLID, 
+            GameEnvironment.BackgroundType.NONE,
             isNight = isNightMode, 
             weather = envWeather, 
             paint = paint, 
@@ -754,23 +828,41 @@ class TRexView @JvmOverloads constructor(
 
         // Draw Clouds
         paint.color = theme.cloudColor
-        for (cloud in clouds) canvas.drawRoundRect(cloud.x, cloud.y, cloud.x + 120, cloud.y + 45, 15f, 15f, paint)
+        for (cloud in clouds) {
+            val cx = cloud.x
+            val cy = cloud.y
+            // Draw a more "fluffy" cloud using overlapping ovals
+            canvas.drawOval(cx, cy, cx + 100, cy + 40, paint)
+            canvas.drawOval(cx + 20, cy - 20, cx + 80, cy + 20, paint)
+            canvas.drawOval(cx + 40, cy, cx + 120, cy + 40, paint)
+        }
 
         // Draw Ground
         paint.color = theme.groundColor
-        paint.strokeWidth = 3f
         val lineY = height * groundY
+        canvas.drawRect(0f, lineY, width.toFloat(), height.toFloat(), paint)
+        
+        paint.color = theme.groundColor
+        paint.strokeWidth = 3f
         canvas.drawLine(0f, lineY, width.toFloat(), lineY, paint)
         for (dot in groundDots) canvas.drawRect(dot.x, dot.y, dot.x + 4, dot.y + 4, paint)
 
-        // Draw Craters
+        // Draw Craters (Meteor impacts)
         for (c in craters) {
             paint.color = Color.BLACK
-            paint.alpha = (c.alpha * 0.4f).toInt()
-            canvas.drawOval(c.x, lineY - 10, c.x + c.width, lineY + 30, paint)
-            paint.color = theme.bgColor
-            paint.alpha = (c.alpha * 0.6f).toInt()
-            canvas.drawOval(c.x + 10, lineY - 5, c.x + c.width - 10, lineY + 15, paint)
+            paint.alpha = (c.alpha * 0.5f).toInt()
+            canvas.drawOval(c.x - 10, lineY - 15, c.x + c.width + 10, lineY + 60, paint) // Scorched area
+            
+            paint.color = Color.parseColor("#1A1A1B")
+            paint.alpha = c.alpha
+            pathBuffer.reset()
+            pathBuffer.moveTo(c.x, lineY - 5f)
+            pathBuffer.lineTo(c.x + c.width * 0.2f, lineY + 40f)
+            pathBuffer.lineTo(c.x + c.width * 0.5f, lineY + 80f)
+            pathBuffer.lineTo(c.x + c.width * 0.8f, lineY + 40f)
+            pathBuffer.lineTo(c.x + c.width, lineY - 5f)
+            pathBuffer.close()
+            canvas.drawPath(pathBuffer, paint)
         }
         paint.alpha = 255
 
@@ -856,354 +948,25 @@ class TRexView @JvmOverloads constructor(
             paint.textAlign = Paint.Align.CENTER
             canvas.drawText("EARTHQUAKE!", width / 2f, height * 0.3f, paint)
         }
+        
+        // Earthquake warning
+        if (earthquakeTimer > 150) {
+            paint.color = Color.RED
+            paint.textSize = 60f
+            paint.textAlign = Paint.Align.CENTER
+            canvas.drawText("EARTHQUAKE!", width / 2f, height * 0.3f, paint)
+        }
 
         canvas.restore()
     }
 
     private fun drawObstacle(canvas: Canvas, obs: Obstacle, theme: Theme) {
-        paint.style = Paint.Style.FILL
-        when (obs.type) {
-            ObstacleType.CACTUS -> {
-                paint.color = theme.cactusColor
-                // Better Cactus Shape
-                val centerX = obs.x + obs.width / 2f
-                val stemW = obs.width * 0.4f
-                // Main stem
-                canvas.drawRoundRect(centerX - stemW / 2, obs.y, centerX + stemW / 2, obs.y + obs.height, 10f, 10f, paint)
-                
-                // arms
-                if (obs.height > 60f) {
-                    // Left arm
-                    val armY = obs.y + obs.height * 0.4f
-                    canvas.drawRect(centerX - stemW / 2 - 15f, armY, centerX - stemW / 2, armY + 12f, paint)
-                    canvas.drawRect(centerX - stemW / 2 - 15f, armY - 15f, centerX - stemW / 2 - 5f, armY, paint)
-                    // Right arm
-                    val armY2 = obs.y + obs.height * 0.3f
-                    canvas.drawRect(centerX + stemW / 2, armY2, centerX + stemW / 2 + 15f, armY2 + 12f, paint)
-                    canvas.drawRect(centerX + stemW / 2 + 5f, armY2 - 20f, centerX + stemW / 2 + 15f, armY2, paint)
-                }
-
-                // Blossoms (if variant is 2)
-                if (obs.variant == 2) {
-                    paint.color = Color.parseColor("#F48FB1") // Pink
-                    canvas.drawCircle(centerX, obs.y, 8f, paint)
-                    if (obs.height > 60f) {
-                        canvas.drawCircle(centerX - stemW / 2 - 15f, obs.y + obs.height * 0.4f - 15f, 6f, paint)
-                        canvas.drawCircle(centerX + stemW / 2 + 15f, obs.y + obs.height * 0.3f - 20f, 6f, paint)
-                    }
-                    paint.color = theme.cactusColor
-                }
-
-                // Spikes/Detail
-                paint.color = Color.BLACK
-                paint.alpha = 40
-                canvas.drawRect(centerX - 2f, obs.y + 10f, centerX + 2f, obs.y + obs.height - 10f, paint)
-                paint.alpha = 255
-            }
-            ObstacleType.TREE -> {
-                // Trunk
-                paint.color = Color.parseColor("#5D4037")
-                val trunkW = obs.width * 0.2f
-                canvas.drawRect(obs.x + (obs.width - trunkW) / 2f, obs.y + obs.height * 0.5f, obs.x + (obs.width + trunkW) / 2f, obs.y + obs.height, paint)
-                
-                // Leaves (Different styles based on variant)
-                paint.color = theme.treeColor
-                when(obs.variant % 3) {
-                    0 -> { // Pine
-                        pathBuffer.reset()
-                        for (i in 0..2) {
-                            val ty = obs.y + (i * obs.height * 0.2f)
-                            val th = obs.height * 0.4f
-                            pathBuffer.moveTo(obs.x + obs.width / 2f, ty)
-                            pathBuffer.lineTo(obs.x, ty + th)
-                            pathBuffer.lineTo(obs.x + obs.width, ty + th)
-                        }
-                        pathBuffer.close()
-                        canvas.drawPath(pathBuffer, paint)
-                    }
-                    1 -> { // Round
-                        canvas.drawCircle(obs.x + obs.width / 2f, obs.y + obs.height * 0.3f, obs.width * 0.5f, paint)
-                        canvas.drawCircle(obs.x + obs.width * 0.3f, obs.y + obs.height * 0.45f, obs.width * 0.4f, paint)
-                        canvas.drawCircle(obs.x + obs.width * 0.7f, obs.y + obs.height * 0.45f, obs.width * 0.4f, paint)
-                    }
-                    else -> { // Pointy
-                        pathBuffer.reset()
-                        pathBuffer.moveTo(obs.x + obs.width * 0.5f, obs.y)
-                        pathBuffer.lineTo(obs.x, obs.y + obs.height * 0.7f)
-                        pathBuffer.lineTo(obs.x + obs.width, obs.y + obs.height * 0.7f)
-                        pathBuffer.close()
-                        canvas.drawPath(pathBuffer, paint)
-                    }
-                }
-            }
-            ObstacleType.PTEROSAUR -> {
-                // Pterosaur styling
-                val pterosaurColor = when(obs.variant % 3) {
-                    0 -> Color.parseColor("#5D4037") // Brown
-                    1 -> Color.parseColor("#455A64") // Slate
-                    else -> Color.parseColor("#37474F") // Dark Slate
-                }
-                paint.color = pterosaurColor
-                
-                // Body/Torso
-                canvas.drawOval(obs.x + 20, obs.y + 20, obs.x + obs.width - 20, obs.y + obs.height - 10, paint)
-                
-                // Long Head/Beak
-                pathBuffer.reset()
-                pathBuffer.moveTo(obs.x + 40, obs.y + 25)
-                pathBuffer.lineTo(obs.x - 10, obs.y + 15) // Beak tip
-                pathBuffer.lineTo(obs.x + 40, obs.y + 45)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, paint)
-                
-                // Crest on back of head
-                pathBuffer.reset()
-                pathBuffer.moveTo(obs.x + 40, obs.y + 25)
-                pathBuffer.lineTo(obs.x + 60, obs.y + 5)
-                pathBuffer.lineTo(obs.x + 50, obs.y + 35)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, paint)
-
-                // Large Wings
-                paint.color = pterosaurColor
-                val wingSpan = if (walkFrame == 0) -40f else 40f
-                pathBuffer.reset()
-                pathBuffer.moveTo(obs.x + 30, obs.y + 30)
-                pathBuffer.lineTo(obs.x + 50, obs.y + 30 + wingSpan)
-                pathBuffer.lineTo(obs.x + 70, obs.y + 30)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, paint)
-            }
-            ObstacleType.ROCK -> {
-                paint.color = Color.parseColor("#757575")
-                // More impressive, jagged rock shapes with variants
-                pathBuffer.reset()
-                
-                if (obs.variant == 3) {
-                    // Shattered Rock pieces - use deterministic values to avoid jitter
-                    for (j in 0..4) {
-                        val rx = obs.x + (j * obs.width / 5f)
-                        val ry = obs.y + obs.height - 15f - (j * 3f % 10f)
-                        val rw = 15f + (j * 7f % 10f)
-                        canvas.drawRect(rx, ry, rx + rw, obs.y + obs.height, paint)
-                    }
-                } else {
-                    pathBuffer.moveTo(obs.x, obs.y + obs.height)
-                    when(obs.variant % 4) {
-                        0 -> {
-                            pathBuffer.lineTo(obs.x + obs.width * 0.1f, obs.y + obs.height * 0.4f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.3f, obs.y)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.5f, obs.y + obs.height * 0.2f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.7f, obs.y + obs.height * 0.05f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.9f, obs.y + obs.height * 0.5f)
-                        }
-                        1 -> {
-                            pathBuffer.lineTo(obs.x + obs.width * 0.2f, obs.y + obs.height * 0.2f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.4f, obs.y + obs.height * 0.1f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.5f, obs.y)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.8f, obs.y + obs.height * 0.3f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.9f, obs.y + obs.height * 0.1f)
-                        }
-                        2 -> {
-                            pathBuffer.lineTo(obs.x + obs.width * 0.05f, obs.y + obs.height * 0.3f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.15f, obs.y + obs.height * 0.1f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.4f, obs.y + obs.height * 0.4f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.7f, obs.y)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.95f, obs.y + obs.height * 0.2f)
-                        }
-                        else -> {
-                            pathBuffer.lineTo(obs.x + obs.width * 0.1f, obs.y + obs.height * 0.6f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.2f, obs.y + obs.height * 0.2f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.6f, obs.y + obs.height * 0.1f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.8f, obs.y)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.95f, obs.y + obs.height * 0.4f)
-                        }
-                    }
-                    pathBuffer.lineTo(obs.x + obs.width, obs.y + obs.height)
-                    pathBuffer.close()
-                    canvas.drawPath(pathBuffer, paint)
-                    
-                    // Inner details/Cracks
-                    paint.color = Color.BLACK
-                    paint.alpha = 50
-                    canvas.drawLine(obs.x + obs.width * 0.3f, obs.y, obs.x + obs.width * 0.4f, obs.y + obs.height * 0.6f, paint)
-                    canvas.drawLine(obs.x + obs.width * 0.7f, obs.y + obs.height * 0.05f, obs.x + obs.width * 0.6f, obs.y + obs.height * 0.7f, paint)
-                    
-                    // Highlight for 3D look
-                    paint.color = Color.WHITE
-                    paint.alpha = 40
-                    canvas.drawCircle(obs.x + obs.width * 0.3f, obs.y + obs.height * 0.25f, obs.width * 0.15f, paint)
-                }
-                paint.alpha = 255
-            }
-            ObstacleType.CRATER -> {
-                val lineY = height * groundY
-                
-                // Deep, impressive crater with various shapes based on variant
-                pathBuffer.reset()
-                when(obs.variant % 3) {
-                    0 -> { // Wide jagged impact
-                        pathBuffer.moveTo(obs.x, lineY - 8f)
-                        pathBuffer.lineTo(obs.x + obs.width * 0.2f, lineY + 15f)
-                        pathBuffer.lineTo(obs.x + obs.width * 0.5f, lineY + 35f)
-                        pathBuffer.lineTo(obs.x + obs.width * 0.8f, lineY + 18f)
-                        pathBuffer.lineTo(obs.x + obs.width, lineY - 10f)
-                    }
-                    1 -> { // Deep steep hole
-                        pathBuffer.moveTo(obs.x + 10f, lineY - 5f)
-                        pathBuffer.lineTo(obs.x + obs.width * 0.3f, lineY + 40f)
-                        pathBuffer.lineTo(obs.x + obs.width * 0.7f, lineY + 40f)
-                        pathBuffer.lineTo(obs.x + obs.width - 10f, lineY - 5f)
-                    }
-                    else -> { // Irregular double-dent crater
-                        pathBuffer.moveTo(obs.x, lineY - 12f)
-                        pathBuffer.lineTo(obs.x + obs.width * 0.3f, lineY + 20f)
-                        pathBuffer.lineTo(obs.x + obs.width * 0.5f, lineY + 5f)
-                        pathBuffer.lineTo(obs.x + obs.width * 0.7f, lineY + 25f)
-                        pathBuffer.lineTo(obs.x + obs.width, lineY - 8f)
-                    }
-                }
-                
-                // Outer scorched area
-                paint.color = Color.BLACK
-                paint.alpha = 160
-                canvas.drawOval(obs.x - 10f, lineY - 15f, obs.x + obs.width + 10f, lineY + 38f, paint)
-                
-                // Inner deep hole
-                paint.color = Color.parseColor("#1A1A1B") // Darker than theme BG
-                paint.alpha = 255
-                canvas.drawPath(pathBuffer, paint)
-                
-                // Inner rim for depth/shading
-                paint.style = Paint.Style.STROKE
-                paint.strokeWidth = 4f
-                paint.color = Color.parseColor("#37474F")
-                canvas.drawPath(pathBuffer, paint)
-                paint.style = Paint.Style.FILL
-                
-                // Ejecta/Scorched debris (varied by variant) - deterministic to avoid jitter
-                paint.color = Color.DKGRAY
-                val debrisCount = 3 + (obs.variant % 4)
-                for (j in 0 until debrisCount) {
-                    val dx = obs.x - 20f - (j * 15f)
-                    canvas.drawRect(dx, lineY - 5f, dx + 10f, lineY, paint)
-                    val dx2 = obs.x + obs.width + 10f + (j * j * 6f)
-                    canvas.drawRect(dx2, lineY - 5f, dx2 + 10f, lineY, paint)
-                    
-                    if (obs.variant % 2 == 1) { // Add some vertical debris shards
-                        val vx = obs.x + obs.width * 0.5f + (j * 25f) - (debrisCount * 12f)
-                        canvas.drawRect(vx, lineY - 15f, vx + 6f, lineY - 5f, paint)
-                    }
-                }
-            }
-            ObstacleType.STUMP -> {
-                paint.color = Color.parseColor("#5D4037")
-                canvas.drawRect(obs.x, obs.y + 10f, obs.x + obs.width, obs.y + obs.height, paint)
-                paint.color = Color.parseColor("#8D6E63") // Top part
-                canvas.drawOval(obs.x, obs.y, obs.x + obs.width, obs.y + 20f, paint)
-            }
-            ObstacleType.METEOR -> {
-                val cx = obs.x + obs.width / 2f
-                val cy = obs.y + obs.height / 2f
-                val r = obs.width / 2f
-                
-                // Outer glow/aura
-                paint.shader = RadialGradient(cx, cy, r * 1.5f, 
-                    intArrayOf(Color.argb(150, 255, 111, 0), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
-                canvas.drawCircle(cx, cy, r * 1.5f, paint)
-                
-                // Burning Tail
-                paint.shader = LinearGradient(cx, cy, cx + obs.width * 1.5f, cy - obs.height * 1.5f, 
-                    intArrayOf(Color.parseColor("#FF5722"), Color.parseColor("#FFD600"), Color.TRANSPARENT), 
-                    floatArrayOf(0f, 0.4f, 1f), Shader.TileMode.CLAMP)
-                
-                pathBuffer.reset()
-                pathBuffer.moveTo(cx, cy - r)
-                pathBuffer.lineTo(cx + obs.width * 2f, cy - obs.height * 2f)
-                pathBuffer.lineTo(cx + r, cy)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, paint)
-                
-                // Meteor Rock Body (Various shapes based on variant)
-                paint.shader = null
-                paint.color = Color.parseColor("#4E342E") // Dark brown/rock
-                when(obs.variant) {
-                    0 -> canvas.drawCircle(cx, cy, r, paint)
-                    1 -> canvas.drawOval(obs.x, obs.y + r * 0.2f, obs.x + obs.width, obs.y + obs.height - r * 0.2f, paint)
-                    else -> {
-                        pathBuffer.reset()
-                        pathBuffer.moveTo(obs.x + r, obs.y)
-                        pathBuffer.lineTo(obs.x + obs.width, obs.y + r)
-                        pathBuffer.lineTo(obs.x + r * 1.2f, obs.y + obs.height)
-                        pathBuffer.lineTo(obs.x, obs.y + r * 1.2f)
-                        pathBuffer.close()
-                        canvas.drawPath(pathBuffer, paint)
-                    }
-                }
-                
-                // Shining Core/Cracks
-                paint.color = Color.parseColor("#FFEB3B")
-                paint.alpha = 200
-                canvas.drawCircle(cx - r * 0.3f, cy - r * 0.3f, r * 0.4f, paint)
-                paint.alpha = 255
-            }
-            ObstacleType.THUNDERBOLT -> {
-                paint.color = Color.parseColor("#FFEA00") // Bright Yellow
-                pathBuffer.reset()
-                pathBuffer.moveTo(obs.x + obs.width, obs.y)
-                pathBuffer.lineTo(obs.x, obs.y + obs.height * 0.6f)
-                pathBuffer.lineTo(obs.x + obs.width * 0.8f, obs.y + obs.height * 0.5f)
-                pathBuffer.lineTo(obs.x + obs.width * 0.2f, obs.y + obs.height)
-                canvas.drawPath(pathBuffer, paint)
-            }
-            ObstacleType.FIRE -> {
-                val cx = obs.x + obs.width / 2f
-                val cy = obs.y + obs.height
-                // Flickering dynamic fire
-                for (i in 0..4) {
-                    val fx = cx + (i - 2) * 25f + (Math.sin(animationFrame * 0.2 + i).toFloat() * 10f)
-                    val fy = cy - 20f - random.nextInt(100)
-                    paint.color = if (random.nextBoolean()) Color.parseColor("#FFD600") else Color.parseColor("#FF3D00")
-                    canvas.drawCircle(fx, fy, 20f + random.nextInt(20), paint)
-                }
-                // Base glow
-                paint.color = Color.parseColor("#FF6D00")
-                paint.alpha = 150
-                canvas.drawRect(obs.x, cy - 20f, obs.x + obs.width, cy, paint)
-                paint.alpha = 255
-            }
-            ObstacleType.FALLEN_TREE -> {
-                // Log/Trunk on ground
-                paint.color = Color.parseColor("#5D4037")
-                canvas.drawRoundRect(obs.x, obs.y + obs.height * 0.5f, obs.x + obs.width, obs.y + obs.height, 10f, 10f, paint)
-                // Broken branch jagged edges
-                pathBuffer.reset()
-                pathBuffer.moveTo(obs.x, obs.y + obs.height * 0.5f)
-                pathBuffer.lineTo(obs.x + 20f, obs.y)
-                pathBuffer.lineTo(obs.x + 40f, obs.y + obs.height * 0.5f)
-                canvas.drawPath(pathBuffer, paint)
-            }
-            ObstacleType.RAISED_EDGE -> {
-                paint.color = theme.groundColor
-                pathBuffer.reset()
-                pathBuffer.moveTo(obs.x, obs.y + obs.height)
-                pathBuffer.lineTo(obs.x + obs.width * 0.2f, obs.y)
-                pathBuffer.lineTo(obs.x + obs.width * 0.8f, obs.y + 10f)
-                pathBuffer.lineTo(obs.x + obs.width, obs.y + obs.height)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, paint)
-                // Crack detail
-                paint.color = Color.BLACK
-                paint.alpha = 100
-                canvas.drawLine(obs.x + obs.width * 0.5f, obs.y + 5f, obs.x + obs.width * 0.5f, obs.y + obs.height, paint)
-                paint.alpha = 255
-            }
-        }
+        TRexDrawer.drawObstacle(canvas, obs, theme, paint, pathBuffer, isNightMode, animationFrame, walkFrame)
     }
 
     private fun drawDino(canvas: Canvas, x: Float, y: Float, color: Int, eyeColor: Int) {
         // Special Colors per Member
-        val bodyColor = when(currentMember) {
+        var bodyColor = when(currentMember) {
             DinoMember.DADDY -> color // Theme default
             DinoMember.MUMMY -> Color.parseColor("#FF80AB") // Pinkish
             DinoMember.BABY -> Color.parseColor("#B2FF59") // Bright Green
@@ -1216,172 +979,7 @@ class TRexView @JvmOverloads constructor(
             DinoMember.ASTRONAUT -> Color.parseColor("#BDBDBD") // Silver
         }
         
-        paint.color = bodyColor
-        paint.style = Paint.Style.FILL
-        val p = dinoScale
-        
-        canvas.save()
-        canvas.translate(x, y)
-        
-        if (isDucking) {
-            // Detailed Ducking Dino
-            pathBuffer.reset()
-            // Body
-            pathBuffer.moveTo(0f, 8*p)
-            pathBuffer.lineTo(20*p, 8*p)
-            pathBuffer.lineTo(26*p, 4*p)
-            pathBuffer.lineTo(32*p, 4*p)
-            pathBuffer.lineTo(32*p, 10*p)
-            pathBuffer.lineTo(24*p, 14*p)
-            pathBuffer.lineTo(0f, 14*p)
-            pathBuffer.close()
-            canvas.drawPath(pathBuffer, paint)
-            
-            // Tail
-            pathBuffer.reset()
-            pathBuffer.moveTo(0f, 10*p)
-            pathBuffer.lineTo(-5*p, 12*p)
-            pathBuffer.lineTo(0f, 14*p)
-            pathBuffer.close()
-            canvas.drawPath(pathBuffer, paint)
-            
-            // Eye
-            paint.color = eyeColor
-            canvas.drawRect(24*p, 5*p, 26*p, 7*p, paint)
-            
-            // Legs
-            paint.color = bodyColor
-            if (walkFrame == 0) {
-                canvas.drawRect(6*p, 14*p, 10*p, 16*p, paint)
-            } else {
-                canvas.drawRect(14*p, 14*p, 18*p, 16*p, paint)
-            }
-        } else {
-            // Detailed Standing Dino
-            // Head & Neck
-            pathBuffer.reset()
-            pathBuffer.moveTo(12*p, 0f)
-            pathBuffer.lineTo(26*p, 0f)
-            pathBuffer.lineTo(26*p, 8*p)
-            pathBuffer.lineTo(16*p, 8*p)
-            pathBuffer.lineTo(16*p, 12*p)
-            pathBuffer.lineTo(10*p, 12*p)
-            pathBuffer.lineTo(10*p, 4*p)
-            pathBuffer.close()
-            canvas.drawPath(pathBuffer, paint)
-            
-            // Body
-            pathBuffer.reset()
-            pathBuffer.moveTo(2*p, 10*p)
-            pathBuffer.lineTo(16*p, 10*p)
-            pathBuffer.lineTo(16*p, 18*p)
-            pathBuffer.lineTo(0f, 18*p)
-            pathBuffer.close()
-            canvas.drawPath(pathBuffer, paint)
-            
-            // Tail
-            pathBuffer.reset()
-            pathBuffer.moveTo(0f, 12*p)
-            pathBuffer.lineTo(-8*p, 16*p)
-            pathBuffer.lineTo(0f, 18*p)
-            pathBuffer.close()
-            canvas.drawPath(pathBuffer, paint)
-            
-            // Tiny Arms
-            canvas.drawRect(16*p, 11*p, 19*p, 13*p, paint)
-            
-            // Eye
-            paint.color = eyeColor
-            canvas.drawRect(14*p, 2*p, 16*p, 4*p, paint)
-            
-            // Legs
-            paint.color = bodyColor
-            val ly = 18*p
-            if (isJumping) {
-                canvas.drawRect(4*p, ly, 7*p, ly + 3*p, paint)
-                canvas.drawRect(10*p, ly, 13*p, ly + 3*p, paint)
-            } else {
-                if (walkFrame == 0) {
-                    canvas.drawRect(4*p, ly, 7*p, ly + 5*p, paint) // Down
-                    canvas.drawRect(10*p, ly, 13*p, ly + 2*p, paint) // Up
-                } else {
-                    canvas.drawRect(4*p, ly, 7*p, ly + 2*p, paint)
-                    canvas.drawRect(10*p, ly, 13*p, ly + 5*p, paint)
-                }
-            }
-        }
-
-        // --- Accessories per Member ---
-        when(currentMember) {
-            DinoMember.MUMMY -> {
-                // Bow on head
-                paint.color = Color.RED
-                canvas.drawCircle(14*p, -2*p, 3*p, paint)
-                canvas.drawCircle(10*p, -2*p, 3*p, paint)
-            }
-            DinoMember.GRANDPA -> {
-                // Glasses
-                paint.color = Color.BLACK
-                paint.style = Paint.Style.STROKE
-                paint.strokeWidth = 1f * p
-                canvas.drawCircle(15*p, 3*p, 2.5f*p, paint)
-                canvas.drawCircle(21*p, 3*p, 2.5f*p, paint)
-                paint.style = Paint.Style.FILL
-            }
-            DinoMember.TEENAGER -> {
-                // Cool Cap
-                paint.color = Color.parseColor("#00BCD4")
-                canvas.drawRect(11*p, -2*p, 22*p, 1*p, paint)
-                canvas.drawRect(22*p, -1*p, 28*p, 1*p, paint) // Brim
-            }
-            DinoMember.SCIENTIST -> {
-                // Bowtie
-                paint.color = Color.BLACK
-                pathBuffer.reset()
-                pathBuffer.moveTo(14*p, 10*p)
-                pathBuffer.lineTo(12*p, 8*p)
-                pathBuffer.lineTo(12*p, 12*p)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, paint)
-                pathBuffer.reset()
-                pathBuffer.moveTo(14*p, 10*p)
-                pathBuffer.lineTo(16*p, 8*p)
-                pathBuffer.lineTo(16*p, 12*p)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, paint)
-            }
-            DinoMember.ATHLETE -> {
-                // Headband
-                paint.color = Color.RED
-                canvas.drawRect(12*p, 1*p, 26*p, 3*p, paint)
-            }
-            DinoMember.PIRATE -> {
-                // Eyepatch
-                paint.color = Color.BLACK
-                canvas.drawRect(13*p, 2*p, 17*p, 5*p, paint)
-                paint.strokeWidth = 1f * p
-                canvas.drawLine(10*p, 3*p, 26*p, 1*p, paint)
-            }
-            DinoMember.CHEF -> {
-                // Chef Hat
-                paint.color = Color.WHITE
-                canvas.drawRoundRect(12*p, -8*p, 26*p, -1*p, 2*p, 2*p, paint)
-                canvas.drawCircle(19*p, -8*p, 5*p, paint)
-            }
-            DinoMember.ASTRONAUT -> {
-                // Space Helmet
-                paint.color = Color.argb(100, 129, 212, 250)
-                canvas.drawCircle(19*p, 4*p, 10*p, paint)
-                paint.style = Paint.Style.STROKE
-                paint.color = Color.WHITE
-                paint.strokeWidth = 1f * p
-                canvas.drawCircle(19*p, 4*p, 10*p, paint)
-                paint.style = Paint.Style.FILL
-            }
-            else -> {}
-        }
-
-        canvas.restore()
+        TRexDrawer.drawDino(canvas, x, y, bodyColor, eyeColor, dinoScale, isGameOver, causeOfDeath, isDucking, isJumping, walkFrame, isNightMode, animationFrame, obstacles, paint, pathBuffer)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, textColor: Int) {
@@ -1410,19 +1008,65 @@ class TRexView @JvmOverloads constructor(
     }
 
     private fun getEnvironmentTheme(): Theme {
+        val isRainy = currentWeather == Weather.RAINY
+        val isSnowy = currentWeather == Weather.SNOWY
+        
         return if (isNightMode) {
-            Theme(Color.parseColor("#202124"), Color.WHITE, Color.parseColor("#BDC1C6"), Color.DKGRAY, Color.parseColor("#444444"), Color.parseColor("#F1F3F4"), Color.parseColor("#388E3C"), Color.parseColor("#A5D6A7"), Color.parseColor("#F48FB1"), Color.WHITE)
-        } else {
+            // Nighttime condition: sky is a very dark charcoal, ground is black (heavier)
+            val bgColor = Color.parseColor("#121212") // Not pure black for sky
+            val textColor = Color.WHITE
+            val cloudColor = if (isRainy) Color.parseColor("#2C2C2C") else Color.parseColor("#333333")
+            val ground = Color.BLACK // Ground is darker than sky
+            
+            // All seasons: Cacti and Trees are GREEN
+            val cac = Color.parseColor("#2E7D32")
+            val tree = Color.parseColor("#1B5E20")
+            
             when (currentSeason) {
-                Season.SPRING -> Theme(Color.parseColor("#E8F5E9"), Color.BLACK, Color.parseColor("#2E7D32"), Color.WHITE, Color.parseColor("#A5D6A7"), Color.parseColor("#FFD600"), Color.parseColor("#388E3C"), Color.parseColor("#43A047"), Color.parseColor("#EC407A"), Color.parseColor("#64B5F6"))
-                Season.SUMMER -> Theme(Color.parseColor("#FFFDE7"), Color.BLACK, Color.parseColor("#FBC02D"), Color.WHITE, Color.parseColor("#FFF59D"), Color.parseColor("#FFD600"), Color.parseColor("#2E7D32"), Color.parseColor("#388E3C"), Color.parseColor("#D81B60"), Color.parseColor("#FFEB3B"))
-                Season.AUTUMN -> Theme(Color.parseColor("#FBE9E7"), Color.BLACK, Color.parseColor("#D84315"), Color.WHITE, Color.parseColor("#FFAB91"), Color.parseColor("#FFD600"), Color.parseColor("#558B2F"), Color.parseColor("#A1887F"), Color.parseColor("#C62828"), Color.parseColor("#FF9800"))
-                Season.WINTER -> Theme(Color.parseColor("#F5F5F5"), Color.BLACK, Color.parseColor("#0277BD"), Color.WHITE, Color.parseColor("#B3E5FC"), Color.parseColor("#FFD600"), Color.parseColor("#455A64"), Color.parseColor("#90A4AE"), Color.parseColor("#C2185B"), Color.WHITE)
+                Season.WINTER -> {
+                    Theme(bgColor, textColor, Color.parseColor("#90CAF9"), cloudColor, ground, Color.parseColor("#1A237E"), cac, tree, Color.parseColor("#F48FB1"), Color.WHITE)
+                }
+                Season.AUTUMN -> {
+                    Theme(bgColor, textColor, Color.parseColor("#CFD8DC"), cloudColor, ground, Color.parseColor("#212121"), cac, tree, Color.parseColor("#F48FB1"), Color.WHITE)
+                }
+                else -> {
+                    Theme(bgColor, textColor, Color.parseColor("#BDC1C6"), cloudColor, ground, Color.parseColor("#263238"), cac, tree, Color.parseColor("#F48FB1"), Color.WHITE)
+                }
+            }
+        } else {
+            // Daytime condition: sky is dimmed for less brightness, ground remains significantly darker
+            val cloudColor = when {
+                isRainy -> Color.parseColor("#B0BEC5") 
+                isSnowy -> Color.WHITE
+                else -> Color.parseColor("#F5F5F5") 
+            }
+            
+            // All seasons: Cacti and Trees are GREEN
+            val cac = Color.parseColor("#388E3C")
+            val tree = Color.parseColor("#2E7D32")
+
+            when (currentSeason) {
+                Season.SPRING -> {
+                    val bg = if (isRainy) Color.parseColor("#B2DFDB") else Color.parseColor("#C8E6C9")
+                    Theme(bg, Color.BLACK, Color.parseColor("#1B5E20"), cloudColor, Color.parseColor("#689F38"), Color.parseColor("#FFD600"), cac, tree, Color.parseColor("#EC407A"), Color.parseColor("#64B5F6"))
+                }
+                Season.SUMMER -> {
+                    val bg = if (isRainy) Color.parseColor("#C5E1A5") else Color.parseColor("#E6EE9C")
+                    Theme(bg, Color.BLACK, Color.parseColor("#F9A825"), cloudColor, Color.parseColor("#F57F17"), Color.parseColor("#FFD600"), cac, tree, Color.parseColor("#D81B60"), Color.parseColor("#FFEB3B"))
+                }
+                Season.AUTUMN -> {
+                    val bg = if (isRainy) Color.parseColor("#FFCC80") else Color.parseColor("#FFE0B2")
+                    Theme(bg, Color.BLACK, Color.parseColor("#D84315"), cloudColor, Color.parseColor("#BF360C"), Color.parseColor("#FFD600"), cac, tree, Color.parseColor("#C62828"), Color.parseColor("#FF9800"))
+                }
+                Season.WINTER -> {
+                    val bg = if (isSnowy) Color.parseColor("#B0BEC5") else Color.parseColor("#BBDEFB")
+                    Theme(bg, Color.BLACK, Color.parseColor("#0277BD"), cloudColor, Color.parseColor("#1976D2"), Color.parseColor("#FFD600"), cac, tree, Color.parseColor("#C2185B"), Color.WHITE)
+                }
             }
         }
     }
 
     data class Theme(val bgColor: Int, val textColor: Int, val dinoColor: Int, val cloudColor: Int, val groundColor: Int, val secondaryColor: Int, val cactusColor: Int, val treeColor: Int, val birdColor: Int, val weatherColor: Int)
-    enum class ObstacleType { CACTUS, PTEROSAUR, TREE, ROCK, CRATER, METEOR, THUNDERBOLT, STUMP, FIRE, FALLEN_TREE, RAISED_EDGE }
+    enum class ObstacleType { CACTUS, PTEROSAUR, TREE, ROCK, CANYON, METEOR, THUNDERBOLT, STUMP, FIRE, FALLEN_TREE, RAISED_EDGE, BIG_DINO }
     data class Obstacle(var x: Float, var y: Float, var width: Float, var height: Float, var type: ObstacleType, var variant: Int = 0)
 }

@@ -15,7 +15,6 @@
     <string name="game_starfighter">STAR FIGHTER</string>
     <string name="game_memory">TRÚC XANH</string>
     <string name="game_slide_puzzle">XẾP HÌNH</string>
-    <string name="game_maze">MÊ CUNG</string>
     <string name="game_mental_math">TÍNH NHẨM</string>
     <string name="game_froggy">ẾCH QUA ĐƯỜNG</string>
     <string name="game_simon">SIMON SAYS</string>
@@ -43,7 +42,6 @@
     <string name="game_starfighter_instructions">• Di chuyển phi thuyền bằng D-PAD.\n• Tự động bắn.\n• Tiêu diệt kẻ địch để ghi điểm.\n• Nhấn \'S\' để tắt/mở âm thanh.</string>
     <string name="game_memory_instructions">• Dùng DPAD để di chuyển.\n• Nhấn CENTER để lật bài.\n• Tìm hết các cặp giống nhau.\n• Ít lượt đi hơn là tốt hơn!</string>
     <string name="game_slide_puzzle_instructions">• Dùng DPAD để di chuyển.\n• Nhấn CENTER để trượt ô.\n• Sắp xếp lại để hoàn thành hình.</string>
-    <string name="game_maze_instructions">• Quan sát mê cung thật kỹ.\n• Tìm lối ra nối với chấm xanh.\n• TRÁI/PHẢI để chọn.\n• CENTER để xác nhận.</string>
     <string name="game_mental_math_instructions">• Giải phép tính.\n• Dùng DPAD chọn đáp án.\n• Nhấn CENTER để xác nhận.\n• Nhanh lên! Thời gian đang trôi.</string>
     <string name="game_froggy_instructions">• Băng qua đường và sông.\n• Tránh xe cộ.\n• Nhảy lên các khúc gỗ.\n• Về đích để ghi điểm!</string>
     <string name="game_simon_instructions">• Quan sát dãy màu.\n• Lặp lại bằng D-PAD.\n• Dãy màu sẽ dài hơn sau mỗi vòng!</string>
@@ -163,13 +161,6 @@
         <item>ÁT CHỦ BÀI!</item>
         <item>XONG BỘ BÀI!</item>
         <item>VUA BÀI!</item>
-    </string-array>
-
-    <string-array name="win_maze">
-        <item>ĐÃ THẤY CÚP!</item>
-        <item>VƯỢT MÊ CUNG!</item>
-        <item>THÔNG THẠO ĐƯỜNG ĐI!</item>
-        <item>LỐI RA ĐÂY RỒI!</item>
     </string-array>
 
     <string-array name="win_sokoban">
