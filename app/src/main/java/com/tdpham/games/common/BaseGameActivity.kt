@@ -90,7 +90,9 @@ abstract class BaseGameActivity : AppCompatActivity() {
         if (GuideManager.shouldShowGuide(this, gameKey)) {
             showGameGuide()
         } else {
-            showMasteryHint()
+            if (GuideManager.shouldShowMasteryHint(this, gameKey)) {
+                showMasteryHint()
+            }
             startGameWithAnalytics()
             focusGame()
         }

@@ -27,6 +27,19 @@ object GuideManager {
         return prefs.getBoolean("show_$gameKey", true)
     }
 
+    fun shouldShowMasteryHint(context: Context, gameKey: String): Boolean {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        if (!prefs.getBoolean("show_$gameKey", true)) {
+            val launchCount = prefs.getInt("launch_count_$gameKey", 0)
+            if (launchCount <= 10) return true
+            
+            // Reduced rate after 10 sessions: 10/launchCount probability
+            val chance = 10.0 / launchCount
+            return Math.random() < chance
+        }
+        return false
+    }
+
     fun showGuide(context: Context, gameKey: String, title: String, content: String, buttonText: String? = null, onDismiss: () -> Unit) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
