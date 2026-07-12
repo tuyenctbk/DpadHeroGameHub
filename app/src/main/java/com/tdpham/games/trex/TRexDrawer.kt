@@ -160,8 +160,8 @@ internal object TRexDrawer {
                 if (isNightMode) {
                     val key = "canyon_${obs.width}"
                     paint.shader = shaderCache.getOrPut(key) {
-                        RadialGradient(obs.width / 2f, 100f, obs.width,
-                            intArrayOf(Color.argb(120, 255, 69, 0), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
+                        RadialGradient(obs.width / 2f, 120f, obs.width * 1.2f,
+                            intArrayOf(Color.argb(200, 255, 69, 0), Color.argb(100, 255, 160, 0), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
                     }
                     canvas.save()
                     canvas.translate(obs.x, lineY)
@@ -327,16 +327,9 @@ internal object TRexDrawer {
         var bodyColor = color
         // Special Colors per Member
         bodyColor = when(member) {
-            "MUMMY" -> Color.parseColor("#FF80AB") 
-            "BABY" -> Color.parseColor("#B2FF59") 
-            "GRANDPA" -> Color.parseColor("#9E9E9E") 
-            "TEENAGER" -> Color.parseColor("#FFFF00") 
-            "SCIENTIST" -> Color.parseColor("#E0E0E0") 
-            "ATHLETE" -> Color.parseColor("#2196F3") 
-            "PIRATE" -> Color.parseColor("#4E342E") 
-            "CHEF" -> Color.WHITE
-            "ASTRONAUT" -> Color.parseColor("#BDBDBD") 
-            else -> color 
+            "NINJA" -> Color.parseColor("#212121") // Stealthy Dark Gray
+            "ASTRONAUT" -> Color.parseColor("#BDBDBD") // Silver/Moon color
+            else -> color // DADDY standard color
         }
 
         if (isGameOver) {
@@ -382,9 +375,7 @@ internal object TRexDrawer {
                 pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
             }
         }
-        val isBrightSkin = bodyColor == Color.parseColor("#FF80AB") || bodyColor == Color.parseColor("#B2FF59") || 
-                           bodyColor == Color.parseColor("#FFFF00") || bodyColor == Color.parseColor("#E0E0E0") || 
-                           bodyColor == Color.WHITE || bodyColor == Color.parseColor("#BDBDBD")
+        val isBrightSkin = bodyColor == Color.WHITE || bodyColor == Color.parseColor("#BDBDBD")
         if (isBrightSkin) {
             pathPaint.style = Paint.Style.STROKE; pathPaint.strokeWidth = 0.5f * p
             pathPaint.color = if (isNightMode) Color.argb(180, (Color.red(bodyColor) + 50).coerceAtMost(255), (Color.green(bodyColor) + 50).coerceAtMost(255), (Color.blue(bodyColor) + 50).coerceAtMost(255))
@@ -424,43 +415,9 @@ internal object TRexDrawer {
         val headY = if (isDucking) 4*p else 0f
         
         when(member) {
-            "MUMMY" -> {
-                paint.color = Color.RED
-                canvas.drawCircle(headX, headY - 2*p, 3*p, paint)
-                canvas.drawCircle(headX - 4*p, headY - 2*p, 3*p, paint)
-            }
-            "GRANDPA" -> {
-                paint.color = Color.BLACK; paint.style = Paint.Style.STROKE; paint.strokeWidth = 1f * p
-                canvas.drawCircle(headX + p, headY + 3*p, 2.5f*p, paint)
-                canvas.drawCircle(headX + 7*p, headY + 3*p, 2.5f*p, paint)
-                paint.style = Paint.Style.FILL
-            }
-            "TEENAGER" -> {
-                paint.color = Color.parseColor("#00BCD4")
-                canvas.drawRect(headX - 3*p, headY - 2*p, headX + 8*p, headY + p, paint)
-                canvas.drawRect(headX + 8*p, headY - p, headX + 14*p, headY + p, paint)
-            }
-            "SCIENTIST" -> {
-                paint.color = Color.BLACK; pathBuffer.reset()
-                val bx = if (isDucking) 20*p else 14*p
-                val by = if (isDucking) 10*p else 10*p
-                pathBuffer.moveTo(bx, by); pathBuffer.lineTo(bx-2*p, by-2*p); pathBuffer.lineTo(bx-2*p, by+2*p); pathBuffer.close()
-                canvas.drawPath(pathBuffer, paint)
-                pathBuffer.reset(); pathBuffer.moveTo(bx, by); pathBuffer.lineTo(bx+2*p, by-2*p); pathBuffer.lineTo(bx+2*p, by+2*p); pathBuffer.close()
-                canvas.drawPath(pathBuffer, paint)
-            }
-            "ATHLETE" -> {
-                paint.color = Color.RED
+            "NINJA" -> {
+                paint.color = Color.RED // Ninja Headband
                 canvas.drawRect(headX - 2*p, headY + p, headX + 12*p, headY + 3*p, paint)
-            }
-            "PIRATE" -> {
-                paint.color = Color.BLACK; canvas.drawRect(headX - p, headY + 2*p, headX + 3*p, headY + 5*p, paint)
-                paint.strokeWidth = 1f * p; canvas.drawLine(headX - 4*p, headY + 3*p, headX + 12*p, headY + p, paint)
-            }
-            "CHEF" -> {
-                paint.color = Color.WHITE
-                canvas.drawRoundRect(headX - 2*p, headY - 8*p, headX + 12*p, headY - p, 2*p, 2*p, paint)
-                canvas.drawCircle(headX + 5*p, headY - 8*p, 5*p, paint)
             }
             "ASTRONAUT" -> {
                 paint.color = Color.argb(100, 129, 212, 250)
@@ -468,6 +425,24 @@ internal object TRexDrawer {
                 paint.style = Paint.Style.STROKE; paint.color = Color.WHITE; paint.strokeWidth = 1f * p
                 canvas.drawCircle(headX + 5*p, headY + 4*p, 10*p, paint)
                 paint.style = Paint.Style.FILL
+            }
+            "BABY" -> {
+                paint.color = Color.parseColor("#4FC3F7") // Blue pacifier
+                canvas.drawCircle(headX + 10*p, headY + 6*p, 2*p, paint)
+            }
+            "GRANDPA" -> {
+                paint.color = Color.BLACK; paint.style = Paint.Style.STROKE; paint.strokeWidth = 0.5f * p
+                canvas.drawCircle(headX + 2*p, headY + 3*p, 3*p, paint)
+                canvas.drawCircle(headX + 8*p, headY + 3*p, 3*p, paint)
+                paint.style = Paint.Style.FILL
+            }
+            "SCIENTIST" -> {
+                paint.color = Color.BLACK; canvas.drawRect(headX + 2*p, headY + 6*p, headX + 8*p, headY + 8*p, paint)
+                paint.color = Color.WHITE; canvas.drawRect(headX + 4*p, headY + 7*p, headX + 6*p, headY + 8*p, paint)
+            }
+            "PIRATE" -> {
+                paint.color = Color.BLACK; canvas.drawRect(headX - p, headY + 2*p, headX + 3*p, headY + 5*p, paint)
+                paint.strokeWidth = 0.8f * p; canvas.drawLine(headX - 4*p, headY + 3*p, headX + 12*p, headY + p, paint)
             }
         }
 

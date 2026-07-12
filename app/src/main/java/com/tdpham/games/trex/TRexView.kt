@@ -55,21 +55,20 @@ class TRexView @JvmOverloads constructor(
         val jump: Float,
         val gravityMult: Float = 1.0f,
         val scoreMult: Float = 1.0f,
-        val canDoubleJump: Boolean = false
+        val canDoubleJump: Boolean = false,
+        val abilityDesc: String = ""
     ) {
-        DADDY(6.5f, -30f),
-        MUMMY(6.0f, -28f),
-        BABY(3.5f, -26f),
-        GRANDPA(5.8f, -24f, scoreMult = 1.5f),
-        TEENAGER(5.5f, -28f),
-        SCIENTIST(5.8f, -28f, scoreMult = 1.2f),
-        ATHLETE(6.0f, -31f, canDoubleJump = true),
-        PIRATE(6.2f, -28f),
-        CHEF(6.0f, -28f),
-        ASTRONAUT(6.0f, -30f, gravityMult = 0.6f)
+        DADDY(6.5f, -30f, scoreMult = 1.2f, abilityDesc = "Score x1.2"),
+        NINJA(6.0f, -31f, canDoubleJump = true, abilityDesc = "Double Jump"),
+        ASTRONAUT(6.0f, -30f, gravityMult = 0.6f, abilityDesc = "Low Gravity"),
+        BABY(3.5f, -26f, scoreMult = 0.8f, abilityDesc = "Tiny Hitbox"),
+        GRANDPA(5.8f, -24f, scoreMult = 1.5f, abilityDesc = "Score x1.5 / Slow"),
+        SCIENTIST(5.8f, -28f, scoreMult = 1.3f, abilityDesc = "Score x1.3"),
+        PIRATE(6.2f, -33f, abilityDesc = "Strong Jump")
     }
 
     private var currentMember = DinoMember.DADDY
+    private var selectedMemberIndex = 0
     private var memberName = ""
     private var nameShowFrames = 0
     private var hasDoubleJumped = false
@@ -170,22 +169,19 @@ class TRexView @JvmOverloads constructor(
         causeOfDeath = null
         celebrationManager.start(0f, 0f)
         
-        // Pick random family member for this run
-        currentMember = DinoMember.entries.random()
+        // Use selected member
+        currentMember = DinoMember.entries[selectedMemberIndex]
         applyMemberProperties()
         memberName = context.getString(when(currentMember) {
             DinoMember.DADDY -> R.string.trex_daddy
-            DinoMember.MUMMY -> R.string.trex_mummy
+            DinoMember.NINJA -> R.string.trex_athlete 
+            DinoMember.ASTRONAUT -> R.string.trex_astronaut
             DinoMember.BABY -> R.string.trex_baby
             DinoMember.GRANDPA -> R.string.trex_grandpa
-            DinoMember.TEENAGER -> R.string.trex_teenager
             DinoMember.SCIENTIST -> R.string.trex_scientist
-            DinoMember.ATHLETE -> R.string.trex_athlete
             DinoMember.PIRATE -> R.string.trex_pirate
-            DinoMember.CHEF -> R.string.trex_chef
-            DinoMember.ASTRONAUT -> R.string.trex_astronaut
         })
-        nameShowFrames = 120 // Show for ~2 seconds
+        nameShowFrames = 120 
         hasDoubleJumped = false
 
         earthquakeShake = 0f
@@ -241,6 +237,24 @@ class TRexView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_DOWN -> {
                 if (!isJumping) {
                     isDucking = true
+                    invalidate()
+                }
+                true
+            }
+            KeyEvent.KEYCODE_DPAD_LEFT -> {
+                if (isPaused && !isGameOver) {
+                    selectedMemberIndex = (selectedMemberIndex - 1 + DinoMember.entries.size) % DinoMember.entries.size
+                    currentMember = DinoMember.entries[selectedMemberIndex]
+                    applyMemberProperties()
+                    invalidate()
+                }
+                true
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                if (isPaused && !isGameOver) {
+                    selectedMemberIndex = (selectedMemberIndex + 1) % DinoMember.entries.size
+                    currentMember = DinoMember.entries[selectedMemberIndex]
+                    applyMemberProperties()
                     invalidate()
                 }
                 true
@@ -851,6 +865,16 @@ class TRexView @JvmOverloads constructor(
 
         // Draw Craters (Meteor impacts)
         for (c in craters) {
+            if (isNightMode) {
+                // Night warning glow for craters
+                paint.shader = currentTheme?.let { theme ->
+                    RadialGradient(c.x + c.width / 2f, lineY + 20f, c.width * 0.8f,
+                        intArrayOf(Color.argb(180, 255, 87, 34), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
+                }
+                canvas.drawCircle(c.x + c.width / 2f, lineY + 20f, c.width * 0.8f, paint)
+                paint.shader = null
+            }
+
             paint.color = Color.BLACK
             paint.alpha = (c.alpha * 0.5f).toInt()
             canvas.drawOval(c.x - 10, lineY - 15, c.x + c.width + 10, lineY + 60, paint) // Scorched area
@@ -974,25 +998,70 @@ class TRexView @JvmOverloads constructor(
         paint.color = if (isNightMode) Color.argb(160, 0, 0, 0) else Color.argb(160, 255, 255, 255)
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
         paint.textAlign = Paint.Align.CENTER
-        paint.textSize = 90f
         
-        // Ensure text is visible even in game over state
-        paint.color = if (isGameOver) {
-            if (isNightMode) Color.parseColor("#FF5252") else Color.RED
-        } else textColor
-        
-        paint.setShadowLayer(5f, 2f, 2f, if (isNightMode) Color.BLACK else Color.WHITE)
-        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
-        
-        paint.textSize = 35f
-        paint.color = textColor
-        if (isGameOver) {
-            canvas.drawText("${context.getString(R.string.score_label)}: $score", width / 2f, height / 2f + 50f, paint)
-            canvas.drawText(context.getString(R.string.restart_hint), width / 2f, height / 2f + 100f, paint)
+        if (isPaused && !isGameOver) {
+            // Character Selection UI
+            paint.textSize = 80f
+            paint.color = textColor
+            paint.setShadowLayer(5f, 2f, 2f, if (isNightMode) Color.BLACK else Color.WHITE)
+            canvas.drawText("SELECT CHARACTER", width / 2f, height / 2f - 180f, paint)
+            
+            // Draw current selection preview
+            val member = DinoMember.entries[selectedMemberIndex]
+            val previewScale = 12f
+            val previewX = width / 2f - (25 * previewScale / 2f)
+            val previewY = height / 2f - (23 * previewScale / 2f)
+            
+            drawDinoPreview(canvas, previewX, previewY, previewScale, member)
+            
+            // Member Name and Stats
+            paint.textSize = 50f
+            val name = context.getString(when(member) {
+                DinoMember.DADDY -> R.string.trex_daddy
+                DinoMember.NINJA -> R.string.trex_athlete
+                DinoMember.ASTRONAUT -> R.string.trex_astronaut
+                DinoMember.BABY -> R.string.trex_baby
+                DinoMember.GRANDPA -> R.string.trex_grandpa
+                DinoMember.SCIENTIST -> R.string.trex_scientist
+                DinoMember.PIRATE -> R.string.trex_pirate
+            })
+            canvas.drawText(name, width / 2f, height / 2f + 140f, paint)
+            
+            paint.textSize = 35f
+            paint.color = if (isNightMode) Color.LTGRAY else Color.DKGRAY
+            canvas.drawText(member.abilityDesc, width / 2f, height / 2f + 190f, paint)
+            
+            // Arrows
+            paint.textSize = 60f
+            paint.color = textColor
+            canvas.drawText("<", width / 2f - 200f, height / 2f + 30f, paint)
+            canvas.drawText(">", width / 2f + 200f, height / 2f + 30f, paint)
+            
+            paint.textSize = 35f
+            canvas.drawText(context.getString(R.string.start_game), width / 2f, height / 2f + 260f, paint)
+            
         } else {
-            canvas.drawText(context.getString(R.string.start_game), width / 2f, height / 2f + 50f, paint)
+            paint.textSize = 90f
+            paint.color = if (isGameOver) {
+                if (isNightMode) Color.parseColor("#FF5252") else Color.RED
+            } else textColor
+            
+            paint.setShadowLayer(5f, 2f, 2f, if (isNightMode) Color.BLACK else Color.WHITE)
+            canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
+            
+            paint.textSize = 35f
+            paint.color = textColor
+            if (isGameOver) {
+                canvas.drawText("${context.getString(R.string.score_label)}: $score", width / 2f, height / 2f + 50f, paint)
+                canvas.drawText(context.getString(R.string.restart_hint), width / 2f, height / 2f + 100f, paint)
+            }
         }
         paint.clearShadowLayer()
+    }
+
+    private fun drawDinoPreview(canvas: Canvas, x: Float, y: Float, scale: Float, member: DinoMember) {
+        val theme = getEnvironmentTheme()
+        TRexDrawer.drawDino(canvas, x, y, theme.dinoColor, theme.bgColor, scale, false, null, false, false, 0, isNightMode, animationFrame, emptyList(), paint, pathBuffer, member.name)
     }
 
     private fun getEnvironmentTheme(): Theme {
