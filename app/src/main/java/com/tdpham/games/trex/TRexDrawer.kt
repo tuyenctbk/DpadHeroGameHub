@@ -5,6 +5,9 @@ import com.tdpham.games.R
 
 internal object TRexDrawer {
 
+    // Shader caches to prevent constant allocation of native objects
+    private val shaderCache = mutableMapOf<String, Shader>()
+
     fun drawObstacle(canvas: Canvas, obs: TRexView.Obstacle, theme: TRexView.Theme, paint: Paint, pathBuffer: Path, isNightMode: Boolean, animationFrame: Int, walkFrame: Int) {
         paint.style = Paint.Style.FILL
         when (obs.type) {
@@ -74,9 +77,9 @@ internal object TRexDrawer {
             }
             TRexView.ObstacleType.PTEROSAUR -> {
                 val pterosaurColor = when(obs.variant % 3) {
-                    0 -> Color.parseColor("#5D4037") // Brown
-                    1 -> Color.parseColor("#455A64") // Slate
-                    else -> Color.parseColor("#37474F") // Dark Slate
+                    0 -> Color.parseColor("#5D4037") 
+                    1 -> Color.parseColor("#455A64") 
+                    else -> Color.parseColor("#37474F") 
                 }
                 paint.color = pterosaurColor
                 canvas.drawOval(obs.x + 20, obs.y + 20, obs.x + obs.width - 20, obs.y + obs.height - 10, paint)
@@ -95,7 +98,6 @@ internal object TRexDrawer {
                 pathBuffer.close()
                 canvas.drawPath(pathBuffer, paint)
 
-                paint.color = pterosaurColor
                 val wingSpan = if (walkFrame == 0) -40f else 40f
                 pathBuffer.reset()
                 pathBuffer.moveTo(obs.x + 30, obs.y + 30)
@@ -106,8 +108,6 @@ internal object TRexDrawer {
             }
             TRexView.ObstacleType.ROCK -> {
                 paint.color = Color.parseColor("#757575")
-                pathBuffer.reset()
-                
                 if (obs.variant == 3) {
                     for (j in 0..4) {
                         val rx = obs.x + (j * obs.width / 5f)
@@ -116,6 +116,7 @@ internal object TRexDrawer {
                         canvas.drawRect(rx, ry, rx + rw, obs.y + obs.height, paint)
                     }
                 } else {
+                    pathBuffer.reset()
                     pathBuffer.moveTo(obs.x, obs.y + obs.height)
                     when(obs.variant % 4) {
                         0 -> {
@@ -132,19 +133,12 @@ internal object TRexDrawer {
                             pathBuffer.lineTo(obs.x + obs.width * 0.8f, obs.y + obs.height * 0.3f)
                             pathBuffer.lineTo(obs.x + obs.width * 0.9f, obs.y + obs.height * 0.1f)
                         }
-                        2 -> {
+                        else -> {
                             pathBuffer.lineTo(obs.x + obs.width * 0.05f, obs.y + obs.height * 0.3f)
                             pathBuffer.lineTo(obs.x + obs.width * 0.15f, obs.y + obs.height * 0.1f)
                             pathBuffer.lineTo(obs.x + obs.width * 0.4f, obs.y + obs.height * 0.4f)
                             pathBuffer.lineTo(obs.x + obs.width * 0.7f, obs.y)
                             pathBuffer.lineTo(obs.x + obs.width * 0.95f, obs.y + obs.height * 0.2f)
-                        }
-                        else -> {
-                            pathBuffer.lineTo(obs.x + obs.width * 0.1f, obs.y + obs.height * 0.6f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.2f, obs.y + obs.height * 0.2f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.6f, obs.y + obs.height * 0.1f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.8f, obs.y)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.95f, obs.y + obs.height * 0.4f)
                         }
                     }
                     pathBuffer.lineTo(obs.x + obs.width, obs.y + obs.height)
@@ -155,7 +149,6 @@ internal object TRexDrawer {
                     paint.alpha = 50
                     canvas.drawLine(obs.x + obs.width * 0.3f, obs.y, obs.x + obs.width * 0.4f, obs.y + obs.height * 0.6f, paint)
                     canvas.drawLine(obs.x + obs.width * 0.7f, obs.y + obs.height * 0.05f, obs.x + obs.width * 0.6f, obs.y + obs.height * 0.7f, paint)
-                    
                     paint.color = Color.WHITE
                     paint.alpha = 40
                     canvas.drawCircle(obs.x + obs.width * 0.3f, obs.y + obs.height * 0.25f, obs.width * 0.15f, paint)
@@ -164,67 +157,51 @@ internal object TRexDrawer {
             }
             TRexView.ObstacleType.CANYON -> {
                 val lineY = canvas.height * 0.8f
-                
-                // 1. Danger Glow (Deep orange/red glow from the bottom at night)
                 if (isNightMode) {
-                    paint.shader = RadialGradient(obs.x + obs.width / 2f, lineY + 100f, obs.width,
-                        intArrayOf(Color.argb(120, 255, 69, 0), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
-                    
+                    val key = "canyon_${obs.width}"
+                    paint.shader = shaderCache.getOrPut(key) {
+                        RadialGradient(obs.width / 2f, 100f, obs.width,
+                            intArrayOf(Color.argb(120, 255, 69, 0), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
+                    }
+                    canvas.save()
+                    canvas.translate(obs.x, lineY)
                     pathBuffer.reset()
-                    pathBuffer.moveTo(obs.x, lineY - 2f) // Masking start
+                    pathBuffer.moveTo(0f, -2f)
                     when(obs.variant % 3) {
-                        0 -> {
-                            pathBuffer.lineTo(obs.x + obs.width * 0.1f, lineY + 120f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.9f, lineY + 120f)
-                        }
-                        1 -> pathBuffer.lineTo(obs.x + obs.width * 0.5f, lineY + 150f)
+                        0 -> { pathBuffer.lineTo(obs.width * 0.1f, 120f); pathBuffer.lineTo(obs.width * 0.9f, 120f) }
+                        1 -> pathBuffer.lineTo(obs.width * 0.5f, 150f)
                         else -> {
-                            pathBuffer.lineTo(obs.x + obs.width * 0.2f, lineY + 80f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.4f, lineY + 140f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.6f, lineY + 100f)
-                            pathBuffer.lineTo(obs.x + obs.width * 0.8f, lineY + 130f)
+                            pathBuffer.lineTo(obs.width * 0.2f, 80f); pathBuffer.lineTo(obs.width * 0.4f, 140f)
+                            pathBuffer.lineTo(obs.width * 0.6f, 100f); pathBuffer.lineTo(obs.width * 0.8f, 130f)
                         }
                     }
-                    pathBuffer.lineTo(obs.x + obs.width, lineY - 2f)
-                    pathBuffer.close()
+                    pathBuffer.lineTo(obs.width, -2f); pathBuffer.close()
                     canvas.drawPath(pathBuffer, paint)
+                    canvas.restore()
                     paint.shader = null
                 }
 
-                // 2. Canyons have the same color as the air (the sky)
                 paint.color = theme.bgColor
-                paint.alpha = 255
                 pathBuffer.reset()
-                pathBuffer.moveTo(obs.x, lineY - 2f) // Masking start
-                
+                pathBuffer.moveTo(obs.x, lineY - 2f)
                 when(obs.variant % 3) {
-                    0 -> { 
-                        pathBuffer.lineTo(obs.x + obs.width * 0.1f, lineY + 120f)
-                        pathBuffer.lineTo(obs.x + obs.width * 0.9f, lineY + 120f)
-                    }
-                    1 -> { 
-                        pathBuffer.lineTo(obs.x + obs.width * 0.5f, lineY + 150f)
-                    }
-                    else -> { 
-                        pathBuffer.lineTo(obs.x + obs.width * 0.2f, lineY + 80f)
-                        pathBuffer.lineTo(obs.x + obs.width * 0.4f, lineY + 140f)
-                        pathBuffer.lineTo(obs.x + obs.width * 0.6f, lineY + 100f)
-                        pathBuffer.lineTo(obs.x + obs.width * 0.8f, lineY + 130f)
+                    0 -> { pathBuffer.lineTo(obs.x + obs.width * 0.1f, lineY + 120f); pathBuffer.lineTo(obs.x + obs.width * 0.9f, lineY + 120f) }
+                    1 -> pathBuffer.lineTo(obs.x + obs.width * 0.5f, lineY + 150f)
+                    else -> {
+                        pathBuffer.lineTo(obs.x + obs.width * 0.2f, lineY + 80f); pathBuffer.lineTo(obs.x + obs.width * 0.4f, lineY + 140f)
+                        pathBuffer.lineTo(obs.x + obs.width * 0.6f, lineY + 100f); pathBuffer.lineTo(obs.x + obs.width * 0.8f, lineY + 130f)
                     }
                 }
-                pathBuffer.lineTo(obs.x + obs.width, lineY - 2f)
-                pathBuffer.close()
+                pathBuffer.lineTo(obs.x + obs.width, lineY - 2f); pathBuffer.close()
                 canvas.drawPath(pathBuffer, paint)
                 
-                // 3. Add inner walls for depth effect (slightly darker than ground)
                 paint.color = theme.groundColor
                 paint.alpha = 180
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 4f
                 canvas.drawPath(pathBuffer, paint)
-                paint.style = Paint.Style.FILL
                 
-                // 4. Specifically mask the horizon ground line
+                paint.style = Paint.Style.FILL
                 paint.color = theme.bgColor
                 paint.strokeWidth = 6f
                 canvas.drawLine(obs.x, lineY, obs.x + obs.width, lineY, paint)
@@ -240,89 +217,67 @@ internal object TRexDrawer {
                 val cx = obs.x + obs.width / 2f
                 val cy = obs.y + obs.height / 2f
                 val r = obs.width / 2f
+                val keyGlow = "meteor_glow_$r"
+                paint.shader = shaderCache.getOrPut(keyGlow) {
+                    RadialGradient(r, r, r * 1.5f, intArrayOf(Color.argb(150, 255, 111, 0), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
+                }
+                canvas.save(); canvas.translate(obs.x - r * 0.5f, obs.y - r * 0.5f)
+                canvas.drawCircle(r * 1.5f, r * 1.5f, r * 1.5f, paint)
+                canvas.restore()
                 
-                paint.shader = RadialGradient(cx, cy, r * 1.5f, 
-                    intArrayOf(Color.argb(150, 255, 111, 0), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
-                canvas.drawCircle(cx, cy, r * 1.5f, paint)
-                
-                paint.shader = LinearGradient(cx, cy, cx + obs.width * 1.5f, cy - obs.height * 1.5f, 
-                    intArrayOf(Color.parseColor("#FF5722"), Color.parseColor("#FFD600"), Color.TRANSPARENT), 
-                    floatArrayOf(0f, 0.4f, 1f), Shader.TileMode.CLAMP)
-                
-                pathBuffer.reset()
-                pathBuffer.moveTo(cx, cy - r)
-                pathBuffer.lineTo(cx + obs.width * 2f, cy - obs.height * 2f)
-                pathBuffer.lineTo(cx + r, cy)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, paint)
+                val keyTail = "meteor_tail_${obs.width}"
+                paint.shader = shaderCache.getOrPut(keyTail) {
+                    LinearGradient(0f, 0f, obs.width * 1.5f, -obs.height * 1.5f, 
+                        intArrayOf(Color.parseColor("#FF5722"), Color.parseColor("#FFD600"), Color.TRANSPARENT), 
+                        floatArrayOf(0f, 0.4f, 1f), Shader.TileMode.CLAMP)
+                }
+                canvas.save(); canvas.translate(cx, cy)
+                pathBuffer.reset(); pathBuffer.moveTo(0f, -r); pathBuffer.lineTo(obs.width * 2f, -obs.height * 2f); pathBuffer.lineTo(r, 0f)
+                pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
+                canvas.restore()
                 
                 paint.shader = null
                 paint.color = Color.parseColor("#4E342E")
                 when(obs.variant) {
                     0 -> canvas.drawCircle(cx, cy, r, paint)
-                    1 -> canvas.drawOval(obs.x, obs.y + r * 0.2f, obs.x + obs.width, obs.y + obs.height - r * 0.2f, paint)
-                    else -> {
-                        pathBuffer.reset()
-                        pathBuffer.moveTo(obs.x + r, obs.y)
-                        pathBuffer.lineTo(obs.x + obs.width, obs.y + r)
-                        pathBuffer.lineTo(obs.x + r * 1.2f, obs.y + obs.height)
-                        pathBuffer.lineTo(obs.x, obs.y + r * 1.2f)
-                        pathBuffer.close()
-                        canvas.drawPath(pathBuffer, paint)
-                    }
+                    else -> canvas.drawOval(obs.x, obs.y + r * 0.2f, obs.x + obs.width, obs.y + obs.height - r * 0.2f, paint)
                 }
-                
-                paint.color = Color.parseColor("#FFEB3B")
-                paint.alpha = 200
+                paint.color = Color.parseColor("#FFEB3B"); paint.alpha = 200
                 canvas.drawCircle(cx - r * 0.3f, cy - r * 0.3f, r * 0.4f, paint)
                 paint.alpha = 255
             }
             TRexView.ObstacleType.THUNDERBOLT -> {
                 paint.color = Color.parseColor("#FFEA00")
-                pathBuffer.reset()
-                pathBuffer.moveTo(obs.x + obs.width, obs.y)
-                pathBuffer.lineTo(obs.x, obs.y + obs.height * 0.6f)
-                pathBuffer.lineTo(obs.x + obs.width * 0.8f, obs.y + obs.height * 0.5f)
-                pathBuffer.lineTo(obs.x + obs.width * 0.2f, obs.y + obs.height)
-                canvas.drawPath(pathBuffer, paint)
+                pathBuffer.reset(); pathBuffer.moveTo(obs.x + obs.width, obs.y)
+                pathBuffer.lineTo(obs.x, obs.y + obs.height * 0.6f); pathBuffer.lineTo(obs.x + obs.width * 0.8f, obs.y + obs.height * 0.5f)
+                pathBuffer.lineTo(obs.x + obs.width * 0.2f, obs.y + obs.height); canvas.drawPath(pathBuffer, paint)
             }
             TRexView.ObstacleType.FIRE -> {
                 val cx = obs.x + obs.width / 2f
                 val cy = obs.y + obs.height
-                val random = java.util.Random()
+                val random = java.util.Random(obs.x.toLong())
                 for (i in 0..4) {
                     val fx = cx + (i - 2) * 25f + (Math.sin(animationFrame * 0.2 + i).toFloat() * 10f)
                     val fy = cy - 20f - random.nextInt(100)
                     paint.color = if (random.nextBoolean()) Color.parseColor("#FFD600") else Color.parseColor("#FF3D00")
                     canvas.drawCircle(fx, fy, 20f + random.nextInt(20), paint)
                 }
-                paint.color = Color.parseColor("#FF6D00")
-                paint.alpha = 150
-                canvas.drawRect(obs.x, cy - 20f, obs.x + obs.width, cy, paint)
-                paint.alpha = 255
+                paint.color = Color.parseColor("#FF6D00"); paint.alpha = 150
+                canvas.drawRect(obs.x, cy - 20f, obs.x + obs.width, cy, paint); paint.alpha = 255
             }
             TRexView.ObstacleType.FALLEN_TREE -> {
                 paint.color = Color.parseColor("#5D4037")
                 canvas.drawRoundRect(obs.x, obs.y + obs.height * 0.5f, obs.x + obs.width, obs.y + obs.height, 10f, 10f, paint)
-                pathBuffer.reset()
-                pathBuffer.moveTo(obs.x, obs.y + obs.height * 0.5f)
-                pathBuffer.lineTo(obs.x + 20f, obs.y)
-                pathBuffer.lineTo(obs.x + 40f, obs.y + obs.height * 0.5f)
-                canvas.drawPath(pathBuffer, paint)
+                pathBuffer.reset(); pathBuffer.moveTo(obs.x, obs.y + obs.height * 0.5f); pathBuffer.lineTo(obs.x + 20f, obs.y)
+                pathBuffer.lineTo(obs.x + 40f, obs.y + obs.height * 0.5f); canvas.drawPath(pathBuffer, paint)
             }
             TRexView.ObstacleType.RAISED_EDGE -> {
                 paint.color = theme.groundColor
-                pathBuffer.reset()
-                pathBuffer.moveTo(obs.x, obs.y + obs.height)
-                pathBuffer.lineTo(obs.x + obs.width * 0.2f, obs.y)
-                pathBuffer.lineTo(obs.x + obs.width * 0.8f, obs.y + 10f)
-                pathBuffer.lineTo(obs.x + obs.width, obs.y + obs.height)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, paint)
-                paint.color = Color.BLACK
-                paint.alpha = 100
-                canvas.drawLine(obs.x + obs.width * 0.5f, obs.y + 5f, obs.x + obs.width * 0.5f, obs.y + obs.height, paint)
-                paint.alpha = 255
+                pathBuffer.reset(); pathBuffer.moveTo(obs.x, obs.y + obs.height); pathBuffer.lineTo(obs.x + obs.width * 0.2f, obs.y)
+                pathBuffer.lineTo(obs.x + obs.width * 0.8f, obs.y + 10f); pathBuffer.lineTo(obs.x + obs.width, obs.y + obs.height)
+                pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
+                paint.color = Color.BLACK; paint.alpha = 100
+                canvas.drawLine(obs.x + obs.width * 0.5f, obs.y + 5f, obs.x + obs.width * 0.5f, obs.y + obs.height, paint); paint.alpha = 255
             }
             TRexView.ObstacleType.BIG_DINO -> {
                 val dinoColor = when(obs.variant % 3) {
@@ -332,14 +287,8 @@ internal object TRexDrawer {
                 }
                 paint.color = dinoColor
                 val p = obs.width / 30f 
-                
-                canvas.save()
-                canvas.translate(obs.x, obs.y)
-                
-                if (obs.variant % 2 != 0) {
-                    canvas.scale(-1f, 1f, obs.width / 2f, obs.height / 2f)
-                }
-                
+                canvas.save(); canvas.translate(obs.x, obs.y)
+                if (obs.variant % 2 != 0) canvas.scale(-1f, 1f, obs.width / 2f, obs.height / 2f)
                 when(obs.variant % 3) {
                     0 -> { 
                         canvas.drawRoundRect(20*p, 0f, 32*p, 8*p, 4*p, 4*p, paint)
@@ -349,40 +298,22 @@ internal object TRexDrawer {
                     1 -> { 
                         canvas.drawRoundRect(25*p, 18*p, 32*p, 24*p, 2*p, 2*p, paint)
                         canvas.drawRoundRect(0f, 15*p, 28*p, 30*p, 8*p, 8*p, paint)
-                        for (j in 0..3) {
-                            val px = 5*p + j*5*p
-                            canvas.drawRect(px, 10*p, px+3*p, 15*p, paint)
-                        }
+                        for (j in 0..3) canvas.drawRect(5*p + j*5*p, 10*p, 5*p + j*5*p + 3*p, 15*p, paint)
                     }
                     else -> { 
                         canvas.drawRoundRect(18*p, 10*p, 30*p, 18*p, 3*p, 3*p, paint)
                         canvas.drawRoundRect(0f, 18*p, 25*p, 32*p, 5*p, 5*p, paint)
-                        pathBuffer.reset()
-                        pathBuffer.moveTo(5*p, 18*p)
-                        pathBuffer.lineTo(12*p, 5*p)
-                        pathBuffer.lineTo(20*p, 18*p)
-                        pathBuffer.close()
-                        canvas.drawPath(pathBuffer, paint)
+                        pathBuffer.reset(); pathBuffer.moveTo(5*p, 18*p); pathBuffer.lineTo(12*p, 5*p); pathBuffer.lineTo(20*p, 18*p)
+                        pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
                     }
                 }
-                
-                pathBuffer.reset()
-                pathBuffer.moveTo(0f, 18*p)
-                pathBuffer.lineTo(-10*p, 22*p)
-                pathBuffer.lineTo(0f, 26*p)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, paint)
-                
+                pathBuffer.reset(); pathBuffer.moveTo(0f, 18*p); pathBuffer.lineTo(-10*p, 22*p); pathBuffer.lineTo(0f, 26*p)
+                pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
                 val legH = if (walkFrame == 0) 5*p else 2*p
-                canvas.drawRect(5*p, 28*p, 9*p, 28*p + legH, paint)
-                canvas.drawRect(16*p, 28*p, 20*p, 28*p + (7*p - legH), paint)
-                
-                paint.color = Color.BLACK
-                val eyeX = if (obs.variant % 3 == 0) 22*p else if (obs.variant % 3 == 1) 28*p else 24*p
+                canvas.drawRect(5*p, 28*p, 9*p, 28*p + legH, paint); canvas.drawRect(16*p, 28*p, 20*p, 28*p + (7*p - legH), paint)
+                paint.color = Color.BLACK; val eyeX = if (obs.variant % 3 == 0) 22*p else if (obs.variant % 3 == 1) 28*p else 24*p
                 val eyeY = if (obs.variant % 3 == 0) 2*p else if (obs.variant % 3 == 1) 20*p else 12*p
-                canvas.drawRect(eyeX, eyeY, eyeX + 2*p, eyeY + 2*p, paint)
-                
-                canvas.restore()
+                canvas.drawRect(eyeX, eyeY, eyeX + 2*p, eyeY + 2*p, paint); canvas.restore()
             }
         }
     }
@@ -391,40 +322,37 @@ internal object TRexDrawer {
                  p: Float, isGameOver: Boolean, causeOfDeath: TRexView.ObstacleType?, 
                  isDucking: Boolean, isJumping: Boolean, walkFrame: Int, 
                  isNightMode: Boolean, animationFrame: Int, obstacles: List<TRexView.Obstacle>,
-                 paint: Paint, pathBuffer: Path) {
+                 paint: Paint, pathBuffer: Path, member: String) {
         
         var bodyColor = color
+        // Special Colors per Member
+        bodyColor = when(member) {
+            "MUMMY" -> Color.parseColor("#FF80AB") 
+            "BABY" -> Color.parseColor("#B2FF59") 
+            "GRANDPA" -> Color.parseColor("#9E9E9E") 
+            "TEENAGER" -> Color.parseColor("#FFFF00") 
+            "SCIENTIST" -> Color.parseColor("#E0E0E0") 
+            "ATHLETE" -> Color.parseColor("#2196F3") 
+            "PIRATE" -> Color.parseColor("#4E342E") 
+            "CHEF" -> Color.WHITE
+            "ASTRONAUT" -> Color.parseColor("#BDBDBD") 
+            else -> color 
+        }
+
         if (isGameOver) {
             when(causeOfDeath) {
-                TRexView.ObstacleType.FIRE, TRexView.ObstacleType.METEOR, TRexView.ObstacleType.THUNDERBOLT -> {
-                    bodyColor = Color.DKGRAY
-                }
+                TRexView.ObstacleType.FIRE, TRexView.ObstacleType.METEOR, TRexView.ObstacleType.THUNDERBOLT -> bodyColor = Color.DKGRAY
                 else -> {}
             }
         }
-
-        paint.color = bodyColor
-        paint.style = Paint.Style.FILL
-        
+        paint.color = bodyColor; paint.style = Paint.Style.FILL
         canvas.save()
-        
-        var drawY = y
-        var drawX = x
+        var drawY = y; var drawX = x
         if (isGameOver && causeOfDeath == TRexView.ObstacleType.CANYON) {
             val dinoCenter = 100f + 12 * p
-            var foundCanyon: TRexView.Obstacle? = null
-            for (obs in obstacles) {
-                if (obs.type == TRexView.ObstacleType.CANYON && dinoCenter > obs.x && dinoCenter < obs.x + obs.width) {
-                    foundCanyon = obs
-                    break
-                }
-            }
-            
-            if (foundCanyon != null) {
-                drawX = foundCanyon.x + (foundCanyon.width / 2f) - (12 * p)
-            }
-            drawY += 24 * p
-            canvas.rotate(-45f, drawX + 12*p, drawY + 10*p)
+            val foundCanyon = obstacles.find { it.type == TRexView.ObstacleType.CANYON && dinoCenter > it.x && dinoCenter < it.x + it.width }
+            if (foundCanyon != null) drawX = foundCanyon.x + (foundCanyon.width / 2f) - (12 * p)
+            drawY += 24 * p; canvas.rotate(-45f, drawX + 12*p, drawY + 10*p)
         } else if (isGameOver) {
             val rotation = when {
                 causeOfDeath == TRexView.ObstacleType.PTEROSAUR -> -90f 
@@ -435,122 +363,116 @@ internal object TRexDrawer {
             }
             canvas.rotate(rotation, drawX + 12*p, drawY + 10*p)
         }
-        
         canvas.translate(drawX, drawY)
-
         val pathPaint = Paint(paint)
-        
         fun drawPaths() {
             if (isDucking) {
-                pathBuffer.reset()
-                pathBuffer.moveTo(0f, 8*p)
-                pathBuffer.lineTo(20*p, 8*p)
-                pathBuffer.lineTo(26*p, 4*p)
-                pathBuffer.lineTo(32*p, 4*p)
-                pathBuffer.lineTo(32*p, 10*p)
-                pathBuffer.lineTo(24*p, 14*p)
-                pathBuffer.lineTo(0f, 14*p)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, pathPaint)
-                
-                pathBuffer.reset()
-                pathBuffer.moveTo(0f, 8*p)
-                pathBuffer.lineTo(-10*p, 8*p)
-                pathBuffer.lineTo(0f, 12*p)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, pathPaint)
+                pathBuffer.reset(); pathBuffer.moveTo(0f, 8*p); pathBuffer.lineTo(20*p, 8*p); pathBuffer.lineTo(26*p, 4*p)
+                pathBuffer.lineTo(32*p, 4*p); pathBuffer.lineTo(32*p, 10*p); pathBuffer.lineTo(24*p, 14*p); pathBuffer.lineTo(0f, 14*p)
+                pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
+                pathBuffer.reset(); pathBuffer.moveTo(0f, 8*p); pathBuffer.lineTo(-10*p, 8*p); pathBuffer.lineTo(0f, 12*p)
+                pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
             } else {
-                pathBuffer.reset()
-                pathBuffer.moveTo(12*p, 0f)
-                pathBuffer.lineTo(26*p, 0f)
-                pathBuffer.lineTo(26*p, 8*p)
-                pathBuffer.lineTo(16*p, 8*p)
-                pathBuffer.lineTo(16*p, 18*p) 
-                pathBuffer.lineTo(10*p, 18*p)
-                pathBuffer.lineTo(10*p, 4*p)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, pathPaint)
-                
-                pathBuffer.reset()
-                pathBuffer.moveTo(0f, 8*p) 
-                pathBuffer.lineTo(16*p, 8*p)
-                pathBuffer.lineTo(16*p, 18*p)
-                pathBuffer.lineTo(0f, 18*p)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, pathPaint)
-                
-                pathBuffer.reset()
-                pathBuffer.moveTo(0f, 8*p)
-                pathBuffer.lineTo(-14*p, 8*p)
-                pathBuffer.lineTo(0f, 14*p)
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, pathPaint)
+                pathBuffer.reset(); pathBuffer.moveTo(12*p, 0f); pathBuffer.lineTo(26*p, 0f); pathBuffer.lineTo(26*p, 8*p)
+                pathBuffer.lineTo(16*p, 8*p); pathBuffer.lineTo(16*p, 18*p); pathBuffer.lineTo(10*p, 18*p); pathBuffer.lineTo(10*p, 4*p)
+                pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
+                pathBuffer.reset(); pathBuffer.moveTo(0f, 8*p); pathBuffer.lineTo(16*p, 8*p); pathBuffer.lineTo(16*p, 18*p)
+                pathBuffer.lineTo(0f, 18*p); pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
+                pathBuffer.reset(); pathBuffer.moveTo(0f, 8*p); pathBuffer.lineTo(-14*p, 8*p); pathBuffer.lineTo(0f, 14*p)
+                pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
             }
         }
-
-        val isBrightSkin = color == Color.parseColor("#FF80AB") || color == Color.parseColor("#B2FF59") || 
-                           color == Color.parseColor("#FFFF00") || color == Color.parseColor("#E0E0E0") || 
-                           color == Color.WHITE || color == Color.parseColor("#BDBDBD")
-        
+        val isBrightSkin = bodyColor == Color.parseColor("#FF80AB") || bodyColor == Color.parseColor("#B2FF59") || 
+                           bodyColor == Color.parseColor("#FFFF00") || bodyColor == Color.parseColor("#E0E0E0") || 
+                           bodyColor == Color.WHITE || bodyColor == Color.parseColor("#BDBDBD")
         if (isBrightSkin) {
-            pathPaint.style = Paint.Style.STROKE
-            pathPaint.strokeWidth = 0.5f * p
-            pathPaint.color = if (isNightMode) {
-                Color.argb(180, (Color.red(bodyColor) + 50).coerceAtMost(255), (Color.green(bodyColor) + 50).coerceAtMost(255), (Color.blue(bodyColor) + 50).coerceAtMost(255))
-            } else {
-                Color.argb(180, (Color.red(bodyColor) * 0.7f).toInt(), (Color.green(bodyColor) * 0.7f).toInt(), (Color.blue(bodyColor) * 0.7f).toInt())
-            }
+            pathPaint.style = Paint.Style.STROKE; pathPaint.strokeWidth = 0.5f * p
+            pathPaint.color = if (isNightMode) Color.argb(180, (Color.red(bodyColor) + 50).coerceAtMost(255), (Color.green(bodyColor) + 50).coerceAtMost(255), (Color.blue(bodyColor) + 50).coerceAtMost(255))
+            else Color.argb(180, (Color.red(bodyColor) * 0.7f).toInt(), (Color.green(bodyColor) * 0.7f).toInt(), (Color.blue(bodyColor) * 0.7f).toInt())
             drawPaths()
         }
-
-        pathPaint.style = Paint.Style.FILL
-        pathPaint.color = bodyColor
-        pathPaint.alpha = 255
-        drawPaths()
-
+        pathPaint.style = Paint.Style.FILL; pathPaint.color = bodyColor; pathPaint.alpha = 255; drawPaths()
+        
+        // Eye and Legs
         if (isDucking) {
-            paint.color = if (isGameOver) Color.BLACK else eyeColor
-            canvas.drawRect(24*p, 5*p, 26*p, 7*p, paint)
+            paint.color = if (isGameOver) Color.BLACK else eyeColor; canvas.drawRect(24*p, 5*p, 26*p, 7*p, paint)
             if (isGameOver) { 
-                paint.color = Color.WHITE
-                paint.strokeWidth = 2f
-                canvas.drawLine(24*p, 5*p, 26*p, 7*p, paint)
-                canvas.drawLine(26*p, 5*p, 24*p, 7*p, paint)
+                paint.color = Color.WHITE; paint.strokeWidth = 2f
+                canvas.drawLine(24*p, 5*p, 26*p, 7*p, paint); canvas.drawLine(26*p, 5*p, 24*p, 7*p, paint)
             }
-            
             paint.color = bodyColor
             if (walkFrame == 0) canvas.drawRect(6*p, 14*p, 10*p, 16*p, paint)
             else canvas.drawRect(14*p, 14*p, 18*p, 16*p, paint)
         } else {
             canvas.drawRect(16*p, 10*p, 19*p, 12*p, paint)
-            paint.color = if (isGameOver) Color.BLACK else eyeColor
-            canvas.drawRect(14*p, 2*p, 16*p, 4*p, paint)
+            paint.color = if (isGameOver) Color.BLACK else eyeColor; canvas.drawRect(14*p, 2*p, 16*p, 4*p, paint)
             if (isGameOver) {
-                paint.color = Color.WHITE
-                paint.strokeWidth = 2f
-                canvas.drawLine(14*p, 2*p, 16*p, 4*p, paint)
-                canvas.drawLine(16*p, 2*p, 14*p, 4*p, paint)
+                paint.color = Color.WHITE; paint.strokeWidth = 2f
+                canvas.drawLine(14*p, 2*p, 16*p, 4*p, paint); canvas.drawLine(16*p, 2*p, 14*p, 4*p, paint)
             }
-            
-            paint.color = bodyColor
-            val ly = 18*p
-            if (isJumping) {
-                canvas.drawRect(4*p, ly, 7*p, ly + 3*p, paint)
-                canvas.drawRect(10*p, ly, 13*p, ly + 3*p, paint)
-            } else {
-                if (walkFrame == 0) {
-                    canvas.drawRect(4*p, ly, 7*p, ly + 5*p, paint) 
-                    canvas.drawRect(10*p, ly, 13*p, ly + 2*p, paint) 
-                } else {
-                    canvas.drawRect(4*p, ly, 7*p, ly + 2*p, paint)
-                    canvas.drawRect(10*p, ly, 13*p, ly + 5*p, paint)
-                }
+            paint.color = bodyColor; val ly = 18*p
+            if (isJumping) { canvas.drawRect(4*p, ly, 7*p, ly + 3*p, paint); canvas.drawRect(10*p, ly, 13*p, ly + 3*p, paint) }
+            else {
+                if (walkFrame == 0) { canvas.drawRect(4*p, ly, 7*p, ly + 5*p, paint); canvas.drawRect(10*p, ly, 13*p, ly + 2*p, paint) }
+                else { canvas.drawRect(4*p, ly, 7*p, ly + 2*p, paint); canvas.drawRect(10*p, ly, 13*p, ly + 5*p, paint) }
+            }
+        }
+
+        // Character Accessories
+        paint.style = Paint.Style.FILL
+        val headX = if (isDucking) 24*p else 14*p
+        val headY = if (isDucking) 4*p else 0f
+        
+        when(member) {
+            "MUMMY" -> {
+                paint.color = Color.RED
+                canvas.drawCircle(headX, headY - 2*p, 3*p, paint)
+                canvas.drawCircle(headX - 4*p, headY - 2*p, 3*p, paint)
+            }
+            "GRANDPA" -> {
+                paint.color = Color.BLACK; paint.style = Paint.Style.STROKE; paint.strokeWidth = 1f * p
+                canvas.drawCircle(headX + p, headY + 3*p, 2.5f*p, paint)
+                canvas.drawCircle(headX + 7*p, headY + 3*p, 2.5f*p, paint)
+                paint.style = Paint.Style.FILL
+            }
+            "TEENAGER" -> {
+                paint.color = Color.parseColor("#00BCD4")
+                canvas.drawRect(headX - 3*p, headY - 2*p, headX + 8*p, headY + p, paint)
+                canvas.drawRect(headX + 8*p, headY - p, headX + 14*p, headY + p, paint)
+            }
+            "SCIENTIST" -> {
+                paint.color = Color.BLACK; pathBuffer.reset()
+                val bx = if (isDucking) 20*p else 14*p
+                val by = if (isDucking) 10*p else 10*p
+                pathBuffer.moveTo(bx, by); pathBuffer.lineTo(bx-2*p, by-2*p); pathBuffer.lineTo(bx-2*p, by+2*p); pathBuffer.close()
+                canvas.drawPath(pathBuffer, paint)
+                pathBuffer.reset(); pathBuffer.moveTo(bx, by); pathBuffer.lineTo(bx+2*p, by-2*p); pathBuffer.lineTo(bx+2*p, by+2*p); pathBuffer.close()
+                canvas.drawPath(pathBuffer, paint)
+            }
+            "ATHLETE" -> {
+                paint.color = Color.RED
+                canvas.drawRect(headX - 2*p, headY + p, headX + 12*p, headY + 3*p, paint)
+            }
+            "PIRATE" -> {
+                paint.color = Color.BLACK; canvas.drawRect(headX - p, headY + 2*p, headX + 3*p, headY + 5*p, paint)
+                paint.strokeWidth = 1f * p; canvas.drawLine(headX - 4*p, headY + 3*p, headX + 12*p, headY + p, paint)
+            }
+            "CHEF" -> {
+                paint.color = Color.WHITE
+                canvas.drawRoundRect(headX - 2*p, headY - 8*p, headX + 12*p, headY - p, 2*p, 2*p, paint)
+                canvas.drawCircle(headX + 5*p, headY - 8*p, 5*p, paint)
+            }
+            "ASTRONAUT" -> {
+                paint.color = Color.argb(100, 129, 212, 250)
+                canvas.drawCircle(headX + 5*p, headY + 4*p, 10*p, paint)
+                paint.style = Paint.Style.STROKE; paint.color = Color.WHITE; paint.strokeWidth = 1f * p
+                canvas.drawCircle(headX + 5*p, headY + 4*p, 10*p, paint)
+                paint.style = Paint.Style.FILL
             }
         }
 
         if (isGameOver && (causeOfDeath == TRexView.ObstacleType.TREE || causeOfDeath == TRexView.ObstacleType.CACTUS || causeOfDeath == TRexView.ObstacleType.ROCK)) {
-            paint.color = Color.YELLOW
-            val starRot = (animationFrame * 5) % 360
+            paint.color = Color.YELLOW; val starRot = (animationFrame * 5) % 360
             for (i in 0..2) {
                 val angle = Math.toRadians((starRot + i * 120).toDouble())
                 val sx = 18*p + Math.cos(angle).toFloat() * 15*p

@@ -45,9 +45,28 @@ class TRexView @JvmOverloads constructor(
     private var animationFrame = 0
     private var walkFrame = 0
 
-    private enum class DinoMember { DADDY, MUMMY, BABY, GRANDPA, TEENAGER, SCIENTIST, ATHLETE, PIRATE, CHEF, ASTRONAUT }
+    private enum class DinoMember(
+        val scale: Float,
+        val jump: Float,
+        val gravityMult: Float = 1.0f,
+        val scoreMult: Float = 1.0f,
+        val canDoubleJump: Boolean = false
+    ) {
+        DADDY(6.5f, -30f),
+        MUMMY(6.0f, -28f),
+        BABY(3.5f, -26f),
+        GRANDPA(5.8f, -24f, scoreMult = 1.5f),
+        TEENAGER(5.5f, -28f),
+        SCIENTIST(5.8f, -28f, scoreMult = 1.2f),
+        ATHLETE(6.0f, -31f, canDoubleJump = true),
+        PIRATE(6.2f, -28f),
+        CHEF(6.0f, -28f),
+        ASTRONAUT(6.0f, -30f, gravityMult = 0.6f)
+    }
+
     private var currentMember = DinoMember.DADDY
     private var memberName = ""
+    private var hasDoubleJumped = false
     private var nameShowFrames = 0
     
     private var highScoreFlash = 0
@@ -80,17 +99,22 @@ class TRexView @JvmOverloads constructor(
     private var nextObstacleDistance = 0f
     private var lastObstacleHeight = 0f
     
+    // Cached objects for optimization
+    private var currentTheme: Theme? = null
+    private val dinoRect = RectF()
+    private val obsRect = RectF()
+    private val tempPoint = PointF()
+
     // Earthquake state
     private var earthquakeShake = 0f
     private var earthquakeTimer = 0
 
-    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
-    private val gameLoop = object : Runnable {
-        override fun run() {
+    private val frameCallback = object : android.view.Choreographer.FrameCallback {
+        override fun doFrame(frameTimeNanos: Long) {
             if (!isGameOver && !isPaused) {
                 update()
                 invalidate()
-                handler.postDelayed(this, 16)
+                android.view.Choreographer.getInstance().postFrameCallback(this)
             }
         }
     }
@@ -120,18 +144,18 @@ class TRexView @JvmOverloads constructor(
 
     override fun pause() {
         isPaused = true
-        handler.removeCallbacks(gameLoop)
+        android.view.Choreographer.getInstance().removeFrameCallback(frameCallback)
     }
 
     override fun resume() {
         isPaused = false
-        handler.removeCallbacks(gameLoop)
-        handler.post(gameLoop)
+        android.view.Choreographer.getInstance().removeFrameCallback(frameCallback)
+        android.view.Choreographer.getInstance().postFrameCallback(frameCallback)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        handler.removeCallbacks(gameLoop)
+        android.view.Choreographer.getInstance().removeFrameCallback(frameCallback)
     }
 
     override fun resetGame() {
@@ -268,31 +292,21 @@ class TRexView @JvmOverloads constructor(
     }
 
     private fun jump() {
-        dinoVelocityY = jumpStrength
-        isJumping = true
-        SoundManager.playClick()
+        if (!isJumping) {
+            dinoVelocityY = currentMember.jump
+            isJumping = true
+            hasDoubleJumped = false
+            SoundManager.playClick()
+        } else if (currentMember.canDoubleJump && !hasDoubleJumped) {
+            dinoVelocityY = currentMember.jump * 0.8f
+            hasDoubleJumped = true
+            SoundManager.playClick()
+        }
     }
 
     private fun applyMemberProperties() {
-        dinoScale = when(currentMember) {
-            DinoMember.DADDY -> 6.5f
-            DinoMember.MUMMY -> 6.0f
-            DinoMember.BABY -> 3.5f
-            DinoMember.GRANDPA -> 5.8f
-            DinoMember.TEENAGER -> 5.5f
-            DinoMember.SCIENTIST -> 5.8f
-            DinoMember.ATHLETE -> 6.0f
-            DinoMember.PIRATE -> 6.2f
-            DinoMember.CHEF -> 6.0f
-            DinoMember.ASTRONAUT -> 6.0f
-        }
-        
-        jumpStrength = when(currentMember) {
-            DinoMember.BABY -> -26f // Slightly stronger jump for baby to clear ~200px trees
-            DinoMember.DADDY -> -30f // Heavier jump
-            DinoMember.ATHLETE -> -32f // High jump
-            else -> -28f
-        }
+        dinoScale = currentMember.scale
+        jumpStrength = currentMember.jump
     }
 
     private fun update() {
@@ -304,13 +318,13 @@ class TRexView @JvmOverloads constructor(
             walkFrame = (walkFrame + 1) % 2
         }
 
-        if (isNightMode) {
+        if (isNightMode && animationFrame % 10 == 0) {
             stars.forEach {
                 if (random.nextFloat() > 0.95f) it.alpha = random.nextInt(255)
             }
         }
 
-        distanceTravelled += gameSpeed
+        distanceTravelled += gameSpeed * currentMember.scoreMult
         score = (distanceTravelled / 50).toInt()
         
         if (score > highScore && highScore > 0 && !isNewHighScoreBroken) {
@@ -319,11 +333,10 @@ class TRexView @JvmOverloads constructor(
         }
         if (highScoreFlash > 0) highScoreFlash--
 
-        // Progression Cycles
         updateEnvironment()
 
         gameSpeed += 0.0025f
-        dinoVelocityY += gravity
+        dinoVelocityY += gravity * currentMember.gravityMult
         dinoY += dinoVelocityY
         
         val dinoHeight = if (isDucking) 16 * dinoScale else 23 * dinoScale
@@ -335,13 +348,41 @@ class TRexView @JvmOverloads constructor(
         }
 
         updateDecorations()
-        
-        // Run particles
-        if (!isJumping) {
-            if (animationFrame % 4 == 0) {
-                runParticles.add(RunParticle(120f + random.nextInt(40), height * groundY - 5, random.nextFloat() * 4 + 2, 200, -gameSpeed * 0.5f, -random.nextFloat() * 2))
-            }
+        updateParticles()
+        updateEvents()
+
+        // Obstacle Spawning and Movement
+        if (score > 1500 && currentWeather == Weather.RAINY && random.nextInt(400) == 0) {
+            obstacles.add(Obstacle(random.nextFloat() * width + 200f, -100f, 30f, 100f, ObstacleType.THUNDERBOLT, random.nextInt(4)))
         }
+        if (score > 3000 && isNightMode && random.nextInt(800) == 0) {
+            obstacles.add(Obstacle(random.nextFloat() * width + 400f, -200f, 80f, 80f, ObstacleType.METEOR, random.nextInt(4)))
+        }
+
+        nextObstacleDistance -= gameSpeed
+        if (nextObstacleDistance <= 0) spawnObstacle()
+
+        val iterator = obstacles.iterator()
+        while (iterator.hasNext()) {
+            val obs = iterator.next()
+            updateObstaclePosition(obs)
+            
+            if (obs.type != ObstacleType.METEOR && obs.type != ObstacleType.THUNDERBOLT) {
+                if (checkCollision(obs)) {
+                    gameOver(obs.type)
+                    break
+                }
+            }
+            
+            if (obs.x + obs.width < -200) iterator.remove()
+        }
+    }
+
+    private fun updateParticles() {
+        if (!isJumping && animationFrame % 4 == 0) {
+            runParticles.add(RunParticle(120f + random.nextInt(40), height * groundY - 5, random.nextFloat() * 4 + 2, 200, -gameSpeed * 0.5f, -random.nextFloat() * 2))
+        }
+        
         val pIter = runParticles.iterator()
         while (pIter.hasNext()) {
             val p = pIter.next()
@@ -352,7 +393,6 @@ class TRexView @JvmOverloads constructor(
             if (p.alpha <= 0) pIter.remove()
         }
 
-        // Explosions
         val eIter = explosions.iterator()
         while (eIter.hasNext()) {
             val e = eIter.next()
@@ -360,114 +400,73 @@ class TRexView @JvmOverloads constructor(
             e.alpha -= 10
             if (e.alpha <= 0) eIter.remove()
         }
+    }
 
-        // Craters and Earthquake
-        updateEvents()
-
-        // Randomly trigger conditions/events (not obstacles)
-        if (score > 1500 && currentWeather == Weather.RAINY && random.nextInt(400) == 0) {
-            // Spawn Thunderbolt (Strike ground/obstacles)
-            val tx = random.nextFloat() * width + 200f
-            obstacles.add(Obstacle(tx, -100f, 30f, 100f, ObstacleType.THUNDERBOLT, random.nextInt(4)))
-        }
-        if (score > 3000 && isNightMode && random.nextInt(800) == 0) {
-            // Spawn Meteor (Create craters)
-            val mx = random.nextFloat() * width + 400f
-            obstacles.add(Obstacle(mx, -200f, 80f, 80f, ObstacleType.METEOR, random.nextInt(4)))
-        }
-
-        nextObstacleDistance -= gameSpeed
-        if (nextObstacleDistance <= 0) spawnObstacle()
-
-        val iterator = obstacles.iterator()
-        while (iterator.hasNext()) {
-            val obs = iterator.next()
-            
-            if (obs.type == ObstacleType.METEOR || obs.type == ObstacleType.THUNDERBOLT) {
-                // Diagonal trajectory
+    private fun updateObstaclePosition(obs: Obstacle) {
+        when (obs.type) {
+            ObstacleType.METEOR, ObstacleType.THUNDERBOLT -> {
                 val fallSpeed = if (obs.type == ObstacleType.THUNDERBOLT) 22f else 14f
                 val horizontalFactor = 1.3f + (obs.variant * 0.1f)
                 obs.x -= gameSpeed * horizontalFactor
                 obs.y += fallSpeed
                 
                 if (obs.y >= height * groundY - obs.height / 2) {
-                    // Impact!
-                    val color = if (obs.type == ObstacleType.METEOR) Color.parseColor("#FF5722") else Color.parseColor("#FFEA00")
-                    explosions.add(Explosion(obs.x + obs.width / 2, height * groundY, color, 20f, 255))
-                    
-                    if (obs.type == ObstacleType.METEOR) {
-                        craters.add(Crater(obs.x + obs.width / 4, obs.width * 1.8f, 255))
-                    }
-
-                    // Shared Impact Logic: Transform nearby obstacles to increase difficulty
-                    var targetsFound = 0
-                    val strikeX = obs.x + obs.width / 2f
-                    val impactRange = if (obs.type == ObstacleType.METEOR) 200f else 150f
-                    
-                    for (other in obstacles) {
-                        if (other != obs && (other.type == ObstacleType.CACTUS || other.type == ObstacleType.TREE || other.type == ObstacleType.ROCK)) {
-                            if (Math.abs(strikeX - (other.x + other.width / 2f)) < impactRange) {
-                                targetsFound++
-                                if (other.type == ObstacleType.ROCK) {
-                                    other.variant = 3 // Shattered/Cracked
-                                    other.width *= 1.5f // Increase difficulty (larger kill zone)
-                                } else {
-                                    // Burn Trees/Cacti
-                                    other.type = ObstacleType.FIRE
-                                    other.width = 240f
-                                    other.height = 240f
-                                    other.y = height * groundY - 240f
-                                }
-                            }
-                        }
-                    }
-                    
-                    // Lightning strike on empty ground creates fire; Meteor creates Crater (already handled)
-                    if (targetsFound == 0 && obs.type == ObstacleType.THUNDERBOLT) {
-                        obstacles.add(Obstacle(obs.x - 100f, height * groundY - 200f, 200f, 200f, ObstacleType.FIRE, 0))
-                    }
-                    SoundManager.playClick()
-                    iterator.remove()
-                    continue
+                    handleObstacleImpact(obs)
+                    obs.x = -1000f // Mark for removal
                 }
-                
-                // Events don't kill while in the air (don't check collision yet)
-                continue 
             }
-else if (obs.type == ObstacleType.PTEROSAUR) {
+            ObstacleType.PTEROSAUR -> {
                 obs.x -= gameSpeed * 1.2f
-                
-                // Dynamic oscillation: frequency and amplitude increase with score
-                // Later in the run, they move in much less predictable paths
                 val freqFactor = (0.1 + (score / 4000.0)).coerceAtMost(0.3)
                 val ampFactor = (3f + (score / 1200f)).coerceAtMost(12f)
-                
-                // Compound oscillation (two sine waves) to make it harder to guess
-                val wave1 = Math.sin(animationFrame * freqFactor + obs.variant)
-                val wave2 = Math.sin(animationFrame * (freqFactor * 0.5) + obs.variant * 2)
-                obs.y += (wave1 + wave2).toFloat() * (ampFactor * 0.5f)
-                
-                // Random "Diving" behavior for elite scores
-                if (score > 2000 && obs.x < width * 0.5f && obs.x > width * 0.2f) {
-                    if (obs.variant % 2 == 0) {
-                        obs.y += 4f // Sudden dip
-                    }
+                obs.y += (Math.sin(animationFrame * freqFactor + obs.variant) + Math.sin(animationFrame * freqFactor * 0.5 + obs.variant * 2)).toFloat() * (ampFactor * 0.5f)
+                if (score > 2000 && obs.x < width * 0.5f && obs.x > width * 0.2f && obs.variant % 2 == 0) {
+                    obs.y += 4f
                 }
-            } else if (obs.type == ObstacleType.BIG_DINO) {
-                // Moving big dino: relatively slow movement relative to game speed
-                val dinoSpeed = if (obs.variant % 2 == 0) 2f else -2f // Some move left faster, some move right
-                obs.x -= (gameSpeed + dinoSpeed)
-            } else {
+            }
+            ObstacleType.BIG_DINO -> {
+                obs.x -= (gameSpeed + if (obs.variant % 2 == 0) 2f else -2f)
+            }
+            else -> {
                 obs.x -= gameSpeed
             }
-
-            if (checkCollision(obs)) {
-                gameOver(obs.type)
-                break
-            }
-            if (obs.x + obs.width < -100) iterator.remove()
         }
-        invalidate()
+    }
+
+    private fun handleObstacleImpact(obs: Obstacle) {
+        val color = if (obs.type == ObstacleType.METEOR) Color.parseColor("#FF5722") else Color.parseColor("#FFEA00")
+        explosions.add(Explosion(obs.x + obs.width / 2, height * groundY, color, 20f, 255))
+        
+        if (obs.type == ObstacleType.METEOR) {
+            craters.add(Crater(obs.x + obs.width / 4, obs.width * 1.8f, 255))
+        }
+
+        val strikeX = obs.x + obs.width / 2f
+        val impactRange = if (obs.type == ObstacleType.METEOR) 200f else 150f
+        var targetsFound = 0
+        
+        for (other in obstacles) {
+            if (other != obs && (other.type == ObstacleType.CACTUS || other.type == ObstacleType.TREE || other.type == ObstacleType.ROCK)) {
+                if (Math.abs(strikeX - (other.x + other.width / 2f)) < impactRange) {
+                    targetsFound++
+                    if (other.type == ObstacleType.ROCK) {
+                        other.variant = 3
+                        other.width *= 1.5f
+                    } else {
+                        other.type = ObstacleType.FIRE
+                        other.width = 240f; other.height = 240f
+                        other.y = height * groundY - 240f
+                    }
+                }
+            }
+        }
+        
+        if (targetsFound == 0 && obs.type == ObstacleType.THUNDERBOLT) {
+            obstacles.add(Obstacle(obs.x - 100f, height * groundY - 200f, 200f, 200f, ObstacleType.FIRE, 0))
+        }
+        SoundManager.playClick()
+    }
+  invalidate()
     }
 
     private fun updateEvents() {
@@ -554,6 +553,7 @@ else if (obs.type == ObstacleType.PTEROSAUR) {
                 }
             }
             lastEnvironmentChangeTime = now
+            currentTheme = getEnvironmentTheme() // Cache new theme
         } else {
             // Randomize but ENSURE at least one major component is different from previous run
             // and favor a light/bright start if it was dark before
@@ -573,6 +573,7 @@ else if (obs.type == ObstacleType.PTEROSAUR) {
                 currentWeather = Weather.entries.random()
             }
             lastEnvironmentChangeTime = now
+            currentTheme = getEnvironmentTheme() // Cache new theme
         }
     }
 
@@ -605,13 +606,13 @@ else if (obs.type == ObstacleType.PTEROSAUR) {
         val isGroupable = baseType == ObstacleType.CACTUS || baseType == ObstacleType.TREE || 
                          baseType == ObstacleType.ROCK || baseType == ObstacleType.BIG_DINO || 
                          baseType == ObstacleType.PTEROSAUR
-        // Progressive group logic: more groups as score increases, up to 4 items
+        // Progressive group logic: more groups as score increases, up to 4 items (+15% base increase)
         val groupChance = when {
-            score > 2500 -> 55
-            score > 1500 -> 45
-            score > 800 -> 25
-            score > 300 -> 12
-            else -> 0
+            score > 2500 -> 70
+            score > 1500 -> 60
+            score > 800 -> 40
+            score > 300 -> 27
+            else -> 15
         }
         
         // Calculate max allowed group width based on current jump ability
@@ -744,8 +745,8 @@ else if (obs.type == ObstacleType.PTEROSAUR) {
         }
         
         val dinoHeight = if (isDucking) 16 * dinoScale else 23 * dinoScale
-        val dinoRect = RectF(100f, dinoY, 100f + 25 * dinoScale, dinoY + dinoHeight)
-        val obsRect = RectF(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height)
+        dinoRect.set(100f, dinoY, 100f + 25 * dinoScale, dinoY + dinoHeight)
+        obsRect.set(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height)
         dinoRect.inset(15f, 10f)
         obsRect.inset(10f, 10f)
         return RectF.intersects(dinoRect, obsRect)
@@ -775,14 +776,13 @@ else if (obs.type == ObstacleType.PTEROSAUR) {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        // update() - Moved to gameLoop
 
         canvas.save()
         if (earthquakeShake != 0f) {
             canvas.translate(earthquakeShake, earthquakeShake * 0.5f)
         }
 
-        val theme = getEnvironmentTheme()
+        val theme = currentTheme ?: getEnvironmentTheme().also { currentTheme = it }
         val envWeather = when(currentWeather) {
             Weather.RAINY -> GameEnvironment.WeatherType.RAIN
             Weather.SNOWY -> GameEnvironment.WeatherType.SNOW
@@ -965,21 +965,7 @@ else if (obs.type == ObstacleType.PTEROSAUR) {
     }
 
     private fun drawDino(canvas: Canvas, x: Float, y: Float, color: Int, eyeColor: Int) {
-        // Special Colors per Member
-        var bodyColor = when(currentMember) {
-            DinoMember.DADDY -> color // Theme default
-            DinoMember.MUMMY -> Color.parseColor("#FF80AB") // Pinkish
-            DinoMember.BABY -> Color.parseColor("#B2FF59") // Bright Green
-            DinoMember.GRANDPA -> Color.parseColor("#9E9E9E") // Gray
-            DinoMember.TEENAGER -> Color.parseColor("#FFFF00") // Neon Yellow
-            DinoMember.SCIENTIST -> Color.parseColor("#E0E0E0") // Light Gray (Lab coat)
-            DinoMember.ATHLETE -> Color.parseColor("#2196F3") // Blue
-            DinoMember.PIRATE -> Color.parseColor("#4E342E") // Brown
-            DinoMember.CHEF -> Color.WHITE
-            DinoMember.ASTRONAUT -> Color.parseColor("#BDBDBD") // Silver
-        }
-        
-        TRexDrawer.drawDino(canvas, x, y, bodyColor, eyeColor, dinoScale, isGameOver, causeOfDeath, isDucking, isJumping, walkFrame, isNightMode, animationFrame, obstacles, paint, pathBuffer)
+        TRexDrawer.drawDino(canvas, x, y, color, eyeColor, dinoScale, isGameOver, causeOfDeath, isDucking, isJumping, walkFrame, isNightMode, animationFrame, obstacles, paint, pathBuffer, currentMember.name)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, textColor: Int) {
@@ -1012,56 +998,62 @@ else if (obs.type == ObstacleType.PTEROSAUR) {
         val isSnowy = currentWeather == Weather.SNOWY
         
         return if (isNightMode) {
-            // Nighttime condition: sky is a very dark charcoal, ground is black (heavier)
-            val bgColor = Color.parseColor("#121212") // Not pure black for sky
+            // Nighttime condition: sky is a very dark charcoal, ground is a very dark variant of the terrain
+            val bgColor = Color.parseColor("#0F0F12") // Deep Midnight Sky
             val textColor = Color.WHITE
-            val cloudColor = if (isRainy) Color.parseColor("#2C2C2C") else Color.parseColor("#333333")
-            val ground = Color.BLACK // Ground is darker than sky
+            val cloudColor = if (isRainy) Color.parseColor("#252528") else Color.parseColor("#2A2A2E")
             
-            // All seasons: Cacti and Trees are GREEN
-            val cac = Color.parseColor("#2E7D32")
-            val tree = Color.parseColor("#1B5E20")
+            // All seasons: Cacti and Trees are DARK GREEN
+            val cac = Color.parseColor("#1B3A1D")
+            val tree = Color.parseColor("#122A14")
             
             when (currentSeason) {
                 Season.WINTER -> {
-                    Theme(bgColor, textColor, Color.parseColor("#90CAF9"), cloudColor, ground, Color.parseColor("#1A237E"), cac, tree, Color.parseColor("#F48FB1"), Color.WHITE)
+                    Theme(bgColor, textColor, Color.parseColor("#607D8B"), cloudColor, Color.parseColor("#0A0E12"), Color.parseColor("#1A237E"), cac, tree, Color.parseColor("#9C27B0"), Color.WHITE)
                 }
                 Season.AUTUMN -> {
-                    Theme(bgColor, textColor, Color.parseColor("#CFD8DC"), cloudColor, ground, Color.parseColor("#212121"), cac, tree, Color.parseColor("#F48FB1"), Color.WHITE)
+                    Theme(bgColor, textColor, Color.parseColor("#8D6E63"), cloudColor, Color.parseColor("#0D0A08"), Color.parseColor("#212121"), cac, tree, Color.parseColor("#9C27B0"), Color.WHITE)
                 }
                 else -> {
-                    Theme(bgColor, textColor, Color.parseColor("#BDC1C6"), cloudColor, ground, Color.parseColor("#263238"), cac, tree, Color.parseColor("#F48FB1"), Color.WHITE)
+                    Theme(bgColor, textColor, Color.parseColor("#66BB6A"), cloudColor, Color.parseColor("#080D08"), Color.parseColor("#263238"), cac, tree, Color.parseColor("#9C27B0"), Color.WHITE)
                 }
             }
         } else {
-            // Daytime condition: sky is dimmed for less brightness, ground remains significantly darker
-            // All colors here reduced by 20% brightness for "darker air/ground" request
-            val cloudColor = when {
-                isRainy -> Color.parseColor("#8C989E") // B0BEC5 -20%
-                isSnowy -> Color.parseColor("#CCCCCC") // White -20%
-                else -> Color.parseColor("#C4C4C4") // F5F5F5 -20%
-            }
+            // Daytime condition: Sky is the background (Air), Ground is the terrain.
+            // All base colors are logically selected and then darkened by 20% as requested.
             
-            // All seasons: Cacti and Trees are GREEN
-            val cac = Color.parseColor("#388E3C")
-            val tree = Color.parseColor("#2E7D32")
+            // Cacti and Trees are always GREEN
+            val cac = Color.parseColor("#2E7D32")
+            val tree = Color.parseColor("#1B5E20")
 
             when (currentSeason) {
                 Season.SPRING -> {
-                    val bg = if (isRainy) Color.parseColor("#8FB2AF") else Color.parseColor("#A0B8A1")
-                    Theme(bg, Color.BLACK, Color.parseColor("#1B5E20"), cloudColor, Color.parseColor("#53802D"), Color.parseColor("#CCAB00"), cac, tree, Color.parseColor("#BD3362"), Color.parseColor("#5091C5"))
+                    // Air: Soft Sky Blue -> #6CA4BC (-20%)
+                    // Ground: Vibrant Grass -> #388E3C (-20% of #4CAF50 is ~#3D8C40)
+                    val bg = if (isRainy) Color.parseColor("#607D8B") else Color.parseColor("#6CA4BC")
+                    val cloud = if (isRainy) Color.parseColor("#78909C") else Color.parseColor("#BDBDBD")
+                    Theme(bg, Color.BLACK, Color.parseColor("#2E7D32"), cloud, Color.parseColor("#3D8C40"), Color.parseColor("#CCAB00"), cac, tree, Color.parseColor("#AD1457"), Color.parseColor("#0277BD"))
                 }
                 Season.SUMMER -> {
-                    val bg = if (isRainy) Color.parseColor("#9DB584") else Color.parseColor("#B8BE7D")
-                    Theme(bg, Color.BLACK, Color.parseColor("#C99A24"), cloudColor, Color.parseColor("#C46612"), Color.parseColor("#CCAB00"), cac, tree, Color.parseColor("#AD164D"), Color.parseColor("#CCBC2F"))
+                    // Air: Clear Deep Blue -> #0099CC (-20% of #00BFFF is ~#0099CC)
+                    // Ground: Warm Field -> #6F9C3B
+                    val bg = if (isRainy) Color.parseColor("#546E7A") else Color.parseColor("#0099CC")
+                    val cloud = if (isRainy) Color.parseColor("#78909C") else Color.parseColor("#CFD8DC")
+                    Theme(bg, Color.BLACK, Color.parseColor("#FBC02D"), cloud, Color.parseColor("#6F9C3B"), Color.parseColor("#CCAB00"), cac, tree, Color.parseColor("#C2185B"), Color.parseColor("#FBC02D"))
                 }
                 Season.AUTUMN -> {
-                    val bg = if (isRainy) Color.parseColor("#CCA366") else Color.parseColor("#CCB38E")
-                    Theme(bg, Color.BLACK, Color.parseColor("#AD3611"), cloudColor, Color.parseColor("#992B0A"), Color.parseColor("#CCAB00"), cac, tree, Color.parseColor("#9E2020"), Color.parseColor("#CC7A00"))
+                    // Air: Hazy Gold -> #CCA366 (-20%)
+                    // Ground: Earthy Soil -> #816D65
+                    val bg = if (isRainy) Color.parseColor("#795548") else Color.parseColor("#CCA366")
+                    val cloud = if (isRainy) Color.parseColor("#5D4037") else Color.parseColor("#BCAAA4")
+                    Theme(bg, Color.BLACK, Color.parseColor("#D84315"), cloud, Color.parseColor("#816D65"), Color.parseColor("#CCAB00"), cac, tree, Color.parseColor("#A52714"), Color.parseColor("#E65100"))
                 }
                 Season.WINTER -> {
-                    val bg = if (isSnowy) Color.parseColor("#8C989E") else Color.parseColor("#96B2C9")
-                    Theme(bg, Color.BLACK, Color.parseColor("#025F96"), cloudColor, Color.parseColor("#145EA8"), Color.parseColor("#CCAB00"), cac, tree, Color.parseColor("#9B1349"), Color.parseColor("#CCCCCC"))
+                    // Air: Frosty Gray-Blue -> #78909C
+                    // Ground: Snowy Slush -> #BDBFC0
+                    val bg = if (isSnowy) Color.parseColor("#455A64") else Color.parseColor("#78909C")
+                    val cloud = if (isSnowy) Color.parseColor("#ECEFF1") else Color.parseColor("#CFD8DC")
+                    Theme(bg, Color.BLACK, Color.parseColor("#0277BD"), cloud, Color.parseColor("#BDBFC0"), Color.parseColor("#CCAB00"), cac, tree, Color.parseColor("#880E4F"), Color.WHITE)
                 }
             }
         }
