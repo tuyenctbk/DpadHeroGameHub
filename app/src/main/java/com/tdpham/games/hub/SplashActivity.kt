@@ -14,6 +14,11 @@ import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.ConfigManager
 import com.tdpham.games.common.AdManager
 
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
 class SplashActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val startMainRunnable = Runnable {
@@ -25,12 +30,19 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        // Run heavy initializations in background to avoid blocking transition to MainActivity
-        Thread {
-            SoundManager.init(this)
+        // Use lifecycleScope for safer, structured background initialization
+        lifecycleScope.launch(Dispatchers.IO) {
+            // Warm up SharedPreferences and SoundManager
+            SoundManager.init(this@SplashActivity)
+            
+            // Wait slightly for system to stabilize before hitting GMS services
+            delay(500)
             ConfigManager.init()
-            AdManager.init(this)
-        }.start()
+            
+            // AdMob init can be heavy on Binder, give it another gap
+            delay(300)
+            AdManager.init(this@SplashActivity)
+        }
 
         // Animation for splash content
         findViewById<android.view.View>(R.id.splash_content).apply {

@@ -5,12 +5,17 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class TRexView @JvmOverloads constructor(
@@ -66,8 +71,8 @@ class TRexView @JvmOverloads constructor(
 
     private var currentMember = DinoMember.DADDY
     private var memberName = ""
-    private var hasDoubleJumped = false
     private var nameShowFrames = 0
+    private var hasDoubleJumped = false
     
     private var highScoreFlash = 0
     private var isNewHighScoreBroken = false
@@ -103,7 +108,6 @@ class TRexView @JvmOverloads constructor(
     private var currentTheme: Theme? = null
     private val dinoRect = RectF()
     private val obsRect = RectF()
-    private val tempPoint = PointF()
 
     // Earthquake state
     private var earthquakeShake = 0f
@@ -182,6 +186,7 @@ class TRexView @JvmOverloads constructor(
             DinoMember.ASTRONAUT -> R.string.trex_astronaut
         })
         nameShowFrames = 120 // Show for ~2 seconds
+        hasDoubleJumped = false
 
         earthquakeShake = 0f
         earthquakeTimer = 0
@@ -203,7 +208,6 @@ class TRexView @JvmOverloads constructor(
         groundDots.clear()
         stars.clear()
         runParticles.clear()
-        explosions.clear()
         particles.clear()
         repeat(40) {
             stars.add(Star(random.nextFloat() * 2000, random.nextFloat() * 400, random.nextFloat() * 3 + 1, random.nextInt(255)))
@@ -231,7 +235,7 @@ class TRexView @JvmOverloads constructor(
 
         return when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE -> {
-                if (isPaused) resume() else if (!isJumping && !isDucking) jump()
+                if (isPaused) resume() else jump()
                 true
             }
             KeyEvent.KEYCODE_DPAD_DOWN -> {
@@ -264,7 +268,7 @@ class TRexView @JvmOverloads constructor(
             }
 
             if (event.y < height * 0.5f) {
-                if (!isJumping && !isDucking) jump()
+                jump()
             } else {
                 if (!isJumping) {
                     isDucking = true
@@ -465,8 +469,6 @@ class TRexView @JvmOverloads constructor(
             obstacles.add(Obstacle(obs.x - 100f, height * groundY - 200f, 200f, 200f, ObstacleType.FIRE, 0))
         }
         SoundManager.playClick()
-    }
-  invalidate()
     }
 
     private fun updateEvents() {

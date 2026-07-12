@@ -13,6 +13,11 @@ import com.google.firebase.Firebase
 import com.tdpham.games.R
 import com.tdpham.games.hub.GuideManager
 
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 abstract class BaseGameActivity : AppCompatActivity() {
     
     protected abstract val gameKey: String
@@ -32,11 +37,16 @@ abstract class BaseGameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutId())
 
-        firebaseAnalytics = try {
-            Firebase.analytics
-        } catch (e: Exception) {
-            android.util.Log.e("BaseGameActivity", "Failed to initialize Firebase Analytics: ${e.message}", e)
-            null
+        lifecycleScope.launch(Dispatchers.Default) {
+            val analytics = try {
+                Firebase.analytics
+            } catch (e: Exception) {
+                android.util.Log.e("BaseGameActivity", "Failed to initialize Firebase Analytics: ${e.message}", e)
+                null
+            }
+            withContext(Dispatchers.Main) {
+                firebaseAnalytics = analytics
+            }
         }
         
         val view = findViewById<View>(getGameViewId())

@@ -38,6 +38,11 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.Firebase
 
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 class MainActivity : AppCompatActivity() {
 
     private var firebaseAnalytics: FirebaseAnalytics? = null
@@ -46,11 +51,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        firebaseAnalytics = try {
-            Firebase.analytics
-        } catch (e: Throwable) {
-            android.util.Log.e("MainActivity", "Failed to initialize Firebase Analytics: ${e.message}", e)
-            null
+        // Initialize Firebase Analytics in background to avoid blocking main thread during Binder contention
+        lifecycleScope.launch(Dispatchers.Default) {
+            val analytics = try {
+                Firebase.analytics
+            } catch (e: Throwable) {
+                android.util.Log.e("MainActivity", "Failed to initialize Firebase Analytics: ${e.message}", e)
+                null
+            }
+            withContext(Dispatchers.Main) {
+                firebaseAnalytics = analytics
+            }
         }
 
         val title = findViewById<android.view.View>(R.id.main_title)
