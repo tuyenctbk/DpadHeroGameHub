@@ -16,9 +16,37 @@ import com.tdpham.games.R
 object GuideManager {
     private const val PREFS_NAME = "game_guides"
 
-    fun shouldShowGuide(context: Context, gameKey: String): Boolean {
+    enum class GuidePhase { DISCOVERY, FAMILIARITY, MASTERY }
+
+    fun getGuidePhase(context: Context, gameKey: String): GuidePhase {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        return prefs.getBoolean("show_$gameKey", true)
+        
+        // Check legacy "don't show again" boolean first
+        if (!prefs.getBoolean("show_$gameKey", true)) return GuidePhase.MASTERY
+        
+        val launchCount = prefs.getInt("launch_count_$gameKey", 0)
+        return when {
+            launchCount == 0 -> GuidePhase.DISCOVERY
+            launchCount < 5 -> GuidePhase.FAMILIARITY
+            else -> GuidePhase.MASTERY
+        }
+    }
+
+    fun incrementLaunchCount(context: Context, gameKey: String) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val current = prefs.getInt("launch_count_$gameKey", 0)
+        prefs.edit().putInt("launch_count_$gameKey", current + 1).apply()
+    }
+
+    fun markGuideAsRead(context: Context, gameKey: String) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        // Ensure it moves past DISCOVERY at minimum
+        val current = prefs.getInt("launch_count_$gameKey", 0)
+        if (current == 0) prefs.edit().putInt("launch_count_$gameKey", 1).apply()
+    }
+
+    fun shouldShowGuide(context: Context, gameKey: String): Boolean {
+        return getGuidePhase(context, gameKey) != GuidePhase.MASTERY
     }
 
     fun showGuide(context: Context, gameKey: String, title: String, content: String, buttonText: String? = null, onDismiss: () -> Unit) {

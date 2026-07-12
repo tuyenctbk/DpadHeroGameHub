@@ -24,6 +24,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     private lateinit var btnHelp: View
     private var isGuideShowing = false
     private var hasStarted = false
+    private var activeOverlay: View? = null
 
     protected open fun shouldShowHelpButton(): Boolean = false
 
@@ -71,16 +72,108 @@ abstract class BaseGameActivity : AppCompatActivity() {
             helpContainer?.visibility = View.GONE
         }
 
-        if (GuideManager.shouldShowGuide(this, gameKey)) {
-            showGameGuide()
-        } else {
-            startGameWithAnalytics()
-            (view as View).alpha = 0f
-            (view as View).animate().alpha(1f).setDuration(400).start()
-            (view as View).requestFocus()
+        handleGuideProgression()
+        saveLastPlayed()
+    }
+
+    private fun handleGuideProgression() {
+        val phase = GuideManager.getGuidePhase(this, gameKey)
+
+        when (phase) {
+            GuideManager.GuidePhase.DISCOVERY -> {
+                showGameGuide()
+            }
+            GuideManager.GuidePhase.FAMILIARITY -> {
+                showAutoHideOverlay()
+                startGameWithAnalytics()
+                focusGame()
+            }
+            GuideManager.GuidePhase.MASTERY -> {
+                showMasteryHint()
+                startGameWithAnalytics()
+                focusGame()
+            }
+        }
+        GuideManager.incrementLaunchCount(this, gameKey)
+    }
+
+    private fun focusGame() {
+        val view = findViewById<View>(getGameViewId())
+        view.alpha = 0f
+        view.animate().alpha(1f).setDuration(400).start()
+        view.requestFocus()
+    }
+
+    private fun showAutoHideOverlay() {
+        val root = findViewById<android.view.ViewGroup>(android.R.id.content)
+        val overlay = android.widget.FrameLayout(this).apply {
+            layoutParams = android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                android.view.Gravity.BOTTOM
+            )
+            setPadding(48, 48, 48, 48)
+            setBackgroundColor(android.graphics.Color.argb(180, 0, 0, 0))
         }
 
-        saveLastPlayed()
+        val text = android.widget.TextView(this).apply {
+            text = gameInstructions
+            setTextColor(android.graphics.Color.WHITE)
+            setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 16f)
+            gravity = android.view.Gravity.CENTER
+        }
+
+        overlay.addView(text)
+        root.addView(overlay)
+        activeOverlay = overlay
+
+        overlay.alpha = 0f
+        overlay.animate()
+            .alpha(1f)
+            .setDuration(500)
+            .withEndAction {
+                overlay.animate()
+                    .alpha(0f)
+                    .setStartDelay(6000)
+                    .setDuration(1000)
+                    .withEndAction { 
+                        root.removeView(overlay)
+                        if (activeOverlay == overlay) activeOverlay = null
+                    }
+                    .start()
+            }
+            .start()
+    }
+
+    private fun showMasteryHint() {
+        val root = findViewById<android.view.ViewGroup>(android.R.id.content)
+        val hint = android.widget.TextView(this).apply {
+            layoutParams = android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                android.view.Gravity.TOP or android.view.Gravity.START
+            ).apply { setMargins(32, 32, 0, 0) }
+            text = getString(R.string.guide_hint_keys)
+            setTextColor(android.graphics.Color.WHITE)
+            alpha = 0.5f
+            setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 12f)
+        }
+
+        root.addView(hint)
+        activeOverlay = hint
+        hint.animate().alpha(0f).setStartDelay(3000).setDuration(1000).withEndAction { 
+            root.removeView(hint)
+            if (activeOverlay == hint) activeOverlay = null
+        }.start()
+    }
+
+    private fun removeActiveOverlay() {
+        activeOverlay?.let {
+            it.animate().cancel()
+            val root = findViewById<android.view.ViewGroup>(android.R.id.content)
+            root.removeView(it)
+            activeOverlay = null
+        }
     }
 
     private fun startGameWithAnalytics() {
@@ -100,6 +193,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     abstract fun getGameViewId(): Int
 
     protected fun showGameGuide() {
+        removeActiveOverlay()
         isGuideShowing = true
         gameView.pause()
         val btnText = if (hasStarted) getString(R.string.resume) else getString(R.string.start_game)
@@ -164,6 +258,14 @@ abstract class BaseGameActivity : AppCompatActivity() {
             }
             return true
         }
+        
+        // Hide overlay on any D-pad input
+        if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+            keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
+            keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            removeActiveOverlay()
+        }
+
         if (keyCode == KeyEvent.KEYCODE_S || keyCode == KeyEvent.KEYCODE_VOLUME_MUTE) {
             gameView.toggleSound()
             return true
