@@ -18,19 +18,46 @@ import com.tdpham.games.R
 import com.tdpham.games.common.ConfigManager
 
 object UpdateManager {
+    private const val PREFS_NAME = "update_prefs"
+    private const val LAST_CHECK_TIME = "last_check_time"
+    private const val CHECK_INTERVAL = 24 * 60 * 60 * 1000L // 24 hours
+
     fun checkForUpdates(context: Context, onComplete: (Boolean) -> Unit) {
         val latestVersionCode = ConfigManager.getLatestVersionCode()
+        val minVersionCode = ConfigManager.getMinVersionCode()
         val currentVersionCode = getCurrentVersionCode(context)
-        
-        // Don't show update dialog if we're on the initial version (prevents review issues)
-        // or if we're already up to date
-        if (currentVersionCode > 1 && latestVersionCode > currentVersionCode) {
-            showUpdateDialog(context) {
+
+        val isForceUpdate = currentVersionCode < minVersionCode
+        val isUpdateAvailable = latestVersionCode > currentVersionCode
+
+        // If it's a force update, we show it regardless of the last check time
+        if (isForceUpdate) {
+            showUpdateDialog(context, true) {
                 onComplete(true)
             }
+            return
+        }
+
+        // For regular updates, check if 24 hours have passed since the last check
+        if (isUpdateAvailable && shouldCheckForUpdate(context)) {
+            showUpdateDialog(context, false) {
+                onComplete(true)
+            }
+            updateLastCheckTime(context)
         } else {
             onComplete(false)
         }
+    }
+
+    private fun shouldCheckForUpdate(context: Context): Boolean {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val lastCheck = prefs.getLong(LAST_CHECK_TIME, 0L)
+        return System.currentTimeMillis() - lastCheck > CHECK_INTERVAL
+    }
+
+    private fun updateLastCheckTime(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().putLong(LAST_CHECK_TIME, System.currentTimeMillis()).apply()
     }
 
     private fun getCurrentVersionCode(context: Context): Long {
@@ -53,18 +80,30 @@ object UpdateManager {
         }
     }
 
-    private fun showUpdateDialog(context: Context, onDismiss: () -> Unit) {
+    private fun showUpdateDialog(context: Context, isForceUpdate: Boolean, onDismiss: () -> Unit) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_update)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setCancelable(false)
 
+        if (isForceUpdate) {
+            dialog.setOnKeyListener { _, keyCode, event ->
+                if (keyCode == android.view.KeyEvent.KEYCODE_BACK && event.action == android.view.KeyEvent.ACTION_UP) {
+                    (context as? androidx.appcompat.app.AppCompatActivity)?.finish()
+                    true
+                } else false
+            }
+        }
+
         val btnUpdate = dialog.findViewById<Button>(R.id.btn_update_now)
         val btnLater = dialog.findViewById<Button>(R.id.btn_update_later)
 
+        if (isForceUpdate) {
+            btnLater.visibility = View.GONE
+        }
+
         btnUpdate.setOnClickListener {
-            dialog.dismiss()
             val packageName = context.packageName
             val uri = Uri.parse("market://details?id=$packageName")
             val goToMarket = Intent(Intent.ACTION_VIEW, uri).apply {
@@ -79,7 +118,11 @@ object UpdateManager {
                     Log.e("UpdateManager", "Could not launch Play Store link", ex)
                 }
             }
-            onDismiss()
+            
+            if (!isForceUpdate) {
+                dialog.dismiss()
+                onDismiss()
+            }
         }
 
         btnLater.setOnClickListener {

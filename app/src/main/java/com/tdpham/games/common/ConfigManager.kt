@@ -26,7 +26,8 @@ object ConfigManager {
             rc.setDefaultsAsync(mapOf(
                 "is_ads_enabled" to true,
                 "snake_speed" to 150L,
-                "latest_version_code" to 1L
+                "latest_version_code" to 1L,
+                "min_version_code" to 1L
             ))
             rc.fetchAndActivate()
         } catch (e: Throwable) {
@@ -40,6 +41,16 @@ object ConfigManager {
             rc.getLong("latest_version_code")
         } catch (e: Exception) {
             Log.e("ConfigManager", "Failed to get latest_version_code: ${e.message}")
+            0L
+        }
+    }
+
+    fun getMinVersionCode(): Long {
+        val rc = remoteConfig ?: return 0L
+        return try {
+            rc.getLong("min_version_code")
+        } catch (e: Exception) {
+            Log.e("ConfigManager", "Failed to get min_version_code: ${e.message}")
             0L
         }
     }
