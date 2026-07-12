@@ -34,6 +34,8 @@ Built for tactile feedback and physical controllers:
 | :--- | :--- |
 | **D-Pad Directionals** | Move cursor, paddle, or character |
 | **D-Pad Center / Enter** | Launch ball, select game, or confirm |
+| **UP / DOWN Keys** | Cycle Difficulty Levels (on Game Over screen) |
+| **Menu / Tab Button** | Instantly Switch Difficulty Level |
 | **Back Button** | Return to menu / Exit game |
 | **H / Info Button** | Toggle the "How to Play" guide |
 | **S / Mute Button** | Toggle in-game sound effects |
