@@ -167,8 +167,13 @@ abstract class BaseGameActivity : AppCompatActivity() {
         isGuideShowing = true
         gameView.pause()
         val btnText = if (hasStarted) getString(R.string.resume) else getString(R.string.start_game)
+        
+        // Only show "Don't show again" checkbox if shown at the very beginning (not started yet)
+        val showCheckbox = !hasStarted
+        
         GuideManager.showGuide(
             this, gameKey, gameTitle, gameInstructions, btnText,
+            showCheckbox = showCheckbox,
             onDismiss = {
                 isGuideShowing = false
                 if (!hasStarted) {

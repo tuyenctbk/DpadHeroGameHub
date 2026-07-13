@@ -40,7 +40,7 @@ object GuideManager {
         return false
     }
 
-    fun showGuide(context: Context, gameKey: String, title: String, content: String, buttonText: String? = null, onDismiss: () -> Unit) {
+    fun showGuide(context: Context, gameKey: String, title: String, content: String, buttonText: String? = null, showCheckbox: Boolean = true, onDismiss: () -> Unit) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_guide)
@@ -52,17 +52,21 @@ object GuideManager {
         val checkBox = dialog.findViewById<CheckBox>(R.id.cb_dont_show_again)
         val btnClose = dialog.findViewById<Button>(R.id.btn_close_guide)
 
+        checkBox.visibility = if (showCheckbox) View.VISIBLE else View.GONE
         buttonText?.let { btnClose.text = it }
 
-        // Auto-check the box after 3rd session (starting from 4th launch) to guide user towards dismissal
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val launchCount = prefs.getInt("launch_count_$gameKey", 0)
-        if (launchCount >= 3) {
-            checkBox.isChecked = true
+        if (showCheckbox) {
+            // Auto-check the box after 3rd session (starting from 4th launch) to guide user towards dismissal
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val launchCount = prefs.getInt("launch_count_$gameKey", 0)
+            if (launchCount >= 3) {
+                checkBox.isChecked = true
+            }
         }
 
         btnClose.setOnClickListener {
-            if (checkBox.isChecked) {
+            if (showCheckbox && checkBox.isChecked) {
+                val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                 prefs.edit().putBoolean("show_$gameKey", false).apply()
             }
             dialog.dismiss()
