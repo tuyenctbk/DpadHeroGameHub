@@ -356,8 +356,8 @@ internal object TRexDrawer {
         
         // Squish effect for "lower and lower" ducking
         if (duckingProgress > 0) {
-            val squash = 1f - (0.7f * duckingProgress)
-            canvas.scale(1f, squash, 12 * p, 23 * p)
+            val squash = 1f - (0.5f * duckingProgress)
+            canvas.scale(1f, squash, 12 * p, 0f) // Scale from the top (drawY)
         }
 
         val pathPaint = Paint(paint)
