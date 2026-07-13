@@ -457,7 +457,7 @@ class TetrisView @JvmOverloads constructor(
             celebrationManager.draw(canvas)
             invalidate()
             val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.game_over)
-            drawOverlay(canvas, title, "Score: $score\n${context.getString(R.string.restart_hint)}")
+            drawOverlay(canvas, title, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         }
         else if (paused) drawOverlay(canvas, context.getString(R.string.paused), context.getString(R.string.resume_hint))
     }

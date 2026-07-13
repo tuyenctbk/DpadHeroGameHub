@@ -257,7 +257,7 @@ class SimonSaysView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = size * 0.05f
         paint.typeface = Typeface.MONOSPACE
-        canvas.drawText("SIMON", cx, cy + size * 0.02f, paint)
+        canvas.drawText(context.getString(R.string.game_simon), cx, cy + size * 0.02f, paint)
 
         // HUD
         paint.reset()

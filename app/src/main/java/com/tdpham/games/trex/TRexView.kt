@@ -5,17 +5,12 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
-import androidx.lifecycle.lifecycleScope
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 
 class TRexView @JvmOverloads constructor(
@@ -87,7 +82,6 @@ class TRexView @JvmOverloads constructor(
     
     // Environment State
     private var isNightMode = Random().nextBoolean()
-    private var lastNightToggle = 0
     private var currentSeason = Season.SPRING
     private var currentWeather = Weather.SUNNY
     private var lastEnvironmentChangeTime = 0L
@@ -266,8 +260,8 @@ class TRexView @JvmOverloads constructor(
         repeat(30) {
             particles.add(GameEnvironment.Particle(random.nextFloat() * 2000, random.nextFloat() * 1000, random.nextFloat() * 10 + 5))
         }
-        for (i in 0..5) spawnCloud(random.nextFloat() * 2000)
-        for (i in 0..15) spawnGroundDot(random.nextFloat() * 2000)
+        repeat(6) { spawnCloud(random.nextFloat() * 2000) }
+        repeat(16) { spawnGroundDot(random.nextFloat() * 2000) }
         nextObstacleDistance = 600f
         invalidate()
     }
@@ -298,7 +292,7 @@ class TRexView @JvmOverloads constructor(
                 true
             }
             KeyEvent.KEYCODE_DPAD_LEFT -> {
-                if (isPaused && !isGameOver) {
+                if (isPaused) {
                     selectedMemberIndex = (selectedMemberIndex - 1 + DinoMember.entries.size) % DinoMember.entries.size
                     currentMember = DinoMember.entries[selectedMemberIndex]
                     val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -310,7 +304,7 @@ class TRexView @JvmOverloads constructor(
                 true
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                if (isPaused && !isGameOver) {
+                if (isPaused) {
                     selectedMemberIndex = (selectedMemberIndex + 1) % DinoMember.entries.size
                     currentMember = DinoMember.entries[selectedMemberIndex]
                     val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -489,7 +483,7 @@ class TRexView @JvmOverloads constructor(
             }
             ObstacleType.PTEROSAUR -> {
                 obs.x -= effectiveSpeed * 1.2f
-                val seed = obs.variant + (score / 500).toInt()
+                val seed = obs.variant + (score / 500)
                 val freqFactor = (0.1 + (score / 3000.0) + (Math.sin(seed.toDouble()) * 0.08)).coerceIn(0.08, 0.4)
                 val ampFactor = (5f + (score / 600f) + (Math.cos(seed.toDouble()).toFloat() * 15f)).coerceIn(5f, 30f)
                 
@@ -663,7 +657,7 @@ class TRexView @JvmOverloads constructor(
     private fun spawnGroundDot(x: Float) = groundDots.add(PointF(x, height * groundY + 5 + random.nextInt(40)))
 
     private fun spawnObstacle() {
-        var baseType = when (random.nextInt(30)) {
+        val baseType = when (random.nextInt(30)) {
             in 0..1 -> if (score > 400) ObstacleType.PTEROSAUR else ObstacleType.CACTUS
             in 2..5 -> ObstacleType.TREE
             in 6..7 -> ObstacleType.ROCK
@@ -675,7 +669,7 @@ class TRexView @JvmOverloads constructor(
         
         val isGroupable = baseType == ObstacleType.CACTUS || baseType == ObstacleType.TREE || 
                          baseType == ObstacleType.ROCK || baseType == ObstacleType.BIG_DINO || 
-                         baseType == ObstacleType.PTEROSAUR
+                         baseType == ObstacleType.PTEROSAUR || baseType == ObstacleType.STUMP
         val groupChance = when {
             score > 2500 -> 70
             score > 1500 -> 60
@@ -688,14 +682,19 @@ class TRexView @JvmOverloads constructor(
         val maxJumpDistance = gameSpeed * airTime
         val safeJumpWidth = maxJumpDistance * 0.75f 
 
-        val count = if (isGroupable && random.nextInt(100) < groupChance) {
-            when {
-                baseType == ObstacleType.BIG_DINO -> 2 
-                baseType == ObstacleType.PTEROSAUR -> random.nextInt(2) + 2 
-                score > 3000 -> random.nextInt(3) + 2 
-                score > 2000 -> random.nextInt(2) + 2 
-                else -> 2
-            }
+        val count = if (isGroupable) {
+            val roll = random.nextInt(100)
+            // Stump always groups up
+            if (baseType == ObstacleType.STUMP || roll < groupChance) {
+                when {
+                    baseType == ObstacleType.BIG_DINO -> 2 
+                    baseType == ObstacleType.PTEROSAUR -> random.nextInt(2) + 2 
+                    baseType == ObstacleType.STUMP -> random.nextInt(2) + 2
+                    score > 3000 -> random.nextInt(3) + 2 
+                    score > 2000 -> random.nextInt(2) + 2 
+                    else -> 2
+                }
+            } else 1
         } else 1
         
         var currentGroupWidth = 0f
@@ -709,8 +708,8 @@ class TRexView @JvmOverloads constructor(
             } else baseType
 
             val variant = random.nextInt(4)
-            var width = 0f
-            var height = 0f
+            var width: Float
+            var height: Float
             val sizeBoost = (score / 1500f).coerceAtMost(1f) * 30f
 
             when(type) {
@@ -778,8 +777,7 @@ class TRexView @JvmOverloads constructor(
         val reactionDistance = gameSpeed * 25f 
         val minGap = (maxJumpDistance + reactionDistance) * 0.9f
         val maxExtraGap = 630f 
-        val skyBuffer = if (baseType == ObstacleType.METEOR || baseType == ObstacleType.THUNDERBOLT) 300f else 0f
-        nextObstacleDistance = (minGap + random.nextFloat() * maxExtraGap + skyBuffer + currentGroupWidth).coerceAtLeast(540f)
+        nextObstacleDistance = (minGap + random.nextFloat() * maxExtraGap + currentGroupWidth).coerceAtLeast(540f)
     }
 
     private fun checkCollision(obs: Obstacle): Boolean {
@@ -812,7 +810,7 @@ class TRexView @JvmOverloads constructor(
         val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
         if (isNewHigh) {
             highScore = score
-            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
+            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
         } else {
             currentVictoryWord = ""
         }
@@ -984,7 +982,7 @@ class TRexView @JvmOverloads constructor(
             celebrationManager.update()
             celebrationManager.draw(canvas)
             invalidate()
-            val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.game_over)
+            val title = currentVictoryWord.ifEmpty { context.getString(R.string.game_over) }
             drawOverlay(canvas, title, theme.textColor)
         }
         else if (isPaused) drawOverlay(canvas, context.getString(R.string.game_trex), theme.textColor)

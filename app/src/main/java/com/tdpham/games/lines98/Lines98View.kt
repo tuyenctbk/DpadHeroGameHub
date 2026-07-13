@@ -453,7 +453,7 @@ class Lines98View @JvmOverloads constructor(
             celebrationManager.draw(canvas)
             invalidate()
             val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.game_over)
-            drawOverlay(canvas, title, "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+            drawOverlay(canvas, title, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         } else if (isPaused) {
             drawOverlay(canvas, context.getString(R.string.paused), context.getString(R.string.resume_hint))
         }

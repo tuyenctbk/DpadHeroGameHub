@@ -364,12 +364,22 @@ class MinesweeperView @JvmOverloads constructor(
 
     private fun checkWin() {
         var revealedCount = 0
+        var correctFlags = 0
+        var totalFlags = 0
         for (r in 0 until rows) {
             for (c in 0 until cols) {
                 if (grid[r][c].isRevealed && !grid[r][c].isMine) revealedCount++
+                if (grid[r][c].isFlagged) {
+                    totalFlags++
+                    if (grid[r][c].isMine) correctFlags++
+                }
             }
         }
-        if (revealedCount == (rows * cols - minesCount)) {
+
+        val allNonMinesRevealed = revealedCount == (rows * cols - minesCount)
+        val allMinesCorrectlyFlagged = correctFlags == minesCount && totalFlags == minesCount
+
+        if (allNonMinesRevealed || allMinesCorrectlyFlagged) {
             isWin = true
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
             val oldWins = totalWins
@@ -393,6 +403,7 @@ class MinesweeperView @JvmOverloads constructor(
         if (!grid[r][c].isRevealed && !isGameOver && !isWin) {
             grid[r][c].isFlagged = !grid[r][c].isFlagged
             SoundManager.playFlag()
+            checkWin()
             invalidate()
         }
     }
@@ -624,13 +635,13 @@ class MinesweeperView @JvmOverloads constructor(
             paint.color = if (isWin) Color.GREEN else GamePalette.WARNING
             paint.textAlign = Paint.Align.CENTER
             paint.textSize = width / 18f
-            canvas.drawText(if (isWin) currentVictoryWord else "BOOM! GAME OVER", width / 2f, height / 2f - 20f, paint)
+            canvas.drawText(if (isWin) currentVictoryWord else context.getString(R.string.boom_game_over_label), width / 2f, height / 2f - 20f, paint)
             
             paint.color = GamePalette.TEXT_PRIMARY
             paint.textSize = width / 45f
-            canvas.drawText("${context.getString(R.string.total_wins_label)}: $totalWins", width / 2f, height / 2f + 50f, paint)
-            canvas.drawText(context.getString(R.string.play_again_hint), width / 2f, height / 2f + 90f, paint)
-            canvas.drawText(context.getString(R.string.exit_hint), width / 2f, height / 2f + 130f, paint)
+            canvas.drawText("${context.getString(R.string.total_wins_label)}: $totalWins", width / 2f, height / 2f + 70f, paint)
+            canvas.drawText(context.getString(R.string.play_again_hint), width / 2f, height / 2f + 130f, paint)
+            canvas.drawText(context.getString(R.string.exit_hint), width / 2f, height / 2f + 190f, paint)
         }
     }
 

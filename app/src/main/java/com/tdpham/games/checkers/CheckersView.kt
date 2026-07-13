@@ -581,7 +581,7 @@ class CheckersView @JvmOverloads constructor(
         paint.textSize = 35f
         val lines = sub.split("\n")
         lines.forEachIndexed { i, s ->
-            canvas.drawText(s, width / 2f, height / 2f + 50f + i * 45f, paint)
+            canvas.drawText(s, width / 2f, height / 2f + 70f + i * 60f, paint)
         }
     }
 
