@@ -433,15 +433,6 @@ class TRexView @JvmOverloads constructor(
             }
         }
 
-        distanceTravelled += gameSpeed * currentMember.scoreMult
-        score = (distanceTravelled / 50).toInt()
-        
-        if (score > highScore && highScore > 0 && !isNewHighScoreBroken) {
-            isNewHighScoreBroken = true
-            highScoreFlash = 60
-        }
-        if (highScoreFlash > 0) highScoreFlash--
-
         updateEnvironment()
 
         if (isDucking || duckFrames > 0) {
