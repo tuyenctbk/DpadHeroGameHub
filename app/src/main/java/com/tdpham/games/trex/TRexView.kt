@@ -453,7 +453,7 @@ class TRexView @JvmOverloads constructor(
             duckingProgress = 1f
             if (duckFrames > 0) duckFrames--
             if (duckFrames == 0 && !isDucking) {
-                duckCooldownFrames = 15 // 0.25s cooldown
+                duckCooldownFrames = 30 // 0.5s cooldown
             }
         } else {
             duckingProgress = 0f
@@ -1202,10 +1202,6 @@ class TRexView @JvmOverloads constructor(
             paint.textSize = 38f
             paint.color = textColor
             canvas.drawText(context.getString(R.string.start_game), width / 2f, height / 2f + 310f, paint)
-            
-            paint.textSize = 30f
-            paint.color = if (isNightMode) Color.GRAY else Color.LTGRAY
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), width / 2f, height / 2f + 360f, paint)
         } else {
             paint.textSize = 90f
             paint.color = if (isGameOver) {
