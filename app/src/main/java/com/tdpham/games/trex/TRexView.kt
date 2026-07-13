@@ -1134,18 +1134,20 @@ class TRexView @JvmOverloads constructor(
             paint.textSize = 80f
             paint.color = textColor
             paint.setShadowLayer(5f, 2f, 2f, if (isNightMode) Color.BLACK else Color.WHITE)
-            canvas.drawText(context.getString(R.string.trex_select_character), width / 2f, height / 2f - 180f, paint)
+            // Move title much higher to avoid any tall accessories (King crown, Robot antenna)
+            canvas.drawText(context.getString(R.string.trex_select_character), width / 2f, height / 2f - 320f, paint)
             
             // Draw current selection preview
             val member = DinoMember.entries[selectedMemberIndex]
             val previewScale = 12f
             val previewX = width / 2f - (25 * previewScale / 2f)
-            val previewY = height / 2f - (23 * previewScale / 2f)
+            // Center the dino body vertically in the middle of the screen
+            val previewY = height / 2f - (15 * previewScale / 2f) + 20f
             
             drawDinoPreview(canvas, previewX, previewY, previewScale, member)
             
             // Member Name and Stats
-            paint.textSize = 50f
+            paint.textSize = 55f
             val name = context.getString(when(member) {
                 DinoMember.DADDY -> R.string.trex_daddy
                 DinoMember.NINJA -> R.string.trex_ninja
@@ -1163,21 +1165,25 @@ class TRexView @JvmOverloads constructor(
                 DinoMember.ROBOT -> R.string.trex_robot
                 DinoMember.KING -> R.string.trex_king
             })
-            canvas.drawText(name, width / 2f, height / 2f + 140f, paint)
+            paint.color = Color.parseColor("#FFEB3B")
+            paint.setShadowLayer(10f, 0f, 0f, Color.argb(150, 255, 235, 59))
+            canvas.drawText(name, width / 2f, height / 2f + 160f, paint)
+            paint.clearShadowLayer()
             
-            paint.textSize = 32f
-            paint.color = Color.parseColor("#4CAF50") // Green for Strong
-            canvas.drawText("${context.getString(R.string.trex_strong_prefix)}${context.getString(member.strongPointRes)}", width / 2f, height / 2f + 185f, paint)
+            paint.textSize = 34f
+            paint.color = Color.parseColor("#81C784")
+            canvas.drawText("${context.getString(R.string.trex_strong_prefix)}${context.getString(member.strongPointRes)}", width / 2f, height / 2f + 210f, paint)
             
-            paint.color = Color.parseColor("#FF5252") // Red for Weak
-            canvas.drawText("${context.getString(R.string.trex_weak_prefix)}${context.getString(member.weakPointRes)}", width / 2f, height / 2f + 225f, paint)
+            paint.color = Color.parseColor("#E57373")
+            canvas.drawText("${context.getString(R.string.trex_weak_prefix)}${context.getString(member.weakPointRes)}", width / 2f, height / 2f + 250f, paint)
             
-            paint.textSize = 35f
-            canvas.drawText(context.getString(R.string.start_game), width / 2f, height / 2f + 270f, paint)
+            paint.textSize = 38f
+            paint.color = textColor
+            canvas.drawText(context.getString(R.string.start_game), width / 2f, height / 2f + 310f, paint)
             
-            paint.textSize = 28f
+            paint.textSize = 30f
             paint.color = if (isNightMode) Color.GRAY else Color.LTGRAY
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), width / 2f, height / 2f + 310f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), width / 2f, height / 2f + 360f, paint)
         } else {
             paint.textSize = 90f
             paint.color = if (isGameOver) {
