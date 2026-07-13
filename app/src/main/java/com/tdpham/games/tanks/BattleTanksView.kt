@@ -48,6 +48,7 @@ class BattleTanksView @JvmOverloads constructor(
     private val PREFS_NAME = "battle_tanks_settings"
     private val KEY_START_LEVEL = "start_level"
     private var hintShowFrames = 0
+    private var isInitialized = false
     
     private var bgType = GameEnvironment.BackgroundType.SOLID
     private var isNight = false
@@ -80,8 +81,15 @@ class BattleTanksView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        resetGame()
         animHandler.post(animRunnable)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0 && !isInitialized) {
+            resetGame()
+            isInitialized = true
+        }
     }
 
     override fun startGame() {
@@ -327,14 +335,18 @@ class BattleTanksView @JvmOverloads constructor(
         paint.color = Color.WHITE
         paint.textSize = 36f
         paint.style = Paint.Style.FILL
+        val hudY = height * 0.05f
+        
         paint.textAlign = Paint.Align.LEFT
-        val hudX = Math.round(20f).toFloat()
-        val hudY = Math.round(40f).toFloat()
-        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.level_label)}: $level", hudX, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
+        
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.LTGRAY
+        canvas.drawText("${context.getString(R.string.level_label)}: $level", width / 2f, hudY, paint)
         
         paint.textAlign = Paint.Align.RIGHT
-        val bestX = Math.round(width - 20f).toFloat()
-        canvas.drawText("${context.getString(R.string.best_label)}: $best", bestX, hudY, paint)
+        paint.color = Color.WHITE
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
@@ -342,7 +354,7 @@ class BattleTanksView @JvmOverloads constructor(
             paint.textSize = 28f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 20f, hudY + 45f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 45f, paint)
             paint.alpha = 255
         }
 

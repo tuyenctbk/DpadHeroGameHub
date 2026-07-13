@@ -465,18 +465,14 @@ class MentalMathView @JvmOverloads constructor(
             }
         }
 
-        if (isReviewing || gameOver) {
-            celebrationManager.draw(canvas)
-            
-            if (isReviewing) {
-                val title = if (isCorrect) currentVictoryWord else "${context.getString(R.string.wrong_label)} ${context.getString(R.string.answer_was_label)} $correctAnswer"
-                val sub = if (isCorrect) context.getString(R.string.continue_hint) else context.getString(R.string.finish_hint)
-                drawOverlay(canvas, title, sub)
-            }
-        }
+        celebrationManager.draw(canvas)
 
         if (gameOver) {
             drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+        } else if (isReviewing) {
+            val title = if (isCorrect) currentVictoryWord else "${context.getString(R.string.wrong_label)} ${context.getString(R.string.answer_was_label)} $correctAnswer"
+            val sub = if (isCorrect) context.getString(R.string.continue_hint) else context.getString(R.string.finish_hint)
+            drawOverlay(canvas, title, sub)
         }
     }
 
@@ -485,12 +481,12 @@ class MentalMathView @JvmOverloads constructor(
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.WHITE
-        paint.textSize = 60f // Smaller title for long math labels
-        canvas.drawText(title, width / 2f, height / 2f - 30f, paint)
-        paint.textSize = 35f
+        paint.textSize = 70f 
+        canvas.drawText(title, width / 2f, height / 2f - 80f, paint)
+        paint.textSize = 40f
         val lines = sub.split("\n")
         lines.forEachIndexed { i, s ->
-            canvas.drawText(s, width / 2f, height / 2f + 50f + i * 45f, paint)
+            canvas.drawText(s, width / 2f, height / 2f + 40f + i * 50f, paint)
         }
     }
 }
