@@ -32,7 +32,7 @@
     <string name="snake_instructions">• Dùng D-PAD để di chuyển rắn.\n• Nhấn LÊN/XUỐNG hoặc MENU để đổi LEVEL.\n• LEVEL 1 có tường không gây chết!\n• Ăn táo đỏ để ghi điểm.</string>
     <string name="minesweeper_instructions">• Dùng D-PAD để di chuyển.\n• Nhấn LÊN/XUỐNG hoặc MENU để đổi LEVEL.\n• CENTER để mở, MENU hoặc \'S\' cắm cờ.\n• Mở hết các ô an toàn để thắng!</string>
     <string name="game_4096_instructions">• Dùng D-PAD để trượt các ô.\n• Các ô cùng số sẽ gộp lại.\n• Đạt đến ô 4096 để thắng!</string>
-    <string name="game_trex_instructions">• Nhấn LÊN hoặc CENTER để nhảy.\n• Tránh xương rồng và chim!\n• Trò chơi sẽ nhanh dần theo thời gian.</string>
+    <string name="game_trex_instructions">• Nhấn LÊN hoặc CENTER để nhảy.\n• Nhấn XUỐNG để cúi người.\n• Sử dụng MENU, [M] hoặc [O] để chọn nhân vật.</string>
     <string name="game_brick_break_instructions">• Di chuyển thanh ngang bằng TRÁI/PHẢI.\n• Nhấn CENTER để bắn bóng hoặc tạm dừng.\n• Phá hết gạch để qua màn.\n• Bạn có 3 mạng.</string>
     <string name="game_tictactoe_instructions">• Di chuyển con trỏ bằng D-PAD.\n• Nhấn CENTER để đánh X.\n• Thắng máy bằng cách tạo hàng 3.</string>
     <string name="game_checkers_instructions">• D-PAD: di chuyển. CENTER: chọn.\n• Quân đỏ (bạn) đi lên. Chỉ đi ô đen.\n• Bắt buộc phải ăn quân.\n• Đến hàng cuối để phong Vua.\n• Ăn hết quân đối phương.</string>

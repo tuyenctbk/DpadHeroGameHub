@@ -322,7 +322,7 @@ class TRexView @JvmOverloads constructor(
                 }
                 true
             }
-            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_SETTINGS -> {
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_SETTINGS, KeyEvent.KEYCODE_M, KeyEvent.KEYCODE_O -> {
                 if (isPaused && !isGameOver) {
                     TRexOptionsDialog.show(context) {
                         resetGame() // Reload everything
@@ -945,12 +945,6 @@ class TRexView @JvmOverloads constructor(
 
         // Draw Craters (Meteor impacts -> Water Lakes)
         for (c in craters) {
-            // Water Surface Glow
-            paint.shader = RadialGradient(c.x + c.width / 2f, lineY + 10f, c.width * 0.7f,
-                intArrayOf(Color.parseColor("#4FC3F7"), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
-            canvas.drawCircle(c.x + c.width / 2f, lineY + 10f, c.width * 0.7f, paint)
-            paint.shader = null
-
             // Lake Body (Blue Water)
             paint.color = Color.parseColor("#0288D1")
             paint.alpha = (c.alpha * 0.8f).toInt()

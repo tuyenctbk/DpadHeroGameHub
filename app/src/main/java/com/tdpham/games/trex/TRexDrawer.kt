@@ -158,21 +158,9 @@ internal object TRexDrawer {
             TRexView.ObstacleType.CANYON -> {
                 val lineY = canvas.height * 0.8f
                 
-                // No more danger glow. Just Blue Water.
-                
-                // 1. Water Surface (Subtle highlight)
-                val glowKey = "water_glow_${obs.width}"
-                paint.shader = shaderCache.getOrPut(glowKey) {
-                    RadialGradient(obs.width / 2f, 10f, obs.width * 0.6f,
-                        intArrayOf(Color.parseColor("#81D4FA"), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
-                }
-                canvas.save()
-                canvas.translate(obs.x, lineY)
-                canvas.drawCircle(obs.width / 2f, 10f, obs.width * 0.6f, paint)
-                canvas.restore()
-                paint.shader = null
+                // No more glowing or surface highlights. Just Blue Water.
 
-                // 2. Lake Body (Deep Blue Water)
+                // 1. Lake Body (Deep Blue Water)
                 paint.color = Color.parseColor("#0288D1")
                 pathBuffer.reset()
                 pathBuffer.moveTo(obs.x, lineY - 2f)
@@ -187,12 +175,12 @@ internal object TRexDrawer {
                 pathBuffer.lineTo(obs.x + obs.width, lineY - 2f); pathBuffer.close()
                 canvas.drawPath(pathBuffer, paint)
                 
-                // 3. Water surface line (Reflection)
+                // 2. Water surface line (Subtle Reflection)
                 paint.color = Color.WHITE
-                paint.alpha = 150
+                paint.alpha = 100
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 2f
-                canvas.drawLine(obs.x + 10f, lineY + 5f, obs.x + obs.width - 10f, lineY + 5f, paint)
+                canvas.drawLine(obs.x + 10f, lineY + 2f, obs.x + obs.width - 10f, lineY + 2f, paint)
                 
                 paint.style = Paint.Style.FILL
                 paint.alpha = 255
