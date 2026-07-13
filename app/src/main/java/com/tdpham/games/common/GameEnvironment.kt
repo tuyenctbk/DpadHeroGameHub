@@ -136,15 +136,6 @@ object GameEnvironment {
             BackgroundType.NONE -> {}
         }
 
-        // Add Vignette effect to all backgrounds
-        vignettePaint.shader = RadialGradient(
-            width / 2f, height / 2f, height * 1.2f,
-            intArrayOf(Color.TRANSPARENT, Color.BLACK),
-            floatArrayOf(0.4f, 1.0f),
-            Shader.TileMode.CLAMP
-        )
-        canvas.drawRect(0f, 0f, width, height, vignettePaint)
-
         // 2. Weather
         if (weather != WeatherType.NONE && particles != null) {
             when (weather) {
