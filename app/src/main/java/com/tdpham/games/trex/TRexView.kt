@@ -1003,7 +1003,7 @@ class TRexView @JvmOverloads constructor(
         drawDino(canvas, 100f, dinoY, theme.dinoColor, theme.bgColor)
 
         // Draw Character Name
-        if (nameShowFrames > 0) {
+        if (nameShowFrames > 0 && !isPaused) {
             paint.reset()
             paint.isAntiAlias = true
             paint.textAlign = Paint.Align.CENTER
@@ -1040,6 +1040,17 @@ class TRexView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.high_score_prefix)} ${String.format("%05d", highScore)}  ${String.format("%05d", score)}", scoreX, scoreY, paint)
         paint.clearShadowLayer()
 
+        // Earthquake warning
+        if (earthquakeTimer > 150) {
+            paint.reset()
+            paint.isAntiAlias = true
+            paint.color = Color.RED
+            paint.textSize = 60f
+            paint.textAlign = Paint.Align.CENTER
+            paint.typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+            canvas.drawText(context.getString(R.string.trex_earthquake), width / 2f, height * 0.3f, paint)
+        }
+
         if (isGameOver) {
             celebrationManager.update()
             celebrationManager.draw(canvas)
@@ -1048,22 +1059,6 @@ class TRexView @JvmOverloads constructor(
             drawOverlay(canvas, title, theme.textColor)
         }
         else if (isPaused) drawOverlay(canvas, context.getString(R.string.game_trex), theme.textColor)
-        
-        // Earthquake warning
-        if (earthquakeTimer > 150) {
-            paint.color = Color.RED
-            paint.textSize = 60f
-            paint.textAlign = Paint.Align.CENTER
-            canvas.drawText(context.getString(R.string.trex_earthquake), width / 2f, height * 0.3f, paint)
-        }
-        
-        // Earthquake warning
-        if (earthquakeTimer > 150) {
-            paint.color = Color.RED
-            paint.textSize = 60f
-            paint.textAlign = Paint.Align.CENTER
-            canvas.drawText(context.getString(R.string.trex_earthquake), width / 2f, height * 0.3f, paint)
-        }
 
         canvas.restore()
     }
@@ -1162,12 +1157,6 @@ class TRexView @JvmOverloads constructor(
             
             paint.color = Color.parseColor("#FF5252") // Red for Weak
             canvas.drawText("${context.getString(R.string.trex_weak_prefix)}${context.getString(member.weakPointRes)}", width / 2f, height / 2f + 225f, paint)
-            
-            // Arrows
-            paint.textSize = 60f
-            paint.color = textColor
-            canvas.drawText("<", width / 2f - 200f, height / 2f + 30f, paint)
-            canvas.drawText(">", width / 2f + 200f, height / 2f + 30f, paint)
             
             paint.textSize = 35f
             canvas.drawText(context.getString(R.string.start_game), width / 2f, height / 2f + 270f, paint)
