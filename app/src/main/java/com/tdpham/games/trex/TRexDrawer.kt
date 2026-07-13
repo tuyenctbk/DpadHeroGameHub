@@ -308,7 +308,7 @@ internal object TRexDrawer {
 
     fun drawDino(canvas: Canvas, x: Float, y: Float, color: Int, eyeColor: Int, 
                  p: Float, isGameOver: Boolean, causeOfDeath: TRexView.ObstacleType?, 
-                 isDucking: Boolean, isJumping: Boolean, walkFrame: Int, 
+                 isDucking: Boolean, duckingProgress: Float, isJumping: Boolean, walkFrame: Int,
                  isNightMode: Boolean, animationFrame: Int, obstacles: List<TRexView.Obstacle>,
                  paint: Paint, pathBuffer: Path, member: String) {
         
@@ -353,9 +353,16 @@ internal object TRexDrawer {
             canvas.rotate(rotation, drawX + 12*p, drawY + 10*p)
         }
         canvas.translate(drawX, drawY)
+        
+        // Squish effect for "lower and lower" ducking
+        if (duckingProgress > 0) {
+            val squash = 1f - (0.7f * duckingProgress)
+            canvas.scale(1f, squash, 12 * p, 23 * p)
+        }
+
         val pathPaint = Paint(paint)
         fun drawPaths() {
-            if (isDucking) {
+            if (isDucking || duckingProgress > 0.5f) {
                 pathBuffer.reset(); pathBuffer.moveTo(0f, 8*p); pathBuffer.lineTo(20*p, 8*p); pathBuffer.lineTo(26*p, 4*p)
                 pathBuffer.lineTo(32*p, 4*p); pathBuffer.lineTo(32*p, 10*p); pathBuffer.lineTo(24*p, 14*p); pathBuffer.lineTo(0f, 14*p)
                 pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)

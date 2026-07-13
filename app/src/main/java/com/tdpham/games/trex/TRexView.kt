@@ -83,6 +83,8 @@ class TRexView @JvmOverloads constructor(
     private var memberName = ""
     private var nameShowFrames = 0
     private var hasDoubleJumped = false
+    private var duckFrames = 0
+    private var duckingProgress = 0f
     
     private var highScoreFlash = 0
     private var isNewHighScoreBroken = false
@@ -437,11 +439,21 @@ class TRexView @JvmOverloads constructor(
 
         updateEnvironment()
 
+        if (isDucking) {
+            duckingProgress = (duckingProgress + 0.2f).coerceAtMost(1f)
+            duckFrames = 25 
+        } else if (duckFrames > 0) {
+            duckFrames--
+            // Stay low
+        } else {
+            duckingProgress = (duckingProgress - 0.2f).coerceAtLeast(0f)
+        }
+
         gameSpeed += 0.0025f
         dinoVelocityY += gravity * currentMember.gravityMult
         dinoY += dinoVelocityY
         
-        val dinoHeight = if (isDucking) 12 * dinoScale else 23 * dinoScale
+        val dinoHeight = (23 - (18 * duckingProgress)) * dinoScale
         val actualGroundY = height * groundY - dinoHeight
         if (dinoY >= actualGroundY) {
             dinoY = actualGroundY
@@ -832,10 +844,10 @@ class TRexView @JvmOverloads constructor(
     }
 
     private fun checkCollision(obs: Obstacle): Boolean {
+        val currentDinoHeight = (23 - (18 * duckingProgress)) * dinoScale
         if (obs.type == ObstacleType.CANYON) {
             // Special collision for canyons: lethal if Dino is on ground within canyon X bounds
-            val dinoHeight = if (isDucking) 12 * dinoScale else 23 * dinoScale
-            val actualGroundY = height * groundY - dinoHeight
+            val actualGroundY = height * groundY - currentDinoHeight
             val isOnGround = dinoY >= actualGroundY - 5f
             
             if (isOnGround) {
@@ -847,8 +859,7 @@ class TRexView @JvmOverloads constructor(
             return false
         }
         
-        val dinoHeight = if (isDucking) 12 * dinoScale else 23 * dinoScale
-        dinoRect.set(100f, dinoY, 100f + 25 * dinoScale, dinoY + dinoHeight)
+        dinoRect.set(100f, dinoY, 100f + 25 * dinoScale, dinoY + currentDinoHeight)
         obsRect.set(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height)
         dinoRect.inset(15f, 10f)
         obsRect.inset(10f, 10f)
@@ -1071,7 +1082,7 @@ class TRexView @JvmOverloads constructor(
     }
 
     private fun drawDino(canvas: Canvas, x: Float, y: Float, color: Int, eyeColor: Int) {
-        TRexDrawer.drawDino(canvas, x, y, color, eyeColor, dinoScale, isGameOver, causeOfDeath, isDucking, isJumping, walkFrame, isNightMode, animationFrame, obstacles, paint, pathBuffer, currentMember.name)
+        TRexDrawer.drawDino(canvas, x, y, color, eyeColor, dinoScale, isGameOver, causeOfDeath, isDucking, duckingProgress, isJumping, walkFrame, isNightMode, animationFrame, obstacles, paint, pathBuffer, currentMember.name)
     }
 
     private fun drawGroundDecorations(canvas: Canvas, theme: Theme) {
