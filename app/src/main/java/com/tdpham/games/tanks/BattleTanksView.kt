@@ -58,7 +58,7 @@ class BattleTanksView @JvmOverloads constructor(
     private val gridRect = RectF()
     private val animRunnable = object : Runnable {
         override fun run() {
-            if (gameOver || gamePaused) {
+            if (gameOver) {
                 celebrationManager.update()
                 invalidate()
             }
@@ -81,7 +81,6 @@ class BattleTanksView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        animHandler.post(animRunnable)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -95,6 +94,7 @@ class BattleTanksView @JvmOverloads constructor(
     override fun startGame() {
         requestFocus()
         gamePaused = false
+        SoundManager.playSuccess()
         invalidate()
     }
 
@@ -125,7 +125,7 @@ class BattleTanksView @JvmOverloads constructor(
         best = ScoreManager.getHighScore(context, gameKey, startingLevel)
         gameOver = false
         gamePaused = true
-        celebrationManager.start(0f, 0f)
+        animHandler.removeCallbacks(animRunnable)
         setupLevel()
         hintShowFrames = 100
         invalidate()
@@ -135,8 +135,8 @@ class BattleTanksView @JvmOverloads constructor(
         isLevelLoading = true
         for (r in 0 until rows) for (c in 0 until cols) grid[r][c] = 0
         
-        bgType = listOf(GameEnvironment.BackgroundType.SOLID, GameEnvironment.BackgroundType.GRID, GameEnvironment.BackgroundType.DOTS).random()
-        isNight = Random.nextBoolean()
+        bgType = GameEnvironment.BackgroundType.SOLID
+        isNight = false
         
         // Random map generation
         for (r in 1 until rows - 1) {
@@ -157,9 +157,28 @@ class BattleTanksView @JvmOverloads constructor(
         enemies.clear()
         bullets.clear()
         particles.clear()
-        repeat(20) { particles.add(GameEnvironment.Particle(Random.nextFloat() * 2000, Random.nextFloat() * 2000, Random.nextFloat() * 5)) }
         spawnEnemy()
         isLevelLoading = false
+    }
+
+    private fun onGameOverTriggered() {
+        gameOver = true
+        gamePaused = true
+        SoundManager.playError()
+        val oldBest = best
+        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, startingLevel)
+        if (isNewHigh) best = score
+        celebrationManager.startOutcome(
+            width = width.toFloat(),
+            height = height.toFloat(),
+            isWin = false,
+            isNewHigh = isNewHigh,
+            score = score,
+            highScore = oldBest
+        )
+        onGameOver?.invoke(score)
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
     }
 
     private fun spawnEnemy() {
@@ -312,7 +331,8 @@ class BattleTanksView @JvmOverloads constructor(
                 }
                 4 -> {
                     paint.color = Color.parseColor("#2E7D32")
-                    canvas.drawCircle(c * cellW + cellW/2, r * cellH + cellH/2, cellW/2.5f, paint)
+                    gridRect.set(c * cellW + 8, r * cellH + 8, (c + 1) * cellW - 8, (r + 1) * cellH - 8)
+                    canvas.drawRect(gridRect, paint)
                 }
             }
         }
@@ -321,7 +341,7 @@ class BattleTanksView @JvmOverloads constructor(
         drawTank(canvas, player, Color.parseColor("#4CAF50"))
 
         // Draw Enemies
-        for (e in enemies) drawTank(canvas, e, if (e.hp > 1) Color.parseColor("#E91E63") else Color.parseColor("#F44336"))
+        for (e in enemies) drawTank(canvas, e, if (e.hp > 1) Color.parseColor("#673AB7") else Color.parseColor("#FF5722"))
 
         // Draw Bullets
         paint.color = Color.YELLOW
@@ -431,19 +451,7 @@ class BattleTanksView @JvmOverloads constructor(
             if (tile != 0 && tile != 4) { // Hits something solid
                 if (tile == 1) grid[by][bx] = 0 // Break brick
                 if (tile == 3) {
-                    gameOver = true; gamePaused = true; SoundManager.playError()
-                    val oldBest = best
-                    val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, startingLevel)
-                    if (isNewHigh) best = score
-                    celebrationManager.startOutcome(
-                        width = width.toFloat(),
-                        height = height.toFloat(),
-                        isWin = false,
-                        isNewHigh = isNewHigh,
-                        score = score,
-                        highScore = oldBest
-                    )
-                    onGameOver?.invoke(score)
+                    onGameOverTriggered()
                 }
                 bIter.remove()
                 continue
@@ -484,19 +492,7 @@ class BattleTanksView @JvmOverloads constructor(
                 }
             } else {
                 if (player.x == bx && player.y == by) {
-                    gameOver = true; gamePaused = true; SoundManager.playError()
-                    val oldBest = best
-                    val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, startingLevel)
-                    if (isNewHigh) best = score
-                    celebrationManager.startOutcome(
-                        width = width.toFloat(),
-                        height = height.toFloat(),
-                        isWin = false,
-                        isNewHigh = isNewHigh,
-                        score = score,
-                        highScore = oldBest
-                    )
-                    onGameOver?.invoke(score)
+                    onGameOverTriggered()
                     bIter.remove()
                     continue
                 }
