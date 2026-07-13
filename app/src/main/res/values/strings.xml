@@ -187,6 +187,21 @@
     <string name="trex_rainy">RAINY</string>
     <string name="trex_snowy">SNOWY</string>
 
+    <string name="trex_desc_char_random">Every run a surprise Dino!</string>
+    <string name="trex_desc_char_specific">Use the Dino you selected in the lobby.</string>
+    <string name="trex_desc_time_random">Day or Night cycle.</string>
+    <string name="trex_desc_time_day">Clear daytime sky.</string>
+    <string name="trex_desc_time_night">Dark starry night.</string>
+    <string name="trex_desc_season_random">Cycles through all seasons.</string>
+    <string name="trex_desc_season_spring">Greenery and fresh grass.</string>
+    <string name="trex_desc_season_summer">Bright fields and sun.</string>
+    <string name="trex_desc_season_autumn">Fallen leaves and hazy soil.</string>
+    <string name="trex_desc_season_winter">Snowy terrain and frost.</string>
+    <string name="trex_desc_weather_random">Dynamic weather changes.</string>
+    <string name="trex_desc_weather_sunny">Perfect clear weather.</string>
+    <string name="trex_desc_weather_rainy">Rain and darker clouds.</string>
+    <string name="trex_desc_weather_snowy">Beautiful snowfall.</string>
+
     <string name="trex_point_bonus_score">Bonus Score</string>
     <string name="trex_point_large_hitbox">Large Hitbox</string>
     <string name="trex_point_double_jump">Double Jump</string>
