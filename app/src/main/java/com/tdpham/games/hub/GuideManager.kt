@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 import com.tdpham.games.R
+import com.tdpham.games.trex.TRexOptionsDialog
 
 object GuideManager {
     private const val PREFS_NAME = "game_guides"
@@ -75,6 +76,23 @@ object GuideManager {
 
         setupFocusEffect(btnClose)
         setupFocusEffect(checkBox)
+
+        dialog.setOnKeyListener { _, keyCode, event ->
+            if (event.action == android.view.KeyEvent.ACTION_DOWN) {
+                if (keyCode == android.view.KeyEvent.KEYCODE_M || keyCode == android.view.KeyEvent.KEYCODE_O ||
+                    keyCode == android.view.KeyEvent.KEYCODE_MENU || keyCode == android.view.KeyEvent.KEYCODE_SETTINGS) {
+                    if (gameKey == "trex") {
+                        dialog.dismiss()
+                        // Use the context to show the options dialog directly
+                        TRexOptionsDialog.show(context) {
+                            // On dismiss of options, user might have changed settings
+                        }
+                        return@setOnKeyListener true
+                    }
+                }
+            }
+            false
+        }
 
         dialog.show()
         btnClose.requestFocus()

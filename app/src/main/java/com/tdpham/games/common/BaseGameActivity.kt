@@ -12,6 +12,8 @@ import com.google.firebase.analytics.analytics
 import com.google.firebase.Firebase
 import com.tdpham.games.R
 import com.tdpham.games.hub.GuideManager
+import com.tdpham.games.trex.TRexOptionsDialog
+import com.tdpham.games.trex.TRexView
 
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -93,7 +95,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
             if (GuideManager.shouldShowMasteryHint(this, gameKey)) {
                 showMasteryHint()
             }
-            startGameWithAnalytics()
+            // Do not auto-start game here to allow user to see lobby/options
             focusGame()
         }
         GuideManager.incrementLaunchCount(this, gameKey)
@@ -108,13 +110,19 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     private fun showMasteryHint() {
         val root = findViewById<android.view.ViewGroup>(android.R.id.content)
+        val hintText = if (gameKey == "trex") {
+            "Press [INFO], [M] or [O] for Options"
+        } else {
+            getString(R.string.guide_hint_keys)
+        }
+        
         val hint = android.widget.TextView(this).apply {
             layoutParams = android.widget.FrameLayout.LayoutParams(
                 android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
                 android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
                 android.view.Gravity.TOP or android.view.Gravity.START
             ).apply { setMargins(32, 32, 0, 0) }
-            text = getString(R.string.guide_hint_keys)
+            text = hintText
             setTextColor(android.graphics.Color.WHITE)
             alpha = 0f
             setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 14f)
@@ -226,6 +234,22 @@ abstract class BaseGameActivity : AppCompatActivity() {
         return super.dispatchGenericMotionEvent(event)
     }
 
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        // Intercept M and O keys globally for T-Rex Run
+        if (gameKey == "trex" && event.action == KeyEvent.ACTION_DOWN) {
+            val keyCode = event.keyCode
+            if (keyCode == KeyEvent.KEYCODE_M || keyCode == KeyEvent.KEYCODE_O || 
+                keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_SETTINGS) {
+                // Force show options dialog regardless of focus/pause state
+                TRexOptionsDialog.show(this) {
+                    (gameView as? com.tdpham.games.trex.TRexView)?.resetGame()
+                }
+                return true
+            }
+        }
+        return super.dispatchKeyEvent(event)
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             AdManager.showInterstitial(this) {
@@ -234,6 +258,12 @@ abstract class BaseGameActivity : AppCompatActivity() {
             return true
         }
         
+        // Pass specialized keys (M, O, etc.) to the game view even if activity handles some
+        if (keyCode == KeyEvent.KEYCODE_M || keyCode == KeyEvent.KEYCODE_O || 
+            keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_SETTINGS) {
+            if ((gameView as View).onKeyDown(keyCode, event)) return true
+        }
+
         // Hide overlay on any D-pad input
         if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
             keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
