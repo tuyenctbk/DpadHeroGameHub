@@ -24,7 +24,6 @@ import com.tdpham.games.wordquest.WordQuestActivity
 import com.tdpham.games.lines98.Lines98Activity
 import com.tdpham.games.solitaire.SolitaireActivity
 import com.tdpham.games.dungeon.DungeonEscapeActivity
-import com.tdpham.games.flappy.FlappyHeroActivity
 import com.tdpham.games.twentyfortyeight.TwentyFortyEightActivity
 import com.tdpham.games.trex.TRexActivity
 import com.tdpham.games.tictactoe.TicTacToeActivity
@@ -112,7 +111,6 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_minesweeper to MinesweeperActivity::class.java,
             R.id.btn_trex to TRexActivity::class.java,
             R.id.btn_4096 to TwentyFortyEightActivity::class.java,
-            R.id.btn_flappy to FlappyHeroActivity::class.java,
             R.id.btn_memory to MemoryActivity::class.java,
             R.id.btn_brick_break to BrickBreakActivity::class.java,
             R.id.btn_solitaire to SolitaireActivity::class.java,
@@ -149,7 +147,6 @@ class MainActivity : AppCompatActivity() {
             "minesweeper" -> findViewById<Button>(R.id.btn_minesweeper).requestFocus()
             "trex" -> findViewById<Button>(R.id.btn_trex).requestFocus()
             "4096" -> findViewById<Button>(R.id.btn_4096).requestFocus()
-            "flappy_hero" -> findViewById<Button>(R.id.btn_flappy).requestFocus()
             "memory" -> findViewById<Button>(R.id.btn_memory).requestFocus()
             "brick_break" -> findViewById<Button>(R.id.btn_brick_break).requestFocus()
             "solitaire" -> findViewById<Button>(R.id.btn_solitaire).requestFocus()
