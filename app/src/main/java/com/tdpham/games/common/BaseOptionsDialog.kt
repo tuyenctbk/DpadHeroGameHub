@@ -80,7 +80,7 @@ class BaseOptionsDialog(context: Context) : Dialog(context) {
     private fun setupFocusEffect(view: View) {
         view.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
-                v.animate().scaleX(1.02f).scaleY(1.02f).setDuration(200).start()
+                v.animate().scaleX(1.08f).scaleY(1.08f).setDuration(200).start()
                 v.setBackgroundColor("#33FFFFFF".toColorInt())
             } else {
                 v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()

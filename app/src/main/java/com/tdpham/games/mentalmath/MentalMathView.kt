@@ -27,7 +27,7 @@ class MentalMathView @JvmOverloads constructor(
     private val animHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private val animRunnable = object : Runnable {
         override fun run() {
-            if (gameOver || isReviewing || isPaused) {
+            if (gameOver || isReviewing || isPaused || hintShowFrames > 0) {
                 celebrationManager.update()
                 invalidate()
             }
@@ -341,7 +341,6 @@ class MentalMathView @JvmOverloads constructor(
 
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
 
         // HUD
@@ -468,11 +467,6 @@ class MentalMathView @JvmOverloads constructor(
 
         if (gameOver) {
             drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
-        }
-
-        if (!isReviewing && !gameOver && !isPaused) {
-            celebrationManager.update()
-            invalidate()
         }
     }
 

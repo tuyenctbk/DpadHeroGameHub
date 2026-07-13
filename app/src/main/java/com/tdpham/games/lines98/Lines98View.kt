@@ -2,6 +2,8 @@ package com.tdpham.games.lines98
 
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
@@ -39,6 +41,16 @@ class Lines98View @JvmOverloads constructor(
     private var isPaused = false
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val handler = Handler(Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (isGameOver || hintShowFrames > 0) {
+                celebrationManager.update()
+                invalidate()
+            }
+            handler.postDelayed(this, 50)
+        }
+    }
     
     private val ballColors = intArrayOf(
         Color.parseColor("#F44336"), // Red
@@ -59,6 +71,7 @@ class Lines98View @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        handler.post(animRunnable)
     }
 
     override fun startGame() {
@@ -95,6 +108,11 @@ class Lines98View @JvmOverloads constructor(
         
         hintShowFrames = 100
         invalidate()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(animRunnable)
     }
 
     override fun toggleSound(): Boolean {
@@ -344,7 +362,6 @@ class Lines98View @JvmOverloads constructor(
         
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
 
         GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.SOLID, paint = paint)
@@ -358,7 +375,6 @@ class Lines98View @JvmOverloads constructor(
             pulseFactor = 0.85f
             pulseDirection = 1
         }
-        if (!isGameOver && !isPaused) invalidate()
 
         val cellSize = Math.min(width, height) / (gridSize + 1f)
         val offsetX = (width - cellSize * gridSize) / 2f
@@ -490,9 +506,7 @@ class Lines98View @JvmOverloads constructor(
         }
 
         if (isGameOver) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
-            invalidate()
             val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.game_over)
             drawOverlay(canvas, title, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         } else if (isPaused) {

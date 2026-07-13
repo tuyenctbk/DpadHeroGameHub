@@ -60,7 +60,7 @@ class WordQuestView @JvmOverloads constructor(
     private val animHandler = Handler(Looper.getMainLooper())
     private val animRunnable = object : Runnable {
         override fun run() {
-            if (gameOver) {
+            if (gameOver || hintShowFrames > 0) {
                 celebrationManager.update()
                 invalidate()
             }
@@ -280,7 +280,6 @@ class WordQuestView @JvmOverloads constructor(
 
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
 
         val cellS = 80f

@@ -352,7 +352,6 @@ class SnakeGameView @JvmOverloads constructor(
         
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
         
         // Increase divisor to gridSize + 8 to provide safe margins for TV screens

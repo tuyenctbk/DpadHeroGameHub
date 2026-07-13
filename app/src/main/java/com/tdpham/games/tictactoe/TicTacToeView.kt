@@ -352,7 +352,6 @@ class TicTacToeView @JvmOverloads constructor(
         
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
 
         val size = width.coerceAtMost(height) * 0.65f

@@ -46,6 +46,15 @@ class RoadRacerView @JvmOverloads constructor(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (isGameOver || isPaused || hintShowFrames > 0) {
+                celebrationManager.update()
+                invalidate()
+            }
+            handler.postDelayed(this, 50)
+        }
+    }
     private val gameLoop = object : Runnable {
         override fun run() {
             if (!isGameOver && !isPaused) {
@@ -72,6 +81,7 @@ class RoadRacerView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        handler.post(animRunnable)
     }
 
     override fun startGame() {
@@ -92,6 +102,7 @@ class RoadRacerView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         handler.removeCallbacks(gameLoop)
+        handler.removeCallbacks(animRunnable)
     }
 
     override fun resetGame() {
@@ -280,7 +291,6 @@ class RoadRacerView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
         
         super.onDraw(canvas)
@@ -348,9 +358,7 @@ class RoadRacerView @JvmOverloads constructor(
         }
 
         if (isGameOver) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
-            invalidate()
             val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.crashed_label)
             drawOverlay(canvas, title, "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         }

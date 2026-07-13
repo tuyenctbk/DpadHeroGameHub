@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
@@ -87,11 +89,22 @@ class SokobanView @JvmOverloads constructor(
     private val PREFS_NAME = "sokoban_settings"
     private val KEY_START_LEVEL = "start_level"
     private var hintShowFrames = 0
+    private val handler = Handler(Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (solved || allLevelsDone || hintShowFrames > 0) {
+                celebrationManager.update()
+                invalidate()
+            }
+            handler.postDelayed(this, 50)
+        }
+    }
 
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        loadLevel(0)
+        resetGame()
+        handler.post(animRunnable)
     }
 
     override fun startGame() {
@@ -140,6 +153,11 @@ class SokobanView @JvmOverloads constructor(
             return
         }
         loadLevel(levelIndex + 1)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(animRunnable)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -271,7 +289,6 @@ class SokobanView @JvmOverloads constructor(
 
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
 
         val cell = (width.coerceAtMost(height) / (maxOf(cols, rows) + 2)).toFloat()
@@ -367,9 +384,7 @@ class SokobanView @JvmOverloads constructor(
         }
 
         if (solved || allLevelsDone) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
-            invalidate()
             
             if (allLevelsDone) {
                 drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.pushes_label)}: $totalPushesAllLevels\n${context.getString(R.string.restart_hint)}")

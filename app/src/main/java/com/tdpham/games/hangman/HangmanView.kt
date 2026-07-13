@@ -274,7 +274,6 @@ class HangmanView @JvmOverloads constructor(
         
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
         
         GameEnvironment.draw(canvas, bgType, isNight = isNight, paint = paint)
@@ -326,11 +325,6 @@ class HangmanView @JvmOverloads constructor(
             else drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.next_word_hint)}")
         }
         else if (isPaused) drawOverlay(canvas, context.getString(R.string.game_hangman), context.getString(R.string.start_game))
-        
-        if (!isPaused && !isGameOver && !isWin) {
-            celebrationManager.update()
-            invalidate()
-        }
     }
 
     private fun drawHangman(canvas: Canvas, x: Float, y: Float, h: Float) {

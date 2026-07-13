@@ -54,6 +54,15 @@ class SpinballView @JvmOverloads constructor(
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (isGameOver || isPaused || hintShowFrames > 0) {
+                celebrationManager.update()
+                invalidate()
+            }
+            mainHandler.postDelayed(this, 50)
+        }
+    }
     private val updateRunnable = object : Runnable {
         override fun run() {
             if (!isPaused && !isGameOver) {
@@ -68,6 +77,7 @@ class SpinballView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        mainHandler.post(animRunnable)
         
         // Pre-create spike path
         spikePath.moveTo(radius - 30f, -15f)
@@ -105,6 +115,7 @@ class SpinballView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         mainHandler.removeCallbacks(updateRunnable)
+        mainHandler.removeCallbacks(animRunnable)
     }
 
     override fun startGame() {
@@ -224,7 +235,6 @@ class SpinballView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
 
         super.onDraw(canvas)
@@ -296,9 +306,7 @@ class SpinballView @JvmOverloads constructor(
             val sub = if (isGameOver) "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}" else context.getString(R.string.resume_hint)
             
             if (isGameOver) {
-                celebrationManager.update()
                 celebrationManager.draw(canvas)
-                invalidate()
             }
             
             drawOverlay(canvas, title, sub)

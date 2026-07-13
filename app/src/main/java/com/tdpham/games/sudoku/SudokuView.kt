@@ -322,7 +322,6 @@ class SudokuView @JvmOverloads constructor(
         
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
 
         val grid = width.coerceAtMost(height) * 0.78f

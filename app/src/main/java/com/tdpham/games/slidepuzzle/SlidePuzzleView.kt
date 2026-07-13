@@ -2,6 +2,8 @@ package com.tdpham.games.slidepuzzle
 
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
@@ -42,12 +44,23 @@ class SlidePuzzleView @JvmOverloads constructor(
     private var gameOver = false
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val handler = Handler(Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (gameOver || hintShowFrames > 0) {
+                celebrationManager.update()
+                invalidate()
+            }
+            handler.postDelayed(this, 50)
+        }
+    }
     private var puzzleBitmap: Bitmap? = null
 
     init {
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        handler.post(animRunnable)
     }
 
     override fun startGame() {
@@ -267,7 +280,6 @@ class SlidePuzzleView @JvmOverloads constructor(
         
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
 
         val margin = 60f
@@ -322,10 +334,7 @@ class SlidePuzzleView @JvmOverloads constructor(
         }
 
         if (gameOver) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
-            invalidate()
-
             drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.moves_label)}: $moves\n${context.getString(R.string.restart_hint)}")
         }
     }
@@ -371,5 +380,6 @@ class SlidePuzzleView @JvmOverloads constructor(
         super.onDetachedFromWindow()
         puzzleBitmap?.recycle()
         puzzleBitmap = null
+        handler.removeCallbacks(animRunnable)
     }
 }

@@ -523,7 +523,6 @@ class MinesweeperView @JvmOverloads constructor(
         
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
 
         cellSize = width.coerceAtMost(height).toFloat() / (rows + 5)

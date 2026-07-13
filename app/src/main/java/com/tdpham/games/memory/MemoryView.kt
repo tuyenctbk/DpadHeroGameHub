@@ -53,6 +53,15 @@ class MemoryView @JvmOverloads constructor(
     private val celebrationManager = CelebrationManager()
     private var currentVictoryWord = ""
     private val handler = Handler(Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (gameOver || isProcessing || hintShowFrames > 0) {
+                celebrationManager.update()
+                invalidate()
+            }
+            handler.postDelayed(this, 50)
+        }
+    }
 
     private val symbolThemes = listOf(
         listOf("🍎", "🍌", "🍒", "🍇", "🍓", "🍍", "🥝", "🍉"), // Fruits
@@ -70,6 +79,7 @@ class MemoryView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        handler.post(animRunnable)
     }
 
     override fun startGame() {
@@ -275,7 +285,6 @@ class MemoryView @JvmOverloads constructor(
         
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
 
         val margin = 40f
@@ -325,9 +334,7 @@ class MemoryView @JvmOverloads constructor(
         }
 
         if (gameOver) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
-            invalidate()
             drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.moves_label)}: $moves\n${context.getString(R.string.restart_hint)}")
         }
     }

@@ -2,6 +2,8 @@ package com.tdpham.games.solitaire
 
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
@@ -39,6 +41,16 @@ class SolitaireView @JvmOverloads constructor(
     private var isPaused = false
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val handler = Handler(Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (isGameOver || hintShowFrames > 0) {
+                celebrationManager.update()
+                invalidate()
+            }
+            handler.postDelayed(this, 50)
+        }
+    }
     private val PREFS_NAME = "solitaire_settings"
     private val KEY_DRAW_COUNT = "draw_count"
     private var drawCount = 1
@@ -66,6 +78,7 @@ class SolitaireView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        handler.post(animRunnable)
     }
 
     override fun startGame() {
@@ -425,6 +438,11 @@ class SolitaireView @JvmOverloads constructor(
         }
     }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(animRunnable)
+    }
+
     override fun onDraw(canvas: Canvas) {
         // Green Felt Background
         GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.FELT, paint = paint)
@@ -433,7 +451,6 @@ class SolitaireView @JvmOverloads constructor(
         
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
         
         // Update pulse animation
@@ -446,7 +463,6 @@ class SolitaireView @JvmOverloads constructor(
                 pulseFactor = 0.9f
                 pulseDirection = 1
             }
-            invalidate()
         }
 
         val w = width.toFloat()
@@ -544,9 +560,7 @@ class SolitaireView @JvmOverloads constructor(
         }
 
         if (isGameOver) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
-            invalidate()
             drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         }
     }
