@@ -477,7 +477,7 @@ class TRexView @JvmOverloads constructor(
         dinoVelocityY += gravity * currentMember.gravityMult
         dinoY += dinoVelocityY
         
-        val dinoHeight = (23 - (11.5f * duckingProgress)) * dinoScale // 23 * 0.5 = 11.5, remaining 50% height
+        val dinoHeight = (23 - (16f * duckingProgress)) * dinoScale // 23 - 16 = 7 units high when ducked
         val actualGroundY = height * groundY - dinoHeight
         if (dinoY >= actualGroundY) {
             dinoY = actualGroundY
@@ -868,7 +868,7 @@ class TRexView @JvmOverloads constructor(
     }
 
     private fun checkCollision(obs: Obstacle): Boolean {
-        val currentDinoHeight = (23 - (11.5f * duckingProgress)) * dinoScale
+        val currentDinoHeight = (23 - (16f * duckingProgress)) * dinoScale
         if (obs.type == ObstacleType.CANYON) {
             // Special collision for canyons: lethal if Dino is on ground within canyon X bounds
             val actualGroundY = height * groundY - currentDinoHeight

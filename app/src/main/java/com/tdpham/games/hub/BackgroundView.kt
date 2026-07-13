@@ -15,9 +15,9 @@ class BackgroundView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private var bgType = GameEnvironment.BackgroundType.entries.random()
-    private var weather = GameEnvironment.WeatherType.entries.random()
-    private var isNight = Random().nextBoolean()
+    private var bgType = GameEnvironment.BackgroundType.GRADIENT
+    private var weather = GameEnvironment.WeatherType.RAIN
+    private var isNight = true
     
     private val particles = mutableListOf<GameEnvironment.Particle>()
     private val handler = Handler(Looper.getMainLooper())
@@ -30,10 +30,24 @@ class BackgroundView @JvmOverloads constructor(
 
     private val themeRotator = object : Runnable {
         override fun run() {
-            bgType = GameEnvironment.BackgroundType.entries.random()
-            weather = GameEnvironment.WeatherType.entries.random()
+            // Pick from a curated list of subtle backgrounds for the hub
+            val safeBgs = listOf(
+                GameEnvironment.BackgroundType.GRADIENT,
+                GameEnvironment.BackgroundType.GRID,
+                GameEnvironment.BackgroundType.DOTS,
+                GameEnvironment.BackgroundType.SOLID
+            )
+            val safeWeather = listOf(
+                GameEnvironment.WeatherType.NONE,
+                GameEnvironment.WeatherType.RAIN,
+                GameEnvironment.WeatherType.SNOW,
+                GameEnvironment.WeatherType.FOG
+            )
+            
+            bgType = safeBgs.random()
+            weather = safeWeather.random()
             isNight = Random().nextBoolean()
-            handler.postDelayed(this, 10000) // Change theme every 10 seconds
+            handler.postDelayed(this, 15000) // Change theme every 15 seconds
         }
     }
 

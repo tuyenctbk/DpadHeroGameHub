@@ -160,7 +160,7 @@ object GameEnvironment {
                 }
                 WeatherType.STORM -> {
                     paint.color = Color.parseColor("#AAFFFFFF")
-                    if (random.nextInt(100) < 2) canvas.drawColor(Color.WHITE) // Lightning flash
+                    // Removed lightning flash to prevent visual discomfort
                     for (p in particles) {
                         canvas.drawLine(p.x, p.y, p.x - 5, p.y + 25, paint)
                         p.y += p.speed * 1.5f
