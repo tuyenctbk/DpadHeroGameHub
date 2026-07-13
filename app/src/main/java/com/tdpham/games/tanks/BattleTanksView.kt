@@ -47,6 +47,16 @@ class BattleTanksView @JvmOverloads constructor(
     private var isNight = false
 
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val animHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (gameOver || gamePaused) {
+                celebrationManager.update()
+                invalidate()
+            }
+            animHandler.postDelayed(this, 50)
+        }
+    }
     private val gameLoop = object : Runnable {
         override fun run() {
             if (!gamePaused && !gameOver) {
@@ -64,6 +74,7 @@ class BattleTanksView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        animHandler.post(animRunnable)
     }
 
     override fun startGame() {
@@ -86,6 +97,7 @@ class BattleTanksView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         handler.removeCallbacks(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
     }
 
     override fun resetGame() {
@@ -295,10 +307,12 @@ class BattleTanksView @JvmOverloads constructor(
         if (gameOver) drawOverlay(canvas, context.getString(R.string.mission_failed_label), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         else if (gamePaused) drawOverlay(canvas, context.getString(R.string.game_tanks), "${context.getString(R.string.level_label)} $level\n${context.getString(R.string.start_game)}")
 
-        celebrationManager.update()
         celebrationManager.draw(canvas)
 
-        if (!gamePaused && !gameOver) invalidate()
+        if (!gamePaused && !gameOver) {
+            celebrationManager.update()
+            invalidate()
+        }
     }
 
     private fun drawTank(canvas: Canvas, tank: Tank, color: Int) {

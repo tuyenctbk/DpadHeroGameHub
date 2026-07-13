@@ -61,6 +61,18 @@ class SnakeGameView @JvmOverloads constructor(
     private val screenShake = com.tdpham.games.common.ScreenShake()
 
     private val handler = Handler(Looper.getMainLooper())
+    private val animationHandler = Handler(Looper.getMainLooper())
+    private val animationRunnable = object : Runnable {
+        override fun run() {
+            animationFrame++
+            if (isGameOver) {
+                celebrationManager.update()
+            }
+            invalidate()
+            animationHandler.postDelayed(this, 50)
+        }
+    }
+
     private val gameLoop = object : Runnable {
         override fun run() {
             if (!isGameOver && !isPaused) {
@@ -87,6 +99,7 @@ class SnakeGameView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        animationHandler.post(animationRunnable)
     }
 
     override fun startGame() {
@@ -109,6 +122,7 @@ class SnakeGameView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         handler.removeCallbacks(gameLoop)
+        animationHandler.removeCallbacks(animationRunnable)
     }
 
     override fun resetGame() {
@@ -479,7 +493,6 @@ class SnakeGameView @JvmOverloads constructor(
             val restartHint = context.getString(R.string.restart_hint)
             val exitHint = context.getString(R.string.exit_hint)
             
-            celebrationManager.update()
             celebrationManager.draw(canvas)
             invalidate()
 

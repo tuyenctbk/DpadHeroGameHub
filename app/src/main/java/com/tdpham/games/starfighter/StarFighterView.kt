@@ -55,6 +55,16 @@ class StarFighterView @JvmOverloads constructor(
     private val screenShake = com.tdpham.games.common.ScreenShake()
 
     private val handler = Handler(Looper.getMainLooper())
+    private val animHandler = Handler(Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (gameOver || isPaused) {
+                celebrationManager.update()
+                invalidate()
+            }
+            animHandler.postDelayed(this, 50)
+        }
+    }
     private val gameLoop = object : Runnable {
         override fun run() {
             if (!isPaused && !gameOver) {
@@ -73,6 +83,7 @@ class StarFighterView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        animHandler.post(animRunnable)
     }
 
     override fun startGame() {
@@ -182,6 +193,7 @@ class StarFighterView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         handler.removeCallbacks(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
     }
 
     private fun update() {
@@ -443,14 +455,16 @@ class StarFighterView @JvmOverloads constructor(
         canvas.drawText(livesStr, 40f, Math.round(110f).toFloat(), paint)
 
         if (gameOver) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
-            invalidate()
             val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.mission_failed_label)
             drawOverlay(canvas, title, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         }
         else if (isPaused) drawOverlay(canvas, context.getString(R.string.game_starfighter), context.getString(R.string.start_game))
         
+        if (!isPaused && !gameOver) {
+            celebrationManager.update()
+            invalidate()
+        }
         if (needsInvalidate) invalidate()
     }
 

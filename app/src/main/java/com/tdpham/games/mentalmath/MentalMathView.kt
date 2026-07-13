@@ -24,6 +24,16 @@ class MentalMathView @JvmOverloads constructor(
     override var gameKey: String = "mental_math"
     override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val animHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (gameOver || isReviewing || isPaused) {
+                celebrationManager.update()
+                invalidate()
+            }
+            animHandler.postDelayed(this, 50)
+        }
+    }
 
     private var stage = 1
     private var score = 0
@@ -48,6 +58,12 @@ class MentalMathView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        animHandler.post(animRunnable)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        animHandler.removeCallbacks(animRunnable)
     }
 
     override fun startGame() {
@@ -395,9 +411,7 @@ class MentalMathView @JvmOverloads constructor(
         }
 
         if (isReviewing || gameOver) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
-            invalidate()
             
             if (isReviewing) {
                 val title = if (isCorrect) currentVictoryWord else "${context.getString(R.string.wrong_label)} ${context.getString(R.string.answer_was_label)} $correctAnswer"
@@ -408,6 +422,11 @@ class MentalMathView @JvmOverloads constructor(
 
         if (gameOver) {
             drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+        }
+
+        if (!isReviewing && !gameOver && !isPaused) {
+            celebrationManager.update()
+            invalidate()
         }
     }
 

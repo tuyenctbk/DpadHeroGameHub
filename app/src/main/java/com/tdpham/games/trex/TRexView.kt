@@ -117,6 +117,10 @@ class TRexView @JvmOverloads constructor(
                 update()
                 invalidate()
                 android.view.Choreographer.getInstance().postFrameCallback(this)
+            } else if (isGameOver) {
+                celebrationManager.update()
+                invalidate()
+                android.view.Choreographer.getInstance().postFrameCallback(this)
             }
         }
     }
@@ -806,6 +810,10 @@ class TRexView @JvmOverloads constructor(
         causeOfDeath = type
         isGameOver = true
         SoundManager.playError()
+        // Ensure animation continues for celebration
+        android.view.Choreographer.getInstance().removeFrameCallback(frameCallback)
+        android.view.Choreographer.getInstance().postFrameCallback(frameCallback)
+        
         val oldBest = highScore
         val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
         if (isNewHigh) {
@@ -979,7 +987,6 @@ class TRexView @JvmOverloads constructor(
         }
 
         if (isGameOver) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
             invalidate()
             val title = currentVictoryWord.ifEmpty { context.getString(R.string.game_over) }
