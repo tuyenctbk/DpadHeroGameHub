@@ -45,6 +45,7 @@ class HangmanView @JvmOverloads constructor(
     private var isGameOver = false
     private var isWin = false
     private var isPaused = true
+    private var isInitialized = false
 
     private val celebrationManager = CelebrationManager()
     private val animHandler = Handler(Looper.getMainLooper())
@@ -72,7 +73,6 @@ class HangmanView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        resetGame()
         animHandler.post(animRunnable)
     }
 
@@ -83,6 +83,14 @@ class HangmanView @JvmOverloads constructor(
 
     override fun pause() { isPaused = true; invalidate() }
     override fun resume() { isPaused = false; invalidate() }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0 && !isInitialized) {
+            resetGame()
+            isInitialized = true
+        }
+    }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()

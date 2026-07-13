@@ -21,7 +21,6 @@ import com.tdpham.games.slidepuzzle.SlidePuzzleActivity
 import com.tdpham.games.spinball.SpinballActivity
 import com.tdpham.games.mentalmath.MentalMathActivity
 import com.tdpham.games.simon.SimonSaysActivity
-import com.tdpham.games.froggy.FroggyCrossActivity
 import com.tdpham.games.tanks.BattleTanksActivity
 import com.tdpham.games.wordquest.WordQuestActivity
 import com.tdpham.games.lines98.Lines98Activity
@@ -129,7 +128,6 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_tanks to BattleTanksActivity::class.java,
             R.id.btn_starfighter to StarFighterActivity::class.java,
             R.id.btn_dungeon to DungeonEscapeActivity::class.java,
-            R.id.btn_froggy to FroggyCrossActivity::class.java,
             R.id.btn_slide_puzzle to SlidePuzzleActivity::class.java,
             R.id.btn_hangman to HangmanActivity::class.java,
             R.id.btn_simon to SimonSaysActivity::class.java,
@@ -169,7 +167,6 @@ class MainActivity : AppCompatActivity() {
             "battle_tanks" -> findViewById<Button>(R.id.btn_tanks).requestFocus()
             "star_fighter" -> findViewById<Button>(R.id.btn_starfighter).requestFocus()
             "dungeon_escape" -> findViewById<Button>(R.id.btn_dungeon).requestFocus()
-            "froggy_cross" -> findViewById<Button>(R.id.btn_froggy).requestFocus()
             "slide_puzzle" -> findViewById<Button>(R.id.btn_slide_puzzle).requestFocus()
             "hangman" -> findViewById<Button>(R.id.btn_hangman).requestFocus()
             "simon_says" -> findViewById<Button>(R.id.btn_simon).requestFocus()
