@@ -44,6 +44,9 @@ class BattleTanksView @JvmOverloads constructor(
     private var isLevelLoading = false
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val PREFS_NAME = "battle_tanks_settings"
+    private val KEY_START_LEVEL = "start_level"
+    private var hintShowFrames = 0
     
     private var bgType = GameEnvironment.BackgroundType.SOLID
     private var isNight = false
@@ -104,13 +107,17 @@ class BattleTanksView @JvmOverloads constructor(
     }
 
     override fun resetGame() {
+        // Load start level from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        level = prefs.getInt(KEY_START_LEVEL, 1).coerceIn(1, 3)
+
         score = 0
-        level = 1
-        best = ScoreManager.getHighScore(context, gameKey)
+        best = ScoreManager.getHighScore(context, gameKey, level)
         gameOver = false
         gamePaused = true
         celebrationManager.start(0f, 0f)
         setupLevel()
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -168,11 +175,22 @@ class BattleTanksView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_RIGHT -> moveTank(player, 1)
             KeyEvent.KEYCODE_DPAD_DOWN -> moveTank(player, 2)
             KeyEvent.KEYCODE_DPAD_LEFT -> moveTank(player, 3)
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
+    }
+
+    private fun showOptions() {
+        pause()
+        BattleTanksOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -243,6 +261,11 @@ class BattleTanksView @JvmOverloads constructor(
         cellW = width.toFloat() / cols
         cellH = height.toFloat() / rows
 
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         // update() - Moved to gameLoop
 
         GameEnvironment.draw(canvas, bgType, isNight = isNight, paint = paint, particles = particles)
@@ -310,6 +333,16 @@ class BattleTanksView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.RIGHT
         val bestX = Math.round(width - 20f).toFloat()
         canvas.drawText("${context.getString(R.string.best_label)}: $best", bestX, hudY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 20f, hudY + 45f, paint)
+            paint.alpha = 255
+        }
 
         if (gameOver) drawOverlay(canvas, context.getString(R.string.mission_failed_label), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         else if (gamePaused) drawOverlay(canvas, context.getString(R.string.game_tanks), "${context.getString(R.string.level_label)} $level\n${context.getString(R.string.start_game)}")
@@ -386,7 +419,7 @@ class BattleTanksView @JvmOverloads constructor(
                 if (tile == 3) {
                     gameOver = true; gamePaused = true; SoundManager.playError()
                     val oldBest = best
-                    val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+                    val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, level)
                     if (isNewHigh) best = score
                     celebrationManager.startOutcome(
                         width = width.toFloat(),
@@ -439,7 +472,7 @@ class BattleTanksView @JvmOverloads constructor(
                 if (player.x == bx && player.y == by) {
                     gameOver = true; gamePaused = true; SoundManager.playError()
                     val oldBest = best
-                    val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+                    val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, level)
                     if (isNewHigh) best = score
                     celebrationManager.startOutcome(
                         width = width.toFloat(),

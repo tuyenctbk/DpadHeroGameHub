@@ -84,6 +84,9 @@ class SokobanView @JvmOverloads constructor(
     private var totalPushesAllLevels = 0
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val PREFS_NAME = "sokoban_settings"
+    private val KEY_START_LEVEL = "start_level"
+    private var hintShowFrames = 0
 
     init {
         isFocusable = true
@@ -100,10 +103,12 @@ class SokobanView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
-        levelIndex = 0
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        levelIndex = (prefs.getInt(KEY_START_LEVEL, 1) - 1).coerceIn(0, levels.lastIndex)
         totalPushesAllLevels = 0
         allLevelsDone = false
-        loadLevel(0)
+        loadLevel(levelIndex)
+        hintShowFrames = 100
     }
 
     private fun loadLevel(index: Int) {
@@ -115,7 +120,7 @@ class SokobanView @JvmOverloads constructor(
         board = Array(rows) { r -> map[r].toCharArray() }
         solved = false
         pushes = 0
-        best = ScoreManager.getHighScore(context, gameKey)
+        best = ScoreManager.getHighScore(context, gameKey, levelIndex)
         for (r in 0 until rows) for (c in 0 until cols) {
             if (board[r][c] == '@') {
                 playerR = r
@@ -150,11 +155,21 @@ class SokobanView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_LEFT -> move(0, -1)
             KeyEvent.KEYCODE_DPAD_RIGHT -> move(0, 1)
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> restartCurrentLevel()
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
+    }
+
+    private fun showOptions() {
+        SokobanOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -219,7 +234,7 @@ class SokobanView @JvmOverloads constructor(
             val oldBest = best
             if (levelIndex >= levels.lastIndex) {
                 allLevelsDone = true
-                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, levelIndex)
                 if (isNewHigh) best = score
                 celebrationManager.startOutcome(
                     width = width.toFloat(),
@@ -231,10 +246,13 @@ class SokobanView @JvmOverloads constructor(
                 )
                 onGameOver?.invoke(score)
             } else {
+                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, levelIndex)
+                if (isNewHigh) best = score
                 celebrationManager.startOutcome(
                     width = width.toFloat(),
                     height = height.toFloat(),
                     isWin = true,
+                    isNewHigh = isNewHigh,
                     score = score,
                     highScore = oldBest
                 )
@@ -250,6 +268,12 @@ class SokobanView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(GamePalette.BACKGROUND)
+
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         val cell = (width.coerceAtMost(height) / (maxOf(cols, rows) + 2)).toFloat()
         val left = (width - cols * cell) / 2f
         val top = (height - rows * cell) / 2f + 40f
@@ -313,6 +337,18 @@ class SokobanView @JvmOverloads constructor(
         paint.textSize = 30f
         val centerX = Math.round(width / 2f).toFloat()
         val textY = Math.round(top - 16f).toFloat()
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 30f, hudY + 45f, paint)
+            paint.alpha = 255
+            paint.textAlign = Paint.Align.CENTER
+        }
+
         when {
             allLevelsDone -> {
                 canvas.drawText(currentVictoryWord, centerX, textY, paint)

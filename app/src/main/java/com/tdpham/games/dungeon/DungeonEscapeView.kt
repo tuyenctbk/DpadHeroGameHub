@@ -391,6 +391,7 @@ class DungeonEscapeView @JvmOverloads constructor(
         gameOver = true
         gamePaused = true
         val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+        if (isNewHigh) best = score
         celebrationManager.startOutcome(
             width = width.toFloat(),
             height = height.toFloat(),

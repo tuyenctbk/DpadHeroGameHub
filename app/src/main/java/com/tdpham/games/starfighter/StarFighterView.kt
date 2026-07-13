@@ -32,6 +32,10 @@ class StarFighterView @JvmOverloads constructor(
     private var isPaused = true
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val PREFS_NAME = "starfighter_settings"
+    private val KEY_DIFFICULTY = "difficulty_index"
+    private var currentDifficultyIndex = 1
+    private var hintShowFrames = 0
 
     private var playerX = 0f
     private var playerY = 0f
@@ -104,13 +108,17 @@ class StarFighterView @JvmOverloads constructor(
     }
 
     override fun resetGame() {
+        // Load difficulty from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        currentDifficultyIndex = prefs.getInt(KEY_DIFFICULTY, 1).coerceIn(0, 2)
+
         score = 0
-        best = ScoreManager.getHighScore(context, gameKey)
+        best = ScoreManager.getHighScore(context, gameKey, currentDifficultyIndex)
         gameOver = false
         isPaused = true
         celebrationManager.start(0f, 0f)
         gunLevel = 1
-        lives = 3
+        lives = when(currentDifficultyIndex) { 0 -> 5; 2 -> 1; else -> 3 }
         invulnerableUntil = 0L
         powerUpEndTime = 0L
         bullets.clear()
@@ -124,6 +132,8 @@ class StarFighterView @JvmOverloads constructor(
         repeat(60) {
             bgParticles.add(GameEnvironment.Particle(random.nextFloat() * 2000, random.nextFloat() * 2000, random.nextFloat() * 4 + 1))
         }
+        
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -153,12 +163,23 @@ class StarFighterView @JvmOverloads constructor(
                 pause()
                 return true
             }
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> {
                 toggleSound()
                 return true
             }
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    private fun showOptions() {
+        pause()
+        StarFighterOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -199,7 +220,7 @@ class StarFighterView @JvmOverloads constructor(
     private fun update() {
         if (isPaused || gameOver) return
 
-        val step = 12f
+        val step = when(currentDifficultyIndex) { 0 -> 14f; 2 -> 10f; else -> 12f }
         if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) playerX = (playerX - step).coerceAtLeast(playerSize)
         if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) playerX = (playerX + step).coerceAtMost(width - playerSize)
         if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_UP)) playerY = (playerY - step).coerceAtLeast(playerSize)
@@ -207,7 +228,8 @@ class StarFighterView @JvmOverloads constructor(
 
         val now = System.currentTimeMillis()
         
-        if (now - lastEnemySpawn > (1200 - (score / 200) * 50).coerceAtLeast(600)) {
+        val spawnInterval = when(currentDifficultyIndex) { 0 -> 1500; 2 -> 800; else -> 1200 }
+        if (now - lastEnemySpawn > (spawnInterval - (score / 200) * 50).coerceAtLeast(500)) {
             val type = if (random.nextFloat() < 0.15) EnemyType.FAST else if (random.nextFloat() < 0.1) EnemyType.BIG else EnemyType.NORMAL
             enemies.add(Enemy(random.nextFloat() * (width - 150) + 75, -100f, type))
             lastEnemySpawn = now
@@ -351,7 +373,7 @@ class StarFighterView @JvmOverloads constructor(
     private fun endGame() {
         gameOver = true
         val oldBest = best
-        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, currentDifficultyIndex)
         if (isNewHigh) {
             best = score
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
@@ -364,6 +386,12 @@ class StarFighterView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         val needsInvalidate = screenShake.apply(canvas)
+        
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         if (playerX == 0f) { playerX = width / 2f; playerY = height - 250f }
         
         GameEnvironment.draw(canvas, bgType, isNight = true, paint = paint, particles = bgParticles)
@@ -451,6 +479,16 @@ class StarFighterView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 100f, paint)
+            paint.alpha = 255
+        }
         
         paint.textAlign = Paint.Align.LEFT
         paint.color = Color.RED

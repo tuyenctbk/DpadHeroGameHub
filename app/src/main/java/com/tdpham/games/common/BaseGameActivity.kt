@@ -341,6 +341,24 @@ abstract class BaseGameActivity : AppCompatActivity() {
                         (gameView as? com.tdpham.games.roadracer.RoadRacerView)?.resetGame()
                     }
                     return true
+                } else if (gameKey == "sokoban") {
+                    removeActiveOverlay()
+                    com.tdpham.games.sokoban.SokobanOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.sokoban.SokobanView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "battle_tanks") {
+                    removeActiveOverlay()
+                    com.tdpham.games.tanks.BattleTanksOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.tanks.BattleTanksView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "starfighter") {
+                    removeActiveOverlay()
+                    com.tdpham.games.starfighter.StarFighterOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.starfighter.StarFighterView)?.resetGame()
+                    }
+                    return true
                 }
             }
         }

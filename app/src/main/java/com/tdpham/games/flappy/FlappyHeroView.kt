@@ -447,7 +447,7 @@ class FlappyHeroView @JvmOverloads constructor(
                 SoundManager.playScore()
                 if (score > best) {
                     best = score
-                    ScoreManager.updateHighScore(context, gameKey, best)
+                    ScoreManager.updateHighScore(context, gameKey, best, currentDifficulty.ordinal)
                 }
             }
         }
