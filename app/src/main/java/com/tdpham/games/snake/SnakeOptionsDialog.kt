@@ -3,13 +3,15 @@ package com.tdpham.games.snake
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.edit
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.toColorInt
 import com.tdpham.games.R
 
 object SnakeOptionsDialog {
@@ -20,7 +22,7 @@ object SnakeOptionsDialog {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_snake_settings)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         dialog.setCancelable(true)
 
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -45,7 +47,7 @@ object SnakeOptionsDialog {
         levelLayout.setOnClickListener {
             val index = prefs.getInt(KEY_DIFFICULTY, 1)
             val nextIndex = (index + 1) % 3
-            prefs.edit().putInt(KEY_DIFFICULTY, nextIndex).apply()
+            prefs.edit { putInt(KEY_DIFFICULTY, nextIndex) }
             updateLevelText()
         }
 
@@ -64,7 +66,7 @@ object SnakeOptionsDialog {
         view.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
                 v.animate().scaleX(1.02f).scaleY(1.02f).setDuration(200).start()
-                v.setBackgroundColor(Color.parseColor("#33FFFFFF"))
+                v.setBackgroundColor("#33FFFFFF".toColorInt())
             } else {
                 v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
                 v.setBackgroundColor(Color.TRANSPARENT)

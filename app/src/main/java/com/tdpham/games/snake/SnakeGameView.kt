@@ -7,6 +7,8 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
+import androidx.core.graphics.toColorInt
+import androidx.core.graphics.withSave
 import com.tdpham.games.R
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
@@ -82,13 +84,13 @@ class SnakeGameView @JvmOverloads constructor(
                 moveSnake()
                 animationFrame++
                 invalidate()
-            } else if (isPaused || isGameOver) {
+            } else {
                 animationFrame++
                 invalidate()
             }
             if (!isGameOver) {
                 // Speed up game slightly as score increases, starting from difficulty base speed
-                val delay = (currentDifficulty.speed - (score / 20) * 5).coerceAtLeast(60).toLong()
+                val delay = (currentDifficulty.speed - (score / 20) * 5).coerceAtLeast(60)
                 handler.postDelayed(this, delay)
             }
         }
@@ -279,7 +281,7 @@ class SnakeGameView @JvmOverloads constructor(
                 speed, 
                 Math.cos(angle).toFloat() * speed,
                 random.nextFloat() * 5f + 2f,
-                Color.parseColor("#FFD700") // Gold particles for eating
+                "#FFD700".toColorInt() // Gold particles for eating
             ))
         }
     }
@@ -401,36 +403,36 @@ class SnakeGameView @JvmOverloads constructor(
             val rectBottom = offsetY + (point.y + 1) * cellSize - 1
             
             if (i == 0 && headScale > 1.01f) {
-                canvas.save()
-                val cx = rectLeft + cellSize / 2f
-                val cy = rectTop + cellSize / 2f
-                canvas.scale(headScale, headScale, cx, cy)
-                val cornerRadius = cellSize / 2f
-                canvas.drawRoundRect(rectLeft, rectTop, rectRight, rectBottom, cornerRadius, cornerRadius, paint)
-                
-                // Draw eyes inside the scaled head
-                paint.color = Color.WHITE
-                val eyeSize = cellSize / 6f
-                val eyeOffset = cellSize / 4f
-                when (direction) {
-                    Direction.UP -> {
-                        canvas.drawCircle(rectLeft + eyeOffset, rectTop + eyeOffset, eyeSize, paint)
-                        canvas.drawCircle(rectRight - eyeOffset, rectTop + eyeOffset, eyeSize, paint)
-                    }
-                    Direction.DOWN -> {
-                        canvas.drawCircle(rectLeft + eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
-                        canvas.drawCircle(rectRight - eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
-                    }
-                    Direction.LEFT -> {
-                        canvas.drawCircle(rectLeft + eyeOffset, rectTop + eyeOffset, eyeSize, paint)
-                        canvas.drawCircle(rectLeft + eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
-                    }
-                    Direction.RIGHT -> {
-                        canvas.drawCircle(rectRight - eyeOffset, rectTop + eyeOffset, eyeSize, paint)
-                        canvas.drawCircle(rectRight - eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                canvas.withSave {
+                    val cx = rectLeft + cellSize / 2f
+                    val cy = rectTop + cellSize / 2f
+                    canvas.scale(headScale, headScale, cx, cy)
+                    val cornerRadius = cellSize / 2f
+                    canvas.drawRoundRect(rectLeft, rectTop, rectRight, rectBottom, cornerRadius, cornerRadius, paint)
+                    
+                    // Draw eyes inside the scaled head
+                    paint.color = Color.WHITE
+                    val eyeSize = cellSize / 6f
+                    val eyeOffset = cellSize / 4f
+                    when (direction) {
+                        Direction.UP -> {
+                            canvas.drawCircle(rectLeft + eyeOffset, rectTop + eyeOffset, eyeSize, paint)
+                            canvas.drawCircle(rectRight - eyeOffset, rectTop + eyeOffset, eyeSize, paint)
+                        }
+                        Direction.DOWN -> {
+                            canvas.drawCircle(rectLeft + eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                            canvas.drawCircle(rectRight - eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                        }
+                        Direction.LEFT -> {
+                            canvas.drawCircle(rectLeft + eyeOffset, rectTop + eyeOffset, eyeSize, paint)
+                            canvas.drawCircle(rectLeft + eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                        }
+                        Direction.RIGHT -> {
+                            canvas.drawCircle(rectRight - eyeOffset, rectTop + eyeOffset, eyeSize, paint)
+                            canvas.drawCircle(rectRight - eyeOffset, rectBottom - eyeOffset, eyeSize, paint)
+                        }
                     }
                 }
-                canvas.restore()
                 headScale *= 0.9f
                 invalidate()
             } else {
@@ -510,18 +512,18 @@ class SnakeGameView @JvmOverloads constructor(
         val scoreLabelWidth = paint.measureText(scoreLabel)
         
         // Only the score number pops, scaling from its center
-        val scoreStr = "$score"
+        val scoreStr = score.toString()
         val scoreNumX = labelX + scoreLabelWidth
         
         if (scorePopScale > 1.01f) {
-            canvas.save()
-            // Approximate center for scaling
-            val pivotX = scoreNumX + (scoreStr.length * paint.textSize * 0.3f)
-            val pivotY = labelY - (paint.textSize * 0.4f)
-            canvas.scale(scorePopScale, scorePopScale, pivotX, pivotY)
-            paint.color = GamePalette.SCORE
-            canvas.drawText(scoreStr, scoreNumX, labelY, paint)
-            canvas.restore()
+            canvas.withSave {
+                // Approximate center for scaling
+                val pivotX = scoreNumX + (scoreStr.length * paint.textSize * 0.3f)
+                val pivotY = labelY - (paint.textSize * 0.4f)
+                canvas.scale(scorePopScale, scorePopScale, pivotX, pivotY)
+                paint.color = GamePalette.SCORE
+                canvas.drawText(scoreStr, scoreNumX, labelY, paint)
+            }
             
             scorePopScale *= 0.9f
             invalidate()

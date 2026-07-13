@@ -32,6 +32,7 @@ class HangmanView @JvmOverloads constructor(
     )
 
     private var currentCategory = ""
+    private var currentCategoryIndex = -1
     private var targetWord = ""
     private val usedWords = mutableSetOf<String>()
     private var guessedLetters = mutableSetOf<Char>()
@@ -99,11 +100,18 @@ class HangmanView @JvmOverloads constructor(
 
         // Randomly pick one
         val chosen = availableWords.random()
-        val catKey = when(chosen.first) {
-            "ANIMALS" -> R.string.cat_animals
-            "FRUITS" -> R.string.cat_fruits
-            "COUNTRIES" -> R.string.cat_countries
-            "SPORTS" -> R.string.cat_sports
+        currentCategoryIndex = when(chosen.first) {
+            "ANIMALS" -> 0
+            "FRUITS" -> 1
+            "COUNTRIES" -> 2
+            "SPORTS" -> 3
+            else -> -1
+        }
+        val catKey = when(currentCategoryIndex) {
+            0 -> R.string.cat_animals
+            1 -> R.string.cat_fruits
+            2 -> R.string.cat_countries
+            3 -> R.string.cat_sports
             else -> R.string.help
         }
         currentCategory = context.getString(catKey)
@@ -117,7 +125,7 @@ class HangmanView @JvmOverloads constructor(
         isPaused = true
         cursorRow = 0
         cursorCol = 0
-        highScore = ScoreManager.getHighScore(context, gameKey)
+        highScore = ScoreManager.getHighScore(context, gameKey, currentCategoryIndex)
         bgType = GameEnvironment.BackgroundType.entries.random()
         isNight = Random().nextBoolean()
         invalidate()
@@ -217,7 +225,7 @@ class HangmanView @JvmOverloads constructor(
                         currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
                         score += 10 + remainingAttempts
                         val oldBest = highScore
-                        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+                        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, currentCategoryIndex)
                         if (isNewHigh) highScore = score
                         celebrationManager.startOutcome(
                             width = width.toFloat(),

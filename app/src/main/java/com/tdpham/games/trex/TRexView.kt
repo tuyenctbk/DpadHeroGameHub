@@ -211,13 +211,14 @@ class TRexView @JvmOverloads constructor(
 
     override fun resetGame() {
         score = 0
-        highScore = ScoreManager.getHighScore(context, gameKey)
+        
+        loadSettings()
+        highScore = ScoreManager.getHighScore(context, gameKey, currentMember.ordinal)
         isGameOver = false
         isPaused = true
         causeOfDeath = null
         celebrationManager.start(0f, 0f)
         
-        loadSettings()
         applyMemberProperties()
         memberName = context.getString(when(currentMember) {
             DinoMember.DADDY -> R.string.trex_daddy
@@ -815,7 +816,7 @@ class TRexView @JvmOverloads constructor(
         android.view.Choreographer.getInstance().postFrameCallback(frameCallback)
         
         val oldBest = highScore
-        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, currentMember.ordinal)
         if (isNewHigh) {
             highScore = score
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
@@ -825,6 +826,7 @@ class TRexView @JvmOverloads constructor(
         celebrationManager.startOutcome(
             width = width.toFloat(),
             height = height.toFloat(),
+            isWin = false,
             isNewHigh = isNewHigh,
             score = score,
             highScore = oldBest
