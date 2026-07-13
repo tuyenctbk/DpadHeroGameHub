@@ -9,7 +9,6 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.tdpham.games.R
 import com.tdpham.games.brickbreak.BrickBreakActivity
-import com.tdpham.games.checkers.CheckersActivity
 import com.tdpham.games.snake.SnakeActivity
 import com.tdpham.games.minesweeper.MinesweeperActivity
 import com.tdpham.games.sokoban.SokobanActivity
@@ -18,7 +17,6 @@ import com.tdpham.games.tetris.TetrisActivity
 import com.tdpham.games.starfighter.StarFighterActivity
 import com.tdpham.games.memory.MemoryActivity
 import com.tdpham.games.slidepuzzle.SlidePuzzleActivity
-import com.tdpham.games.spinball.SpinballActivity
 import com.tdpham.games.mentalmath.MentalMathActivity
 import com.tdpham.games.simon.SimonSaysActivity
 import com.tdpham.games.tanks.BattleTanksActivity
@@ -130,9 +128,7 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_dungeon to DungeonEscapeActivity::class.java,
             R.id.btn_slide_puzzle to SlidePuzzleActivity::class.java,
             R.id.btn_hangman to HangmanActivity::class.java,
-            R.id.btn_simon to SimonSaysActivity::class.java,
-            R.id.btn_checkers to CheckersActivity::class.java,
-            R.id.btn_spinball to SpinballActivity::class.java
+            R.id.btn_simon to SimonSaysActivity::class.java
         )
 
         for ((id, activityClass) in games) {
@@ -170,8 +166,6 @@ class MainActivity : AppCompatActivity() {
             "slide_puzzle" -> findViewById<Button>(R.id.btn_slide_puzzle).requestFocus()
             "hangman" -> findViewById<Button>(R.id.btn_hangman).requestFocus()
             "simon_says" -> findViewById<Button>(R.id.btn_simon).requestFocus()
-            "checkers" -> findViewById<Button>(R.id.btn_checkers).requestFocus()
-            "spinball" -> findViewById<Button>(R.id.btn_spinball).requestFocus()
             else -> findViewById<Button>(R.id.btn_snake).requestFocus()
         }
     }

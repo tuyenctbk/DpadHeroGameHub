@@ -532,7 +532,8 @@
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/btn_spinball"
@@ -551,7 +552,8 @@
                 android:drawablePadding="16dp"
                 android:textColor="#FFFFFF"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
 
         </LinearLayout>
     </HorizontalScrollView>
