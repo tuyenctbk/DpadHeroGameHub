@@ -44,25 +44,48 @@ class SplashActivity : AppCompatActivity() {
             }
         }
 
-        // Animation for splash content (Snappier duration)
-        findViewById<android.view.View>(R.id.splash_content).apply {
-            alpha = 0f
-            scaleX = 0.9f
-            scaleY = 0.9f
-            animate()
-                .alpha(1f)
-                .scaleX(1f)
-                .scaleY(1f)
-                .setDuration(600) // Faster animation
-                .setInterpolator(android.view.animation.DecelerateInterpolator())
-                .start()
+        // Animation for splash content with staggered entry
+        val logo = findViewById<android.view.View>(R.id.splash_logo)
+        val title = findViewById<android.view.View>(R.id.splash_title)
+        val loader = findViewById<android.view.View>(R.id.splash_loader)
+        val hint = findViewById<android.view.View>(R.id.splash_hint)
+
+        // Initial state
+        listOf(logo, title, loader, hint).forEach {
+            it.alpha = 0f
+            it.translationY = 20f
         }
+
+        // Staggered Entrance
+        logo.animate().alpha(1f).translationY(0f).setDuration(500).setStartDelay(100).start()
+        title.animate().alpha(1f).translationY(0f).setDuration(500).setStartDelay(250).start()
+        loader.animate().alpha(1f).translationY(0f).setDuration(500).setStartDelay(400).start()
+        hint.animate().alpha(1f).translationY(0f).setDuration(500).setStartDelay(550).start()
+
+        // Subtle continuous pulse for logo
+        logo.postDelayed(object : Runnable {
+            override fun run() {
+                logo.animate()
+                    .scaleX(1.05f)
+                    .scaleY(1.05f)
+                    .setDuration(1000)
+                    .withEndAction {
+                        logo.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(1000)
+                            .withEndAction(this)
+                            .start()
+                    }
+                    .start()
+            }
+        }, 600)
 
         // Hide system UI with modern approach for API 30+, fallback for older versions
         hideSystemUI()
 
-        // Reduced from 2500ms to 1200ms for a much faster entry
-        handler.postDelayed(startMainRunnable, 1200)
+        // Increased slightly to 1500ms to let the staggered animation breathe
+        handler.postDelayed(startMainRunnable, 1800)
     }
 
     override fun onDestroy() {

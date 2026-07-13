@@ -2,7 +2,26 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212">
+    android:background="#0A0A0A">
+
+    <!-- Deep Gradient Background -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/main_background_gradient" />
+
+    <!-- Animated Dynamic Background -->
+    <com.tdpham.games.hub.BackgroundView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5" />
+
+    <!-- Retro Scanline Overlay -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/scanline_pattern"
+        android:alpha="0.1" />
 
     <LinearLayout
         android:id="@+id/splash_content"
@@ -13,34 +32,45 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/splash_logo"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_launcher"
+            android:elevation="8dp" />
 
         <TextView
+            android:id="@+id/splash_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/app_name"
             android:textColor="#FFFFFF"
-            android:textSize="32sp"
-            android:textStyle="bold" />
+            android:textSize="42sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            android:shadowColor="#80000000"
+            android:shadowDx="4"
+            android:shadowDy="4"
+            android:shadowRadius="8" />
 
         <ProgressBar
+            android:id="@+id/splash_loader"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="40dp"
             android:indeterminate="true"
             android:indeterminateTint="#4CAF50" />
 
         <TextView
+            android:id="@+id/splash_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:text="@string/supported_devices_hint"
-            android:textColor="#B0BEC5"
-            android:textSize="14sp" />
+            android:textColor="#90A4AE"
+            android:textSize="14sp"
+            android:letterSpacing="0.1" />
 
     </LinearLayout>
 
@@ -50,8 +80,9 @@
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="32dp"
         android:text="@string/retro_game_studio"
-        android:textColor="#666666"
-        android:textSize="14sp"
-        android:letterSpacing="0.2" />
+        android:textColor="#444444"
+        android:textSize="12sp"
+        android:letterSpacing="0.3"
+        android:textAllCaps="true" />
 
 </FrameLayout>
