@@ -357,13 +357,14 @@ internal object TRexDrawer {
         val pathPaint = Paint(paint)
         fun drawPaths() {
             if (isDucking || duckingProgress > 0.1f) {
-                // Crawling Path: Extremely Low and Stretched
-                // Body & Neck: 0 to 65, 8 to 14 (Flat body, very low head)
-                pathBuffer.reset(); pathBuffer.moveTo(0f, 10*p); pathBuffer.lineTo(35*p, 10*p); pathBuffer.lineTo(55*p, 8*p)
-                pathBuffer.lineTo(70*p, 8*p); pathBuffer.lineTo(70*p, 15*p); pathBuffer.lineTo(55*p, 16f*p); pathBuffer.lineTo(0f, 16f*p)
+                // TRUE CRAWLING: Drawn from scratch, not squashed.
+                // Low body: 0 to 45, 10 to 18 (Total height 8)
+                // Head/Neck: 45 to 80, 8 to 14 (Extended forward)
+                pathBuffer.reset(); pathBuffer.moveTo(0f, 10*p); pathBuffer.lineTo(45*p, 10*p); pathBuffer.lineTo(65*p, 6*p)
+                pathBuffer.lineTo(82*p, 6*p); pathBuffer.lineTo(82*p, 13*p); pathBuffer.lineTo(65*p, 15*p); pathBuffer.lineTo(0f, 15*p)
                 pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
-                // Stretched Tail
-                pathBuffer.reset(); pathBuffer.moveTo(0f, 10*p); pathBuffer.lineTo(-20*p, 10*p); pathBuffer.lineTo(0f, 14*p)
+                // Low horizontal tail
+                pathBuffer.reset(); pathBuffer.moveTo(0f, 10*p); pathBuffer.lineTo(-25*p, 10*p); pathBuffer.lineTo(0f, 14*p)
                 pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
             } else {
                 // Standing shape: 0 to 18 (Total Height: 18)
@@ -388,15 +389,15 @@ internal object TRexDrawer {
         // Eye and Legs
         if (isDucking || duckingProgress > 0.1f) {
             // Crawling Eye (Low in stretched head)
-            paint.color = if (isGameOver) Color.BLACK else eyeColor; canvas.drawRect(58*p, 9*p, 62*p, 12*p, paint)
+            paint.color = if (isGameOver) Color.BLACK else eyeColor; canvas.drawRect(70*p, 7*p, 74*p, 10*p, paint)
             if (isGameOver) { 
                 paint.color = Color.WHITE; paint.strokeWidth = 2f
-                canvas.drawLine(58*p, 9*p, 62*p, 12*p, paint); canvas.drawLine(62*p, 9*p, 58*p, 12*p, paint)
+                canvas.drawLine(70*p, 7*p, 74*p, 10*p, paint); canvas.drawLine(74*p, 7*p, 70*p, 10*p, paint)
             }
             paint.color = bodyColor
-            // Extremely short crawl legs
-            if (walkFrame == 0) canvas.drawRect(8*p, 16*p, 14*p, 17.5f*p, paint)
-            else canvas.drawRect(28*p, 16*p, 34*p, 17.5f*p, paint)
+            // Extremely short "scurrying" legs
+            if (walkFrame == 0) canvas.drawRect(10*p, 15*p, 16*p, 16.5f*p, paint)
+            else canvas.drawRect(30*p, 15*p, 36*p, 16.5f*p, paint)
         } else {
             canvas.drawRect(16*p, 10*p, 19*p, 12*p, paint)
             paint.color = if (isGameOver) Color.BLACK else eyeColor; canvas.drawRect(14*p, 2*p, 16*p, 4*p, paint)
@@ -414,8 +415,8 @@ internal object TRexDrawer {
 
         // Character Accessories
         paint.style = Paint.Style.FILL
-        val headX = if (isDucking || duckingProgress > 0.1f) 45*p else 14*p
-        val headY = if (isDucking || duckingProgress > 0.1f) 8*p else 0f
+        val headX = if (isDucking || duckingProgress > 0.1f) 62*p else 14*p
+        val headY = if (isDucking || duckingProgress > 0.1f) 6*p else 0f
         
         when(member) {
             "NINJA" -> {

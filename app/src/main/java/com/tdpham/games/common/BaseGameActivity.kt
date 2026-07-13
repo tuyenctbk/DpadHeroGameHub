@@ -241,6 +241,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
             if (keyCode == KeyEvent.KEYCODE_M || keyCode == KeyEvent.KEYCODE_O || 
                 keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_SETTINGS) {
                 // Force show options dialog regardless of focus/pause state
+                removeActiveOverlay()
                 TRexOptionsDialog.show(this) {
                     (gameView as? com.tdpham.games.trex.TRexView)?.resetGame()
                 }
@@ -276,6 +277,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
             return true
         }
         if (keyCode == KeyEvent.KEYCODE_H || keyCode == KeyEvent.KEYCODE_INFO) {
+            removeActiveOverlay()
             showGameGuide()
             return true
         }
