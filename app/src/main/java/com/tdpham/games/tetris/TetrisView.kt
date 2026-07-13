@@ -73,7 +73,7 @@ class TetrisView @JvmOverloads constructor(
                 }
                 if (flashFrames > 0) flashFrames--
                 invalidate()
-                val currentLevel = (startLevel + score / 1000).coerceAtMost(15)
+                val currentLevel = (startLevel + (score / 1000)).coerceAtMost(15)
                 val delay = (450 - (currentLevel - 1) * 30).coerceAtLeast(80).toLong()
                 handler.postDelayed(this, delay)
             } else if (!paused && !gameOver) {
@@ -262,7 +262,7 @@ class TetrisView @JvmOverloads constructor(
         for (cell in shapeCells(current.shape, nrot)) {
             val r = nr + cell.first
             val c = nc + cell.second
-            if (r < 0 || r >= rows || c < 0 || c >= cols || board[r][c] != 0) return false
+            if (r !in 0 until rows || c !in 0 until cols || board[r][c] != 0) return false
         }
         return true
     }
@@ -353,7 +353,7 @@ class TetrisView @JvmOverloads constructor(
                     particles.add(GameEnvironment.Particle(
                         c.toFloat(), lineY.toFloat(), 
                         speed,
-                        Math.cos(angle).toFloat() * speed,
+                        kotlin.math.cos(angle).toFloat() * speed,
                         Random.nextFloat() * 4f + 2f,
                         colorFor(Random.nextInt(7) + 1)
                     ))
