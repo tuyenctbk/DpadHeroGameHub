@@ -35,6 +35,9 @@ class MemoryView @JvmOverloads constructor(
     }
 
     private var currentDifficulty = Difficulty.LEVEL_2
+    private val PREFS_NAME = "memory_settings"
+    private val KEY_DIFFICULTY = "difficulty_index"
+    private var hintShowFrames = 0
     private var rows = currentDifficulty.rows
     private var cols = currentDifficulty.cols
     private var cards = mutableListOf<Card>()
@@ -82,6 +85,11 @@ class MemoryView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
+        // Load difficulty from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val diffIndex = prefs.getInt(KEY_DIFFICULTY, 1)
+        currentDifficulty = Difficulty.entries[diffIndex.coerceIn(0, 3)]
+
         rows = currentDifficulty.rows
         cols = currentDifficulty.cols
         
@@ -119,6 +127,8 @@ class MemoryView @JvmOverloads constructor(
         // For Best Moves, we store (1000 - moves) to use higherIsBetter logic of ScoreManager
         val highScore = ScoreManager.getHighScore(context, gameKey, currentDifficulty.ordinal)
         bestMoves = if (highScore == 0) Int.MAX_VALUE else (1000 - highScore)
+        
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -128,11 +138,6 @@ class MemoryView @JvmOverloads constructor(
                 resetGame()
                 return true
             }
-            if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-                cycleDifficulty(keyCode == KeyEvent.KEYCODE_DPAD_UP)
-                return true
-            }
-            return true
         }
 
         when (keyCode) {
@@ -143,8 +148,8 @@ class MemoryView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
                 if (!isProcessing) flipCard(cursorR * cols + cursorC)
             }
-            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB -> {
-                cycleDifficulty(true)
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
                 return true
             }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
@@ -154,14 +159,10 @@ class MemoryView @JvmOverloads constructor(
         return true
     }
 
-    private fun cycleDifficulty(next: Boolean) {
-        val values = Difficulty.entries
-        var idx = values.indexOf(currentDifficulty)
-        if (next) idx++ else idx--
-        if (idx >= values.size) idx = 0
-        if (idx < 0) idx = values.size - 1
-        currentDifficulty = values[idx]
-        resetGame()
+    private fun showOptions() {
+        MemoryOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -272,6 +273,11 @@ class MemoryView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.CHECKERBOARD, paint = paint)
         
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         val margin = 40f
         val topArea = 120f
         val boardW = width - margin * 2
@@ -294,6 +300,17 @@ class MemoryView @JvmOverloads constructor(
 
         paint.textAlign = Paint.Align.CENTER
         canvas.drawText("${context.getString(R.string.level_label)} ${currentDifficulty.ordinal + 1}", width / 2f, hudY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 40f, paint)
+            paint.alpha = 255
+            paint.textAlign = Paint.Align.CENTER
+        }
 
         // Board
         for (r in 0 until rows) {

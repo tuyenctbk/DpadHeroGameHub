@@ -28,6 +28,9 @@ class TicTacToeView @JvmOverloads constructor(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     
     private var gridSize = 3
+    private val PREFS_NAME = "tictactoe_settings"
+    private val KEY_BOARD_SIZE = "board_size"
+    private var hintShowFrames = 0
     private var board = Array(gridSize) { IntArray(gridSize) { 0 } }
     private var cursorR = 0
     private var cursorC = 0
@@ -73,6 +76,11 @@ class TicTacToeView @JvmOverloads constructor(
 
     override fun resetGame() {
         handler.removeCallbacks(cpuMoveRunnable)
+        
+        // Load size from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        gridSize = prefs.getInt(KEY_BOARD_SIZE, 3).coerceIn(3, 5)
+
         board = Array(gridSize) { IntArray(gridSize) { 0 } }
         cursorR = gridSize / 2
         cursorC = gridSize / 2
@@ -90,6 +98,7 @@ class TicTacToeView @JvmOverloads constructor(
         isPlayerTurn = (turnStarter == 1)
         status = if (isPlayerTurn) context.getString(R.string.your_turn_label) else context.getString(R.string.cpu_starting_label)
         
+        hintShowFrames = 100
         invalidate()
         
         if (!isPlayerTurn) {
@@ -97,14 +106,10 @@ class TicTacToeView @JvmOverloads constructor(
         }
     }
 
-    private fun changeGridSize() {
-        gridSize = when(gridSize) {
-            3 -> 4
-            4 -> 5
-            else -> 3
+    private fun showOptions() {
+        TicTacToeOptionsDialog.show(context) {
+            resetGame()
         }
-        turnStarter = 1 // Reset turn starter when changing mode
-        resetGame()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -115,10 +120,6 @@ class TicTacToeView @JvmOverloads constructor(
                 resetGame()
                 return true
             }
-            if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-                changeGridSize()
-                return true
-            }
         }
         
         when (keyCode) {
@@ -127,8 +128,8 @@ class TicTacToeView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_LEFT -> cursorC = (cursorC - 1).coerceAtLeast(0)
             KeyEvent.KEYCODE_DPAD_RIGHT -> cursorC = (cursorC + 1).coerceAtMost(gridSize - 1)
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> if (isPlayerTurn) playerMove()
-            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB -> {
-                changeGridSize()
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
                 return true
             }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
@@ -349,6 +350,11 @@ class TicTacToeView @JvmOverloads constructor(
         // Draw Wooden Background
         GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.WOOD, paint = paint)
         
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         val size = width.coerceAtMost(height) * 0.65f
         val left = (width - size) / 2f
         val top = (height - size) / 2f + 60f
@@ -408,6 +414,16 @@ class TicTacToeView @JvmOverloads constructor(
         
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.mode_label)}: ${gridSize}x$gridSize", width - 40f, hudY1, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY1 + 40f, paint)
+            paint.alpha = 255
+        }
 
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 42f

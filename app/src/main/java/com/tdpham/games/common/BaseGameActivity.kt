@@ -253,6 +253,36 @@ abstract class BaseGameActivity : AppCompatActivity() {
                         (gameView as? com.tdpham.games.snake.SnakeGameView)?.resetGame()
                     }
                     return true
+                } else if (gameKey == "minesweeper") {
+                    removeActiveOverlay()
+                    com.tdpham.games.minesweeper.MinesweeperOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.minesweeper.MinesweeperView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "sudoku") {
+                    removeActiveOverlay()
+                    com.tdpham.games.sudoku.SudokuOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.sudoku.SudokuView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "memory") {
+                    removeActiveOverlay()
+                    com.tdpham.games.memory.MemoryOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.memory.MemoryView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "slide_puzzle") {
+                    removeActiveOverlay()
+                    com.tdpham.games.slidepuzzle.SlidePuzzleOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.slidepuzzle.SlidePuzzleView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "tic_tac_toe") {
+                    removeActiveOverlay()
+                    com.tdpham.games.tictactoe.TicTacToeOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.tictactoe.TicTacToeView)?.resetGame()
+                    }
+                    return true
                 }
             }
         }

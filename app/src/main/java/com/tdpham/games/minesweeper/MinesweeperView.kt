@@ -35,6 +35,9 @@ class MinesweeperView @JvmOverloads constructor(
     }
 
     private var currentDifficulty = Difficulty.LEVEL_1
+    private val PREFS_NAME = "minesweeper_settings"
+    private val KEY_DIFFICULTY = "difficulty_index"
+    private var hintShowFrames = 0
     private var rows = currentDifficulty.rows
     private var cols = currentDifficulty.cols
     private var minesCount = currentDifficulty.mines
@@ -138,7 +141,13 @@ class MinesweeperView @JvmOverloads constructor(
     }
 
     override fun resetGame() {
+        // Load difficulty from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val diffIndex = prefs.getInt(KEY_DIFFICULTY, 0)
+        currentDifficulty = Difficulty.entries[diffIndex.coerceIn(0, 2)]
+        
         setupGame()
+        hintShowFrames = 100 // Show hint for ~5 seconds
     }
 
     override fun toggleSound(): Boolean {
@@ -352,16 +361,6 @@ class MinesweeperView @JvmOverloads constructor(
         }
     }
 
-    private fun cycleDifficulty(next: Boolean) {
-        val values = Difficulty.entries
-        var idx = values.indexOf(currentDifficulty)
-        if (next) idx++ else idx--
-        if (idx >= values.size) idx = 0
-        if (idx < 0) idx = values.size - 1
-        currentDifficulty = values[idx]
-        setupGame()
-    }
-
     private fun checkWin() {
         var revealedCount = 0
         var correctFlags = 0
@@ -414,11 +413,6 @@ class MinesweeperView @JvmOverloads constructor(
                 setupGame()
                 return true
             }
-            if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-                cycleDifficulty(keyCode == KeyEvent.KEYCODE_DPAD_UP)
-                return true
-            }
-            return super.onKeyDown(keyCode, event)
         }
 
         when (keyCode) {
@@ -442,8 +436,12 @@ class MinesweeperView @JvmOverloads constructor(
                 revealCell(cursorY, cursorX)
                 return true
             }
-            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_DPAD_DOWN_LEFT -> {
+            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_DPAD_DOWN_LEFT -> {
                 toggleFlag(cursorY, cursorX)
+                return true
+            }
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
                 return true
             }
             KeyEvent.KEYCODE_M, KeyEvent.KEYCODE_VOLUME_MUTE -> {
@@ -452,6 +450,13 @@ class MinesweeperView @JvmOverloads constructor(
             }
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    private fun showOptions() {
+        pause()
+        MinesweeperOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -515,6 +520,12 @@ class MinesweeperView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         cellSize = width.coerceAtMost(height).toFloat() / (rows + 5)
         val offsetX = (width - cellSize * cols) / 2
         val offsetY = (height - cellSize * rows) / 2 + cellSize * 1.5f
@@ -619,6 +630,18 @@ class MinesweeperView @JvmOverloads constructor(
                     paint.strokeWidth = 1f
                 }
             }
+        }
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.reset()
+            paint.isAntiAlias = true
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = cellSize * 0.5f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), offsetX, offsetY - cellSize * 1.8f, paint)
+            paint.alpha = 255
         }
 
         if (isWin || isGameOver) celebrationManager.draw(canvas)

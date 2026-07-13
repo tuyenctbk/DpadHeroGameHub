@@ -34,6 +34,9 @@ class SudokuView @JvmOverloads constructor(
     }
 
     private var currentDifficulty = Difficulty.LEVEL_2
+    private val PREFS_NAME = "sudoku_settings"
+    private val KEY_DIFFICULTY = "difficulty_index"
+    private var hintShowFrames = 0
 
     private val puzzleBaseA: Array<IntArray> = arrayOf(
         intArrayOf(5, 3, 0, 0, 7, 0, 0, 0, 0),
@@ -130,7 +133,14 @@ class SudokuView @JvmOverloads constructor(
 
     override fun resetGame() {
         puzzleIndex = 0
+        
+        // Load difficulty from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val diffIndex = prefs.getInt(KEY_DIFFICULTY, 1)
+        currentDifficulty = Difficulty.entries[diffIndex.coerceIn(0, 2)]
+        
         loadPuzzle(0)
+        hintShowFrames = 100
     }
 
     private fun loadPuzzle(index: Int) {
@@ -163,27 +173,12 @@ class SudokuView @JvmOverloads constructor(
         invalidate()
     }
 
-    private fun cycleDifficulty(next: Boolean) {
-        val values = Difficulty.entries
-        var idx = values.indexOf(currentDifficulty)
-        if (next) idx++ else idx--
-        if (idx >= values.size) idx = 0
-        if (idx < 0) idx = values.size - 1
-        currentDifficulty = values[idx]
-        loadPuzzle(puzzleIndex)
-    }
-
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (solved && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
             loadPuzzle(puzzleIndex + 1)
             return true
         }
         
-        if (solved && (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN)) {
-            cycleDifficulty(keyCode == KeyEvent.KEYCODE_DPAD_UP)
-            return true
-        }
-
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN, 
             KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT -> {
@@ -207,8 +202,8 @@ class SudokuView @JvmOverloads constructor(
                 invalidate()
                 return true
             }
-            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB -> {
-                cycleDifficulty(true)
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
                 return true
             }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> {
@@ -217,6 +212,12 @@ class SudokuView @JvmOverloads constructor(
             }
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    private fun showOptions() {
+        SudokuOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -318,6 +319,12 @@ class SudokuView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.GRID, paint = paint)
+        
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         val grid = width.coerceAtMost(height) * 0.78f
         val left = (width - grid) / 2f
         val top = (height - grid) / 2f + 32f
@@ -404,6 +411,18 @@ class SudokuView @JvmOverloads constructor(
         paint.textSize = 28f
         val centerX = Math.round(width / 2f).toFloat()
         val hudY2 = Math.round(top - 14f).toFloat()
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 24f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), left, hudY1 + 35f, paint)
+            paint.alpha = 255
+            paint.textAlign = Paint.Align.CENTER
+        }
+
         canvas.drawText(
             when {
                 solved -> currentVictoryWord
