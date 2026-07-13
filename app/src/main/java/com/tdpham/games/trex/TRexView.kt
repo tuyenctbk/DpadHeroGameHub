@@ -489,11 +489,19 @@ class TRexView @JvmOverloads constructor(
             }
             ObstacleType.PTEROSAUR -> {
                 obs.x -= effectiveSpeed * 1.2f
-                val freqFactor = (0.1 + (score / 4000.0)).coerceAtMost(0.3)
-                val ampFactor = (3f + (score / 1200f)).coerceAtMost(12f)
-                obs.y += (Math.sin(animationFrame * freqFactor + obs.variant) + Math.sin(animationFrame * freqFactor * 0.5 + obs.variant * 2)).toFloat() * (ampFactor * 0.5f)
-                if (score > 2000 && obs.x < width * 0.5f && obs.x > width * 0.2f && obs.variant % 2 == 0) {
-                    obs.y += 4f
+                val seed = obs.variant + (score / 500).toInt()
+                val freqFactor = (0.1 + (score / 3000.0) + (Math.sin(seed.toDouble()) * 0.08)).coerceIn(0.08, 0.4)
+                val ampFactor = (5f + (score / 600f) + (Math.cos(seed.toDouble()).toFloat() * 15f)).coerceIn(5f, 30f)
+                
+                obs.y += (Math.sin(animationFrame * freqFactor + obs.variant) + Math.sin(animationFrame * freqFactor * 0.6 + seed)).toFloat() * (ampFactor * 0.5f)
+                
+                // Occasional sudden vertical adjustment
+                if (random.nextInt(120) == 0) {
+                    obs.y += (random.nextFloat() - 0.5f) * 30f
+                }
+
+                if (score > 1000 && obs.x < width * 0.7f && obs.x > width * 0.05f && obs.variant % 2 == 0) {
+                    obs.y += 5f 
                 }
             }
             ObstacleType.BIG_DINO -> {
@@ -749,8 +757,10 @@ class TRexView @JvmOverloads constructor(
 
             val ox = this.width.toFloat() + currentGroupWidth + groupSpacing
             val y = if (type == ObstacleType.PTEROSAUR) {
-                val h = if (random.nextBoolean()) 180f else 100f
-                (this.height * groundY) - h - random.nextInt(80)
+                // More variety in starting heights
+                val heights = listOf(80f, 120f, 180f, 250f, 300f)
+                val h = heights.random()
+                (this.height * groundY) - h - random.nextInt(120)
             } else if (type == ObstacleType.METEOR || type == ObstacleType.THUNDERBOLT) {
                 val meteorOx = this.width.toFloat() * 0.8f + random.nextInt(400)
                 obstacles.add(Obstacle(meteorOx, -200f, width, height, type, variant))
