@@ -363,13 +363,13 @@ internal object TRexDrawer {
         val pathPaint = Paint(paint)
         fun drawPaths() {
             if (isDucking || duckingProgress > 0.5f) {
-                // Better Ducking Path: Longer and Lower
-                // Body: -10 to 35, 0 to 14 (Total Height: 14)
-                pathBuffer.reset(); pathBuffer.moveTo(0f, 4*p); pathBuffer.lineTo(24*p, 4*p); pathBuffer.lineTo(34*p, 0f)
-                pathBuffer.lineTo(44*p, 0f); pathBuffer.lineTo(44*p, 10*p); pathBuffer.lineTo(34*p, 14*p); pathBuffer.lineTo(0f, 14*p)
+                // Stretched Forward Ducking Path: Extremely Low
+                // Body & Neck: 0 to 45, 4 to 10 (Total Height: 10)
+                pathBuffer.reset(); pathBuffer.moveTo(0f, 6*p); pathBuffer.lineTo(35*p, 6*p); pathBuffer.lineTo(50*p, 2*p)
+                pathBuffer.lineTo(62*p, 2*p); pathBuffer.lineTo(62*p, 10*p); pathBuffer.lineTo(50*p, 11.5f*p); pathBuffer.lineTo(0f, 11.5f*p)
                 pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
                 // Tail
-                pathBuffer.reset(); pathBuffer.moveTo(0f, 4*p); pathBuffer.lineTo(-14*p, 4*p); pathBuffer.lineTo(0f, 10*p)
+                pathBuffer.reset(); pathBuffer.moveTo(0f, 6*p); pathBuffer.lineTo(-18*p, 6*p); pathBuffer.lineTo(0f, 10*p)
                 pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
             } else {
                 // Standing shape: 0 to 18 (Total Height: 18)
@@ -393,15 +393,16 @@ internal object TRexDrawer {
         
         // Eye and Legs
         if (isDucking || duckingProgress > 0.5f) {
-            // Ducking Eye
-            paint.color = if (isGameOver) Color.BLACK else eyeColor; canvas.drawRect(34*p, 2*p, 37*p, 5*p, paint)
+            // Ducking Eye (Centered in stretched head)
+            paint.color = if (isGameOver) Color.BLACK else eyeColor; canvas.drawRect(52*p, 4*p, 55*p, 7*p, paint)
             if (isGameOver) { 
                 paint.color = Color.WHITE; paint.strokeWidth = 2f
-                canvas.drawLine(34*p, 2*p, 37*p, 5*p, paint); canvas.drawLine(37*p, 2*p, 34*p, 5*p, paint)
+                canvas.drawLine(52*p, 4*p, 55*p, 7*p, paint); canvas.drawLine(55*p, 4*p, 52*p, 7*p, paint)
             }
             paint.color = bodyColor
-            if (walkFrame == 0) canvas.drawRect(6*p, 14*p, 10*p, 18*p, paint)
-            else canvas.drawRect(16*p, 14*p, 20*p, 18*p, paint)
+            // Extremely short legs for crouching look
+            if (walkFrame == 0) canvas.drawRect(8*p, 11.5f*p, 12*p, 13.5f*p, paint)
+            else canvas.drawRect(22*p, 11.5f*p, 26*p, 13.5f*p, paint)
         } else {
             canvas.drawRect(16*p, 10*p, 19*p, 12*p, paint)
             paint.color = if (isGameOver) Color.BLACK else eyeColor; canvas.drawRect(14*p, 2*p, 16*p, 4*p, paint)

@@ -295,7 +295,21 @@ class TRexView @JvmOverloads constructor(
         }
 
         return when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE -> {
+            KeyEvent.KEYCODE_DPAD_UP -> {
+                if (isPaused) {
+                    resume()
+                } else if (isDucking || duckFrames > 0) {
+                    // Cancel ducking immediately on UP press
+                    isDucking = false
+                    duckFrames = 0
+                    duckCooldownFrames = 0
+                    invalidate()
+                } else {
+                    jump()
+                }
+                true
+            }
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE -> {
                 if (isPaused) resume() else jump()
                 true
             }
