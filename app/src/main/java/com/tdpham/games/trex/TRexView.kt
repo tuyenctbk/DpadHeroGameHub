@@ -85,6 +85,7 @@ class TRexView @JvmOverloads constructor(
     private var hasDoubleJumped = false
     private var duckFrames = 0
     private var duckingProgress = 0f
+    private var duckCooldownFrames = 0
     
     private var highScoreFlash = 0
     private var isNewHighScoreBroken = false
@@ -398,6 +399,8 @@ class TRexView @JvmOverloads constructor(
     }
 
     private fun jump() {
+        if (isDucking || duckFrames > 0 || duckCooldownFrames > 0) return
+
         if (!isJumping) {
             dinoVelocityY = currentMember.jump
             isJumping = true
@@ -444,15 +447,25 @@ class TRexView @JvmOverloads constructor(
         if (isDucking || duckFrames > 0) {
             duckingProgress = 1f
             if (duckFrames > 0) duckFrames--
+            if (duckFrames == 0 && !isDucking) {
+                duckCooldownFrames = 30 // 0.5s cooldown
+            }
         } else {
             duckingProgress = 0f
+            if (duckCooldownFrames > 0) duckCooldownFrames--
+        }
+
+        var speedFactor = 1.0f
+        if (duckingProgress > 0) {
+            speedFactor = 0.7f
         }
 
         gameSpeed += 0.0025f
+        val effectiveSpeed = gameSpeed * speedFactor
         dinoVelocityY += gravity * currentMember.gravityMult
         dinoY += dinoVelocityY
         
-        val dinoHeight = (23 - (16 * duckingProgress)) * dinoScale
+        val dinoHeight = (23 - (13.8f * duckingProgress)) * dinoScale // 23 * 0.6 = 13.8, remaining 40% height
         val actualGroundY = height * groundY - dinoHeight
         if (dinoY >= actualGroundY) {
             dinoY = actualGroundY
@@ -460,9 +473,12 @@ class TRexView @JvmOverloads constructor(
             isJumping = false
         }
 
-        updateDecorations()
-        updateParticles()
-        updateEvents()
+        distanceTravelled += effectiveSpeed * currentMember.scoreMult
+        score = (distanceTravelled / 50).toInt()
+
+        updateDecorations(effectiveSpeed)
+        updateParticles(effectiveSpeed)
+        updateEvents(effectiveSpeed)
 
         // Obstacle Spawning and Movement
         if (score > 1500 && currentWeather == Weather.RAINY && random.nextInt(400) == 0) {
@@ -472,13 +488,13 @@ class TRexView @JvmOverloads constructor(
             obstacles.add(Obstacle(random.nextFloat() * width + 400f, -200f, 80f, 80f, ObstacleType.METEOR, random.nextInt(4)))
         }
 
-        nextObstacleDistance -= gameSpeed
+        nextObstacleDistance -= effectiveSpeed
         if (nextObstacleDistance <= 0) spawnObstacle()
 
         val iterator = obstacles.iterator()
         while (iterator.hasNext()) {
             val obs = iterator.next()
-            updateObstaclePosition(obs)
+            updateObstaclePosition(obs, effectiveSpeed)
             
             if (obs.type != ObstacleType.METEOR && obs.type != ObstacleType.THUNDERBOLT) {
                 if (checkCollision(obs)) {
@@ -491,9 +507,9 @@ class TRexView @JvmOverloads constructor(
         }
     }
 
-    private fun updateParticles() {
+    private fun updateParticles(effectiveSpeed: Float) {
         if (!isJumping && animationFrame % 4 == 0) {
-            runParticles.add(RunParticle(120f + random.nextInt(40), height * groundY - 5, random.nextFloat() * 4 + 2, 200, -gameSpeed * 0.5f, -random.nextFloat() * 2))
+            runParticles.add(RunParticle(120f + random.nextInt(40), height * groundY - 5, random.nextFloat() * 4 + 2, 200, -effectiveSpeed * 0.5f, -random.nextFloat() * 2))
         }
         
         val pIter = runParticles.iterator()
@@ -515,12 +531,12 @@ class TRexView @JvmOverloads constructor(
         }
     }
 
-    private fun updateObstaclePosition(obs: Obstacle) {
+    private fun updateObstaclePosition(obs: Obstacle, effectiveSpeed: Float) {
         when (obs.type) {
             ObstacleType.METEOR, ObstacleType.THUNDERBOLT -> {
                 val fallSpeed = if (obs.type == ObstacleType.THUNDERBOLT) 22f else 14f
                 val horizontalFactor = 1.3f + (obs.variant * 0.1f)
-                obs.x -= gameSpeed * horizontalFactor
+                obs.x -= effectiveSpeed * horizontalFactor
                 obs.y += fallSpeed
                 
                 if (obs.y >= height * groundY - obs.height / 2) {
@@ -529,7 +545,7 @@ class TRexView @JvmOverloads constructor(
                 }
             }
             ObstacleType.PTEROSAUR -> {
-                obs.x -= gameSpeed * 1.2f
+                obs.x -= effectiveSpeed * 1.2f
                 val freqFactor = (0.1 + (score / 4000.0)).coerceAtMost(0.3)
                 val ampFactor = (3f + (score / 1200f)).coerceAtMost(12f)
                 obs.y += (Math.sin(animationFrame * freqFactor + obs.variant) + Math.sin(animationFrame * freqFactor * 0.5 + obs.variant * 2)).toFloat() * (ampFactor * 0.5f)
@@ -540,10 +556,10 @@ class TRexView @JvmOverloads constructor(
             ObstacleType.BIG_DINO -> {
                 // Large Dino movement logic: subtle left/right sway + base speed
                 val sway = Math.sin(animationFrame * 0.05 + obs.variant).toFloat() * 1.5f
-                obs.x -= (gameSpeed + sway)
+                obs.x -= (effectiveSpeed + sway)
             }
             else -> {
-                obs.x -= gameSpeed
+                obs.x -= effectiveSpeed
             }
         }
     }
@@ -582,12 +598,12 @@ class TRexView @JvmOverloads constructor(
         SoundManager.playClick()
     }
 
-    private fun updateEvents() {
+    private fun updateEvents(effectiveSpeed: Float) {
         // Craters
         val cIter = craters.iterator()
         while (cIter.hasNext()) {
             val c = cIter.next()
-            c.x -= gameSpeed
+            c.x -= effectiveSpeed
             c.alpha -= 1
             
             // Check collision with lethal canyon
@@ -690,14 +706,14 @@ class TRexView @JvmOverloads constructor(
         }
     }
 
-    private fun updateDecorations() {
+    private fun updateDecorations(effectiveSpeed: Float) {
         // Clouds
-        clouds.forEach { it.x -= gameSpeed * 0.2f }
+        clouds.forEach { it.x -= effectiveSpeed * 0.2f }
         clouds.removeAll { it.x < -200 }
         if (clouds.size < 3) spawnCloud(width.toFloat() + random.nextInt(500))
 
         // Ground
-        groundDots.forEach { it.x -= gameSpeed }
+        groundDots.forEach { it.x -= effectiveSpeed }
         groundDots.removeAll { it.x < -50 }
         if (groundDots.size < 15) spawnGroundDot(width.toFloat())
     }
