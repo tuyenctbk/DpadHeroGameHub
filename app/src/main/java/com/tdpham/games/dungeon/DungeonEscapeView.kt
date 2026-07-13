@@ -127,6 +127,14 @@ class DungeonEscapeView @JvmOverloads constructor(
     }
 
     private fun setupLevel() {
+        var attempts = 0
+        do {
+            generateMap()
+            attempts++
+        } while (!isSolvable() && attempts < 10)
+    }
+
+    private fun generateMap() {
         sentinels.clear()
         for (r in 0 until rows) for (c in 0 until cols) {
             grid[r][c] = if (r == 0 || r == rows - 1 || c == 0 || c == cols - 1) 1 else 0
@@ -168,6 +176,52 @@ class DungeonEscapeView @JvmOverloads constructor(
             kc = Random.nextInt(1, cols - 1)
         }
         grid[kr][kc] = 3
+    }
+
+    private fun isSolvable(): Boolean {
+        // Find key position
+        var kr = -1
+        var kc = -1
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (grid[r][c] == 3) { kr = r; kc = c; break }
+            }
+        }
+        if (kr == -1) return false
+
+        // Path from (1,1) to Key
+        val toKey = hasPath(1, 1, kc, kr)
+        if (!toKey) return false
+
+        // Path from Key to Door (rows-2, cols-2)
+        return hasPath(kc, kr, cols - 2, rows - 2)
+    }
+
+    private fun hasPath(sx: Int, sy: Int, ex: Int, ey: Int): Boolean {
+        val q: java.util.Queue<Pair<Int, Int>> = java.util.LinkedList()
+        val visited = Array(rows) { BooleanArray(cols) }
+        
+        q.add(sy to sx)
+        visited[sy][sx] = true
+        
+        val dr = intArrayOf(0, 0, 1, -1)
+        val dc = intArrayOf(1, -1, 0, 0)
+        
+        while (q.isNotEmpty()) {
+            val (r, c) = q.poll()!!
+            if (r == ey && c == ex) return true
+            
+            for (i in 0 until 4) {
+                val nr = r + dr[i]
+                val nc = c + dc[i]
+                // Wall (1) is impassable, Spikes (2) are impassable for pathfinding check to ensure safety
+                if (nr in 0 until rows && nc in 0 until cols && !visited[nr][nc] && grid[nr][nc] != 1 && grid[nr][nc] != 2) {
+                    visited[nr][nc] = true
+                    q.add(nr to nc)
+                }
+            }
+        }
+        return false
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
