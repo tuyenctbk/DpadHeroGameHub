@@ -58,6 +58,7 @@ class BrickBreakView @JvmOverloads constructor(
     private var ballDx = 0f
     private var ballDy = 0f
     private var ballRadius = 0f
+    private var ballSpeedMultiplier = 1.0f
     private val pressedKeys = mutableSetOf<Int>()
 
     private var isBallLaunched = false
@@ -120,6 +121,7 @@ class BrickBreakView @JvmOverloads constructor(
         isWin = false
         isPaused = true
         isBallLaunched = false
+        ballSpeedMultiplier = 1.0f
         celebrationManager.start(0f, 0f)
         highScore = ScoreManager.getHighScore(context, gameKey, sizeIndex)
         brickFlashes.clear()
@@ -258,7 +260,7 @@ class BrickBreakView @JvmOverloads constructor(
         }
 
         // Move ball based on time
-        ball.offset(ballDx * dtSec, ballDy * dtSec)
+        ball.offset(ballDx * dtSec * ballSpeedMultiplier, ballDy * dtSec * ballSpeedMultiplier)
 
         if (ball.left <= 0f) {
             ball.offset(-ball.left, 0f)
@@ -317,6 +319,7 @@ class BrickBreakView @JvmOverloads constructor(
             bricks.remove(hitBrick)
             brickFlashes[hitBrick] = System.currentTimeMillis()
             score += 10
+            ballSpeedMultiplier = (ballSpeedMultiplier + 0.012f).coerceAtMost(2.2f)
             SoundManager.playScore()
             if (bricks.isEmpty()) {
                 isWin = true
@@ -635,7 +638,7 @@ class BrickBreakView @JvmOverloads constructor(
         private const val BRICK_PADDING = 6f
         private const val INITIAL_LIVES = 3
         /** Screen widths per second; movement is scaled by frame delta for smooth, consistent speed. */
-        private const val PADDLE_SPEED_PER_SCREEN_WIDTH_PER_SEC = 1.5f
+        private const val PADDLE_SPEED_PER_SCREEN_WIDTH_PER_SEC = 2.0f
         private const val MAX_FRAME_DELTA_SEC = 0.05f
         private const val FIRST_FRAME_DT_SEC = 1f / 60f
     }
