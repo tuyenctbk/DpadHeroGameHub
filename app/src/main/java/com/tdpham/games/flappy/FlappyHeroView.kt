@@ -23,6 +23,17 @@ class FlappyHeroView @JvmOverloads constructor(
     override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    enum class Difficulty(val gapHMult: Float, val speed: Float, val interval: Long) {
+        LEVEL_1(0.42f, 4.5f, 2800L),
+        LEVEL_2(0.35f, 5.5f, 2500L),
+        LEVEL_3(0.28f, 7.0f, 2100L)
+    }
+
+    private var currentDifficulty = Difficulty.LEVEL_2
+    private val PREFS_NAME = "flappy_hero_settings"
+    private val KEY_DIFFICULTY = "difficulty_index"
+    private var hintShowFrames = 0
+
     private var birdY = 0f
     private var birdV = 0f
     private val gravity = 0.8f
@@ -35,7 +46,7 @@ class FlappyHeroView @JvmOverloads constructor(
     private val clouds = mutableListOf<Cloud>()
     private var pipeSpeed = 5f
     private var pipeSpawnTime = 0L
-    private val pipeInterval = 2500L
+    private var pipeInterval = 2500L
 
     private var score = 0
     private var best = 0
@@ -43,8 +54,20 @@ class FlappyHeroView @JvmOverloads constructor(
     private var gamePaused = true
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val animHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (gameOver || gamePaused) {
+                celebrationManager.update()
+                invalidate()
+            }
+            animHandler.postDelayed(this, 50)
+        }
+    }
     private var lastUpdate = 0L
     private val beakPath = Path()
+    private val pipeRect = RectF()
+    private val pipeCapRect = RectF()
     private val sunsetPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
@@ -71,6 +94,7 @@ class FlappyHeroView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        animHandler.post(animRunnable)
     }
 
     override fun startGame() {
@@ -93,16 +117,25 @@ class FlappyHeroView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         handler.removeCallbacks(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
     }
 
     override fun resetGame() {
+        // Load difficulty from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val diffIndex = prefs.getInt(KEY_DIFFICULTY, 1)
+        currentDifficulty = Difficulty.entries[diffIndex.coerceIn(0, 2)]
+        
+        pipeSpeed = currentDifficulty.speed
+        pipeInterval = currentDifficulty.interval
+
         birdY = height / 2f
         birdV = 0f
         pipes.clear()
         clouds.clear()
         celebrationManager.start(0f, 0f)
         score = 0
-        best = ScoreManager.getHighScore(context, gameKey)
+        best = ScoreManager.getHighScore(context, gameKey, currentDifficulty.ordinal)
         gameOver = false
         gamePaused = true
         pipeSpawnTime = 0L
@@ -116,6 +149,7 @@ class FlappyHeroView @JvmOverloads constructor(
             }
         }
         
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -138,6 +172,11 @@ class FlappyHeroView @JvmOverloads constructor(
             SoundManager.playClick()
             return true
         }
+
+        if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_TAB || keyCode == KeyEvent.KEYCODE_O) {
+            showOptions()
+            return true
+        }
         
         if (keyCode == KeyEvent.KEYCODE_S || keyCode == KeyEvent.KEYCODE_VOLUME_MUTE) {
             toggleSound()
@@ -145,6 +184,13 @@ class FlappyHeroView @JvmOverloads constructor(
         }
         
         return super.onKeyDown(keyCode, event)
+    }
+
+    private fun showOptions() {
+        pause()
+        FlappyHeroOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -173,6 +219,11 @@ class FlappyHeroView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         val bgType = when (currentTheme) {
             FlappyTheme.NIGHT -> GameEnvironment.BackgroundType.STARRY
             FlappyTheme.WINTER -> GameEnvironment.BackgroundType.SOLID
@@ -224,29 +275,37 @@ class FlappyHeroView @JvmOverloads constructor(
         for (pipe in pipes) {
             // Draw pipe body
             paint.color = Color.parseColor(pipeColor)
-            canvas.drawRect(pipe.x + 10f, 0f, pipe.x + 90f, pipe.gapY, paint)
-            canvas.drawRect(pipe.x + 10f, pipe.gapY + pipe.gapH, pipe.x + 90f, height.toFloat(), paint)
+            pipeRect.set(pipe.x + 10f, 0f, pipe.x + 90f, pipe.gapY)
+            canvas.drawRect(pipeRect, paint)
+            pipeRect.set(pipe.x + 10f, pipe.gapY + pipe.gapH, pipe.x + 90f, height.toFloat())
+            canvas.drawRect(pipeRect, paint)
 
             // Draw pipe shading
             paint.color = Color.parseColor(pipeColorDark)
-            canvas.drawRect(pipe.x + 70f, 0f, pipe.x + 85f, pipe.gapY, paint)
-            canvas.drawRect(pipe.x + 70f, pipe.gapY + pipe.gapH, pipe.x + 85f, height.toFloat(), paint)
+            pipeRect.set(pipe.x + 70f, 0f, pipe.x + 85f, pipe.gapY)
+            canvas.drawRect(pipeRect, paint)
+            pipeRect.set(pipe.x + 70f, pipe.gapY + pipe.gapH, pipe.x + 85f, height.toFloat())
+            canvas.drawRect(pipeRect, paint)
 
             paint.color = Color.parseColor("#4CAF50")
-            canvas.drawRect(pipe.x + 15f, 0f, pipe.x + 25f, pipe.gapY, paint)
-            canvas.drawRect(pipe.x + 15f, pipe.gapY + pipe.gapH, pipe.x + 25f, height.toFloat(), paint)
+            pipeRect.set(pipe.x + 15f, 0f, pipe.x + 25f, pipe.gapY)
+            canvas.drawRect(pipeRect, paint)
+            pipeRect.set(pipe.x + 15f, pipe.gapY + pipe.gapH, pipe.x + 25f, height.toFloat())
+            canvas.drawRect(pipeRect, paint)
 
             // Draw pipe caps
             paint.color = Color.parseColor("#388E3C")
-            canvas.drawRect(pipe.x, pipe.gapY - 40f, pipe.x + 100f, pipe.gapY, paint)
-            canvas.drawRect(pipe.x, pipe.gapY + pipe.gapH, pipe.x + 100f, pipe.gapY + pipe.gapH + 40f, paint)
+            pipeCapRect.set(pipe.x, pipe.gapY - 40f, pipe.x + 100f, pipe.gapY)
+            canvas.drawRect(pipeCapRect, paint)
+            pipeCapRect.set(pipe.x, pipe.gapY + pipe.gapH, pipe.x + 100f, pipe.gapY + pipe.gapH + 40f)
+            canvas.drawRect(pipeCapRect, paint)
             
             // Cap outline
             paint.style = Paint.Style.STROKE
             paint.color = Color.parseColor("#1B5E20")
             paint.strokeWidth = 4f
-            canvas.drawRect(pipe.x, pipe.gapY - 40f, pipe.x + 100f, pipe.gapY, paint)
-            canvas.drawRect(pipe.x, pipe.gapY + pipe.gapH, pipe.x + 100f, pipe.gapY + pipe.gapH + 40f, paint)
+            canvas.drawRect(pipeCapRect.apply { set(pipe.x, pipe.gapY - 40f, pipe.x + 100f, pipe.gapY) }, paint)
+            canvas.drawRect(pipeCapRect.apply { set(pipe.x, pipe.gapY + pipe.gapH, pipe.x + 100f, pipe.gapY + pipe.gapH + 40f) }, paint)
             paint.style = Paint.Style.FILL
         }
 
@@ -297,16 +356,29 @@ class FlappyHeroView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
         if (gameOver) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
-            invalidate()
             val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.crashed_label)
             drawOverlay(canvas, title, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         } else if (gamePaused) {
             drawOverlay(canvas, context.getString(R.string.game_flappy), context.getString(R.string.flap_hint))
         }
 
-        if (!gamePaused && !gameOver) invalidate()
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.reset()
+            paint.isAntiAlias = true
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, 100f, paint)
+            paint.alpha = 255
+        }
+
+        if (!gamePaused && !gameOver) {
+            celebrationManager.update()
+            invalidate()
+        }
     }
 
     private fun update() {
@@ -339,7 +411,7 @@ class FlappyHeroView @JvmOverloads constructor(
 
         // Pipes
         if (now - pipeSpawnTime > pipeInterval) {
-            val gapH = height * 0.35f
+            val gapH = height * currentDifficulty.gapHMult
             val minY = 100f
             val maxY = height - gapH - 100f
             val gapY = if (maxY > minY) {
@@ -385,7 +457,7 @@ class FlappyHeroView @JvmOverloads constructor(
         gameOver = true
         gamePaused = true
         val oldBest = best
-        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, currentDifficulty.ordinal)
         if (isNewHigh) {
             best = score
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")

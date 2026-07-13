@@ -66,6 +66,9 @@ class BrickBreakView @JvmOverloads constructor(
     private var isWin = false
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val PREFS_NAME = "brick_break_settings"
+    private val KEY_PADDLE_SIZE = "paddle_size_index"
+    private var hintShowFrames = 0
 
     private var score = 0
     private var highScore = 0
@@ -107,6 +110,10 @@ class BrickBreakView @JvmOverloads constructor(
     }
 
     override fun resetGame() {
+        // Load paddle size from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val sizeIndex = prefs.getInt(KEY_PADDLE_SIZE, 1).coerceIn(0, 2)
+
         score = 0
         lives = INITIAL_LIVES
         isGameOver = false
@@ -114,12 +121,14 @@ class BrickBreakView @JvmOverloads constructor(
         isPaused = true
         isBallLaunched = false
         celebrationManager.start(0f, 0f)
-        highScore = ScoreManager.getHighScore(context, gameKey)
+        highScore = ScoreManager.getHighScore(context, gameKey, sizeIndex)
         brickFlashes.clear()
-        initializeBoard()
+        initializeBoard(sizeIndex)
         lastFrameTimeNanos = 0L
         Choreographer.getInstance().removeFrameCallback(this)
         Choreographer.getInstance().postFrameCallback(this)
+        
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -148,15 +157,22 @@ class BrickBreakView @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (w > 0 && h > 0) {
-            initializeBoard()
-            highScore = ScoreManager.getHighScore(context, gameKey)
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val sizeIndex = prefs.getInt(KEY_PADDLE_SIZE, 1)
+            initializeBoard(sizeIndex)
+            highScore = ScoreManager.getHighScore(context, gameKey, sizeIndex)
         }
     }
 
-    private fun initializeBoard() {
+    private fun initializeBoard(sizeIndex: Int = 1) {
         if (width == 0 || height == 0) return
 
-        val paddleWidth = width * 0.22f
+        val paddleWidthMult = when(sizeIndex) {
+            0 -> 0.32f // Large
+            2 -> 0.14f // Small
+            else -> 0.22f // Medium
+        }
+        val paddleWidth = width * paddleWidthMult
         val paddleHeight = height * 0.025f
         val paddleTop = height * 0.88f
         paddle.set(
@@ -306,8 +322,9 @@ class BrickBreakView @JvmOverloads constructor(
                 isWin = true
                 isPaused = true
                 currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-                val oldHighScore = ScoreManager.getHighScore(context, gameKey)
-                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+                val sizeIndex = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getInt(KEY_PADDLE_SIZE, 1)
+                val oldHighScore = ScoreManager.getHighScore(context, gameKey, sizeIndex)
+                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, sizeIndex)
                 if (isNewHigh) highScore = score
                 celebrationManager.startOutcome(
                     width = width.toFloat(),
@@ -329,8 +346,9 @@ class BrickBreakView @JvmOverloads constructor(
             if (lives <= 0) {
                 isGameOver = true
                 isPaused = true
-                val oldHighScore = ScoreManager.getHighScore(context, gameKey)
-                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+                val sizeIndex = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getInt(KEY_PADDLE_SIZE, 1)
+                val oldHighScore = ScoreManager.getHighScore(context, gameKey, sizeIndex)
+                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, sizeIndex)
                 if (isNewHigh) highScore = score
                 celebrationManager.startOutcome(
                     width = width.toFloat(),
@@ -382,6 +400,10 @@ class BrickBreakView @JvmOverloads constructor(
                 }
                 true
             }
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> {
                 toggleSound()
                 true
@@ -391,6 +413,13 @@ class BrickBreakView @JvmOverloads constructor(
                 true
             }
             else -> super.onKeyDown(keyCode, event)
+        }
+    }
+
+    private fun showOptions() {
+        pause()
+        BrickBreakOptionsDialog.show(context) {
+            resetGame()
         }
     }
 
@@ -448,6 +477,11 @@ class BrickBreakView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+        
         super.onDraw(canvas)
         // Always try to keep focus on the game view
         if (!isGameOver && !isWin && !isFocused) {
@@ -493,6 +527,16 @@ class BrickBreakView @JvmOverloads constructor(
         canvas.drawCircle(ball.centerX() - ballRadius * 0.3f, ball.centerY() - ballRadius * 0.3f, ballRadius * 0.2f, paint)
 
         drawHud(canvas)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = width / 45f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, height * 0.15f, paint)
+            paint.alpha = 255
+        }
 
         if (isPaused && !isGameOver && !isWin) {
             drawOverlay(canvas, context.getString(R.string.game_brick_break), context.getString(R.string.launch_hint))

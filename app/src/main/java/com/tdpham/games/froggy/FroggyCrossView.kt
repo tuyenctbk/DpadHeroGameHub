@@ -51,6 +51,8 @@ class FroggyCrossView @JvmOverloads constructor(
 
     private val lanes = mutableListOf<Lane>()
     private var lastUpdate = 0L
+    private val entityRect = RectF()
+    private val tempRect = RectF()
 
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
     private val gameLoop = object : Runnable {
@@ -253,37 +255,37 @@ class FroggyCrossView @JvmOverloads constructor(
 
         // update() - Moved to gameLoop
 
-    // Draw Entities
+        // Draw Entities
         for (lane in lanes) {
             for (e in lane.entities) {
                 paint.color = e.color
-                val r = RectF(e.c * cellW, lane.r * cellH + 5, (e.c + e.length) * cellW, (lane.r + 1) * cellH - 5)
+                entityRect.set(e.c * cellW, lane.r * cellH + 5, (e.c + e.length) * cellW, (lane.r + 1) * cellH - 5)
                 
                 if (lane.isRiver) {
                     // Logs with texture/lines
                     paint.color = Color.parseColor("#5D4037")
-                    canvas.drawRoundRect(r, 10f, 10f, paint)
+                    canvas.drawRoundRect(entityRect, 10f, 10f, paint)
                     paint.color = Color.parseColor("#4E342E")
                     paint.strokeWidth = 2f
-                    canvas.drawLine(r.left + 10, r.top + r.height()/2, r.right - 10, r.top + r.height()/2, paint)
+                    canvas.drawLine(entityRect.left + 10, entityRect.top + entityRect.height()/2, entityRect.right - 10, entityRect.top + entityRect.height()/2, paint)
                 } else {
                     // Cars with simple 3D effect
-                    canvas.drawRoundRect(r, 8f, 8f, paint)
+                    canvas.drawRoundRect(entityRect, 8f, 8f, paint)
                     paint.color = Color.BLACK
-                    canvas.drawRect(r.left + r.width()*0.2f, r.top + 5, r.right - r.width()*0.2f, r.bottom - 5, paint)
+                    canvas.drawRect(entityRect.left + entityRect.width()*0.2f, entityRect.top + 5, entityRect.right - entityRect.width()*0.2f, entityRect.bottom - 5, paint)
                     paint.color = Color.YELLOW
-                    canvas.drawRect(r.left + 2, r.top + 10, r.left + 10, r.bottom - 10, paint) // Headlights
+                    canvas.drawRect(entityRect.left + 2, entityRect.top + 10, entityRect.left + 10, entityRect.bottom - 10, paint) // Headlights
                 }
                 
                 // Wrap around drawing
                 if (e.c + e.length > cols) {
-                    val r2 = RectF((e.c - cols) * cellW, lane.r * cellH + 5, (e.c + e.length - cols) * cellW, (lane.r + 1) * cellH - 5)
+                    tempRect.set((e.c - cols) * cellW, lane.r * cellH + 5, (e.c + e.length - cols) * cellW, (lane.r + 1) * cellH - 5)
                     paint.color = e.color
                     if (lane.isRiver) {
                         paint.color = Color.parseColor("#5D4037")
-                        canvas.drawRoundRect(r2, 10f, 10f, paint)
+                        canvas.drawRoundRect(tempRect, 10f, 10f, paint)
                     } else {
-                        canvas.drawRoundRect(r2, 8f, 8f, paint)
+                        canvas.drawRoundRect(tempRect, 8f, 8f, paint)
                     }
                 }
             }

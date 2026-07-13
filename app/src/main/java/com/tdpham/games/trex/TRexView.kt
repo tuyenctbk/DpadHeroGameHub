@@ -5,6 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
+import androidx.core.content.edit
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
@@ -185,7 +186,7 @@ class TRexView @JvmOverloads constructor(
 
     private fun saveSettings() {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit().putInt(KEY_SELECTED_CHAR, selectedMemberIndex).apply()
+        prefs.edit { putInt(KEY_SELECTED_CHAR, selectedMemberIndex) }
     }
 
     override fun startGame() {
@@ -975,7 +976,9 @@ class TRexView @JvmOverloads constructor(
         
         val scoreX = Math.round(width - 50f).toFloat()
         val scoreY = Math.round(80f).toFloat()
-        canvas.drawText("${context.getString(R.string.high_score_prefix)} ${String.format("%05d", highScore)}  ${String.format("%05d", score)}", scoreX, scoreY, paint)
+        val highScoreStr = String.format(Locale.US, "%05d", highScore)
+        val scoreStr = String.format(Locale.US, "%05d", score)
+        canvas.drawText("${context.getString(R.string.high_score_prefix)} $highScoreStr  $scoreStr", scoreX, scoreY, paint)
         paint.clearShadowLayer()
 
         // Quick Hint (Top/Left)

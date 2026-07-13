@@ -28,6 +28,10 @@ class RoadRacerView @JvmOverloads constructor(
     private var isPaused = true
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val PREFS_NAME = "roadracer_settings"
+    private val KEY_DENSITY = "traffic_density_index"
+    private var trafficDensity = 1 // 0: Low, 1: Normal, 2: High
+    private var hintShowFrames = 0
     private var gameSpeed = 10f
     
     private val playerWidth = 80f
@@ -91,8 +95,12 @@ class RoadRacerView @JvmOverloads constructor(
     }
 
     override fun resetGame() {
+        // Load density from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        trafficDensity = prefs.getInt(KEY_DENSITY, 1).coerceIn(0, 2)
+
         score = 0
-        highScore = ScoreManager.getHighScore(context, gameKey)
+        highScore = ScoreManager.getHighScore(context, gameKey, trafficDensity)
         isGameOver = false
         isPaused = true
         celebrationManager.start(0f, 0f)
@@ -108,6 +116,8 @@ class RoadRacerView @JvmOverloads constructor(
         repeat(30) {
             particles.add(GameEnvironment.Particle(random.nextFloat() * 2000, random.nextFloat() * 1000, random.nextFloat() * 10 + 5))
         }
+        
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -131,10 +141,23 @@ class RoadRacerView @JvmOverloads constructor(
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT -> { if (playerLane > 0) { playerLane--; SoundManager.playClick() } }
             KeyEvent.KEYCODE_DPAD_RIGHT -> { if (playerLane < 2) { playerLane++; SoundManager.playClick() } }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> pause()
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+                pause()
+            }
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
         }
         invalidate()
         return true
+    }
+
+    private fun showOptions() {
+        pause()
+        RoadRacerOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -177,7 +200,12 @@ class RoadRacerView @JvmOverloads constructor(
         nextObstacleTimer -= 1f
         if (nextObstacleTimer <= 0) {
             spawnObstacle()
-            nextObstacleTimer = (50f - (gameSpeed - 10) * 2).coerceAtLeast(15f) + random.nextInt(30)
+            val baseInterval = when(trafficDensity) {
+                0 -> 70f
+                2 -> 35f
+                else -> 50f
+            }
+            nextObstacleTimer = (baseInterval - (gameSpeed - 10) * 2.5f).coerceAtLeast(12f) + random.nextInt(25)
         }
 
         val iterator = obstacles.iterator()
@@ -231,7 +259,7 @@ class RoadRacerView @JvmOverloads constructor(
         isGameOver = true
         SoundManager.playError()
         val oldBest = highScore
-        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, trafficDensity)
         if (isNewHigh) {
             highScore = score
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
@@ -250,8 +278,12 @@ class RoadRacerView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+        
         super.onDraw(canvas)
-        // update() - Moved to gameLoop
 
         val theme = getTheme()
         GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.SOLID, isNight = isNightMode, weather = currentWeather, paint = paint, particles = particles)
@@ -300,6 +332,16 @@ class RoadRacerView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.RIGHT
         val bestX = Math.round(width - 40f).toFloat()
         canvas.drawText("${context.getString(R.string.best_label)}: $highScore", bestX, hudY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 80f, paint)
+            paint.alpha = 255
+        }
 
         if (isGameOver) {
             celebrationManager.update()

@@ -23,7 +23,10 @@ class TwentyFortyEightView @JvmOverloads constructor(
 
     override var gameKey: String = "4096"
     override var onGameOver: ((Int) -> Unit)? = null
-    private val gridSize = 5 // 5x5 for "4096" on larger TV screens
+    private var gridSize = 4 // Default, will be loaded from settings
+    private val PREFS_NAME = "twentyfortyeight_settings"
+    private val KEY_GRID_SIZE = "grid_size"
+    private var hintShowFrames = 0
     private var board = Array(gridSize) { IntArray(gridSize) { 0 } }
     private var score = 0
     private var highScore = 0
@@ -70,15 +73,21 @@ class TwentyFortyEightView @JvmOverloads constructor(
     override fun resume() {}
 
     override fun resetGame() {
+        // Load size from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        gridSize = prefs.getInt(KEY_GRID_SIZE, 4).coerceIn(4, 5)
+
         board = Array(gridSize) { IntArray(gridSize) { 0 } }
         score = 0
         isGameOver = false
         isWin = false
         celebrationManager.start(0f, 0f) // Just clear/reset
-        highScore = ScoreManager.getHighScore(context, gameKey)
+        highScore = ScoreManager.getHighScore(context, gameKey, gridSize)
         mergedTiles.clear()
         addRandomTile()
         addRandomTile()
+        
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -103,7 +112,6 @@ class TwentyFortyEightView @JvmOverloads constructor(
                 resetGame()
                 return true
             }
-            return super.onKeyDown(keyCode, event)
         }
 
         val moved = when (keyCode) {
@@ -111,6 +119,10 @@ class TwentyFortyEightView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_DOWN -> move(0, 1)
             KeyEvent.KEYCODE_DPAD_LEFT -> move(-1, 0)
             KeyEvent.KEYCODE_DPAD_RIGHT -> move(1, 0)
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             else -> false
         }
 
@@ -122,6 +134,12 @@ class TwentyFortyEightView @JvmOverloads constructor(
         }
 
         return super.onKeyDown(keyCode, event)
+    }
+
+    private fun showOptions() {
+        TwentyFortyEightOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -234,14 +252,14 @@ class TwentyFortyEightView @JvmOverloads constructor(
         if (!movePossible) {
             isGameOver = true
             val oldBest = highScore
-            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, gridSize)
             if (isNewHigh) highScore = score
             SoundManager.playError()
             celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = false, isNewHigh = isNewHigh, score = score, highScore = oldBest)
             onGameOver?.invoke(score)
         } else if (isWin) {
             val oldBest = highScore
-            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, gridSize)
             if (isNewHigh) highScore = score
             celebrationManager.startOutcome(width.toFloat(), height.toFloat(), isWin = true, isNewHigh = isNewHigh, score = score, highScore = oldBest)
             SoundManager.playSuccess()
@@ -250,6 +268,12 @@ class TwentyFortyEightView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         cellSize = width.coerceAtMost(height).toFloat() / (gridSize + 2.5f)
         val offsetX = (width - cellSize * gridSize) / 2
         val offsetY = (height - cellSize * gridSize) / 2 + cellSize * 1.0f
@@ -284,6 +308,16 @@ class TwentyFortyEightView @JvmOverloads constructor(
         paint.textSize = cellSize * 0.5f
         paint.color = GamePalette.SCORE
         canvas.drawText("$highScore", bestX, scoreNumY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = cellSize * 0.25f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), labelX, scoreNumY + cellSize * 0.4f, paint)
+            paint.alpha = 255
+        }
 
         // Draw Grid Background
         paint.color = Color.parseColor("#333333")

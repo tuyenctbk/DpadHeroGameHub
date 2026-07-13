@@ -293,6 +293,54 @@ abstract class BaseGameActivity : AppCompatActivity() {
                         (gameView as? com.tdpham.games.solitaire.SolitaireView)?.resetGame()
                     }
                     return true
+                } else if (gameKey == "4096") {
+                    removeActiveOverlay()
+                    com.tdpham.games.twentyfortyeight.TwentyFortyEightOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.twentyfortyeight.TwentyFortyEightView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "tetris") {
+                    removeActiveOverlay()
+                    com.tdpham.games.tetris.TetrisOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.tetris.TetrisView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "mental_math") {
+                    removeActiveOverlay()
+                    com.tdpham.games.mentalmath.MentalMathOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.mentalmath.MentalMathView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "flappy_hero") {
+                    removeActiveOverlay()
+                    com.tdpham.games.flappy.FlappyHeroOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.flappy.FlappyHeroView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "brick_break") {
+                    removeActiveOverlay()
+                    com.tdpham.games.brickbreak.BrickBreakOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.brickbreak.BrickBreakView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "lines98") {
+                    removeActiveOverlay()
+                    com.tdpham.games.lines98.Lines98OptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.lines98.Lines98View)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "word_quest") {
+                    removeActiveOverlay()
+                    com.tdpham.games.wordquest.WordQuestOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.wordquest.WordQuestView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "road_racer") {
+                    removeActiveOverlay()
+                    com.tdpham.games.roadracer.RoadRacerOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.roadracer.RoadRacerView)?.resetGame()
+                    }
+                    return true
                 }
             }
         }

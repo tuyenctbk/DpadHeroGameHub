@@ -2,6 +2,8 @@ package com.tdpham.games.tanks
 
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
@@ -46,8 +48,9 @@ class BattleTanksView @JvmOverloads constructor(
     private var bgType = GameEnvironment.BackgroundType.SOLID
     private var isNight = false
 
-    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
-    private val animHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val handler = Handler(Looper.getMainLooper())
+    private val animHandler = Handler(Looper.getMainLooper())
+    private val gridRect = RectF()
     private val animRunnable = object : Runnable {
         override fun run() {
             if (gameOver || gamePaused) {
@@ -252,15 +255,19 @@ class BattleTanksView @JvmOverloads constructor(
             when (type) {
                 1 -> {
                     paint.color = Color.parseColor("#A1887F") // Brick
-                    canvas.drawRect(c * cellW + 4, r * cellH + 4, (c + 1) * cellW - 4, (r + 1) * cellH - 4, paint)
+                    gridRect.set(c * cellW + 4, r * cellH + 4, (c + 1) * cellW - 4, (r + 1) * cellH - 4)
+                    canvas.drawRect(gridRect, paint)
                     paint.color = Color.parseColor("#795548")
-                    canvas.drawRect(c * cellW + 4, r * cellH + cellH/2, (c + 1) * cellW - 4, r * cellH + cellH/2 + 4, paint)
+                    gridRect.set(c * cellW + 4, r * cellH + cellH/2, (c + 1) * cellW - 4, r * cellH + cellH/2 + 4)
+                    canvas.drawRect(gridRect, paint)
                 }
                 2 -> {
                     paint.color = Color.LTGRAY // Steel
-                    canvas.drawRect(c * cellW + 2, r * cellH + 2, (c + 1) * cellW - 2, (r + 1) * cellH - 2, paint)
+                    gridRect.set(c * cellW + 2, r * cellH + 2, (c + 1) * cellW - 2, (r + 1) * cellH - 2)
+                    canvas.drawRect(gridRect, paint)
                     paint.color = Color.WHITE
-                    canvas.drawRect(c * cellW + 8, r * cellH + 8, (c + 1) * cellW - 8, (r + 1) * cellH - 8, paint)
+                    gridRect.set(c * cellW + 8, r * cellH + 8, (c + 1) * cellW - 8, (r + 1) * cellH - 8)
+                    canvas.drawRect(gridRect, paint)
                 }
                 3 -> {
                     paint.color = Color.parseColor("#FFD600")
@@ -324,11 +331,14 @@ class BattleTanksView @JvmOverloads constructor(
 
         // Tracks
         paint.color = Color.DKGRAY
-        canvas.drawRect(x + 2, y + 2, x + 12, y + cellH - 2, paint)
-        canvas.drawRect(x + cellW - 12, y + 2, x + cellW - 2, y + cellH - 2, paint)
+        gridRect.set(x + 2, y + 2, x + 12, y + cellH - 2)
+        canvas.drawRect(gridRect, paint)
+        gridRect.set(x + cellW - 12, y + 2, x + cellW - 2, y + cellH - 2)
+        canvas.drawRect(gridRect, paint)
         
         paint.color = color
-        canvas.drawRoundRect(x + 10, y + 10, x + cellW - 10, y + cellH - 10, 4f, 4f, paint)
+        gridRect.set(x + 10, y + 10, x + cellW - 10, y + cellH - 10)
+        canvas.drawRoundRect(gridRect, 4f, 4f, paint)
         
         // Turret
         paint.color = color
@@ -340,10 +350,10 @@ class BattleTanksView @JvmOverloads constructor(
         paint.color = Color.WHITE
         val bw = 5f
         when (tank.dir) {
-            0 -> canvas.drawRect(centerX-bw, y + 4, centerX+bw, centerY, paint)
-            1 -> canvas.drawRect(centerX, centerY-bw, x+cellW-4, centerY+bw, paint)
-            2 -> canvas.drawRect(centerX-bw, centerY, centerX+bw, y+cellH-4, paint)
-            3 -> canvas.drawRect(x+4, centerY-bw, centerX, centerY+bw, paint)
+            0 -> { gridRect.set(centerX-bw, y + 4, centerX+bw, centerY); canvas.drawRect(gridRect, paint) }
+            1 -> { gridRect.set(centerX, centerY-bw, x+cellW-4, centerY+bw); canvas.drawRect(gridRect, paint) }
+            2 -> { gridRect.set(centerX-bw, centerY, centerX+bw, y+cellH-4); canvas.drawRect(gridRect, paint) }
+            3 -> { gridRect.set(x+4, centerY-bw, centerX, centerY+bw); canvas.drawRect(gridRect, paint) }
         }
     }
 

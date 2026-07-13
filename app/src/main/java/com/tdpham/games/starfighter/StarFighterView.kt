@@ -56,6 +56,7 @@ class StarFighterView @JvmOverloads constructor(
 
     private val handler = Handler(Looper.getMainLooper())
     private val animHandler = Handler(Looper.getMainLooper())
+    private val drawRect = RectF()
     private val animRunnable = object : Runnable {
         override fun run() {
             if (gameOver || isPaused) {
@@ -75,7 +76,6 @@ class StarFighterView @JvmOverloads constructor(
         }
     }
 
-    private val tempRect = RectF()
     private val playerPath = Path()
     private val tempPath = Path()
 
@@ -387,12 +387,14 @@ class StarFighterView @JvmOverloads constructor(
             paint.color = e.color
             when (e.type) {
                 EnemyType.BIG -> {
-                    tempRect.set(e.x - e.size, e.y - e.size, e.x + e.size, e.y + e.size)
-                    canvas.drawRoundRect(tempRect, 15f, 15f, paint)
+                    drawRect.set(e.x - e.size, e.y - e.size, e.x + e.size, e.y + e.size)
+                    canvas.drawRoundRect(drawRect, 15f, 15f, paint)
                     paint.color = Color.BLACK
                     paint.alpha = 100
-                    canvas.drawRect(e.x - 20, e.y - 10, e.x - 10, e.y + 10, paint)
-                    canvas.drawRect(e.x + 10, e.y - 10, e.x + 20, e.y + 10, paint)
+                    drawRect.set(e.x - 20, e.y - 10, e.x - 10, e.y + 10)
+                    canvas.drawRect(drawRect, paint)
+                    drawRect.set(e.x + 10, e.y - 10, e.x + 20, e.y + 10)
+                    canvas.drawRect(drawRect, paint)
                     paint.alpha = 255
                 }
                 EnemyType.FAST -> {
@@ -417,7 +419,8 @@ class StarFighterView @JvmOverloads constructor(
         bullets.forEach {
             paint.color = if (it.isEnemy) Color.RED else Color.CYAN
             paint.style = Paint.Style.FILL
-            canvas.drawRect(it.x - 3, it.y - 12, it.x + 3, it.y + 12, paint)
+            drawRect.set(it.x - 3, it.y - 12, it.x + 3, it.y + 12)
+            canvas.drawRect(drawRect, paint)
             paint.alpha = 100
             canvas.drawCircle(it.x, it.y, 8f, paint)
             paint.alpha = 255
@@ -510,7 +513,8 @@ class StarFighterView @JvmOverloads constructor(
 
     private fun drawOverlay(canvas: Canvas, title: String, sub: String) {
         paint.color = GamePalette.OVERLAY
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        drawRect.set(0f, 0f, width.toFloat(), height.toFloat())
+        canvas.drawRect(drawRect, paint)
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 80f
         paint.color = Color.WHITE

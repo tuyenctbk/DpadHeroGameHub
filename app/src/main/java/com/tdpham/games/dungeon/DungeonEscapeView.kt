@@ -53,7 +53,7 @@ class DungeonEscapeView @JvmOverloads constructor(
     private val spikePath = Path()
     private var lastUpdate = 0L
     
-    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val handler = Handler(Looper.getMainLooper())
     private val gameLoop = object : Runnable {
         override fun run() {
             if (!gamePaused && !gameOver) {
@@ -66,6 +66,7 @@ class DungeonEscapeView @JvmOverloads constructor(
 
     private var offsetX = 0f
     private var offsetY = 0f
+    private val gridRect = RectF()
 
     data class Sentinel(var x: Float, var y: Float, val dx: Float, val dy: Float, val isVertical: Boolean)
 
@@ -274,13 +275,16 @@ class DungeonEscapeView @JvmOverloads constructor(
                 4 -> if (hasKey) Color.parseColor("#4CAF50") else Color.parseColor("#5D4037") // Door
                 else -> Color.parseColor("#212121") // Floor
             }
-            canvas.drawRect(x + 1, y + 1, x + cellS - 1, y + cellS - 1, paint)
+            gridRect.set(x + 1, y + 1, x + cellS - 1, y + cellS - 1)
+            canvas.drawRect(gridRect, paint)
             
             // Subtle texture/detail
             if (type == 1) { // Wall bevel
                 paint.color = Color.parseColor("#616161")
-                canvas.drawRect(x + 2, y + 2, x + cellS - 2, y + 6, paint)
-                canvas.drawRect(x + 2, y + 2, x + 6, y + cellS - 2, paint)
+                gridRect.set(x + 2, y + 2, x + cellS - 2, y + 6)
+                canvas.drawRect(gridRect, paint)
+                gridRect.set(x + 2, y + 2, x + 6, y + cellS - 2)
+                canvas.drawRect(gridRect, paint)
             } else if (type == 0) { // Floor detail
                 if ((r + c) % 4 == 0) {
                     paint.color = Color.parseColor("#252525")

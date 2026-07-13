@@ -163,7 +163,6 @@
     <string name="picture_restored_label">คืนรูปภาพแล้ว!</string>
     <string name="score_prefix">คะแนน</string>
     <string name="high_score_label">คะแนนสูงสุด</string>
-    <string name="wrong_path_label">ผิดทาง!</string>
     <string name="wrong_label">ผิด!</string>
     <string name="answer_was_label">คำตอบคือ</string>
     <string name="finish_label">จบ</string>

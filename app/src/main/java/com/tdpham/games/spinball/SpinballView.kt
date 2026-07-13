@@ -90,6 +90,11 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
         }
     }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        mainHandler.removeCallbacks(updateRunnable)
+    }
+
     override fun startGame() {
         isPaused = false
         isGameOver = false

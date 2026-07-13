@@ -44,6 +44,10 @@ class MentalMathView @JvmOverloads constructor(
     private var isPaused = false
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val PREFS_NAME = "mentalmath_settings"
+    private val KEY_DIFFICULTY = "difficulty_index"
+    private var currentMode = 1 // 0:Easy, 1:Normal, 2:Hard
+    private var hintShowFrames = 0
 
     private var question = ""
     private var correctAnswer = 0
@@ -90,21 +94,27 @@ class MentalMathView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
+        // Load difficulty from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        currentMode = prefs.getInt(KEY_DIFFICULTY, 1).coerceIn(0, 2)
+
         stage = 1
         score = 0
-        best = ScoreManager.getHighScore(context, gameKey)
+        best = ScoreManager.getHighScore(context, gameKey, currentMode)
         gameOver = false
         isReviewing = false
         isPaused = false
         celebrationManager.start(0f, 0f)
         generateQuestion()
+        
+        hintShowFrames = 100
         invalidate()
     }
 
     private fun generateQuestion() {
-        val op = when {
-            stage < 5 -> if (Random.nextBoolean()) "+" else "-"
-            stage < 15 -> listOf("+", "-", "*").random()
+        val op = when (currentMode) {
+            0 -> if (Random.nextBoolean()) "+" else "-"
+            1 -> listOf("+", "-", "*").random()
             else -> listOf("+", "-", "*", "/").random()
         }
 
@@ -224,11 +234,22 @@ class MentalMathView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_UP -> if (selectedOptionIdx >= 2) selectedOptionIdx -= 2
             KeyEvent.KEYCODE_DPAD_DOWN -> if (selectedOptionIdx < 2) selectedOptionIdx += 2
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> checkAnswer()
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
+    }
+
+    private fun showOptions() {
+        pause()
+        MentalMathOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -289,7 +310,7 @@ class MentalMathView @JvmOverloads constructor(
         if (isCorrect) {
             score += (100 * stage) + (timeLeft / 100).toInt()
             val oldBest = best
-            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, currentMode)
             if (isNewHigh) {
                 best = score
             }
@@ -318,6 +339,11 @@ class MentalMathView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(GamePalette.BACKGROUND)
 
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         // HUD
         paint.reset()
         paint.isAntiAlias = true
@@ -327,6 +353,17 @@ class MentalMathView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.LEFT
         val hudY = Math.round(60f).toFloat()
         canvas.drawText("${context.getString(R.string.stage_label)}: $stage", 40f, hudY, paint)
+        
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 80f, paint)
+            paint.alpha = 255
+        }
+
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 

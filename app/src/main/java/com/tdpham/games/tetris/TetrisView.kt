@@ -33,6 +33,10 @@ class TetrisView @JvmOverloads constructor(
     private var next = spawnPieceData()
     private var score = 0
     private var best = 0
+    private var startLevel = 1
+    private val PREFS_NAME = "tetris_settings"
+    private val KEY_START_LEVEL = "start_level"
+    private var hintShowFrames = 0
     private var paused = true
     private var gameOver = false
     private var currentVictoryWord = ""
@@ -60,7 +64,8 @@ class TetrisView @JvmOverloads constructor(
                 }
                 if (flashFrames > 0) flashFrames--
                 invalidate()
-                val delay = (450 - (score / 400) * 25).coerceAtLeast(100).toLong()
+                val currentLevel = (startLevel + score / 1000).coerceAtMost(15)
+                val delay = (450 - (currentLevel - 1) * 30).coerceAtLeast(80).toLong()
                 handler.postDelayed(this, delay)
             }
         }
@@ -99,12 +104,16 @@ class TetrisView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
+        // Load start level from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        startLevel = prefs.getInt(KEY_START_LEVEL, 1).coerceIn(1, 10)
+
         for (r in 0 until rows) {
             for (c in 0 until cols) board[r][c] = 0
         }
         score = 0
         celebrationManager.start(0f, 0f)
-        best = ScoreManager.getHighScore(context, gameKey)
+        best = ScoreManager.getHighScore(context, gameKey, startLevel)
         current = spawnPieceData()
         next = spawnPieceData()
         gameOver = false
@@ -112,6 +121,8 @@ class TetrisView @JvmOverloads constructor(
         flashFrames = 0
         particles.clear()
         handler.removeCallbacks(tick)
+        
+        hintShowFrames = 100
         bgType = listOf(GameEnvironment.BackgroundType.GRADIENT, GameEnvironment.BackgroundType.GRID, GameEnvironment.BackgroundType.STRIPES).random()
         isNight = Random.nextBoolean()
         invalidate()
@@ -146,11 +157,22 @@ class TetrisView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_DOWN -> fastMoveDown()
             KeyEvent.KEYCODE_DPAD_UP -> rotate()
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> hardDrop()
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
+    }
+
+    private fun showOptions() {
+        pause()
+        TetrisOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -245,8 +267,9 @@ class TetrisView @JvmOverloads constructor(
         if (!isValid(current.r, current.c, current.rot)) {
             gameOver = true
             handler.removeCallbacks(tick)
-            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, startLevel)
             if (isNewHigh) {
+                best = score
                 currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
             } else {
                 currentVictoryWord = ""
@@ -376,6 +399,12 @@ class TetrisView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         val needsInvalidate = screenShake.apply(canvas)
+        
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         val size = (height / (rows + 2)).coerceAtMost(width / (cols + 8)).toFloat()
         val offsetX = (width - cols * size) / 2f
         val offsetY = (height - rows * size) / 2f
@@ -457,6 +486,17 @@ class TetrisView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.score_label)}: $score", hudX, hudY1, textPaint)
         textPaint.color = GamePalette.TEXT_SECONDARY
         canvas.drawText("${context.getString(R.string.best_label)}: $best", hudX, hudY2, textPaint)
+        
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            textPaint.textAlign = Paint.Align.LEFT
+            textPaint.textSize = size * 0.5f
+            textPaint.color = Color.WHITE
+            textPaint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, 60f, textPaint)
+            textPaint.alpha = 255
+        }
+
         canvas.drawText("${context.getString(R.string.next_label)}:", hudX, hudY3, textPaint)
 
         // Draw next piece

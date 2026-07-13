@@ -20,6 +20,10 @@ class Lines98View @JvmOverloads constructor(
 
     override var gameKey: String = "lines98"
     override var onGameOver: ((Int) -> Unit)? = null
+    private var colorCount = 7 // Default
+    private val PREFS_NAME = "lines98_settings"
+    private val KEY_COLOR_COUNT = "color_count"
+    private var hintShowFrames = 0
     private val gridSize = 9
     private var board = Array(gridSize) { IntArray(gridSize) { 0 } }
     private var selectedX = -1
@@ -73,6 +77,10 @@ class Lines98View @JvmOverloads constructor(
     }
 
     override fun resetGame() {
+        // Load color count from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        colorCount = prefs.getInt(KEY_COLOR_COUNT, 7).coerceIn(5, 9)
+
         board = Array(gridSize) { IntArray(gridSize) { 0 } }
         score = 0
         isGameOver = false
@@ -84,6 +92,8 @@ class Lines98View @JvmOverloads constructor(
         generateNextBalls()
         spawnBalls()
         generateNextBalls()
+        
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -103,7 +113,7 @@ class Lines98View @JvmOverloads constructor(
 
         val count = Math.min(emptyCells.size, 3)
         repeat(count) {
-            nextBalls.add(random.nextInt(ballColors.size) + 1)
+            nextBalls.add(random.nextInt(colorCount) + 1)
             val idx = random.nextInt(emptyCells.size)
             nextPositions.add(emptyCells.removeAt(idx))
         }
@@ -136,8 +146,8 @@ class Lines98View @JvmOverloads constructor(
         }
         if (!hasEmpty) {
             isGameOver = true
-            val oldHighScore = ScoreManager.getHighScore(context, gameKey)
-            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            val oldHighScore = ScoreManager.getHighScore(context, gameKey, colorCount)
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, colorCount)
             if (isNewHigh) {
                 currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
             } else {
@@ -193,7 +203,7 @@ class Lines98View @JvmOverloads constructor(
                 board[rr][cc] = 0
             }
             score += toRemove.size * 2
-            ScoreManager.updateHighScore(context, gameKey, score)
+            ScoreManager.updateHighScore(context, gameKey, score, colorCount)
             SoundManager.playScore()
             return true
         }
@@ -245,10 +255,21 @@ class Lines98View @JvmOverloads constructor(
             KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DPAD_CENTER -> {
                 handleSelection()
             }
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
+    }
+
+    private fun showOptions() {
+        pause()
+        Lines98OptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -321,6 +342,11 @@ class Lines98View @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.SOLID, paint = paint)
         
         // Update pulse animation
@@ -439,7 +465,17 @@ class Lines98View @JvmOverloads constructor(
         val hudY1 = Math.round(80f).toFloat()
         val hudY2 = Math.round(130f).toFloat()
         canvas.drawText("${context.getString(R.string.score_label)}: $score", 50f, hudY1, paint)
-        canvas.drawText("${context.getString(R.string.high_score_label)}: ${ScoreManager.getHighScore(context, gameKey)}", 50f, hudY2, paint)
+        canvas.drawText("${context.getString(R.string.high_score_label)}: ${ScoreManager.getHighScore(context, gameKey, colorCount)}", 50f, hudY2, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 50f, hudY2 + 50f, paint)
+            paint.alpha = 255
+        }
 
         // Next Balls
         canvas.drawText("${context.getString(R.string.next_label)}:", width - 300f, hudY1, paint)

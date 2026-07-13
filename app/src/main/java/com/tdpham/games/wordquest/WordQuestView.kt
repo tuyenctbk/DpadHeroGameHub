@@ -24,13 +24,24 @@ class WordQuestView @JvmOverloads constructor(
     override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    private val words = listOf(
+    private val allWords = listOf(
         "BRAIN", "STORM", "LIGHT", "SPACE", "GAMES", "PIXEL", "CLOCK", "POWER", "BOARD", "MUSIC",
         "HEART", "DREAM", "WORLD", "PILOT", "SHINE", "LEVEL", "TRACK", "STAGE", "MATCH", "BRICK",
         "POINT", "SNAKE", "ROBOT", "SUPER", "SOUND", "GUIDE", "QUICK", "FLASH", "TIMER", "SMART",
         "COLOR", "ROUND", "QUEST", "BRAVE", "CLEAR", "EARTH", "FINAL", "GREAT", "HOUSE", "IMAGE",
         "JOINT", "KNIFE", "LARGE", "MODEL", "NORTH", "OCEAN", "PLANT", "SPACE", "TOUCH", "VALVE"
     ).map { it.uppercase() }.filter { it.length == 5 }
+
+    private val natureWords = listOf(
+        "OCEAN", "PLANT", "EARTH", "WORLD", "FIELD", "WATER", "FLOWER", "RIVER", "CLOUD", "STORM",
+        "GRASS", "TREES", "LEAFY", "STONE", "BEACH", "MOUNTS", "SUNNY", "RAINY", "WINDY", "FROST"
+    ).map { it.uppercase() }.filter { it.length == 5 }
+
+    private val techWords = listOf(
+        "ROBOT", "PIXEL", "POWER", "CLOCK", "TIMER", "FLASH", "MODEL", "VALVE", "SPACE", "TRACK",
+        "MOUSE", "BOARD", "LOGIC", "DATA", "MICRO", "CHIPY", "CODEX", "SOUND", "AUDIO", "VIDEO"
+    ).map { it.uppercase() }.filter { it.length == 5 }
+
     private var targetWord = ""
     private val guesses = mutableListOf<String>()
     private var currentGuess = ""
@@ -40,6 +51,12 @@ class WordQuestView @JvmOverloads constructor(
     private var best = 0
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val PREFS_NAME = "wordquest_settings"
+    private val KEY_CATEGORY = "selected_category_index"
+    private var currentCategoryIndex = 0
+    private var hintShowFrames = 0
+    private val cellRect = RectF()
+    private val keyRect = RectF()
     private val animHandler = Handler(Looper.getMainLooper())
     private val animRunnable = object : Runnable {
         override fun run() {
@@ -82,16 +99,28 @@ class WordQuestView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
-        targetWord = words[Random.nextInt(words.size)]
+        // Load category from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        currentCategoryIndex = prefs.getInt(KEY_CATEGORY, 0).coerceIn(0, 2)
+
+        val wordList = when(currentCategoryIndex) {
+            1 -> natureWords
+            2 -> techWords
+            else -> allWords
+        }
+
+        targetWord = wordList[Random.nextInt(wordList.size)]
         guesses.clear()
         currentGuess = ""
         usedKeys.clear()
         gameOver = false
         won = false
         celebrationManager.start(0f, 0f)
-        best = ScoreManager.getHighScore(context, gameKey)
+        best = ScoreManager.getHighScore(context, gameKey, currentCategoryIndex)
         keyR = 0
         keyC = 0
+        
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -116,12 +145,22 @@ class WordQuestView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_LEFT -> keyC = (keyC - 1).coerceAtLeast(0)
             KeyEvent.KEYCODE_DPAD_RIGHT -> keyC = (keyC + 1).coerceAtMost(keyboard[keyR].length - 1)
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> selectKey()
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         
         invalidate()
         return true
+    }
+
+    private fun showOptions() {
+        WordQuestOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -207,7 +246,7 @@ class WordQuestView @JvmOverloads constructor(
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
             score = (6 - guesses.size + 1) * 1000
             val oldBest = best
-            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, currentCategoryIndex)
             if (isNewHigh) best = score
             celebrationManager.startOutcome(
                 width = width.toFloat(),
@@ -239,6 +278,11 @@ class WordQuestView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(GamePalette.BACKGROUND)
 
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         val cellS = 80f
         val margin = 10f
         val startX = (width - (5 * cellS + 4 * margin)) / 2f
@@ -253,11 +297,11 @@ class WordQuestView @JvmOverloads constructor(
                 
                 val x = startX + c * (cellS + margin)
                 val y = startY + r * (cellS + margin)
-                val rect = RectF(x, y, x + cellS, y + cellS)
+                cellRect.set(x, y, x + cellS, y + cellS)
                 
                 // Draw cell with bevel
                 paint.color = color
-                canvas.drawRoundRect(rect, 10f, 10f, paint)
+                canvas.drawRoundRect(cellRect, 10f, 10f, paint)
                 
                 // Bevel highlight
                 paint.color = Color.argb(40, 255, 255, 255)
@@ -296,7 +340,7 @@ class WordQuestView @JvmOverloads constructor(
                     paint.style = Paint.Style.STROKE
                     paint.strokeWidth = 2f
                     paint.color = Color.GRAY
-                    canvas.drawRoundRect(rect, 10f, 10f, paint)
+                    canvas.drawRoundRect(cellRect, 10f, 10f, paint)
                     paint.style = Paint.Style.FILL
                 }
             }
@@ -321,7 +365,7 @@ class WordQuestView @JvmOverloads constructor(
                 
                 // Selection Pulse
                 val pulse = if (isSelected) (Math.sin(System.currentTimeMillis() / 150.0).toFloat() * 3f) else 0f
-                val rect = RectF(x - pulse, y - pulse, x + keyS + pulse, y + keyS + pulse)
+                keyRect.set(x - pulse, y - pulse, x + keyS + pulse, y + keyS + pulse)
 
                 paint.color = when {
                     isSelected -> Color.YELLOW
@@ -334,13 +378,13 @@ class WordQuestView @JvmOverloads constructor(
                 if (isSelected) {
                     paint.setShadowLayer(15f, 0f, 0f, Color.YELLOW)
                 }
-                canvas.drawRoundRect(rect, 8f, 8f, paint)
+                canvas.drawRoundRect(keyRect, 8f, 8f, paint)
                 paint.clearShadowLayer()
                 
                 paint.color = if (isSelected) Color.BLACK else Color.WHITE
                 paint.textSize = 30f
                 paint.textAlign = Paint.Align.CENTER
-                canvas.drawText(kRow[c].toString(), rect.centerX(), rect.centerY() + 10f, paint)
+                canvas.drawText(kRow[c].toString(), keyRect.centerX(), keyRect.centerY() + 10f, paint)
             }
         }
 
@@ -355,6 +399,16 @@ class WordQuestView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 24f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 40f, paint)
+            paint.alpha = 255
+        }
 
         if (gameOver) {
             celebrationManager.draw(canvas)
