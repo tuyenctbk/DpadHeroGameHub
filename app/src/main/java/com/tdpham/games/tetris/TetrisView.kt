@@ -131,6 +131,8 @@ class TetrisView @JvmOverloads constructor(
         gameOver = false
         paused = true
         flashFrames = 0
+        linesClearing.clear()
+        lineClearAnimationTimer = 0
         particles.clear()
         handler.removeCallbacks(tick)
         
@@ -262,7 +264,7 @@ class TetrisView @JvmOverloads constructor(
         for (cell in shapeCells(current.shape, nrot)) {
             val r = nr + cell.first
             val c = nc + cell.second
-            if (r !in 0 until rows || c !in 0 until cols || board[r][c] != 0) return false
+            if (r >= rows || c !in 0 until cols || (r >= 0 && board[r][c] != 0)) return false
         }
         return true
     }
@@ -332,16 +334,24 @@ class TetrisView @JvmOverloads constructor(
             else -> 1000
         }
 
-        val linesToClear = linesClearing.sorted() // e.g., [18, 19]
-        
-        for (r in linesToClear) {
-            // Shift everything above r down by 1
-            for (rr in r downTo 1) {
-                for (cc in 0 until cols) {
-                    board[rr][cc] = board[rr - 1][cc]
+        // Standard Tetris line clear logic: process from bottom to top
+        var r = rows - 1
+        while (r >= 0) {
+            var full = true
+            for (c in 0 until cols) {
+                if (board[r][c] == 0) {
+                    full = false
+                    break
                 }
             }
-            for (cc in 0 until cols) board[0][cc] = 0
+            if (full) {
+                for (rr in r downTo 1) {
+                    for (cc in 0 until cols) board[rr][cc] = board[rr - 1][cc]
+                }
+                for (cc in 0 until cols) board[0][cc] = 0
+            } else {
+                r--
+            }
         }
 
         // Spawn particles at the end of animation

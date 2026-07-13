@@ -36,6 +36,9 @@ class DungeonEscapeView @JvmOverloads constructor(
     private var level = 1
     private var score = 0
     private var best = 0
+    private val PREFS_NAME = "dungeon_settings"
+    private val KEY_START_LEVEL = "start_level"
+    private var hintShowFrames = 0
     private var gameOver = false
     private var gamePaused = true
     private var currentVictoryWord = ""
@@ -101,13 +104,15 @@ class DungeonEscapeView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
-        level = 1
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        level = prefs.getInt(KEY_START_LEVEL, 1).coerceIn(1, 10)
         score = 0
         best = ScoreManager.getHighScore(context, gameKey)
         celebrationManager.start(0f, 0f)
         setupLevel()
         gamePaused = true
         gameOver = false
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -174,11 +179,21 @@ class DungeonEscapeView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_DOWN -> movePlayer(0, 1)
             KeyEvent.KEYCODE_DPAD_LEFT -> movePlayer(-1, 0)
             KeyEvent.KEYCODE_DPAD_RIGHT -> movePlayer(1, 0)
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
+    }
+
+    private fun showOptions() {
+        DungeonOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -254,6 +269,11 @@ class DungeonEscapeView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         cellS = (width / cols).coerceAtMost(height / rows).toFloat()
         offsetX = (width - cols * cellS) / 2f
         offsetY = (height - rows * cellS) / 2f
@@ -347,6 +367,16 @@ class DungeonEscapeView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.level_label)}: $level  ${context.getString(R.string.score_label)}: $score", 20f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 20f, hudY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 30f, hudY + 45f, paint)
+            paint.alpha = 255
+        }
 
         if (gameOver) {
             drawOverlay(canvas, context.getString(R.string.trapped_label), "${context.getString(R.string.final_score_label)}: $level\n${context.getString(R.string.restart_hint)}")

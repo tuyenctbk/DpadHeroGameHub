@@ -36,6 +36,10 @@ class SimonSaysView @JvmOverloads constructor(
     private var currentVictoryWord = ""
     private var celebrationTimer = 0
     private val celebrationManager = CelebrationManager()
+    private val PREFS_NAME = "simon_settings"
+    private val KEY_SPEED = "speed_index"
+    private var speedIndex = 1
+    private var hintShowFrames = 0
 
     private val colors = arrayOf(
         Color.YELLOW, // Up
@@ -64,12 +68,17 @@ class SimonSaysView @JvmOverloads constructor(
         handler.removeCallbacksAndMessages(null)
         sequence.clear()
         celebrationManager.start(0f, 0f)
+
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        speedIndex = prefs.getInt(KEY_SPEED, 1).coerceIn(0, 2)
+
         score = 0
-        best = ScoreManager.getHighScore(context, gameKey)
+        best = ScoreManager.getHighScore(context, gameKey, speedIndex)
         gameOver = false
         gamePaused = true
         activeQuadrant = -1
         celebrationTimer = 0
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -82,6 +91,8 @@ class SimonSaysView @JvmOverloads constructor(
     private fun showSequence() {
         isShowingSequence = true
         activeQuadrant = -1
+        val baseDelay = when(speedIndex) { 0 -> 800L; 2 -> 400L; else -> 600L }
+        val flashDuration = (baseDelay * 0.6).toLong()
         var delay = 500L
         for (i in sequence.indices) {
             handler.postDelayed({
@@ -91,9 +102,9 @@ class SimonSaysView @JvmOverloads constructor(
                 handler.postDelayed({
                     activeQuadrant = -1
                     invalidate()
-                }, 400)
+                }, flashDuration)
             }, delay)
-            delay += 600
+            delay += baseDelay
         }
         handler.postDelayed({
             isShowingSequence = false
@@ -122,6 +133,10 @@ class SimonSaysView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_RIGHT -> 1
             KeyEvent.KEYCODE_DPAD_DOWN -> 2
             KeyEvent.KEYCODE_DPAD_LEFT -> 3
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> {
                 toggleSound()
                 return true
@@ -179,6 +194,13 @@ class SimonSaysView @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
+    private fun showOptions() {
+        pause()
+        SimonOptionsDialog.show(context) {
+            resetGame()
+        }
+    }
+
     private fun handleInput(input: Int) {
         if (playerIdx >= sequence.size || isShowingSequence || gameOver || gamePaused) return
 
@@ -195,7 +217,7 @@ class SimonSaysView @JvmOverloads constructor(
             if (playerIdx == sequence.size) {
                 score++
                 val oldBest = best
-                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, speedIndex)
                 if (isNewHigh) {
                     best = score
                     currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
@@ -209,25 +231,32 @@ class SimonSaysView @JvmOverloads constructor(
                     )
                     celebrationTimer = 180 // ~3 seconds at 60fps or similar
                 }
+                SoundManager.playSuccess()
                 handler.postDelayed({ startNextRound() }, 800)
             }
         } else {
             gameOver = true
             gamePaused = true
-            SoundManager.playError()
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, speedIndex)
             celebrationManager.startOutcome(
                 width = width.toFloat(),
                 height = height.toFloat(),
                 isWin = false,
+                isNewHigh = isNewHigh,
                 score = score,
                 highScore = best
             )
+            SoundManager.playError()
             onGameOver?.invoke(score)
             invalidate()
         }
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
         canvas.drawColor(GamePalette.BACKGROUND)
         
         val size = width.coerceAtMost(height) * 0.8f
@@ -270,6 +299,16 @@ class SimonSaysView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 45f, paint)
+            paint.alpha = 255
+        }
 
         paint.textAlign = Paint.Align.CENTER
         val centerX = Math.round(width / 2f).toFloat()

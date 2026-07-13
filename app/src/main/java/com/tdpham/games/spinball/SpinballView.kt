@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
@@ -14,16 +15,24 @@ import com.tdpham.games.R
 import java.util.*
 import kotlin.math.*
 
-class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs), GameView {
+class SpinballView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr), GameView {
 
     override var gameKey: String = "spinball"
     override var onGameOver: ((Int) -> Unit)? = null
     private var isPaused = true
+    private var isGameOver = false
     private var score = 0
     private var highScore = 0
-    private var isGameOver = false
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val PREFS_NAME = "spinball_settings"
+    private val KEY_DIFFICULTY = "difficulty_index"
+    private var currentDifficultyIndex = 1
+    private var hintShowFrames = 0
 
     // Physics constants
     private val radius = 300f
@@ -47,7 +56,7 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private val updateRunnable = object : Runnable {
         override fun run() {
-            if (!isPaused) {
+            if (!isPaused && !isGameOver) {
                 update()
                 invalidate()
                 mainHandler.postDelayed(this, 16)
@@ -57,9 +66,8 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
 
     init {
         isFocusable = true
-        highScore = ScoreManager.getHighScore(context, gameKey)
-        resetBall()
-        spawnItems()
+        isFocusableInTouchMode = true
+        resetGame()
         
         // Pre-create spike path
         spikePath.moveTo(radius - 30f, -15f)
@@ -72,7 +80,11 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
         ballX = 0f
         ballY = 0f
         val angle = random.nextFloat() * 2 * PI.toFloat()
-        val speed = 6f
+        val speed = when(currentDifficultyIndex) {
+            0 -> 4.5f
+            2 -> 8.5f
+            else -> 6.5f
+        }
         ballVX = cos(angle) * speed
         ballVY = sin(angle) * speed
     }
@@ -96,12 +108,14 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
     }
 
     override fun startGame() {
+        requestFocus()
         isPaused = false
         isGameOver = false
         score = 0
         celebrationManager.start(0f, 0f)
         resetBall()
         spawnItems()
+        mainHandler.removeCallbacks(updateRunnable)
         mainHandler.post(updateRunnable)
     }
 
@@ -110,14 +124,23 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
     }
 
     override fun resume() {
-        if (isPaused) {
+        if (isPaused && !isGameOver) {
             isPaused = false
+            mainHandler.removeCallbacks(updateRunnable)
             mainHandler.post(updateRunnable)
         }
     }
 
     override fun resetGame() {
+        // Load difficulty from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        currentDifficultyIndex = prefs.getInt(KEY_DIFFICULTY, 1).coerceIn(0, 2)
+
+        highScore = ScoreManager.getHighScore(context, gameKey, currentDifficultyIndex)
+        hintShowFrames = 100
         startGame()
+        isPaused = true
+        invalidate()
     }
 
     override fun toggleSound(): Boolean {
@@ -181,7 +204,7 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
         isGameOver = true
         SoundManager.playError()
         val finalScore = score
-        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, finalScore)
+        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, finalScore, currentDifficultyIndex)
         if (isNewHigh) {
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, "win_highscore")
         } else {
@@ -194,26 +217,19 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
             score = finalScore,
             highScore = highScore
         )
-        highScore = ScoreManager.getHighScore(context, gameKey)
+        highScore = ScoreManager.getHighScore(context, gameKey, currentDifficultyIndex)
         onGameOver?.invoke(finalScore)
     }
 
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        
-        if (isGameOver || isPaused) {
-            val title = if (isGameOver) (if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.game_over)) else context.getString(R.string.paused)
-            val sub = if (isGameOver) "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}" else context.getString(R.string.resume_hint)
-            
-            if (isGameOver) {
-                celebrationManager.update()
-                celebrationManager.draw(canvas)
-                invalidate()
-            }
-            
-            drawOverlay(canvas, title, sub)
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
         }
 
+        super.onDraw(canvas)
+        
+        canvas.save()
         canvas.translate(width / 2f, height / 2f)
 
         // Draw Boundary
@@ -255,6 +271,30 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
         paint.textAlign = Paint.Align.CENTER
         val hudY = Math.round(-radius - 40f).toFloat()
         canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.best_label)}: $highScore", 0f, hudY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), -width/2 + 30f, -height/2 + 60f, paint)
+            paint.alpha = 255
+        }
+        canvas.restore()
+
+        if (isGameOver || isPaused) {
+            val title = if (isGameOver) (if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.game_over)) else context.getString(R.string.paused)
+            val sub = if (isGameOver) "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}" else context.getString(R.string.resume_hint)
+            
+            if (isGameOver) {
+                celebrationManager.update()
+                celebrationManager.draw(canvas)
+                invalidate()
+            }
+            
+            drawOverlay(canvas, title, sub)
+        }
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, sub: String) {
@@ -274,6 +314,7 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (isGameOver) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                resetGame()
                 startGame()
                 return true
             }
@@ -298,8 +339,19 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
                 invalidate()
                 return true
             }
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    private fun showOptions() {
+        pause()
+        SpinballOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -307,10 +359,15 @@ class SpinballView(context: Context, attrs: AttributeSet?) : View(context, attrs
         return true
     }
 
-    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
-        if (event.action == android.view.MotionEvent.ACTION_MOVE || event.action == android.view.MotionEvent.ACTION_DOWN) {
-            if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_MOVE || event.action == MotionEvent.ACTION_DOWN) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
                 performClick()
+                if (isGameOver) {
+                    resetGame()
+                    startGame()
+                    return true
+                }
                 if (isPaused) {
                     resume()
                     return true

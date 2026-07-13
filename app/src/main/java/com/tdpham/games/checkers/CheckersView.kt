@@ -38,6 +38,10 @@ class CheckersView @JvmOverloads constructor(
     private var wins = 0
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val PREFS_NAME = "checkers_settings"
+    private val KEY_DIFFICULTY = "difficulty_index"
+    private var currentDifficultyIndex = 1
+    private var hintShowFrames = 0
     private val animHandler = Handler(Looper.getMainLooper())
     private val animRunnable = object : Runnable {
         override fun run() {
@@ -74,6 +78,10 @@ class CheckersView @JvmOverloads constructor(
 
     override fun resetGame() {
         celebrationManager.start(0f, 0f)
+
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        currentDifficultyIndex = prefs.getInt(KEY_DIFFICULTY, 1).coerceIn(0, 1)
+
         for (r in 0..7) for (c in 0..7) board[r][c] = EMPTY
         for (r in 0..2) for (c in 0..7) {
             if (darkSquare(r, c)) board[r][c] = CPU_MAN
@@ -87,7 +95,8 @@ class CheckersView @JvmOverloads constructor(
         mustContinueFrom = null
         gameOver = false
         status = context.getString(R.string.your_turn_label)
-        wins = ScoreManager.getHighScore(context, gameKey)
+        wins = ScoreManager.getHighScore(context, gameKey, currentDifficultyIndex)
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -102,11 +111,21 @@ class CheckersView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_LEFT -> cursorC = (cursorC + 7) % 8
             KeyEvent.KEYCODE_DPAD_RIGHT -> cursorC = (cursorC + 1) % 8
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> onSelect()
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
+    }
+
+    private fun showOptions() {
+        CheckersOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -232,7 +251,7 @@ class CheckersView @JvmOverloads constructor(
         currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
         val oldWins = wins
         val newWins = wins + 1
-        if (ScoreManager.updateHighScore(context, gameKey, newWins)) wins = newWins
+        if (ScoreManager.updateHighScore(context, gameKey, newWins, currentDifficultyIndex)) wins = newWins
         celebrationManager.startOutcome(
             width = width.toFloat(),
             height = height.toFloat(),
@@ -476,6 +495,10 @@ class CheckersView @JvmOverloads constructor(
     private fun isCpuPiece(v: Int) = v == CPU_MAN || v == CPU_KING
 
     override fun onDraw(canvas: Canvas) {
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
         canvas.drawColor(GamePalette.BACKGROUND)
         val size = width.coerceAtMost(height) * 0.8f
         val left = (width - size) / 2f
@@ -564,7 +587,18 @@ class CheckersView @JvmOverloads constructor(
         paint.color = Color.WHITE
         paint.textSize = 38f
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("${context.getString(R.string.wins_label)}: $wins", 30f, 52f, paint)
+        val hudY = 52f
+        canvas.drawText("${context.getString(R.string.wins_label)}: $wins", 30f, hudY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 30f, hudY + 45f, paint)
+            paint.alpha = 255
+        }
         
         if (gameOver) {
             celebrationManager.draw(canvas)

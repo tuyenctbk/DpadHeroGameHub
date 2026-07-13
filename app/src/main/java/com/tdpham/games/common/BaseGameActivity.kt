@@ -359,6 +359,36 @@ abstract class BaseGameActivity : AppCompatActivity() {
                         (gameView as? com.tdpham.games.starfighter.StarFighterView)?.resetGame()
                     }
                     return true
+                } else if (gameKey == "dungeon_escape") {
+                    removeActiveOverlay()
+                    com.tdpham.games.dungeon.DungeonOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.dungeon.DungeonEscapeView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "froggy_cross") {
+                    removeActiveOverlay()
+                    com.tdpham.games.froggy.FroggyOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.froggy.FroggyCrossView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "simon_says") {
+                    removeActiveOverlay()
+                    com.tdpham.games.simon.SimonOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.simon.SimonSaysView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "checkers") {
+                    removeActiveOverlay()
+                    com.tdpham.games.checkers.CheckersOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.checkers.CheckersView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "spinball") {
+                    removeActiveOverlay()
+                    com.tdpham.games.spinball.SpinballOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.spinball.SpinballView)?.resetGame()
+                    }
+                    return true
                 }
             }
         }

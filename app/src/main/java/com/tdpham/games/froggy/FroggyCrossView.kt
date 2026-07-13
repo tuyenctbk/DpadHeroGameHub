@@ -38,6 +38,10 @@ class FroggyCrossView @JvmOverloads constructor(
     private var lives = 3
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val PREFS_NAME = "froggy_settings"
+    private val KEY_DIFFICULTY = "difficulty_index"
+    private var currentDifficultyIndex = 1
+    private var hintShowFrames = 0
     private val animHandler = Handler(Looper.getMainLooper())
     private val animRunnable = object : Runnable {
         override fun run() {
@@ -99,14 +103,19 @@ class FroggyCrossView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
+        // Load difficulty from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        currentDifficultyIndex = prefs.getInt(KEY_DIFFICULTY, 1).coerceIn(0, 2)
+
         score = 0
         lives = 3
-        best = ScoreManager.getHighScore(context, gameKey)
+        best = ScoreManager.getHighScore(context, gameKey, currentDifficultyIndex)
         gameOver = false
         gamePaused = true
         celebrationManager.start(0f, 0f)
         resetFrog()
         setupLanes()
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -117,9 +126,14 @@ class FroggyCrossView @JvmOverloads constructor(
 
     private fun setupLanes() {
         lanes.clear()
+        val speedMult = when(currentDifficultyIndex) {
+            0 -> 0.7f
+            2 -> 1.4f
+            else -> 1.0f
+        }
         // Road lanes (1 to 4)
         for (r in 6..9) {
-            val speed = (Random.nextFloat() * 0.05f + 0.03f) * (if (r % 2 == 0) 1 else -1)
+            val speed = (Random.nextFloat() * 0.05f + 0.03f) * (if (r % 2 == 0) 1 else -1) * speedMult
             val entities = mutableListOf<Entity>()
             repeat(3) { i ->
                 entities.add(Entity(i * 5f, 2, Color.RED))
@@ -128,7 +142,7 @@ class FroggyCrossView @JvmOverloads constructor(
         }
         // River lanes (1 to 4)
         for (r in 1..4) {
-            val speed = (Random.nextFloat() * 0.04f + 0.02f) * (if (r % 2 == 0) 1 else -1)
+            val speed = (Random.nextFloat() * 0.04f + 0.02f) * (if (r % 2 == 0) 1 else -1) * speedMult
             val entities = mutableListOf<Entity>()
             repeat(3) { i ->
                 entities.add(Entity(i * 5f, 3, Color.parseColor("#8D6E63"), true))
@@ -156,11 +170,22 @@ class FroggyCrossView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_DOWN -> moveFrog(1, 0)
             KeyEvent.KEYCODE_DPAD_LEFT -> moveFrog(0, -1)
             KeyEvent.KEYCODE_DPAD_RIGHT -> moveFrog(0, 1)
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
+    }
+
+    private fun showOptions() {
+        pause()
+        FroggyOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -206,12 +231,16 @@ class FroggyCrossView @JvmOverloads constructor(
         if (frogR == 0) {
             score += 1000
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+            val oldBest = best
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, currentDifficultyIndex)
+            if (isNewHigh) best = score
             celebrationManager.startOutcome(
                 width = width.toFloat(),
                 height = height.toFloat(),
                 isWin = true,
+                isNewHigh = isNewHigh,
                 score = score,
-                highScore = best
+                highScore = oldBest
             )
             SoundManager.playSuccess()
             resetFrog()
@@ -224,7 +253,7 @@ class FroggyCrossView @JvmOverloads constructor(
         if (lives <= 0) {
             gameOver = true
             gamePaused = true
-            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, currentDifficultyIndex)
             if (isNewHigh) best = score
             celebrationManager.startOutcome(
                 width = width.toFloat(),
@@ -241,6 +270,11 @@ class FroggyCrossView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+
         cellW = width.toFloat() / cols
         cellH = height.toFloat() / rows
 
@@ -323,6 +357,16 @@ class FroggyCrossView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.lives_label)}: $lives", 20f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 20f, hudY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 20f, hudY + 45f, paint)
+            paint.alpha = 255
+        }
 
         if (gameOver) {
             drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
