@@ -301,6 +301,7 @@ class TRexView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_DOWN -> {
                 if (!isJumping) {
                     isDucking = true
+                    duckFrames = 120 // ~2 seconds hold
                     invalidate()
                 }
                 true
@@ -372,6 +373,7 @@ class TRexView @JvmOverloads constructor(
             } else {
                 if (!isJumping) {
                     isDucking = true
+                    duckFrames = 120 // ~2 seconds hold
                     invalidate()
                 }
             }
@@ -439,21 +441,18 @@ class TRexView @JvmOverloads constructor(
 
         updateEnvironment()
 
-        if (isDucking) {
-            duckingProgress = (duckingProgress + 0.2f).coerceAtMost(1f)
-            duckFrames = 25 
-        } else if (duckFrames > 0) {
-            duckFrames--
-            // Stay low
+        if (isDucking || duckFrames > 0) {
+            duckingProgress = 1f
+            if (duckFrames > 0) duckFrames--
         } else {
-            duckingProgress = (duckingProgress - 0.2f).coerceAtLeast(0f)
+            duckingProgress = 0f
         }
 
         gameSpeed += 0.0025f
         dinoVelocityY += gravity * currentMember.gravityMult
         dinoY += dinoVelocityY
         
-        val dinoHeight = (23 - (18 * duckingProgress)) * dinoScale
+        val dinoHeight = (23 - (16 * duckingProgress)) * dinoScale
         val actualGroundY = height * groundY - dinoHeight
         if (dinoY >= actualGroundY) {
             dinoY = actualGroundY
@@ -846,7 +845,7 @@ class TRexView @JvmOverloads constructor(
     }
 
     private fun checkCollision(obs: Obstacle): Boolean {
-        val currentDinoHeight = (23 - (18 * duckingProgress)) * dinoScale
+        val currentDinoHeight = (23 - (16 * duckingProgress)) * dinoScale
         if (obs.type == ObstacleType.CANYON) {
             // Special collision for canyons: lethal if Dino is on ground within canyon X bounds
             val actualGroundY = height * groundY - currentDinoHeight
@@ -1143,8 +1142,8 @@ class TRexView @JvmOverloads constructor(
             val member = DinoMember.entries[selectedMemberIndex]
             val previewScale = 12f
             val previewX = width / 2f - (25 * previewScale / 2f)
-            // Center the dino body vertically in the middle of the screen
-            val previewY = height / 2f - (15 * previewScale / 2f) + 20f
+            // Center the dino body higher to avoid overlapping with name text below
+            val previewY = height / 2f - 240f
             
             drawDinoPreview(canvas, previewX, previewY, previewScale, member)
             
@@ -1207,7 +1206,7 @@ class TRexView @JvmOverloads constructor(
 
     private fun drawDinoPreview(canvas: Canvas, x: Float, y: Float, scale: Float, member: DinoMember) {
         val theme = getEnvironmentTheme()
-        TRexDrawer.drawDino(canvas, x, y, theme.dinoColor, theme.bgColor, scale, false, null, false, false, 0, isNightMode, animationFrame, emptyList(), paint, pathBuffer, member.name)
+        TRexDrawer.drawDino(canvas, x, y, theme.dinoColor, theme.bgColor, scale, false, null, false, 0f, false, 0, isNightMode, animationFrame, emptyList(), paint, pathBuffer, member.name)
     }
 
     private fun getEnvironmentTheme(): Theme {
