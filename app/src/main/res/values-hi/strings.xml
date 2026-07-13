@@ -62,6 +62,16 @@
     <string name="game_lines98">लाइन्स 98</string>
     <string name="game_solitaire">सॉलिटेयर</string>
     <string name="game_road_racer">रोड रेसर</string>
+    <string name="hangman_settings_title">हैंगमैन सेटिंग्स</string>
+    <string name="hangman_category_label">श्रेणी</string>
+    <string name="hangman_mode_random">मोड: रैंडम</string>
+    <string name="hangman_mode_random_desc">श्रेणियों को बेतरतीब ढंग से बदलें।</string>
+    <string name="solitaire_settings_title">सॉलिटेयर सेटिंग्स</string>
+    <string name="solitaire_draw_label">ड्रॉ मोड</string>
+    <string name="solitaire_draw_1">ड्रॉ 1</string>
+    <string name="solitaire_draw_3">ड्रॉ 3</string>
+    <string name="solitaire_draw_1_desc">एक बार में एक कार्ड निकालें (आसान)।</string>
+    <string name="solitaire_draw_3_desc">एक बार में तीन कार्ड निकालें (क्लासिक)।</string>
     <string name="game_hangman">हैंगमैन</string>
     <string name="game_spinball">स्पिनबॉल</string>
     <string name="game_spinball_instructions">घूमने के लिए बाएँ/दाएँ का उपयोग करें। तारे इकट्ठा करें और कांटों से बचें। गेंद को बाहर न जाने दें!</string>

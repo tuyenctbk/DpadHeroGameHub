@@ -62,6 +62,16 @@
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLITAIRE</string>
     <string name="game_road_racer">ROAD RACER</string>
+    <string name="hangman_settings_title">PENGATURAN HANGMAN</string>
+    <string name="hangman_category_label">Kategori</string>
+    <string name="hangman_mode_random">MODE: ACAK</string>
+    <string name="hangman_mode_random_desc">Ubah kategori secara acak.</string>
+    <string name="solitaire_settings_title">PENGATURAN SOLITAIRE</string>
+    <string name="solitaire_draw_label">Mode Ambil Kartu</string>
+    <string name="solitaire_draw_1">AMBIL 1</string>
+    <string name="solitaire_draw_3">AMBIL 3</string>
+    <string name="solitaire_draw_1_desc">Ambil satu kartu sekaligus (Mudah).</string>
+    <string name="solitaire_draw_3_desc">Ambil tiga kartu sekaligus (Klasik).</string>
     <string name="game_hangman">HANGMAN</string>
     <string name="game_spinball">SPINBALL</string>
     <string name="game_spinball_instructions">Gunakan KIRI/KANAN untuk memutar. Kumpulkan bintang dan hindari duri. Jangan biarkan bola keluar!</string>

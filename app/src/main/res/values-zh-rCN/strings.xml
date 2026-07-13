@@ -62,6 +62,16 @@
     <string name="game_lines98">连珠五子</string>
     <string name="game_solitaire">接龙</string>
     <string name="game_road_racer">公路赛车</string>
+    <string name="hangman_settings_title">吊死鬼设置</string>
+    <string name="hangman_category_label">类别</string>
+    <string name="hangman_mode_random">模式：随机</string>
+    <string name="hangman_mode_random_desc">随机切换类别。</string>
+    <string name="solitaire_settings_title">接龙设置</string>
+    <string name="solitaire_draw_label">翻牌模式</string>
+    <string name="solitaire_draw_1">翻1张牌</string>
+    <string name="solitaire_draw_3">翻3张牌</string>
+    <string name="solitaire_draw_1_desc">一次翻一张牌（简单）。</string>
+    <string name="solitaire_draw_3_desc">一次翻三张牌（经典）。</string>
     <string name="game_hangman">吊死鬼</string>
     <string name="game_spinball">旋转球</string>
     <string name="game_spinball_instructions">左右旋转圆圈。收集星星，避开尖刺。不要让球掉出来！</string>

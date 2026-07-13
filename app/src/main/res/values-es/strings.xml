@@ -62,6 +62,16 @@
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLITARIO</string>
     <string name="game_road_racer">ROAD RACER</string>
+    <string name="hangman_settings_title">AJUSTES DE EL AHORCADO</string>
+    <string name="hangman_category_label">Categoría</string>
+    <string name="hangman_mode_random">MODO: ALEATORIO</string>
+    <string name="hangman_mode_random_desc">Cambiar categorías al azar.</string>
+    <string name="solitaire_settings_title">AJUSTES DE SOLITARIO</string>
+    <string name="solitaire_draw_label">Modo de Robo</string>
+    <string name="solitaire_draw_1">ROBAR 1</string>
+    <string name="solitaire_draw_3">ROBAR 3</string>
+    <string name="solitaire_draw_1_desc">Robar una carta a la vez (Fácil).</string>
+    <string name="solitaire_draw_3_desc">Robar tres cartas a la vez (Clásico).</string>
     <string name="game_hangman">EL AHORCADO</string>
     <string name="game_spinball">SPINBALL</string>
     <string name="game_spinball_instructions">Usa IZQUIERDA/DERECHA para girar el círculo. Recoge estrellas y evita pinchos. ¡No dejes que la bola escape!</string>

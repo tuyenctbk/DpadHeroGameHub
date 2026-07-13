@@ -62,6 +62,16 @@
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLITAIRE</string>
     <string name="game_road_racer">ĐUA XE</string>
+    <string name="hangman_settings_title">CÀI ĐẶT NGƯỜI TREO CỔ</string>
+    <string name="hangman_category_label">Chủ đề</string>
+    <string name="hangman_mode_random">CHẾ ĐỘ: NGẪU NHIÊN</string>
+    <string name="hangman_mode_random_desc">Thay đổi chủ đề ngẫu nhiên.</string>
+    <string name="solitaire_settings_title">CÀI ĐẶT SOLITAIRE</string>
+    <string name="solitaire_draw_label">Chế độ rút bài</string>
+    <string name="solitaire_draw_1">RÚT 1 LÁ</string>
+    <string name="solitaire_draw_3">RÚT 3 LÁ</string>
+    <string name="solitaire_draw_1_desc">Rút một lá bài mỗi lần (Dễ).</string>
+    <string name="solitaire_draw_3_desc">Rút ba lá bài mỗi lần (Cổ điển).</string>
     <string name="game_hangman">NGƯỜI TREO CỔ</string>
     <string name="game_spinball">SPINBALL</string>
     <string name="game_spinball_instructions">Dùng TRÁI/PHẢI để xoay vòng tròn. Thu thập sao và tránh gai. Đừng để bóng rơi ra ngoài!</string>

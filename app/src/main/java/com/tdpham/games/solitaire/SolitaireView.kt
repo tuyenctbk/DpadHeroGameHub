@@ -39,6 +39,10 @@ class SolitaireView @JvmOverloads constructor(
     private var isPaused = false
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val PREFS_NAME = "solitaire_settings"
+    private val KEY_DRAW_COUNT = "draw_count"
+    private var drawCount = 1
+    private var hintShowFrames = 0
 
     private var pulseFactor = 1.0f
     private var pulseDirection = 1
@@ -82,6 +86,11 @@ class SolitaireView @JvmOverloads constructor(
     override fun resetGame() {
         deck.clear()
         celebrationManager.start(0f, 0f)
+        
+        // Load mode from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        drawCount = prefs.getInt(KEY_DRAW_COUNT, 1).coerceIn(1, 3)
+
         for (suit in Suit.entries) {
             for (rank in Rank.entries) {
                 deck.add(Card(suit, rank))
@@ -109,6 +118,8 @@ class SolitaireView @JvmOverloads constructor(
         selectedCards.clear()
         sourcePile = null
         sourceCardIndex = -1
+        
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -131,10 +142,20 @@ class SolitaireView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_LEFT -> moveCursor(-1, 0)
             KeyEvent.KEYCODE_DPAD_RIGHT -> moveCursor(1, 0)
             KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DPAD_CENTER -> handleSelection()
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
+    }
+
+    private fun showOptions() {
+        SolitaireOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -221,9 +242,13 @@ class SolitaireView @JvmOverloads constructor(
                             waste.clear()
                             stock.forEach { it.isFaceUp = false }
                         } else {
-                            val card = stock.removeAt(stock.size - 1)
-                            card.isFaceUp = true
-                            waste.add(card)
+                            repeat(drawCount) {
+                                if (stock.isNotEmpty()) {
+                                    val card = stock.removeAt(stock.size - 1)
+                                    card.isFaceUp = true
+                                    waste.add(card)
+                                }
+                            }
                         }
                     }
                     1 -> { // Waste
@@ -406,6 +431,11 @@ class SolitaireView @JvmOverloads constructor(
 
         super.onDraw(canvas)
         
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+        
         // Update pulse animation
         if (!isGameOver) {
             pulseFactor += 0.015f * pulseDirection
@@ -496,6 +526,16 @@ class SolitaireView @JvmOverloads constructor(
         paint.textSize = 30f
         val hudY = Math.round(h - 20).toFloat()
         canvas.drawText("${context.getString(R.string.score_label)}: $score", 20f, hudY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 26f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 20f, 40f, paint)
+            paint.alpha = 255
+        }
 
         if (isGameOver) {
             celebrationManager.update()

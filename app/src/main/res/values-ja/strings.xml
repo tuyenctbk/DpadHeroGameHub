@@ -62,6 +62,16 @@
     <string name="game_lines98">ライン98</string>
     <string name="game_solitaire">ソリティア</string>
     <string name="game_road_racer">ロードレーサー</string>
+    <string name="hangman_settings_title">ハングマン設定</string>
+    <string name="hangman_category_label">カテゴリー</string>
+    <string name="hangman_mode_random">モード：ランダム</string>
+    <string name="hangman_mode_random_desc">カテゴリーをランダムに切り替える。</string>
+    <string name="solitaire_settings_title">ソリティア設定</string>
+    <string name="solitaire_draw_label">ドローモード</string>
+    <string name="solitaire_draw_1">1枚ドロー</string>
+    <string name="solitaire_draw_3">3枚ドロー</string>
+    <string name="solitaire_draw_1_desc">一度に1枚引く（簡単）。</string>
+    <string name="solitaire_draw_3_desc">一度に3枚引く（クラシック）。</string>
     <string name="game_hangman">ハングマン</string>
     <string name="game_spinball">スピンボール</string>
     <string name="game_spinball_instructions">左右で回転。星を集めてトゲを避けよう。ボールを出すな！</string>

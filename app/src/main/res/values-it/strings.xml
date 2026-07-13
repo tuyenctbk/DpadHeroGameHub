@@ -62,6 +62,16 @@
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLITARIO</string>
     <string name="game_road_racer">ROAD RACER</string>
+    <string name="hangman_settings_title">IMPOSTAZIONI L\'IMPICCATO</string>
+    <string name="hangman_category_label">Categoria</string>
+    <string name="hangman_mode_random">MODALITÀ: CASUALE</string>
+    <string name="hangman_mode_random_desc">Cambia categorie casualmente.</string>
+    <string name="solitaire_settings_title">IMPOSTAZIONI SOLITARIO</string>
+    <string name="solitaire_draw_label">Modalità di Pesca</string>
+    <string name="solitaire_draw_1">PESCA 1</string>
+    <string name="solitaire_draw_3">PESCA 3</string>
+    <string name="solitaire_draw_1_desc">Pesca una carta alla volta (Facile).</string>
+    <string name="solitaire_draw_3_desc">Pesca tre carte alla volta (Classico).</string>
     <string name="game_hangman">L\'IMPICCATO</string>
     <string name="game_spinball">SPINBALL</string>
     <string name="game_spinball_instructions">Usa SINISTRA/DESTRA per ruotare. Raccogli stelle ed evita punte. Non far uscire la palla!</string>

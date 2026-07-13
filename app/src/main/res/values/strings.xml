@@ -61,6 +61,16 @@
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLITAIRE</string>
     <string name="game_road_racer">ROAD RACER</string>
+    <string name="hangman_settings_title">HANGMAN SETTINGS</string>
+    <string name="hangman_category_label">Category</string>
+    <string name="hangman_mode_random">MODE: RANDOM</string>
+    <string name="hangman_mode_random_desc">Randomly switch categories.</string>
+    <string name="solitaire_settings_title">SOLITAIRE SETTINGS</string>
+    <string name="solitaire_draw_label">Draw Mode</string>
+    <string name="solitaire_draw_1">DRAW 1</string>
+    <string name="solitaire_draw_3">DRAW 3</string>
+    <string name="solitaire_draw_1_desc">Draw one card at a time (Easy).</string>
+    <string name="solitaire_draw_3_desc">Draw three cards at a time (Classic).</string>
     <string name="game_hangman">HANGMAN</string>
     <string name="game_spinball">SPINBALL</string>
     <string name="game_spinball_instructions">Use LEFT/RIGHT to rotate the circle. Collect stars and avoid spikes. Don\'t let the ball escape!</string>

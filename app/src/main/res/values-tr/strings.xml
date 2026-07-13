@@ -62,6 +62,16 @@
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLİTAİRE</string>
     <string name="game_road_racer">YOL YARIŞÇISI</string>
+    <string name="hangman_settings_title">ADAM ASMACA AYARLARI</string>
+    <string name="hangman_category_label">Kategori</string>
+    <string name="hangman_mode_random">MOD: RASTGELE</string>
+    <string name="hangman_mode_random_desc">Kategorileri rastgele değiştirir.</string>
+    <string name="solitaire_settings_title">SOLİTAİRE AYARLARI</string>
+    <string name="solitaire_draw_label">Kart Çekme Modu</string>
+    <string name="solitaire_draw_1">1 KART ÇEK</string>
+    <string name="solitaire_draw_3">3 KART ÇEK</string>
+    <string name="solitaire_draw_1_desc">Her seferinde bir kart çek (Kolay).</string>
+    <string name="solitaire_draw_3_desc">Her seferinde üç kart çek (Klasik).</string>
     <string name="game_hangman">ADAM ASMACA</string>
     <string name="game_spinball">SPINBALL</string>
     <string name="game_spinball_instructions">Döndürmek için SOL/SAĞ kullanın. Yıldızları toplayın ve dikenlerden kaçının. Topu dışarı kaçırmayın!</string>

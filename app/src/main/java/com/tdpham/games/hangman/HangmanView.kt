@@ -34,6 +34,9 @@ class HangmanView @JvmOverloads constructor(
     private var currentCategory = ""
     private var currentCategoryIndex = -1
     private var targetWord = ""
+    private val PREFS_NAME = "hangman_settings"
+    private val KEY_CATEGORY = "selected_category_index"
+    private var hintShowFrames = 0
     private val usedWords = mutableSetOf<String>()
     private var guessedLetters = mutableSetOf<Char>()
     private var remainingAttempts = 6
@@ -87,31 +90,41 @@ class HangmanView @JvmOverloads constructor(
     }
 
     override fun resetGame() {
+        // Load category from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val selectedCat = prefs.getInt(KEY_CATEGORY, -1)
+
         // Collect all available words that haven't been used yet
         celebrationManager.start(0f, 0f)
-        var availableWords = words.flatMap { (cat, wList) -> wList.map { cat to it } }
-            .filter { (_, word) -> word !in usedWords }
+        
+        var availableWords = if (selectedCat == -1) {
+            words.flatMap { (cat, wList) -> wList.map { cat to it } }
+        } else {
+            val catName = words.keys.toList()[selectedCat]
+            words[catName]?.map { catName to it } ?: emptyList()
+        }.filter { (_, word) -> word !in usedWords }
 
         // If all words are used, reset the history
         if (availableWords.isEmpty()) {
             usedWords.clear()
-            availableWords = words.flatMap { (cat, wList) -> wList.map { cat to it } }
+            availableWords = if (selectedCat == -1) {
+                words.flatMap { (cat, wList) -> wList.map { cat to it } }
+            } else {
+                val catName = words.keys.toList()[selectedCat]
+                words[catName]?.map { catName to it } ?: emptyList()
+            }
         }
 
         // Randomly pick one
         val chosen = availableWords.random()
-        currentCategoryIndex = when(chosen.first) {
-            "ANIMALS" -> 0
-            "FRUITS" -> 1
-            "COUNTRIES" -> 2
-            "SPORTS" -> 3
-            else -> -1
-        }
-        val catKey = when(currentCategoryIndex) {
-            0 -> R.string.cat_animals
-            1 -> R.string.cat_fruits
-            2 -> R.string.cat_countries
-            3 -> R.string.cat_sports
+        val actualCatName = chosen.first
+        currentCategoryIndex = words.keys.toList().indexOf(actualCatName)
+        
+        val catKey = when(actualCatName) {
+            "ANIMALS" -> R.string.cat_animals
+            "FRUITS" -> R.string.cat_fruits
+            "COUNTRIES" -> R.string.cat_countries
+            "SPORTS" -> R.string.cat_sports
             else -> R.string.help
         }
         currentCategory = context.getString(catKey)
@@ -128,6 +141,8 @@ class HangmanView @JvmOverloads constructor(
         highScore = ScoreManager.getHighScore(context, gameKey, currentCategoryIndex)
         bgType = GameEnvironment.BackgroundType.entries.random()
         isNight = Random().nextBoolean()
+        
+        hintShowFrames = 100
         invalidate()
     }
 
@@ -153,10 +168,21 @@ class HangmanView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_LEFT -> cursorCol = (cursorCol - 1 + 9) % 9
             KeyEvent.KEYCODE_DPAD_RIGHT -> cursorCol = (cursorCol + 1) % 9
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> makeGuess()
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
+                showOptions()
+                return true
+            }
             KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
         }
         invalidate()
         return true
+    }
+
+    private fun showOptions() {
+        pause()
+        HangmanOptionsDialog.show(context) {
+            resetGame()
+        }
     }
 
     override fun performClick(): Boolean {
@@ -245,6 +271,12 @@ class HangmanView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+        
         GameEnvironment.draw(canvas, bgType, isNight = isNight, paint = paint)
 
         val padding = 100f
@@ -276,6 +308,16 @@ class HangmanView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $highScore", width - 40f, hudY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 40f, paint)
+            paint.alpha = 255
+        }
 
         if (isGameOver || isWin) {
             celebrationManager.draw(canvas)

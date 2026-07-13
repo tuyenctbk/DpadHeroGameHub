@@ -283,6 +283,18 @@ abstract class BaseGameActivity : AppCompatActivity() {
                         (gameView as? com.tdpham.games.tictactoe.TicTacToeView)?.resetGame()
                     }
                     return true
+                } else if (gameKey == "hangman") {
+                    removeActiveOverlay()
+                    com.tdpham.games.hangman.HangmanOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.hangman.HangmanView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "solitaire") {
+                    removeActiveOverlay()
+                    com.tdpham.games.solitaire.SolitaireOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.solitaire.SolitaireView)?.resetGame()
+                    }
+                    return true
                 }
             }
         }

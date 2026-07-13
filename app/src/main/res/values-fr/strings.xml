@@ -62,6 +62,16 @@
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLITAIRE</string>
     <string name="game_road_racer">ROAD RACER</string>
+    <string name="hangman_settings_title">PARAMÈTRES DU PENDU</string>
+    <string name="hangman_category_label">Catégorie</string>
+    <string name="hangman_mode_random">MODE : ALÉATOIRE</string>
+    <string name="hangman_mode_random_desc">Changer de catégorie au hasard.</string>
+    <string name="solitaire_settings_title">PARAMÈTRES DU SOLITAIRE</string>
+    <string name="solitaire_draw_label">Mode de Tirage</string>
+    <string name="solitaire_draw_1">TIRER 1</string>
+    <string name="solitaire_draw_3">TIRER 3</string>
+    <string name="solitaire_draw_1_desc">Tirer une carte à la fois (Facile).</string>
+    <string name="solitaire_draw_3_desc">Tirer trois cartes à la fois (Classique).</string>
     <string name="game_hangman">LE PENDU</string>
     <string name="game_spinball">SPINBALL</string>
     <string name="game_spinball_instructions">Utilisez GAUCHE/DROITE pour faire tourner le cercle. Collectez des étoiles et évitez les pics. Ne laissez pas la balle s\'échapper !</string>

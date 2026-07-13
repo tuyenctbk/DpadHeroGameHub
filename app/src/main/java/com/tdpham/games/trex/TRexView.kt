@@ -978,6 +978,16 @@ class TRexView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.high_score_prefix)} ${String.format("%05d", highScore)}  ${String.format("%05d", score)}", scoreX, scoreY, paint)
         paint.clearShadowLayer()
 
+        // Quick Hint (Top/Left)
+        if (nameShowFrames > 0 && !isPaused) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 30f
+            paint.color = theme.textColor
+            paint.alpha = (nameShowFrames * 4).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 50f, 80f, paint)
+            paint.alpha = 255
+        }
+
         if (earthquakeTimer > 150) {
             paint.reset()
             paint.isAntiAlias = true

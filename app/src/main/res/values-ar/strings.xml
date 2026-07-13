@@ -62,6 +62,16 @@
     <string name="game_lines98">لاينز 98</string>
     <string name="game_solitaire">سوليتير</string>
     <string name="game_road_racer">سباق الطرق</string>
+    <string name="hangman_settings_title">إعدادات الرجل المشنوق</string>
+    <string name="hangman_category_label">الفئة</string>
+    <string name="hangman_mode_random">الوضع: عشوائي</string>
+    <string name="hangman_mode_random_desc">تغيير الفئات عشوائيًا.</string>
+    <string name="solitaire_settings_title">إعدادات سوليتير</string>
+    <string name="solitaire_draw_label">وضع السحب</string>
+    <string name="solitaire_draw_1">سحب 1</string>
+    <string name="solitaire_draw_3">سحب 3</string>
+    <string name="solitaire_draw_1_desc">سحب بطاقة واحدة في كل مرة (سهل).</string>
+    <string name="solitaire_draw_3_desc">سحب ثلاث بطاقات في كل مرة (كلاسيكي).</string>
     <string name="game_hangman">الرجل المشنوق</string>
     <string name="game_spinball">سبينبول</string>
     <string name="game_spinball_instructions">استخدم يسار/يمين لتدوير الدائرة. اجمع النجوم وتجنب المسامير. لا تدع الكرة تخرج!</string>

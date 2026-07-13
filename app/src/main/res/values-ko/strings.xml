@@ -62,6 +62,16 @@
     <string name="game_lines98">라인 98</string>
     <string name="game_solitaire">솔리테어</string>
     <string name="game_road_racer">로드 레이서</string>
+    <string name="hangman_settings_title">행맨 설정</string>
+    <string name="hangman_category_label">카테고리</string>
+    <string name="hangman_mode_random">모드: 랜덤</string>
+    <string name="hangman_mode_random_desc">카테고리를 무작위로 변경합니다.</string>
+    <string name="solitaire_settings_title">솔리테어 설정</string>
+    <string name="solitaire_draw_label">드로우 모드</string>
+    <string name="solitaire_draw_1">1장 드로우</string>
+    <string name="solitaire_draw_3">3장 드로우</string>
+    <string name="solitaire_draw_1_desc">한 번에 한 장씩 뽑기 (쉬움).</string>
+    <string name="solitaire_draw_3_desc">한 번에 세 장씩 뽑기 (클래식).</string>
     <string name="game_hangman">행맨</string>
     <string name="game_spinball">스핀볼</string>
     <string name="game_spinball_instructions">좌우로 회전하세요. 별을 모으고 가시를 피하세요. 공이 나가지 않게 하세요!</string>
