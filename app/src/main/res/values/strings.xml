@@ -487,4 +487,11 @@
         <item>FROGGY HERO!</item>
         <item>RIVER MASTER!</item>
     </string-array>
+    <string name="starfighter_ship_label">Ship Selection</string>
+    <string name="starfighter_ship_balanced">Interceptor</string>
+    <string name="starfighter_ship_balanced_desc">Balanced speed and health.</string>
+    <string name="starfighter_ship_fast">Swift Shadow</string>
+    <string name="starfighter_ship_fast_desc">High speed, but very fragile (1 Life).</string>
+    <string name="starfighter_ship_tank">Dreadnought</string>
+    <string name="starfighter_ship_tank_desc">Massive armor (5 Lives), but moves slowly.</string>
 </resources>

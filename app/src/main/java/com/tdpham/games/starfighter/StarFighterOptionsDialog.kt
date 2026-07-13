@@ -8,12 +8,37 @@ import com.tdpham.games.common.BaseOptionsDialog
 object StarFighterOptionsDialog {
     private const val PREFS_NAME = "starfighter_settings"
     private const val KEY_DIFFICULTY = "difficulty_index"
+    private const val KEY_SHIP_TYPE = "selected_ship_index"
 
     fun show(context: Context, onDismiss: () -> Unit) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         
         BaseOptionsDialog(context)
             .setTitle(context.getString(R.string.starfighter_settings_title))
+            .addOption(
+                label = context.getString(R.string.starfighter_ship_label),
+                valueProvider = {
+                    val index = prefs.getInt(KEY_SHIP_TYPE, 0)
+                    context.getString(when(index) {
+                        1 -> R.string.starfighter_ship_fast
+                        2 -> R.string.starfighter_ship_tank
+                        else -> R.string.starfighter_ship_balanced
+                    })
+                },
+                descProvider = {
+                    val index = prefs.getInt(KEY_SHIP_TYPE, 0)
+                    context.getString(when(index) {
+                        1 -> R.string.starfighter_ship_fast_desc
+                        2 -> R.string.starfighter_ship_tank_desc
+                        else -> R.string.starfighter_ship_balanced_desc
+                    })
+                },
+                onClick = {
+                    val index = prefs.getInt(KEY_SHIP_TYPE, 0)
+                    val nextIndex = (index + 1) % 3
+                    prefs.edit { putInt(KEY_SHIP_TYPE, nextIndex) }
+                }
+            )
             .addOption(
                 label = context.getString(R.string.mode_label),
                 valueProvider = {

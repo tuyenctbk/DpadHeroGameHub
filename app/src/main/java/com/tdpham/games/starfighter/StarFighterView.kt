@@ -36,6 +36,11 @@ class StarFighterView @JvmOverloads constructor(
     private val KEY_DIFFICULTY = "difficulty_index"
     private var currentDifficultyIndex = 1
     private var hintShowFrames = 0
+    private var isInitialized = false
+
+    private val KEY_SHIP_TYPE = "selected_ship_index"
+    private var currentShipType = 0 // 0: Balanced, 1: Fast, 2: Tank
+    private var playerSpeed = 12f
 
     private var playerX = 0f
     private var playerY = 0f
@@ -107,10 +112,19 @@ class StarFighterView @JvmOverloads constructor(
         handler.post(gameLoop)
     }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0 && !isInitialized) {
+            resetGame()
+            isInitialized = true
+        }
+    }
+
     override fun resetGame() {
-        // Load difficulty from settings
+        // Load difficulty and ship type from settings
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         currentDifficultyIndex = prefs.getInt(KEY_DIFFICULTY, 1).coerceIn(0, 2)
+        currentShipType = prefs.getInt(KEY_SHIP_TYPE, 0).coerceIn(0, 2)
 
         score = 0
         best = ScoreManager.getHighScore(context, gameKey, currentDifficultyIndex)
@@ -118,7 +132,27 @@ class StarFighterView @JvmOverloads constructor(
         isPaused = true
         celebrationManager.start(0f, 0f)
         gunLevel = 1
-        lives = when(currentDifficultyIndex) { 0 -> 5; 2 -> 1; else -> 3 }
+
+        // Ship Stats
+        when(currentShipType) {
+            1 -> { // Fast
+                playerSpeed = 18f
+                lives = 1
+            }
+            2 -> { // Tank
+                playerSpeed = 8f
+                lives = 5
+            }
+            else -> { // Balanced
+                playerSpeed = 13f
+                lives = 3
+            }
+        }
+        
+        // Difficulty adjustments to health (Difficulty still overrides base lives if very high/low)
+        if (currentDifficultyIndex == 0) lives = (lives + 2).coerceAtMost(7)
+        if (currentDifficultyIndex == 2) lives = (lives - 1).coerceAtLeast(1)
+
         invulnerableUntil = 0L
         powerUpEndTime = 0L
         bullets.clear()
@@ -220,11 +254,10 @@ class StarFighterView @JvmOverloads constructor(
     private fun update() {
         if (isPaused || gameOver) return
 
-        val step = when(currentDifficultyIndex) { 0 -> 14f; 2 -> 10f; else -> 12f }
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) playerX = (playerX - step).coerceAtLeast(playerSize)
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) playerX = (playerX + step).coerceAtMost(width - playerSize)
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_UP)) playerY = (playerY - step).coerceAtLeast(playerSize)
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_DOWN)) playerY = (playerY + step).coerceAtMost(height - playerSize)
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) playerX = (playerX - playerSpeed).coerceAtLeast(playerSize)
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) playerX = (playerX + playerSpeed).coerceAtMost(width - playerSize)
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_UP)) playerY = (playerY - playerSpeed).coerceAtLeast(playerSize)
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_DOWN)) playerY = (playerY + playerSpeed).coerceAtMost(height - playerSize)
 
         val now = System.currentTimeMillis()
         
@@ -528,20 +561,67 @@ class StarFighterView @JvmOverloads constructor(
         canvas.rotate(tilt, x, y)
 
         paint.style = Paint.Style.FILL
-        paint.color = Color.parseColor("#455A64")
+        
+        // Colors based on ship type
+        val primaryColor = when(currentShipType) {
+            1 -> Color.parseColor("#78909C") // Light Steel (Fast)
+            2 -> Color.parseColor("#37474F") // Dark Metal (Tank)
+            else -> Color.parseColor("#455A64") // Blue Gray (Balanced)
+        }
+        val accentColor = when(currentShipType) {
+            1 -> Color.YELLOW // Fast
+            2 -> Color.parseColor("#E91E63") // Tank
+            else -> Color.CYAN // Balanced
+        }
+
+        paint.color = primaryColor
         playerPath.reset()
-        playerPath.moveTo(x - 60, y + 30)
-        playerPath.lineTo(x, y - 20)
-        playerPath.lineTo(x + 60, y + 30)
-        playerPath.lineTo(x, y + 10)
+        
+        // Shapes based on ship type
+        when(currentShipType) {
+            1 -> { // Fast - Sleek/Pointy
+                playerPath.moveTo(x - 40, y + 20)
+                playerPath.lineTo(x, y - 50)
+                playerPath.lineTo(x + 40, y + 20)
+                playerPath.lineTo(x, y + 5)
+            }
+            2 -> { // Tank - Bulky/Wide
+                playerPath.moveTo(x - 70, y + 40)
+                playerPath.lineTo(x - 60, y - 20)
+                playerPath.lineTo(x, y - 40)
+                playerPath.lineTo(x + 60, y - 20)
+                playerPath.lineTo(x + 70, y + 40)
+                playerPath.lineTo(x, y + 25)
+            }
+            else -> { // Balanced
+                playerPath.moveTo(x - 60, y + 30)
+                playerPath.lineTo(x, y - 20)
+                playerPath.lineTo(x + 60, y + 30)
+                playerPath.lineTo(x, y + 10)
+            }
+        }
         playerPath.close()
         canvas.drawPath(playerPath, paint)
 
-        paint.color = Color.CYAN
+        paint.color = accentColor
         playerPath.reset()
-        playerPath.moveTo(x, y - 50)
-        playerPath.lineTo(x - 20, y + 40)
-        playerPath.lineTo(x + 20, y + 40)
+        when(currentShipType) {
+            1 -> {
+                playerPath.moveTo(x, y - 60)
+                playerPath.lineTo(x - 10, y + 30)
+                playerPath.lineTo(x + 10, y + 30)
+            }
+            2 -> {
+                playerPath.moveTo(x, y - 50)
+                playerPath.lineTo(x - 30, y + 40)
+                playerPath.lineTo(x + 30, y + 40)
+            }
+            else -> {
+                playerPath.moveTo(x, y - 50)
+                playerPath.lineTo(x - 20, y + 40)
+                playerPath.lineTo(x + 20, y + 40)
+            }
+        }
         playerPath.close()
         canvas.drawPath(playerPath, paint)
 
@@ -550,9 +630,10 @@ class StarFighterView @JvmOverloads constructor(
 
         if ((System.currentTimeMillis() / 50) % 2 == 0L) {
             paint.color = Color.YELLOW
-            canvas.drawCircle(x, y + 45, 10f, paint)
+            val engineY = if (currentShipType == 2) 55f else 45f
+            canvas.drawCircle(x, y + engineY, 10f, paint)
             paint.color = Color.RED
-            canvas.drawCircle(x, y + 55, 6f, paint)
+            canvas.drawCircle(x, y + engineY + 10, 6f, paint)
         }
         
         canvas.restore()
