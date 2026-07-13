@@ -41,6 +41,16 @@ class TetrisView @JvmOverloads constructor(
     private val celebrationManager = CelebrationManager()
     private val screenShake = com.tdpham.games.common.ScreenShake()
     private val handler = Handler(Looper.getMainLooper())
+    private val animHandler = Handler(Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (gameOver || paused) {
+                celebrationManager.update()
+                invalidate()
+            }
+            animHandler.postDelayed(this, 50)
+        }
+    }
 
     private val tick = object : Runnable {
         override fun run() {
@@ -63,6 +73,7 @@ class TetrisView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        animHandler.post(animRunnable)
     }
 
     override fun startGame() {
@@ -109,6 +120,7 @@ class TetrisView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         handler.removeCallbacks(tick)
+        animHandler.removeCallbacks(animRunnable)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -453,13 +465,16 @@ class TetrisView @JvmOverloads constructor(
         }
 
         if (gameOver) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
-            invalidate()
             val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.game_over)
             drawOverlay(canvas, title, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         }
         else if (paused) drawOverlay(canvas, context.getString(R.string.paused), context.getString(R.string.resume_hint))
+        
+        if (!paused && !gameOver) {
+            celebrationManager.update()
+            invalidate()
+        }
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {

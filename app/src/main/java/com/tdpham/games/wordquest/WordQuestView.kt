@@ -2,6 +2,8 @@ package com.tdpham.games.wordquest
 
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
@@ -38,6 +40,16 @@ class WordQuestView @JvmOverloads constructor(
     private var best = 0
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val animHandler = Handler(Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (gameOver) {
+                celebrationManager.update()
+                invalidate()
+            }
+            animHandler.postDelayed(this, 50)
+        }
+    }
 
     private val usedKeys = mutableMapOf<Char, Int>() // 0:gray, 1:yellow, 2:green
 
@@ -53,6 +65,12 @@ class WordQuestView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        animHandler.post(animRunnable)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        animHandler.removeCallbacks(animRunnable)
     }
 
     override fun startGame() {
@@ -339,9 +357,7 @@ class WordQuestView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
         if (gameOver) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
-            invalidate()
 
             val title = if (won) currentVictoryWord else context.getString(R.string.out_of_tries)
             val sub = if (won) "${context.getString(R.string.game_word_quest)}: $targetWord" else "${context.getString(R.string.answer_was_label)}: $targetWord"

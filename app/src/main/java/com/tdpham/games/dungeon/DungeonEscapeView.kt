@@ -2,6 +2,8 @@ package com.tdpham.games.dungeon
 
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
@@ -38,6 +40,16 @@ class DungeonEscapeView @JvmOverloads constructor(
     private var gamePaused = true
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
+    private val animHandler = Handler(Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (gameOver || gamePaused) {
+                celebrationManager.update()
+                invalidate()
+            }
+            animHandler.postDelayed(this, 50)
+        }
+    }
     private val spikePath = Path()
     private var lastUpdate = 0L
     
@@ -61,6 +73,13 @@ class DungeonEscapeView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        animHandler.post(animRunnable)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
     }
 
     override fun startGame() {
@@ -79,11 +98,6 @@ class DungeonEscapeView @JvmOverloads constructor(
         handler.post(gameLoop)
     }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        handler.removeCallbacks(gameLoop)
-    }
 
     override fun resetGame() {
         level = 1
@@ -336,10 +350,12 @@ class DungeonEscapeView @JvmOverloads constructor(
             drawOverlay(canvas, context.getString(R.string.game_dungeon), context.getString(R.string.start_game))
         }
 
-        celebrationManager.update()
         celebrationManager.draw(canvas)
 
-        if (!gamePaused && !gameOver) invalidate()
+        if (!gamePaused && !gameOver) {
+            celebrationManager.update()
+            invalidate()
+        }
     }
 
     private fun update() {

@@ -2,7 +2,6 @@ package com.tdpham.games.snake
 
 import android.content.Context
 import android.graphics.*
-import android.media.ToneGenerator
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -32,6 +31,9 @@ class SnakeGameView @JvmOverloads constructor(
     }
 
     private var currentDifficulty = Difficulty.LEVEL_2
+    private val PREFS_NAME = "snake_settings"
+    private val KEY_DIFFICULTY = "difficulty_index"
+    private var hintShowFrames = 0
 
     private val paint = Paint().apply {
         isAntiAlias = true
@@ -128,6 +130,12 @@ class SnakeGameView @JvmOverloads constructor(
     override fun resetGame() {
         snake.clear()
         celebrationManager.start(0f, 0f)
+        
+        // Load difficulty from settings
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val diffIndex = prefs.getInt(KEY_DIFFICULTY, 1) // Default to Level 2
+        currentDifficulty = Difficulty.entries[diffIndex.coerceIn(0, 2)]
+        
         snake.add(Point(10, 10))
         snake.add(Point(9, 10))
         snake.add(Point(8, 10))
@@ -140,6 +148,8 @@ class SnakeGameView @JvmOverloads constructor(
         score = 0
         spawnFood()
         particles.clear()
+        
+        hintShowFrames = 100 // Show hint for ~5 seconds (50ms * 100)
         
         bgType = listOf(GameEnvironment.BackgroundType.CHECKERBOARD, GameEnvironment.BackgroundType.GRID, GameEnvironment.BackgroundType.DOTS).random()
         isNight = Random().nextBoolean()
@@ -168,16 +178,6 @@ class SnakeGameView @JvmOverloads constructor(
             if (!isPaused) resume()
         }
         invalidate()
-    }
-
-    private fun cycleDifficulty(next: Boolean) {
-        val values = Difficulty.entries
-        var idx = values.indexOf(currentDifficulty)
-        if (next) idx++ else idx--
-        if (idx >= values.size) idx = 0
-        if (idx < 0) idx = values.size - 1
-        currentDifficulty = values[idx]
-        resetGame()
     }
 
     override fun toggleSound(): Boolean {
@@ -290,42 +290,26 @@ class SnakeGameView @JvmOverloads constructor(
                 resetGame()
                 return true
             }
-            if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-                cycleDifficulty(keyCode == KeyEvent.KEYCODE_DPAD_UP)
-                return true
-            }
         }
 
-        return when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> {
-                updateDirection(Direction.UP)
-                true
-            }
-            KeyEvent.KEYCODE_DPAD_DOWN -> {
-                updateDirection(Direction.DOWN)
-                true
-            }
-            KeyEvent.KEYCODE_DPAD_LEFT -> {
-                updateDirection(Direction.LEFT)
-                true
-            }
-            KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                updateDirection(Direction.RIGHT)
-                true
-            }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
-                togglePause()
-                true
-            }
-            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB -> {
-                cycleDifficulty(true)
-                true
-            }
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> {
-                toggleSound()
-                true
-            }
-            else -> super.onKeyDown(keyCode, event)
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_UP -> updateDirection(Direction.UP)
+            KeyEvent.KEYCODE_DPAD_DOWN -> updateDirection(Direction.DOWN)
+            KeyEvent.KEYCODE_DPAD_LEFT -> updateDirection(Direction.LEFT)
+            KeyEvent.KEYCODE_DPAD_RIGHT -> updateDirection(Direction.RIGHT)
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> togglePause()
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> showOptions()
+            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
+            else -> return super.onKeyDown(keyCode, event)
+        }
+        invalidate()
+        return true
+    }
+
+    private fun showOptions() {
+        pause()
+        SnakeOptionsDialog.show(context) {
+            resetGame()
         }
     }
 
@@ -363,6 +347,12 @@ class SnakeGameView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         val needsInvalidate = screenShake.apply(canvas)
         super.onDraw(canvas)
+        
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+            invalidate()
+        }
+        
         // Increase divisor to gridSize + 8 to provide safe margins for TV screens
         cellSize = width.coerceAtMost(height).toFloat() / (gridSize + 8)
         val offsetX = (width - cellSize * gridSize) / 2
@@ -552,6 +542,16 @@ class SnakeGameView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.LTGRAY
         canvas.drawText("${context.getString(R.string.level_label)} ${currentDifficulty.ordinal + 1}", width / 2f, labelY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = labelSize * 0.6f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), offsetX, labelY + cellSize * 1.5f, paint)
+            paint.alpha = 255
+        }
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {

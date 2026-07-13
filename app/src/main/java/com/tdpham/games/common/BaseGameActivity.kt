@@ -235,17 +235,25 @@ abstract class BaseGameActivity : AppCompatActivity() {
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        // Intercept M and O keys globally for T-Rex Run
-        if (gameKey == "trex" && event.action == KeyEvent.ACTION_DOWN) {
+        // Intercept M and O keys globally for T-Rex Run and Snake
+        if (event.action == KeyEvent.ACTION_DOWN) {
             val keyCode = event.keyCode
             if (keyCode == KeyEvent.KEYCODE_M || keyCode == KeyEvent.KEYCODE_O || 
                 keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_SETTINGS) {
-                // Force show options dialog regardless of focus/pause state
-                removeActiveOverlay()
-                TRexOptionsDialog.show(this) {
-                    (gameView as? com.tdpham.games.trex.TRexView)?.resetGame()
+                
+                if (gameKey == "trex") {
+                    removeActiveOverlay()
+                    TRexOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.trex.TRexView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "snake") {
+                    removeActiveOverlay()
+                    com.tdpham.games.snake.SnakeOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.snake.SnakeGameView)?.resetGame()
+                    }
+                    return true
                 }
-                return true
             }
         }
         return super.dispatchKeyEvent(event)

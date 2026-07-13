@@ -2,6 +2,14 @@
     <string name="app_name">Dpad Arcade</string>
     <string name="app_name_full">Dpad Arcade: Retro Oyunlar</string>
     <string name="game_center">DPAD ARCADE</string>
+    <string name="snake_settings_title">YILAN AYARLARI</string>
+    <string name="snake_level_1">SEVİYE 1: BAŞLANGIÇ</string>
+    <string name="snake_level_2">SEVİYE 2: NORMAL</string>
+    <string name="snake_level_3">SEVİYE 3: ZOR</string>
+    <string name="snake_level_1_desc">Duvarlardan geçiş. Düşük hız.</string>
+    <string name="snake_level_2_desc">Duvarlar ölümcül. Normal hız.</string>
+    <string name="snake_level_3_desc">Duvarlar ölümcül. Yüksek hız.</string>
+    <string name="snake_level_label">Zorluk Seviyesi</string>
     <string name="snake">YILAN</string>
     <string name="minesweeper">MAYIN TARLASI</string>
     <string name="game_4096">4096</string>

@@ -3,6 +3,14 @@
     <string name="app_name_full">Dpad Arcade: Retro Games</string>
     <string name="game_center">DPAD ARCADE</string>
     <string name="snake">SNAKE</string>
+    <string name="snake_settings_title">SNAKE SETTINGS</string>
+    <string name="snake_level_1">LEVEL 1: BEGINNER</string>
+    <string name="snake_level_2">LEVEL 2: NORMAL</string>
+    <string name="snake_level_3">LEVEL 3: HARD</string>
+    <string name="snake_level_1_desc">Non-lethal warping walls. Slower speed.</string>
+    <string name="snake_level_2_desc">Walls are lethal. Normal speed.</string>
+    <string name="snake_level_3_desc">Walls are lethal. Fast speed.</string>
+    <string name="snake_level_label">Difficulty Level</string>
     <string name="minesweeper">MINESWEEPER</string>
     <string name="game_4096">4096</string>
     <string name="game_trex">T-REX RUN</string>

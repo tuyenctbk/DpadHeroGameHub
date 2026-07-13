@@ -42,9 +42,11 @@ class BrickBreakView @JvmOverloads constructor(
             }
             lastFrameTimeNanos = frameTimeNanos
             update(dtSec)
-            invalidate()
-            Choreographer.getInstance().postFrameCallback(this)
+        } else {
+            celebrationManager.update()
         }
+        invalidate()
+        Choreographer.getInstance().postFrameCallback(this)
     }
 
     private val ball = RectF()
@@ -115,10 +117,10 @@ class BrickBreakView @JvmOverloads constructor(
         highScore = ScoreManager.getHighScore(context, gameKey)
         brickFlashes.clear()
         initializeBoard()
-        invalidate()
         lastFrameTimeNanos = 0L
         Choreographer.getInstance().removeFrameCallback(this)
         Choreographer.getInstance().postFrameCallback(this)
+        invalidate()
     }
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
@@ -317,7 +319,7 @@ class BrickBreakView @JvmOverloads constructor(
                 )
                 SoundManager.playSuccess()
                 onGameOver?.invoke(score)
-                Choreographer.getInstance().removeFrameCallback(this)
+                // Choreographer callback continues for celebration
             }
         }
 
@@ -339,7 +341,7 @@ class BrickBreakView @JvmOverloads constructor(
                     highScore = oldHighScore
                 )
                 onGameOver?.invoke(score)
-                Choreographer.getInstance().removeFrameCallback(this)
+                // Choreographer callback continues for celebration
             } else {
                 resetBall()
             }
@@ -495,9 +497,7 @@ class BrickBreakView @JvmOverloads constructor(
         if (isPaused && !isGameOver && !isWin) {
             drawOverlay(canvas, context.getString(R.string.game_brick_break), context.getString(R.string.launch_hint))
         } else if (isGameOver || isWin) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
-            invalidate()
             
             if (isGameOver) {
                 drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")

@@ -2,6 +2,14 @@
     <string name="app_name">Dpad Arcade</string>
     <string name="app_name_full">Dpad Arcade: Giochi Retro</string>
     <string name="game_center">DPAD ARCADE</string>
+    <string name="snake_settings_title">IMPOSTAZIONI SNAKE</string>
+    <string name="snake_level_1">LIVELLO 1: PRINCIPIANTE</string>
+    <string name="snake_level_2">LIVELLO 2: NORMALE</string>
+    <string name="snake_level_3">LIVELLO 3: DIFFICILE</string>
+    <string name="snake_level_1_desc">Muri teletrasporto. Velocità lenta.</string>
+    <string name="snake_level_2_desc">Muri letali. Velocità normale.</string>
+    <string name="snake_level_3_desc">Muri letali. Velocità rapida.</string>
+    <string name="snake_level_label">Livello di Difficoltà</string>
     <string name="snake">SNAKE</string>
     <string name="minesweeper">CAMPO MINATO</string>
     <string name="game_4096">4096</string>

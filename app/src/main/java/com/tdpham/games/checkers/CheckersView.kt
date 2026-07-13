@@ -1,9 +1,9 @@
 package com.tdpham.games.checkers
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
@@ -38,26 +38,38 @@ class CheckersView @JvmOverloads constructor(
     private var wins = 0
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
-    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val animHandler = Handler(Looper.getMainLooper())
+    private val animRunnable = object : Runnable {
+        override fun run() {
+            if (gameOver) {
+                celebrationManager.update()
+                invalidate()
+            }
+            animHandler.postDelayed(this, 50)
+        }
+    }
+    private val handler = Handler(Looper.getMainLooper())
     private val cpuRunnable = Runnable { cpuTurnLogic() }
 
     init {
         isFocusable = true
         isFocusableInTouchMode = true
         resetGame()
+        animHandler.post(animRunnable)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacks(cpuRunnable)
+        animHandler.removeCallbacks(animRunnable)
     }
 
     override fun startGame() {
-        requestFocus()
-    }
-
     override fun pause() {}
     override fun resume() {}
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
-    override fun resetGame() {
-        handler.removeCallbacks(cpuRunnable)
-        celebrationManager.start(0f, 0f)
+    override fun resetGame() {        celebrationManager.start(0f, 0f)
         for (r in 0..7) for (c in 0..7) board[r][c] = EMPTY
         for (r in 0..2) for (c in 0..7) {
             if (darkSquare(r, c)) board[r][c] = CPU_MAN
@@ -556,9 +568,7 @@ class CheckersView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.wins_label)}: $wins", 30f, 52f, paint)
         
         if (gameOver) {
-            celebrationManager.update()
             celebrationManager.draw(canvas)
-            invalidate()
         }
 
         paint.textAlign = Paint.Align.CENTER
