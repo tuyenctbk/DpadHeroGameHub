@@ -25,6 +25,9 @@ object ConfigManager {
             rc.setConfigSettingsAsync(configSettings)
             rc.setDefaultsAsync(mapOf(
                 "is_ads_enabled" to true,
+                "ads_min_days" to 100L,
+                "ads_min_opens" to 10L,
+                "ads_min_session_seconds" to 10L,
                 "snake_speed" to 150L,
                 "latest_version_code" to 1L,
                 "min_version_code" to 1L
@@ -73,6 +76,33 @@ object ConfigManager {
         } catch (e: Exception) {
             Log.e("ConfigManager", "Failed to get is_ads_enabled: ${e.message}")
             false
+        }
+    }
+
+    fun getAdsMinDays(): Int {
+        val rc = remoteConfig ?: return 100
+        return try {
+            rc.getLong("ads_min_days").toInt()
+        } catch (_: Exception) {
+            100
+        }
+    }
+
+    fun getAdsMinOpens(): Int {
+        val rc = remoteConfig ?: return 10
+        return try {
+            rc.getLong("ads_min_opens").toInt()
+        } catch (_: Exception) {
+            10
+        }
+    }
+
+    fun getAdsMinSessionSeconds(): Int {
+        val rc = remoteConfig ?: return 10
+        return try {
+            rc.getLong("ads_min_session_seconds").toInt()
+        } catch (_: Exception) {
+            10
         }
     }
 }
