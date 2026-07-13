@@ -631,39 +631,39 @@ class TRexView @JvmOverloads constructor(
         val now = System.currentTimeMillis()
         if (!force && now - lastEnvironmentChangeTime < ENVIRONMENT_CHANGE_INTERVAL) return
         
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val timeMode = prefs.getString("trex_time_mode", "random")
+        val seasonMode = prefs.getString("trex_season_mode", "random")
+        val weatherMode = prefs.getString("trex_weather_mode", "random")
+
         if (!force) {
-            // Cycle one property at a time for a "logical" change
+            // Cycle properties only if set to "random"
             when(random.nextInt(3)) {
-                0 -> { // Toggle Day/Night
-                    isNightMode = !isNightMode
-                    if (isNightMode) SoundManager.playSuccess()
-                }
-                1 -> { // Change Season
-                    currentSeason = Season.entries[(currentSeason.ordinal + 1) % Season.entries.size]
-                }
-                2 -> { // Change Weather
-                    currentWeather = Weather.entries[(currentWeather.ordinal + 1) % Weather.entries.size]
-                }
+                0 -> if (timeMode == "random") isNightMode = !isNightMode
+                1 -> if (seasonMode == "random") currentSeason = Season.entries[(currentSeason.ordinal + 1) % Season.entries.size]
+                2 -> if (weatherMode == "random") currentWeather = Weather.entries[(currentWeather.ordinal + 1) % Weather.entries.size]
             }
             lastEnvironmentChangeTime = now
             currentTheme = getEnvironmentTheme() // Cache new theme
         } else {
-            // Randomize but ENSURE at least one major component is different from previous run
-            // and favor a light/bright start if it was dark before
-            val prevNight = isNightMode
-            val prevSeason = currentSeason
-            val prevWeather = currentWeather
-            
-            // Forced change on reset
-            isNightMode = !prevNight
-            currentSeason = Season.entries.random()
-            currentWeather = Weather.entries.random()
-            
-            // If somehow they are still the same (unlikely with night toggle), randomize until different
-            while (isNightMode == prevNight && currentSeason == prevSeason && currentWeather == prevWeather) {
-                isNightMode = random.nextBoolean()
-                currentSeason = Season.entries.random()
-                currentWeather = Weather.entries.random()
+            // Respect preferences on reset
+            isNightMode = when (timeMode) {
+                "day" -> false
+                "night" -> true
+                else -> random.nextBoolean()
+            }
+            currentSeason = when (seasonMode) {
+                "spring" -> Season.SPRING
+                "summer" -> Season.SUMMER
+                "autumn" -> Season.AUTUMN
+                "winter" -> Season.WINTER
+                else -> Season.entries.random()
+            }
+            currentWeather = when (weatherMode) {
+                "sunny" -> Weather.SUNNY
+                "rainy" -> Weather.RAINY
+                "snowy" -> Weather.SNOWY
+                else -> Weather.entries.random()
             }
             lastEnvironmentChangeTime = now
             currentTheme = getEnvironmentTheme() // Cache new theme
