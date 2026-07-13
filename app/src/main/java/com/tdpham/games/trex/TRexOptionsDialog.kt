@@ -24,22 +24,63 @@ object TRexOptionsDialog {
 
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-        // Character Mode
+        // 1. Character Selection
         val charLayout = dialog.findViewById<LinearLayout>(R.id.opt_char_layout)
         val charValue = dialog.findViewById<TextView>(R.id.opt_char_value)
+        
+        val characters = arrayOf("RANDOM", "DADDY", "NINJA", "ASTRONAUT", "BABY", "GRANDPA", "SCIENTIST", "PIRATE", "MUMMY", "TEENAGER", "CHEF", "ATHLETE", "DRAGON", "ZOMBIE", "ROBOT", "KING")
+        
+        fun getCharDisplayName(key: String): String {
+            if (key == "RANDOM") return "RANDOM"
+            val resId = when(key) {
+                "DADDY" -> R.string.trex_daddy
+                "NINJA" -> R.string.trex_athlete // Shared
+                "ASTRONAUT" -> R.string.trex_astronaut
+                "BABY" -> R.string.trex_baby
+                "GRANDPA" -> R.string.trex_grandpa
+                "SCIENTIST" -> R.string.trex_scientist
+                "PIRATE" -> R.string.trex_pirate
+                "MUMMY" -> R.string.trex_mummy
+                "TEENAGER" -> R.string.trex_teenager
+                "CHEF" -> R.string.trex_chef
+                "ATHLETE" -> R.string.trex_athlete
+                "DRAGON" -> R.string.trex_dragon
+                "ZOMBIE" -> R.string.trex_zombie
+                "ROBOT" -> R.string.trex_robot
+                "KING" -> R.string.trex_king
+                else -> return key
+            }
+            return context.getString(resId).uppercase()
+        }
+
         fun updateCharText() {
-            charValue.text = prefs.getString("trex_char_mode", "specific")?.replaceFirstChar { it.uppercase() }
+            val mode = prefs.getString("trex_char_mode", "specific")
+            if (mode == "random") {
+                charValue.text = "RANDOM"
+            } else {
+                val index = prefs.getInt("selected_char_index", 0)
+                val key = if (index >= 0 && index < characters.size - 1) characters[index + 1] else "DADDY"
+                charValue.text = getCharDisplayName(key)
+            }
         }
         updateCharText()
         charLayout.setOnClickListener {
-            val current = prefs.getString("trex_char_mode", "specific")
-            val next = if (current == "specific") "random" else "specific"
-            prefs.edit().putString("trex_char_mode", next).apply()
+            val mode = prefs.getString("trex_char_mode", "specific")
+            if (mode == "random") {
+                prefs.edit().putString("trex_char_mode", "specific").putInt("selected_char_index", 0).apply()
+            } else {
+                val index = prefs.getInt("selected_char_index", 0)
+                if (index < characters.size - 2) {
+                    prefs.edit().putInt("selected_char_index", index + 1).apply()
+                } else {
+                    prefs.edit().putString("trex_char_mode", "random").apply()
+                }
+            }
             updateCharText()
         }
         setupFocusEffect(charLayout)
 
-        // Time Mode
+        // 2. Time Mode
         val timeLayout = dialog.findViewById<LinearLayout>(R.id.opt_time_layout)
         val timeValue = dialog.findViewById<TextView>(R.id.opt_time_value)
         val timeModes = arrayOf("random", "day", "night")
@@ -55,7 +96,7 @@ object TRexOptionsDialog {
         }
         setupFocusEffect(timeLayout)
 
-        // Season Mode
+        // 3. Season Mode
         val seasonLayout = dialog.findViewById<LinearLayout>(R.id.opt_season_layout)
         val seasonValue = dialog.findViewById<TextView>(R.id.opt_season_value)
         val seasonModes = arrayOf("random", "spring", "summer", "autumn", "winter")
@@ -71,7 +112,7 @@ object TRexOptionsDialog {
         }
         setupFocusEffect(seasonLayout)
 
-        // Weather Mode
+        // 4. Weather Mode
         val weatherLayout = dialog.findViewById<LinearLayout>(R.id.opt_weather_layout)
         val weatherValue = dialog.findViewById<TextView>(R.id.opt_weather_value)
         val weatherModes = arrayOf("random", "sunny", "rainy", "snowy")
@@ -87,11 +128,9 @@ object TRexOptionsDialog {
         }
         setupFocusEffect(weatherLayout)
 
-        val btnClose = dialog.findViewById<Button>(R.id.btn_close_opts)
-        btnClose.setOnClickListener {
-            dialog.dismiss()
-        }
-        setupFocusEffect(btnClose)
+        val btnDone = dialog.findViewById<Button>(R.id.btn_close_opts)
+        btnDone.setOnClickListener { dialog.dismiss() }
+        setupFocusEffect(btnDone)
 
         dialog.setOnDismissListener { onDismiss() }
         dialog.show()

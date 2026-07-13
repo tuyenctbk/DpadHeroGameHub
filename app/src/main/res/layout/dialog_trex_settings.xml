@@ -2,20 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="450dp"
     android:layout_height="wrap_content"
-    android:background="#1A1A1B"
+    android:background="@drawable/dialog_trex_bg"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="32dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:text="T-REX OPTIONS"
+        android:layout_marginBottom="28dp"
+        android:text="T-REX SETTINGS"
         android:textColor="#FFEB3B"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textAllCaps="true" />
 
-    <!-- Character Mode -->
+    <!-- Character Selection -->
     <LinearLayout
         android:id="@+id/opt_char_layout"
         android:layout_width="match_parent"
@@ -24,20 +25,22 @@
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="14dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Character Mode"
+            android:text="Character"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
         <TextView
             android:id="@+id/opt_char_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Specific"
-            android:textColor="#888888"
-            android:textSize="14sp" />
+            android:layout_marginTop="2dp"
+            android:text="RANDOM"
+            android:textColor="#4FC3F7"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <!-- Time Mode -->
@@ -45,25 +48,27 @@
         android:id="@+id/opt_time_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="14dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Time of Day"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
         <TextView
             android:id="@+id/opt_time_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Random"
-            android:textColor="#888888"
-            android:textSize="14sp" />
+            android:layout_marginTop="2dp"
+            android:text="RANDOM"
+            android:textColor="#4FC3F7"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <!-- Season Mode -->
@@ -71,25 +76,27 @@
         android:id="@+id/opt_season_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="14dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Season"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
         <TextView
             android:id="@+id/opt_season_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Random"
-            android:textColor="#888888"
-            android:textSize="14sp" />
+            android:layout_marginTop="2dp"
+            android:text="RANDOM"
+            android:textColor="#4FC3F7"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <!-- Weather Mode -->
@@ -97,34 +104,37 @@
         android:id="@+id/opt_weather_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="14dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Weather"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
         <TextView
             android:id="@+id/opt_weather_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Random"
-            android:textColor="#888888"
-            android:textSize="14sp" />
+            android:layout_marginTop="2dp"
+            android:text="RANDOM"
+            android:textColor="#4FC3F7"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <Button
         android:id="@+id/btn_close_opts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:backgroundTint="#333333"
         android:text="DONE"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
 
 </LinearLayout>
