@@ -153,8 +153,40 @@ class TRexView @JvmOverloads constructor(
 
     private fun loadSettings() {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        selectedMemberIndex = prefs.getInt(KEY_SELECTED_CHAR, 0).coerceIn(0, DinoMember.entries.size - 1)
+        
+        // Load Character Preference
+        val charMode = prefs.getString("trex_char_mode", "specific")
+        if (charMode == "random") {
+            selectedMemberIndex = random.nextInt(DinoMember.entries.size)
+        } else {
+            selectedMemberIndex = prefs.getInt(KEY_SELECTED_CHAR, 0).coerceIn(0, DinoMember.entries.size - 1)
+        }
         currentMember = DinoMember.entries[selectedMemberIndex]
+
+        // Load Environment Preferences
+        val timeMode = prefs.getString("trex_time_mode", "random")
+        isNightMode = when (timeMode) {
+            "day" -> false
+            "night" -> true
+            else -> random.nextBoolean()
+        }
+
+        val seasonMode = prefs.getString("trex_season_mode", "random")
+        currentSeason = when (seasonMode) {
+            "spring" -> Season.SPRING
+            "summer" -> Season.SUMMER
+            "autumn" -> Season.AUTUMN
+            "winter" -> Season.WINTER
+            else -> Season.entries.random()
+        }
+
+        val weatherMode = prefs.getString("trex_weather_mode", "random")
+        currentWeather = when (weatherMode) {
+            "sunny" -> Weather.SUNNY
+            "rainy" -> Weather.RAINY
+            "snowy" -> Weather.SNOWY
+            else -> Weather.entries.random()
+        }
     }
 
     private fun saveSettings() {
@@ -191,8 +223,7 @@ class TRexView @JvmOverloads constructor(
         causeOfDeath = null
         celebrationManager.start(0f, 0f)
         
-        // Use selected member
-        currentMember = DinoMember.entries[selectedMemberIndex]
+        loadSettings() // Reload preferences on reset
         applyMemberProperties()
         memberName = context.getString(when(currentMember) {
             DinoMember.DADDY -> R.string.trex_daddy
@@ -890,6 +921,9 @@ class TRexView @JvmOverloads constructor(
         val lineY = height * groundY
         canvas.drawRect(0f, lineY, width.toFloat(), height.toFloat(), paint)
         
+        // Ground Decorations (Rocks, Grass, Snow)
+        drawGroundDecorations(canvas, theme)
+
         paint.color = theme.groundColor
         paint.strokeWidth = 3f
         canvas.drawLine(0f, lineY, width.toFloat(), lineY, paint)
@@ -1025,6 +1059,45 @@ class TRexView @JvmOverloads constructor(
 
     private fun drawDino(canvas: Canvas, x: Float, y: Float, color: Int, eyeColor: Int) {
         TRexDrawer.drawDino(canvas, x, y, color, eyeColor, dinoScale, isGameOver, causeOfDeath, isDucking, isJumping, walkFrame, isNightMode, animationFrame, obstacles, paint, pathBuffer, currentMember.name)
+    }
+
+    private fun drawGroundDecorations(canvas: Canvas, theme: Theme) {
+        paint.style = Paint.Style.FILL
+        for (dot in groundDots) {
+            val dx = dot.x
+            val dy = dot.y
+            
+            // Texture variation based on season
+            when (currentSeason) {
+                Season.SPRING, Season.SUMMER -> {
+                    // Grass tufts (2-3 blades)
+                    paint.color = theme.cactusColor
+                    paint.alpha = if (isNightMode) 60 else 100
+                    canvas.drawRect(dx, dy, dx + 3, dy - 8, paint)
+                    canvas.drawRect(dx - 3, dy, dx - 1, dy - 5, paint)
+                    canvas.drawRect(dx + 4, dy, dx + 6, dy - 5, paint)
+                }
+                Season.AUTUMN -> {
+                    // Fallen leaves/Pebbles
+                    paint.color = if (random.nextBoolean()) Color.parseColor("#A1887F") else Color.parseColor("#795548")
+                    paint.alpha = if (isNightMode) 80 else 140
+                    canvas.drawCircle(dx, dy, 4f, paint)
+                }
+                Season.WINTER -> {
+                    // Snow piles/Ice patches
+                    paint.color = Color.WHITE
+                    paint.alpha = if (isNightMode) 100 else 180
+                    pathBuffer.reset()
+                    pathBuffer.moveTo(dx, dy)
+                    pathBuffer.lineTo(dx + 15, dy)
+                    pathBuffer.lineTo(dx + 10, dy - 4)
+                    pathBuffer.lineTo(dx + 5, dy - 4)
+                    pathBuffer.close()
+                    canvas.drawPath(pathBuffer, paint)
+                }
+            }
+        }
+        paint.alpha = 255
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, textColor: Int) {

@@ -158,7 +158,9 @@ internal object TRexDrawer {
             TRexView.ObstacleType.CANYON -> {
                 val lineY = canvas.height * 0.8f
                 
-                // 1. Water Surface (Glow)
+                // No more danger glow. Just Blue Water.
+                
+                // 1. Water Surface (Subtle highlight)
                 val glowKey = "water_glow_${obs.width}"
                 paint.shader = shaderCache.getOrPut(glowKey) {
                     RadialGradient(obs.width / 2f, 10f, obs.width * 0.6f,
