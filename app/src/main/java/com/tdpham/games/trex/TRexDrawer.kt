@@ -265,13 +265,21 @@ internal object TRexDrawer {
                 }
                 paint.color = dinoColor
                 val p = obs.width / 30f 
+                val headSway = Math.sin(animationFrame * 0.1 + obs.variant).toFloat() * 4 * p
                 canvas.save(); canvas.translate(obs.x, obs.y)
                 if (obs.variant % 2 != 0) canvas.scale(-1f, 1f, obs.width / 2f, obs.height / 2f)
+                
+                // Body & Tail
+                canvas.drawRoundRect(0f, 15*p, 25*p, 28*p, 6*p, 6*p, paint)
+                pathBuffer.reset(); pathBuffer.moveTo(0f, 18*p); pathBuffer.lineTo(-10*p, 22*p); pathBuffer.lineTo(0f, 26*p)
+                pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
+
+                // Head (Moved by headSway)
+                canvas.save(); canvas.translate(0f, headSway)
                 when(obs.variant % 3) {
                     0 -> { 
                         canvas.drawRoundRect(20*p, 0f, 32*p, 8*p, 4*p, 4*p, paint)
                         canvas.drawRect(20*p, 6*p, 25*p, 18*p, paint)
-                        canvas.drawRoundRect(0f, 15*p, 25*p, 28*p, 6*p, 6*p, paint)
                     }
                     1 -> { 
                         canvas.drawRoundRect(25*p, 18*p, 32*p, 24*p, 2*p, 2*p, paint)
@@ -285,13 +293,15 @@ internal object TRexDrawer {
                         pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
                     }
                 }
-                pathBuffer.reset(); pathBuffer.moveTo(0f, 18*p); pathBuffer.lineTo(-10*p, 22*p); pathBuffer.lineTo(0f, 26*p)
-                pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
-                val legH = if (walkFrame == 0) 5*p else 2*p
-                canvas.drawRect(5*p, 28*p, 9*p, 28*p + legH, paint); canvas.drawRect(16*p, 28*p, 20*p, 28*p + (7*p - legH), paint)
                 paint.color = Color.BLACK; val eyeX = if (obs.variant % 3 == 0) 22*p else if (obs.variant % 3 == 1) 28*p else 24*p
                 val eyeY = if (obs.variant % 3 == 0) 2*p else if (obs.variant % 3 == 1) 20*p else 12*p
                 canvas.drawRect(eyeX, eyeY, eyeX + 2*p, eyeY + 2*p, paint); canvas.restore()
+
+                // Legs
+                paint.color = dinoColor
+                val legH = if (walkFrame == 0) 5*p else 2*p
+                canvas.drawRect(5*p, 28*p, 9*p, 28*p + legH, paint); canvas.drawRect(16*p, 28*p, 20*p, 28*p + (7*p - legH), paint)
+                canvas.restore()
             }
         }
     }
@@ -404,6 +414,11 @@ internal object TRexDrawer {
             "NINJA" -> {
                 paint.color = Color.RED // Ninja Headband
                 canvas.drawRect(headX - 2*p, headY + p, headX + 12*p, headY + 3*p, paint)
+                // Headband tail
+                pathBuffer.reset(); pathBuffer.moveTo(headX, headY + 2*p)
+                val tailSway = Math.sin(animationFrame * 0.2).toFloat() * 4*p
+                pathBuffer.lineTo(headX - 8*p, headY + 2*p + tailSway); pathBuffer.lineTo(headX - 6*p, headY + 5*p + tailSway)
+                canvas.drawPath(pathBuffer, paint)
             }
             "ASTRONAUT" -> {
                 paint.color = Color.argb(100, 129, 212, 250)
@@ -411,43 +426,78 @@ internal object TRexDrawer {
                 paint.style = Paint.Style.STROKE; paint.color = Color.WHITE; paint.strokeWidth = 1f * p
                 canvas.drawCircle(headX + 5*p, headY + 4*p, 10*p, paint)
                 paint.style = Paint.Style.FILL
+                // Oxygen tank
+                paint.color = Color.LTGRAY; canvas.drawRoundRect(headX - 12*p, headY + 8*p, headX - 4*p, headY + 16*p, 2*p, 2*p, paint)
+            }
+            "ATHLETE" -> {
+                paint.color = Color.WHITE; canvas.drawRect(headX - p, headY - p, headX + 11*p, headY + 2*p, paint)
+                paint.textSize = 6*p; paint.color = Color.BLACK; canvas.drawText("1", headX + 4*p, headY + 12*p, paint)
             }
             "BABY" -> {
                 paint.color = Color.parseColor("#4FC3F7") // Blue pacifier
                 canvas.drawCircle(headX + 10*p, headY + 6*p, 2*p, paint)
+                paint.color = Color.parseColor("#F8BBD0"); canvas.drawCircle(headX + 5*p, headY - 2*p, 3*p, paint)
+            }
+            "SCIENTIST" -> {
+                paint.color = Color.BLACK; canvas.drawRect(headX + 2*p, headY + 6*p, headX + 8*p, headY + 8*p, paint)
+                paint.color = Color.WHITE; canvas.drawRect(headX + 4*p, headY + 7*p, headX + 6*p, headY + 8*p, paint)
+                // Bubbling Flask
+                if (animationFrame % 20 < 10) {
+                    paint.color = Color.CYAN; canvas.drawCircle(headX + 12*p, headY + 12*p - (animationFrame % 10), 2*p, paint)
+                }
+            }
+            "DRAGON" -> {
+                paint.color = Color.parseColor("#1B5E20")
+                pathBuffer.reset(); pathBuffer.moveTo(headX, headY); pathBuffer.lineTo(headX - 4*p, headY - 4*p)
+                pathBuffer.lineTo(headX, headY - 8*p); pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
+                // Wings
+                val wingSway = Math.sin(animationFrame * 0.15).toFloat() * 10*p
+                pathBuffer.reset(); pathBuffer.moveTo(headX - 10*p, headY + 10*p)
+                pathBuffer.lineTo(headX - 25*p, headY + wingSway); pathBuffer.lineTo(headX - 15*p, headY + 20*p); canvas.drawPath(pathBuffer, paint)
+            }
+            "ROBOT" -> {
+                paint.color = Color.RED; canvas.drawCircle(headX + 2*p, headY + 3*p, p, paint)
+                paint.color = Color.BLACK; canvas.drawRect(headX - p, headY - 4*p, headX + p, headY, paint)
+                // Antenna light
+                if ((animationFrame / 15) % 2 == 0) {
+                    paint.color = Color.YELLOW; canvas.drawCircle(headX, headY - 5*p, 2*p, paint)
+                }
+            }
+            "ZOMBIE" -> {
+                paint.color = Color.parseColor("#689F38"); canvas.drawCircle(headX + 3*p, headY + 12*p, 2*p, paint)
+                paint.color = Color.BLACK; canvas.drawRect(headX + 8*p, headY + 2*p, headX + 10*p, headY + 4*p, paint) // Missing eye
+            }
+            "KING" -> {
+                paint.color = Color.parseColor("#FFD600")
+                pathBuffer.reset(); pathBuffer.moveTo(headX, headY); pathBuffer.lineTo(headX, headY - 6*p)
+                pathBuffer.lineTo(headX + 3*p, headY - 4*p); pathBuffer.lineTo(headX + 6*p, headY - 10*p)
+                pathBuffer.lineTo(headX + 9*p, headY - 4*p); pathBuffer.lineTo(headX + 12*p, headY - 6*p)
+                pathBuffer.lineTo(headX + 12*p, headY); pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
+            }
+            "CHEF" -> {
+                paint.color = Color.WHITE; canvas.drawRoundRect(headX, headY - 8*p, headX + 12*p, headY, 2*p, 2*p, paint)
+                paint.color = Color.LTGRAY; canvas.drawRect(headX + 12*p, headY + 10*p, headX + 18*p, headY + 12*p, paint) // Spatula
+            }
+            "MUMMY" -> {
+                paint.color = Color.parseColor("#BDBDBD")
+                for (i in 0..2) canvas.drawLine(headX, headY + i*3*p, headX + 10*p, headY + i*3*p, paint)
+                // Loose bandage
+                val looseSway = Math.sin(animationFrame * 0.1).toFloat() * 5*p
+                canvas.drawLine(headX - 5*p, headY + 15*p, headX - 15*p, headY + 15*p + looseSway, paint)
+            }
+            "PIRATE" -> {
+                paint.color = Color.BLACK; canvas.drawRect(headX - p, headY + 2*p, headX + 3*p, headY + 5*p, paint)
+                paint.strokeWidth = 0.8f * p; canvas.drawLine(headX - 4*p, headY + 3*p, headX + 12*p, headY + p, paint)
+                // Earring
+                paint.color = Color.YELLOW; paint.style = Paint.Style.STROKE; canvas.drawCircle(headX + 12*p, headY + 8*p, 2*p, paint); paint.style = Paint.Style.FILL
             }
             "GRANDPA" -> {
                 paint.color = Color.BLACK; paint.style = Paint.Style.STROKE; paint.strokeWidth = 0.5f * p
                 canvas.drawCircle(headX + 2*p, headY + 3*p, 3*p, paint)
                 canvas.drawCircle(headX + 8*p, headY + 3*p, 3*p, paint)
                 paint.style = Paint.Style.FILL
-            }
-            "SCIENTIST" -> {
-                paint.color = Color.BLACK; canvas.drawRect(headX + 2*p, headY + 6*p, headX + 8*p, headY + 8*p, paint)
-                paint.color = Color.WHITE; canvas.drawRect(headX + 4*p, headY + 7*p, headX + 6*p, headY + 8*p, paint)
-            }
-            "PIRATE" -> {
-                paint.color = Color.BLACK; canvas.drawRect(headX - p, headY + 2*p, headX + 3*p, headY + 5*p, paint)
-                paint.strokeWidth = 0.8f * p; canvas.drawLine(headX - 4*p, headY + 3*p, headX + 12*p, headY + p, paint)
-            }
-            "MUMMY" -> {
-                paint.color = Color.parseColor("#BDBDBD")
-                for (i in 0..2) canvas.drawLine(headX, headY + i*3*p, headX + 10*p, headY + i*3*p, paint)
-            }
-            "KING" -> {
-                paint.color = Color.parseColor("#FFD600")
-                pathBuffer.reset(); pathBuffer.moveTo(headX, headY); pathBuffer.lineTo(headX, headY - 4*p)
-                pathBuffer.lineTo(headX + 5*p, headY - 8*p); pathBuffer.lineTo(headX + 10*p, headY - 4*p)
-                pathBuffer.lineTo(headX + 10*p, headY); pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
-            }
-            "ROBOT" -> {
-                paint.color = Color.RED; canvas.drawCircle(headX + 2*p, headY + 3*p, p, paint)
-                paint.color = Color.BLACK; canvas.drawRect(headX - p, headY - 4*p, headX + p, headY, paint)
-            }
-            "DRAGON" -> {
-                paint.color = Color.parseColor("#1B5E20")
-                pathBuffer.reset(); pathBuffer.moveTo(headX, headY); pathBuffer.lineTo(headX - 4*p, headY - 4*p)
-                pathBuffer.lineTo(headX, headY - 8*p); pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
+                // Cane
+                paint.color = Color.parseColor("#5D4037"); canvas.drawRect(headX + 10*p, headY + 10*p, headX + 12*p, headY + 20*p, paint)
             }
         }
 

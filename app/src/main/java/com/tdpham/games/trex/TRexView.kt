@@ -527,7 +527,9 @@ class TRexView @JvmOverloads constructor(
                 }
             }
             ObstacleType.BIG_DINO -> {
-                obs.x -= (gameSpeed + if (obs.variant % 2 == 0) 2f else -2f)
+                // Large Dino movement logic: subtle left/right sway + base speed
+                val sway = Math.sin(animationFrame * 0.05 + obs.variant).toFloat() * 1.5f
+                obs.x -= (gameSpeed + sway)
             }
             else -> {
                 obs.x -= gameSpeed
@@ -722,7 +724,8 @@ class TRexView @JvmOverloads constructor(
 
         val count = if (isGroupable && random.nextInt(100) < groupChance) {
             when {
-                baseType == ObstacleType.BIG_DINO || baseType == ObstacleType.PTEROSAUR -> random.nextInt(2) + 2 // 2 to 3
+                baseType == ObstacleType.BIG_DINO -> 2 // Max 2 if BIG_DINO is present
+                baseType == ObstacleType.PTEROSAUR -> random.nextInt(2) + 2 // 2 to 3
                 score > 3000 -> random.nextInt(3) + 2 // 2 to 4
                 score > 2000 -> random.nextInt(2) + 2 // 2 to 3
                 else -> 2
