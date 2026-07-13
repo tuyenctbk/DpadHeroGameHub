@@ -439,7 +439,7 @@ class TRexView @JvmOverloads constructor(
             duckingProgress = 1f
             if (duckFrames > 0) duckFrames--
             if (duckFrames == 0 && !isDucking) {
-                duckCooldownFrames = 30 // 0.5s cooldown
+                duckCooldownFrames = 15 // 0.25s cooldown
             }
         } else {
             duckingProgress = 0f
