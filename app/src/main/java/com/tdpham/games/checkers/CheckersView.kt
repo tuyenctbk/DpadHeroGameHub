@@ -65,11 +65,15 @@ class CheckersView @JvmOverloads constructor(
     }
 
     override fun startGame() {
+        requestFocus()
+    }
+
     override fun pause() {}
     override fun resume() {}
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
-    override fun resetGame() {        celebrationManager.start(0f, 0f)
+    override fun resetGame() {
+        celebrationManager.start(0f, 0f)
         for (r in 0..7) for (c in 0..7) board[r][c] = EMPTY
         for (r in 0..2) for (c in 0..7) {
             if (darkSquare(r, c)) board[r][c] = CPU_MAN
@@ -85,11 +89,6 @@ class CheckersView @JvmOverloads constructor(
         status = context.getString(R.string.your_turn_label)
         wins = ScoreManager.getHighScore(context, gameKey)
         invalidate()
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        handler.removeCallbacks(cpuRunnable)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
