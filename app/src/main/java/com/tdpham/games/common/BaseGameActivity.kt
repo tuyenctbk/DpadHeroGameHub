@@ -187,9 +187,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 if (!hasStarted) {
                     startGameWithAnalytics()
                 } else {
-                    AdManager.showInterstitial(this) {
-                        gameView.resume()
-                    }
+                    gameView.resume()
                 }
                 (gameView as View).requestFocus()
             }

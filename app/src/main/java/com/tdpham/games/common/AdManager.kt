@@ -2,6 +2,8 @@ package com.tdpham.games.common
 
 import android.app.Activity
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.core.content.edit
 import com.google.android.gms.ads.AdError
@@ -17,7 +19,9 @@ object AdManager {
     private const val INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-5190563950149825/9206126543"
     
     private var isInitialized = false
+    private var isInitializing = false
     private var mInterstitialAd: InterstitialAd? = null
+    private var isLoading = false
 
     // Session tracking
     private var sessionStartTime: Long = 0L
@@ -28,6 +32,7 @@ object AdManager {
     private var adsShownInSession = 0
     private const val MIN_TIME_BETWEEN_ADS_MS = 120_000L  // 2 minutes
     private const val MAX_ADS_PER_SESSION = 3
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     fun init(context: Context) {
         if (sessionStartTime == 0L) {
@@ -39,43 +44,62 @@ object AdManager {
             incrementAppOpens(context)
         }
 
+        if (isInitialized || isInitializing) return
+        isInitializing = true
+
         try {
             if (!ConfigManager.isAdsEnabled()) {
                 Log.d(TAG, "AdMob is disabled by default.")
+                isInitializing = false
                 return
             }
-            if (isInitialized) return
             
             val appContext = context.applicationContext
-            MobileAds.initialize(appContext) { status ->
-                isInitialized = true
-                loadInterstitial(appContext)
+            mainHandler.post {
+                try {
+                    MobileAds.initialize(appContext) {
+                        isInitialized = true
+                        isInitializing = false
+                        loadInterstitial(appContext)
+                    }
+                } catch (e: Throwable) {
+                    Log.e(TAG, "Failed to initialize MobileAds on main thread: ${e.message}")
+                    isInitializing = false
+                }
             }
         } catch (e: Throwable) {
             Log.e(TAG, "Failed to initialize MobileAds: ${e.message}", e)
+            isInitializing = false
         }
     }
 
     fun loadInterstitial(context: Context) {
         try {
-            if (!ConfigManager.isAdsEnabled()) return
+            if (!ConfigManager.isAdsEnabled() || isLoading || (mInterstitialAd != null)) return
+            isLoading = true
 
-            val adRequest = AdRequest.Builder().build()
-            InterstitialAd.load(context, INTERSTITIAL_AD_UNIT_ID, adRequest,
-                object : InterstitialAdLoadCallback() {
-                    override fun onAdFailedToLoad(adError: LoadAdError) {
-                        Log.d(TAG, "Ad failed to load: ${adError.message}")
-                        mInterstitialAd = null
-                    }
+            val appContext = context.applicationContext
+            mainHandler.post {
+                val adRequest = AdRequest.Builder().build()
+                InterstitialAd.load(appContext, INTERSTITIAL_AD_UNIT_ID, adRequest,
+                    object : InterstitialAdLoadCallback() {
+                        override fun onAdFailedToLoad(adError: LoadAdError) {
+                            Log.d(TAG, "Ad failed to load: ${adError.message}")
+                            mInterstitialAd = null
+                            isLoading = false
+                        }
 
-                    override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                        Log.d(TAG, "Ad was loaded.")
-                        mInterstitialAd = interstitialAd
-                    }
-                })
+                        override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                            Log.d(TAG, "Ad was loaded.")
+                            mInterstitialAd = interstitialAd
+                            isLoading = false
+                        }
+                    })
+            }
         } catch (e: Throwable) {
             Log.e(TAG, "Failed to load interstitial ad: ${e.message}", e)
             mInterstitialAd = null
+            isLoading = false
         }
     }
 
@@ -117,7 +141,7 @@ object AdManager {
                         mInterstitialAd = null
                         adsShownInSession++
                         lastAdShowTime = System.currentTimeMillis()
-                        loadInterstitial(activity) // Pre-load next
+                        loadInterstitial(activity.applicationContext) // Pre-load next
                         onAdDismissed()
                     }
 
