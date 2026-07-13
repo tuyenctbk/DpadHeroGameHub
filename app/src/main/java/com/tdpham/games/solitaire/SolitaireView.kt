@@ -526,6 +526,12 @@ class SolitaireView @JvmOverloads constructor(
         paint.textSize = 30f
         val hudY = Math.round(h - 20).toFloat()
         canvas.drawText("${context.getString(R.string.score_label)}: $score", 20f, hudY, paint)
+        
+        paint.textAlign = Paint.Align.RIGHT
+        paint.color = Color.LTGRAY
+        val modeStr = context.getString(if (drawCount == 3) R.string.solitaire_draw_3 else R.string.solitaire_draw_1)
+        canvas.drawText("${context.getString(R.string.mode_label)}: $modeStr", width - 20f, hudY, paint)
+        paint.textAlign = Paint.Align.LEFT
 
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {

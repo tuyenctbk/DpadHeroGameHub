@@ -467,6 +467,11 @@ class Lines98View @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.score_label)}: $score", 50f, hudY1, paint)
         canvas.drawText("${context.getString(R.string.high_score_label)}: ${ScoreManager.getHighScore(context, gameKey, colorCount)}", 50f, hudY2, paint)
 
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.LTGRAY
+        canvas.drawText("${context.getString(R.string.level_label)}: ${colorCount}", width / 2f, hudY1, paint)
+        paint.textAlign = Paint.Align.LEFT
+
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT

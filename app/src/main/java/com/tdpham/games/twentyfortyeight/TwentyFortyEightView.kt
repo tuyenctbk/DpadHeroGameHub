@@ -298,6 +298,11 @@ class TwentyFortyEightView @JvmOverloads constructor(
         paint.color = GamePalette.TEXT_PRIMARY
         canvas.drawText("$score", labelX, scoreNumY, paint)
         
+        paint.textSize = cellSize * 0.4f
+        paint.color = Color.LTGRAY
+        paint.textAlign = Paint.Align.CENTER
+        canvas.drawText("${context.getString(R.string.mode_label)}: ${gridSize}x$gridSize", width / 2f, scoreNumY, paint)
+
         // Draw Best (Right Side)
         paint.textAlign = Paint.Align.RIGHT
         paint.textSize = cellSize * 0.3f

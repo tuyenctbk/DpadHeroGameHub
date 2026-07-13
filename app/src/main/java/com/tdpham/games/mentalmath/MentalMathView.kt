@@ -364,6 +364,15 @@ class MentalMathView @JvmOverloads constructor(
             paint.alpha = 255
         }
 
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.LTGRAY
+        val modeStr = context.getString(when(currentMode) {
+            0 -> R.string.mental_math_mode_easy
+            2 -> R.string.mental_math_mode_hard
+            else -> R.string.mental_math_mode_normal
+        })
+        canvas.drawText("${context.getString(R.string.mode_label)}: $modeStr", width / 2f, hudY, paint)
+
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 

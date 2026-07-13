@@ -271,6 +271,14 @@ class SpinballView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.CENTER
         val hudY = Math.round(-radius - 40f).toFloat()
         canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.best_label)}: $highScore", 0f, hudY, paint)
+        
+        paint.color = Color.LTGRAY
+        val modeStr = context.getString(when(currentDifficultyIndex) {
+            0 -> R.string.spinball_difficulty_1
+            2 -> R.string.spinball_difficulty_3
+            else -> R.string.spinball_difficulty_2
+        })
+        canvas.drawText("${context.getString(R.string.mode_label)}: $modeStr", 0f, hudY + 40f, paint)
 
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {

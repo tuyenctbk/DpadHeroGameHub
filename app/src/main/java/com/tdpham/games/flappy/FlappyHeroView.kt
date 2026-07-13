@@ -355,6 +355,10 @@ class FlappyHeroView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.LTGRAY
+        canvas.drawText("${context.getString(R.string.level_label)}: ${currentDifficulty.ordinal + 1}", width / 2f, hudY, paint)
+
         if (gameOver) {
             celebrationManager.draw(canvas)
             val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.crashed_label)

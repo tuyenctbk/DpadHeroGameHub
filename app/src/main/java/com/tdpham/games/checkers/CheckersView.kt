@@ -590,6 +590,12 @@ class CheckersView @JvmOverloads constructor(
         val hudY = 52f
         canvas.drawText("${context.getString(R.string.wins_label)}: $wins", 30f, hudY, paint)
 
+        paint.textAlign = Paint.Align.RIGHT
+        paint.color = Color.LTGRAY
+        val modeStr = context.getString(if (currentDifficultyIndex == 0) R.string.checkers_difficulty_1 else R.string.checkers_difficulty_2)
+        canvas.drawText("${context.getString(R.string.mode_label)}: $modeStr", width - 30f, hudY, paint)
+        paint.textAlign = Paint.Align.LEFT
+
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT

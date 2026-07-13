@@ -526,6 +526,8 @@ class TetrisView @JvmOverloads constructor(
         val hudY1 = Math.round(offsetY + size).toFloat()
         val hudY2 = Math.round(offsetY + size * 2.5f).toFloat()
         val hudY3 = Math.round(offsetY + size * 4.5f).toFloat()
+        val currentLevel = (startLevel + (score / 1000)).coerceAtMost(15)
+        canvas.drawText("${context.getString(R.string.level_label)}: $currentLevel", hudX, hudY1 - size * 1.5f, textPaint)
         canvas.drawText("${context.getString(R.string.score_label)}: $score", hudX, hudY1, textPaint)
         textPaint.color = GamePalette.TEXT_SECONDARY
         canvas.drawText("${context.getString(R.string.best_label)}: $best", hudX, hudY2, textPaint)

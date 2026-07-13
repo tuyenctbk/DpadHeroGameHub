@@ -538,6 +538,17 @@ class BrickBreakView @JvmOverloads constructor(
             paint.alpha = 255
         }
 
+        paint.color = Color.LTGRAY
+        paint.textAlign = Paint.Align.CENTER
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val sizeIndex = prefs.getInt(KEY_PADDLE_SIZE, 1)
+        val sizeStr = context.getString(when(sizeIndex) {
+            0 -> R.string.brick_break_paddle_large
+            2 -> R.string.brick_break_paddle_small
+            else -> R.string.brick_break_paddle_medium
+        })
+        canvas.drawText("${context.getString(R.string.level_label)}: $sizeStr", width / 2f, 60f, paint)
+
         if (isPaused && !isGameOver && !isWin) {
             drawOverlay(canvas, context.getString(R.string.game_brick_break), context.getString(R.string.launch_hint))
         } else if (isGameOver || isWin) {

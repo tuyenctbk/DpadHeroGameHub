@@ -477,6 +477,15 @@ class StarFighterView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.LEFT
         val hudY = Math.round(60f).toFloat()
         canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.LTGRAY
+        val modeStr = context.getString(when(currentDifficultyIndex) {
+            0 -> R.string.starfighter_difficulty_1
+            2 -> R.string.starfighter_difficulty_3
+            else -> R.string.starfighter_difficulty_2
+        })
+        canvas.drawText("${context.getString(R.string.mode_label)}: $modeStr", width / 2f, hudY, paint)
+
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 

@@ -329,6 +329,10 @@ class RoadRacerView @JvmOverloads constructor(
         val hudX = Math.round(40f).toFloat()
         val hudY = Math.round(60f).toFloat()
         canvas.drawText("${context.getString(R.string.score_label)}: $score", hudX, hudY, paint)
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.LTGRAY
+        canvas.drawText("${context.getString(R.string.level_label)}: ${trafficDensity + 1}", width / 2f, hudY, paint)
+
         paint.textAlign = Paint.Align.RIGHT
         val bestX = Math.round(width - 40f).toFloat()
         canvas.drawText("${context.getString(R.string.best_label)}: $highScore", bestX, hudY, paint)

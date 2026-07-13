@@ -400,6 +400,15 @@ class WordQuestView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.LTGRAY
+        val catStr = context.getString(when(currentCategoryIndex) {
+            1 -> R.string.word_quest_category_nature
+            2 -> R.string.word_quest_category_tech
+            else -> R.string.word_quest_category_all
+        })
+        canvas.drawText("${context.getString(R.string.category_label)}: $catStr", width / 2f, hudY, paint)
+
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT

@@ -358,6 +358,10 @@ class FroggyCrossView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 20f, hudY, paint)
 
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.LTGRAY
+        canvas.drawText("${context.getString(R.string.level_label)}: ${currentDifficultyIndex + 1}", width / 2f, hudY, paint)
+
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT

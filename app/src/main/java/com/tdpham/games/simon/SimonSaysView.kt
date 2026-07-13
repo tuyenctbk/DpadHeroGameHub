@@ -300,6 +300,16 @@ class SimonSaysView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.LTGRAY
+        val modeStr = context.getString(when(speedIndex) {
+            0 -> R.string.simon_says_speed_1
+            2 -> R.string.simon_says_speed_3
+            else -> R.string.simon_says_speed_2
+        })
+        canvas.drawText("${context.getString(R.string.mode_label)}: $modeStr", width / 2f, hudY, paint)
+        paint.textAlign = Paint.Align.LEFT
+
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT
