@@ -34,6 +34,7 @@ class DungeonEscapeView @JvmOverloads constructor(
     private var playerY = 1
     private var hasKey = false
     private var level = 1
+    private var startingLevel = 1
     private var score = 0
     private var best = 0
     private val PREFS_NAME = "dungeon_settings"
@@ -105,9 +106,10 @@ class DungeonEscapeView @JvmOverloads constructor(
 
     override fun resetGame() {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        level = prefs.getInt(KEY_START_LEVEL, 1).coerceIn(1, 10)
+        startingLevel = prefs.getInt(KEY_START_LEVEL, 1).coerceIn(1, 10)
+        level = startingLevel
         score = 0
-        best = ScoreManager.getHighScore(context, gameKey)
+        best = ScoreManager.getHighScore(context, gameKey, startingLevel)
         celebrationManager.start(0f, 0f)
         setupLevel()
         gamePaused = true
@@ -420,7 +422,7 @@ class DungeonEscapeView @JvmOverloads constructor(
         SoundManager.playError()
         gameOver = true
         gamePaused = true
-        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score)
+        val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, startingLevel)
         if (isNewHigh) best = score
         celebrationManager.startOutcome(
             width = width.toFloat(),

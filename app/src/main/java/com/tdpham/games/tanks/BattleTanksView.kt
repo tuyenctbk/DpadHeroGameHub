@@ -41,6 +41,7 @@ class BattleTanksView @JvmOverloads constructor(
     private var gameOver = false
     private var gamePaused = true
     private var level = 1
+    private var startingLevel = 1
     private var isLevelLoading = false
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
@@ -109,10 +110,11 @@ class BattleTanksView @JvmOverloads constructor(
     override fun resetGame() {
         // Load start level from settings
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        level = prefs.getInt(KEY_START_LEVEL, 1).coerceIn(1, 3)
+        startingLevel = prefs.getInt(KEY_START_LEVEL, 1).coerceIn(1, 3)
+        level = startingLevel
 
         score = 0
-        best = ScoreManager.getHighScore(context, gameKey, level)
+        best = ScoreManager.getHighScore(context, gameKey, startingLevel)
         gameOver = false
         gamePaused = true
         celebrationManager.start(0f, 0f)
@@ -419,7 +421,7 @@ class BattleTanksView @JvmOverloads constructor(
                 if (tile == 3) {
                     gameOver = true; gamePaused = true; SoundManager.playError()
                     val oldBest = best
-                    val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, level)
+                    val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, startingLevel)
                     if (isNewHigh) best = score
                     celebrationManager.startOutcome(
                         width = width.toFloat(),
@@ -472,7 +474,7 @@ class BattleTanksView @JvmOverloads constructor(
                 if (player.x == bx && player.y == by) {
                     gameOver = true; gamePaused = true; SoundManager.playError()
                     val oldBest = best
-                    val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, level)
+                    val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, startingLevel)
                     if (isNewHigh) best = score
                     celebrationManager.startOutcome(
                         width = width.toFloat(),

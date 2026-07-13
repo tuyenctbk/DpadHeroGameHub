@@ -406,7 +406,7 @@ class SolitaireView @JvmOverloads constructor(
         selectedCards.clear()
         sourcePile = null
         sourceCardIndex = -1
-        ScoreManager.updateHighScore(context, gameKey, score)
+        ScoreManager.updateHighScore(context, gameKey, score, drawCount)
     }
 
     private fun checkWin() {
