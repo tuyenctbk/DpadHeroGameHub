@@ -459,6 +459,11 @@ class BrickBreakView @JvmOverloads constructor(
                 return true
             }
 
+            // Ignore taps in the HUD area to prevent accidental paddle jumps
+            if (event.y < height * 0.1f) {
+                return false
+            }
+
             if (!isBallLaunched) {
                 if (event.action == android.view.MotionEvent.ACTION_DOWN) {
                     performClick()
@@ -547,7 +552,7 @@ class BrickBreakView @JvmOverloads constructor(
             2 -> R.string.brick_break_paddle_small
             else -> R.string.brick_break_paddle_medium
         })
-        canvas.drawText("${context.getString(R.string.level_label)}: $sizeStr", width / 2f, 60f, paint)
+        canvas.drawText("${context.getString(R.string.level_label)}: $sizeStr", width / 2f, height * 0.05f, paint)
 
         if (isPaused && !isGameOver && !isWin) {
             drawOverlay(canvas, context.getString(R.string.game_brick_break), context.getString(R.string.launch_hint))
@@ -594,17 +599,14 @@ class BrickBreakView @JvmOverloads constructor(
 
     private fun drawHud(canvas: Canvas) {
         paint.textSize = width / 35f
+        val hudY = height * 0.05f
         paint.textAlign = Paint.Align.LEFT
         paint.color = GamePalette.TEXT_PRIMARY
-        canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, 60f, paint)
-
-        paint.textAlign = Paint.Align.CENTER
-        paint.color = GamePalette.WARNING
-        canvas.drawText("${context.getString(R.string.lives_label)}: $lives", width / 2f, 60f, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.lives_label)}: $lives", 40f, hudY, paint)
 
         paint.textAlign = Paint.Align.RIGHT
         paint.color = GamePalette.SCORE
-        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", width - 40f, 60f, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", width - 40f, hudY, paint)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {

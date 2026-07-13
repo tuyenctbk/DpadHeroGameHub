@@ -36,6 +36,7 @@ class SnakeGameView @JvmOverloads constructor(
     private val PREFS_NAME = "snake_settings"
     private val KEY_DIFFICULTY = "difficulty_index"
     private var hintShowFrames = 0
+    private var isInitialized = false
 
     private val paint = Paint().apply {
         isAntiAlias = true
@@ -102,8 +103,15 @@ class SnakeGameView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        resetGame()
         animationHandler.post(animationRunnable)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0 && !isInitialized) {
+            resetGame()
+            isInitialized = true
+        }
     }
 
     override fun startGame() {

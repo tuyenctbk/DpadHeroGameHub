@@ -32,6 +32,7 @@ class RoadRacerView @JvmOverloads constructor(
     private val KEY_DENSITY = "traffic_density_index"
     private var trafficDensity = 1 // 0: Low, 1: Normal, 2: High
     private var hintShowFrames = 0
+    private var isInitialized = false
     private var gameSpeed = 10f
     
     private val playerWidth = 80f
@@ -80,8 +81,15 @@ class RoadRacerView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        resetGame()
         handler.post(animRunnable)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0 && !isInitialized) {
+            resetGame()
+            isInitialized = true
+        }
     }
 
     override fun startGame() {
@@ -335,17 +343,18 @@ class RoadRacerView @JvmOverloads constructor(
         paint.color = Color.WHITE
         paint.textSize = 40f
         paint.style = Paint.Style.FILL
+        val hudY = height * 0.05f
+        
         paint.textAlign = Paint.Align.LEFT
-        val hudX = Math.round(40f).toFloat()
-        val hudY = Math.round(60f).toFloat()
-        canvas.drawText("${context.getString(R.string.score_label)}: $score", hudX, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
+        
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.LTGRAY
         canvas.drawText("${context.getString(R.string.level_label)}: ${trafficDensity + 1}", width / 2f, hudY, paint)
 
         paint.textAlign = Paint.Align.RIGHT
-        val bestX = Math.round(width - 40f).toFloat()
-        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", bestX, hudY, paint)
+        paint.color = Color.WHITE
+        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", width - 40f, hudY, paint)
 
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {

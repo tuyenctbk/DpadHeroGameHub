@@ -32,6 +32,7 @@ class Lines98View @JvmOverloads constructor(
     private var selectedY = -1
     private var cursorX = 4
     private var cursorY = 4
+    private var isInitialized = false
 
     private var pulseFactor = 1.0f
     private var pulseDirection = 1
@@ -70,8 +71,15 @@ class Lines98View @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        resetGame()
         handler.post(animRunnable)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0 && !isInitialized) {
+            resetGame()
+            isInitialized = true
+        }
     }
 
     override fun startGame() {
@@ -478,31 +486,36 @@ class Lines98View @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
         paint.textSize = 40f
-        val hudY1 = Math.round(80f).toFloat()
-        val hudY2 = Math.round(130f).toFloat()
+        val hudY1 = height * 0.05f
+        
+        paint.textAlign = Paint.Align.LEFT
         canvas.drawText("${context.getString(R.string.score_label)}: $score", 50f, hudY1, paint)
-        canvas.drawText("${context.getString(R.string.high_score_label)}: ${ScoreManager.getHighScore(context, gameKey, colorCount)}", 50f, hudY2, paint)
-
+        
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.LTGRAY
         canvas.drawText("${context.getString(R.string.level_label)}: ${colorCount}", width / 2f, hudY1, paint)
-        paint.textAlign = Paint.Align.LEFT
-
+        
+        paint.textAlign = Paint.Align.RIGHT
+        paint.color = Color.WHITE
+        canvas.drawText("${context.getString(R.string.best_label)}: ${ScoreManager.getHighScore(context, gameKey, colorCount)}", width - 50f, hudY1, paint)
+        
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT
             paint.textSize = 28f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 50f, hudY2 + 50f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 50f, hudY1 + 50f, paint)
             paint.alpha = 255
         }
 
         // Next Balls
-        canvas.drawText("${context.getString(R.string.next_label)}:", width - 300f, hudY1, paint)
+        paint.textAlign = Paint.Align.RIGHT
+        val nextLabel = context.getString(R.string.next_label)
+        canvas.drawText("$nextLabel:", width - 250f, hudY1 + 60f, paint)
         for (i in nextBalls.indices) {
             paint.color = ballColors[nextBalls[i] - 1]
-            canvas.drawCircle(width - 150f + i * 60f, hudY1 - 10f, 20f, paint)
+            canvas.drawCircle(width - 200f + i * 50f, hudY1 + 50f, 15f, paint)
         }
 
         if (isGameOver) {

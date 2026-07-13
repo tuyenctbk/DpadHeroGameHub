@@ -33,6 +33,7 @@ class FlappyHeroView @JvmOverloads constructor(
     private val PREFS_NAME = "flappy_hero_settings"
     private val KEY_DIFFICULTY = "difficulty_index"
     private var hintShowFrames = 0
+    private var isInitialized = false
 
     private var birdY = 0f
     private var birdV = 0f
@@ -93,8 +94,15 @@ class FlappyHeroView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        resetGame()
         animHandler.post(animRunnable)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0 && !isInitialized) {
+            resetGame()
+            isInitialized = true
+        }
     }
 
     override fun startGame() {
@@ -350,7 +358,7 @@ class FlappyHeroView @JvmOverloads constructor(
         paint.textSize = 40f
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        val hudY = Math.round(60f).toFloat()
+        val hudY = height * 0.05f
         canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)

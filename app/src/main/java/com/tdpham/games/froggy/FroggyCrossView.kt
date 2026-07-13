@@ -42,6 +42,7 @@ class FroggyCrossView @JvmOverloads constructor(
     private val KEY_DIFFICULTY = "difficulty_index"
     private var currentDifficultyIndex = 1
     private var hintShowFrames = 0
+    private var isInitialized = false
     private val animHandler = Handler(Looper.getMainLooper())
     private val animRunnable = object : Runnable {
         override fun run() {
@@ -75,8 +76,15 @@ class FroggyCrossView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        resetGame()
         animHandler.post(animRunnable)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0 && !isInitialized) {
+            resetGame()
+            isInitialized = true
+        }
     }
 
     override fun onDetachedFromWindow() {
@@ -352,11 +360,13 @@ class FroggyCrossView @JvmOverloads constructor(
         paint.color = Color.WHITE
         paint.textSize = 36f
         paint.style = Paint.Style.FILL
+        val hudY = height * 0.05f
+        
         paint.textAlign = Paint.Align.LEFT
-        val hudY = Math.round(40f).toFloat()
-        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.lives_label)}: $lives", 20f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.lives_label)}: $lives", 40f, hudY, paint)
+        
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 20f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.LTGRAY
@@ -368,7 +378,7 @@ class FroggyCrossView @JvmOverloads constructor(
             paint.textSize = 28f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 20f, hudY + 45f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 45f, paint)
             paint.alpha = 255
         }
 

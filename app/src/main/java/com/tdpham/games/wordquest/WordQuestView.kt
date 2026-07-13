@@ -55,6 +55,7 @@ class WordQuestView @JvmOverloads constructor(
     private val KEY_CATEGORY = "selected_category_index"
     private var currentCategoryIndex = 0
     private var hintShowFrames = 0
+    private var isInitialized = false
     private val cellRect = RectF()
     private val keyRect = RectF()
     private val animHandler = Handler(Looper.getMainLooper())
@@ -81,8 +82,15 @@ class WordQuestView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        resetGame()
         animHandler.post(animRunnable)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0 && !isInitialized) {
+            resetGame()
+            isInitialized = true
+        }
     }
 
     override fun onDetachedFromWindow() {
@@ -394,7 +402,7 @@ class WordQuestView @JvmOverloads constructor(
         paint.textSize = 30f
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        val hudY = Math.round(40f).toFloat()
+        val hudY = height * 0.05f
         canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)

@@ -17,12 +17,12 @@ IMPLEMENTATION STATUS:
 - Tetris (Rank 2): Starting Level (1-10).
 - Mental Math (Rank 11): Difficulty Mode (Easy, Normal, Hard).
 
-[TODO] BATCH 2:
-- Flappy Hero (Rank 6): Difficulty (Easy, Normal, Hard - gap/speed).
-- Brick Break (Rank 8): Paddle Size (Big, Medium, Small).
+[DONE] BATCH 2:
+- Flappy Hero (Rank 6): Difficulty (Easy, Normal, Hard - gap/speed). Fixed instant death bug.
+- Brick Break (Rank 8): Paddle Size (Big, Medium, Small). Fixed HUD/Touch overlap.
 - Lines 98 (Rank 10): Board Difficulty (Number of colors).
 
-[TODO] BATCH 3:
+[DONE] BATCH 3:
 - Word Quest (Rank 14): Category Selection.
 - Road Racer (Rank 15): Traffic Density (Low, Medium, High).
 

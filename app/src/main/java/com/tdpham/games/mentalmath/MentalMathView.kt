@@ -48,6 +48,7 @@ class MentalMathView @JvmOverloads constructor(
     private val KEY_DIFFICULTY = "difficulty_index"
     private var currentMode = 1 // 0:Easy, 1:Normal, 2:Hard
     private var hintShowFrames = 0
+    private var isInitialized = false
 
     private var question = ""
     private var correctAnswer = 0
@@ -61,8 +62,15 @@ class MentalMathView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        resetGame()
         animHandler.post(animRunnable)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0 && !isInitialized) {
+            resetGame()
+            isInitialized = true
+        }
     }
 
     override fun onDetachedFromWindow() {
@@ -349,20 +357,11 @@ class MentalMathView @JvmOverloads constructor(
         paint.color = Color.WHITE
         paint.textSize = 38f
         paint.style = Paint.Style.FILL
+        val hudY = height * 0.05f
+        
         paint.textAlign = Paint.Align.LEFT
-        val hudY = Math.round(60f).toFloat()
         canvas.drawText("${context.getString(R.string.stage_label)}: $stage", 40f, hudY, paint)
         
-        // Quick Hint (Top/Left)
-        if (hintShowFrames > 0) {
-            paint.textAlign = Paint.Align.LEFT
-            paint.textSize = 28f
-            paint.color = Color.WHITE
-            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 80f, paint)
-            paint.alpha = 255
-        }
-
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.LTGRAY
         val modeStr = context.getString(when(currentMode) {
@@ -373,7 +372,18 @@ class MentalMathView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.mode_label)}: $modeStr", width / 2f, hudY, paint)
 
         paint.textAlign = Paint.Align.RIGHT
+        paint.color = Color.WHITE
         canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
+
+        // Quick Hint (Top/Left)
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 80f, paint)
+            paint.alpha = 255
+        }
 
         // Timer bar
         if (!isReviewing && !gameOver && !isPaused) {
