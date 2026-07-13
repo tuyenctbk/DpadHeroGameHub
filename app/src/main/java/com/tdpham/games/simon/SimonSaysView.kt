@@ -40,6 +40,7 @@ class SimonSaysView @JvmOverloads constructor(
     private val KEY_SPEED = "speed_index"
     private var speedIndex = 1
     private var hintShowFrames = 0
+    private var isInitialized = false
 
     private val colors = arrayOf(
         Color.YELLOW, // Up
@@ -51,7 +52,14 @@ class SimonSaysView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        resetGame()
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0 && !isInitialized) {
+            resetGame()
+            isInitialized = true
+        }
     }
 
     override fun startGame() {
@@ -295,7 +303,7 @@ class SimonSaysView @JvmOverloads constructor(
         paint.textSize = 40f
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        val hudY = Math.round(60f).toFloat()
+        val hudY = height * 0.05f
         canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
@@ -324,10 +332,10 @@ class SimonSaysView @JvmOverloads constructor(
         val centerX = Math.round(width / 2f).toFloat()
         if (isShowingSequence) {
             paint.color = Color.YELLOW
-            canvas.drawText(context.getString(R.string.watch_hint), centerX, hudY, paint)
+            canvas.drawText(context.getString(R.string.watch_hint), centerX, hudY + 60f, paint)
         } else if (!gamePaused && !gameOver) {
             paint.color = Color.GREEN
-            canvas.drawText(context.getString(R.string.your_turn_hint), centerX, hudY, paint)
+            canvas.drawText(context.getString(R.string.your_turn_hint), centerX, hudY + 60f, paint)
         }
 
         if (gameOver) {
