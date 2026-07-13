@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
-        android:text="T-REX SETTINGS"
+        android:text="@string/game_trex"
         android:textColor="#FFEB3B"
         android:textSize="26sp"
         android:textStyle="bold"
@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Character"
+            android:text="@string/trex_character_label"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="RANDOM"
+            android:text="@string/trex_random"
             android:textColor="#4FC3F7"
             android:textSize="15sp" />
     </LinearLayout>
@@ -57,7 +57,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time of Day"
+            android:text="@string/trex_time_of_day"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="RANDOM"
+            android:text="@string/trex_random"
             android:textColor="#4FC3F7"
             android:textSize="15sp" />
     </LinearLayout>
@@ -85,7 +85,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Season"
+            android:text="@string/trex_season"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -94,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="RANDOM"
+            android:text="@string/trex_random"
             android:textColor="#4FC3F7"
             android:textSize="15sp" />
     </LinearLayout>
@@ -113,7 +113,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Weather"
+            android:text="@string/trex_weather"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -122,7 +122,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="RANDOM"
+            android:text="@string/trex_random"
             android:textColor="#4FC3F7"
             android:textSize="15sp" />
     </LinearLayout>
@@ -133,7 +133,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:backgroundTint="#333333"
-        android:text="DONE"
+        android:text="@string/trex_done"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
 

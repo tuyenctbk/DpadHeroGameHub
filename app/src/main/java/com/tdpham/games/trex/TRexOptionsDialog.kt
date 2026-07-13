@@ -28,13 +28,14 @@ object TRexOptionsDialog {
         val charLayout = dialog.findViewById<LinearLayout>(R.id.opt_char_layout)
         val charValue = dialog.findViewById<TextView>(R.id.opt_char_value)
         
-        val characters = arrayOf("RANDOM", "DADDY", "NINJA", "ASTRONAUT", "BABY", "GRANDPA", "SCIENTIST", "PIRATE", "MUMMY", "TEENAGER", "CHEF", "ATHLETE", "DRAGON", "ZOMBIE", "ROBOT", "KING")
+        // Move RANDOM to the end for a better default experience
+        val characters = arrayOf("DADDY", "NINJA", "ASTRONAUT", "BABY", "GRANDPA", "SCIENTIST", "PIRATE", "MUMMY", "TEENAGER", "CHEF", "ATHLETE", "DRAGON", "ZOMBIE", "ROBOT", "KING", "RANDOM")
         
         fun getCharDisplayName(key: String): String {
-            if (key == "RANDOM") return "RANDOM"
+            if (key == "RANDOM") return context.getString(R.string.trex_random)
             val resId = when(key) {
                 "DADDY" -> R.string.trex_daddy
-                "NINJA" -> R.string.trex_athlete // Shared
+                "NINJA" -> R.string.trex_ninja
                 "ASTRONAUT" -> R.string.trex_astronaut
                 "BABY" -> R.string.trex_baby
                 "GRANDPA" -> R.string.trex_grandpa
@@ -56,10 +57,10 @@ object TRexOptionsDialog {
         fun updateCharText() {
             val mode = prefs.getString("trex_char_mode", "specific")
             if (mode == "random") {
-                charValue.text = "RANDOM"
+                charValue.text = context.getString(R.string.trex_random)
             } else {
                 val index = prefs.getInt("selected_char_index", 0)
-                val key = if (index >= 0 && index < characters.size - 1) characters[index + 1] else "DADDY"
+                val key = if (index >= 0 && index < characters.size - 1) characters[index] else "DADDY"
                 charValue.text = getCharDisplayName(key)
             }
         }
@@ -85,7 +86,13 @@ object TRexOptionsDialog {
         val timeValue = dialog.findViewById<TextView>(R.id.opt_time_value)
         val timeModes = arrayOf("random", "day", "night")
         fun updateTimeText() {
-            timeValue.text = prefs.getString("trex_time_mode", "random")?.uppercase()
+            val mode = prefs.getString("trex_time_mode", "random")
+            val resId = when(mode) {
+                "day" -> R.string.trex_day
+                "night" -> R.string.trex_night
+                else -> R.string.trex_random
+            }
+            timeValue.text = context.getString(resId).uppercase()
         }
         updateTimeText()
         timeLayout.setOnClickListener {
@@ -101,7 +108,15 @@ object TRexOptionsDialog {
         val seasonValue = dialog.findViewById<TextView>(R.id.opt_season_value)
         val seasonModes = arrayOf("random", "spring", "summer", "autumn", "winter")
         fun updateSeasonText() {
-            seasonValue.text = prefs.getString("trex_season_mode", "random")?.uppercase()
+            val mode = prefs.getString("trex_season_mode", "random")
+            val resId = when(mode) {
+                "spring" -> R.string.trex_spring
+                "summer" -> R.string.trex_summer
+                "autumn" -> R.string.trex_autumn
+                "winter" -> R.string.trex_winter
+                else -> R.string.trex_random
+            }
+            seasonValue.text = context.getString(resId).uppercase()
         }
         updateSeasonText()
         seasonLayout.setOnClickListener {
@@ -117,7 +132,14 @@ object TRexOptionsDialog {
         val weatherValue = dialog.findViewById<TextView>(R.id.opt_weather_value)
         val weatherModes = arrayOf("random", "sunny", "rainy", "snowy")
         fun updateWeatherText() {
-            weatherValue.text = prefs.getString("trex_weather_mode", "random")?.uppercase()
+            val mode = prefs.getString("trex_weather_mode", "random")
+            val resId = when(mode) {
+                "sunny" -> R.string.trex_sunny
+                "rainy" -> R.string.trex_rainy
+                "snowy" -> R.string.trex_snowy
+                else -> R.string.trex_random
+            }
+            weatherValue.text = context.getString(resId).uppercase()
         }
         updateWeatherText()
         weatherLayout.setOnClickListener {

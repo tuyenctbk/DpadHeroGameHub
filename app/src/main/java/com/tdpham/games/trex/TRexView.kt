@@ -56,23 +56,24 @@ class TRexView @JvmOverloads constructor(
         val gravityMult: Float = 1.0f,
         val scoreMult: Float = 1.0f,
         val canDoubleJump: Boolean = false,
-        val abilityDesc: String = ""
+        val strongPointRes: Int,
+        val weakPointRes: Int
     ) {
-        DADDY(6.5f, -30f, scoreMult = 1.2f, abilityDesc = "Score x1.2"),
-        NINJA(6.0f, -31f, canDoubleJump = true, abilityDesc = "Double Jump"),
-        ASTRONAUT(6.0f, -30f, gravityMult = 0.6f, abilityDesc = "Low Gravity"),
-        BABY(3.5f, -26f, scoreMult = 0.8f, abilityDesc = "Tiny Hitbox"),
-        GRANDPA(5.8f, -24f, scoreMult = 1.5f, abilityDesc = "Score x1.5 / Slow"),
-        SCIENTIST(5.8f, -28f, scoreMult = 1.3f, abilityDesc = "Score x1.3"),
-        PIRATE(6.2f, -33f, abilityDesc = "Strong Jump"),
-        MUMMY(6.0f, -28f, scoreMult = 1.1f, abilityDesc = "Score x1.1"),
-        TEENAGER(5.5f, -29f, abilityDesc = "Fast Runner"),
-        CHEF(6.0f, -28f, scoreMult = 1.25f, abilityDesc = "Score x1.25"),
-        ATHLETE(6.0f, -32f, gravityMult = 1.1f, abilityDesc = "Fast Fall / High Jump"),
-        DRAGON(7.0f, -31f, scoreMult = 1.4f, abilityDesc = "Giant / Score x1.4"),
-        ZOMBIE(6.0f, -25f, scoreMult = 2.0f, abilityDesc = "Slow / Score x2.0"),
-        ROBOT(6.0f, -29f, gravityMult = 0.8f, abilityDesc = "Steady Physics"),
-        KING(6.5f, -30f, scoreMult = 1.8f, abilityDesc = "Royalty / Score x1.8")
+        DADDY(6.5f, -30f, scoreMult = 1.2f, strongPointRes = R.string.trex_point_bonus_score, weakPointRes = R.string.trex_point_large_hitbox),
+        NINJA(6.0f, -31f, canDoubleJump = true, strongPointRes = R.string.trex_point_double_jump, weakPointRes = R.string.trex_point_fast_fall),
+        ASTRONAUT(6.0f, -30f, gravityMult = 0.6f, strongPointRes = R.string.trex_point_low_gravity, weakPointRes = R.string.trex_point_slow_landing),
+        BABY(3.5f, -26f, scoreMult = 0.8f, strongPointRes = R.string.trex_point_tiny_hitbox, weakPointRes = R.string.trex_point_short_jump),
+        GRANDPA(5.8f, -24f, scoreMult = 1.5f, strongPointRes = R.string.trex_point_elite_score, weakPointRes = R.string.trex_point_slow_movement),
+        SCIENTIST(5.8f, -28f, scoreMult = 1.3f, strongPointRes = R.string.trex_point_steady_score, weakPointRes = R.string.trex_point_average_agility),
+        PIRATE(6.2f, -33f, strongPointRes = R.string.trex_point_power_jump, weakPointRes = R.string.trex_point_heavy_body),
+        MUMMY(6.0f, -28f, scoreMult = 1.1f, strongPointRes = R.string.trex_point_stable_run, weakPointRes = R.string.trex_point_rigid_physics),
+        TEENAGER(5.5f, -29f, strongPointRes = R.string.trex_point_fast_reflexes, weakPointRes = R.string.trex_point_low_weight),
+        CHEF(6.0f, -28f, scoreMult = 1.25f, strongPointRes = R.string.trex_point_balanced, weakPointRes = R.string.trex_point_standard),
+        ATHLETE(6.0f, -32f, gravityMult = 1.1f, strongPointRes = R.string.trex_point_high_jump, weakPointRes = R.string.trex_point_fast_fall),
+        DRAGON(7.0f, -31f, scoreMult = 1.4f, strongPointRes = R.string.trex_point_giant_stature, weakPointRes = R.string.trex_point_huge_hitbox),
+        ZOMBIE(6.0f, -25f, scoreMult = 2.0f, strongPointRes = R.string.trex_point_max_score, weakPointRes = R.string.trex_point_very_slow),
+        ROBOT(6.0f, -29f, gravityMult = 0.8f, strongPointRes = R.string.trex_point_steady_physics, weakPointRes = R.string.trex_point_no_momentum),
+        KING(6.5f, -30f, scoreMult = 1.8f, strongPointRes = R.string.trex_point_royal_bonus, weakPointRes = R.string.trex_point_visible_target)
     }
 
     private var currentMember = DinoMember.DADDY
@@ -227,7 +228,7 @@ class TRexView @JvmOverloads constructor(
         applyMemberProperties()
         memberName = context.getString(when(currentMember) {
             DinoMember.DADDY -> R.string.trex_daddy
-            DinoMember.NINJA -> R.string.trex_athlete 
+            DinoMember.NINJA -> R.string.trex_ninja
             DinoMember.ASTRONAUT -> R.string.trex_astronaut
             DinoMember.BABY -> R.string.trex_baby
             DinoMember.GRANDPA -> R.string.trex_grandpa
@@ -306,6 +307,9 @@ class TRexView @JvmOverloads constructor(
                 if (isPaused && !isGameOver) {
                     selectedMemberIndex = (selectedMemberIndex - 1 + DinoMember.entries.size) % DinoMember.entries.size
                     currentMember = DinoMember.entries[selectedMemberIndex]
+                    // Force specific mode when using arrows
+                    val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                    prefs.edit().putString("trex_char_mode", "specific").apply()
                     saveSettings()
                     applyMemberProperties()
                     invalidate()
@@ -316,6 +320,9 @@ class TRexView @JvmOverloads constructor(
                 if (isPaused && !isGameOver) {
                     selectedMemberIndex = (selectedMemberIndex + 1) % DinoMember.entries.size
                     currentMember = DinoMember.entries[selectedMemberIndex]
+                    // Force specific mode when using arrows
+                    val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                    prefs.edit().putString("trex_char_mode", "specific").apply()
                     saveSettings()
                     applyMemberProperties()
                     invalidate()
@@ -434,7 +441,7 @@ class TRexView @JvmOverloads constructor(
         dinoVelocityY += gravity * currentMember.gravityMult
         dinoY += dinoVelocityY
         
-        val dinoHeight = if (isDucking) 16 * dinoScale else 23 * dinoScale
+        val dinoHeight = if (isDucking) 12 * dinoScale else 23 * dinoScale
         val actualGroundY = height * groundY - dinoHeight
         if (dinoY >= actualGroundY) {
             dinoY = actualGroundY
@@ -824,7 +831,7 @@ class TRexView @JvmOverloads constructor(
     private fun checkCollision(obs: Obstacle): Boolean {
         if (obs.type == ObstacleType.CANYON) {
             // Special collision for canyons: lethal if Dino is on ground within canyon X bounds
-            val dinoHeight = if (isDucking) 16 * dinoScale else 23 * dinoScale
+            val dinoHeight = if (isDucking) 12 * dinoScale else 23 * dinoScale
             val actualGroundY = height * groundY - dinoHeight
             val isOnGround = dinoY >= actualGroundY - 5f
             
@@ -837,7 +844,7 @@ class TRexView @JvmOverloads constructor(
             return false
         }
         
-        val dinoHeight = if (isDucking) 16 * dinoScale else 23 * dinoScale
+        val dinoHeight = if (isDucking) 12 * dinoScale else 23 * dinoScale
         dinoRect.set(100f, dinoY, 100f + 25 * dinoScale, dinoY + dinoHeight)
         obsRect.set(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height)
         dinoRect.inset(15f, 10f)
@@ -1047,7 +1054,7 @@ class TRexView @JvmOverloads constructor(
             paint.color = Color.RED
             paint.textSize = 60f
             paint.textAlign = Paint.Align.CENTER
-            canvas.drawText("EARTHQUAKE!", width / 2f, height * 0.3f, paint)
+            canvas.drawText(context.getString(R.string.trex_earthquake), width / 2f, height * 0.3f, paint)
         }
         
         // Earthquake warning
@@ -1055,7 +1062,7 @@ class TRexView @JvmOverloads constructor(
             paint.color = Color.RED
             paint.textSize = 60f
             paint.textAlign = Paint.Align.CENTER
-            canvas.drawText("EARTHQUAKE!", width / 2f, height * 0.3f, paint)
+            canvas.drawText(context.getString(R.string.trex_earthquake), width / 2f, height * 0.3f, paint)
         }
 
         canvas.restore()
@@ -1118,7 +1125,7 @@ class TRexView @JvmOverloads constructor(
             paint.textSize = 80f
             paint.color = textColor
             paint.setShadowLayer(5f, 2f, 2f, if (isNightMode) Color.BLACK else Color.WHITE)
-            canvas.drawText("SELECT CHARACTER", width / 2f, height / 2f - 180f, paint)
+            canvas.drawText(context.getString(R.string.trex_select_character), width / 2f, height / 2f - 180f, paint)
             
             // Draw current selection preview
             val member = DinoMember.entries[selectedMemberIndex]
@@ -1132,7 +1139,7 @@ class TRexView @JvmOverloads constructor(
             paint.textSize = 50f
             val name = context.getString(when(member) {
                 DinoMember.DADDY -> R.string.trex_daddy
-                DinoMember.NINJA -> R.string.trex_athlete
+                DinoMember.NINJA -> R.string.trex_ninja
                 DinoMember.ASTRONAUT -> R.string.trex_astronaut
                 DinoMember.BABY -> R.string.trex_baby
                 DinoMember.GRANDPA -> R.string.trex_grandpa
@@ -1149,9 +1156,12 @@ class TRexView @JvmOverloads constructor(
             })
             canvas.drawText(name, width / 2f, height / 2f + 140f, paint)
             
-            paint.textSize = 35f
-            paint.color = if (isNightMode) Color.LTGRAY else Color.DKGRAY
-            canvas.drawText(member.abilityDesc, width / 2f, height / 2f + 190f, paint)
+            paint.textSize = 32f
+            paint.color = Color.parseColor("#4CAF50") // Green for Strong
+            canvas.drawText("${context.getString(R.string.trex_strong_prefix)}${context.getString(member.strongPointRes)}", width / 2f, height / 2f + 185f, paint)
+            
+            paint.color = Color.parseColor("#FF5252") // Red for Weak
+            canvas.drawText("${context.getString(R.string.trex_weak_prefix)}${context.getString(member.weakPointRes)}", width / 2f, height / 2f + 225f, paint)
             
             // Arrows
             paint.textSize = 60f
@@ -1160,11 +1170,11 @@ class TRexView @JvmOverloads constructor(
             canvas.drawText(">", width / 2f + 200f, height / 2f + 30f, paint)
             
             paint.textSize = 35f
-            canvas.drawText(context.getString(R.string.start_game), width / 2f, height / 2f + 250f, paint)
+            canvas.drawText(context.getString(R.string.start_game), width / 2f, height / 2f + 270f, paint)
             
             paint.textSize = 28f
             paint.color = if (isNightMode) Color.GRAY else Color.LTGRAY
-            canvas.drawText("Press [MENU] for Options", width / 2f, height / 2f + 290f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), width / 2f, height / 2f + 310f, paint)
         } else {
             paint.textSize = 90f
             paint.color = if (isGameOver) {

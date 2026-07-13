@@ -111,7 +111,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     private fun showMasteryHint() {
         val root = findViewById<android.view.ViewGroup>(android.R.id.content)
         val hintText = if (gameKey == "trex") {
-            "Press [INFO], [M] or [O] for Options"
+            getString(R.string.trex_press_menu_options)
         } else {
             getString(R.string.guide_hint_keys)
         }
