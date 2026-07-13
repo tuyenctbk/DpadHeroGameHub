@@ -86,9 +86,14 @@ class TRexView @JvmOverloads constructor(
     private var duckFrames = 0
     private var duckingProgress = 0f
     private var duckCooldownFrames = 0
+
+    // Cached Settings
+    private var timeMode = "random"
+    private var seasonMode = "random"
+    private var weatherMode = "random"
+    private var charMode = "specific"
     
     private var highScoreFlash = 0
-    private var isNewHighScoreBroken = false
     
     // Environment State
     private var isNightMode = Random().nextBoolean()
@@ -158,8 +163,12 @@ class TRexView @JvmOverloads constructor(
     private fun loadSettings() {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         
-        // Load Character Preference
-        val charMode = prefs.getString("trex_char_mode", "specific")
+        // Load Preferences
+        charMode = prefs.getString("trex_char_mode", "specific") ?: "specific"
+        timeMode = prefs.getString("trex_time_mode", "random") ?: "random"
+        seasonMode = prefs.getString("trex_season_mode", "random") ?: "random"
+        weatherMode = prefs.getString("trex_weather_mode", "random") ?: "random"
+
         if (charMode == "random") {
             selectedMemberIndex = random.nextInt(DinoMember.entries.size)
         } else {
@@ -167,15 +176,12 @@ class TRexView @JvmOverloads constructor(
         }
         currentMember = DinoMember.entries[selectedMemberIndex]
 
-        // Load Environment Preferences
-        val timeMode = prefs.getString("trex_time_mode", "random")
         isNightMode = when (timeMode) {
             "day" -> false
             "night" -> true
             else -> random.nextBoolean()
         }
 
-        val seasonMode = prefs.getString("trex_season_mode", "random")
         currentSeason = when (seasonMode) {
             "spring" -> Season.SPRING
             "summer" -> Season.SUMMER
@@ -184,13 +190,14 @@ class TRexView @JvmOverloads constructor(
             else -> Season.entries.random()
         }
 
-        val weatherMode = prefs.getString("trex_weather_mode", "random")
         currentWeather = when (weatherMode) {
             "sunny" -> Weather.SUNNY
             "rainy" -> Weather.RAINY
             "snowy" -> Weather.SNOWY
             else -> Weather.entries.random()
         }
+        
+        currentTheme = getEnvironmentTheme()
     }
 
     private fun saveSettings() {
@@ -672,11 +679,6 @@ class TRexView @JvmOverloads constructor(
         val now = System.currentTimeMillis()
         if (!force && now - lastEnvironmentChangeTime < ENVIRONMENT_CHANGE_INTERVAL) return
         
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val timeMode = prefs.getString("trex_time_mode", "random")
-        val seasonMode = prefs.getString("trex_season_mode", "random")
-        val weatherMode = prefs.getString("trex_weather_mode", "random")
-
         if (!force) {
             // Cycle properties only if set to "random"
             when(random.nextInt(3)) {
@@ -687,7 +689,7 @@ class TRexView @JvmOverloads constructor(
             lastEnvironmentChangeTime = now
             currentTheme = getEnvironmentTheme() // Cache new theme
         } else {
-            // Respect preferences on reset
+            // Respect cached settings on reset
             isNightMode = when (timeMode) {
                 "day" -> false
                 "night" -> true
@@ -1156,15 +1158,15 @@ class TRexView @JvmOverloads constructor(
             paint.textSize = 80f
             paint.color = textColor
             paint.setShadowLayer(5f, 2f, 2f, if (isNightMode) Color.BLACK else Color.WHITE)
-            // Move title much higher to avoid any tall accessories (King crown, Robot antenna)
-            canvas.drawText(context.getString(R.string.trex_select_character), width / 2f, height / 2f - 320f, paint)
+            // Move title higher to avoid antenna/accessory overlap
+            canvas.drawText(context.getString(R.string.trex_select_character), width / 2f, height / 2f - 350f, paint)
             
             // Draw current selection preview
             val member = DinoMember.entries[selectedMemberIndex]
-            val previewScale = 12f
+            val previewScale = 10f // Reduced scale for better fit
             val previewX = width / 2f - (25 * previewScale / 2f)
-            // Center the dino body higher to avoid overlapping with name text below
-            val previewY = height / 2f - 240f
+            // Center the dino body better
+            val previewY = height / 2f - 120f
             
             drawDinoPreview(canvas, previewX, previewY, previewScale, member)
             
@@ -1187,21 +1189,22 @@ class TRexView @JvmOverloads constructor(
                 DinoMember.ROBOT -> R.string.trex_robot
                 DinoMember.KING -> R.string.trex_king
             })
+            // Add a yellow glow to the focused character name
             paint.color = Color.parseColor("#FFEB3B")
             paint.setShadowLayer(10f, 0f, 0f, Color.argb(150, 255, 235, 59))
-            canvas.drawText(name, width / 2f, height / 2f + 160f, paint)
+            canvas.drawText(name, width / 2f, height / 2f + 140f, paint)
             paint.clearShadowLayer()
             
             paint.textSize = 34f
-            paint.color = Color.parseColor("#81C784")
-            canvas.drawText("${context.getString(R.string.trex_strong_prefix)}${context.getString(member.strongPointRes)}", width / 2f, height / 2f + 210f, paint)
+            paint.color = Color.parseColor("#81C784") // Lighter Green
+            canvas.drawText("${context.getString(R.string.trex_strong_prefix)}${context.getString(member.strongPointRes)}", width / 2f, height / 2f + 195f, paint)
             
-            paint.color = Color.parseColor("#E57373")
-            canvas.drawText("${context.getString(R.string.trex_weak_prefix)}${context.getString(member.weakPointRes)}", width / 2f, height / 2f + 250f, paint)
+            paint.color = Color.parseColor("#E57373") // Lighter Red
+            canvas.drawText("${context.getString(R.string.trex_weak_prefix)}${context.getString(member.weakPointRes)}", width / 2f, height / 2f + 245f, paint)
             
             paint.textSize = 38f
             paint.color = textColor
-            canvas.drawText(context.getString(R.string.start_game), width / 2f, height / 2f + 310f, paint)
+            canvas.drawText(context.getString(R.string.start_game), width / 2f, height / 2f + 320f, paint)
         } else {
             paint.textSize = 90f
             paint.color = if (isGameOver) {
