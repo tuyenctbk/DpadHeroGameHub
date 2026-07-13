@@ -748,9 +748,11 @@ class TRexView @JvmOverloads constructor(
         var maxHeightInGroup = 0f
 
         for (i in 0 until count) {
-            // Allow mixed obstacles in a group
+            // Allow mixed obstacles in a group, but logically filtered
             val type = if (i > 0 && isGroupable && random.nextBoolean()) {
-                val mixed = listOf(ObstacleType.CACTUS, ObstacleType.TREE, ObstacleType.ROCK, ObstacleType.STUMP)
+                val mixed = mutableListOf(ObstacleType.CACTUS, ObstacleType.TREE, ObstacleType.ROCK, ObstacleType.STUMP)
+                if (baseType == ObstacleType.CACTUS) mixed.remove(ObstacleType.TREE)
+                if (baseType == ObstacleType.TREE) mixed.remove(ObstacleType.CACTUS)
                 mixed.random()
             } else baseType
 
