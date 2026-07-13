@@ -64,11 +64,21 @@ class TRexView @JvmOverloads constructor(
         BABY(3.5f, -26f, scoreMult = 0.8f, abilityDesc = "Tiny Hitbox"),
         GRANDPA(5.8f, -24f, scoreMult = 1.5f, abilityDesc = "Score x1.5 / Slow"),
         SCIENTIST(5.8f, -28f, scoreMult = 1.3f, abilityDesc = "Score x1.3"),
-        PIRATE(6.2f, -33f, abilityDesc = "Strong Jump")
+        PIRATE(6.2f, -33f, abilityDesc = "Strong Jump"),
+        MUMMY(6.0f, -28f, scoreMult = 1.1f, abilityDesc = "Score x1.1"),
+        TEENAGER(5.5f, -29f, abilityDesc = "Fast Runner"),
+        CHEF(6.0f, -28f, scoreMult = 1.25f, abilityDesc = "Score x1.25"),
+        ATHLETE(6.0f, -32f, gravityMult = 1.1f, abilityDesc = "Fast Fall / High Jump"),
+        DRAGON(7.0f, -31f, scoreMult = 1.4f, abilityDesc = "Giant / Score x1.4"),
+        ZOMBIE(6.0f, -25f, scoreMult = 2.0f, abilityDesc = "Slow / Score x2.0"),
+        ROBOT(6.0f, -29f, gravityMult = 0.8f, abilityDesc = "Steady Physics"),
+        KING(6.5f, -30f, scoreMult = 1.8f, abilityDesc = "Royalty / Score x1.8")
     }
 
     private var currentMember = DinoMember.DADDY
     private var selectedMemberIndex = 0
+    private val PREFS_NAME = "trex_settings"
+    private val KEY_SELECTED_CHAR = "selected_char_index"
     private var memberName = ""
     private var nameShowFrames = 0
     private var hasDoubleJumped = false
@@ -137,7 +147,19 @@ class TRexView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
+        loadSettings()
         resetGame()
+    }
+
+    private fun loadSettings() {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        selectedMemberIndex = prefs.getInt(KEY_SELECTED_CHAR, 0).coerceIn(0, DinoMember.entries.size - 1)
+        currentMember = DinoMember.entries[selectedMemberIndex]
+    }
+
+    private fun saveSettings() {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().putInt(KEY_SELECTED_CHAR, selectedMemberIndex).apply()
     }
 
     override fun startGame() {
@@ -180,6 +202,14 @@ class TRexView @JvmOverloads constructor(
             DinoMember.GRANDPA -> R.string.trex_grandpa
             DinoMember.SCIENTIST -> R.string.trex_scientist
             DinoMember.PIRATE -> R.string.trex_pirate
+            DinoMember.MUMMY -> R.string.trex_mummy
+            DinoMember.TEENAGER -> R.string.trex_teenager
+            DinoMember.CHEF -> R.string.trex_chef
+            DinoMember.ATHLETE -> R.string.trex_athlete
+            DinoMember.DRAGON -> R.string.trex_dragon
+            DinoMember.ZOMBIE -> R.string.trex_zombie
+            DinoMember.ROBOT -> R.string.trex_robot
+            DinoMember.KING -> R.string.trex_king
         })
         nameShowFrames = 120 
         hasDoubleJumped = false
@@ -245,6 +275,7 @@ class TRexView @JvmOverloads constructor(
                 if (isPaused && !isGameOver) {
                     selectedMemberIndex = (selectedMemberIndex - 1 + DinoMember.entries.size) % DinoMember.entries.size
                     currentMember = DinoMember.entries[selectedMemberIndex]
+                    saveSettings()
                     applyMemberProperties()
                     invalidate()
                 }
@@ -254,6 +285,7 @@ class TRexView @JvmOverloads constructor(
                 if (isPaused && !isGameOver) {
                     selectedMemberIndex = (selectedMemberIndex + 1) % DinoMember.entries.size
                     currentMember = DinoMember.entries[selectedMemberIndex]
+                    saveSettings()
                     applyMemberProperties()
                     invalidate()
                 }
@@ -863,32 +895,33 @@ class TRexView @JvmOverloads constructor(
         canvas.drawLine(0f, lineY, width.toFloat(), lineY, paint)
         for (dot in groundDots) canvas.drawRect(dot.x, dot.y, dot.x + 4, dot.y + 4, paint)
 
-        // Draw Craters (Meteor impacts)
+        // Draw Craters (Meteor impacts -> Water Lakes)
         for (c in craters) {
-            if (isNightMode) {
-                // Night warning glow for craters
-                paint.shader = currentTheme?.let { theme ->
-                    RadialGradient(c.x + c.width / 2f, lineY + 20f, c.width * 0.8f,
-                        intArrayOf(Color.argb(180, 255, 87, 34), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
-                }
-                canvas.drawCircle(c.x + c.width / 2f, lineY + 20f, c.width * 0.8f, paint)
-                paint.shader = null
-            }
+            // Water Surface Glow
+            paint.shader = RadialGradient(c.x + c.width / 2f, lineY + 10f, c.width * 0.7f,
+                intArrayOf(Color.parseColor("#4FC3F7"), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
+            canvas.drawCircle(c.x + c.width / 2f, lineY + 10f, c.width * 0.7f, paint)
+            paint.shader = null
 
-            paint.color = Color.BLACK
-            paint.alpha = (c.alpha * 0.5f).toInt()
-            canvas.drawOval(c.x - 10, lineY - 15, c.x + c.width + 10, lineY + 60, paint) // Scorched area
-            
-            paint.color = Color.parseColor("#1A1A1B")
-            paint.alpha = c.alpha
+            // Lake Body (Blue Water)
+            paint.color = Color.parseColor("#0288D1")
+            paint.alpha = (c.alpha * 0.8f).toInt()
             pathBuffer.reset()
-            pathBuffer.moveTo(c.x, lineY - 5f)
-            pathBuffer.lineTo(c.x + c.width * 0.2f, lineY + 40f)
-            pathBuffer.lineTo(c.x + c.width * 0.5f, lineY + 80f)
-            pathBuffer.lineTo(c.x + c.width * 0.8f, lineY + 40f)
-            pathBuffer.lineTo(c.x + c.width, lineY - 5f)
+            pathBuffer.moveTo(c.x, lineY)
+            pathBuffer.lineTo(c.x + c.width * 0.2f, lineY + 30f)
+            pathBuffer.lineTo(c.x + c.width * 0.5f, lineY + 50f)
+            pathBuffer.lineTo(c.x + c.width * 0.8f, lineY + 30f)
+            pathBuffer.lineTo(c.x + c.width, lineY)
             pathBuffer.close()
             canvas.drawPath(pathBuffer, paint)
+
+            // Ripple effects
+            paint.color = Color.WHITE
+            paint.alpha = (c.alpha * 0.3f).toInt()
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = 2f
+            canvas.drawOval(c.x + 20f, lineY + 10f, c.x + c.width - 20f, lineY + 20f, paint)
+            paint.style = Paint.Style.FILL
         }
         paint.alpha = 255
 
@@ -1024,6 +1057,14 @@ class TRexView @JvmOverloads constructor(
                 DinoMember.GRANDPA -> R.string.trex_grandpa
                 DinoMember.SCIENTIST -> R.string.trex_scientist
                 DinoMember.PIRATE -> R.string.trex_pirate
+                DinoMember.MUMMY -> R.string.trex_mummy
+                DinoMember.TEENAGER -> R.string.trex_teenager
+                DinoMember.CHEF -> R.string.trex_chef
+                DinoMember.ATHLETE -> R.string.trex_athlete
+                DinoMember.DRAGON -> R.string.trex_dragon
+                DinoMember.ZOMBIE -> R.string.trex_zombie
+                DinoMember.ROBOT -> R.string.trex_robot
+                DinoMember.KING -> R.string.trex_king
             })
             canvas.drawText(name, width / 2f, height / 2f + 140f, paint)
             

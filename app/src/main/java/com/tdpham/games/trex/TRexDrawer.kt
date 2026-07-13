@@ -157,31 +157,21 @@ internal object TRexDrawer {
             }
             TRexView.ObstacleType.CANYON -> {
                 val lineY = canvas.height * 0.8f
-                if (isNightMode) {
-                    val key = "canyon_${obs.width}"
-                    paint.shader = shaderCache.getOrPut(key) {
-                        RadialGradient(obs.width / 2f, 120f, obs.width * 1.2f,
-                            intArrayOf(Color.argb(200, 255, 69, 0), Color.argb(100, 255, 160, 0), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
-                    }
-                    canvas.save()
-                    canvas.translate(obs.x, lineY)
-                    pathBuffer.reset()
-                    pathBuffer.moveTo(0f, -2f)
-                    when(obs.variant % 3) {
-                        0 -> { pathBuffer.lineTo(obs.width * 0.1f, 120f); pathBuffer.lineTo(obs.width * 0.9f, 120f) }
-                        1 -> pathBuffer.lineTo(obs.width * 0.5f, 150f)
-                        else -> {
-                            pathBuffer.lineTo(obs.width * 0.2f, 80f); pathBuffer.lineTo(obs.width * 0.4f, 140f)
-                            pathBuffer.lineTo(obs.width * 0.6f, 100f); pathBuffer.lineTo(obs.width * 0.8f, 130f)
-                        }
-                    }
-                    pathBuffer.lineTo(obs.width, -2f); pathBuffer.close()
-                    canvas.drawPath(pathBuffer, paint)
-                    canvas.restore()
-                    paint.shader = null
+                
+                // 1. Water Surface (Glow)
+                val glowKey = "water_glow_${obs.width}"
+                paint.shader = shaderCache.getOrPut(glowKey) {
+                    RadialGradient(obs.width / 2f, 10f, obs.width * 0.6f,
+                        intArrayOf(Color.parseColor("#81D4FA"), Color.TRANSPARENT), null, Shader.TileMode.CLAMP)
                 }
+                canvas.save()
+                canvas.translate(obs.x, lineY)
+                canvas.drawCircle(obs.width / 2f, 10f, obs.width * 0.6f, paint)
+                canvas.restore()
+                paint.shader = null
 
-                paint.color = theme.bgColor
+                // 2. Lake Body (Deep Blue Water)
+                paint.color = Color.parseColor("#0288D1")
                 pathBuffer.reset()
                 pathBuffer.moveTo(obs.x, lineY - 2f)
                 when(obs.variant % 3) {
@@ -195,16 +185,14 @@ internal object TRexDrawer {
                 pathBuffer.lineTo(obs.x + obs.width, lineY - 2f); pathBuffer.close()
                 canvas.drawPath(pathBuffer, paint)
                 
-                paint.color = theme.groundColor
-                paint.alpha = 180
+                // 3. Water surface line (Reflection)
+                paint.color = Color.WHITE
+                paint.alpha = 150
                 paint.style = Paint.Style.STROKE
-                paint.strokeWidth = 4f
-                canvas.drawPath(pathBuffer, paint)
+                paint.strokeWidth = 2f
+                canvas.drawLine(obs.x + 10f, lineY + 5f, obs.x + obs.width - 10f, lineY + 5f, paint)
                 
                 paint.style = Paint.Style.FILL
-                paint.color = theme.bgColor
-                paint.strokeWidth = 6f
-                canvas.drawLine(obs.x, lineY, obs.x + obs.width, lineY, paint)
                 paint.alpha = 255
             }
             TRexView.ObstacleType.STUMP -> {
@@ -329,6 +317,14 @@ internal object TRexDrawer {
         bodyColor = when(member) {
             "NINJA" -> Color.parseColor("#212121") // Stealthy Dark Gray
             "ASTRONAUT" -> Color.parseColor("#BDBDBD") // Silver/Moon color
+            "MUMMY" -> Color.parseColor("#FFF9C4") // Linen
+            "TEENAGER" -> Color.parseColor("#FFCA28") // Yellow
+            "CHEF" -> Color.WHITE
+            "ATHLETE" -> Color.parseColor("#FF5252") // Red
+            "DRAGON" -> Color.parseColor("#43A047") // Green
+            "ZOMBIE" -> Color.parseColor("#9E9D24") // Rotten Green
+            "ROBOT" -> Color.parseColor("#78909C") // Metallic
+            "KING" -> Color.parseColor("#D4AF37") // Gold
             else -> color // DADDY standard color
         }
 
@@ -443,6 +439,25 @@ internal object TRexDrawer {
             "PIRATE" -> {
                 paint.color = Color.BLACK; canvas.drawRect(headX - p, headY + 2*p, headX + 3*p, headY + 5*p, paint)
                 paint.strokeWidth = 0.8f * p; canvas.drawLine(headX - 4*p, headY + 3*p, headX + 12*p, headY + p, paint)
+            }
+            "MUMMY" -> {
+                paint.color = Color.parseColor("#BDBDBD")
+                for (i in 0..2) canvas.drawLine(headX, headY + i*3*p, headX + 10*p, headY + i*3*p, paint)
+            }
+            "KING" -> {
+                paint.color = Color.parseColor("#FFD600")
+                pathBuffer.reset(); pathBuffer.moveTo(headX, headY); pathBuffer.lineTo(headX, headY - 4*p)
+                pathBuffer.lineTo(headX + 5*p, headY - 8*p); pathBuffer.lineTo(headX + 10*p, headY - 4*p)
+                pathBuffer.lineTo(headX + 10*p, headY); pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
+            }
+            "ROBOT" -> {
+                paint.color = Color.RED; canvas.drawCircle(headX + 2*p, headY + 3*p, p, paint)
+                paint.color = Color.BLACK; canvas.drawRect(headX - p, headY - 4*p, headX + p, headY, paint)
+            }
+            "DRAGON" -> {
+                paint.color = Color.parseColor("#1B5E20")
+                pathBuffer.reset(); pathBuffer.moveTo(headX, headY); pathBuffer.lineTo(headX - 4*p, headY - 4*p)
+                pathBuffer.lineTo(headX, headY - 8*p); pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
             }
         }
 

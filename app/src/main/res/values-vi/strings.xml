@@ -222,4 +222,8 @@
     <string name="trex_pirate">Khủng Long Cướp Biển</string>
     <string name="trex_chef">Khủng Long Đầu Bếp</string>
     <string name="trex_astronaut">Khủng Long Phi Hành Gia</string>
+    <string name="trex_dragon">Khủng Long Rồng</string>
+    <string name="trex_zombie">Khủng Long Zombie</string>
+    <string name="trex_robot">Khủng Long Robot</string>
+    <string name="trex_king">Khủng Long Vua</string>
 </resources>
