@@ -41,6 +41,8 @@ class TetrisView @JvmOverloads constructor(
     private var gameOver = false
     private var currentVictoryWord = ""
     private var flashFrames = 0
+    private val linesClearing = mutableListOf<Int>()
+    private var lineClearAnimationTimer = 0
     private val particles = mutableListOf<GameEnvironment.Particle>()
     private val celebrationManager = CelebrationManager()
     private val screenShake = com.tdpham.games.common.ScreenShake()
@@ -52,13 +54,20 @@ class TetrisView @JvmOverloads constructor(
                 celebrationManager.update()
                 invalidate()
             }
+            if (linesClearing.isNotEmpty()) {
+                lineClearAnimationTimer--
+                if (lineClearAnimationTimer <= 0) {
+                    finalizeLineClear()
+                }
+                invalidate()
+            }
             animHandler.postDelayed(this, 50)
         }
     }
 
     private val tick = object : Runnable {
         override fun run() {
-            if (!paused && !gameOver) {
+            if (!paused && !gameOver && linesClearing.isEmpty()) {
                 if (!tryMove(current.r + 1, current.c, current.rot)) {
                     lockPiece()
                 }
@@ -67,6 +76,9 @@ class TetrisView @JvmOverloads constructor(
                 val currentLevel = (startLevel + score / 1000).coerceAtMost(15)
                 val delay = (450 - (currentLevel - 1) * 30).coerceAtLeast(80).toLong()
                 handler.postDelayed(this, delay)
+            } else if (!paused && !gameOver) {
+                // Keep ticking but skip movement while animating line clear
+                handler.postDelayed(this, 100)
             }
         }
     }
@@ -287,10 +299,8 @@ class TetrisView @JvmOverloads constructor(
     }
 
     private fun clearLines() {
-        var linesCleared = 0
-        var r = rows - 1
-        val fullLines = mutableListOf<Int>()
-        while (r >= 0) {
+        linesClearing.clear()
+        for (r in rows - 1 downTo 0) {
             var full = true
             for (c in 0 until cols) {
                 if (board[r][c] == 0) {
@@ -299,48 +309,65 @@ class TetrisView @JvmOverloads constructor(
                 }
             }
             if (full) {
-                linesCleared++
-                fullLines.add(r)
-                for (rr in r downTo 1) {
-                    for (cc in 0 until cols) board[rr][cc] = board[rr - 1][cc]
-                }
-                for (cc in 0 until cols) board[0][cc] = 0
-                // Stay on same row index to check the newly dropped line
-            } else {
-                r--
+                linesClearing.add(r)
             }
         }
-        if (linesCleared > 0) {
-            flashFrames = 3
-            screenShake.trigger(10, 8f + linesCleared * 4f)
-            
-            // Spawn particles for cleared lines
-            val cellSize = (height / (rows + 2)).coerceAtMost(width / (cols + 8)).toFloat()
-            for (lineY in fullLines) {
-                for (c in 0 until cols) {
-                    repeat(2) {
-                        val angle = Random.nextDouble() * 2.0 * Math.PI
-                        val speed = Random.nextFloat() * 0.4f + 0.1f
-                        particles.add(GameEnvironment.Particle(
-                            c.toFloat(), lineY.toFloat(), 
-                            speed,
-                            Math.cos(angle).toFloat() * speed,
-                            Random.nextFloat() * 4f + 2f,
-                            colorFor(Random.nextInt(7) + 1)
-                        ))
-                    }
-                }
-            }
 
-            score += when (linesCleared) {
-                1 -> 100
-                2 -> 300
-                3 -> 500
-                4 -> 800
-                else -> 1000
-            }
+        if (linesClearing.isNotEmpty()) {
+            lineClearAnimationTimer = 10 // ~500ms at 20fps-ish (animRunnable)
+            screenShake.trigger(10, 8f + linesClearing.size * 4f)
             SoundManager.playScore()
+            invalidate()
         }
+    }
+
+    private fun finalizeLineClear() {
+        if (linesClearing.isEmpty()) return
+        
+        score += when (linesClearing.size) {
+            1 -> 100
+            2 -> 300
+            3 -> 500
+            4 -> 800
+            else -> 1000
+        }
+
+        val linesToClear = linesClearing.sorted() // e.g., [18, 19]
+        
+        for (r in linesToClear) {
+            // Shift everything above r down by 1
+            for (rr in r downTo 1) {
+                for (cc in 0 until cols) {
+                    board[rr][cc] = board[rr - 1][cc]
+                }
+            }
+            for (cc in 0 until cols) board[0][cc] = 0
+        }
+
+        // Spawn particles at the end of animation
+        for (lineY in linesClearing) {
+            for (c in 0 until cols) {
+                repeat(2) {
+                    val angle = Random.nextDouble() * 2.0 * Math.PI
+                    val speed = Random.nextFloat() * 0.4f + 0.1f
+                    particles.add(GameEnvironment.Particle(
+                        c.toFloat(), lineY.toFloat(), 
+                        speed,
+                        Math.cos(angle).toFloat() * speed,
+                        Random.nextFloat() * 4f + 2f,
+                        colorFor(Random.nextInt(7) + 1)
+                    ))
+                }
+            }
+        }
+
+        linesClearing.clear()
+        lineClearAnimationTimer = 0
+        
+        // Resume tick if not paused
+        handler.removeCallbacks(tick)
+        handler.post(tick)
+        invalidate()
     }
 
     private fun spawnPieceData(): Piece {
@@ -459,7 +486,13 @@ class TetrisView @JvmOverloads constructor(
         for (r in 0 until rows) {
             for (c in 0 until cols) {
                 if (board[r][c] != 0) {
-                    drawBlock(canvas, offsetX + c * size, offsetY + r * size, size, colorFor(board[r][c]))
+                    if (linesClearing.contains(r)) {
+                        // Special animation for clearing lines
+                        val alpha = (lineClearAnimationTimer * 25).coerceIn(0, 255)
+                        drawBlock(canvas, offsetX + c * size, offsetY + r * size, size, Color.WHITE, alpha = alpha)
+                    } else {
+                        drawBlock(canvas, offsetX + c * size, offsetY + r * size, size, colorFor(board[r][c]))
+                    }
                 }
             }
         }
@@ -535,25 +568,26 @@ class TetrisView @JvmOverloads constructor(
         }
     }
 
-    private fun drawBlock(canvas: Canvas, x: Float, y: Float, size: Float, color: Int, isGhost: Boolean = false) {
+    private fun drawBlock(canvas: Canvas, x: Float, y: Float, size: Float, color: Int, isGhost: Boolean = false, alpha: Int = 255) {
         if (isGhost) {
             blockPaint.color = color
             blockPaint.style = Paint.Style.STROKE
             blockPaint.strokeWidth = 3f // Thicker stroke for ghost
-            blockPaint.alpha = 180 // More visible ghost
+            blockPaint.alpha = (180 * alpha / 255) // More visible ghost
             canvas.drawRect(x + 4, y + 4, x + size - 4, y + size - 4, blockPaint)
             
             blockPaint.style = Paint.Style.FILL
-            blockPaint.alpha = 40
+            blockPaint.alpha = (40 * alpha / 255)
             canvas.drawRect(x + 4, y + 4, x + size - 4, y + size - 4, blockPaint)
             blockPaint.alpha = 255
         } else {
             blockPaint.color = color
+            blockPaint.alpha = alpha
             blockPaint.style = Paint.Style.FILL
             canvas.drawRect(x + 1, y + 1, x + size - 1, y + size - 1, blockPaint)
             // Bevel effect
             blockPaint.color = Color.WHITE
-            blockPaint.alpha = 70
+            blockPaint.alpha = (70 * alpha / 255)
             canvas.drawRect(x + 2, y + 2, x + size * 0.35f, y + size * 0.35f, blockPaint)
             blockPaint.alpha = 255
         }
