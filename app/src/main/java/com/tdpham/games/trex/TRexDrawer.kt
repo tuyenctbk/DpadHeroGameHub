@@ -5,7 +5,6 @@ import com.tdpham.games.R
 
 internal object TRexDrawer {
 
-    // Shader caches to prevent constant allocation of native objects
     private val shaderCache = mutableMapOf<String, Shader>()
 
     fun drawObstacle(canvas: Canvas, obs: TRexView.Obstacle, theme: TRexView.Theme, paint: Paint, pathBuffer: Path, isNightMode: Boolean, animationFrame: Int, walkFrame: Int) {
@@ -27,7 +26,7 @@ internal object TRexDrawer {
                 }
 
                 if (obs.variant == 2) {
-                    paint.color = Color.parseColor("#F48FB1") // Pink
+                    paint.color = Color.parseColor("#F48FB1") 
                     canvas.drawCircle(centerX, obs.y, 8f, paint)
                     if (obs.height > 60f) {
                         canvas.drawCircle(centerX - stemW / 2 - 15f, obs.y + obs.height * 0.4f - 15f, 6f, paint)
@@ -48,7 +47,7 @@ internal object TRexDrawer {
                 
                 paint.color = theme.treeColor
                 when(obs.variant % 3) {
-                    0 -> { // Pine
+                    0 -> { 
                         pathBuffer.reset()
                         for (i in 0..2) {
                             val ty = obs.y + (i * obs.height * 0.2f)
@@ -60,12 +59,12 @@ internal object TRexDrawer {
                         pathBuffer.close()
                         canvas.drawPath(pathBuffer, paint)
                     }
-                    1 -> { // Round
+                    1 -> { 
                         canvas.drawCircle(obs.x + obs.width / 2f, obs.y + obs.height * 0.3f, obs.width * 0.5f, paint)
                         canvas.drawCircle(obs.x + obs.width * 0.3f, obs.y + obs.height * 0.45f, obs.width * 0.4f, paint)
                         canvas.drawCircle(obs.x + obs.width * 0.7f, obs.y + obs.height * 0.45f, obs.width * 0.4f, paint)
                     }
-                    else -> { // Pointy
+                    else -> { 
                         pathBuffer.reset()
                         pathBuffer.moveTo(obs.x + obs.width * 0.5f, obs.y)
                         pathBuffer.lineTo(obs.x, obs.y + obs.height * 0.7f)
@@ -157,10 +156,6 @@ internal object TRexDrawer {
             }
             TRexView.ObstacleType.CANYON -> {
                 val lineY = canvas.height * 0.8f
-                
-                // No more glowing or surface highlights. Just Blue Water.
-
-                // 1. Lake Body (Deep Blue Water)
                 paint.color = Color.parseColor("#0288D1")
                 pathBuffer.reset()
                 pathBuffer.moveTo(obs.x, lineY - 2f)
@@ -175,7 +170,6 @@ internal object TRexDrawer {
                 pathBuffer.lineTo(obs.x + obs.width, lineY - 2f); pathBuffer.close()
                 canvas.drawPath(pathBuffer, paint)
                 
-                // 2. Water surface line (Subtle Reflection)
                 paint.color = Color.WHITE
                 paint.alpha = 100
                 paint.style = Paint.Style.STROKE
@@ -269,12 +263,10 @@ internal object TRexDrawer {
                 canvas.save(); canvas.translate(obs.x, obs.y)
                 if (obs.variant % 2 != 0) canvas.scale(-1f, 1f, obs.width / 2f, obs.height / 2f)
                 
-                // Body & Tail
                 canvas.drawRoundRect(0f, 15*p, 25*p, 28*p, 6*p, 6*p, paint)
                 pathBuffer.reset(); pathBuffer.moveTo(0f, 18*p); pathBuffer.lineTo(-10*p, 22*p); pathBuffer.lineTo(0f, 26*p)
                 pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
 
-                // Head (Moved by headSway)
                 canvas.save(); canvas.translate(0f, headSway)
                 when(obs.variant % 3) {
                     0 -> { 
@@ -297,7 +289,6 @@ internal object TRexDrawer {
                 val eyeY = if (obs.variant % 3 == 0) 2*p else if (obs.variant % 3 == 1) 20*p else 12*p
                 canvas.drawRect(eyeX, eyeY, eyeX + 2*p, eyeY + 2*p, paint); canvas.restore()
 
-                // Legs
                 paint.color = dinoColor
                 val legH = if (walkFrame == 0) 5*p else 2*p
                 canvas.drawRect(5*p, 28*p, 9*p, 28*p + legH, paint); canvas.drawRect(16*p, 28*p, 20*p, 28*p + (7*p - legH), paint)
@@ -308,24 +299,22 @@ internal object TRexDrawer {
 
     fun drawDino(canvas: Canvas, x: Float, y: Float, color: Int, eyeColor: Int, 
                  p: Float, isGameOver: Boolean, causeOfDeath: TRexView.ObstacleType?, 
-                 isDucking: Boolean, duckingProgress: Float, isJumping: Boolean, walkFrame: Int,
-                 isNightMode: Boolean, animationFrame: Int, obstacles: List<TRexView.Obstacle>,
-                 paint: Paint, pathBuffer: Path, member: String) {
+                 walkFrame: Int, isNightMode: Boolean, animationFrame: Int, 
+                 obstacles: List<TRexView.Obstacle>, paint: Paint, pathBuffer: Path, member: String) {
         
         var bodyColor = color
-        // Special Colors per Member
         bodyColor = when(member) {
-            "NINJA" -> Color.parseColor("#212121") // Stealthy Dark Gray
-            "ASTRONAUT" -> Color.parseColor("#BDBDBD") // Silver/Moon color
-            "MUMMY" -> Color.parseColor("#FFF9C4") // Linen
-            "TEENAGER" -> Color.parseColor("#FFCA28") // Yellow
+            "NINJA" -> Color.parseColor("#212121") 
+            "ASTRONAUT" -> Color.parseColor("#BDBDBD") 
+            "MUMMY" -> Color.parseColor("#FFF9C4") 
+            "TEENAGER" -> Color.parseColor("#FFCA28") 
             "CHEF" -> Color.WHITE
-            "ATHLETE" -> Color.parseColor("#FF5252") // Red
-            "DRAGON" -> Color.parseColor("#43A047") // Green
-            "ZOMBIE" -> Color.parseColor("#9E9D24") // Rotten Green
-            "ROBOT" -> Color.parseColor("#78909C") // Metallic
-            "KING" -> Color.parseColor("#D4AF37") // Gold
-            else -> color // DADDY standard color
+            "ATHLETE" -> Color.parseColor("#FF5252") 
+            "DRAGON" -> Color.parseColor("#43A047") 
+            "ZOMBIE" -> Color.parseColor("#9E9D24") 
+            "ROBOT" -> Color.parseColor("#78909C") 
+            "KING" -> Color.parseColor("#D4AF37") 
+            else -> color 
         }
 
         if (isGameOver) {
@@ -345,8 +334,6 @@ internal object TRexDrawer {
         } else if (isGameOver) {
             val rotation = when {
                 causeOfDeath == TRexView.ObstacleType.PTEROSAUR -> -90f 
-                isJumping -> -35f 
-                isDucking -> 25f 
                 causeOfDeath == TRexView.ObstacleType.FIRE || causeOfDeath == TRexView.ObstacleType.METEOR -> 5f 
                 else -> 10f 
             }
@@ -356,30 +343,13 @@ internal object TRexDrawer {
         
         val pathPaint = Paint(paint)
         fun drawPaths() {
-            if (isDucking || duckingProgress > 0.1f) {
-                // SIMPLE CRAWLING: Low profile, no legs, everything close to ground
-                // Height: 12 to 18 (Total height 6)
-                pathBuffer.reset()
-                pathBuffer.moveTo(-20*p, 16*p) // Tail start
-                pathBuffer.lineTo(0f, 14*p)    // Body top
-                pathBuffer.lineTo(40*p, 14*p)  // Neck start
-                pathBuffer.lineTo(55*p, 11*p)  // Head top start
-                pathBuffer.lineTo(75*p, 11*p)  // Head front top
-                pathBuffer.lineTo(75*p, 18*p)  // Head front bottom (on ground)
-                pathBuffer.lineTo(0f, 18*p)    // Body bottom (on ground)
-                pathBuffer.lineTo(-20*p, 17*p) // Tail bottom
-                pathBuffer.close()
-                canvas.drawPath(pathBuffer, pathPaint)
-            } else {
-                // Standing shape: 0 to 18 (Total Height: 18)
-                pathBuffer.reset(); pathBuffer.moveTo(12*p, 0f); pathBuffer.lineTo(26*p, 0f); pathBuffer.lineTo(26*p, 8*p)
-                pathBuffer.lineTo(16*p, 8*p); pathBuffer.lineTo(16*p, 18*p); pathBuffer.lineTo(10*p, 18*p); pathBuffer.lineTo(10*p, 4*p)
-                pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
-                pathBuffer.reset(); pathBuffer.moveTo(0f, 8*p); pathBuffer.lineTo(16*p, 8*p); pathBuffer.lineTo(16*p, 18*p)
-                pathBuffer.lineTo(0f, 18*p); pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
-                pathBuffer.reset(); pathBuffer.moveTo(0f, 8*p); pathBuffer.lineTo(-14*p, 8*p); pathBuffer.lineTo(0f, 14*p)
-                pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
-            }
+            pathBuffer.reset(); pathBuffer.moveTo(12*p, 0f); pathBuffer.lineTo(26*p, 0f); pathBuffer.lineTo(26*p, 8*p)
+            pathBuffer.lineTo(16*p, 8*p); pathBuffer.lineTo(16*p, 18*p); pathBuffer.lineTo(10*p, 18*p); pathBuffer.lineTo(10*p, 4*p)
+            pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
+            pathBuffer.reset(); pathBuffer.moveTo(0f, 8*p); pathBuffer.lineTo(16*p, 8*p); pathBuffer.lineTo(16*p, 18*p)
+            pathBuffer.lineTo(0f, 18*p); pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
+            pathBuffer.reset(); pathBuffer.moveTo(0f, 8*p); pathBuffer.lineTo(-14*p, 8*p); pathBuffer.lineTo(0f, 14*p)
+            pathBuffer.close(); canvas.drawPath(pathBuffer, pathPaint)
         }
         val isBrightSkin = bodyColor == Color.WHITE || bodyColor == Color.parseColor("#BDBDBD")
         if (isBrightSkin) {
@@ -390,75 +360,54 @@ internal object TRexDrawer {
         }
         pathPaint.style = Paint.Style.FILL; pathPaint.color = bodyColor; pathPaint.alpha = 255; drawPaths()
         
-        // Eye and Legs
-        if (isDucking || duckingProgress > 0.1f) {
-            // Crawling Eye (Centered in stretched head)
-            paint.color = if (isGameOver) Color.BLACK else eyeColor; canvas.drawRect(60*p, 12*p, 64*p, 15*p, paint)
-            if (isGameOver) { 
-                paint.color = Color.WHITE; paint.strokeWidth = 2f
-                canvas.drawLine(60*p, 12*p, 64*p, 15*p, paint); canvas.drawLine(64*p, 12*p, 60*p, 15*p, paint)
-            }
-            // NO LEGS DRAWING WHEN CRAWLING
-        } else {
-            canvas.drawRect(16*p, 10*p, 19*p, 12*p, paint)
-            paint.color = if (isGameOver) Color.BLACK else eyeColor; canvas.drawRect(14*p, 2*p, 16*p, 4*p, paint)
-            if (isGameOver) {
-                paint.color = Color.WHITE; paint.strokeWidth = 2f
-                canvas.drawLine(14*p, 2*p, 16*p, 4*p, paint); canvas.drawLine(16*p, 2*p, 14*p, 4*p, paint)
-            }
-            paint.color = bodyColor; val ly = 18*p
-            if (isJumping) { canvas.drawRect(4*p, ly, 7*p, ly + 3*p, paint); canvas.drawRect(10*p, ly, 13*p, ly + 3*p, paint) }
-            else {
-                if (walkFrame == 0) { canvas.drawRect(4*p, ly, 7*p, ly + 5*p, paint); canvas.drawRect(10*p, ly, 13*p, ly + 2*p, paint) }
-                else { canvas.drawRect(4*p, ly, 7*p, ly + 2*p, paint); canvas.drawRect(10*p, ly, 13*p, ly + 5*p, paint) }
-            }
+        canvas.drawRect(16*p, 10*p, 19*p, 12*p, paint)
+        paint.color = if (isGameOver) Color.BLACK else eyeColor; canvas.drawRect(14*p, 2*p, 16*p, 4*p, paint)
+        if (isGameOver) {
+            paint.color = Color.WHITE; paint.strokeWidth = 2f
+            canvas.drawLine(14*p, 2*p, 16*p, 4*p, paint); canvas.drawLine(16*p, 2*p, 14*p, 4*p, paint)
         }
+        paint.color = bodyColor; val ly = 18*p
+        if (walkFrame == 0) { canvas.drawRect(4*p, ly, 7*p, ly + 5*p, paint); canvas.drawRect(10*p, ly, 13*p, ly + 2*p, paint) }
+        else { canvas.drawRect(4*p, ly, 7*p, ly + 2*p, paint); canvas.drawRect(10*p, ly, 13*p, ly + 5*p, paint) }
 
-        // Character Accessories
         paint.style = Paint.Style.FILL
-        val headX = if (isDucking || duckingProgress > 0.1f) 55*p else 14*p
-        val headY = if (isDucking || duckingProgress > 0.1f) 11*p else 0f
+        val headX = 14*p
+        val headY = 0f
         
         when(member) {
             "NINJA" -> {
-                paint.color = Color.RED // Ninja Headband
+                paint.color = Color.RED 
                 canvas.drawRect(headX - 2*p, headY + p, headX + 12*p, headY + 3*p, paint)
-                // Headband tail
                 pathBuffer.reset(); pathBuffer.moveTo(headX, headY + 2*p)
                 val tailSway = Math.sin(animationFrame * 0.2).toFloat() * 4*p
                 pathBuffer.lineTo(headX - 10*p, headY + 3*p + tailSway); pathBuffer.lineTo(headX - 8*p, headY + 6*p + tailSway)
                 canvas.drawPath(pathBuffer, paint)
             }
             "ASTRONAUT" -> {
-                // Shiny Helmet
                 paint.color = Color.argb(120, 178, 235, 242)
                 canvas.drawCircle(headX + 5*p, headY + 4*p, 10*p, paint)
                 paint.style = Paint.Style.STROKE; paint.color = Color.WHITE; paint.strokeWidth = 1.5f * p
                 canvas.drawCircle(headX + 5*p, headY + 4*p, 10*p, paint)
-                // Reflection on helmet
                 paint.style = Paint.Style.FILL; paint.alpha = 150
                 canvas.drawCircle(headX + 2*p, headY + 2*p, 3*p, paint)
                 paint.alpha = 255
-                // Oxygen tank
                 paint.color = Color.parseColor("#E0E0E0")
                 canvas.drawRoundRect(headX - 14*p, headY + 6*p, headX - 4*p, headY + 18*p, 3*p, 3*p, paint)
-                paint.color = Color.RED; canvas.drawCircle(headX - 9*p, headY + 12*p, p, paint) // Small status light
+                paint.color = Color.RED; canvas.drawCircle(headX - 9*p, headY + 12*p, p, paint)
             }
             "ATHLETE" -> {
                 paint.color = Color.WHITE; canvas.drawRect(headX - p, headY - p, headX + 11*p, headY + 2*p, paint)
                 paint.textSize = 6*p; paint.color = Color.BLACK; canvas.drawText("1", headX + 4*p, headY + 12*p, paint)
-                // Sweatband on arm
                 paint.color = Color.WHITE; canvas.drawRect(8*p, 12*p, 10*p, 14*p, paint)
             }
             "BABY" -> {
-                paint.color = Color.parseColor("#4FC3F7") // Blue pacifier
+                paint.color = Color.parseColor("#4FC3F7") 
                 canvas.drawCircle(headX + 10*p, headY + 6*p, 2.5f*p, paint)
-                paint.color = Color.parseColor("#F8BBD0"); canvas.drawCircle(headX + 5*p, headY - 3*p, 4*p, paint) // Pink ribbon
+                paint.color = Color.parseColor("#F8BBD0"); canvas.drawCircle(headX + 5*p, headY - 3*p, 4*p, paint) 
             }
             "SCIENTIST" -> {
                 paint.color = Color.BLACK; canvas.drawRect(headX + 2*p, headY + 6*p, headX + 8*p, headY + 8*p, paint)
                 paint.color = Color.WHITE; canvas.drawRect(headX + 4*p, headY + 7*p, headX + 6*p, headY + 8*p, paint)
-                // Bubbling Flask with glow
                 if (animationFrame % 20 < 10) {
                     paint.color = Color.CYAN; paint.setShadowLayer(4f, 0f, 0f, Color.CYAN)
                     canvas.drawCircle(headX + 14*p, headY + 14*p - (animationFrame % 10), 2*p, paint)
@@ -469,12 +418,10 @@ internal object TRexDrawer {
                 paint.color = Color.parseColor("#1B5E20")
                 pathBuffer.reset(); pathBuffer.moveTo(headX, headY); pathBuffer.lineTo(headX - 5*p, headY - 5*p)
                 pathBuffer.lineTo(headX, headY - 10*p); pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
-                // Spikes on back
                 for(i in 0..2) {
                     pathBuffer.reset(); pathBuffer.moveTo(i*5*p, 8*p); pathBuffer.lineTo(i*5*p + 2.5f*p, 3*p); pathBuffer.lineTo(i*5*p + 5*p, 8*p)
                     pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
                 }
-                // Wings
                 val wingSway = Math.sin(animationFrame * 0.15).toFloat() * 12*p
                 paint.color = Color.parseColor("#2E7D32")
                 pathBuffer.reset(); pathBuffer.moveTo(headX - 10*p, headY + 10*p)
@@ -483,23 +430,19 @@ internal object TRexDrawer {
             "ROBOT" -> {
                 paint.color = Color.RED; canvas.drawCircle(headX + 2*p, headY + 3*p, p, paint)
                 paint.color = Color.BLACK; canvas.drawRect(headX - p, headY - 4*p, headX + p, headY, paint)
-                // Antenna light with glow
                 val roboGlow = if ((animationFrame / 15) % 2 == 0) Color.YELLOW else Color.TRANSPARENT
                 if (roboGlow != Color.TRANSPARENT) {
                     paint.color = roboGlow; paint.setShadowLayer(8f, 0f, 0f, Color.YELLOW)
                     canvas.drawCircle(headX, headY - 6*p, 2.5f*p, paint)
                     paint.clearShadowLayer()
                 }
-                // Metallic details
                 paint.color = Color.argb(100, 0, 0, 0)
                 canvas.drawRect(2*p, 10*p, 14*p, 11*p, paint)
                 canvas.drawRect(2*p, 14*p, 14*p, 15*p, paint)
             }
             "ZOMBIE" -> {
-                // Rotting skin patch
                 paint.color = Color.parseColor("#689F38"); canvas.drawCircle(headX + 3*p, headY + 12*p, 3*p, paint)
-                paint.color = Color.BLACK; canvas.drawRect(headX + 8*p, headY + 2*p, headX + 11*p, headY + 5*p, paint) // Missing eye
-                // Exposed bone on tail
+                paint.color = Color.BLACK; canvas.drawRect(headX + 8*p, headY + 2*p, headX + 11*p, headY + 5*p, paint) 
                 paint.color = Color.WHITE; canvas.drawRect(-12*p, 9*p, -8*p, 11*p, paint)
             }
             "KING" -> {
@@ -508,17 +451,15 @@ internal object TRexDrawer {
                 pathBuffer.lineTo(headX + 3*p, headY - 5*p); pathBuffer.lineTo(headX + 6*p, headY - 12*p)
                 pathBuffer.lineTo(headX + 9*p, headY - 5*p); pathBuffer.lineTo(headX + 12*p, headY - 8*p)
                 pathBuffer.lineTo(headX + 12*p, headY); pathBuffer.close(); canvas.drawPath(pathBuffer, paint)
-                // Ruby on crown
                 paint.color = Color.RED; canvas.drawCircle(headX + 6*p, headY - 6*p, 1.5f*p, paint)
             }
             "CHEF" -> {
                 paint.color = Color.WHITE; canvas.drawRoundRect(headX, headY - 10*p, headX + 13*p, headY, 3*p, 3*p, paint)
-                paint.color = Color.LTGRAY; canvas.drawRect(headX + 12*p, headY + 10*p, headX + 20*p, headY + 13*p, paint) // Spatula
+                paint.color = Color.LTGRAY; canvas.drawRect(headX + 12*p, headY + 10*p, headX + 20*p, headY + 13*p, paint) 
             }
             "MUMMY" -> {
-                paint.color = Color.parseColor("#D7CCC8") // Slightly darker linen
+                paint.color = Color.parseColor("#D7CCC8") 
                 for (i in 0..3) canvas.drawLine(headX, headY + i*4*p, headX + 11*p, headY + i*4*p, paint)
-                // Loose bandage trail
                 val looseSway = Math.sin(animationFrame * 0.1).toFloat() * 6*p
                 paint.strokeWidth = 2f*p
                 canvas.drawLine(headX - 6*p, headY + 16*p, headX - 18*p, headY + 18*p + looseSway, paint)
@@ -527,18 +468,16 @@ internal object TRexDrawer {
             "PIRATE" -> {
                 paint.color = Color.BLACK; canvas.drawRect(headX - p, headY + 2*p, headX + 3*p, headY + 5*p, paint)
                 paint.strokeWidth = 1f * p; canvas.drawLine(headX - 6*p, headY + 4*p, headX + 14*p, headY + p, paint)
-                // Golden Earring
                 paint.color = Color.parseColor("#FFD600"); paint.style = Paint.Style.STROKE; canvas.drawCircle(headX + 13*p, headY + 8*p, 2.5f*p, paint); paint.style = Paint.Style.FILL
             }
             "GRANDPA" -> {
                 paint.color = Color.BLACK; paint.style = Paint.Style.STROKE; paint.strokeWidth = 0.8f * p
                 canvas.drawCircle(headX + 2*p, headY + 3*p, 3.5f*p, paint)
                 canvas.drawCircle(headX + 9*p, headY + 3*p, 3.5f*p, paint)
-                canvas.drawLine(headX + 5.5f*p, headY + 3*p, headX + 6.5f*p, headY + 3*p, paint) // Glasses bridge
+                canvas.drawLine(headX + 5.5f*p, headY + 3*p, headX + 6.5f*p, headY + 3*p, paint) 
                 paint.style = Paint.Style.FILL
-                // Wooden Cane
                 paint.color = Color.parseColor("#5D4037"); canvas.drawRect(headX + 12*p, headY + 8*p, headX + 14*p, headY + 22*p, paint)
-                canvas.drawRect(headX + 12*p, headY + 8*p, headX + 18*p, headY + 10*p, paint) // Cane handle
+                canvas.drawRect(headX + 12*p, headY + 8*p, headX + 18*p, headY + 10*p, paint)
             }
         }
 
