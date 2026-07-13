@@ -322,11 +322,25 @@ class TRexView @JvmOverloads constructor(
                 }
                 true
             }
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_SETTINGS -> {
+                if (isPaused && !isGameOver) {
+                    TRexOptionsDialog.show(context) {
+                        resetGame() // Reload everything
+                    }
+                }
+                true
+            }
             else -> super.onKeyDown(keyCode, event)
         }
     }
 
     override fun performClick(): Boolean {
+        if (isPaused && !isGameOver) {
+            TRexOptionsDialog.show(context) {
+                resetGame()
+            }
+            return true
+        }
         super.performClick()
         return true
     }
@@ -1152,8 +1166,11 @@ class TRexView @JvmOverloads constructor(
             canvas.drawText(">", width / 2f + 200f, height / 2f + 30f, paint)
             
             paint.textSize = 35f
-            canvas.drawText(context.getString(R.string.start_game), width / 2f, height / 2f + 260f, paint)
+            canvas.drawText(context.getString(R.string.start_game), width / 2f, height / 2f + 250f, paint)
             
+            paint.textSize = 28f
+            paint.color = if (isNightMode) Color.GRAY else Color.LTGRAY
+            canvas.drawText("Press [MENU] for Options", width / 2f, height / 2f + 290f, paint)
         } else {
             paint.textSize = 90f
             paint.color = if (isGameOver) {
