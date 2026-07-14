@@ -479,12 +479,12 @@ class FroggyCrossView @JvmOverloads constructor(
         for (lane in lanes) {
             for (e in lane.entities) {
                 entityRect.set(e.c * cellW, lane.r * cellH + 5, (e.c + e.length) * cellW, (lane.r + 1) * cellH - 5)
-                drawEntity(canvas, entityRect, lane.isRiver, lane.speed, lane.r)
+                drawEntity(canvas, entityRect, e, lane.speed, lane.r)
                 
                 // Wrap around drawing
                 if (e.c + e.length > cols) {
                     tempRect.set((e.c - cols) * cellW, lane.r * cellH + 5, (e.c + e.length - cols) * cellW, (lane.r + 1) * cellH - 5)
-                    drawEntity(canvas, tempRect, lane.isRiver, lane.speed, lane.r)
+                    drawEntity(canvas, tempRect, e, lane.speed, lane.r)
                 }
             }
         }
@@ -632,14 +632,9 @@ class FroggyCrossView @JvmOverloads constructor(
         }
     }
 
-    private fun drawEntity(canvas: Canvas, rect: RectF, isRiver: Boolean, speed: Float, r: Int) {
+    private fun drawEntity(canvas: Canvas, rect: RectF, entity: Entity, speed: Float, r: Int) {
         val terrain = getTerrainType(r)
-        val e = lanes.find { it.r == r }?.entities?.find { 
-            val cellW = width.toFloat() / cols
-            val cellH = height.toFloat() / rows
-            Math.abs(it.c * cellW - rect.left) < 1f || Math.abs((it.c - cols) * cellW - rect.left) < 1f
-        }
-        val sub = e?.subType ?: 0
+        val sub = entity.subType
 
         when (terrain) {
             TerrainType.ROAD -> {
