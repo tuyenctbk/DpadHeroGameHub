@@ -60,9 +60,9 @@ class SyobonView @JvmOverloads constructor(
 
     // Physics parameters
     private val gravity = 0.018f
-    private val speedAccel = 0.008f
-    private val friction = 0.82f
-    private val maxSpeed = 0.16f
+    private val speedAccel = 0.03f
+    private val friction = 0.90f
+    private val maxSpeed = 0.22f
     private val jumpImpulse = -0.35f
     private val jumpHoldForce = -0.016f
 
