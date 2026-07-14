@@ -423,10 +423,9 @@ class SyobonView @JvmOverloads constructor(
     private fun checkGridCollisionX() {
         val left = playerX
         val right = playerX + playerW
-        val top = playerY
-        val bottom = playerY + playerH
+        val top = playerY + 0.01f
+        val bottom = playerY + playerH - 0.01f
 
-        // Clamp positions to valid grid
         val cMin = Math.max(0, left.toInt())
         val cMax = Math.min(totalMapCols - 1, right.toInt())
         val rMin = Math.max(0, top.toInt())
@@ -436,13 +435,13 @@ class SyobonView @JvmOverloads constructor(
             for (c in cMin..cMax) {
                 if (isSolid(r, c)) {
                     if (velX > 0) {
-                        // Moving right -> snap to left of solid block
                         playerX = c - playerW
                         velX = 0f
+                        return
                     } else if (velX < 0) {
-                        // Moving left -> snap to right of solid block
                         playerX = c + 1f
                         velX = 0f
+                        return
                     }
                 }
             }
@@ -450,8 +449,8 @@ class SyobonView @JvmOverloads constructor(
     }
 
     private fun checkGridCollisionY() {
-        val left = playerX
-        val right = playerX + playerW
+        val left = playerX + 0.01f
+        val right = playerX + playerW - 0.01f
         val top = playerY
         val bottom = playerY + playerH
 
@@ -471,23 +470,21 @@ class SyobonView @JvmOverloads constructor(
                         playerY = r + 1f
                         velY = 0f
                         onBlockHit(r, c)
-                        continue
+                        return
                     }
                 }
 
                 if (isSolid(r, c)) {
                     if (velY > 0) {
-                        // Landing on top of block
                         playerY = r - playerH
                         velY = 0f
                         isOnGround = true
+                        return
                     } else if (velY < 0) {
-                        // Bonking block from below
                         playerY = r + 1f
                         velY = 0f
-
-                        // Block Hit Actions (Trolls!)
                         onBlockHit(r, c)
+                        return
                     }
                 }
             }
