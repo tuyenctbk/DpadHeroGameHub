@@ -79,8 +79,8 @@ class SyobonView @JvmOverloads constructor(
     private class TrapEntity(
         var x: Float,
         var y: Float,
-        val vx: Float,
-        val vy: Float,
+        var vx: Float,
+        var vy: Float,
         val type: Int // 0: Nyan Cat, 1: Flying Spike, 2: Popup Ground Spike
     )
     private val trapEntities = mutableListOf<TrapEntity>()
@@ -289,6 +289,25 @@ class SyobonView @JvmOverloads constructor(
             die()
         }
 
+        // Spike collision check
+        val pLeft = playerX
+        val pRight = playerX + playerW
+        val pTop = playerY
+        val pBottom = playerY + playerH
+        val sCMin = Math.max(0, pLeft.toInt())
+        val sCMax = Math.min(totalMapCols - 1, pRight.toInt())
+        val sRMin = Math.max(0, pTop.toInt())
+        val sRMax = Math.min(rows - 1, pBottom.toInt())
+        for (r in sRMin..sRMax) {
+            for (c in sCMin..sCMax) {
+                if (map[r][c] == 5) {
+                    if (pRight > c && pLeft < c + 1 && pBottom > r && pTop < r + 1) {
+                        die()
+                    }
+                }
+            }
+        }
+
         // Trigger Camera Scroll
         val targetCam = playerX - cols / 2f
         cameraX += (targetCam - cameraX) * 0.1f
@@ -301,15 +320,33 @@ class SyobonView @JvmOverloads constructor(
         val iterator = trapEntities.iterator()
         while (iterator.hasNext()) {
             val ent = iterator.next()
-            ent.x += ent.vx
-            ent.y += ent.vy
+            
+            if (ent.type == 1) {
+                // Apply gravity to poison mushroom
+                ent.vy += 0.012f
+                ent.y += ent.vy
+                ent.x += ent.vx
+                
+                // Simple collision check for mushroom
+                val mx = ent.x.toInt()
+                val my = ent.y.toInt()
+                if (my in 0 until rows && mx in 0 until totalMapCols) {
+                    if (isSolid(my + 1, mx)) {
+                        ent.y = my.toFloat()
+                        ent.vy = 0f
+                    }
+                }
+            } else {
+                ent.x += ent.vx
+                ent.y += ent.vy
+            }
             
             // Check collision with player
             if (Math.abs(ent.x - playerX) < 0.7f && Math.abs(ent.y - playerY) < 0.7f) {
                 die()
             }
             
-            // Remove off-screen entities
+            // Remove off-screen/fallen entities
             if (ent.x < cameraX - 2 || ent.x > cameraX + cols + 2 || ent.y > rows + 2) {
                 iterator.remove()
             }
@@ -426,17 +463,23 @@ class SyobonView @JvmOverloads constructor(
 
         for (r in rMin..rMax) {
             for (c in cMin..cMax) {
+                val cell = if (r in 0 until rows && c in 0 until totalMapCols) map[r][c] else 0
+                if (cell == 4 && invisibleBlocks[Pair(r, c)] != true) {
+                    if (velY < 0 && top <= r + 1 && top - velY > r) {
+                        invisibleBlocks[Pair(r, c)] = true
+                        playerY = r + 1f
+                        velY = 0f
+                        onBlockHit(r, c)
+                        continue
+                    }
+                }
+
                 if (isSolid(r, c)) {
                     if (velY > 0) {
                         // Landing on top of block
                         playerY = r - playerH
                         velY = 0f
                         isOnGround = true
-                        
-                        // Collapsible floor trigger
-                        if (map[r][c] == 10) {
-                            // Falling floor collapses
-                        }
                     } else if (velY < 0) {
                         // Bonking block from below
                         playerY = r + 1f
@@ -491,6 +534,12 @@ class SyobonView @JvmOverloads constructor(
         // Invisible block: only solid if active (visible)
         if (cell == 4) {
             return invisibleBlocks[Pair(r, c)] == true
+        }
+
+        // Collapsible bridge block: only solid if it hasn't fallen
+        if (cell == 10) {
+            val yOffset = fallingBlocks[Pair(r, c)] ?: 0f
+            return yOffset < 0.2f
         }
         
         // Spikes and flagpoles are triggers, not solid blocks!
