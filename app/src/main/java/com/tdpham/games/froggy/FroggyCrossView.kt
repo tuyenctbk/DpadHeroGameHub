@@ -15,6 +15,7 @@ import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
 import kotlin.random.Random
 import kotlin.math.sin
+import kotlin.math.cos
 import kotlin.math.PI
 
 class FroggyCrossView @JvmOverloads constructor(
@@ -97,7 +98,7 @@ class FroggyCrossView @JvmOverloads constructor(
         }
     }
 
-    data class Entity(var c: Float, val length: Int, val color: Int, val isLog: Boolean = false)
+    data class Entity(var c: Float, val length: Int, val color: Int, val isLog: Boolean = false, val subType: Int = 0)
     data class Lane(val r: Int, val speed: Float, val entities: MutableList<Entity>, val isRiver: Boolean)
 
     init {
@@ -183,30 +184,88 @@ class FroggyCrossView @JvmOverloads constructor(
             
             when (terrain) {
                 TerrainType.ROAD -> {
-                    val speed = (Random.nextFloat() * 0.05f + 0.03f) * direction * speedMult
-                    repeat(3) { i ->
-                        entities.add(Entity(i * 5f, 2, Color.RED))
+                    val sub = Random.nextInt(3)
+                    val length = when (sub) {
+                        1 -> 3 // Truck
+                        2 -> 1 // Motorcycle
+                        else -> 2 // Sports Car
+                    }
+                    val baseSpeed = when (sub) {
+                        1 -> 0.025f // Truck (slow)
+                        2 -> 0.06f  // Motorcycle (very fast)
+                        else -> 0.04f // Sports Car
+                    }
+                    val speed = (baseSpeed + Random.nextFloat() * 0.015f) * direction * speedMult
+                    val count = if (sub == 1) 2 else 3
+                    val spacing = if (sub == 1) 6f else 4.5f
+                    repeat(count) { i ->
+                        entities.add(Entity(i * spacing, length, Color.RED, subType = sub))
                     }
                     lanes.add(Lane(r, speed, entities, false))
                 }
                 TerrainType.RIVER -> {
-                    val speed = (Random.nextFloat() * 0.04f + 0.02f) * direction * speedMult
+                    val sub = Random.nextInt(3)
+                    val length = when (sub) {
+                        0 -> 3 // Log
+                        1 -> 1 // Lilypad
+                        else -> 2 // Turtle
+                    }
+                    val baseSpeed = when (sub) {
+                        1 -> 0.02f // Lilypad
+                        else -> 0.03f
+                    }
+                    val speed = (baseSpeed + Random.nextFloat() * 0.01f) * direction * speedMult
+                    val spacing = when (sub) {
+                        0 -> 5f
+                        1 -> 4f
+                        else -> 4.5f
+                    }
                     repeat(3) { i ->
-                        entities.add(Entity(i * 5f, 3, Color.parseColor("#8D6E63"), true))
+                        entities.add(Entity(i * spacing, length, Color.parseColor("#8D6E63"), true, subType = sub))
                     }
                     lanes.add(Lane(r, speed, entities, true))
                 }
                 TerrainType.RAILROAD -> {
-                    // Fast moving Bullet Train
-                    val speed = 0.12f * direction * speedMult
-                    entities.add(Entity(0f, 5, Color.LTGRAY))
+                    val sub = Random.nextInt(3)
+                    val length = when (sub) {
+                        0 -> 5 // Bullet Train
+                        1 -> 7 // Cargo Train
+                        else -> 1 // Handcart
+                    }
+                    val speed = when (sub) {
+                        0 -> 0.12f // Bullet Train
+                        1 -> 0.08f // Cargo Train
+                        else -> 0.035f // Handcart
+                    } * direction * speedMult
+                    
+                    if (sub == 2) {
+                        repeat(3) { i ->
+                            entities.add(Entity(i * 5f, length, Color.LTGRAY, subType = sub))
+                        }
+                    } else {
+                        entities.add(Entity(0f, length, Color.LTGRAY, subType = sub))
+                    }
                     lanes.add(Lane(r, speed, entities, false))
                 }
                 TerrainType.LAVA -> {
-                    // Floating obsidian rocks
-                    val speed = (Random.nextFloat() * 0.03f + 0.025f) * direction * speedMult
+                    val sub = Random.nextInt(3)
+                    val length = when (sub) {
+                        1 -> 3 // Slab
+                        2 -> 1 // Skull
+                        else -> 2 // Rock
+                    }
+                    val baseSpeed = when (sub) {
+                        2 -> 0.045f // Skull
+                        1 -> 0.02f  // Slab
+                        else -> 0.03f
+                    }
+                    val speed = (baseSpeed + Random.nextFloat() * 0.01f) * direction * speedMult
+                    val spacing = when (sub) {
+                        1 -> 6f
+                        else -> 4.5f
+                    }
                     repeat(3) { i ->
-                        entities.add(Entity(i * 5f, 2, Color.DKGRAY, true))
+                        entities.add(Entity(i * spacing, length, Color.DKGRAY, true, subType = sub))
                     }
                     lanes.add(Lane(r, speed, entities, true))
                 }
@@ -575,84 +634,204 @@ class FroggyCrossView @JvmOverloads constructor(
 
     private fun drawEntity(canvas: Canvas, rect: RectF, isRiver: Boolean, speed: Float, r: Int) {
         val terrain = getTerrainType(r)
+        val e = lanes.find { it.r == r }?.entities?.find { 
+            val cellW = width.toFloat() / cols
+            val cellH = height.toFloat() / rows
+            Math.abs(it.c * cellW - rect.left) < 1f || Math.abs((it.c - cols) * cellW - rect.left) < 1f
+        }
+        val sub = e?.subType ?: 0
+
         when (terrain) {
             TerrainType.ROAD -> {
-                val carColor = when (r % 3) {
-                    0 -> Color.parseColor("#E53935")
-                    1 -> Color.parseColor("#1E88E5")
-                    else -> Color.parseColor("#8E24AA")
-                }
-                paint.color = carColor
-                canvas.drawRoundRect(rect, 10f, 10f, paint)
-                paint.color = Color.BLACK
-                canvas.drawCircle(rect.left + 15, rect.top, 8f, paint)
-                canvas.drawCircle(rect.right - 15, rect.top, 8f, paint)
-                canvas.drawCircle(rect.left + 15, rect.bottom, 8f, paint)
-                canvas.drawCircle(rect.right - 15, rect.bottom, 8f, paint)
-                paint.color = Color.parseColor("#B3E5FC")
-                val wx1 = if (speed > 0) rect.right - rect.width() * 0.4f else rect.left + rect.width() * 0.15f
-                val wx2 = if (speed > 0) rect.right - rect.width() * 0.15f else rect.left + rect.width() * 0.4f
-                canvas.drawRect(wx1, rect.top + 8, wx2, rect.bottom - 8, paint)
-                paint.color = Color.YELLOW
-                if (speed > 0) {
-                    canvas.drawCircle(rect.right - 4, rect.top + 10, 5f, paint)
-                    canvas.drawCircle(rect.right - 4, rect.bottom - 10, 5f, paint)
-                } else {
-                    canvas.drawCircle(rect.left + 4, rect.top + 10, 5f, paint)
-                    canvas.drawCircle(rect.left + 4, rect.bottom - 10, 5f, paint)
+                if (sub == 1) { // Cargo Truck
+                    paint.color = Color.parseColor("#F57C00")
+                    canvas.drawRoundRect(rect.left, rect.top, rect.right - rect.width()*0.25f, rect.bottom, 6f, 6f, paint)
+                    paint.color = Color.parseColor("#FFE082")
+                    canvas.drawRoundRect(rect.right - rect.width()*0.27f, rect.top + 4, rect.right, rect.bottom - 4, 8f, 8f, paint)
+                    paint.color = Color.parseColor("#37474F")
+                    val wx1 = if (speed > 0) rect.right - rect.width() * 0.12f else rect.right - rect.width() * 0.22f
+                    val wx2 = if (speed > 0) rect.right - rect.width() * 0.04f else rect.right - rect.width() * 0.14f
+                    canvas.drawRect(wx1, rect.top + 8, wx2, rect.bottom - 8, paint)
+                    paint.color = Color.BLACK
+                    canvas.drawCircle(rect.left + 20, rect.top, 10f, paint)
+                    canvas.drawCircle(rect.right - 20, rect.top, 10f, paint)
+                    canvas.drawCircle(rect.left + 20, rect.bottom, 10f, paint)
+                    canvas.drawCircle(rect.right - 20, rect.bottom, 10f, paint)
+                } else if (sub == 2) { // Motorcycle
+                    paint.color = Color.parseColor("#00E5FF")
+                    val cy = rect.top + rect.height() / 2f
+                    canvas.drawRoundRect(rect.left + 5, cy - 8, rect.right - 5, cy + 8, 4f, 4f, paint)
+                    paint.color = Color.BLACK
+                    canvas.drawCircle(rect.left + 12, cy, 11f, paint)
+                    canvas.drawCircle(rect.right - 12, cy, 11f, paint)
+                    paint.color = Color.WHITE
+                    canvas.drawCircle(rect.left + 12, cy, 4f, paint)
+                    canvas.drawCircle(rect.right - 12, cy, 4f, paint)
+                } else { // Sports Car
+                    val carColor = when (r % 3) {
+                        0 -> Color.parseColor("#E53935")
+                        1 -> Color.parseColor("#1E88E5")
+                        else -> Color.parseColor("#8E24AA")
+                    }
+                    paint.color = carColor
+                    canvas.drawRoundRect(rect, 10f, 10f, paint)
+                    paint.color = Color.BLACK
+                    canvas.drawCircle(rect.left + 15, rect.top, 8f, paint)
+                    canvas.drawCircle(rect.right - 15, rect.top, 8f, paint)
+                    canvas.drawCircle(rect.left + 15, rect.bottom, 8f, paint)
+                    canvas.drawCircle(rect.right - 15, rect.bottom, 8f, paint)
+                    paint.color = Color.parseColor("#B3E5FC")
+                    val wx1 = if (speed > 0) rect.right - rect.width() * 0.4f else rect.left + rect.width() * 0.15f
+                    val wx2 = if (speed > 0) rect.right - rect.width() * 0.15f else rect.left + rect.width() * 0.4f
+                    canvas.drawRect(wx1, rect.top + 8, wx2, rect.bottom - 8, paint)
+                    paint.color = Color.YELLOW
+                    if (speed > 0) {
+                        canvas.drawCircle(rect.right - 4, rect.top + 10, 5f, paint)
+                        canvas.drawCircle(rect.right - 4, rect.bottom - 10, 5f, paint)
+                    } else {
+                        canvas.drawCircle(rect.left + 4, rect.top + 10, 5f, paint)
+                        canvas.drawCircle(rect.left + 4, rect.bottom - 10, 5f, paint)
+                    }
                 }
             }
             TerrainType.RIVER -> {
-                paint.color = Color.parseColor("#5D4037")
-                canvas.drawRoundRect(rect, 12f, 12f, paint)
-                paint.color = Color.parseColor("#8D6E63")
-                canvas.drawCircle(rect.left + 15, rect.top + rect.height()/2, 10f, paint)
-                canvas.drawCircle(rect.right - 15, rect.top + rect.height()/2, 10f, paint)
-                paint.color = Color.parseColor("#3E2723")
-                paint.strokeWidth = 3f
-                paint.style = Paint.Style.STROKE
-                canvas.drawLine(rect.left + 35, rect.top + 12, rect.right - 35, rect.top + 12, paint)
-                canvas.drawLine(rect.left + 25, rect.bottom - 12, rect.right - 25, rect.bottom - 12, paint)
-                paint.style = Paint.Style.FILL
-                paint.color = Color.parseColor("#4CAF50")
-                canvas.drawCircle(rect.left + rect.width()/2, rect.top + 2, 8f, paint)
+                if (sub == 1) { // Lilypad
+                    paint.color = Color.parseColor("#4CAF50")
+                    val cx = rect.left + rect.width() / 2
+                    val cy = rect.top + rect.height() / 2
+                    val rd = rect.height() * 0.45f
+                    canvas.drawCircle(cx, cy, rd, paint)
+                    paint.color = Color.parseColor("#0277BD")
+                    tempPath.reset()
+                    tempPath.moveTo(cx, cy)
+                    val angle = 30f
+                    tempPath.lineTo(cx + rd * cos(Math.toRadians(angle.toDouble())).toFloat(), cy - rd * sin(Math.toRadians(angle.toDouble())).toFloat())
+                    tempPath.lineTo(cx + rd * cos(Math.toRadians(-angle.toDouble())).toFloat(), cy - rd * sin(Math.toRadians(-angle.toDouble())).toFloat())
+                    tempPath.close()
+                    canvas.drawPath(tempPath, paint)
+                } else if (sub == 2) { // Turtle
+                    paint.color = Color.parseColor("#00695C")
+                    val cx = rect.left + rect.width() / 2
+                    val cy = rect.top + rect.height() / 2
+                    val rx = rect.width() * 0.4f
+                    val ry = rect.height() * 0.4f
+                    canvas.drawOval(cx - rx, cy - ry, cx + rx, cy + ry, paint)
+                    paint.color = Color.parseColor("#00897B")
+                    canvas.drawCircle(cx - rx * 0.7f, cy - ry * 0.7f, 6f, paint)
+                    canvas.drawCircle(cx + rx * 0.7f, cy - ry * 0.7f, 6f, paint)
+                    canvas.drawCircle(cx - rx * 0.7f, cy + ry * 0.7f, 6f, paint)
+                    canvas.drawCircle(cx + rx * 0.7f, cy + ry * 0.7f, 6f, paint)
+                    canvas.drawCircle(if (speed > 0) cx + rx else cx - rx, cy, 8f, paint)
+                } else { // Log
+                    paint.color = Color.parseColor("#5D4037")
+                    canvas.drawRoundRect(rect, 12f, 12f, paint)
+                    paint.color = Color.parseColor("#8D6E63")
+                    canvas.drawCircle(rect.left + 15, rect.top + rect.height()/2, 10f, paint)
+                    canvas.drawCircle(rect.right - 15, rect.top + rect.height()/2, 10f, paint)
+                    paint.color = Color.parseColor("#3E2723")
+                    paint.strokeWidth = 3f
+                    paint.style = Paint.Style.STROKE
+                    canvas.drawLine(rect.left + 35, rect.top + 12, rect.right - 35, rect.top + 12, paint)
+                    canvas.drawLine(rect.left + 25, rect.bottom - 12, rect.right - 25, rect.bottom - 12, paint)
+                    paint.style = Paint.Style.FILL
+                    paint.color = Color.parseColor("#4CAF50")
+                    canvas.drawCircle(rect.left + rect.width()/2, rect.top + 2, 8f, paint)
+                }
             }
             TerrainType.RAILROAD -> {
-                paint.color = Color.parseColor("#ECEFF1")
-                canvas.drawRoundRect(rect, 15f, 15f, paint)
-                paint.color = Color.parseColor("#D50000")
-                canvas.drawRect(rect.left, rect.top + rect.height() * 0.4f, rect.right, rect.top + rect.height() * 0.6f, paint)
-                paint.color = Color.parseColor("#263238")
-                val windowW = rect.width() / 8f
-                for (w in 1..6) {
-                    canvas.drawRoundRect(rect.left + w * windowW + 5, rect.top + 6, rect.left + (w + 1) * windowW - 5, rect.top + rect.height() * 0.35f, 4f, 4f, paint)
-                }
-                paint.color = Color.parseColor("#37474F")
-                if (speed > 0) {
-                    tempPath.reset()
-                    tempPath.moveTo(rect.right - 25f, rect.top + 6)
-                    tempPath.lineTo(rect.right - 5f, rect.top + rect.height()/2)
-                    tempPath.lineTo(rect.right - 25f, rect.bottom - 6)
-                    tempPath.close()
-                    canvas.drawPath(tempPath, paint)
-                } else {
-                    tempPath.reset()
-                    tempPath.moveTo(rect.left + 25f, rect.top + 6)
-                    tempPath.lineTo(rect.left + 5f, rect.top + rect.height()/2)
-                    tempPath.lineTo(rect.left + 25f, rect.bottom - 6)
-                    tempPath.close()
-                    canvas.drawPath(tempPath, paint)
+                if (sub == 1) { // Cargo Freight Train
+                    val numSegments = 5
+                    val segmentW = rect.width() / numSegments
+                    paint.style = Paint.Style.FILL
+                    for (i in 0 until numSegments) {
+                        val sl = rect.left + i * segmentW
+                        val sr = sl + segmentW
+                        val isFront = (speed > 0 && i == numSegments - 1) || (speed < 0 && i == 0)
+                        if (isFront) {
+                            paint.color = Color.parseColor("#263238")
+                            canvas.drawRoundRect(sl + 2, rect.top + 2, sr - 2, rect.bottom - 2, 6f, 6f, paint)
+                            paint.color = Color.parseColor("#FFD54F")
+                            canvas.drawRect(if (speed > 0) sr - 8 else sl + 2, rect.top + 8, if (speed > 0) sr - 2 else sl + 8, rect.bottom - 8, paint)
+                        } else {
+                            paint.color = when (i % 3) {
+                                0 -> Color.parseColor("#C62828")
+                                1 -> Color.parseColor("#1565C0")
+                                else -> Color.parseColor("#2E7D32")
+                            }
+                            canvas.drawRoundRect(sl + 4, rect.top + 4, sr - 4, rect.bottom - 4, 4f, 4f, paint)
+                            paint.color = Color.BLACK
+                            canvas.drawRect(sl, rect.top + rect.height()*0.45f, sl + 4, rect.top + rect.height()*0.55f, paint)
+                        }
+                    }
+                } else if (sub == 2) { // Handcart
+                    paint.color = Color.parseColor("#8D6E63")
+                    canvas.drawRoundRect(rect.left + 5, rect.top + 6, rect.right - 5, rect.bottom - 6, 4f, 4f, paint)
+                    paint.color = Color.DKGRAY
+                    paint.strokeWidth = 4f
+                    val cx = rect.left + rect.width() / 2f
+                    val cy = rect.top + rect.height() / 2f
+                    canvas.drawLine(cx - 10f, cy, cx + 10f, cy, paint)
+                    paint.color = Color.parseColor("#B0BEC5")
+                    val leverOffset = 10f * sin((System.currentTimeMillis() / 120f)).toFloat()
+                    canvas.drawLine(cx, cy, cx, cy - 12f + leverOffset, paint)
+                    canvas.drawLine(cx - 8f, cy - 12f + leverOffset, cx + 8f, cy - 12f + leverOffset, paint)
+                } else { // Bullet Train
+                    paint.color = Color.parseColor("#ECEFF1")
+                    canvas.drawRoundRect(rect, 15f, 15f, paint)
+                    paint.color = Color.parseColor("#D50000")
+                    canvas.drawRect(rect.left, rect.top + rect.height() * 0.4f, rect.right, rect.top + rect.height() * 0.6f, paint)
+                    paint.color = Color.parseColor("#263238")
+                    val windowW = rect.width() / 8f
+                    for (w in 1..6) {
+                        canvas.drawRoundRect(rect.left + w * windowW + 5, rect.top + 6, rect.left + (w + 1) * windowW - 5, rect.top + rect.height() * 0.35f, 4f, 4f, paint)
+                    }
+                    paint.color = Color.parseColor("#37474F")
+                    if (speed > 0) {
+                        tempPath.reset()
+                        tempPath.moveTo(rect.right - 25f, rect.top + 6)
+                        tempPath.lineTo(rect.right - 5f, rect.top + rect.height()/2)
+                        tempPath.lineTo(rect.right - 25f, rect.bottom - 6)
+                        tempPath.close()
+                        canvas.drawPath(tempPath, paint)
+                    } else {
+                        tempPath.reset()
+                        tempPath.moveTo(rect.left + 25f, rect.top + 6)
+                        tempPath.lineTo(rect.left + 5f, rect.top + rect.height()/2)
+                        tempPath.lineTo(rect.left + 25f, rect.bottom - 6)
+                        tempPath.close()
+                        canvas.drawPath(tempPath, paint)
+                    }
                 }
             }
             TerrainType.LAVA -> {
-                paint.color = Color.parseColor("#212121")
-                canvas.drawRoundRect(rect, 12f, 12f, paint)
-                paint.color = Color.parseColor("#FF3D00")
-                paint.strokeWidth = 3f
-                paint.style = Paint.Style.STROKE
-                canvas.drawLine(rect.left + 15, rect.top + 15, rect.right - 15, rect.bottom - 15, paint)
-                canvas.drawLine(rect.left + 15, rect.bottom - 15, rect.right - 15, rect.top + 15, paint)
-                paint.style = Paint.Style.FILL
+                if (sub == 1) { // Obsidian Slab
+                    paint.color = Color.parseColor("#263238")
+                    canvas.drawRoundRect(rect, 8f, 8f, paint)
+                    paint.color = Color.parseColor("#FF6D00")
+                    paint.strokeWidth = 3f
+                    paint.style = Paint.Style.STROKE
+                    canvas.drawLine(rect.left + 20, rect.top + 10, rect.right - 20, rect.bottom - 10, paint)
+                    canvas.drawLine(rect.left + 40, rect.bottom - 10, rect.right - 40, rect.top + 10, paint)
+                    paint.style = Paint.Style.FILL
+                } else if (sub == 2) { // Magma Skull
+                    val cx = rect.left + rect.width() / 2f
+                    val cy = rect.top + rect.height() / 2f
+                    paint.color = Color.parseColor("#FFD54F")
+                    canvas.drawCircle(cx, cy - 2f, 15f, paint)
+                    canvas.drawRoundRect(cx - 8f, cy + 8f, cx + 8f, cy + 16f, 2f, 2f, paint)
+                    paint.color = Color.parseColor("#DD2C00")
+                    canvas.drawCircle(cx - 5f, cy - 2f, 4f, paint)
+                    canvas.drawCircle(cx + 5f, cy - 2f, 4f, paint)
+                } else { // Obsidian Rock
+                    paint.color = Color.parseColor("#212121")
+                    canvas.drawRoundRect(rect, 12f, 12f, paint)
+                    paint.color = Color.parseColor("#FF3D00")
+                    paint.strokeWidth = 3f
+                    paint.style = Paint.Style.STROKE
+                    canvas.drawLine(rect.left + 15, rect.top + 15, rect.right - 15, rect.bottom - 15, paint)
+                    canvas.drawLine(rect.left + 15, rect.bottom - 15, rect.right - 15, rect.top + 15, paint)
+                    paint.style = Paint.Style.FILL
+                }
             }
             else -> {}
         }
