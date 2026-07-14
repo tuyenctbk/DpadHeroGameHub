@@ -188,7 +188,7 @@ class SyobonView @JvmOverloads constructor(
         val h1 = rand.nextInt(2) + 2 // 2 to 3
         val h2 = rand.nextInt(2) + 3 // 3 to 4
         val h3 = rand.nextInt(2) + 2 // 2 to 3
-        val b1 = rand.nextInt(5) - 2 // -2 to +2
+        val b1 = rand.nextInt(3) - 2 // -2 to 0 (shifted further left)
 
         // 2. Build the map first so we can check for valid spawn points
         buildLevelMap(p1, p2, h1, h2, h3, b1)
@@ -197,20 +197,36 @@ class SyobonView @JvmOverloads constructor(
         fun addRandomizedEnemy(baseX: Float, y: Float, baseSpeed: Float) {
             var spawnX = (baseX + (rand.nextFloat() * 8f - 4f)).coerceIn(4f, (totalMapCols - 10).toFloat())
             
-            // Validate spawn position: ensure not starting inside a solid block (like a pipe)
+            // Validate spawn position
             var attempts = 0
-            while (attempts < 15) {
+            while (attempts < 25) {
                 val gridX = spawnX.toInt()
-                val gridY = y.toInt()
                 
-                // Check if the 1x1 area for the enemy is clear
-                val isBlocked = (gridY in 0 until rows && gridX in 0 until totalMapCols && isSolid(gridY, gridX)) ||
-                                (gridY in 0 until rows && (gridX + 1) in 0 until totalMapCols && isSolid(gridY, gridX + 1))
+                // 1. Column is clear of obstacles (pipes/blocks)
+                var columnIsClear = true
+                for (checkY in 6..12) {
+                    if (isSolid(checkY, gridX) || isSolid(checkY, gridX + 1)) {
+                        columnIsClear = false
+                        break
+                    }
+                }
                 
-                if (!isBlocked) break
+                // 2. Column is over solid ground (not a gap)
+                val groundOk = gridX in 0 until totalMapCols - 1 && map[13][gridX] == 1 && map[13][gridX + 1] == 1
+                
+                // 3. Distance check from other enemies to prevent overlapping
+                var tooCloseToOther = false
+                for (other in landEnemies) {
+                    if (Math.abs(other.x - spawnX) < 3.0f) {
+                        tooCloseToOther = true
+                        break
+                    }
+                }
+                
+                if (columnIsClear && groundOk && !tooCloseToOther) break
                 
                 // Shift and try again
-                spawnX += if (rand.nextBoolean()) 1.5f else -1.5f
+                spawnX += if (rand.nextBoolean()) 3.0f else -3.0f
                 spawnX = spawnX.coerceIn(4f, (totalMapCols - 10).toFloat())
                 attempts++
             }
@@ -222,7 +238,7 @@ class SyobonView @JvmOverloads constructor(
 
         // 4. Randomize the active spike launcher pipe column
         spikeLauncherPipeCol = when (currentLevel) {
-            1 -> listOf(15 + p1, 32 + p2, 55).shuffled().first()
+            1 -> listOf(20 + p1, 35 + p2, 55).shuffled().first()
             2 -> 30 + p1
             else -> listOf(35 + p1, 63 + p2).shuffled().first()
         }
@@ -279,8 +295,8 @@ class SyobonView @JvmOverloads constructor(
         }
 
         // 2. Standard structures
-        // First group of question / brick blocks with randomized offset
-        val group1X = 8 + b1
+        // First group of blocks shifted further left (offset by b1)
+        val group1X = 5 + b1 
         map[9][group1X] = 2 // Brick
         map[9][group1X + 1] = 3 // Question block
         map[9][group1X + 2] = 2 // Brick
@@ -293,8 +309,9 @@ class SyobonView @JvmOverloads constructor(
         invisibleBlocks[Pair(9, 20)] = false
 
         // Pipes with randomized offsets and heights
-        buildPipe(15 + p1, h1) 
-        buildPipe(32 + p2, h2) 
+        // Shifted Pipe 1 further right to ensure no overlap with block group (group ends at max 11, pipe starts at min 18)
+        buildPipe(20 + p1, h1) 
+        buildPipe(35 + p2, h2)
         buildPipe(55, h3) 
 
         // Bridge over the second gap (collapsible!)
@@ -582,26 +599,25 @@ class SyobonView @JvmOverloads constructor(
             // Re-resolve horizontal collision to prevent sticking to pipes
             val eyCheck = enemy.y.toInt()
             
-            // Check for wall at front (multiple rows for reliability)
+            // Check for wall at front
             var wallAtFront = false
-            for (rowOff in 0..0) {
-                val checkY = eyCheck + rowOff
-                if (checkY in 0 until rows) {
-                    val nextX = if (enemy.vx > 0) (enemy.x + 0.85f).toInt() else enemy.x.toInt()
-                    if (nextX in 0 until totalMapCols && isSolid(checkY, nextX)) {
-                        wallAtFront = true
-                        break
-                    }
-                }
+            var hitX = 0
+            val checkX = if (enemy.vx > 0) (enemy.x + 0.85f).toInt() else enemy.x.toInt()
+            
+            if (eyCheck in 0 until rows && checkX in 0 until totalMapCols && isSolid(eyCheck, checkX)) {
+                wallAtFront = true
+                hitX = checkX
             }
 
             if (wallAtFront) {
                 enemy.vx = -enemy.vx
-                // Snap out of the wall to prevent sticking
+                // Snap out of the wall to prevent sticking/shaking
                 if (enemy.vx > 0) {
-                    enemy.x = enemy.x.toInt() + 1.05f
+                    // Was moving left, hit wall at hitX, now move right
+                    enemy.x = (hitX + 1.05f)
                 } else {
-                    enemy.x = enemy.x.toInt() - 0.05f
+                    // Was moving right, hit wall at hitX, now move left
+                    enemy.x = (hitX - 0.90f)
                 }
             }
             
@@ -1194,13 +1210,11 @@ class SyobonView @JvmOverloads constructor(
                 // Single elegant vertical reflection stripe on the left side
                 paint.color = Color.parseColor("#4CAF50")
                 canvas.drawRect(l + w * 0.12f, t, l + w * 0.22f, b, paint)
-                // Emblem decoration: A clean light green circular emblem shield with a white core
+                // Emblem decoration: A clean jade green core to give volume without confusing it for an enemy
                 val cx = (l + r) / 2
                 val cy = (t + b) / 2
                 paint.color = Color.parseColor("#1B5E20")
-                canvas.drawCircle(cx, cy, w * 0.15f, paint)
-                paint.color = Color.parseColor("#C8E6C9")
-                canvas.drawCircle(cx, cy, w * 0.08f, paint)
+                canvas.drawCircle(cx, cy, w * 0.10f, paint)
             }
             7 -> { // Premium Cyber Pipe Top
                 paint.color = Color.parseColor("#1B5E20") // Dark green
