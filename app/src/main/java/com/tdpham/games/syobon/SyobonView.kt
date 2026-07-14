@@ -35,6 +35,7 @@ class SyobonView @JvmOverloads constructor(
     private var currentLives = 3
     private var deaths = 0
     private var initialLivesOption = 3 // 3, 1, or -99
+    private var catType = 0
 
     // Screen dimension and view scaling
     private var cellW = 0f
@@ -144,6 +145,7 @@ class SyobonView @JvmOverloads constructor(
             else -> 3
         }
         currentLives = initialLivesOption
+        catType = prefs.getInt("selected_cat_type", 0)
         if (initialLivesOption == -99) {
             // Keep deaths from resetting to preserve the joke
         } else {
@@ -1115,7 +1117,18 @@ class SyobonView @JvmOverloads constructor(
         val w = r - l
         val h = b - t
 
-        paint.color = Color.WHITE
+        val catColor = when (catType) {
+            1 -> Color.parseColor("#FFD700") // Golden Neko
+            2 -> Color.parseColor("#37474F") // Shadow Nya
+            else -> Color.WHITE // Classic Syobon
+        }
+        val innerEarColor = when (catType) {
+            1 -> Color.parseColor("#FFF59D") // Light yellow
+            2 -> Color.parseColor("#7E57C2") // Light purple
+            else -> Color.parseColor("#FFCDD2") // Pink
+        }
+
+        paint.color = catColor
         
         // 1. Draw Tail
         val tailPath = Path()
@@ -1136,7 +1149,7 @@ class SyobonView @JvmOverloads constructor(
 
         // 3. Draw Legs (animated walking offsets)
         val walkOffset = if (!isOnGround) 0f else Math.sin(System.currentTimeMillis() / 80.0).toFloat() * 4f
-        paint.color = Color.WHITE
+        paint.color = catColor
         canvas.drawRoundRect(l + w * 0.25f, b - h * 0.15f, l + w * 0.4f, b + walkOffset, 3f, 3f, paint)
         canvas.drawRoundRect(r - w * 0.4f, b - h * 0.15f, r - w * 0.25f, b - walkOffset, 3f, 3f, paint)
 
@@ -1154,7 +1167,7 @@ class SyobonView @JvmOverloads constructor(
         earsPath.lineTo(r - w * 0.35f, t + h * 0.18f)
         canvas.drawPath(earsPath, paint)
 
-        paint.color = Color.parseColor("#FFCDD2")
+        paint.color = innerEarColor
         val innerEarsPath = Path()
         innerEarsPath.moveTo(l + w * 0.18f, t + h * 0.22f)
         innerEarsPath.lineTo(l + w * 0.1f, t + h * 0.06f)

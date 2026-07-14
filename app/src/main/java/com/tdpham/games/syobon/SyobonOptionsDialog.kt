@@ -13,7 +13,7 @@ object SyobonOptionsDialog {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
         BaseOptionsDialog(context)
-            .setTitle("SYOBON ACTION SETTINGS")
+            .setTitle("CAT MEOWIO SETTINGS")
             .addOption(
                 label = "Starting Lives",
                 valueProvider = {
@@ -46,6 +46,27 @@ object SyobonOptionsDialog {
                 onClick = {
                     val current = prefs.getInt(KEY_DIFFICULTY, 1)
                     prefs.edit { putInt(KEY_DIFFICULTY, (current + 1) % 3) }
+                }
+            )
+            .addOption(
+                label = "Cat Selection",
+                valueProvider = {
+                    when (prefs.getInt("selected_cat_type", 0)) {
+                        1 -> "Golden Neko"
+                        2 -> "Shadow Nya"
+                        else -> "Classic Syobon"
+                    }
+                },
+                descProvider = {
+                    when (prefs.getInt("selected_cat_type", 0)) {
+                        1 -> "A sparkly, auspicious golden cat."
+                        2 -> "A sleek, mysterious shadow cat."
+                        else -> "The classic, iconic white Syobon cat."
+                    }
+                },
+                onClick = {
+                    val current = prefs.getInt("selected_cat_type", 0)
+                    prefs.edit { putInt("selected_cat_type", (current + 1) % 3) }
                 }
             )
             .setOnDismiss(onDismiss)
