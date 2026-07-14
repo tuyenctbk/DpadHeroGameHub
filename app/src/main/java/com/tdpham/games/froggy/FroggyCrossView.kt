@@ -14,6 +14,8 @@ import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
 import kotlin.random.Random
+import kotlin.math.sin
+import kotlin.math.PI
 
 class FroggyCrossView @JvmOverloads constructor(
     context: Context,
@@ -41,6 +43,10 @@ class FroggyCrossView @JvmOverloads constructor(
     private val celebrationManager = CelebrationManager()
     private val PREFS_NAME = "froggy_settings"
     private val KEY_DIFFICULTY = "difficulty_index"
+    private val KEY_FROG_TYPE = "selected_frog_type"
+    private var selectedFrogType = 0
+    private var jumpStartTime = 0L
+    private val JUMP_DURATION = 200L
     private var currentDifficultyIndex = 1
     private var hintShowFrames = 0
     private var isInitialized = false
@@ -117,9 +123,15 @@ class FroggyCrossView @JvmOverloads constructor(
         // Load difficulty from settings
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         currentDifficultyIndex = prefs.getInt(KEY_DIFFICULTY, 1).coerceIn(0, 2)
+        selectedFrogType = prefs.getInt(KEY_FROG_TYPE, 0).coerceIn(0, 2)
 
         score = 0
-        lives = 3
+        lives = when (selectedFrogType) {
+            1 -> 1
+            2 -> 5
+            else -> 3
+        }
+        jumpStartTime = 0L
         best = ScoreManager.getHighScore(context, gameKey, currentDifficultyIndex)
         gameOver = false
         gamePaused = true
@@ -247,6 +259,7 @@ class FroggyCrossView @JvmOverloads constructor(
         if (gamePaused || gameOver) return
         frogR = (frogR + dr).coerceIn(0, rows - 1)
         frogX = (frogX + dc).coerceIn(0f, (cols - 1).toFloat())
+        jumpStartTime = System.currentTimeMillis()
         
         if (frogR == 0) {
             score += 1000
@@ -328,39 +341,106 @@ class FroggyCrossView @JvmOverloads constructor(
             }
         }
 
-        // Draw Frog with simple animation (jumping scale)
-        val jumpScale = if (gamePaused || gameOver) 1.0f else (1.0f + 0.1f * Math.sin(System.currentTimeMillis() / 150.0).toFloat())
-        val frogRadius = cellH * 0.35f * jumpScale
+        // Improved Jump Animation (Squash & Stretch + Jump Arc Translation)
+        val now = System.currentTimeMillis()
+        val elapsed = now - jumpStartTime
+        val isJumping = elapsed < JUMP_DURATION
+        
+        val idlePulse = if (gamePaused || gameOver) 1.0f else (1.0f + 0.05f * Math.sin(now / 150.0).toFloat())
+        var animScaleX = idlePulse
+        var animScaleY = idlePulse
+        var animOffsetY = 0f
+        
+        if (isJumping) {
+            val t = elapsed.toFloat() / JUMP_DURATION
+            animOffsetY = -25f * sin(t * PI.toFloat())
+            if (t < 0.5f) {
+                val progress = t / 0.5f
+                animScaleY = 1.0f + 0.25f * sin(progress * PI.toFloat() / 2f).toFloat()
+                animScaleX = 1.0f - 0.15f * sin(progress * PI.toFloat() / 2f).toFloat()
+            } else {
+                val progress = (t - 0.5f) / 0.5f
+                animScaleY = 1.0f - 0.2f * sin(progress * PI.toFloat()).toFloat()
+                animScaleX = 1.0f + 0.15f * sin(progress * PI.toFloat()).toFloat()
+            }
+            invalidate() // Keep animating during jump
+        }
+        
+        val frogRadius = cellH * 0.35f
         val fx = frogX * cellW + cellW / 2
-        val fy = frogR * cellH + cellH / 2
-        
-        paint.color = Color.parseColor("#1B5E20") // Darker green shadow
-        canvas.drawCircle(fx, fy + 5, frogRadius, paint)
-        
+        val fy = frogR * cellH + cellH / 2 + animOffsetY
+
+        val bodyColor = when(selectedFrogType) {
+            1 -> Color.parseColor("#FFD700") // Gold (Golden Dart)
+            2 -> Color.parseColor("#673AB7") // Purple (Bullfrog)
+            else -> Color.parseColor("#4CAF50") // Green (Classic)
+        }
+        val limbColor = when(selectedFrogType) {
+            1 -> Color.parseColor("#1E88E5") // Blue limbs
+            2 -> Color.parseColor("#4527A0") // Darker purple limbs
+            else -> Color.parseColor("#2E7D32") // Darker green limbs
+        }
+        val cheekColor = when(selectedFrogType) {
+            1 -> Color.parseColor("#E53935") // Red spots
+            2 -> Color.parseColor("#FFD54F") // Yellow throat/spots
+            else -> Color.parseColor("#FFCDD2") // Pink cheeks
+        }
+
+        canvas.save()
+        canvas.translate(fx, fy)
+        canvas.scale(animScaleX, animScaleY)
+
+        // Draw shadow (translate slightly down, draw translucent circle)
+        paint.color = Color.parseColor("#33000000")
+        canvas.drawCircle(0f, 5f, frogRadius, paint)
+
         // Crouch legs
-        paint.color = Color.parseColor("#2E7D32")
-        canvas.drawCircle(fx - frogRadius * 0.7f, fy + frogRadius * 0.5f, frogRadius * 0.35f, paint)
-        canvas.drawCircle(fx + frogRadius * 0.7f, fy + frogRadius * 0.5f, frogRadius * 0.35f, paint)
-        canvas.drawCircle(fx - frogRadius * 0.6f, fy - frogRadius * 0.3f, frogRadius * 0.25f, paint)
-        canvas.drawCircle(fx + frogRadius * 0.6f, fy - frogRadius * 0.3f, frogRadius * 0.25f, paint)
+        paint.color = limbColor
+        canvas.drawCircle(-frogRadius * 0.7f, frogRadius * 0.5f, frogRadius * 0.35f, paint)
+        canvas.drawCircle(frogRadius * 0.7f, frogRadius * 0.5f, frogRadius * 0.35f, paint)
+        canvas.drawCircle(-frogRadius * 0.6f, -frogRadius * 0.3f, frogRadius * 0.25f, paint)
+        canvas.drawCircle(frogRadius * 0.6f, -frogRadius * 0.3f, frogRadius * 0.25f, paint)
 
         // Main body
-        paint.color = Color.parseColor("#4CAF50")
-        canvas.drawCircle(fx, fy, frogRadius, paint)
-        
-        // Eyes
-        paint.color = Color.WHITE
-        canvas.drawCircle(fx - frogRadius * 0.35f, fy - frogRadius * 0.35f, frogRadius * 0.28f, paint)
-        canvas.drawCircle(fx + frogRadius * 0.35f, fy - frogRadius * 0.35f, frogRadius * 0.28f, paint)
-        
-        paint.color = Color.BLACK
-        canvas.drawCircle(fx - frogRadius * 0.35f, fy - frogRadius * 0.4f, frogRadius * 0.14f, paint)
-        canvas.drawCircle(fx + frogRadius * 0.35f, fy - frogRadius * 0.4f, frogRadius * 0.14f, paint)
+        paint.color = bodyColor
+        canvas.drawCircle(0f, 0f, frogRadius, paint)
 
-        // Cheeks
-        paint.color = Color.parseColor("#FFCDD2")
-        canvas.drawCircle(fx - frogRadius * 0.4f, fy + frogRadius * 0.1f, frogRadius * 0.15f, paint)
-        canvas.drawCircle(fx + frogRadius * 0.4f, fy + frogRadius * 0.1f, frogRadius * 0.15f, paint)
+        // Spots/details
+        if (selectedFrogType == 1) {
+            // Gold spots on blue limbs
+            paint.color = Color.parseColor("#FFD700")
+            canvas.drawCircle(-frogRadius * 0.7f, frogRadius * 0.5f, 3f, paint)
+            canvas.drawCircle(frogRadius * 0.7f, frogRadius * 0.5f, 3f, paint)
+        } else if (selectedFrogType == 2) {
+            // Yellow throat overlay
+            paint.color = Color.parseColor("#FFEB3B")
+            canvas.drawCircle(0f, frogRadius * 0.4f, frogRadius * 0.5f, paint)
+        }
+
+        // Eyes
+        val eyeColor = if (selectedFrogType == 2) Color.parseColor("#FF9800") else Color.WHITE
+        paint.color = eyeColor
+        canvas.drawCircle(-frogRadius * 0.35f, -frogRadius * 0.35f, frogRadius * 0.28f, paint)
+        canvas.drawCircle(frogRadius * 0.35f, -frogRadius * 0.35f, frogRadius * 0.28f, paint)
+
+        paint.color = Color.BLACK
+        canvas.drawCircle(-frogRadius * 0.35f, -frogRadius * 0.4f, frogRadius * 0.14f, paint)
+        canvas.drawCircle(frogRadius * 0.35f, -frogRadius * 0.4f, frogRadius * 0.14f, paint)
+
+        // Cheeks / Spots
+        paint.color = cheekColor
+        if (selectedFrogType == 1) {
+            // Red warning spots on gold back
+            canvas.drawCircle(-frogRadius * 0.3f, frogRadius * 0.2f, 4f, paint)
+            canvas.drawCircle(frogRadius * 0.3f, frogRadius * 0.2f, 4f, paint)
+            canvas.drawCircle(0f, -frogRadius * 0.1f, 5f, paint)
+        } else {
+            // Cheeks
+            canvas.drawCircle(-frogRadius * 0.4f, frogRadius * 0.1f, frogRadius * 0.15f, paint)
+            canvas.drawCircle(frogRadius * 0.4f, frogRadius * 0.1f, frogRadius * 0.15f, paint)
+        }
+
+        canvas.restore()
 
         // HUD
         paint.reset()

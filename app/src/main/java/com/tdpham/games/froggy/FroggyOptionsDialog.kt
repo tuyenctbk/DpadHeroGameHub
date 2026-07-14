@@ -33,6 +33,30 @@ object FroggyOptionsDialog {
                     prefs.edit { putInt(KEY_DIFFICULTY, nextIndex) }
                 }
             )
+            .addOption(
+                label = "Frog Selection",
+                valueProvider = {
+                    val frogType = prefs.getInt("selected_frog_type", 0)
+                    when (frogType) {
+                        1 -> "Golden Dart Frog"
+                        2 -> "Heavy Bullfrog"
+                        else -> "Classic Tree Frog"
+                    }
+                },
+                descProvider = {
+                    val frogType = prefs.getInt("selected_frog_type", 0)
+                    when (frogType) {
+                        1 -> "1 Life. Beautiful gold & blue pattern."
+                        2 -> "5 Lives. Deep purple bullfrog."
+                        else -> "3 Lives. Classic vibrant green."
+                    }
+                },
+                onClick = {
+                    val frogType = prefs.getInt("selected_frog_type", 0)
+                    val nextType = (frogType + 1) % 3
+                    prefs.edit { putInt("selected_frog_type", nextType) }
+                }
+            )
             .setOnDismiss(onDismiss)
             .show()
     }
