@@ -36,6 +36,7 @@ class SyobonView @JvmOverloads constructor(
     private var deaths = 0
     private var initialLivesOption = 3 // 3, 1, or -99
     private var catType = 0
+    private var spikeLauncherPipeCol = 55
 
     // Screen dimension and view scaling
     private var cellW = 0f
@@ -172,26 +173,44 @@ class SyobonView @JvmOverloads constructor(
         isDying = false
         trapEntities.clear()
         landEnemies.clear()
+        val rand = java.util.Random()
+        fun addRandomizedEnemy(baseX: Float, y: Float, baseSpeed: Float) {
+            // Offset starting X randomly by up to +/- 1.5 grid cells
+            val offsetX = (rand.nextFloat() * 3f - 1.5f)
+            // Randomly choose speed direction
+            val speed = if (rand.nextBoolean()) -Math.abs(baseSpeed) else Math.abs(baseSpeed)
+            // Randomly choose enemy type (0: Cyber Slime, 1: Iron Shell)
+            val enemyType = if (rand.nextBoolean()) 0 else 1
+            landEnemies.add(LandEnemy(baseX + offsetX, y, speed, 0f, type = enemyType))
+        }
+
+        // Randomize the active spike launcher pipe column
+        spikeLauncherPipeCol = when (currentLevel) {
+            1 -> listOf(15, 32, 55).shuffled().first()
+            2 -> 30
+            else -> listOf(35, 63).shuffled().first()
+        }
+
         when (currentLevel) {
             1 -> {
-                landEnemies.add(LandEnemy(9.5f, 8f, -0.03f, 0f, type = 0)) // Cyber Slime
-                landEnemies.add(LandEnemy(14f, 12f, -0.04f, 0f, type = 0))
-                landEnemies.add(LandEnemy(28f, 12f, -0.04f, 0f, type = 1)) // Iron Shell
-                landEnemies.add(LandEnemy(38f, 12f, 0.04f, 0f, type = 0))
-                landEnemies.add(LandEnemy(60f, 12f, -0.04f, 0f, type = 1))
+                addRandomizedEnemy(9.5f, 8f, 0.03f)
+                addRandomizedEnemy(14f, 12f, 0.04f)
+                addRandomizedEnemy(28f, 12f, 0.04f)
+                addRandomizedEnemy(38f, 12f, 0.04f)
+                addRandomizedEnemy(60f, 12f, 0.04f)
             }
             2 -> {
-                landEnemies.add(LandEnemy(12f, 12f, -0.04f, 0f, type = 0))
-                landEnemies.add(LandEnemy(25f, 12f, -0.03f, 0f, type = 1))
-                landEnemies.add(LandEnemy(50f, 12f, 0.04f, 0f, type = 0))
-                landEnemies.add(LandEnemy(62f, 7f, -0.04f, 0f, type = 1)) // on bricks
-                landEnemies.add(LandEnemy(82f, 12f, -0.05f, 0f, type = 0))
+                addRandomizedEnemy(12f, 12f, 0.04f)
+                addRandomizedEnemy(25f, 12f, 0.03f)
+                addRandomizedEnemy(50f, 12f, 0.04f)
+                addRandomizedEnemy(62f, 7f, 0.04f)
+                addRandomizedEnemy(82f, 12f, 0.05f)
             }
             else -> {
-                landEnemies.add(LandEnemy(10f, 12f, -0.04f, 0f, type = 0))
-                landEnemies.add(LandEnemy(32f, 12f, -0.03f, 0f, type = 1))
-                landEnemies.add(LandEnemy(60f, 12f, 0.04f, 0f, type = 0))
-                landEnemies.add(LandEnemy(86f, 12f, -0.04f, 0f, type = 1))
+                addRandomizedEnemy(10f, 12f, 0.04f)
+                addRandomizedEnemy(32f, 12f, 0.03f)
+                addRandomizedEnemy(60f, 12f, 0.04f)
+                addRandomizedEnemy(86f, 12f, 0.04f)
             }
         }
         trapTriggered.fill(false)
@@ -462,13 +481,13 @@ class SyobonView @JvmOverloads constructor(
         while (iterator.hasNext()) {
             val ent = iterator.next()
             
-            if (ent.type == 1) {
-                // Apply gravity to poison mushroom
+            if (ent.type == 1 || ent.type == 3) {
+                // Apply gravity to poison mushroom and companion slime
                 ent.vy += 0.012f
                 ent.y += ent.vy
                 ent.x += ent.vx
                 
-                // Simple collision check for mushroom
+                // Simple collision check for sliding entities
                 val mx = ent.x.toInt()
                 val my = ent.y.toInt()
                 if (my in 0 until rows && mx in 0 until totalMapCols) {
@@ -484,7 +503,14 @@ class SyobonView @JvmOverloads constructor(
             
             // Check collision with player
             if (Math.abs(ent.x - playerX) < 0.7f && Math.abs(ent.y - playerY) < 0.7f) {
-                die()
+                if (ent.type == 3) {
+                    // Companion slime gives extra protection or points
+                    SoundManager.playScore()
+                    iterator.remove()
+                    continue
+                } else {
+                    die()
+                }
             }
             
             // Remove off-screen/fallen entities
@@ -588,13 +614,13 @@ class SyobonView @JvmOverloads constructor(
             }, 100)
         }
 
-        // 3b. Spike flying from pipe 55
-        if (playerX >= 53f && !trapTriggered[55]) {
+        // 3b. Spike flying from randomized pipe
+        if (playerX >= (spikeLauncherPipeCol - 2) && playerX <= (spikeLauncherPipeCol + 2) && !trapTriggered[55]) {
             trapTriggered[55] = true
             if (difficulty > 0) {
                 trapEntities.add(
                     TrapEntity(
-                        x = 55.5f,
+                        x = spikeLauncherPipeCol.toFloat() + 0.5f,
                         y = 10f,
                         vx = 0f,
                         vy = -0.12f,
@@ -716,16 +742,35 @@ class SyobonView @JvmOverloads constructor(
             map[r][c] = 2 // turn into hit brick
             SoundManager.playClick()
 
-            // Troll! Spawns a toxic poison mushroom sliding towards player!
-            trapEntities.add(
-                TrapEntity(
-                    x = c.toFloat(),
-                    y = r - 1f,
-                    vx = -0.06f,
-                    vy = 0f,
-                    type = 1 // Poison Mushroom
+            val randVal = (Math.random() * 100).toInt()
+            if (randVal < 40) {
+                // Reward: Glowing Coin! Reduces deaths/ouchies count as a reward!
+                SoundManager.playScore()
+                deaths = Math.max(0, deaths - 1)
+            } else if (randVal < 70) {
+                // Reward: Companion Slime (harmless, happy companion)
+                trapEntities.add(
+                    TrapEntity(
+                        x = c.toFloat(),
+                        y = r - 1f,
+                        vx = -0.06f,
+                        vy = 0f,
+                        type = 3 // Companion Slime
+                    )
                 )
-            )
+            } else {
+                // Troll: Spawns toxic poison mushroom
+                trapEntities.add(
+                    TrapEntity(
+                        x = c.toFloat(),
+                        y = r - 1f,
+                        vx = -0.06f,
+                        vy = 0f,
+                        type = 1 // Poison Mushroom
+                    )
+                )
+                SoundManager.playError()
+            }
             return
         }
 
@@ -983,15 +1028,21 @@ class SyobonView @JvmOverloads constructor(
         val h = b - t
         when (tile) {
             1 -> { // Premium Mossy Ground Block
-                // Deep brown soil base
-                paint.color = Color.parseColor("#4E342E")
+                // Clay brown base
+                paint.color = Color.parseColor("#8D6E63")
                 canvas.drawRect(l, t, r, b, paint)
-                // Grass top layer (top 25%)
-                paint.color = Color.parseColor("#43A047")
-                canvas.drawRect(l, t, r, t + h * 0.25f, paint)
-                // Highlights
-                paint.color = Color.parseColor("#81C784")
-                canvas.drawRect(l, t, r, t + 4, paint)
+                // Grass cap
+                paint.color = Color.parseColor("#4CAF50")
+                canvas.drawRect(l, t, r, t + h * 0.20f, paint)
+                // Decoration: A tiny clean white daisy flower in the center of the clay area
+                val cx = (l + r) / 2
+                val cy = (t + b) / 2
+                paint.color = Color.WHITE
+                canvas.drawCircle(cx - 3f, cy + 2f, 2.5f, paint)
+                canvas.drawCircle(cx + 3f, cy + 2f, 2.5f, paint)
+                canvas.drawCircle(cx, cy - 2f, 2.5f, paint)
+                paint.color = Color.parseColor("#FFD54F") // Yellow center
+                canvas.drawCircle(cx, cy + 1f, 2.2f, paint)
             }
             2 -> { // Modern Metallic Copper Brick
                 paint.color = Color.parseColor("#BF360C") // Deep Copper
@@ -1039,35 +1090,46 @@ class SyobonView @JvmOverloads constructor(
                     canvas.drawRect(l + 4, t + 4, r - 4, b - 4, paint)
                 }
             }
-            5 -> { // Steel Spikes with Laser Red Tips
-                // Base
+            5 -> { // Plasma Spikes with Translucent Energy Fields
+                // Iron base
                 paint.color = Color.parseColor("#37474F")
                 canvas.drawRect(l, b - 4, r, b, paint)
-                // Spikes
+                // Translucent neon pink/red plasma energy aura (cool shield shape)
+                paint.color = Color.parseColor("#40FF1744")
+                val cx = (l + r) / 2
+                canvas.drawCircle(cx, t + h/2f, w * 0.45f, paint)
+                // Sleek metallic spike cone
                 paint.color = Color.parseColor("#90A4AE")
                 val path = Path()
-                path.moveTo(l, b)
-                path.lineTo(l + w / 2, t + h * 0.15f)
-                path.lineTo(r, b)
+                path.moveTo(l + w * 0.1f, b)
+                path.lineTo(cx, t + h * 0.1f)
+                path.lineTo(r - w * 0.1f, b)
                 path.close()
                 canvas.drawPath(path, paint)
-                // Red glowing laser tips
+                // Glowing plasma tip
                 paint.color = Color.parseColor("#FF1744")
-                canvas.drawCircle(l + w / 2, t + h * 0.15f, 4f, paint)
+                canvas.drawCircle(cx, t + h * 0.1f, 4.5f, paint)
             }
-            6 -> { // Cyber Pipe Body
-                paint.color = Color.parseColor("#263238") // Dark steel blue
+            6 -> { // Premium Cyber Pipe Body
+                paint.color = Color.parseColor("#2E7D32") // Clean jade green
                 canvas.drawRect(l, t, r, b, paint)
-                // Glowing horizontal cyan strip
-                paint.color = Color.parseColor("#00E5FF")
-                canvas.drawRect(l, t + h/2 - 2, r, t + h/2 + 2, paint)
+                // Single elegant vertical reflection stripe on the left side
+                paint.color = Color.parseColor("#4CAF50")
+                canvas.drawRect(l + w * 0.12f, t, l + w * 0.22f, b, paint)
+                // Emblem decoration: A clean light green circular emblem shield with a white core
+                val cx = (l + r) / 2
+                val cy = (t + b) / 2
+                paint.color = Color.parseColor("#1B5E20")
+                canvas.drawCircle(cx, cy, w * 0.15f, paint)
+                paint.color = Color.parseColor("#C8E6C9")
+                canvas.drawCircle(cx, cy, w * 0.08f, paint)
             }
-            7 -> { // Cyber Pipe Top
-                paint.color = Color.parseColor("#1A237E") // Dark indigo
+            7 -> { // Premium Cyber Pipe Top
+                paint.color = Color.parseColor("#1B5E20") // Dark green
                 canvas.drawRect(l - 4, t, r + 4, b, paint)
-                // Cyan status glow light
-                paint.color = Color.parseColor("#00E5FF")
-                canvas.drawCircle(l + w/2, t + h/2, 5f, paint)
+                // Light green rim highlight
+                paint.color = Color.parseColor("#4CAF50")
+                canvas.drawRect(l - 4, t, r + 4, t + 4, paint)
             }
             8 -> { // Flagpole
                 paint.color = Color.parseColor("#ECEFF1")
@@ -1128,14 +1190,46 @@ class SyobonView @JvmOverloads constructor(
                 canvas.drawCircle(l + (r - l)*0.7f, t + (b - t)*0.3f, 4f, paint)
                 canvas.drawCircle(l + (r - l)*0.5f, t + (b - t)*0.6f, 3f, paint)
             }
-            2 -> { // Popup ground spikes
-                paint.color = Color.parseColor("#D50000") // Lethal Red spikes
+            2 -> { // Popup ground spikes (Futuristic Plasma Spikes)
+                val cx = (l + r) / 2
+                // Translucent neon pink/red plasma energy aura
+                paint.color = Color.parseColor("#40FF1744")
+                canvas.drawCircle(cx, t + (b - t)/2f, (r - l) * 0.45f, paint)
+                // Sleek metallic spike cone
+                paint.color = Color.parseColor("#90A4AE")
                 val path = Path()
-                path.moveTo(l, b)
-                path.lineTo(l + (r - l)/2, t)
-                path.lineTo(r, b)
+                path.moveTo(l + (r - l) * 0.1f, b)
+                path.lineTo(cx, t + (b - t) * 0.1f)
+                path.lineTo(r - (r - l) * 0.1f, b)
                 path.close()
                 canvas.drawPath(path, paint)
+                // Glowing plasma tip
+                paint.color = Color.parseColor("#FF1744")
+                canvas.drawCircle(cx, t + (b - t) * 0.1f, 4.5f, paint)
+            }
+            3 -> { // Companion Slime (Cyan, happy face)
+                val cx = (l + r) / 2
+                val cy = (t + b) / 2
+                val w = r - l
+                val h = b - t
+                val bounce = (Math.sin(System.currentTimeMillis() / 100.0) * 3f).toFloat()
+                
+                paint.color = Color.parseColor("#00E5FF") // Electric cyan
+                canvas.drawOval(l, t + h * 0.1f + bounce, r, b, paint)
+                
+                // Cute happy smiley eyes
+                paint.color = Color.BLACK
+                canvas.drawCircle(cx - w * 0.18f, cy + bounce / 2f, 2.5f, paint)
+                canvas.drawCircle(cx + w * 0.18f, cy + bounce / 2f, 2.5f, paint)
+                
+                // Happy smile
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = 2f
+                val mouthPath = Path()
+                mouthPath.moveTo(cx - 3f, cy + 4f + bounce/2f)
+                mouthPath.quadTo(cx, cy + 7f + bounce/2f, cx + 3f, cy + 4f + bounce/2f)
+                canvas.drawPath(mouthPath, paint)
+                paint.style = Paint.Style.FILL
             }
         }
     }
