@@ -89,8 +89,11 @@ class SyobonView @JvmOverloads constructor(
         var y: Float,
         var vx: Float,
         var vy: Float,
-        val type: Int, // 0: Nyan Cat, 1: Flying Spike, 2: Popup Ground Spike
-        val variant: Int = 0
+        val type: Int, // 0: Nyan Cat, 1: Flying Spike, 2: Popup Ground Spike, 3: Companion Slime
+        val variant: Int = 0,
+        val sourceX: Float = -1f, // If periodic, spawn from here
+        val sourceY: Float = -1f,
+        var respawnTime: Long = 0L
     )
     private val trapEntities = mutableListOf<TrapEntity>()
 
@@ -101,9 +104,20 @@ class SyobonView @JvmOverloads constructor(
         var vx: Float,
         var vy: Float,
         var isDead: Boolean = false,
-        val type: Int = 0 // 0: Cyber Slime, 1: Iron Shell
+        val type: Int = 0, // 0: Cyber Slime, 1: Iron Shell, 2: Jump Slime, 3: Heavy Shell
+        val variant: Int = 0
     )
     private val landEnemies = mutableListOf<LandEnemy>()
+
+    // Brick breaking particles
+    private class Debris(
+        var x: Float,
+        var y: Float,
+        var vx: Float,
+        var vy: Float,
+        var life: Int = 40
+    )
+    private val debrisParticles = mutableListOf<Debris>()
 
     // Game loop
     private val mainHandler = Handler(Looper.getMainLooper())
@@ -160,6 +174,10 @@ class SyobonView @JvmOverloads constructor(
         } else {
             deaths = 0
         }
+        
+        // Load best (lowest ouchies is best, but ScoreManager tracks high scores. 
+        // We'll treat completion as the record)
+        best = com.tdpham.games.common.ScoreManager.getHighScore(context, gameKey, 0)
 
         resetLevelState()
         gameOver = false
@@ -181,255 +199,252 @@ class SyobonView @JvmOverloads constructor(
         isDying = false
         trapEntities.clear()
         landEnemies.clear()
+        debrisParticles.clear()
+        trapTriggered.fill(false)
+        invisibleBlocks.clear()
+        fallingBlocks.clear()
+
         val rand = java.util.Random()
 
         // 1. Randomize parameters
-        val p1 = rand.nextInt(4) - 3 // -3 to 0 (ensures col 16..19 range for Pipe 1)
-        val p2 = rand.nextInt(7) - 3 // -3 to +3
-        val h1 = rand.nextInt(2) + 2 // 2 to 3
-        val h2 = rand.nextInt(2) + 3 // 3 to 4
-        val h3 = rand.nextInt(2) + 2 // 2 to 3
-        val b1 = rand.nextInt(3) - 2 // -2 to 0 (shifted further left)
+        val p1 = rand.nextInt(4) - 3 
+        val p2 = rand.nextInt(7) - 3 
+        val h1 = rand.nextInt(2) + 2 
+        val h2 = rand.nextInt(2) + 3 
+        val h3 = rand.nextInt(2) + 2 
+        // INCREASED RANDOMIZATION for layouts
+        val b1 = rand.nextInt(15) - 5 // wider horizontal range
+        val bY = rand.nextInt(6) // Much more vertical variation (up to Story 4)
 
         // 2. Build the map first so we can check for valid spawn points
-        buildLevelMap(p1, p2, h1, h2, h3, b1)
+        buildLevelMap(p1, p2, h1, h2, h3, b1, bY)
 
         // 3. Define enemy spawner with collision check
         fun addRandomizedEnemy(baseX: Float, y: Float, baseSpeed: Float) {
-            var spawnX = (baseX + (rand.nextFloat() * 8f - 4f)).coerceIn(4f, (totalMapCols - 10).toFloat())
+            var spawnX = (baseX + (rand.nextFloat() * 12f - 6f)).coerceIn(4f, (totalMapCols - 10).toFloat())
             
             // Validate spawn position
             var attempts = 0
-            while (attempts < 25) {
+            val floorY = if (currentLevel in 11..15) 12 else 13
+            
+            while (attempts < 30) {
                 val gridX = spawnX.toInt()
-                
-                // 1. Column is clear of obstacles (pipes/blocks)
                 var columnIsClear = true
                 for (checkY in 6..12) {
+                    // In Sky levels, ground is at 12, so checkY should only go to 11
+                    if (currentLevel in 11..15 && checkY == 12) continue
                     if (isSolid(checkY, gridX) || isSolid(checkY, gridX + 1)) {
                         columnIsClear = false
                         break
                     }
                 }
-                
-                // 2. Column is over solid ground (not a gap)
-                val groundOk = gridX in 0 until totalMapCols - 1 && map[13][gridX] == 1 && map[13][gridX + 1] == 1
-                
-                // 3. Distance check from other enemies to prevent overlapping
+                val groundOk = gridX in 0 until totalMapCols - 1 && isSolid(floorY, gridX) && isSolid(floorY, gridX + 1)
                 var tooCloseToOther = false
                 for (other in landEnemies) {
-                    if (Math.abs(other.x - spawnX) < 3.0f) {
+                    if (Math.abs(other.x - spawnX) < 4.0f) {
                         tooCloseToOther = true
                         break
                     }
                 }
                 
                 if (columnIsClear && groundOk && !tooCloseToOther) break
-                
-                // Shift and try again
-                spawnX += if (rand.nextBoolean()) 3.0f else -3.0f
+                spawnX += if (rand.nextBoolean()) 4.0f else -4.0f
                 spawnX = spawnX.coerceIn(4f, (totalMapCols - 10).toFloat())
                 attempts++
             }
 
             val speed = if (rand.nextBoolean()) -Math.abs(baseSpeed) else Math.abs(baseSpeed)
-            val enemyType = if (rand.nextBoolean()) 0 else 1
+            val enemyType = when {
+                currentLevel >= 15 -> rand.nextInt(4)
+                currentLevel >= 10 -> rand.nextInt(3)
+                currentLevel >= 5 -> rand.nextInt(2)
+                else -> 0
+            }
             landEnemies.add(LandEnemy(spawnX, y, speed, 0f, type = enemyType))
         }
 
         // 4. Randomize the active spike launcher pipe column
-        spikeLauncherPipeCol = when (currentLevel) {
-            1 -> listOf(19 + p1, 35 + p2, 55).shuffled().first()
-            2 -> 30 + p1
+        spikeLauncherPipeCol = when {
+            currentLevel <= 5 -> listOf(19 + p1, 35 + p2, 55).shuffled().first()
+            currentLevel <= 10 -> 30 + p1
             else -> listOf(35 + p1, 63 + p2).shuffled().first()
         }
 
-        // 5. Spawn enemies
-        when (currentLevel) {
-            1 -> {
-                repeat(rand.nextInt(3) + 4) { // 4 to 6 enemies
-                    addRandomizedEnemy(15f + it * 12f, 12f, 0.04f)
-                }
-            }
-            2 -> {
-                repeat(rand.nextInt(4) + 5) { // 5 to 8 enemies
-                    addRandomizedEnemy(10f + it * 12f, 12f, 0.045f)
-                }
-            }
-            else -> {
-                repeat(rand.nextInt(5) + 6) { // 6 to 10 enemies
-                    addRandomizedEnemy(10f + it * 8f, 12f, 0.05f)
-                }
-            }
+        // 5. Spawn enemies (density increases with level)
+        val enemyCount = 5 + (currentLevel / 1.5).toInt().coerceAtMost(15)
+        repeat(enemyCount) {
+            addRandomizedEnemy(12f + it * (75f / enemyCount), 12f, 0.04f + (currentLevel * 0.002f))
         }
+        
         trapTriggered.fill(false)
         invisibleBlocks.clear()
         fallingBlocks.clear()
-        
-        // Re-build level map to reset trap states that might have been cleared by internal fills
-        // (Though buildLevelMap already does this, we keep the call sequence clean)
-        buildLevelMap(p1, p2, h1, h2, h3, b1)
+        buildLevelMap(p1, p2, h1, h2, h3, b1, bY)
     }
 
-    private fun buildLevelMap(p1: Int, p2: Int, h1: Int, h2: Int, h3: Int, b1: Int) {
+    private fun buildLevelMap(p1: Int, p2: Int, h1: Int, h2: Int, h3: Int, b1: Int, bY: Int) {
         // Clear map
         for (r in 0 until rows) {
             map[r].fill(0)
         }
 
-        when (currentLevel) {
-            1 -> buildLevel1(p1, p2, h1, h2, h3, b1)
-            2 -> buildLevel2(p1, h1)
-            else -> buildLevel3(p1, p2, h1, h2)
+        when {
+            currentLevel <= 5 -> buildGrasslandLevel(p1, p2, h1, h2, h3, b1, bY)
+            currentLevel <= 10 -> buildCavernLevel(p1, p2, h1, h2, b1, bY)
+            currentLevel <= 15 -> buildSkyLevel(p1, p2, h1, h2, h3, bY)
+            else -> buildCastleLevel(p1, p2, h1, h2, b1, bY)
         }
     }
 
-    private fun buildLevel1(p1: Int, p2: Int, h1: Int, h2: Int, h3: Int, b1: Int) {
+    private fun buildGrasslandLevel(p1: Int, p2: Int, h1: Int, h2: Int, h3: Int, b1: Int, bY: Int) {
         // 1. Ground bricks
         for (c in 0 until totalMapCols) {
-            // Classic Mario gap at col 21-23 and col 45-47
-            if (c in 21..23 || c in 45..47 || c in 72..75) {
-                continue
+            // Random gaps based on level
+            val gapFreq = 20 + (currentLevel * 2)
+            if (c > 10 && c % gapFreq in 0..2) {
+                // Ensure flagpole at 88 is NOT in a gap
+                if (c != 88) continue
             }
             map[13][c] = 1 // Ground top
-            map[14][c] = 12 // Ground deep (new type without grass)
+            map[14][c] = 12 // Ground deep
+        }
+        // Force solid ground for flagpole
+        map[13][88] = 1
+        map[14][88] = 12
+
+        // STORY 2: Leveraged bricks
+        val rowY = 9 - bY
+        val group1X = 6 + b1 // Varied horizontal position
+        if (group1X < 12) { // Only at start if b1 is low
+             map[rowY][group1X] = 2 
+             map[rowY][group1X + 1] = 3 
+             map[rowY][group1X + 2] = 2 
+             map[rowY][group1X + 3] = 4 
+             map[rowY][group1X + 4] = 2 
+             invisibleBlocks[Pair(rowY, group1X + 3)] = false 
         }
 
-        // 2. Standard structures
-        // First group of blocks shifted further left (offset by b1)
-        val group1X = 5 + b1 
-        map[9][group1X] = 2 // Brick
-        map[9][group1X + 1] = 3 // Question block
-        map[9][group1X + 2] = 2 // Brick
-        map[9][group1X + 3] = 4 // INVISIBLE block (trap!)
-        map[9][group1X + 4] = 2 // Brick
-        invisibleBlocks[Pair(9, group1X + 3)] = false 
+        // Additional blocks to make levels unique
+        if (currentLevel > 1) {
+            val altX = 20 + (currentLevel * 7) % 30
+            val altY = 7 - (currentLevel % 3)
+            map[altY][altX] = 2
+            map[altY][altX + 1] = 3
+            map[altY][altX + 2] = 2
+        }
 
-        // First pit invisible block troll at col 20
-        map[9][20] = 4
-        invisibleBlocks[Pair(9, 20)] = false
+        // STORY 3: High platforms
+        for (c in 30..40 step 2) {
+            map[5][c] = 2
+        }
 
-        // Pipes with randomized offsets and heights
-        // Shifted Pipe 1 further right to ensure no overlap with block group (group ends at max 11, pipe starts at min 15)
-        // And ensure it stays on solid ground before col 21. 19+1 = 20 (safe).
         buildPipe(19 + p1, h1)
         buildPipe(35 + p2, h2)
         buildPipe(55, h3) 
 
-        // Bridge over the second gap (collapsible!)
-        for (c in 45..47) {
-            map[13][c] = 10 // Collapsible bridge block
-            fallingBlocks[Pair(13, c)] = 0f
+        // Flagpole at col 88 - raising from ground
+        for (r in 3..12) {
+            map[r][88] = 8 
         }
-
-        // Flagpole at col 88
-        map[12][88] = 8 // Flagpole base
-        for (r in 3..11) {
-            map[r][88] = 8 // flagpole shaft
-        }
-        
-        // Invisible stepping stone for the final long gap (col 72-75)
-        map[10][73] = 4
-        invisibleBlocks[Pair(10, 73)] = false
     }
 
-    private fun buildLevel2(p1: Int, h1: Int) {
+    private fun buildCavernLevel(p1: Int, p2: Int, h1: Int, h2: Int, b1: Int, bY: Int) {
         // Underground Cavern
-        // 1. Ground bricks
         for (c in 0 until totalMapCols) {
-            if (c in 18..20 || c in 42..45 || c in 70..73) {
-                continue
+            if (c > 15 && c % 18 in 0..2) {
+                if (c != 88) continue
             }
-            map[13][c] = 1 // Ground top
-            map[14][c] = 12 // Ground deep (new type without grass)
+            map[13][c] = 1 
+            map[14][c] = 12 
         }
+        map[13][88] = 1
+        map[14][88] = 12
 
-        // 2. Ceiling blocks
+        // STORY 4: Solid Ceiling
         for (c in 0 until totalMapCols) {
-            map[2][c] = 12 // Solid ceiling (deep type)
+            map[2][c] = 12 
         }
 
-        // Floating blocks group
-        map[9][10] = 2
-        map[9][11] = 3
-        map[9][12] = 2
-        map[9][13] = 4 // Invisible block
-        map[9][14] = 2
-        invisibleBlocks[Pair(9, 13)] = false
+        // STORY 2: Floating blocks
+        val rowY = 9 - bY
+        val groupX = 10 + b1
+        map[rowY][groupX] = 2
+        map[rowY][groupX + 1] = 3
+        map[rowY][groupX + 2] = 4 // Invisible
+        invisibleBlocks[Pair(rowY, groupX + 2)] = false
 
-        // Pipe
         buildPipe(30 + p1, h1)
-
-        // Stepping stone for first wide gap (troll invisible blocks)
-        map[10][19] = 4
-        invisibleBlocks[Pair(10, 19)] = false
-        
-        // Stepping stone for second wide gap
-        map[10][43] = 4
-        invisibleBlocks[Pair(10, 43)] = false
-
-        // Collapsible floating bridge tiles
-        map[9][41] = 2
-        map[9][42] = 10
-        map[9][43] = 10
-        map[9][44] = 10
-        map[9][45] = 2
-        fallingBlocks[Pair(9, 42)] = 0f
-        fallingBlocks[Pair(9, 43)] = 0f
-        fallingBlocks[Pair(9, 44)] = 0f
-
-        // Floating bricks
-        map[8][60] = 2
-        map[8][61] = 3
-        map[8][62] = 2
-        map[8][63] = 3
-        map[8][64] = 2
+        buildPipe(50 + p2, h2)
 
         // Flagpole at col 88
-        map[12][88] = 8
-        for (r in 3..11) {
+        for (r in 3..12) {
             map[r][88] = 8
         }
     }
 
-    private fun buildLevel3(p1: Int, p2: Int, h1: Int, h2: Int) {
-        // Castle / Lava Style
+    private fun buildSkyLevel(p1: Int, p2: Int, h1: Int, h2: Int, h3: Int, bY: Int) {
+        // Cloud platforms (STORY 1/2)
         for (c in 0 until totalMapCols) {
-            if (c in 15..28 || c in 42..58 || c in 70..83) {
-                map[13][c] = 9 // Lava Top
-                map[14][c] = 9 // Lava Deep
-            } else {
-                map[13][c] = 1 // Ground top
-                map[14][c] = 12 // Ground deep
+            val freq = 12 - (currentLevel - 10)
+            if (c % freq < 5) {
+                map[12][c] = 1
+                map[13][c] = 12
             }
         }
-
-        // Stepping stone bricks over lava
-        map[9][18] = 2
-        map[9][20] = 2
-        map[9][22] = 3
-        map[9][24] = 2
-        map[9][26] = 2
-
-        // Pipes
-        buildPipe(35 + p1, h1)
-        buildPipe(63 + p2, h2)
-
-        // Stepping stone platforms (added more to make it workable)
-        map[10][45] = 2
-        map[10][48] = 2
-        map[9][51] = 2
-        map[10][54] = 2
-        map[10][57] = 2
-
-        // Castle wall blocks
-        for (r in 5..12) {
-            map[r][68] = 1
+        // Force cloud under flagpole
+        map[12][88] = 1
+        map[13][88] = 12
+        
+        // STORY 3: High Clouds
+        val rowY = 8 - bY
+        map[rowY][15] = 2
+        map[rowY][16] = 3
+        map[rowY][17] = 2
+        
+        for (c in 40..60 step 4) {
+            map[5][c] = 1 // Cloud stepping stones
         }
 
-        // Flagpole at col 88
-        map[12][88] = 8
-        for (r in 3..11) {
+        buildPipe(35 + p1, h1)
+        buildPipe(63 + p2, h2)
+        buildPipe(80, h3)
+
+        for (r in 3..12) {
+            map[r][88] = 8
+        }
+    }
+
+    private fun buildCastleLevel(p1: Int, p2: Int, h1: Int, h2: Int, b1: Int, bY: Int) {
+        // Castle / Lava
+        for (c in 0 until totalMapCols) {
+            val lavaWidth = 8 + (currentLevel - 15) + p2 // Incorporate p2 for lava width randomness
+            if (c > 10 && c % 25 in 0..lavaWidth) {
+                if (c != 88) {
+                    map[13][c] = 9 
+                    map[14][c] = 9 
+                    continue
+                }
+            }
+            map[13][c] = 1 
+            map[14][c] = 12 
+        }
+        // Force ground for flagpole
+        map[13][88] = 1
+        map[14][88] = 12
+
+        // STORY 2 & 3: Platform tiers
+        val rowY = 9 - bY
+        map[rowY][18 + b1] = 2 // Use b1 for block group positioning
+        map[rowY][22 + p1] = 3 // Use p1 for question block variation
+        
+        map[rowY - 4][30] = 2
+        map[rowY - 4][31] = 2
+        map[rowY - 4][32] = 2
+
+        buildPipe(35 + p1, h1)
+        buildPipe(63 + p2, h2) // Use h2 for pipe height variation
+
+        for (r in 3..12) {
             map[r][88] = 8
         }
     }
@@ -548,8 +563,24 @@ class SyobonView @JvmOverloads constructor(
         // Troll Trigger Checks
         checkTrapTriggers(difficulty)
 
+        // Periodic Spawner Check
+        if (System.currentTimeMillis() % 4000 < 20) { // Every ~4 seconds
+             // Periodic Nyan Cat from Pipe 2 if difficulty is high
+             if (difficulty == 2 && playerX > 25f && playerX < 60f) {
+                 val pipeX = spikeLauncherPipeCol.toFloat()
+                 trapEntities.add(TrapEntity(pipeX, 8f, -0.15f, 0f, 0, java.util.Random().nextInt(3)))
+                 SoundManager.playError()
+             }
+             
+             // Periodic Flying Spike in Sky levels
+             if (currentLevel in 11..15 && playerX > 10f) {
+                 trapEntities.add(TrapEntity(cameraX + cols + 1f, java.util.Random().nextFloat() * 10f, -0.2f, 0f, 1))
+                 SoundManager.playError()
+             }
+        }
+
         // Update Trap Entities
-        val trapIter = trapEntities.toMutableList().iterator()
+        val trapIter = trapEntities.iterator()
         while (trapIter.hasNext()) {
             val ent = trapIter.next()
             
@@ -578,7 +609,7 @@ class SyobonView @JvmOverloads constructor(
                 if (ent.type == 3) {
                     // Companion slime gives extra protection or points
                     SoundManager.playScore()
-                    trapEntities.remove(ent)
+                    trapIter.remove()
                     continue
                 } else {
                     die()
@@ -587,15 +618,16 @@ class SyobonView @JvmOverloads constructor(
             
             // Remove off-screen/fallen entities
             if (ent.x < cameraX - 2 || ent.x > cameraX + cols + 2 || ent.y > rows + 2) {
-                trapEntities.remove(ent)
+                trapIter.remove()
             }
         }
 
         // Update Land Enemies
-        val enemyList = landEnemies.toMutableList()
-        for (enemy in enemyList) {
+        val enemyIter = landEnemies.iterator()
+        while (enemyIter.hasNext()) {
+            val enemy = enemyIter.next()
             if (enemy.isDead) {
-                landEnemies.remove(enemy)
+                enemyIter.remove()
                 continue
             }
             
@@ -615,6 +647,14 @@ class SyobonView @JvmOverloads constructor(
             
             // Move horizontally
             enemy.x += enemy.vx
+            
+            // Death check (Lava)
+            val gridX = enemy.x.toInt()
+            val gridY = (enemy.y + 0.5f).toInt()
+            if (gridY in 0 until rows && gridX in 0 until totalMapCols && map[gridY][gridX] == 9) {
+                enemy.isDead = true
+                continue
+            }
             
             // Re-resolve horizontal collision to prevent sticking to pipes
             val eyCheck = enemy.y.toInt()
@@ -641,13 +681,20 @@ class SyobonView @JvmOverloads constructor(
                 }
             }
             
-            // Crater awareness: turn back at edges of gaps
-            val gridXFront = if (enemy.vx > 0) (enemy.x + 0.8f).toInt() else (enemy.x - 0.1f).toInt()
-            val gridYBelow = (enemy.y + 1.2f).toInt()
-            if (gridYBelow in 0 until rows && gridXFront in 0 until totalMapCols) {
-                if (!isSolid(gridYBelow, gridXFront) && map[gridYBelow][gridXFront] != 9) { // Not solid and not lava
-                    enemy.vx = -enemy.vx
+            // Crater awareness: turn back at edges of gaps (Only for walkers, not heavy shells)
+            if (enemy.type != 3) {
+                val gridXFront = if (enemy.vx > 0) (enemy.x + 0.8f).toInt() else (enemy.x - 0.1f).toInt()
+                val gridYBelow = (enemy.y + 1.2f).toInt()
+                if (gridYBelow in 0 until rows && gridXFront in 0 until totalMapCols) {
+                    if (!isSolid(gridYBelow, gridXFront) && map[gridYBelow][gridXFront] != 9) { // Not solid and not lava
+                        enemy.vx = -enemy.vx
+                    }
                 }
+            }
+
+            // Jump behavior for Jump Slime (type 2)
+            if (enemy.type == 2 && isOnGround && java.util.Random().nextFloat() < 0.02f) {
+                enemy.vy = -0.2f
             }
             
             // Bounding box collision check with player
@@ -660,6 +707,20 @@ class SyobonView @JvmOverloads constructor(
                 } else {
                     die()
                 }
+            }
+        }
+
+        // Update Debris Particles
+        val debrisIter = debrisParticles.iterator()
+        while (debrisIter.hasNext()) {
+            val d = debrisIter.next()
+            d.vx *= 0.98f
+            d.vy += 0.015f // gravity for debris
+            d.x += d.vx
+            d.y += d.vy
+            d.life--
+            if (d.life <= 0 || d.y > rows) {
+                debrisIter.remove()
             }
         }
     }
@@ -780,8 +841,11 @@ class SyobonView @JvmOverloads constructor(
     }
 
     private fun checkGridCollisionY() {
-        val left = playerX + 0.01f
-        val right = playerX + playerW - 0.01f
+        // Use a larger horizontal buffer for vertical checks to prevent "corner-catching"
+        // where the cat snaps to the top of a block it's only walking past.
+        val buffer = 0.15f
+        val left = playerX + buffer
+        val right = playerX + playerW - buffer
         val top = playerY
         val bottom = playerY + playerH
 
@@ -795,6 +859,8 @@ class SyobonView @JvmOverloads constructor(
         for (r in rMin..rMax) {
             for (c in cMin..cMax) {
                 val cell = if (r in 0 until rows && c in 0 until totalMapCols) map[r][c] else 0
+                
+                // Invisible block bonk (from below)
                 if (cell == 4 && invisibleBlocks[Pair(r, c)] != true) {
                     if (velY < 0 && top <= r + 1 && top - velY > r) {
                         invisibleBlocks[Pair(r, c)] = true
@@ -806,12 +872,14 @@ class SyobonView @JvmOverloads constructor(
                 }
 
                 if (isSolid(r, c)) {
-                    if (velY > 0) {
+                    if (velY > 0 && bottom >= r && bottom - velY <= r) {
+                        // Falling onto a block
                         playerY = r - playerH
                         velY = 0f
                         isOnGround = true
                         return
-                    } else if (velY < 0) {
+                    } else if (velY < 0 && top <= r + 1 && top - velY >= r + 1) {
+                        // Jumping into a block
                         playerY = r + 1f
                         velY = 0f
                         onBlockHit(r, c)
@@ -827,6 +895,7 @@ class SyobonView @JvmOverloads constructor(
         
         // 1. Invisible block bonk
         if (cellType == 4) {
+            if (invisibleBlocks[Pair(r, c)] == true && r > 0 && map[r - 1][c] == 5) return // Already active and trolled
             invisibleBlocks[Pair(r, c)] = true
             SoundManager.playClick() // Block hit sound
             
@@ -881,6 +950,18 @@ class SyobonView @JvmOverloads constructor(
         if (cellType == 2) {
             map[r][c] = 0 // Break and remove block
             SoundManager.playClick() // Shatter sound
+            
+            // Spawn debris particles
+            val centerX = c + 0.5f
+            val centerY = r + 0.5f
+            val rand = java.util.Random()
+            repeat(4) {
+                debrisParticles.add(Debris(
+                    centerX, centerY,
+                    (rand.nextFloat() * 0.16f - 0.08f),
+                    (rand.nextFloat() * -0.15f - 0.05f)
+                ))
+            }
             return
         }
     }
@@ -897,7 +978,7 @@ class SyobonView @JvmOverloads constructor(
         // Collapsible bridge block: only solid if it hasn't fallen
         if (cell == 10) {
             val yOffset = fallingBlocks[Pair(r, c)] ?: 0f
-            return yOffset < 0.2f
+            return yOffset < 0.45f
         }
         
         // Spikes (5), Flagpoles (8), and Lava (9) are triggers, not solid blocks!
@@ -921,12 +1002,21 @@ class SyobonView @JvmOverloads constructor(
         isLevelCleared = true
         celebrationManager.start(width / 2f, height / 3f)
         SoundManager.playSuccess() // victory chime
+        
+        // Update best ouchies if current run was better (only on full completion)
+        if (currentLevel == 20) {
+            val oldBest = com.tdpham.games.common.ScoreManager.getHighScore(context, gameKey, 0)
+            if (oldBest == 0 || deaths < oldBest) {
+                com.tdpham.games.common.ScoreManager.updateHighScore(context, gameKey, deaths, 0)
+                best = deaths
+            }
+        }
     }
 
     private fun handleNextLevelOrReset() {
         if (isLevelCleared) {
             isLevelCleared = false
-            if (currentLevel < 3) {
+            if (currentLevel < 20) {
                 currentLevel++
                 resetLevelState()
             } else {
@@ -1088,6 +1178,16 @@ class SyobonView @JvmOverloads constructor(
             val er = el + cellW * 0.8f
             val eb = et + cellH * 0.8f
             drawLandEnemy(canvas, el, et, er, eb, enemy.type)
+        }
+
+        // 2c. Draw Debris Particles
+        paint.color = Color.parseColor("#BF360C") // Brick color
+        for (d in debrisParticles) {
+            val dl = d.x * cellW
+            val dt = d.y * cellH
+            val dr = dl + cellW * 0.3f
+            val db = dt + cellH * 0.3f
+            canvas.drawRect(dl, dt, dr, db, paint)
         }
 
         // 3. Draw Player (Cat)
@@ -1409,46 +1509,48 @@ class SyobonView @JvmOverloads constructor(
         val w = r - l
         val h = b - t
         
-        if (type == 0) { // 1. Cyber Slime
-            // Animated vertical bouncing/squishing slime
-            val bounce = (Math.sin(System.currentTimeMillis() / 100.0) * 3f).toFloat()
-            paint.color = Color.parseColor("#00E676") // Neon green
-            val slimeRect = RectF(l, t + h * 0.2f + bounce, r, b)
-            canvas.drawOval(slimeRect, paint)
-            
-            // Neon core
-            paint.color = Color.parseColor("#FFFF00")
-            canvas.drawCircle(cx, cy + bounce / 2f + 3f, w * 0.15f, paint)
-            
-            // Small cyber eyes
-            paint.color = Color.BLACK
-            canvas.drawCircle(cx - w * 0.18f, cy + bounce / 2f, 3f, paint)
-            canvas.drawCircle(cx + w * 0.18f, cy + bounce / 2f, 3f, paint)
-        } else { // 2. Iron Shell
-            // Steel blue shell base dome
-            paint.color = Color.parseColor("#455A64")
-            val shellRect = RectF(l, t + h * 0.2f, r, b)
-            canvas.drawArc(shellRect, 180f, 180f, true, paint)
-            
-            // Draw spikes on the shell dome
-            paint.color = Color.parseColor("#CFD8DC")
-            val spikePath = Path()
-            spikePath.moveTo(l + w * 0.2f, t + h * 0.3f)
-            spikePath.lineTo(l + w * 0.25f, t + h * 0.1f)
-            spikePath.lineTo(l + w * 0.35f, t + h * 0.3f)
-            
-            spikePath.moveTo(cx, t + h * 0.2f)
-            spikePath.lineTo(cx, t - 4f)
-            spikePath.lineTo(cx + w * 0.1f, t + h * 0.2f)
-            
-            spikePath.moveTo(r - w * 0.35f, t + h * 0.3f)
-            spikePath.lineTo(r - w * 0.25f, t + h * 0.1f)
-            spikePath.lineTo(r - w * 0.2f, t + h * 0.3f)
-            canvas.drawPath(spikePath, paint)
-            
-            // Glowing orange visor eyes peeking out
-            paint.color = Color.parseColor("#FF6F00")
-            canvas.drawRoundRect(cx - 10f, b - h * 0.3f, cx + 10f, b - h * 0.1f, 2f, 2f, paint)
+        when (type) {
+            0 -> { // 1. Cyber Slime
+                val bounce = (Math.sin(System.currentTimeMillis() / 100.0) * 3f).toFloat()
+                paint.color = Color.parseColor("#00E676") // Neon green
+                val slimeRect = RectF(l, t + h * 0.2f + bounce, r, b)
+                canvas.drawOval(slimeRect, paint)
+                paint.color = Color.parseColor("#FFFF00")
+                canvas.drawCircle(cx, cy + bounce / 2f + 3f, w * 0.15f, paint)
+                paint.color = Color.BLACK
+                canvas.drawCircle(cx - w * 0.18f, cy + bounce / 2f, 3f, paint)
+                canvas.drawCircle(cx + w * 0.18f, cy + bounce / 2f, 3f, paint)
+            }
+            1 -> { // 2. Iron Shell
+                paint.color = Color.parseColor("#455A64")
+                val shellRect = RectF(l, t + h * 0.2f, r, b)
+                canvas.drawArc(shellRect, 180f, 180f, true, paint)
+                paint.color = Color.parseColor("#CFD8DC")
+                val spikePath = Path()
+                spikePath.moveTo(l + w * 0.2f, t + h * 0.3f); spikePath.lineTo(l + w * 0.25f, t + h * 0.1f); spikePath.lineTo(l + w * 0.35f, t + h * 0.3f)
+                canvas.drawPath(spikePath, paint)
+                paint.color = Color.parseColor("#FF6F00")
+                canvas.drawRoundRect(cx - 10f, b - h * 0.3f, cx + 10f, b - h * 0.1f, 2f, 2f, paint)
+            }
+            2 -> { // 3. Jump Slime
+                val bounce = (Math.sin(System.currentTimeMillis() / 80.0) * 5f).toFloat()
+                paint.color = Color.parseColor("#FFD600") // Yellow
+                canvas.drawOval(l, t + h * 0.1f + bounce, r, b, paint)
+                paint.color = Color.BLACK
+                canvas.drawCircle(cx - w * 0.2f, cy + bounce, 4f, paint)
+                canvas.drawCircle(cx + w * 0.2f, cy + bounce, 4f, paint)
+                // Crown for jump slime
+                paint.color = Color.parseColor("#FF5722")
+                canvas.drawRect(cx - 5, t + bounce - 5, cx + 5, t + bounce, paint)
+            }
+            3 -> { // 4. Heavy Shell
+                paint.color = Color.parseColor("#212121")
+                val shellRect = RectF(l - 10, t, r + 10, b)
+                canvas.drawRoundRect(shellRect, 12f, 12f, paint)
+                paint.color = Color.RED
+                canvas.drawCircle(cx - 15, cy, 5f, paint)
+                canvas.drawCircle(cx + 15, cy, 5f, paint)
+            }
         }
     }
 
