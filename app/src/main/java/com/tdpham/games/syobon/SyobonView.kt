@@ -807,7 +807,7 @@ class SyobonView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
                 pressedKeys.add(keyCode)
             }
-            KeyEvent.KEYCODE_MENU -> {
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_SETTINGS, KeyEvent.KEYCODE_M, KeyEvent.KEYCODE_O -> {
                 showOptions()
             }
             else -> return super.onKeyDown(keyCode, event)
@@ -829,6 +829,10 @@ class SyobonView @JvmOverloads constructor(
     }
 
     override fun performClick(): Boolean {
+        if (gamePaused && !gameOver && !isLevelCleared) {
+            showOptions()
+            return true
+        }
         super.performClick()
         return true
     }
@@ -838,6 +842,13 @@ class SyobonView @JvmOverloads constructor(
             if (event.action == MotionEvent.ACTION_DOWN) {
                 performClick()
                 handleNextLevelOrReset()
+            }
+            return true
+        }
+
+        if (gamePaused) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                performClick()
             }
             return true
         }

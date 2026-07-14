@@ -110,7 +110,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     private fun showMasteryHint() {
         val root = findViewById<android.view.ViewGroup>(android.R.id.content)
-        val hintText = if (gameKey == "trex") {
+        val hintText = if (gameKey == "trex" || gameKey == "syobon_action") {
             getString(R.string.trex_press_menu_options)
         } else {
             getString(R.string.guide_hint_keys)
@@ -387,6 +387,12 @@ abstract class BaseGameActivity : AppCompatActivity() {
                     removeActiveOverlay()
                     com.tdpham.games.spinball.SpinballOptionsDialog.show(this) {
                         (gameView as? com.tdpham.games.spinball.SpinballView)?.resetGame()
+                    }
+                    return true
+                } else if (gameKey == "syobon_action") {
+                    removeActiveOverlay()
+                    com.tdpham.games.syobon.SyobonOptionsDialog.show(this) {
+                        (gameView as? com.tdpham.games.syobon.SyobonView)?.resetGame()
                     }
                     return true
                 }
