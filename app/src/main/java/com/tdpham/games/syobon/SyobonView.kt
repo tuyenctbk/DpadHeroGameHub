@@ -53,7 +53,7 @@ class SyobonView @JvmOverloads constructor(
     private var isOnGround = false
     private var isFacingRight = true
     private var jumpHoldTimer = 0L
-    private val maxJumpHoldTime = 300 // milliseconds
+    private val maxJumpHoldTime = 350 // milliseconds
     private var isDying = false
     private var deathTime = 0L
     private var dieSpinAngle = 0f
@@ -63,8 +63,8 @@ class SyobonView @JvmOverloads constructor(
     private val speedAccel = 0.008f
     private val friction = 0.82f
     private val maxSpeed = 0.16f
-    private val jumpImpulse = -0.26f
-    private val jumpHoldForce = -0.012f
+    private val jumpImpulse = -0.35f
+    private val jumpHoldForce = -0.016f
 
     // Keyboard Tracking
     private val pressedKeys = mutableSetOf<Int>()
@@ -84,6 +84,16 @@ class SyobonView @JvmOverloads constructor(
         val type: Int // 0: Nyan Cat, 1: Flying Spike, 2: Popup Ground Spike
     )
     private val trapEntities = mutableListOf<TrapEntity>()
+
+    // Land patrolling enemies (Goomba/Syobon style)
+    private class LandEnemy(
+        var x: Float,
+        var y: Float,
+        var vx: Float,
+        var vy: Float,
+        var isDead: Boolean = false
+    )
+    private val landEnemies = mutableListOf<LandEnemy>()
 
     // Game loop
     private val mainHandler = Handler(Looper.getMainLooper())
@@ -156,6 +166,11 @@ class SyobonView @JvmOverloads constructor(
         isFacingRight = true
         isDying = false
         trapEntities.clear()
+        landEnemies.clear()
+        landEnemies.add(LandEnemy(14f, 12f, -0.04f, 0f))
+        landEnemies.add(LandEnemy(28f, 12f, -0.04f, 0f))
+        landEnemies.add(LandEnemy(38f, 12f, 0.04f, 0f))
+        landEnemies.add(LandEnemy(60f, 12f, -0.04f, 0f))
         trapTriggered.fill(false)
         invisibleBlocks.clear()
         fallingBlocks.clear()
@@ -352,6 +367,53 @@ class SyobonView @JvmOverloads constructor(
                 iterator.remove()
             }
         }
+
+        // Update Land Enemies
+        val enemyIterator = landEnemies.iterator()
+        while (enemyIterator.hasNext()) {
+            val enemy = enemyIterator.next()
+            if (enemy.isDead) {
+                enemyIterator.remove()
+                continue
+            }
+            
+            // Apply gravity
+            enemy.vy += gravity
+            enemy.y += enemy.vy
+            
+            // Vertical collision
+            val ex = enemy.x.toInt()
+            val ey = enemy.y.toInt()
+            if (ey in 0 until rows && ex in 0 until totalMapCols) {
+                if (isSolid(ey + 1, ex)) {
+                    enemy.y = ey.toFloat()
+                    enemy.vy = 0f
+                }
+            }
+            
+            // Move horizontally
+            enemy.x += enemy.vx
+            
+            // Reverse direction if hitting solid wall blocks
+            val nextX = (enemy.x + (if (enemy.vx > 0) 0.8f else -0.1f)).toInt()
+            if (ey in 0 until rows && nextX in 0 until totalMapCols) {
+                if (isSolid(ey, nextX)) {
+                    enemy.vx = -enemy.vx
+                }
+            }
+            
+            // Bounding box collision check with player
+            if (Math.abs(enemy.x - playerX) < 0.7f && Math.abs(enemy.y - playerY) < 0.7f) {
+                // If player is falling onto the enemy's head
+                if (velY > 0f && playerY + playerH - velY <= enemy.y + 0.3f) {
+                    enemy.isDead = true
+                    velY = -0.22f // bounce player high up!
+                    SoundManager.playClick()
+                } else {
+                    die()
+                }
+            }
+        }
     }
 
     private fun checkTrapTriggers(difficulty: Int) {
@@ -519,9 +581,17 @@ class SyobonView @JvmOverloads constructor(
                     y = r - 1f,
                     vx = -0.06f,
                     vy = 0f,
-                    type = 1 // Poison Mushroom / Flying Spike representation
+                    type = 1 // Poison Mushroom
                 )
             )
+            return
+        }
+
+        // 3. Standard brick hit -> Break it!
+        if (cellType == 2) {
+            map[r][c] = 0 // Break and remove block
+            SoundManager.playClick() // Shatter sound
+            return
         }
     }
 
@@ -685,6 +755,15 @@ class SyobonView @JvmOverloads constructor(
             drawTrapEntity(canvas, ent, left, top, right, bottom)
         }
 
+        // 2b. Draw Land Enemies
+        for (enemy in landEnemies) {
+            val el = enemy.x * cellW
+            val et = enemy.y * cellH
+            val er = el + cellW * 0.8f
+            val eb = et + cellH * 0.8f
+            drawLandEnemy(canvas, el, et, er, eb)
+        }
+
         // 3. Draw Player (Cat)
         val pLeft = playerX * cellW
         val pTop = playerY * cellH
@@ -846,6 +925,31 @@ class SyobonView @JvmOverloads constructor(
                 canvas.drawPath(path, paint)
             }
         }
+    }
+
+    private fun drawLandEnemy(canvas: Canvas, l: Float, t: Float, r: Float, b: Float) {
+        val cx = (l + r) / 2
+        val cy = (t + b) / 2
+        val w = r - l
+        val h = b - t
+        
+        paint.color = Color.WHITE
+        canvas.drawOval(l, t + h * 0.2f, r, b, paint)
+        
+        // Draw two cute little ears
+        val earPath = Path()
+        earPath.moveTo(l + w * 0.2f, t + h * 0.3f)
+        earPath.lineTo(l + w * 0.1f, t + h * 0.1f)
+        earPath.lineTo(l + w * 0.35f, t + h * 0.25f)
+        earPath.moveTo(r - w * 0.2f, t + h * 0.3f)
+        earPath.lineTo(r - w * 0.1f, t + h * 0.1f)
+        earPath.lineTo(r - w * 0.35f, t + h * 0.25f)
+        canvas.drawPath(earPath, paint)
+        
+        // Draw eyes
+        paint.color = Color.BLACK
+        canvas.drawCircle(cx - w * 0.2f, cy, 3.5f, paint)
+        canvas.drawCircle(cx + w * 0.2f, cy, 3.5f, paint)
     }
 
     private fun drawCat(canvas: Canvas, l: Float, t: Float, r: Float, b: Float) {
