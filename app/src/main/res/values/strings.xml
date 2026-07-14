@@ -101,6 +101,7 @@
     <string name="game_slide_puzzle">SLIDE PUZZLE</string>
     <string name="game_mental_math">MENTAL MATH</string>
     <string name="game_froggy">FROGGY CROSS</string>
+    <string name="game_syobon">SYOBON ACTION</string>
     <string name="game_simon">SIMON SAYS</string>
     <string name="game_tanks">BATTLE TANKS</string>
     <string name="word_quest_settings_title">WORD QUEST SETTINGS</string>
@@ -167,6 +168,7 @@
     <string name="game_slide_puzzle_instructions">• Use DPAD to move cursor.\n• Press UP/DOWN or MENU to change LEVEL.\n• CENTER to slide tile. Reorder to win.\n• Higher level = more puzzle pieces!</string>
     <string name="game_mental_math_instructions">• Solve the math problem.\n• Use DPAD to select answer.\n• Press CENTER to confirm.\n• Be quick! Timer is running.\n• Wrong answer ends game.</string>
     <string name="game_froggy_instructions">• Cross the road and river.\n• Avoid cars on the road.\n• Jump on logs in the river.\n• Reach the top to score!\n• Use D-PAD to move.</string>
+    <string name="game_syobon_instructions">• Move left/right with D-PAD Left/Right.\n• Press D-PAD Up/Center to Jump.\n• Jump under blocks to hit them.\n• Reach the flagpole to win!\n• WATCH OUT FOR THE TRAPS!</string>
     <string name="game_simon_instructions">• Watch the sequence of colors.\n• Repeat it using the D-PAD:\n  - UP: Yellow\n  - RIGHT: Green\n  - DOWN: Red\n  - LEFT: Blue\n• Sequence gets longer each round!</string>
     <string name="game_tanks_instructions">• Control your tank with D-PAD.\n• Tank fires automatically.\n• Destroy enemy tanks.\n• Protect your BASE (the star).\n• Bricks can be destroyed.</string>
     <string name="game_word_quest_instructions">• Guess the 5-letter word in 6 tries.\n• Use D-PAD to navigate keyboard.\n• Press CENTER to select letter.\n• GREEN: Correct letter &amp; position.\n• YELLOW: Correct letter, wrong position.\n• GRAY: Letter not in word.</string>

@@ -33,6 +33,7 @@ import com.tdpham.games.flappy.FlappyHeroActivity
 import com.tdpham.games.checkers.CheckersActivity
 import com.tdpham.games.spinball.SpinballActivity
 import com.tdpham.games.froggy.FroggyCrossActivity
+import com.tdpham.games.syobon.SyobonActivity
 import com.tdpham.games.common.SoundManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
@@ -134,7 +135,8 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_flappy to FlappyHeroActivity::class.java,
             R.id.btn_checkers to CheckersActivity::class.java,
             R.id.btn_spinball to SpinballActivity::class.java,
-            R.id.btn_froggy to FroggyCrossActivity::class.java
+            R.id.btn_froggy to FroggyCrossActivity::class.java,
+            R.id.btn_syobon to SyobonActivity::class.java
         )
 
         for ((id, activityClass) in games) {
@@ -173,6 +175,7 @@ class MainActivity : AppCompatActivity() {
             "simon_says" -> findViewById<Button>(R.id.btn_simon).requestFocus()
             "flappy_hero" -> findViewById<Button>(R.id.btn_flappy).requestFocus()
             "froggy_cross" -> findViewById<Button>(R.id.btn_froggy).requestFocus()
+            "syobon_action" -> findViewById<Button>(R.id.btn_syobon).requestFocus()
             "checkers" -> findViewById<Button>(R.id.btn_checkers).requestFocus()
             "spinball" -> findViewById<Button>(R.id.btn_spinball).requestFocus()
             else -> findViewById<Button>(R.id.btn_snake).requestFocus()

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Sky Blue Background -->
+    <path
+        android:fillColor="#80D8FF"
+        android:pathData="M0,0 H120 V120 H0 Z" />
+
+    <!-- Cute Retro White Cat (Syobon Face) -->
+    <!-- Cat Ears -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M25,50 L45,25 L55,50 Z M95,50 L75,25 L65,50 Z" />
+    <path
+        android:fillColor="#FFCDD2"
+        android:pathData="M30,48 L42,30 L48,48 Z M90,48 L78,30 L72,48 Z" />
+
+    <!-- Cat Head -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M20,70 A40,32 0 1,0 100,70 A40,32 0 1,0 20,70" />
+
+    <!-- Syobon Eyes -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M42,65 A4,6 0 1,1 50,65 A4,6 0 1,1 42,65 M70,65 A4,6 0 1,1 78,65 A4,6 0 1,1 70,65" />
+
+    <!-- Syobon Mouth -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#000000"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:pathData="M52,75 Q56,80 60,75 Q64,80 68,75" />
+
+</vector>

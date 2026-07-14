@@ -458,6 +458,25 @@
                 android:textStyle="bold" />
 
             <Button
+                android:id="@+id/btn_syobon"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="@color/btn_syobon_color"
+                android:elevation="12dp"
+                android:focusable="true"
+                android:nextFocusUp="@id/btn_settings"
+                android:text="@string/game_syobon"
+                android:textAllCaps="true"
+                android:drawableTop="@drawable/ic_game_syobon"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <Button
                 android:id="@+id/btn_slide_puzzle"
                 android:layout_width="200dp"
                 android:layout_height="240dp"
