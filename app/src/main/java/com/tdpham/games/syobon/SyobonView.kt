@@ -182,35 +182,52 @@ class SyobonView @JvmOverloads constructor(
         landEnemies.clear()
         val rand = java.util.Random()
 
-        // Randomize some pipe positions and heights
+        // 1. Randomize parameters
         val p1 = rand.nextInt(7) - 3 // -3 to +3
         val p2 = rand.nextInt(9) - 4 // -4 to +4
         val h1 = rand.nextInt(2) + 2 // 2 to 3
         val h2 = rand.nextInt(2) + 3 // 3 to 4
         val h3 = rand.nextInt(2) + 2 // 2 to 3
-        
-        // Randomize some block group positions
         val b1 = rand.nextInt(5) - 2 // -2 to +2
 
+        // 2. Build the map first so we can check for valid spawn points
+        buildLevelMap(p1, p2, h1, h2, h3, b1)
+
+        // 3. Define enemy spawner with collision check
         fun addRandomizedEnemy(baseX: Float, y: Float, baseSpeed: Float) {
-            // Randomly offset starting X by up to +/- 3 grid cells
-            val offsetX = (rand.nextFloat() * 6f - 3f)
-            val spawnX = (baseX + offsetX).coerceIn(4f, (totalMapCols - 10).toFloat())
+            var spawnX = (baseX + (rand.nextFloat() * 8f - 4f)).coerceIn(4f, (totalMapCols - 10).toFloat())
             
-            // Randomly choose speed direction
+            // Validate spawn position: ensure not starting inside a solid block (like a pipe)
+            var attempts = 0
+            while (attempts < 15) {
+                val gridX = spawnX.toInt()
+                val gridY = y.toInt()
+                
+                // Check if the 1x1 area for the enemy is clear
+                val isBlocked = (gridY in 0 until rows && gridX in 0 until totalMapCols && isSolid(gridY, gridX)) ||
+                                (gridY in 0 until rows && (gridX + 1) in 0 until totalMapCols && isSolid(gridY, gridX + 1))
+                
+                if (!isBlocked) break
+                
+                // Shift and try again
+                spawnX += if (rand.nextBoolean()) 1.5f else -1.5f
+                spawnX = spawnX.coerceIn(4f, (totalMapCols - 10).toFloat())
+                attempts++
+            }
+
             val speed = if (rand.nextBoolean()) -Math.abs(baseSpeed) else Math.abs(baseSpeed)
-            // Randomly choose enemy type (0: Cyber Slime, 1: Iron Shell)
             val enemyType = if (rand.nextBoolean()) 0 else 1
             landEnemies.add(LandEnemy(spawnX, y, speed, 0f, type = enemyType))
         }
 
-        // Randomize the active spike launcher pipe column
+        // 4. Randomize the active spike launcher pipe column
         spikeLauncherPipeCol = when (currentLevel) {
             1 -> listOf(15 + p1, 32 + p2, 55).shuffled().first()
             2 -> 30 + p1
             else -> listOf(35 + p1, 63 + p2).shuffled().first()
         }
 
+        // 5. Spawn enemies
         when (currentLevel) {
             1 -> {
                 repeat(rand.nextInt(3) + 4) { // 4 to 6 enemies
@@ -231,7 +248,9 @@ class SyobonView @JvmOverloads constructor(
         trapTriggered.fill(false)
         invisibleBlocks.clear()
         fallingBlocks.clear()
-
+        
+        // Re-build level map to reset trap states that might have been cleared by internal fills
+        // (Though buildLevelMap already does this, we keep the call sequence clean)
         buildLevelMap(p1, p2, h1, h2, h3, b1)
     }
 
