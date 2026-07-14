@@ -26,7 +26,26 @@ class FroggyCrossView @JvmOverloads constructor(
     override var onGameOver: ((Int) -> Unit)? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    private val rows = 11 // Start, 4 Road lanes, Grass, 4 River lanes, End
+    enum class TerrainType {
+        GRASS,
+        ROAD,
+        RIVER,
+        RAILROAD,
+        LAVA
+    }
+
+    private fun getTerrainType(r: Int): TerrainType {
+        return when (r) {
+            15, 11, 8, 5, 1, 0 -> TerrainType.GRASS
+            14, 13, 4 -> TerrainType.ROAD
+            12, 2 -> TerrainType.RAILROAD
+            10, 9, 3 -> TerrainType.RIVER
+            7, 6 -> TerrainType.LAVA
+            else -> TerrainType.GRASS
+        }
+    }
+
+    private val rows = 16
     private val cols = 13
     private var cellW = 0f
     private var cellH = 0f
@@ -65,6 +84,7 @@ class FroggyCrossView @JvmOverloads constructor(
     private var lastUpdate = 0L
     private val entityRect = RectF()
     private val tempRect = RectF()
+    private val tempPath = Path()
 
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
     private val gameLoop = object : Runnable {
@@ -154,23 +174,44 @@ class FroggyCrossView @JvmOverloads constructor(
             2 -> 1.4f
             else -> 1.0f
         }
-        // Road lanes (1 to 4)
-        for (r in 6..9) {
-            val speed = (Random.nextFloat() * 0.05f + 0.03f) * (if (r % 2 == 0) 1 else -1) * speedMult
+        for (r in 0 until rows) {
+            val terrain = getTerrainType(r)
+            if (terrain == TerrainType.GRASS) continue
+            
             val entities = mutableListOf<Entity>()
-            repeat(3) { i ->
-                entities.add(Entity(i * 5f, 2, Color.RED))
+            val direction = if (r % 2 == 0) 1 else -1
+            
+            when (terrain) {
+                TerrainType.ROAD -> {
+                    val speed = (Random.nextFloat() * 0.05f + 0.03f) * direction * speedMult
+                    repeat(3) { i ->
+                        entities.add(Entity(i * 5f, 2, Color.RED))
+                    }
+                    lanes.add(Lane(r, speed, entities, false))
+                }
+                TerrainType.RIVER -> {
+                    val speed = (Random.nextFloat() * 0.04f + 0.02f) * direction * speedMult
+                    repeat(3) { i ->
+                        entities.add(Entity(i * 5f, 3, Color.parseColor("#8D6E63"), true))
+                    }
+                    lanes.add(Lane(r, speed, entities, true))
+                }
+                TerrainType.RAILROAD -> {
+                    // Fast moving Bullet Train
+                    val speed = 0.12f * direction * speedMult
+                    entities.add(Entity(0f, 5, Color.LTGRAY))
+                    lanes.add(Lane(r, speed, entities, false))
+                }
+                TerrainType.LAVA -> {
+                    // Floating obsidian rocks
+                    val speed = (Random.nextFloat() * 0.03f + 0.025f) * direction * speedMult
+                    repeat(3) { i ->
+                        entities.add(Entity(i * 5f, 2, Color.DKGRAY, true))
+                    }
+                    lanes.add(Lane(r, speed, entities, true))
+                }
+                else -> {}
             }
-            lanes.add(Lane(r, speed, entities, false))
-        }
-        // River lanes (1 to 4)
-        for (r in 1..4) {
-            val speed = (Random.nextFloat() * 0.04f + 0.02f) * (if (r % 2 == 0) 1 else -1) * speedMult
-            val entities = mutableListOf<Entity>()
-            repeat(3) { i ->
-                entities.add(Entity(i * 5f, 3, Color.parseColor("#8D6E63"), true))
-            }
-            lanes.add(Lane(r, speed, entities, true))
         }
     }
 
@@ -317,12 +358,60 @@ class FroggyCrossView @JvmOverloads constructor(
 
         // Draw Background
         for (r in 0 until rows) {
-            paint.color = when (r) {
-                0, 5, 10 -> Color.parseColor("#2E7D32") // Grass/Safe
-                in 1..4 -> Color.parseColor("#0277BD") // River
-                else -> Color.parseColor("#212121") // Road
+            val terrain = getTerrainType(r)
+            when (terrain) {
+                TerrainType.GRASS -> {
+                    paint.color = Color.parseColor("#2E7D32")
+                    canvas.drawRect(0f, r * cellH, width.toFloat(), (r + 1) * cellH, paint)
+                    paint.color = Color.parseColor("#1B5E20")
+                    paint.strokeWidth = 2f
+                    repeat(4) { idx ->
+                        val gx = (idx * 3 + 1) * (width / 12f)
+                        canvas.drawLine(gx, r * cellH + cellH * 0.7f, gx - 5, r * cellH + cellH * 0.3f, paint)
+                        canvas.drawLine(gx, r * cellH + cellH * 0.7f, gx + 5, r * cellH + cellH * 0.3f, paint)
+                    }
+                }
+                TerrainType.ROAD -> {
+                    paint.color = Color.parseColor("#212121")
+                    canvas.drawRect(0f, r * cellH, width.toFloat(), (r + 1) * cellH, paint)
+                    paint.color = Color.parseColor("#FFD54F")
+                    paint.strokeWidth = 3f
+                    paint.pathEffect = DashPathEffect(floatArrayOf(30f, 30f), 0f)
+                    canvas.drawLine(0f, r * cellH + cellH / 2, width.toFloat(), r * cellH + cellH / 2, paint)
+                    paint.pathEffect = null
+                }
+                TerrainType.RIVER -> {
+                    paint.color = Color.parseColor("#0277BD")
+                    canvas.drawRect(0f, r * cellH, width.toFloat(), (r + 1) * cellH, paint)
+                }
+                TerrainType.RAILROAD -> {
+                    paint.color = Color.parseColor("#37474F")
+                    canvas.drawRect(0f, r * cellH, width.toFloat(), (r + 1) * cellH, paint)
+                    paint.color = Color.parseColor("#4E342E")
+                    val tieWidth = 14f
+                    val tieSpacing = width / 12f
+                    paint.style = Paint.Style.FILL
+                    for (i in 0..12) {
+                        canvas.drawRect(i * tieSpacing + tieSpacing/2 - tieWidth/2, r * cellH + cellH * 0.15f, i * tieSpacing + tieSpacing/2 + tieWidth/2, r * cellH + cellH * 0.85f, paint)
+                    }
+                    paint.color = Color.parseColor("#B0BEC5")
+                    paint.strokeWidth = 6f
+                    canvas.drawLine(0f, r * cellH + cellH * 0.3f, width.toFloat(), r * cellH + cellH * 0.3f, paint)
+                    canvas.drawLine(0f, r * cellH + cellH * 0.7f, width.toFloat(), r * cellH + cellH * 0.7f, paint)
+                }
+                TerrainType.LAVA -> {
+                    paint.color = Color.parseColor("#BF360C")
+                    canvas.drawRect(0f, r * cellH, width.toFloat(), (r + 1) * cellH, paint)
+                    paint.color = Color.parseColor("#FF6D00")
+                    paint.strokeWidth = 4f
+                    val timePulse = (System.currentTimeMillis() / 200L) % 4
+                    repeat(3) { idx ->
+                        val lx = (idx * 4 + timePulse) * (width / 13f)
+                        canvas.drawLine(lx, r * cellH + cellH * 0.2f, lx + 30f, r * cellH + cellH * 0.5f, paint)
+                        canvas.drawLine(lx + 30f, r * cellH + cellH * 0.5f, lx, r * cellH + cellH * 0.8f, paint)
+                    }
+                }
             }
-            canvas.drawRect(0f, r * cellH, width.toFloat(), (r + 1) * cellH, paint)
         }
 
         // update() - Moved to gameLoop
@@ -485,56 +574,87 @@ class FroggyCrossView @JvmOverloads constructor(
     }
 
     private fun drawEntity(canvas: Canvas, rect: RectF, isRiver: Boolean, speed: Float, r: Int) {
-        if (isRiver) {
-            // Logs
-            paint.color = Color.parseColor("#5D4037") // Bark brown
-            canvas.drawRoundRect(rect, 12f, 12f, paint)
-            // Rings at ends
-            paint.color = Color.parseColor("#8D6E63") // Lighter brown rings
-            canvas.drawCircle(rect.left + 15, rect.top + rect.height()/2, 10f, paint)
-            canvas.drawCircle(rect.right - 15, rect.top + rect.height()/2, 10f, paint)
-            // Bark texture lines
-            paint.color = Color.parseColor("#3E2723") // Dark brown lines
-            paint.strokeWidth = 3f
-            paint.style = Paint.Style.STROKE
-            canvas.drawLine(rect.left + 35, rect.top + 12, rect.right - 35, rect.top + 12, paint)
-            canvas.drawLine(rect.left + 25, rect.bottom - 12, rect.right - 25, rect.bottom - 12, paint)
-            paint.style = Paint.Style.FILL
-            // Little green leaf growing from log
-            paint.color = Color.parseColor("#4CAF50")
-            canvas.drawCircle(rect.left + rect.width()/2, rect.top + 2, 8f, paint)
-        } else {
-            // Cars
-            val carColor = when (r % 3) {
-                0 -> Color.parseColor("#E53935") // Red
-                1 -> Color.parseColor("#1E88E5") // Blue
-                else -> Color.parseColor("#8E24AA") // Purple
+        val terrain = getTerrainType(r)
+        when (terrain) {
+            TerrainType.ROAD -> {
+                val carColor = when (r % 3) {
+                    0 -> Color.parseColor("#E53935")
+                    1 -> Color.parseColor("#1E88E5")
+                    else -> Color.parseColor("#8E24AA")
+                }
+                paint.color = carColor
+                canvas.drawRoundRect(rect, 10f, 10f, paint)
+                paint.color = Color.BLACK
+                canvas.drawCircle(rect.left + 15, rect.top, 8f, paint)
+                canvas.drawCircle(rect.right - 15, rect.top, 8f, paint)
+                canvas.drawCircle(rect.left + 15, rect.bottom, 8f, paint)
+                canvas.drawCircle(rect.right - 15, rect.bottom, 8f, paint)
+                paint.color = Color.parseColor("#B3E5FC")
+                val wx1 = if (speed > 0) rect.right - rect.width() * 0.4f else rect.left + rect.width() * 0.15f
+                val wx2 = if (speed > 0) rect.right - rect.width() * 0.15f else rect.left + rect.width() * 0.4f
+                canvas.drawRect(wx1, rect.top + 8, wx2, rect.bottom - 8, paint)
+                paint.color = Color.YELLOW
+                if (speed > 0) {
+                    canvas.drawCircle(rect.right - 4, rect.top + 10, 5f, paint)
+                    canvas.drawCircle(rect.right - 4, rect.bottom - 10, 5f, paint)
+                } else {
+                    canvas.drawCircle(rect.left + 4, rect.top + 10, 5f, paint)
+                    canvas.drawCircle(rect.left + 4, rect.bottom - 10, 5f, paint)
+                }
             }
-            paint.color = carColor
-            canvas.drawRoundRect(rect, 10f, 10f, paint)
-            
-            // Wheels (4 corners)
-            paint.color = Color.BLACK
-            canvas.drawCircle(rect.left + 15, rect.top, 8f, paint)
-            canvas.drawCircle(rect.right - 15, rect.top, 8f, paint)
-            canvas.drawCircle(rect.left + 15, rect.bottom, 8f, paint)
-            canvas.drawCircle(rect.right - 15, rect.bottom, 8f, paint)
-            
-            // Windshield
-            paint.color = Color.parseColor("#B3E5FC") // Light blue
-            val wx1 = if (speed > 0) rect.right - rect.width() * 0.4f else rect.left + rect.width() * 0.15f
-            val wx2 = if (speed > 0) rect.right - rect.width() * 0.15f else rect.left + rect.width() * 0.4f
-            canvas.drawRect(wx1, rect.top + 8, wx2, rect.bottom - 8, paint)
-            
-            // Headlights
-            paint.color = Color.YELLOW
-            if (speed > 0) { // Facing right
-                canvas.drawCircle(rect.right - 4, rect.top + 10, 5f, paint)
-                canvas.drawCircle(rect.right - 4, rect.bottom - 10, 5f, paint)
-            } else { // Facing left
-                canvas.drawCircle(rect.left + 4, rect.top + 10, 5f, paint)
-                canvas.drawCircle(rect.left + 4, rect.bottom - 10, 5f, paint)
+            TerrainType.RIVER -> {
+                paint.color = Color.parseColor("#5D4037")
+                canvas.drawRoundRect(rect, 12f, 12f, paint)
+                paint.color = Color.parseColor("#8D6E63")
+                canvas.drawCircle(rect.left + 15, rect.top + rect.height()/2, 10f, paint)
+                canvas.drawCircle(rect.right - 15, rect.top + rect.height()/2, 10f, paint)
+                paint.color = Color.parseColor("#3E2723")
+                paint.strokeWidth = 3f
+                paint.style = Paint.Style.STROKE
+                canvas.drawLine(rect.left + 35, rect.top + 12, rect.right - 35, rect.top + 12, paint)
+                canvas.drawLine(rect.left + 25, rect.bottom - 12, rect.right - 25, rect.bottom - 12, paint)
+                paint.style = Paint.Style.FILL
+                paint.color = Color.parseColor("#4CAF50")
+                canvas.drawCircle(rect.left + rect.width()/2, rect.top + 2, 8f, paint)
             }
+            TerrainType.RAILROAD -> {
+                paint.color = Color.parseColor("#ECEFF1")
+                canvas.drawRoundRect(rect, 15f, 15f, paint)
+                paint.color = Color.parseColor("#D50000")
+                canvas.drawRect(rect.left, rect.top + rect.height() * 0.4f, rect.right, rect.top + rect.height() * 0.6f, paint)
+                paint.color = Color.parseColor("#263238")
+                val windowW = rect.width() / 8f
+                for (w in 1..6) {
+                    canvas.drawRoundRect(rect.left + w * windowW + 5, rect.top + 6, rect.left + (w + 1) * windowW - 5, rect.top + rect.height() * 0.35f, 4f, 4f, paint)
+                }
+                paint.color = Color.parseColor("#37474F")
+                if (speed > 0) {
+                    tempPath.reset()
+                    tempPath.moveTo(rect.right - 25f, rect.top + 6)
+                    tempPath.lineTo(rect.right - 5f, rect.top + rect.height()/2)
+                    tempPath.lineTo(rect.right - 25f, rect.bottom - 6)
+                    tempPath.close()
+                    canvas.drawPath(tempPath, paint)
+                } else {
+                    tempPath.reset()
+                    tempPath.moveTo(rect.left + 25f, rect.top + 6)
+                    tempPath.lineTo(rect.left + 5f, rect.top + rect.height()/2)
+                    tempPath.lineTo(rect.left + 25f, rect.bottom - 6)
+                    tempPath.close()
+                    canvas.drawPath(tempPath, paint)
+                }
+            }
+            TerrainType.LAVA -> {
+                paint.color = Color.parseColor("#212121")
+                canvas.drawRoundRect(rect, 12f, 12f, paint)
+                paint.color = Color.parseColor("#FF3D00")
+                paint.strokeWidth = 3f
+                paint.style = Paint.Style.STROKE
+                canvas.drawLine(rect.left + 15, rect.top + 15, rect.right - 15, rect.bottom - 15, paint)
+                canvas.drawLine(rect.left + 15, rect.bottom - 15, rect.right - 15, rect.top + 15, paint)
+                paint.style = Paint.Style.FILL
+            }
+            else -> {}
         }
     }
 
@@ -577,12 +697,13 @@ class FroggyCrossView @JvmOverloads constructor(
             }
         }
 
-        if (frogR in 1..4) {
+        val terrain = getTerrainType(frogR)
+        if (terrain == TerrainType.RIVER || terrain == TerrainType.LAVA) {
             if (!onLog) {
                 die()
                 return
             } else {
-                // Move frog with log drift
+                // Move frog with platform drift
                 frogX = (frogX + logSpeed).coerceIn(0f, (cols - 1).toFloat())
             }
         }
