@@ -118,6 +118,7 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_4096 to TwentyFortyEightActivity::class.java,
             R.id.btn_memory to MemoryActivity::class.java,
             R.id.btn_brick_break to BrickBreakActivity::class.java,
+            R.id.btn_syobon to SyobonActivity::class.java,
             R.id.btn_solitaire to SolitaireActivity::class.java,
             R.id.btn_lines98 to Lines98Activity::class.java,
             R.id.btn_mental_math to MentalMathActivity::class.java,
@@ -135,8 +136,7 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_flappy to FlappyHeroActivity::class.java,
             R.id.btn_checkers to CheckersActivity::class.java,
             R.id.btn_spinball to SpinballActivity::class.java,
-            R.id.btn_froggy to FroggyCrossActivity::class.java,
-            R.id.btn_syobon to SyobonActivity::class.java
+            R.id.btn_froggy to FroggyCrossActivity::class.java
         )
 
         for ((id, activityClass) in games) {
