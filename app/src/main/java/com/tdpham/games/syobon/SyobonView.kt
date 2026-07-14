@@ -93,7 +93,8 @@ class SyobonView @JvmOverloads constructor(
         var y: Float,
         var vx: Float,
         var vy: Float,
-        var isDead: Boolean = false
+        var isDead: Boolean = false,
+        val type: Int = 0 // 0: Cyber Slime, 1: Iron Shell
     )
     private val landEnemies = mutableListOf<LandEnemy>()
 
@@ -171,11 +172,28 @@ class SyobonView @JvmOverloads constructor(
         isDying = false
         trapEntities.clear()
         landEnemies.clear()
-        landEnemies.add(LandEnemy(9.5f, 8f, -0.03f, 0f)) // On top of bricks!
-        landEnemies.add(LandEnemy(14f, 12f, -0.04f, 0f))
-        landEnemies.add(LandEnemy(28f, 12f, -0.04f, 0f))
-        landEnemies.add(LandEnemy(38f, 12f, 0.04f, 0f))
-        landEnemies.add(LandEnemy(60f, 12f, -0.04f, 0f))
+        when (currentLevel) {
+            1 -> {
+                landEnemies.add(LandEnemy(9.5f, 8f, -0.03f, 0f, type = 0)) // Cyber Slime
+                landEnemies.add(LandEnemy(14f, 12f, -0.04f, 0f, type = 0))
+                landEnemies.add(LandEnemy(28f, 12f, -0.04f, 0f, type = 1)) // Iron Shell
+                landEnemies.add(LandEnemy(38f, 12f, 0.04f, 0f, type = 0))
+                landEnemies.add(LandEnemy(60f, 12f, -0.04f, 0f, type = 1))
+            }
+            2 -> {
+                landEnemies.add(LandEnemy(12f, 12f, -0.04f, 0f, type = 0))
+                landEnemies.add(LandEnemy(25f, 12f, -0.03f, 0f, type = 1))
+                landEnemies.add(LandEnemy(50f, 12f, 0.04f, 0f, type = 0))
+                landEnemies.add(LandEnemy(62f, 7f, -0.04f, 0f, type = 1)) // on bricks
+                landEnemies.add(LandEnemy(82f, 12f, -0.05f, 0f, type = 0))
+            }
+            else -> {
+                landEnemies.add(LandEnemy(10f, 12f, -0.04f, 0f, type = 0))
+                landEnemies.add(LandEnemy(32f, 12f, -0.03f, 0f, type = 1))
+                landEnemies.add(LandEnemy(60f, 12f, 0.04f, 0f, type = 0))
+                landEnemies.add(LandEnemy(86f, 12f, -0.04f, 0f, type = 1))
+            }
+        }
         trapTriggered.fill(false)
         invisibleBlocks.clear()
         fallingBlocks.clear()
@@ -905,7 +923,7 @@ class SyobonView @JvmOverloads constructor(
             val et = enemy.y * cellH
             val er = el + cellW * 0.8f
             val eb = et + cellH * 0.8f
-            drawLandEnemy(canvas, el, et, er, eb)
+            drawLandEnemy(canvas, el, et, er, eb, enemy.type)
         }
 
         // 3. Draw Player (Cat)
@@ -950,102 +968,127 @@ class SyobonView @JvmOverloads constructor(
     }
 
     private fun drawTile(canvas: Canvas, tile: Int, l: Float, t: Float, r: Float, b: Float, row: Int, col: Int) {
+        val w = r - l
+        val h = b - t
         when (tile) {
-            1 -> { // Ground block (Brown/Yellow retro textured)
-                paint.color = Color.parseColor("#8B5A2B")
+            1 -> { // Premium Mossy Ground Block
+                // Deep brown soil base
+                paint.color = Color.parseColor("#4E342E")
                 canvas.drawRect(l, t, r, b, paint)
-                paint.color = Color.parseColor("#CD853F")
-                canvas.drawRect(l + 2, t + 2, r - 2, b - 2, paint)
-                paint.color = Color.parseColor("#8B5A2B")
-                paint.strokeWidth = 3f
-                canvas.drawLine(l, t, r, t, paint)
+                // Grass top layer (top 25%)
+                paint.color = Color.parseColor("#43A047")
+                canvas.drawRect(l, t, r, t + h * 0.25f, paint)
+                // Highlights
+                paint.color = Color.parseColor("#81C784")
+                canvas.drawRect(l, t, r, t + 4, paint)
             }
-            2 -> { // Brick (Orange brown)
-                paint.color = Color.parseColor("#B22222") // Firebrick red
+            2 -> { // Modern Metallic Copper Brick
+                paint.color = Color.parseColor("#BF360C") // Deep Copper
                 canvas.drawRect(l, t, r, b, paint)
-                paint.color = Color.parseColor("#CD5C5C")
-                canvas.drawRect(l + 2, t + 2, r - 2, b - 2, paint)
-                paint.color = Color.BLACK
+                // Diagonal light reflection highlight
+                paint.color = Color.parseColor("#FF8A65")
+                val path = Path()
+                path.moveTo(l + w * 0.1f, b)
+                path.lineTo(l + w * 0.5f, t)
+                path.lineTo(l + w * 0.7f, t)
+                path.lineTo(l + w * 0.3f, b)
+                path.close()
+                canvas.drawPath(path, paint)
+                // Brick lines
+                paint.color = Color.parseColor("#3E2723")
                 paint.strokeWidth = 2f
-                canvas.drawLine(l, t + (b - t)/2, r, t + (b - t)/2, paint)
-                canvas.drawLine(l + (r - l)/2, t, l + (r - l)/2, t + (b - t)/2, paint)
-                canvas.drawLine(l + (r - l)/4, t + (b - t)/2, l + (r - l)/4, b, paint)
-                canvas.drawLine(l + 3 * (r - l)/4, t + (b - t)/2, l + 3 * (r - l)/4, b, paint)
+                canvas.drawLine(l, t + h/2, r, t + h/2, paint)
+                canvas.drawLine(l + w/2, t, l + w/2, t + h/2, paint)
+                canvas.drawLine(l + w/4, t + h/2, l + w/4, b, paint)
+                canvas.drawLine(l + 3 * w/4, t + h/2, l + 3 * w/4, b, paint)
             }
-            3 -> { // Question block (Yellow)
-                paint.color = Color.parseColor("#DAA520") // Goldenrod
+            3 -> { // Pulsing Neon Golden Question Block
+                val pulse = (Math.sin(System.currentTimeMillis() / 120.0) * 15 + 15).toInt()
+                paint.color = Color.rgb(255, 193 + pulse, 7) // Pulsing gold
                 canvas.drawRect(l, t, r, b, paint)
-                paint.color = Color.parseColor("#FFD700") // Gold
+                // Neon orange border
+                paint.style = Paint.Style.STROKE
+                paint.color = Color.parseColor("#FF5722")
+                paint.strokeWidth = 4f
                 canvas.drawRect(l + 2, t + 2, r - 2, b - 2, paint)
-                // Draw '?'
+                paint.style = Paint.Style.FILL
+                // Center '?' text
                 paint.color = Color.BLACK
-                paint.textSize = (b - t) * 0.7f
+                paint.textSize = h * 0.7f
                 paint.typeface = Typeface.DEFAULT_BOLD
                 paint.textAlign = Paint.Align.CENTER
-                canvas.drawText("?", l + (r - l)/2f, b - (b - t)*0.2f, paint)
+                canvas.drawText("?", l + w/2f, b - h*0.2f, paint)
             }
-            4 -> { // Invisible block (only draw outline if it is hit and active)
+            4 -> { // Translucent Glassmorphic Invisible Block (activated)
                 if (invisibleBlocks[Pair(row, col)] == true) {
-                    // Turn it into a flat metal block
-                    paint.color = Color.parseColor("#78909C")
+                    paint.color = Color.parseColor("#B3E5FC") // Glass cyan tint
                     canvas.drawRect(l, t, r, b, paint)
-                    paint.color = Color.parseColor("#B0BEC5")
+                    // Translucent white inner glow
+                    paint.color = Color.parseColor("#80FFFFFF")
                     canvas.drawRect(l + 4, t + 4, r - 4, b - 4, paint)
                 }
             }
-            5 -> { // Spike (Triangle shape)
-                paint.color = Color.parseColor("#90A4AE") // Steel grey
+            5 -> { // Steel Spikes with Laser Red Tips
+                // Base
+                paint.color = Color.parseColor("#37474F")
+                canvas.drawRect(l, b - 4, r, b, paint)
+                // Spikes
+                paint.color = Color.parseColor("#90A4AE")
                 val path = Path()
                 path.moveTo(l, b)
-                path.lineTo(l + (r - l)/2, t)
+                path.lineTo(l + w / 2, t + h * 0.15f)
                 path.lineTo(r, b)
                 path.close()
                 canvas.drawPath(path, paint)
+                // Red glowing laser tips
+                paint.color = Color.parseColor("#FF1744")
+                canvas.drawCircle(l + w / 2, t + h * 0.15f, 4f, paint)
             }
-            6 -> { // Pipe body (Green side lines)
-                paint.color = Color.parseColor("#2E7D32")
+            6 -> { // Cyber Pipe Body
+                paint.color = Color.parseColor("#263238") // Dark steel blue
                 canvas.drawRect(l, t, r, b, paint)
-                paint.color = Color.parseColor("#4CAF50")
-                canvas.drawRect(l + 4, t, r - 4, b, paint)
+                // Glowing horizontal cyan strip
+                paint.color = Color.parseColor("#00E5FF")
+                canvas.drawRect(l, t + h/2 - 2, r, t + h/2 + 2, paint)
             }
-            7 -> { // Pipe top
-                paint.color = Color.parseColor("#1B5E20")
+            7 -> { // Cyber Pipe Top
+                paint.color = Color.parseColor("#1A237E") // Dark indigo
                 canvas.drawRect(l - 4, t, r + 4, b, paint)
-                paint.color = Color.parseColor("#4CAF50")
-                canvas.drawRect(l, t + 2, r, b - 2, paint)
+                // Cyan status glow light
+                paint.color = Color.parseColor("#00E5FF")
+                canvas.drawCircle(l + w/2, t + h/2, 5f, paint)
             }
             8 -> { // Flagpole
-                paint.color = Color.parseColor("#B0BEC5")
-                canvas.drawRect(l + (r - l)*0.4f, t, l + (r - l)*0.6f, b, paint)
-                // If it is top, draw a green circle/knob
+                paint.color = Color.parseColor("#ECEFF1")
+                canvas.drawRect(l + w * 0.42f, t, l + w * 0.58f, b, paint)
                 if (row == 3) {
-                    paint.color = Color.parseColor("#FF1744")
-                    canvas.drawCircle(l + (r - l)/2, t, (r - l)*0.3f, paint)
-                    
-                    // Draw red flag waving
+                    // Gold flagpole cap
+                    paint.color = Color.parseColor("#FFD700")
+                    canvas.drawCircle(l + w/2, t, w * 0.25f, paint)
+                    // Custom cyan flag
                     val flagPath = Path()
-                    flagPath.moveTo(l + (r - l)/2, t + 10)
-                    flagPath.lineTo(l - (r - l)*1.5f, t + (b - t)*0.3f)
-                    flagPath.lineTo(l + (r - l)/2, t + (b - t)*0.6f)
+                    flagPath.moveTo(l + w/2, t + 10)
+                    flagPath.lineTo(l - w * 1.6f, t + h * 0.35f)
+                    flagPath.lineTo(l + w/2, t + h * 0.7f)
                     flagPath.close()
+                    paint.color = Color.parseColor("#00E5FF")
                     canvas.drawPath(flagPath, paint)
                 }
             }
-            9 -> { // Lava (Animated orange red)
-                val pulse = (Math.sin(System.currentTimeMillis() / 150.0) * 15).toInt()
-                paint.color = Color.rgb(255, 69 + pulse, 0)
+            9 -> { // Animated Lava Molten Flow
+                val pulse = (Math.sin(System.currentTimeMillis() / 150.0) * 18).toInt()
+                paint.color = Color.rgb(244, 67 + pulse, 54) // Vibrant lava red
                 canvas.drawRect(l, t, r, b, paint)
-                
-                // Draw hot yellow bubbles
+                // Heat waves overlay
                 paint.color = Color.YELLOW
-                canvas.drawCircle(l + (r - l) * 0.3f, t + (b - t) * 0.4f, 3f, paint)
-                canvas.drawCircle(l + (r - l) * 0.7f, t + (b - t) * 0.7f, 4f, paint)
+                canvas.drawCircle(l + w * 0.25f, t + h * 0.3f, 3.5f, paint)
+                canvas.drawCircle(l + w * 0.75f, t + h * 0.6f, 4.5f, paint)
             }
-            10 -> { // Collapsible bridge/floor (same texture as ground but reddish)
-                paint.color = Color.parseColor("#A349A4")
+            10 -> { // Premium Collapsible Bridge Block
+                paint.color = Color.parseColor("#6A1B9A") // Violet
                 canvas.drawRect(l, t, r, b, paint)
-                paint.color = Color.parseColor("#C8BFE7")
-                canvas.drawRect(l + 2, t + 2, r - 2, b - 2, paint)
+                paint.color = Color.parseColor("#BA68C8")
+                canvas.drawRect(l + 3, t + 3, r - 3, b - 3, paint)
             }
         }
     }
@@ -1086,29 +1129,53 @@ class SyobonView @JvmOverloads constructor(
         }
     }
 
-    private fun drawLandEnemy(canvas: Canvas, l: Float, t: Float, r: Float, b: Float) {
+    private fun drawLandEnemy(canvas: Canvas, l: Float, t: Float, r: Float, b: Float, type: Int) {
         val cx = (l + r) / 2
         val cy = (t + b) / 2
         val w = r - l
         val h = b - t
         
-        paint.color = Color.WHITE
-        canvas.drawOval(l, t + h * 0.2f, r, b, paint)
-        
-        // Draw two cute little ears
-        val earPath = Path()
-        earPath.moveTo(l + w * 0.2f, t + h * 0.3f)
-        earPath.lineTo(l + w * 0.1f, t + h * 0.1f)
-        earPath.lineTo(l + w * 0.35f, t + h * 0.25f)
-        earPath.moveTo(r - w * 0.2f, t + h * 0.3f)
-        earPath.lineTo(r - w * 0.1f, t + h * 0.1f)
-        earPath.lineTo(r - w * 0.35f, t + h * 0.25f)
-        canvas.drawPath(earPath, paint)
-        
-        // Draw eyes
-        paint.color = Color.BLACK
-        canvas.drawCircle(cx - w * 0.2f, cy, 3.5f, paint)
-        canvas.drawCircle(cx + w * 0.2f, cy, 3.5f, paint)
+        if (type == 0) { // 1. Cyber Slime
+            // Animated vertical bouncing/squishing slime
+            val bounce = (Math.sin(System.currentTimeMillis() / 100.0) * 3f).toFloat()
+            paint.color = Color.parseColor("#00E676") // Neon green
+            val slimeRect = RectF(l, t + h * 0.2f + bounce, r, b)
+            canvas.drawOval(slimeRect, paint)
+            
+            // Neon core
+            paint.color = Color.parseColor("#FFFF00")
+            canvas.drawCircle(cx, cy + bounce / 2f + 3f, w * 0.15f, paint)
+            
+            // Small cyber eyes
+            paint.color = Color.BLACK
+            canvas.drawCircle(cx - w * 0.18f, cy + bounce / 2f, 3f, paint)
+            canvas.drawCircle(cx + w * 0.18f, cy + bounce / 2f, 3f, paint)
+        } else { // 2. Iron Shell
+            // Steel blue shell base dome
+            paint.color = Color.parseColor("#455A64")
+            val shellRect = RectF(l, t + h * 0.2f, r, b)
+            canvas.drawArc(shellRect, 180f, 180f, true, paint)
+            
+            // Draw spikes on the shell dome
+            paint.color = Color.parseColor("#CFD8DC")
+            val spikePath = Path()
+            spikePath.moveTo(l + w * 0.2f, t + h * 0.3f)
+            spikePath.lineTo(l + w * 0.25f, t + h * 0.1f)
+            spikePath.lineTo(l + w * 0.35f, t + h * 0.3f)
+            
+            spikePath.moveTo(cx, t + h * 0.2f)
+            spikePath.lineTo(cx, t - 4f)
+            spikePath.lineTo(cx + w * 0.1f, t + h * 0.2f)
+            
+            spikePath.moveTo(r - w * 0.35f, t + h * 0.3f)
+            spikePath.lineTo(r - w * 0.25f, t + h * 0.1f)
+            spikePath.lineTo(r - w * 0.2f, t + h * 0.3f)
+            canvas.drawPath(spikePath, paint)
+            
+            // Glowing orange visor eyes peeking out
+            paint.color = Color.parseColor("#FF6F00")
+            canvas.drawRoundRect(cx - 10f, b - h * 0.3f, cx + 10f, b - h * 0.1f, 2f, 2f, paint)
+        }
     }
 
     private fun drawCat(canvas: Canvas, l: Float, t: Float, r: Float, b: Float) {
@@ -1147,6 +1214,31 @@ class SyobonView @JvmOverloads constructor(
         val bodyRect = RectF(l + w * 0.15f, t + h * 0.45f, r - w * 0.15f, b - h * 0.1f)
         canvas.drawRoundRect(bodyRect, 8f, 8f, paint)
 
+        // 2b. Character specific accessory (on body)
+        when (catType) {
+            0 -> { // Classic Syobon: Blue collar / scarf
+                paint.color = Color.parseColor("#00E5FF")
+                canvas.drawRect(l + w * 0.2f, t + h * 0.42f, r - w * 0.2f, t + h * 0.48f, paint)
+                // Draw a small yellow bell
+                paint.color = Color.YELLOW
+                canvas.drawCircle(cx, t + h * 0.48f, 4f, paint)
+            }
+            1 -> { // Golden Neko: Red tie
+                paint.color = Color.parseColor("#D50000")
+                val tiePath = Path()
+                tiePath.moveTo(cx, t + h * 0.45f)
+                tiePath.lineTo(cx - 5f, t + h * 0.58f)
+                tiePath.lineTo(cx, t + h * 0.65f)
+                tiePath.lineTo(cx + 5f, t + h * 0.58f)
+                tiePath.close()
+                canvas.drawPath(tiePath, paint)
+            }
+            2 -> { // Shadow Nya: Red belt/sash
+                paint.color = Color.parseColor("#D50000")
+                canvas.drawRect(l + w * 0.15f, t + h * 0.55f, r - w * 0.15f, t + h * 0.62f, paint)
+            }
+        }
+
         // 3. Draw Legs (animated walking offsets)
         val walkOffset = if (!isOnGround) 0f else Math.sin(System.currentTimeMillis() / 80.0).toFloat() * 4f
         paint.color = catColor
@@ -1154,6 +1246,7 @@ class SyobonView @JvmOverloads constructor(
         canvas.drawRoundRect(r - w * 0.4f, b - h * 0.15f, r - w * 0.25f, b - walkOffset, 3f, 3f, paint)
 
         // 4. Draw Head
+        paint.color = catColor
         val headRect = RectF(l + w * 0.05f, t + h * 0.05f, r - w * 0.05f, t + h * 0.65f)
         canvas.drawOval(headRect, paint)
 
@@ -1177,8 +1270,50 @@ class SyobonView @JvmOverloads constructor(
         innerEarsPath.lineTo(r - w * 0.3f, t + h * 0.18f)
         canvas.drawPath(innerEarsPath, paint)
 
+        // 5b. Head accessories
+        when (catType) {
+            1 -> { // Golden Neko: Royal Crown
+                paint.color = Color.parseColor("#FFD54F") // Gold crown base
+                val crownPath = Path()
+                crownPath.moveTo(cx - 10f, t + h * 0.08f)
+                crownPath.lineTo(cx - 15f, t - 8f)
+                crownPath.lineTo(cx - 5f, t + h * 0.02f)
+                crownPath.lineTo(cx, t - 12f)
+                crownPath.lineTo(cx + 5f, t + h * 0.02f)
+                crownPath.lineTo(cx + 15f, t - 8f)
+                crownPath.lineTo(cx + 10f, t + h * 0.08f)
+                crownPath.close()
+                canvas.drawPath(crownPath, paint)
+                // Red crown gem
+                paint.color = Color.RED
+                canvas.drawCircle(cx, t - 2f, 2.5f, paint)
+            }
+            2 -> { // Shadow Nya: Red Ninja Headband tail
+                paint.color = Color.parseColor("#D50000")
+                // Draw headband knot tails waving back
+                val bandPath = Path()
+                if (isFacingRight) {
+                    bandPath.moveTo(l + w * 0.15f, t + h * 0.25f)
+                    bandPath.lineTo(l - w * 0.2f, t + h * 0.28f)
+                    bandPath.lineTo(l - w * 0.15f, t + h * 0.4f)
+                    bandPath.close()
+                } else {
+                    bandPath.moveTo(r - w * 0.15f, t + h * 0.25f)
+                    bandPath.lineTo(r + w * 0.2f, t + h * 0.28f)
+                    bandPath.lineTo(r + w * 0.15f, t + h * 0.4f)
+                    bandPath.close()
+                }
+                canvas.drawPath(bandPath, paint)
+            }
+        }
+
         // 6. Draw Eyes (･ω･)
-        paint.color = Color.BLACK
+        val eyeColor = when (catType) {
+            1 -> Color.parseColor("#00C853") // Golden Neko: Emerald green eyes
+            2 -> Color.RED // Shadow Nya: Glowing red eyes
+            else -> Color.parseColor("#29B6F6") // Classic Syobon: Cute sky-blue eyes
+        }
+        paint.color = eyeColor
         val headCy = (headRect.top + headRect.bottom) / 2f
         if (isFacingRight) {
             canvas.drawCircle(cx + w * 0.15f, headCy - h * 0.05f, 3.5f, paint)
@@ -1192,6 +1327,7 @@ class SyobonView @JvmOverloads constructor(
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = 2f
         paint.strokeCap = Paint.Cap.ROUND
+        paint.color = if (catType == 2) Color.WHITE else Color.BLACK // white mouth for dark shadow cat
         val mouthPath = Path()
         mouthPath.moveTo(cx - 5f, headCy + 6f)
         mouthPath.quadTo(cx - 2.5f, headCy + 10f, cx, headCy + 6f)
