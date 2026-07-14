@@ -16,7 +16,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
 object AdManager {
     private const val TAG = "AdManager"
-    private const val INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-5190563950149825/9206126543"
+    private const val INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-5190563950149825/9226641952"
     
     private var isInitialized = false
     private var isInitializing = false
@@ -30,8 +30,6 @@ object AdManager {
     // Frequency control
     private var lastAdShowTime: Long = 0L
     private var adsShownInSession = 0
-    private const val MIN_TIME_BETWEEN_ADS_MS = 120_000L  // 2 minutes
-    private const val MAX_ADS_PER_SESSION = 3
     private val mainHandler = Handler(Looper.getMainLooper())
 
     fun init(context: Context) {
@@ -111,15 +109,17 @@ object AdManager {
             }
 
             // Check 1: Session ad cap
-            if (adsShownInSession >= MAX_ADS_PER_SESSION) {
-                Log.d(TAG, "Ad skipped: Max ads per session ($MAX_ADS_PER_SESSION) reached")
+            val maxAds = ConfigManager.getAdsMaxPerSession()
+            if (adsShownInSession >= maxAds) {
+                Log.d(TAG, "Ad skipped: Max ads per session ($maxAds) reached")
                 onAdDismissed()
                 return
             }
 
             // Check 2: Cooldown between ads
+            val minInterval = ConfigManager.getAdsMinIntervalMs()
             val timeSinceLastAd = System.currentTimeMillis() - lastAdShowTime
-            if (lastAdShowTime > 0 && timeSinceLastAd < MIN_TIME_BETWEEN_ADS_MS) {
+            if (lastAdShowTime > 0 && timeSinceLastAd < minInterval) {
                 Log.d(TAG, "Ad skipped: Cooldown active. Last ad ${timeSinceLastAd / 1000}s ago")
                 onAdDismissed()
                 return

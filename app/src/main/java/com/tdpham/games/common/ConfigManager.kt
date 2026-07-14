@@ -25,9 +25,11 @@ object ConfigManager {
             rc.setConfigSettingsAsync(configSettings)
             rc.setDefaultsAsync(mapOf(
                 "is_ads_enabled" to true,
-                "ads_min_days" to 100L,
-                "ads_min_opens" to 10L,
-                "ads_min_session_seconds" to 10L,
+                "ads_min_days" to 20L,
+                "ads_min_opens" to 3L,
+                "ads_min_session_seconds" to 30L,
+                "ads_min_interval_ms" to 120000L,
+                "ads_max_per_session" to 3L,
                 "snake_speed" to 150L,
                 "latest_version_code" to 1L,
                 "min_version_code" to 1L
@@ -80,29 +82,47 @@ object ConfigManager {
     }
 
     fun getAdsMinDays(): Int {
-        val rc = remoteConfig ?: return 100
+        val rc = remoteConfig ?: return 20
         return try {
             rc.getLong("ads_min_days").toInt()
         } catch (_: Exception) {
-            100
+            20
         }
     }
 
     fun getAdsMinOpens(): Int {
-        val rc = remoteConfig ?: return 10
+        val rc = remoteConfig ?: return 3
         return try {
             rc.getLong("ads_min_opens").toInt()
         } catch (_: Exception) {
-            10
+            3
         }
     }
 
     fun getAdsMinSessionSeconds(): Int {
-        val rc = remoteConfig ?: return 10
+        val rc = remoteConfig ?: return 30
         return try {
             rc.getLong("ads_min_session_seconds").toInt()
         } catch (_: Exception) {
-            10
+            30
+        }
+    }
+
+    fun getAdsMinIntervalMs(): Long {
+        val rc = remoteConfig ?: return 120000L
+        return try {
+            rc.getLong("ads_min_interval_ms")
+        } catch (_: Exception) {
+            120000L
+        }
+    }
+
+    fun getAdsMaxPerSession(): Int {
+        val rc = remoteConfig ?: return 3
+        return try {
+            rc.getLong("ads_max_per_session").toInt()
+        } catch (_: Exception) {
+            3
         }
     }
 }
