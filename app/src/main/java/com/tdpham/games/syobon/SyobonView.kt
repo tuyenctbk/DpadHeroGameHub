@@ -167,6 +167,7 @@ class SyobonView @JvmOverloads constructor(
         isDying = false
         trapEntities.clear()
         landEnemies.clear()
+        landEnemies.add(LandEnemy(9.5f, 8f, -0.03f, 0f)) // On top of bricks!
         landEnemies.add(LandEnemy(14f, 12f, -0.04f, 0f))
         landEnemies.add(LandEnemy(28f, 12f, -0.04f, 0f))
         landEnemies.add(LandEnemy(38f, 12f, 0.04f, 0f))
@@ -186,8 +187,8 @@ class SyobonView @JvmOverloads constructor(
 
         // 1. Ground bricks
         for (c in 0 until totalMapCols) {
-            // Classic Mario gap at col 22-24 and col 45-47
-            if (c in 22..24 || c in 45..47 || c in 72..75) {
+            // Classic Mario gap at col 21-23 and col 45-47
+            if (c in 21..23 || c in 45..47 || c in 72..75) {
                 continue
             }
             map[13][c] = 1 // Ground top
@@ -201,12 +202,14 @@ class SyobonView @JvmOverloads constructor(
         map[9][10] = 2 // Brick
         map[9][11] = 4 // INVISIBLE block (trap!)
         map[9][12] = 2 // Brick
-
-        // Let's seed invisible block state
         invisibleBlocks[Pair(9, 11)] = false // initially invisible
 
+        // First pit invisible block troll at col 20 (just over edge)
+        map[9][20] = 4
+        invisibleBlocks[Pair(9, 20)] = false
+
         // Pipes
-        buildPipe(16, 3) // Normal pipe
+        buildPipe(15, 3) // Normal pipe
         buildPipe(32, 4) // Trolled pipe (nyan cat spawns when near)
         buildPipe(55, 3) // Pipe with hidden spikes inside
 
@@ -461,6 +464,23 @@ class SyobonView @JvmOverloads constructor(
                     }
                 }
             }, 100)
+        }
+
+        // 3b. Spike flying from pipe 55
+        if (playerX >= 53f && !trapTriggered[55]) {
+            trapTriggered[55] = true
+            if (difficulty > 0) {
+                trapEntities.add(
+                    TrapEntity(
+                        x = 55.5f,
+                        y = 10f,
+                        vx = 0f,
+                        vy = -0.12f,
+                        type = 2 // Spike flying up
+                    )
+                )
+                SoundManager.playError()
+            }
         }
 
         // 4. Pole flag popup trap (when very close to the flagpole)
