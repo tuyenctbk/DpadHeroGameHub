@@ -181,66 +181,74 @@ class SyobonView @JvmOverloads constructor(
         trapEntities.clear()
         landEnemies.clear()
         val rand = java.util.Random()
+
+        // Randomize some pipe positions and heights
+        val p1 = rand.nextInt(7) - 3 // -3 to +3
+        val p2 = rand.nextInt(9) - 4 // -4 to +4
+        val h1 = rand.nextInt(2) + 2 // 2 to 3
+        val h2 = rand.nextInt(2) + 3 // 3 to 4
+        val h3 = rand.nextInt(2) + 2 // 2 to 3
+        
+        // Randomize some block group positions
+        val b1 = rand.nextInt(5) - 2 // -2 to +2
+
         fun addRandomizedEnemy(baseX: Float, y: Float, baseSpeed: Float) {
-            // Offset starting X randomly by up to +/- 1.5 grid cells
-            val offsetX = (rand.nextFloat() * 3f - 1.5f)
+            // Randomly offset starting X by up to +/- 3 grid cells
+            val offsetX = (rand.nextFloat() * 6f - 3f)
+            val spawnX = (baseX + offsetX).coerceIn(4f, (totalMapCols - 10).toFloat())
+            
             // Randomly choose speed direction
             val speed = if (rand.nextBoolean()) -Math.abs(baseSpeed) else Math.abs(baseSpeed)
             // Randomly choose enemy type (0: Cyber Slime, 1: Iron Shell)
             val enemyType = if (rand.nextBoolean()) 0 else 1
-            landEnemies.add(LandEnemy(baseX + offsetX, y, speed, 0f, type = enemyType))
+            landEnemies.add(LandEnemy(spawnX, y, speed, 0f, type = enemyType))
         }
 
         // Randomize the active spike launcher pipe column
         spikeLauncherPipeCol = when (currentLevel) {
-            1 -> listOf(15, 32, 55).shuffled().first()
-            2 -> 30
-            else -> listOf(35, 63).shuffled().first()
+            1 -> listOf(15 + p1, 32 + p2, 55).shuffled().first()
+            2 -> 30 + p1
+            else -> listOf(35 + p1, 63 + p2).shuffled().first()
         }
 
         when (currentLevel) {
             1 -> {
-                addRandomizedEnemy(9.5f, 8f, 0.03f)
-                addRandomizedEnemy(14f, 12f, 0.04f)
-                addRandomizedEnemy(28f, 12f, 0.04f)
-                addRandomizedEnemy(38f, 12f, 0.04f)
-                addRandomizedEnemy(60f, 12f, 0.04f)
+                repeat(rand.nextInt(3) + 4) { // 4 to 6 enemies
+                    addRandomizedEnemy(15f + it * 12f, 12f, 0.04f)
+                }
             }
             2 -> {
-                addRandomizedEnemy(12f, 12f, 0.04f)
-                addRandomizedEnemy(25f, 12f, 0.03f)
-                addRandomizedEnemy(50f, 12f, 0.04f)
-                addRandomizedEnemy(62f, 7f, 0.04f)
-                addRandomizedEnemy(82f, 12f, 0.05f)
+                repeat(rand.nextInt(4) + 5) { // 5 to 8 enemies
+                    addRandomizedEnemy(10f + it * 12f, 12f, 0.045f)
+                }
             }
             else -> {
-                addRandomizedEnemy(10f, 12f, 0.04f)
-                addRandomizedEnemy(32f, 12f, 0.03f)
-                addRandomizedEnemy(60f, 12f, 0.04f)
-                addRandomizedEnemy(86f, 12f, 0.04f)
+                repeat(rand.nextInt(5) + 6) { // 6 to 10 enemies
+                    addRandomizedEnemy(10f + it * 8f, 12f, 0.05f)
+                }
             }
         }
         trapTriggered.fill(false)
         invisibleBlocks.clear()
         fallingBlocks.clear()
 
-        buildLevelMap()
+        buildLevelMap(p1, p2, h1, h2, h3, b1)
     }
 
-    private fun buildLevelMap() {
+    private fun buildLevelMap(p1: Int, p2: Int, h1: Int, h2: Int, h3: Int, b1: Int) {
         // Clear map
         for (r in 0 until rows) {
             map[r].fill(0)
         }
 
         when (currentLevel) {
-            1 -> buildLevel1()
-            2 -> buildLevel2()
-            else -> buildLevel3()
+            1 -> buildLevel1(p1, p2, h1, h2, h3, b1)
+            2 -> buildLevel2(p1, h1)
+            else -> buildLevel3(p1, p2, h1, h2)
         }
     }
 
-    private fun buildLevel1() {
+    private fun buildLevel1(p1: Int, p2: Int, h1: Int, h2: Int, h3: Int, b1: Int) {
         // 1. Ground bricks
         for (c in 0 until totalMapCols) {
             // Classic Mario gap at col 21-23 and col 45-47
@@ -252,22 +260,23 @@ class SyobonView @JvmOverloads constructor(
         }
 
         // 2. Standard structures
-        // First group of question / brick blocks
-        map[9][8] = 2 // Brick
-        map[9][9] = 3 // Question block
-        map[9][10] = 2 // Brick
-        map[9][11] = 4 // INVISIBLE block (trap!)
-        map[9][12] = 2 // Brick
-        invisibleBlocks[Pair(9, 11)] = false // initially invisible
+        // First group of question / brick blocks with randomized offset
+        val group1X = 8 + b1
+        map[9][group1X] = 2 // Brick
+        map[9][group1X + 1] = 3 // Question block
+        map[9][group1X + 2] = 2 // Brick
+        map[9][group1X + 3] = 4 // INVISIBLE block (trap!)
+        map[9][group1X + 4] = 2 // Brick
+        invisibleBlocks[Pair(9, group1X + 3)] = false 
 
-        // First pit invisible block troll at col 20 (just over edge)
+        // First pit invisible block troll at col 20
         map[9][20] = 4
         invisibleBlocks[Pair(9, 20)] = false
 
-        // Pipes
-        buildPipe(15, 3) // Normal pipe
-        buildPipe(32, 4) // Trolled pipe (nyan cat spawns when near)
-        buildPipe(55, 3) // Pipe with hidden spikes inside
+        // Pipes with randomized offsets and heights
+        buildPipe(15 + p1, h1) 
+        buildPipe(32 + p2, h2) 
+        buildPipe(55, h3) 
 
         // Bridge over the second gap (collapsible!)
         for (c in 45..47) {
@@ -282,7 +291,7 @@ class SyobonView @JvmOverloads constructor(
         }
     }
 
-    private fun buildLevel2() {
+    private fun buildLevel2(p1: Int, h1: Int) {
         // Underground Cavern
         // 1. Ground bricks
         for (c in 0 until totalMapCols) {
@@ -307,7 +316,7 @@ class SyobonView @JvmOverloads constructor(
         invisibleBlocks[Pair(9, 13)] = false
 
         // Pipe
-        buildPipe(30, 4)
+        buildPipe(30 + p1, h1)
 
         // Collapsible floating bridge tiles
         map[9][41] = 2
@@ -333,7 +342,7 @@ class SyobonView @JvmOverloads constructor(
         }
     }
 
-    private fun buildLevel3() {
+    private fun buildLevel3(p1: Int, p2: Int, h1: Int, h2: Int) {
         // Castle / Lava Style
         for (c in 0 until totalMapCols) {
             if (c in 15..28 || c in 42..58 || c in 70..83) {
@@ -353,8 +362,8 @@ class SyobonView @JvmOverloads constructor(
         map[9][26] = 2
 
         // Pipes
-        buildPipe(35, 3)
-        buildPipe(63, 4)
+        buildPipe(35 + p1, h1)
+        buildPipe(63 + p2, h2)
 
         // Stepping stone platforms
         map[10][45] = 2
@@ -551,11 +560,29 @@ class SyobonView @JvmOverloads constructor(
             // Move horizontally
             enemy.x += enemy.vx
             
-            // Reverse direction if hitting solid wall blocks
-            val nextX = (enemy.x + (if (enemy.vx > 0) 0.8f else -0.1f)).toInt()
-            if (ey in 0 until rows && nextX in 0 until totalMapCols) {
-                if (isSolid(ey, nextX)) {
-                    enemy.vx = -enemy.vx
+            // Re-resolve horizontal collision to prevent sticking to pipes
+            val eyCheck = enemy.y.toInt()
+            
+            // Check for wall at front (multiple rows for reliability)
+            var wallAtFront = false
+            for (rowOff in 0..0) {
+                val checkY = eyCheck + rowOff
+                if (checkY in 0 until rows) {
+                    val nextX = if (enemy.vx > 0) (enemy.x + 0.85f).toInt() else enemy.x.toInt()
+                    if (nextX in 0 until totalMapCols && isSolid(checkY, nextX)) {
+                        wallAtFront = true
+                        break
+                    }
+                }
+            }
+
+            if (wallAtFront) {
+                enemy.vx = -enemy.vx
+                // Snap out of the wall to prevent sticking
+                if (enemy.vx > 0) {
+                    enemy.x = enemy.x.toInt() + 1.05f
+                } else {
+                    enemy.x = enemy.x.toInt() - 0.05f
                 }
             }
             
