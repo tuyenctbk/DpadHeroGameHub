@@ -43,11 +43,22 @@ class BattleTanksView @JvmOverloads constructor(
     private var level = 1
     private var startingLevel = 1
     private var isLevelLoading = false
+    private var isLevelCleared = false
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
     private val PREFS_NAME = "battle_tanks_settings"
     private val KEY_START_LEVEL = "start_level"
-    private var hintShowFrames = 0
+    private val KEY_TANK_TYPE = "selected_tank_type"
+    private var selectedTankType = 0
+    private var playerLives = 3
+    private val hints = listOf(
+        "Press MENU for Options",
+        "Press BACK for Help / Pause",
+        "Use D-PAD to Move & Aim",
+        "Tanks shoot automatically"
+    )
+    private var currentHintIndex = 0
+    private var hintFrameCounter = 0
     private var isInitialized = false
     
     private var bgType = GameEnvironment.BackgroundType.SOLID
@@ -56,9 +67,10 @@ class BattleTanksView @JvmOverloads constructor(
     private val handler = Handler(Looper.getMainLooper())
     private val animHandler = Handler(Looper.getMainLooper())
     private val gridRect = RectF()
+    private val tempPath = Path()
     private val animRunnable = object : Runnable {
         override fun run() {
-            if (gameOver) {
+            if (gameOver || isLevelCleared) {
                 celebrationManager.update()
                 invalidate()
             }
@@ -75,7 +87,9 @@ class BattleTanksView @JvmOverloads constructor(
         }
     }
 
-    data class Tank(var x: Int, var y: Int, var dir: Int, val isPlayer: Boolean, var lastFire: Long = 0, var hp: Int = 1)
+    data class Tank(var x: Int, var y: Int, var dir: Int, val isPlayer: Boolean, var lastFire: Long = 0, var hp: Int = 1) {
+        var blinkUntil: Long = 0L
+    }
     data class Bullet(var fx: Float, var fy: Float, var dir: Int, val isPlayer: Boolean)
 
     init {
@@ -95,6 +109,8 @@ class BattleTanksView @JvmOverloads constructor(
         requestFocus()
         gamePaused = false
         SoundManager.playSuccess()
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
         invalidate()
     }
 
@@ -119,15 +135,23 @@ class BattleTanksView @JvmOverloads constructor(
         // Load start level from settings
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         startingLevel = prefs.getInt(KEY_START_LEVEL, 1).coerceIn(1, 3)
+        selectedTankType = prefs.getInt(KEY_TANK_TYPE, 0).coerceIn(0, 2)
         level = startingLevel
 
         score = 0
         best = ScoreManager.getHighScore(context, gameKey, startingLevel)
         gameOver = false
         gamePaused = true
+        isLevelCleared = false
+
+        playerLives = when(selectedTankType) {
+            1 -> 1
+            2 -> 5
+            else -> 3
+        }
         animHandler.removeCallbacks(animRunnable)
         setupLevel()
-        hintShowFrames = 100
+        hintFrameCounter = 0
         invalidate()
     }
 
@@ -194,6 +218,16 @@ class BattleTanksView @JvmOverloads constructor(
                 resetGame(); resume(); return true
             }
             return super.onKeyDown(keyCode, event)
+        }
+        if (isLevelCleared) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                level++
+                isLevelCleared = false
+                setupLevel()
+                resume()
+                return true
+            }
+            return true
         }
         if (gamePaused && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
             resume(); return true
@@ -279,7 +313,16 @@ class BattleTanksView @JvmOverloads constructor(
 
     private fun fire(tank: Tank) {
         val now = System.currentTimeMillis()
-        if (now - tank.lastFire > 600) {
+        val fireDelay = if (tank.isPlayer) {
+            when(selectedTankType) {
+                1 -> 300L // Firestorm (Fast reload)
+                2 -> 950L // Mammoth (Slow reload)
+                else -> 600L // Titan
+            }
+        } else {
+            600L
+        }
+        if (now - tank.lastFire > fireDelay) {
             bullets.add(Bullet(tank.x.toFloat(), tank.y.toFloat(), tank.dir, tank.isPlayer))
             tank.lastFire = now
             if (tank.isPlayer) SoundManager.playClick()
@@ -290,9 +333,12 @@ class BattleTanksView @JvmOverloads constructor(
         cellW = width.toFloat() / cols
         cellH = height.toFloat() / rows
 
-        if (hintShowFrames > 0) {
-            hintShowFrames--
-            invalidate()
+        if (!gamePaused && !gameOver) {
+            hintFrameCounter++
+            if (hintFrameCounter >= 250) {
+                hintFrameCounter = 0
+                currentHintIndex = (currentHintIndex + 1) % hints.size
+            }
         }
 
         // update() - Moved to gameLoop
@@ -305,34 +351,76 @@ class BattleTanksView @JvmOverloads constructor(
             if (type == 0) continue
             paint.style = Paint.Style.FILL
             when (type) {
-                1 -> {
-                    paint.color = Color.parseColor("#A1887F") // Brick
-                    gridRect.set(c * cellW + 4, r * cellH + 4, (c + 1) * cellW - 4, (r + 1) * cellH - 4)
-                    canvas.drawRect(gridRect, paint)
-                    paint.color = Color.parseColor("#795548")
-                    gridRect.set(c * cellW + 4, r * cellH + cellH/2, (c + 1) * cellW - 4, r * cellH + cellH/2 + 4)
-                    canvas.drawRect(gridRect, paint)
-                }
-                2 -> {
-                    paint.color = Color.LTGRAY // Steel
+                1 -> { // Brick
+                    paint.color = Color.parseColor("#A1887F")
                     gridRect.set(c * cellW + 2, r * cellH + 2, (c + 1) * cellW - 2, (r + 1) * cellH - 2)
                     canvas.drawRect(gridRect, paint)
-                    paint.color = Color.WHITE
-                    gridRect.set(c * cellW + 8, r * cellH + 8, (c + 1) * cellW - 8, (r + 1) * cellH - 8)
+                    // Brick mortar lines (dark brown)
+                    paint.color = Color.parseColor("#795548")
+                    paint.strokeWidth = 3f
+                    paint.style = Paint.Style.STROKE
+                    // Horizontal mortar line
+                    canvas.drawLine(c * cellW + 2, r * cellH + cellH / 2, (c + 1) * cellW - 2, r * cellH + cellH / 2, paint)
+                    // Vertical mortar lines
+                    canvas.drawLine(c * cellW + cellW / 2, r * cellH + 2, c * cellW + cellW / 2, r * cellH + cellH / 2, paint)
+                    canvas.drawLine(c * cellW + cellW / 4, r * cellH + cellH / 2, c * cellW + cellW / 4, (r + 1) * cellH - 2, paint)
+                    canvas.drawLine(c * cellW + 3 * cellW / 4, r * cellH + cellH / 2, c * cellW + 3 * cellW / 4, (r + 1) * cellH - 2, paint)
+                    paint.style = Paint.Style.FILL
+                }
+                2 -> { // Steel
+                    paint.color = Color.parseColor("#78909C") // Metallic blue-gray
+                    gridRect.set(c * cellW + 2, r * cellH + 2, (c + 1) * cellW - 2, (r + 1) * cellH - 2)
                     canvas.drawRect(gridRect, paint)
+                    // Inner plate
+                    paint.color = Color.parseColor("#B0BEC5")
+                    gridRect.set(c * cellW + 6, r * cellH + 6, (c + 1) * cellW - 6, (r + 1) * cellH - 6)
+                    canvas.drawRect(gridRect, paint)
+                    // Bolts in 4 corners
+                    paint.color = Color.parseColor("#37474F")
+                    canvas.drawCircle(c * cellW + 9, r * cellH + 9, 3f, paint)
+                    canvas.drawCircle((c + 1) * cellW - 9, r * cellH + 9, 3f, paint)
+                    canvas.drawCircle(c * cellW + 9, (r + 1) * cellH - 9, 3f, paint)
+                    canvas.drawCircle((c + 1) * cellW - 9, (r + 1) * cellH - 9, 3f, paint)
                 }
                 3 -> {
-                    paint.color = Color.parseColor("#FFD600")
-                    canvas.drawCircle(c * cellW + cellW/2, r * cellH + cellH/2, cellW/3, paint)
-                    paint.color = Color.BLACK
+                    // Draw outer border (golden shield/brick frame)
+                    paint.color = Color.parseColor("#FFC107")
+                    gridRect.set(c * cellW + 2, r * cellH + 2, (c + 1) * cellW - 2, (r + 1) * cellH - 2)
+                    canvas.drawRoundRect(gridRect, 6f, 6f, paint)
+
+                    // Inner shield background (dark blue)
+                    paint.color = Color.parseColor("#1A237E")
+                    gridRect.set(c * cellW + 6, r * cellH + 6, (c + 1) * cellW - 6, (r + 1) * cellH - 6)
+                    canvas.drawRoundRect(gridRect, 4f, 4f, paint)
+
+                    // Draw golden wings or shield stripes
+                    paint.color = Color.parseColor("#FFD54F")
+                    tempPath.reset()
+                    tempPath.moveTo(c * cellW + 8, r * cellH + cellH * 0.3f)
+                    tempPath.lineTo(c * cellW + cellW * 0.3f, r * cellH + cellH * 0.7f)
+                    tempPath.lineTo(c * cellW + cellW * 0.5f, r * cellH + cellH * 0.5f)
+                    tempPath.lineTo(c * cellW + cellW * 0.7f, r * cellH + cellH * 0.7f)
+                    tempPath.lineTo((c + 1) * cellW - 8, r * cellH + cellH * 0.3f)
+                    tempPath.lineTo(c * cellW + cellW * 0.5f, (r + 1) * cellH - 8)
+                    tempPath.close()
+                    canvas.drawPath(tempPath, paint)
+
+                    // Red star in the center
+                    paint.color = Color.RED
                     paint.textSize = cellW * 0.5f
                     paint.textAlign = Paint.Align.CENTER
                     canvas.drawText("⭐", c * cellW + cellW/2, r * cellH + cellH/2 + cellH/6, paint)
                 }
-                4 -> {
+                4 -> { // Grass / Trees
                     paint.color = Color.parseColor("#2E7D32")
-                    gridRect.set(c * cellW + 8, r * cellH + 8, (c + 1) * cellW - 8, (r + 1) * cellH - 8)
-                    canvas.drawRect(gridRect, paint)
+                    val cx = c * cellW + cellW / 2
+                    val cy = r * cellH + cellH / 2
+                    canvas.drawCircle(cx - cellW * 0.15f, cy - cellH * 0.15f, cellW * 0.25f, paint)
+                    canvas.drawCircle(cx + cellW * 0.15f, cy - cellH * 0.15f, cellW * 0.25f, paint)
+                    canvas.drawCircle(cx - cellW * 0.15f, cy + cellH * 0.15f, cellW * 0.25f, paint)
+                    canvas.drawCircle(cx + cellW * 0.15f, cy + cellH * 0.15f, cellW * 0.25f, paint)
+                    paint.color = Color.parseColor("#1B5E20") // Darker green detail
+                    canvas.drawCircle(cx, cy, cellW * 0.2f, paint)
                 }
             }
         }
@@ -369,49 +457,104 @@ class BattleTanksView @JvmOverloads constructor(
         canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
 
         // Quick Hint (Top/Left)
-        if (hintShowFrames > 0) {
+        if (!gameOver) {
             paint.textAlign = Paint.Align.LEFT
             paint.textSize = 28f
             paint.color = Color.WHITE
-            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 45f, paint)
+            val alpha = if (gamePaused) {
+                255
+            } else {
+                when {
+                    hintFrameCounter < 40 -> ((hintFrameCounter / 40f) * 255).toInt().coerceIn(0, 255)
+                    hintFrameCounter > 210 -> (((250 - hintFrameCounter) / 40f) * 255).toInt().coerceIn(0, 255)
+                    else -> 255
+                }
+            }
+            paint.alpha = alpha
+            canvas.drawText(hints[currentHintIndex], 40f, hudY + 45f, paint)
             paint.alpha = 255
         }
 
-        if (gameOver) drawOverlay(canvas, context.getString(R.string.mission_failed_label), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
-        else if (gamePaused) drawOverlay(canvas, context.getString(R.string.game_tanks), "${context.getString(R.string.level_label)} $level\n${context.getString(R.string.start_game)}")
+        if (gameOver) {
+            drawOverlay(canvas, context.getString(R.string.mission_failed_label), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+        } else if (isLevelCleared) {
+            val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.victory_label)
+            drawOverlay(canvas, title, "${context.getString(R.string.level_label)} $level\n${context.getString(R.string.continue_hint)}")
+        } else if (gamePaused) {
+            drawOverlay(canvas, context.getString(R.string.game_tanks), "${context.getString(R.string.level_label)} $level\n${context.getString(R.string.start_game)}")
+        }
 
-        celebrationManager.draw(canvas)
-
-        if (!gamePaused && !gameOver) {
-            celebrationManager.update()
-            invalidate()
+        if (gameOver || isLevelCleared) {
+            celebrationManager.draw(canvas)
         }
     }
 
     private fun drawTank(canvas: Canvas, tank: Tank, color: Int) {
+        val now = System.currentTimeMillis()
+        val isBlinking = now < tank.blinkUntil
+        val drawColor = if (isBlinking && (now / 80) % 2 == 0L) Color.WHITE else color
+
         paint.style = Paint.Style.FILL
         val x = tank.x * cellW
         val y = tank.y * cellH
         val centerX = x + cellW / 2
         val centerY = y + cellH / 2
 
-        // Tracks
+        // Tracks aligned with direction of movement
         paint.color = Color.DKGRAY
-        gridRect.set(x + 2, y + 2, x + 12, y + cellH - 2)
-        canvas.drawRect(gridRect, paint)
-        gridRect.set(x + cellW - 12, y + 2, x + cellW - 2, y + cellH - 2)
-        canvas.drawRect(gridRect, paint)
+        if (tank.dir == 0 || tank.dir == 2) { // Up or Down
+            // Left track
+            gridRect.set(x + 2, y + 2, x + 10, y + cellH - 2)
+            canvas.drawRect(gridRect, paint)
+            // Right track
+            gridRect.set(x + cellW - 10, y + 2, x + cellW - 2, y + cellH - 2)
+            canvas.drawRect(gridRect, paint)
+        } else { // Left or Right
+            // Top track
+            gridRect.set(x + 2, y + 2, x + cellW - 2, y + 10)
+            canvas.drawRect(gridRect, paint)
+            // Bottom track
+            gridRect.set(x + 2, y + cellH - 10, x + cellW - 2, y + cellH - 2)
+            canvas.drawRect(gridRect, paint)
+        }
         
-        paint.color = color
-        gridRect.set(x + 10, y + 10, x + cellW - 10, y + cellH - 10)
-        canvas.drawRoundRect(gridRect, 4f, 4f, paint)
-        
-        // Turret
-        paint.color = color
-        canvas.drawCircle(centerX, centerY, cellW * 0.22f, paint)
-        paint.color = Color.argb(50, 0, 0, 0)
-        canvas.drawCircle(centerX, centerY, cellW * 0.15f, paint)
+        if (tank.isPlayer) {
+            val bodyColor = when(selectedTankType) {
+                1 -> Color.parseColor("#FBC02D") // Yellow (Firestorm)
+                2 -> Color.parseColor("#0288D1") // Blue (Mammoth)
+                else -> Color.parseColor("#4CAF50") // Green (Titan)
+            }
+            val turretColor = when(selectedTankType) {
+                1 -> Color.parseColor("#FFB300")
+                2 -> Color.parseColor("#90A4AE")
+                else -> Color.parseColor("#81C784")
+            }
+            val starColor = when(selectedTankType) {
+                1 -> Color.RED
+                2 -> Color.WHITE
+                else -> Color.YELLOW
+            }
+            
+            paint.color = if (isBlinking && (now / 80) % 2 == 0L) Color.WHITE else bodyColor
+            gridRect.set(x + 10, y + 10, x + cellW - 10, y + cellH - 10)
+            canvas.drawRoundRect(gridRect, 6f, 6f, paint)
+            
+            paint.color = if (isBlinking && (now / 80) % 2 == 0L) Color.WHITE else turretColor
+            canvas.drawCircle(centerX, centerY, cellW * 0.24f, paint)
+            
+            paint.color = if (isBlinking && (now / 80) % 2 == 0L) Color.WHITE else starColor
+            canvas.drawCircle(centerX, centerY, cellW * 0.10f, paint)
+        } else {
+            // Enemy tank body: Blockier (Rect instead of RoundRect)
+            gridRect.set(x + 10, y + 10, x + cellW - 10, y + cellH - 10)
+            paint.color = drawColor
+            canvas.drawRect(gridRect, paint)
+            
+            // Turret (Square)
+            paint.color = if (isBlinking && (now / 80) % 2 == 0L) Color.WHITE else Color.parseColor("#E57373")
+            gridRect.set(centerX - cellW * 0.22f, centerY - cellH * 0.22f, centerX + cellW * 0.22f, centerY + cellH * 0.22f)
+            canvas.drawRect(gridRect, paint)
+        }
 
         // Barrel
         paint.color = Color.WHITE
@@ -426,6 +569,7 @@ class BattleTanksView @JvmOverloads constructor(
 
     private fun update() {
         if (isLevelLoading) return
+        val now = System.currentTimeMillis()
         fire(player)
 
         val bIter = bullets.iterator()
@@ -464,12 +608,14 @@ class BattleTanksView @JvmOverloads constructor(
                     val e = eIter.next()
                     if (e.x == bx && e.y == by) {
                         e.hp--
+                        e.blinkUntil = System.currentTimeMillis() + 800L
                         if (e.hp <= 0) {
                             eIter.remove()
                             score += 100
                             SoundManager.playScore()
                             if (score % 1000 == 0) {
-                                level++
+                                isLevelCleared = true
+                                gamePaused = true
                                 currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
                                 celebrationManager.startOutcome(
                                     width = width.toFloat(),
@@ -478,9 +624,9 @@ class BattleTanksView @JvmOverloads constructor(
                                     score = score,
                                     highScore = best
                                 )
-                                // Defer setupLevel to avoid ConcurrentModificationException
-                                handler.post { setupLevel() }
-                                return // Exit update immediately as lists are about to be cleared
+                                animHandler.removeCallbacks(animRunnable)
+                                animHandler.post(animRunnable)
+                                return
                             }
                         }
                         hit = true; break
@@ -492,8 +638,16 @@ class BattleTanksView @JvmOverloads constructor(
                 }
             } else {
                 if (player.x == bx && player.y == by) {
-                    onGameOverTriggered()
                     bIter.remove()
+                    if (now > player.blinkUntil) {
+                        playerLives--
+                        SoundManager.playError()
+                        if (playerLives <= 0) {
+                            onGameOverTriggered()
+                        } else {
+                            player.blinkUntil = now + 2000L
+                        }
+                    }
                     continue
                 }
             }

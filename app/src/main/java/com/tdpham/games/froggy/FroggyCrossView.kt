@@ -35,6 +35,7 @@ class FroggyCrossView @JvmOverloads constructor(
     private var best = 0
     private var gameOver = false
     private var gamePaused = true
+    private var isLevelCleared = false
     private var lives = 3
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
@@ -46,7 +47,7 @@ class FroggyCrossView @JvmOverloads constructor(
     private val animHandler = Handler(Looper.getMainLooper())
     private val animRunnable = object : Runnable {
         override fun run() {
-            if (gameOver || gamePaused) {
+            if (gameOver || isLevelCleared) {
                 celebrationManager.update()
                 invalidate()
             }
@@ -96,6 +97,8 @@ class FroggyCrossView @JvmOverloads constructor(
     override fun startGame() {
         requestFocus()
         gamePaused = false
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
         invalidate()
     }
 
@@ -120,7 +123,7 @@ class FroggyCrossView @JvmOverloads constructor(
         best = ScoreManager.getHighScore(context, gameKey, currentDifficultyIndex)
         gameOver = false
         gamePaused = true
-        celebrationManager.start(0f, 0f)
+        isLevelCleared = false
         resetFrog()
         setupLanes()
         hintShowFrames = 100
@@ -167,6 +170,15 @@ class FroggyCrossView @JvmOverloads constructor(
                 return true
             }
             return super.onKeyDown(keyCode, event)
+        }
+        if (isLevelCleared) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                isLevelCleared = false
+                resetFrog()
+                resume()
+                return true
+            }
+            return true
         }
         if (gamePaused && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
             resume()
@@ -238,6 +250,8 @@ class FroggyCrossView @JvmOverloads constructor(
         
         if (frogR == 0) {
             score += 1000
+            isLevelCleared = true
+            gamePaused = true
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
             val oldBest = best
             val isNewHigh = ScoreManager.updateHighScore(context, gameKey, score, currentDifficultyIndex)
@@ -251,11 +265,13 @@ class FroggyCrossView @JvmOverloads constructor(
                 highScore = oldBest
             )
             SoundManager.playSuccess()
-            resetFrog()
+            animHandler.removeCallbacks(animRunnable)
+            animHandler.post(animRunnable)
         }
     }
 
     private fun die() {
+        if (gameOver || gamePaused) return
         lives--
         SoundManager.playError()
         if (lives <= 0) {
@@ -301,35 +317,13 @@ class FroggyCrossView @JvmOverloads constructor(
         // Draw Entities
         for (lane in lanes) {
             for (e in lane.entities) {
-                paint.color = e.color
                 entityRect.set(e.c * cellW, lane.r * cellH + 5, (e.c + e.length) * cellW, (lane.r + 1) * cellH - 5)
-                
-                if (lane.isRiver) {
-                    // Logs with texture/lines
-                    paint.color = Color.parseColor("#5D4037")
-                    canvas.drawRoundRect(entityRect, 10f, 10f, paint)
-                    paint.color = Color.parseColor("#4E342E")
-                    paint.strokeWidth = 2f
-                    canvas.drawLine(entityRect.left + 10, entityRect.top + entityRect.height()/2, entityRect.right - 10, entityRect.top + entityRect.height()/2, paint)
-                } else {
-                    // Cars with simple 3D effect
-                    canvas.drawRoundRect(entityRect, 8f, 8f, paint)
-                    paint.color = Color.BLACK
-                    canvas.drawRect(entityRect.left + entityRect.width()*0.2f, entityRect.top + 5, entityRect.right - entityRect.width()*0.2f, entityRect.bottom - 5, paint)
-                    paint.color = Color.YELLOW
-                    canvas.drawRect(entityRect.left + 2, entityRect.top + 10, entityRect.left + 10, entityRect.bottom - 10, paint) // Headlights
-                }
+                drawEntity(canvas, entityRect, lane.isRiver, lane.speed, lane.r)
                 
                 // Wrap around drawing
                 if (e.c + e.length > cols) {
                     tempRect.set((e.c - cols) * cellW, lane.r * cellH + 5, (e.c + e.length - cols) * cellW, (lane.r + 1) * cellH - 5)
-                    paint.color = e.color
-                    if (lane.isRiver) {
-                        paint.color = Color.parseColor("#5D4037")
-                        canvas.drawRoundRect(tempRect, 10f, 10f, paint)
-                    } else {
-                        canvas.drawRoundRect(tempRect, 8f, 8f, paint)
-                    }
+                    drawEntity(canvas, tempRect, lane.isRiver, lane.speed, lane.r)
                 }
             }
         }
@@ -343,16 +337,30 @@ class FroggyCrossView @JvmOverloads constructor(
         paint.color = Color.parseColor("#1B5E20") // Darker green shadow
         canvas.drawCircle(fx, fy + 5, frogRadius, paint)
         
-        paint.color = Color.GREEN
+        // Crouch legs
+        paint.color = Color.parseColor("#2E7D32")
+        canvas.drawCircle(fx - frogRadius * 0.7f, fy + frogRadius * 0.5f, frogRadius * 0.35f, paint)
+        canvas.drawCircle(fx + frogRadius * 0.7f, fy + frogRadius * 0.5f, frogRadius * 0.35f, paint)
+        canvas.drawCircle(fx - frogRadius * 0.6f, fy - frogRadius * 0.3f, frogRadius * 0.25f, paint)
+        canvas.drawCircle(fx + frogRadius * 0.6f, fy - frogRadius * 0.3f, frogRadius * 0.25f, paint)
+
+        // Main body
+        paint.color = Color.parseColor("#4CAF50")
         canvas.drawCircle(fx, fy, frogRadius, paint)
         
         // Eyes
         paint.color = Color.WHITE
-        canvas.drawCircle(fx - frogRadius * 0.4f, fy - frogRadius * 0.4f, frogRadius * 0.25f, paint)
-        canvas.drawCircle(fx + frogRadius * 0.4f, fy - frogRadius * 0.4f, frogRadius * 0.25f, paint)
+        canvas.drawCircle(fx - frogRadius * 0.35f, fy - frogRadius * 0.35f, frogRadius * 0.28f, paint)
+        canvas.drawCircle(fx + frogRadius * 0.35f, fy - frogRadius * 0.35f, frogRadius * 0.28f, paint)
+        
         paint.color = Color.BLACK
-        canvas.drawCircle(fx - frogRadius * 0.4f, fy - frogRadius * 0.5f, frogRadius * 0.1f, paint)
-        canvas.drawCircle(fx + frogRadius * 0.4f, fy - frogRadius * 0.5f, frogRadius * 0.1f, paint)
+        canvas.drawCircle(fx - frogRadius * 0.35f, fy - frogRadius * 0.4f, frogRadius * 0.14f, paint)
+        canvas.drawCircle(fx + frogRadius * 0.35f, fy - frogRadius * 0.4f, frogRadius * 0.14f, paint)
+
+        // Cheeks
+        paint.color = Color.parseColor("#FFCDD2")
+        canvas.drawCircle(fx - frogRadius * 0.4f, fy + frogRadius * 0.1f, frogRadius * 0.15f, paint)
+        canvas.drawCircle(fx + frogRadius * 0.4f, fy + frogRadius * 0.1f, frogRadius * 0.15f, paint)
 
         // HUD
         paint.reset()
@@ -384,19 +392,74 @@ class FroggyCrossView @JvmOverloads constructor(
 
         if (gameOver) {
             drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+        } else if (isLevelCleared) {
+            val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.victory_label)
+            drawOverlay(canvas, title, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.continue_hint)}")
         } else if (gamePaused) {
             drawOverlay(canvas, context.getString(R.string.game_froggy), context.getString(R.string.start_game))
         }
 
-        celebrationManager.draw(canvas)
+        if (gameOver || isLevelCleared) {
+            celebrationManager.draw(canvas)
+        }
+    }
 
-        if (!gamePaused && !gameOver) {
-            celebrationManager.update()
-            invalidate()
+    private fun drawEntity(canvas: Canvas, rect: RectF, isRiver: Boolean, speed: Float, r: Int) {
+        if (isRiver) {
+            // Logs
+            paint.color = Color.parseColor("#5D4037") // Bark brown
+            canvas.drawRoundRect(rect, 12f, 12f, paint)
+            // Rings at ends
+            paint.color = Color.parseColor("#8D6E63") // Lighter brown rings
+            canvas.drawCircle(rect.left + 15, rect.top + rect.height()/2, 10f, paint)
+            canvas.drawCircle(rect.right - 15, rect.top + rect.height()/2, 10f, paint)
+            // Bark texture lines
+            paint.color = Color.parseColor("#3E2723") // Dark brown lines
+            paint.strokeWidth = 3f
+            paint.style = Paint.Style.STROKE
+            canvas.drawLine(rect.left + 35, rect.top + 12, rect.right - 35, rect.top + 12, paint)
+            canvas.drawLine(rect.left + 25, rect.bottom - 12, rect.right - 25, rect.bottom - 12, paint)
+            paint.style = Paint.Style.FILL
+            // Little green leaf growing from log
+            paint.color = Color.parseColor("#4CAF50")
+            canvas.drawCircle(rect.left + rect.width()/2, rect.top + 2, 8f, paint)
+        } else {
+            // Cars
+            val carColor = when (r % 3) {
+                0 -> Color.parseColor("#E53935") // Red
+                1 -> Color.parseColor("#1E88E5") // Blue
+                else -> Color.parseColor("#8E24AA") // Purple
+            }
+            paint.color = carColor
+            canvas.drawRoundRect(rect, 10f, 10f, paint)
+            
+            // Wheels (4 corners)
+            paint.color = Color.BLACK
+            canvas.drawCircle(rect.left + 15, rect.top, 8f, paint)
+            canvas.drawCircle(rect.right - 15, rect.top, 8f, paint)
+            canvas.drawCircle(rect.left + 15, rect.bottom, 8f, paint)
+            canvas.drawCircle(rect.right - 15, rect.bottom, 8f, paint)
+            
+            // Windshield
+            paint.color = Color.parseColor("#B3E5FC") // Light blue
+            val wx1 = if (speed > 0) rect.right - rect.width() * 0.4f else rect.left + rect.width() * 0.15f
+            val wx2 = if (speed > 0) rect.right - rect.width() * 0.15f else rect.left + rect.width() * 0.4f
+            canvas.drawRect(wx1, rect.top + 8, wx2, rect.bottom - 8, paint)
+            
+            // Headlights
+            paint.color = Color.YELLOW
+            if (speed > 0) { // Facing right
+                canvas.drawCircle(rect.right - 4, rect.top + 10, 5f, paint)
+                canvas.drawCircle(rect.right - 4, rect.bottom - 10, 5f, paint)
+            } else { // Facing left
+                canvas.drawCircle(rect.left + 4, rect.top + 10, 5f, paint)
+                canvas.drawCircle(rect.left + 4, rect.bottom - 10, 5f, paint)
+            }
         }
     }
 
     private fun update() {
+        if (gamePaused || gameOver) return
         val now = System.currentTimeMillis()
         if (lastUpdate == 0L) lastUpdate = now
         val dt = (now - lastUpdate).coerceAtMost(50L)
@@ -412,7 +475,7 @@ class FroggyCrossView @JvmOverloads constructor(
 
                 // Collision Check
                 if (frogR == lane.r) {
-                    val frogPos = frogX
+                    val frogPos = frogX + 0.5f
                     val hit = if (e.c + e.length > cols) {
                         frogPos >= e.c || frogPos < (e.c + e.length - cols)
                     } else {
@@ -425,7 +488,10 @@ class FroggyCrossView @JvmOverloads constructor(
                             logSpeed = lane.speed
                         }
                     } else {
-                        if (hit) die()
+                        if (hit) {
+                            die()
+                            return
+                        }
                     }
                 }
             }
@@ -434,6 +500,7 @@ class FroggyCrossView @JvmOverloads constructor(
         if (frogR in 1..4) {
             if (!onLog) {
                 die()
+                return
             } else {
                 // Move frog with log drift
                 frogX = (frogX + logSpeed).coerceIn(0f, (cols - 1).toFloat())

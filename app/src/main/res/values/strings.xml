@@ -494,4 +494,8 @@
     <string name="starfighter_ship_fast_desc">High speed, but very fragile (1 Life).</string>
     <string name="starfighter_ship_tank">Dreadnought</string>
     <string name="starfighter_ship_tank_desc">Massive armor (5 Lives), but moves slowly.</string>
+    <string name="starfighter_ship_solar">Solar Flare</string>
+    <string name="starfighter_ship_solar_desc">Double starting firepower, but fragile (1 Life).</string>
+    <string name="starfighter_ship_phoenix">Phoenix</string>
+    <string name="starfighter_ship_phoenix_desc">Balanced speed with a one-time automatic revive shield.</string>
 </resources>

@@ -555,7 +555,7 @@ class BrickBreakView @JvmOverloads constructor(
             2 -> R.string.brick_break_paddle_small
             else -> R.string.brick_break_paddle_medium
         })
-        canvas.drawText("${context.getString(R.string.level_label)}: $sizeStr", width / 2f, height * 0.05f, paint)
+        canvas.drawText(sizeStr, width / 2f, height * 0.05f, paint)
 
         if (isPaused && !isGameOver && !isWin) {
             drawOverlay(canvas, context.getString(R.string.game_brick_break), context.getString(R.string.launch_hint))

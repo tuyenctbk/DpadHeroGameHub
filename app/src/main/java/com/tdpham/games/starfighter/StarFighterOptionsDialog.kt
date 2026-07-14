@@ -22,6 +22,8 @@ object StarFighterOptionsDialog {
                     context.getString(when(index) {
                         1 -> R.string.starfighter_ship_fast
                         2 -> R.string.starfighter_ship_tank
+                        3 -> R.string.starfighter_ship_solar
+                        4 -> R.string.starfighter_ship_phoenix
                         else -> R.string.starfighter_ship_balanced
                     })
                 },
@@ -30,12 +32,14 @@ object StarFighterOptionsDialog {
                     context.getString(when(index) {
                         1 -> R.string.starfighter_ship_fast_desc
                         2 -> R.string.starfighter_ship_tank_desc
+                        3 -> R.string.starfighter_ship_solar_desc
+                        4 -> R.string.starfighter_ship_phoenix_desc
                         else -> R.string.starfighter_ship_balanced_desc
                     })
                 },
                 onClick = {
                     val index = prefs.getInt(KEY_SHIP_TYPE, 0)
-                    val nextIndex = (index + 1) % 3
+                    val nextIndex = (index + 1) % 5
                     prefs.edit { putInt(KEY_SHIP_TYPE, nextIndex) }
                 }
             )

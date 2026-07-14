@@ -29,6 +29,10 @@ import com.tdpham.games.trex.TRexActivity
 import com.tdpham.games.tictactoe.TicTacToeActivity
 import com.tdpham.games.hangman.HangmanActivity
 import com.tdpham.games.roadracer.RoadRacerActivity
+import com.tdpham.games.flappy.FlappyHeroActivity
+import com.tdpham.games.checkers.CheckersActivity
+import com.tdpham.games.spinball.SpinballActivity
+import com.tdpham.games.froggy.FroggyCrossActivity
 import com.tdpham.games.common.SoundManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
@@ -126,7 +130,11 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_dungeon to DungeonEscapeActivity::class.java,
             R.id.btn_slide_puzzle to SlidePuzzleActivity::class.java,
             R.id.btn_hangman to HangmanActivity::class.java,
-            R.id.btn_simon to SimonSaysActivity::class.java
+            R.id.btn_simon to SimonSaysActivity::class.java,
+            R.id.btn_flappy to FlappyHeroActivity::class.java,
+            R.id.btn_checkers to CheckersActivity::class.java,
+            R.id.btn_spinball to SpinballActivity::class.java,
+            R.id.btn_froggy to FroggyCrossActivity::class.java
         )
 
         for ((id, activityClass) in games) {
@@ -163,6 +171,10 @@ class MainActivity : AppCompatActivity() {
             "slide_puzzle" -> findViewById<Button>(R.id.btn_slide_puzzle).requestFocus()
             "hangman" -> findViewById<Button>(R.id.btn_hangman).requestFocus()
             "simon_says" -> findViewById<Button>(R.id.btn_simon).requestFocus()
+            "flappy_hero" -> findViewById<Button>(R.id.btn_flappy).requestFocus()
+            "froggy_cross" -> findViewById<Button>(R.id.btn_froggy).requestFocus()
+            "checkers" -> findViewById<Button>(R.id.btn_checkers).requestFocus()
+            "spinball" -> findViewById<Button>(R.id.btn_spinball).requestFocus()
             else -> findViewById<Button>(R.id.btn_snake).requestFocus()
         }
     }

@@ -129,19 +129,20 @@ class DungeonEscapeView @JvmOverloads constructor(
     private fun setupLevel() {
         var attempts = 0
         do {
-            generateMap()
+            generateMap(attempts)
             attempts++
-        } while (!isSolvable() && attempts < 10)
+        } while (!isSolvable() && attempts < 100)
     }
 
-    private fun generateMap() {
+    private fun generateMap(attempt: Int = 0) {
         sentinels.clear()
         for (r in 0 until rows) for (c in 0 until cols) {
             grid[r][c] = if (r == 0 || r == rows - 1 || c == 0 || c == cols - 1) 1 else 0
         }
         
-        // Random obstacles
-        val obstacleCount = (level * 3 + 10).coerceAtMost(50)
+        // Random obstacles (relaxed dynamically as attempts increase)
+        val baseObstacleCount = (level * 3 + 10).coerceAtMost(50)
+        val obstacleCount = (baseObstacleCount - attempt).coerceAtLeast(0)
         repeat(obstacleCount) {
             val r = Random.nextInt(1, rows - 1)
             val c = Random.nextInt(1, cols - 1)
@@ -445,7 +446,7 @@ class DungeonEscapeView @JvmOverloads constructor(
         }
 
         if (gameOver) {
-            drawOverlay(canvas, context.getString(R.string.trapped_label), "${context.getString(R.string.final_score_label)}: $level\n${context.getString(R.string.restart_hint)}")
+            drawOverlay(canvas, context.getString(R.string.trapped_label), "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         } else if (gamePaused) {
             drawOverlay(canvas, context.getString(R.string.game_dungeon), context.getString(R.string.start_game))
         }

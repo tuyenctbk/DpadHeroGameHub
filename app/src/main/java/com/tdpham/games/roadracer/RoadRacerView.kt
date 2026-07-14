@@ -74,8 +74,15 @@ class RoadRacerView @JvmOverloads constructor(
     private val particles = mutableListOf<GameEnvironment.Particle>()
 
     enum class Scene { FIELD, CITY, DESERT, SNOWY_MTN }
-    enum class ObstacleType { CAR, TRUCK, CONE, OIL_SPILL, POTHOLE, BARRIER, AMBULANCE }
-    data class Obstacle(val lane: Int, var y: Float, val type: ObstacleType, val variant: Int = 0)
+    enum class ObstacleType { CAR, TRUCK, CONE, OIL_SPILL, POTHOLE, BARRIER, AMBULANCE, COW, DEER, SHEEP }
+    data class Obstacle(
+        val lane: Int,
+        var y: Float,
+        val type: ObstacleType,
+        val variant: Int = 0,
+        var animalX: Float = -999f,
+        var animalDir: Float = 1f
+    )
     data class RoadTheme(val roadColor: Int, val sideColor: Int, val dashColor: Int, val carColors: List<Int>)
 
     init {
@@ -94,6 +101,8 @@ class RoadRacerView @JvmOverloads constructor(
 
     override fun startGame() {
         isPaused = false
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
         invalidate()
     }
 
@@ -227,15 +236,59 @@ class RoadRacerView @JvmOverloads constructor(
             nextObstacleTimer = (baseInterval - (gameSpeed - 10) * 2.5f).coerceAtLeast(12f) + random.nextInt(25)
         }
 
+        // Sort obstacles from bottom (largest y) to top (smallest y) to update them in order
+        obstacles.sortByDescending { it.y }
+
         val iterator = obstacles.iterator()
+        var index = 0
         while (iterator.hasNext()) {
             val obs = iterator.next()
-            obs.y += gameSpeed * (if (obs.type == ObstacleType.AMBULANCE) 0.6f else 1.0f)
+            
+            // Speed factor relative to road
+            val speedFactor = when(obs.type) {
+                ObstacleType.AMBULANCE -> 0.6f
+                ObstacleType.CAR, ObstacleType.TRUCK -> 0.8f
+                else -> 1.0f
+            }
+            var dy = gameSpeed * speedFactor
+            
+            // Check for speed capping if there is another obstacle in front in the same lane
+            // (Only apply if neither of them is a crossing animal, as animals cross lanes)
+            if (obs.animalX == -999f) {
+                val front = obstacles.take(index).firstOrNull { it.lane == obs.lane && it.animalX == -999f }
+                if (front != null) {
+                    val frontSpeedFactor = when(front.type) {
+                        ObstacleType.AMBULANCE -> 0.6f
+                        ObstacleType.CAR, ObstacleType.TRUCK -> 0.8f
+                        else -> 1.0f
+                    }
+                    val frontDy = gameSpeed * frontSpeedFactor
+                    if (dy > frontDy && obs.y + dy > front.y - 250f) {
+                        dy = (front.y - 250f - obs.y).coerceAtLeast(frontDy)
+                    }
+                }
+            }
+
+            obs.y += dy
+
+            // Move animal horizontally
+            if (obs.type == ObstacleType.COW || obs.type == ObstacleType.DEER || obs.type == ObstacleType.SHEEP) {
+                val horizSpeed = when(obs.type) {
+                    ObstacleType.DEER -> 6f
+                    ObstacleType.COW -> 2f
+                    else -> 4f
+                }
+                obs.animalX += obs.animalDir * horizSpeed
+            }
+
             if (checkCollision(obs)) {
                 gameOver()
                 break
             }
-            if (obs.y > height) iterator.remove()
+            if (obs.y > height) {
+                iterator.remove()
+            }
+            index++
         }
     }
 
@@ -256,20 +309,26 @@ class RoadRacerView @JvmOverloads constructor(
     private fun spawnObstacle() {
         val lane = random.nextInt(3)
         val type = ObstacleType.entries.random()
-        obstacles.add(Obstacle(lane, -300f, type, random.nextInt(3)))
+        val obs = Obstacle(lane, -300f, type, random.nextInt(3))
+        if (type == ObstacleType.COW || type == ObstacleType.DEER || type == ObstacleType.SHEEP) {
+            val fromLeft = random.nextBoolean()
+            obs.animalDir = if (fromLeft) 1f else -1f
+            obs.animalX = if (fromLeft) 0f else width.toFloat()
+        }
+        obstacles.add(obs)
     }
 
     private fun checkCollision(obs: Obstacle): Boolean {
         val laneWidth = width / 3f
         val px = playerLane * laneWidth + (laneWidth - playerWidth) / 2f
         val py = height - 300f
-        val ox = obs.lane * laneWidth + (laneWidth - playerWidth) / 2f
+        val ox = if (obs.animalX != -999f) obs.animalX else obs.lane * laneWidth + (laneWidth - playerWidth) / 2f
         val oy = obs.y
         
         val playerRect = RectF(px + 15, py + 15, px + playerWidth - 15, py + playerHeight - 15)
-        val ow = if (obs.type == ObstacleType.CONE || obs.type == ObstacleType.POTHOLE) 40f else playerWidth
-        val oh = if (obs.type == ObstacleType.CONE || obs.type == ObstacleType.POTHOLE) 40f else if (obs.type == ObstacleType.TRUCK) 220f else playerHeight
-        val obsRect = RectF(ox + 15, oy + 15, ox + ow - 15, oy + oh - 15)
+        val ow = if (obs.type == ObstacleType.COW || obs.type == ObstacleType.DEER || obs.type == ObstacleType.SHEEP) 70f else if (obs.type == ObstacleType.CONE || obs.type == ObstacleType.POTHOLE) 40f else playerWidth
+        val oh = if (obs.type == ObstacleType.COW || obs.type == ObstacleType.DEER || obs.type == ObstacleType.SHEEP) 60f else if (obs.type == ObstacleType.CONE || obs.type == ObstacleType.POTHOLE) 40f else if (obs.type == ObstacleType.TRUCK) 220f else playerHeight
+        val obsRect = RectF(ox + 10, oy + 10, ox + ow - 10, oy + oh - 10)
         
         return RectF.intersects(playerRect, obsRect)
     }
@@ -414,6 +473,9 @@ class RoadRacerView @JvmOverloads constructor(
                 canvas.drawCircle(x + 20, y + 10, 10f, paint)
                 canvas.drawCircle(x + 60, y + 10, 10f, paint)
             }
+            ObstacleType.COW -> drawCow(canvas, x, y)
+            ObstacleType.DEER -> drawDeer(canvas, x, y)
+            ObstacleType.SHEEP -> drawSheep(canvas, x, y)
         }
     }
 
@@ -457,5 +519,85 @@ class RoadRacerView @JvmOverloads constructor(
         lines.forEachIndexed { i, s ->
             canvas.drawText(s, width / 2f, height / 2f + 40f + i * 40f, paint)
         }
+    }
+
+    private fun drawCow(canvas: Canvas, x: Float, y: Float) {
+        paint.reset()
+        paint.isAntiAlias = true
+        // Body (White with black spots)
+        paint.color = Color.WHITE
+        canvas.drawRoundRect(x, y + 10, x + 70, y + 50, 10f, 10f, paint)
+        
+        paint.color = Color.BLACK
+        canvas.drawCircle(x + 15, y + 25, 8f, paint)
+        canvas.drawCircle(x + 35, y + 35, 10f, paint)
+        canvas.drawCircle(x + 50, y + 20, 7f, paint)
+        
+        // Head
+        paint.color = Color.WHITE
+        canvas.drawRoundRect(x + 50, y, x + 75, y + 25, 5f, 5f, paint)
+        // Snout (Pink)
+        paint.color = Color.parseColor("#FFCDD2")
+        canvas.drawRect(x + 65, y + 10, x + 75, y + 25, paint)
+        
+        // Legs
+        paint.color = Color.BLACK
+        canvas.drawRect(x + 10, y + 50, x + 18, y + 60, paint)
+        canvas.drawRect(x + 25, y + 50, x + 33, y + 60, paint)
+        canvas.drawRect(x + 45, y + 50, x + 53, y + 60, paint)
+        canvas.drawRect(x + 58, y + 50, x + 66, y + 60, paint)
+    }
+
+    private fun drawDeer(canvas: Canvas, x: Float, y: Float) {
+        paint.reset()
+        paint.isAntiAlias = true
+        // Legs
+        paint.color = Color.parseColor("#5D4037")
+        canvas.drawRect(x + 15, y + 45, x + 20, y + 60, paint)
+        canvas.drawRect(x + 25, y + 45, x + 30, y + 60, paint)
+        canvas.drawRect(x + 45, y + 45, x + 50, y + 60, paint)
+        canvas.drawRect(x + 55, y + 45, x + 60, y + 60, paint)
+
+        // Body
+        paint.color = Color.parseColor("#8D6E63")
+        canvas.drawRoundRect(x + 5, y + 15, x + 65, y + 45, 8f, 8f, paint)
+        // Spots (White)
+        paint.color = Color.WHITE
+        canvas.drawCircle(x + 25, y + 25, 3f, paint)
+        canvas.drawCircle(x + 40, y + 30, 3f, paint)
+        canvas.drawCircle(x + 50, y + 25, 3f, paint)
+
+        // Neck & Head
+        paint.color = Color.parseColor("#8D6E63")
+        canvas.drawRoundRect(x + 45, y, x + 65, y + 25, 6f, 6f, paint)
+        
+        // Antlers
+        paint.color = Color.parseColor("#5D4037")
+        canvas.drawLine(x + 52, y, x + 47, y - 10, paint)
+        canvas.drawLine(x + 58, y, x + 63, y - 10, paint)
+        canvas.drawLine(x + 47, y - 10, x + 43, y - 12, paint)
+        canvas.drawLine(x + 63, y - 10, x + 67, y - 12, paint)
+    }
+
+    private fun drawSheep(canvas: Canvas, x: Float, y: Float) {
+        paint.reset()
+        paint.isAntiAlias = true
+        // Legs
+        paint.color = Color.parseColor("#212121")
+        canvas.drawRect(x + 15, y + 40, x + 22, y + 55, paint)
+        canvas.drawRect(x + 28, y + 40, x + 35, y + 55, paint)
+        canvas.drawRect(x + 45, y + 40, x + 52, y + 55, paint)
+        canvas.drawRect(x + 55, y + 40, x + 62, y + 55, paint)
+
+        // Body (fluffy white cloud)
+        paint.color = Color.WHITE
+        canvas.drawCircle(x + 25, y + 25, 20f, paint)
+        canvas.drawCircle(x + 45, y + 25, 20f, paint)
+        canvas.drawCircle(x + 35, y + 15, 18f, paint)
+        canvas.drawCircle(x + 35, y + 30, 18f, paint)
+
+        // Head (Black)
+        paint.color = Color.parseColor("#212121")
+        canvas.drawOval(x + 10, y + 12, x + 28, y + 32, paint)
     }
 }

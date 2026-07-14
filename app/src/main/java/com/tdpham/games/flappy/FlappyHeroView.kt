@@ -394,6 +394,7 @@ class FlappyHeroView @JvmOverloads constructor(
     }
 
     private fun update() {
+        if (gamePaused || gameOver) return
         val now = System.currentTimeMillis()
         if (lastUpdate == 0L) lastUpdate = now
         lastUpdate = now
@@ -408,6 +409,7 @@ class FlappyHeroView @JvmOverloads constructor(
 
         if (birdY < 0 || birdY > height) {
             die()
+            return
         }
 
         // Clouds
@@ -449,6 +451,7 @@ class FlappyHeroView @JvmOverloads constructor(
             if (150f + birdSize > p.x && 150f - birdSize < p.x + 100f) {
                 if (birdY - birdSize < p.gapY || birdY + birdSize > p.gapY + p.gapH) {
                     die()
+                    return
                 }
             }
 
@@ -466,6 +469,7 @@ class FlappyHeroView @JvmOverloads constructor(
     }
 
     private fun die() {
+        if (gameOver) return
         gameOver = true
         gamePaused = true
         val oldBest = best

@@ -26,6 +26,7 @@ class SplashActivity : AppCompatActivity() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
+    private var pulseRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +64,7 @@ class SplashActivity : AppCompatActivity() {
         hint.animate().alpha(1f).translationY(0f).setDuration(500).setStartDelay(550).start()
 
         // Subtle continuous pulse for logo
-        logo.postDelayed(object : Runnable {
+        val runnable = object : Runnable {
             override fun run() {
                 logo.animate()
                     .scaleX(1.05f)
@@ -79,7 +80,9 @@ class SplashActivity : AppCompatActivity() {
                     }
                     .start()
             }
-        }, 600)
+        }
+        pulseRunnable = runnable
+        logo.postDelayed(runnable, 600)
 
         // Hide system UI with modern approach for API 30+, fallback for older versions
         hideSystemUI()
@@ -91,6 +94,10 @@ class SplashActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(startMainRunnable)
+        pulseRunnable?.let {
+            findViewById<android.view.View>(R.id.splash_logo)?.removeCallbacks(it)
+        }
+        findViewById<android.view.View>(R.id.splash_logo)?.animate()?.cancel()
     }
 
     private fun hideSystemUI() {

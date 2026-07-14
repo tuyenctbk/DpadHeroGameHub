@@ -33,6 +33,30 @@ object BattleTanksOptionsDialog {
                     prefs.edit { putInt(KEY_START_LEVEL, nextLevel) }
                 }
             )
+            .addOption(
+                label = "Tank Selection",
+                valueProvider = {
+                    val tankType = prefs.getInt("selected_tank_type", 0)
+                    when (tankType) {
+                        1 -> "Firestorm (Fast Fire)"
+                        2 -> "Mammoth (Heavy Armor)"
+                        else -> "Titan (Balanced)"
+                    }
+                },
+                descProvider = {
+                    val tankType = prefs.getInt("selected_tank_type", 0)
+                    when (tankType) {
+                        1 -> "1 Life, extremely fast reloading."
+                        2 -> "5 Lives, slow reloading."
+                        else -> "3 Lives, normal reloading."
+                    }
+                },
+                onClick = {
+                    val tankType = prefs.getInt("selected_tank_type", 0)
+                    val nextType = (tankType + 1) % 3
+                    prefs.edit { putInt("selected_tank_type", nextType) }
+                }
+            )
             .setOnDismiss(onDismiss)
             .show()
     }

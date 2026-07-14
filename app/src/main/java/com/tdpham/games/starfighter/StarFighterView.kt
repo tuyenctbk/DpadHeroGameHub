@@ -47,6 +47,7 @@ class StarFighterView @JvmOverloads constructor(
     private val playerSize = 70f
     private var lives = 3
     private var invulnerableUntil = 0L
+    private var hasPhoenixRevived = false
 
     private val bullets = mutableListOf<Bullet>()
     private val enemies = mutableListOf<Enemy>()
@@ -56,6 +57,7 @@ class StarFighterView @JvmOverloads constructor(
     private val random = Random()
 
     private var lastEnemySpawn = 0L
+    private var lastBossScore = 0
     private var lastShoot = 0L
     private var gunLevel = 1
     private var powerUpEndTime = 0L
@@ -124,9 +126,10 @@ class StarFighterView @JvmOverloads constructor(
         // Load difficulty and ship type from settings
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         currentDifficultyIndex = prefs.getInt(KEY_DIFFICULTY, 1).coerceIn(0, 2)
-        currentShipType = prefs.getInt(KEY_SHIP_TYPE, 0).coerceIn(0, 2)
+        currentShipType = prefs.getInt(KEY_SHIP_TYPE, 0).coerceIn(0, 4)
 
         score = 0
+        lastBossScore = 0
         best = ScoreManager.getHighScore(context, gameKey, currentDifficultyIndex)
         gameOver = false
         isPaused = true
@@ -134,6 +137,7 @@ class StarFighterView @JvmOverloads constructor(
         gunLevel = 1
 
         // Ship Stats
+        hasPhoenixRevived = false
         when(currentShipType) {
             1 -> { // Fast
                 playerSpeed = 18f
@@ -142,6 +146,15 @@ class StarFighterView @JvmOverloads constructor(
             2 -> { // Tank
                 playerSpeed = 8f
                 lives = 5
+            }
+            3 -> { // Solar Flare (Glass Cannon)
+                playerSpeed = 15f
+                lives = 1
+                gunLevel = 2
+            }
+            4 -> { // Phoenix
+                playerSpeed = 12f
+                lives = 2
             }
             else -> { // Balanced
                 playerSpeed = 13f
@@ -261,8 +274,14 @@ class StarFighterView @JvmOverloads constructor(
 
         val now = System.currentTimeMillis()
         
+        val hasBoss = enemies.any { it.type == EnemyType.BOSS }
+        if (!hasBoss && score >= lastBossScore + 2000) {
+            lastBossScore = (score / 2000) * 2000
+            enemies.add(Enemy(width / 2f, -150f, EnemyType.BOSS))
+        }
+
         val spawnInterval = when(currentDifficultyIndex) { 0 -> 1500; 2 -> 800; else -> 1200 }
-        if (now - lastEnemySpawn > (spawnInterval - (score / 200) * 50).coerceAtLeast(500)) {
+        if (!hasBoss && now - lastEnemySpawn > (spawnInterval - (score / 200) * 50).coerceAtLeast(500)) {
             val type = if (random.nextFloat() < 0.15) EnemyType.FAST else if (random.nextFloat() < 0.1) EnemyType.BIG else EnemyType.NORMAL
             enemies.add(Enemy(random.nextFloat() * (width - 150) + 75, -100f, type))
             lastEnemySpawn = now
@@ -270,7 +289,7 @@ class StarFighterView @JvmOverloads constructor(
 
         val shootInterval = if (gunLevel >= 3) 250 else 350
         if (now - lastShoot > shootInterval) {
-            if (now > powerUpEndTime) gunLevel = 1
+            if (now > powerUpEndTime) gunLevel = if (currentShipType == 3) 2 else 1
             
             when (gunLevel) {
                 1 -> bullets.add(Bullet(playerX, playerY - 40, -18f))
@@ -333,18 +352,33 @@ class StarFighterView @JvmOverloads constructor(
         val eIter = enemies.iterator()
         while (eIter.hasNext()) {
             val e = eIter.next()
-            val speedY = when(e.type) { EnemyType.FAST -> 8f; EnemyType.BIG -> 2.5f; else -> 4.5f }
-            e.y += speedY
+            if (e.type == EnemyType.BOSS) {
+                if (e.y < 200f) {
+                    e.y += 1.5f
+                } else {
+                    e.phase += 0.02f
+                    e.x = width / 2f + Math.sin(e.phase.toDouble()).toFloat() * (width / 3f)
+                }
+            } else {
+                val speedY = when(e.type) { EnemyType.FAST -> 8f; EnemyType.BIG -> 2.5f; else -> 4.5f }
+                e.y += speedY
 
-            val huntSpeed = when(e.type) { EnemyType.FAST -> 4.5f; EnemyType.BIG -> 1.5f; else -> 3f }
-            if (e.y > 0 && e.y < height * 0.8f) {
-                if (e.x < playerX - 15) e.x += huntSpeed
-                else if (e.x > playerX + 15) e.x -= huntSpeed
+                val huntSpeed = when(e.type) { EnemyType.FAST -> 4.5f; EnemyType.BIG -> 1.5f; else -> 3f }
+                if (e.y > 0 && e.y < height * 0.8f) {
+                    if (e.x < playerX - 15) e.x += huntSpeed
+                    else if (e.x > playerX + 15) e.x -= huntSpeed
+                }
             }
             
-            val shootChance = when(e.type) { EnemyType.BIG -> 0.02f; EnemyType.FAST -> 0.005f; else -> 0.01f }
+            val shootChance = when(e.type) { EnemyType.BOSS -> 0.04f; EnemyType.BIG -> 0.02f; EnemyType.FAST -> 0.005f; else -> 0.01f }
             if (random.nextFloat() < shootChance && e.y > 0 && e.y < height * 0.7f) {
-                bullets.add(Bullet(e.x, e.y + e.size, 10f, 0f, true))
+                if (e.type == EnemyType.BOSS) {
+                    bullets.add(Bullet(e.x, e.y + 60, 10f, 0f, true))
+                    bullets.add(Bullet(e.x - 30, e.y + 50, 9f, -3f, true))
+                    bullets.add(Bullet(e.x + 30, e.y + 50, 9f, 3f, true))
+                } else {
+                    bullets.add(Bullet(e.x, e.y + e.size, 10f, 0f, true))
+                }
             }
             
             if (now > invulnerableUntil && RectF(playerX - 35, playerY - 35, playerX + 35, playerY + 35).intersects(e.x - e.size * 0.8f, e.y - e.size * 0.8f, e.x + e.size * 0.8f, e.y + e.size * 0.8f)) {
@@ -361,10 +395,16 @@ class StarFighterView @JvmOverloads constructor(
                 val b = bIter2.next()
                 if (!b.isEnemy && Math.abs(b.x - e.x) < e.size && Math.abs(b.y - e.y) < e.size) {
                     e.hp--
+                    e.blinkUntil = System.currentTimeMillis() + 1000L
                     bIter2.remove()
                     if (e.hp <= 0) {
                         spawnExplosion(e.x, e.y, e.color)
-                        score += when(e.type) { EnemyType.BIG -> 100; EnemyType.FAST -> 50; else -> 20 }
+                        score += when(e.type) {
+                            EnemyType.BOSS -> 500
+                            EnemyType.BIG -> 100
+                            EnemyType.FAST -> 50
+                            else -> 20
+                        }
                         if (random.nextFloat() < 0.12) {
                             val pType = if (random.nextFloat() < 0.8 || lives >= 5) PowerUpType.WEAPON else PowerUpType.LIFE
                             powerUps.add(PowerUp(e.x, e.y, pType))
@@ -389,13 +429,22 @@ class StarFighterView @JvmOverloads constructor(
 
     private fun playerHit() {
         lives--
+        if (lives <= 0 && currentShipType == 4 && !hasPhoenixRevived) {
+            lives = 1
+            hasPhoenixRevived = true
+            invulnerableUntil = System.currentTimeMillis() + 4000L // 4s shield
+            screenShake.trigger(20, 30f)
+            spawnExplosion(playerX, playerY, Color.parseColor("#FF9800")) // Orange fire explosion
+            SoundManager.playScore() // Play success sound as rebirth
+            return
+        }
         screenShake.trigger(12, 20f)
         spawnExplosion(playerX, playerY, Color.CYAN)
         SoundManager.playError()
         if (lives <= 0) {
             endGame()
         } else {
-            invulnerableUntil = System.currentTimeMillis() + 2000
+            invulnerableUntil = System.currentTimeMillis() + 2000L
         }
     }
 
@@ -418,6 +467,7 @@ class StarFighterView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        val now = System.currentTimeMillis()
         val needsInvalidate = screenShake.apply(canvas)
         
         if (hintShowFrames > 0) {
@@ -445,34 +495,97 @@ class StarFighterView @JvmOverloads constructor(
         }
 
         for (e in enemies) {
-            paint.color = e.color
+            val isBlinking = now < e.blinkUntil
+            val baseColor = if (isBlinking && (now / 80) % 2 == 0L) Color.WHITE else e.color
+            paint.color = baseColor
+            
             when (e.type) {
+                EnemyType.BOSS -> {
+                    // Outer wing shapes
+                    tempPath.reset()
+                    tempPath.moveTo(e.x - e.size, e.y)
+                    tempPath.lineTo(e.x - e.size * 0.8f, e.y - e.size * 0.5f)
+                    tempPath.lineTo(e.x + e.size * 0.8f, e.y - e.size * 0.5f)
+                    tempPath.lineTo(e.x + e.size, e.y)
+                    tempPath.lineTo(e.x + e.size * 0.7f, e.y + e.size * 0.4f)
+                    tempPath.lineTo(e.x - e.size * 0.7f, e.y + e.size * 0.4f)
+                    tempPath.close()
+                    canvas.drawPath(tempPath, paint)
+
+                    // Side engines (Darker purple/accent)
+                    paint.color = Color.parseColor("#4A148C")
+                    canvas.drawRect(e.x - e.size * 0.8f, e.y - e.size * 0.4f, e.x - e.size * 0.5f, e.y + e.size * 0.3f, paint)
+                    canvas.drawRect(e.x + e.size * 0.5f, e.y - e.size * 0.4f, e.x + e.size * 0.8f, e.y + e.size * 0.3f, paint)
+
+                    // Glowing energy core (Red/Orange pulsing)
+                    paint.color = if ((now / 150) % 2 == 0L) Color.RED else Color.YELLOW
+                    canvas.drawCircle(e.x, e.y, e.size * 0.25f, paint)
+
+                    // Core center
+                    paint.color = Color.WHITE
+                    canvas.drawCircle(e.x, e.y, e.size * 0.12f, paint)
+
+                    // Front turrets
+                    paint.color = Color.DKGRAY
+                    canvas.drawRect(e.x - 30, e.y + e.size * 0.3f, e.x - 15, e.y + e.size * 0.5f, paint)
+                    canvas.drawRect(e.x + 15, e.y + e.size * 0.3f, e.x + 30, e.y + e.size * 0.5f, paint)
+                }
                 EnemyType.BIG -> {
-                    drawRect.set(e.x - e.size, e.y - e.size, e.x + e.size, e.y + e.size)
-                    canvas.drawRoundRect(drawRect, 15f, 15f, paint)
-                    paint.color = Color.BLACK
-                    paint.alpha = 100
-                    drawRect.set(e.x - 20, e.y - 10, e.x - 10, e.y + 10)
-                    canvas.drawRect(drawRect, paint)
-                    drawRect.set(e.x + 10, e.y - 10, e.x + 20, e.y + 10)
-                    canvas.drawRect(drawRect, paint)
-                    paint.alpha = 255
+                    tempPath.reset()
+                    // Angular wing shape
+                    tempPath.moveTo(e.x - e.size, e.y - e.size * 0.2f)
+                    tempPath.lineTo(e.x - e.size * 0.4f, e.y - e.size)
+                    tempPath.lineTo(e.x + e.size * 0.4f, e.y - e.size)
+                    tempPath.lineTo(e.x + e.size, e.y - e.size * 0.2f)
+                    tempPath.lineTo(e.x + e.size * 0.6f, e.y + e.size * 0.8f)
+                    tempPath.lineTo(e.x - e.size * 0.6f, e.y + e.size * 0.8f)
+                    tempPath.close()
+                    canvas.drawPath(tempPath, paint)
+
+                    // Armor plates (Darker red/pink)
+                    paint.color = Color.parseColor("#880E4F")
+                    canvas.drawRect(e.x - e.size * 0.3f, e.y - e.size * 0.6f, e.x + e.size * 0.3f, e.y + e.size * 0.4f, paint)
+
+                    // Bright yellow cockpit
+                    paint.color = Color.YELLOW
+                    canvas.drawCircle(e.x, e.y - e.size * 0.1f, 15f, paint)
                 }
                 EnemyType.FAST -> {
                     tempPath.reset()
-                    tempPath.moveTo(e.x, e.y + e.size)
-                    tempPath.lineTo(e.x - e.size, e.y - e.size)
-                    tempPath.lineTo(e.x + e.size, e.y - e.size)
+                    tempPath.moveTo(e.x, e.y + e.size * 1.2f)
+                    tempPath.lineTo(e.x - e.size, e.y - e.size * 0.6f)
+                    tempPath.lineTo(e.x - e.size * 0.3f, e.y - e.size)
+                    tempPath.lineTo(e.x + e.size * 0.3f, e.y - e.size)
+                    tempPath.lineTo(e.x + e.size, e.y - e.size * 0.6f)
                     tempPath.close()
                     canvas.drawPath(tempPath, paint)
+
+                    // Side stripe details
+                    paint.color = Color.parseColor("#F57F17") // Gold
+                    canvas.drawCircle(e.x - e.size * 0.4f, e.y - e.size * 0.2f, 6f, paint)
+                    canvas.drawCircle(e.x + e.size * 0.4f, e.y - e.size * 0.2f, 6f, paint)
                 }
-                else -> {
-                    canvas.drawCircle(e.x, e.y, e.size, paint)
+                else -> { // NORMAL (Bug/Invader style)
+                    tempPath.reset()
+                    // Head and side antennas
+                    tempPath.moveTo(e.x - e.size * 0.5f, e.y + e.size)
+                    tempPath.lineTo(e.x - e.size, e.y)
+                    tempPath.lineTo(e.x - e.size * 0.8f, e.y - e.size * 0.6f)
+                    tempPath.lineTo(e.x - e.size * 0.3f, e.y - e.size)
+                    tempPath.lineTo(e.x + e.size * 0.3f, e.y - e.size)
+                    tempPath.lineTo(e.x + e.size * 0.8f, e.y - e.size * 0.6f)
+                    tempPath.lineTo(e.x + e.size, e.y)
+                    tempPath.lineTo(e.x + e.size * 0.5f, e.y + e.size)
+                    tempPath.close()
+                    canvas.drawPath(tempPath, paint)
+
+                    // Glowing eyes
                     paint.color = Color.WHITE
-                    paint.alpha = 150
-                    canvas.drawCircle(e.x - 10, e.y - 5, 5f, paint)
-                    canvas.drawCircle(e.x + 10, e.y - 5, 5f, paint)
-                    paint.alpha = 255
+                    canvas.drawCircle(e.x - 12, e.y - 10, 8f, paint)
+                    canvas.drawCircle(e.x + 12, e.y - 10, 8f, paint)
+                    paint.color = Color.RED
+                    canvas.drawCircle(e.x - 12, e.y - 10, 3f, paint)
+                    canvas.drawCircle(e.x + 12, e.y - 10, 3f, paint)
                 }
             }
         }
@@ -537,6 +650,30 @@ class StarFighterView @JvmOverloads constructor(
         val livesStr = "❤ ".repeat(lives)
         canvas.drawText(livesStr, 40f, Math.round(110f).toFloat(), paint)
 
+        // Draw Boss Health Bar if Boss exists
+        val boss = enemies.firstOrNull { it.type == EnemyType.BOSS }
+        if (boss != null) {
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = 4f
+            paint.color = Color.WHITE
+            val barW = width * 0.6f
+            val barX = width * 0.2f
+            val barY = hudY + 50f
+            drawRect.set(barX, barY, barX + barW, barY + 24f)
+            canvas.drawRoundRect(drawRect, 6f, 6f, paint)
+
+            paint.style = Paint.Style.FILL
+            paint.color = Color.parseColor("#9C27B0")
+            val hpPct = boss.hp.toFloat() / 30f
+            drawRect.set(barX + 4, barY + 4, barX + 4 + (barW - 8) * hpPct, barY + 20f)
+            canvas.drawRoundRect(drawRect, 4f, 4f, paint)
+
+            paint.textSize = 24f
+            paint.textAlign = Paint.Align.CENTER
+            paint.color = Color.WHITE
+            canvas.drawText("BOSS CLASS MOTHERSHIP", width / 2f, barY - 10f, paint)
+        }
+
         if (gameOver) {
             celebrationManager.draw(canvas)
             val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.mission_failed_label)
@@ -566,11 +703,15 @@ class StarFighterView @JvmOverloads constructor(
         val primaryColor = when(currentShipType) {
             1 -> Color.parseColor("#78909C") // Light Steel (Fast)
             2 -> Color.parseColor("#37474F") // Dark Metal (Tank)
+            3 -> Color.parseColor("#E65100") // Orange (Solar Flare)
+            4 -> Color.parseColor("#D84315") // Flame Orange (Phoenix)
             else -> Color.parseColor("#455A64") // Blue Gray (Balanced)
         }
         val accentColor = when(currentShipType) {
             1 -> Color.YELLOW // Fast
             2 -> Color.parseColor("#E91E63") // Tank
+            3 -> Color.YELLOW // Solar Flare
+            4 -> Color.parseColor("#FFD54F") // Phoenix
             else -> Color.CYAN // Balanced
         }
 
@@ -592,6 +733,26 @@ class StarFighterView @JvmOverloads constructor(
                 playerPath.lineTo(x + 60, y - 20)
                 playerPath.lineTo(x + 70, y + 40)
                 playerPath.lineTo(x, y + 25)
+            }
+            3 -> { // Solar Flare - Trident shape
+                playerPath.moveTo(x - 55, y + 30)
+                playerPath.lineTo(x - 55, y - 30) // Side cannon left
+                playerPath.lineTo(x - 35, y)
+                playerPath.lineTo(x, y - 50) // Central nose
+                playerPath.lineTo(x + 35, y)
+                playerPath.lineTo(x + 55, y - 30) // Side cannon right
+                playerPath.lineTo(x + 55, y + 30)
+                playerPath.lineTo(x, y + 15)
+            }
+            4 -> { // Phoenix - Winged shape
+                playerPath.moveTo(x - 65, y + 30)
+                playerPath.lineTo(x - 50, y - 10)
+                playerPath.lineTo(x - 30, y - 15)
+                playerPath.lineTo(x, y - 45) // Central nose
+                playerPath.lineTo(x + 30, y - 15)
+                playerPath.lineTo(x + 50, y - 10)
+                playerPath.lineTo(x + 65, y + 30)
+                playerPath.lineTo(x, y + 20)
             }
             else -> { // Balanced
                 playerPath.moveTo(x - 60, y + 30)
@@ -615,6 +776,16 @@ class StarFighterView @JvmOverloads constructor(
                 playerPath.moveTo(x, y - 50)
                 playerPath.lineTo(x - 30, y + 40)
                 playerPath.lineTo(x + 30, y + 40)
+            }
+            3 -> {
+                playerPath.moveTo(x, y - 60)
+                playerPath.lineTo(x - 15, y + 35)
+                playerPath.lineTo(x + 15, y + 35)
+            }
+            4 -> {
+                playerPath.moveTo(x, y - 55)
+                playerPath.lineTo(x - 25, y + 35)
+                playerPath.lineTo(x + 25, y + 35)
             }
             else -> {
                 playerPath.moveTo(x, y - 50)
@@ -655,11 +826,13 @@ class StarFighterView @JvmOverloads constructor(
     }
 
     data class Bullet(var x: Float, var y: Float, val vy: Float, var vx: Float = 0f, val isEnemy: Boolean = false)
-    enum class EnemyType { NORMAL, FAST, BIG }
+    enum class EnemyType { NORMAL, FAST, BIG, BOSS }
     data class Enemy(var x: Float, var y: Float, val type: EnemyType) {
-        val size = when(type) { EnemyType.BIG -> 70f; EnemyType.FAST -> 35f; else -> 50f }
-        var hp = when(type) { EnemyType.BIG -> 6; else -> 1 }
-        val color = when(type) { EnemyType.BIG -> Color.parseColor("#E91E63"); EnemyType.FAST -> Color.parseColor("#FFEB3B"); else -> Color.parseColor("#F44336") }
+        val size = when(type) { EnemyType.BOSS -> 120f; EnemyType.BIG -> 70f; EnemyType.FAST -> 35f; else -> 50f }
+        var hp = when(type) { EnemyType.BOSS -> 30; EnemyType.BIG -> 6; else -> 1 }
+        val color = when(type) { EnemyType.BOSS -> Color.parseColor("#9C27B0"); EnemyType.BIG -> Color.parseColor("#E91E63"); EnemyType.FAST -> Color.parseColor("#FFEB3B"); else -> Color.parseColor("#F44336") }
+        var blinkUntil: Long = 0L
+        var phase: Float = 0f
     }
     enum class PowerUpType { WEAPON, LIFE }
     data class PowerUp(val x: Float, var y: Float, val type: PowerUpType)

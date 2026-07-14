@@ -34,6 +34,7 @@ class CheckersView @JvmOverloads constructor(
     private var selected: Pair<Int, Int>? = null
     private var mustContinueFrom: Pair<Int, Int>? = null
     private var gameOver = false
+    private var isCpuTurn = false
     private var status = ""
     private var wins = 0
     private var currentVictoryWord = ""
@@ -94,6 +95,7 @@ class CheckersView @JvmOverloads constructor(
         selected = null
         mustContinueFrom = null
         gameOver = false
+        isCpuTurn = false
         status = context.getString(R.string.your_turn_label)
         wins = ScoreManager.getHighScore(context, gameKey, currentDifficultyIndex)
         hintShowFrames = 100
@@ -103,6 +105,13 @@ class CheckersView @JvmOverloads constructor(
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
             resetGame()
+            return true
+        }
+        if (isCpuTurn) {
+            if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_TAB || keyCode == KeyEvent.KEYCODE_O) {
+                showOptions()
+                return true
+            }
             return true
         }
         when (keyCode) {
@@ -140,6 +149,7 @@ class CheckersView @JvmOverloads constructor(
                 resetGame()
                 return true
             }
+            if (isCpuTurn) return true
 
             // Calculate grid bounds (must match onDraw)
             val size = width.coerceAtMost(height) * 0.8f
@@ -324,13 +334,40 @@ class CheckersView @JvmOverloads constructor(
     private fun cpuTurn() {
         mustContinueFrom = null
         selected = null
+        isCpuTurn = true
         status = context.getString(R.string.cpu_thinking_label)
         invalidate()
         handler.postDelayed(cpuRunnable, 600)
     }
 
+    private fun isThreatened(r: Int, c: Int, side: Int): Boolean {
+        val enemySide = if (side == PLAYER) CPU else PLAYER
+        val opponentDirs = listOf(-1 to -1, -1 to 1, 1 to -1, 1 to 1)
+        for ((dr, dc) in opponentDirs) {
+            val oppR = r + dr
+            val oppC = c + dc
+            if (oppR in 0..7 && oppC in 0..7) {
+                val oppPiece = board[oppR][oppC]
+                if (isEnemy(oppPiece, side)) {
+                    val oppAllowedDirs = directionsFor(oppPiece, enemySide)
+                    if (oppAllowedDirs.contains(-dr to -dc)) {
+                        val landR = r - dr
+                        val landC = c - dc
+                        if (landR in 0..7 && landC in 0..7 && board[landR][landC] == EMPTY) {
+                            return true
+                        }
+                    }
+                }
+            }
+        }
+        return false
+    }
+
     private fun cpuTurnLogic() {
-        if (gameOver) return
+        if (gameOver) {
+            isCpuTurn = false
+            return
+        }
         val jumpsOnly = cpuMustJump()
         val allMoves = mutableListOf<Move>()
         for (r in 0..7) for (c in 0..7) {
@@ -340,12 +377,39 @@ class CheckersView @JvmOverloads constructor(
         }
         if (allMoves.isEmpty()) {
             endPlayerWin()
+            isCpuTurn = false
             invalidate()
             return
         }
         val captures = allMoves.filter { it.isJump }
         val pickFrom = if (captures.isNotEmpty()) captures else allMoves
-        val m = pickFrom[Random.nextInt(pickFrom.size)]
+        
+        // Smart Move Selection for CPU on Normal difficulty
+        val m = if (currentDifficultyIndex == 1) {
+            pickFrom.maxByOrNull { move ->
+                var moveScore = 0
+                if (move.isJump) {
+                    moveScore += 15
+                }
+                if (isThreatened(move.tr, move.tc, CPU)) {
+                    moveScore -= 10
+                }
+                if (move.tc == 0 || move.tc == 7) {
+                    moveScore += 4
+                }
+                val piece = board[move.fr][move.fc]
+                if (piece == CPU_MAN && move.tr == 7) {
+                    moveScore += 10
+                }
+                if (piece == CPU_KING) {
+                    moveScore += 2
+                }
+                moveScore
+            } ?: pickFrom[Random.nextInt(pickFrom.size)]
+        } else {
+            pickFrom[Random.nextInt(pickFrom.size)]
+        }
+
         applyMove(m)
         var promoted = promoteIfNeeded(m.tr, m.tc, CPU)
         if (m.isJump) SoundManager.playScore() else SoundManager.playClick()
@@ -356,7 +420,18 @@ class CheckersView @JvmOverloads constructor(
             while (true) {
                 val nextJumps = legalMovesForSquare(cr, cc, CPU, true).filter { it.isJump }
                 if (nextJumps.isEmpty()) break
-                val j = nextJumps[Random.nextInt(nextJumps.size)]
+                
+                val j = if (currentDifficultyIndex == 1) {
+                    nextJumps.maxByOrNull { jumpMove ->
+                        var jumpScore = 0
+                        if (isThreatened(jumpMove.tr, jumpMove.tc, CPU)) jumpScore -= 10
+                        if (promoteIfNeeded(jumpMove.tr, jumpMove.tc, CPU)) jumpScore += 10
+                        jumpScore
+                    } ?: nextJumps[Random.nextInt(nextJumps.size)]
+                } else {
+                    nextJumps[Random.nextInt(nextJumps.size)]
+                }
+
                 applyMove(j)
                 promoted = promoteIfNeeded(j.tr, j.tc, CPU)
                 SoundManager.playScore()
@@ -376,6 +451,7 @@ class CheckersView @JvmOverloads constructor(
             }
             else -> status = context.getString(R.string.your_turn_label)
         }
+        isCpuTurn = false
         if (gameOver) onGameOver?.invoke(wins)
         invalidate()
     }

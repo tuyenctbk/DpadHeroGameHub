@@ -33,6 +33,30 @@ object SpinballOptionsDialog {
                     prefs.edit { putInt(KEY_DIFFICULTY, nextIndex) }
                 }
             )
+            .addOption(
+                label = "Ball Selection",
+                valueProvider = {
+                    val ballType = prefs.getInt("selected_ball_type", 0)
+                    when (ballType) {
+                        1 -> "Fireball"
+                        2 -> "Plasma Pulse"
+                        else -> "Neon Classic"
+                    }
+                },
+                descProvider = {
+                    val ballType = prefs.getInt("selected_ball_type", 0)
+                    when (ballType) {
+                        1 -> "Leaves a fiery red trail of sparks."
+                        2 -> "Pulsates green in size dynamically."
+                        else -> "Clean neon-blue energy ball."
+                    }
+                },
+                onClick = {
+                    val ballType = prefs.getInt("selected_ball_type", 0)
+                    val nextType = (ballType + 1) % 3
+                    prefs.edit { putInt("selected_ball_type", nextType) }
+                }
+            )
             .setOnDismiss(onDismiss)
             .show()
     }
