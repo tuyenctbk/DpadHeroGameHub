@@ -53,7 +53,7 @@ class SyobonView @JvmOverloads constructor(
     private var isOnGround = false
     private var isFacingRight = true
     private var jumpHoldTimer = 0L
-    private val maxJumpHoldTime = 250 // milliseconds
+    private val maxJumpHoldTime = 300 // milliseconds
     private var isDying = false
     private var deathTime = 0L
     private var dieSpinAngle = 0f
@@ -63,8 +63,8 @@ class SyobonView @JvmOverloads constructor(
     private val speedAccel = 0.008f
     private val friction = 0.82f
     private val maxSpeed = 0.16f
-    private val jumpImpulse = -0.22f
-    private val jumpHoldForce = -0.01f
+    private val jumpImpulse = -0.26f
+    private val jumpHoldForce = -0.012f
 
     // Keyboard Tracking
     private val pressedKeys = mutableSetOf<Int>()
