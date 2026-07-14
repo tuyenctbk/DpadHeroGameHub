@@ -104,6 +104,7 @@ class SyobonView @JvmOverloads constructor(
 
     override fun startGame() {
         mainHandler.removeCallbacks(gameLoop)
+        gamePaused = false
         lastUpdate = System.currentTimeMillis()
         mainHandler.post(gameLoop)
     }
@@ -856,50 +857,74 @@ class SyobonView @JvmOverloads constructor(
         val w = r - l
         val h = b - t
 
-        // Body/Head (Pure white)
         paint.color = Color.WHITE
-        canvas.drawOval(l, t + h*0.2f, r, b, paint)
-
-        // Ears
-        val path = Path()
+        
+        // 1. Draw Tail
+        val tailPath = Path()
         if (isFacingRight) {
-            // Left Ear
-            path.moveTo(l + w*0.2f, t + h*0.3f)
-            path.lineTo(l + w*0.1f, t)
-            path.lineTo(l + w*0.4f, t + h*0.25f)
-            // Right Ear
-            path.moveTo(l + w*0.8f, t + h*0.3f)
-            path.lineTo(l + w*0.9f, t)
-            path.lineTo(l + w*0.6f, t + h*0.25f)
+            tailPath.moveTo(l + w * 0.2f, b - h * 0.4f)
+            tailPath.quadTo(l - w * 0.2f, b - h * 0.7f, l - w * 0.1f, b - h * 0.8f)
+            tailPath.quadTo(l - w * 0.3f, b - h * 0.7f, l + w * 0.1f, b - h * 0.3f)
         } else {
-            // Mirror ears
-            path.moveTo(l + w*0.2f, t + h*0.3f)
-            path.lineTo(l + w*0.1f, t)
-            path.lineTo(l + w*0.4f, t + h*0.25f)
-            path.moveTo(l + w*0.8f, t + h*0.3f)
-            path.lineTo(l + w*0.9f, t)
-            path.lineTo(l + w*0.6f, t + h*0.25f)
+            tailPath.moveTo(r - w * 0.2f, b - h * 0.4f)
+            tailPath.quadTo(r + w * 0.2f, b - h * 0.7f, r + w * 0.1f, b - h * 0.8f)
+            tailPath.quadTo(r + w * 0.3f, b - h * 0.7f, r - w * 0.1f, b - h * 0.3f)
         }
-        canvas.drawPath(path, paint)
+        canvas.drawPath(tailPath, paint)
 
-        // Eyes (Syobon face (･ω･) simple vertical black dots)
+        // 2. Draw Body
+        val bodyRect = RectF(l + w * 0.15f, t + h * 0.45f, r - w * 0.15f, b - h * 0.1f)
+        canvas.drawRoundRect(bodyRect, 8f, 8f, paint)
+
+        // 3. Draw Legs (animated walking offsets)
+        val walkOffset = if (!isOnGround) 0f else Math.sin(System.currentTimeMillis() / 80.0).toFloat() * 4f
+        paint.color = Color.WHITE
+        canvas.drawRoundRect(l + w * 0.25f, b - h * 0.15f, l + w * 0.4f, b + walkOffset, 3f, 3f, paint)
+        canvas.drawRoundRect(r - w * 0.4f, b - h * 0.15f, r - w * 0.25f, b - walkOffset, 3f, 3f, paint)
+
+        // 4. Draw Head
+        val headRect = RectF(l + w * 0.05f, t + h * 0.05f, r - w * 0.05f, t + h * 0.65f)
+        canvas.drawOval(headRect, paint)
+
+        // 5. Draw Ears
+        val earsPath = Path()
+        earsPath.moveTo(l + w * 0.15f, t + h * 0.25f)
+        earsPath.lineTo(l + w * 0.05f, t)
+        earsPath.lineTo(l + w * 0.35f, t + h * 0.18f)
+        earsPath.moveTo(r - w * 0.15f, t + h * 0.25f)
+        earsPath.lineTo(r - w * 0.05f, t)
+        earsPath.lineTo(r - w * 0.35f, t + h * 0.18f)
+        canvas.drawPath(earsPath, paint)
+
+        paint.color = Color.parseColor("#FFCDD2")
+        val innerEarsPath = Path()
+        innerEarsPath.moveTo(l + w * 0.18f, t + h * 0.22f)
+        innerEarsPath.lineTo(l + w * 0.1f, t + h * 0.06f)
+        innerEarsPath.lineTo(l + w * 0.3f, t + h * 0.18f)
+        innerEarsPath.moveTo(r - w * 0.18f, t + h * 0.22f)
+        innerEarsPath.lineTo(r - w * 0.1f, t + h * 0.06f)
+        innerEarsPath.lineTo(r - w * 0.3f, t + h * 0.18f)
+        canvas.drawPath(innerEarsPath, paint)
+
+        // 6. Draw Eyes (･ω･)
         paint.color = Color.BLACK
+        val headCy = (headRect.top + headRect.bottom) / 2f
         if (isFacingRight) {
-            canvas.drawCircle(cx + w*0.15f, cy - h*0.1f, 3.5f, paint)
-            canvas.drawCircle(cx - w*0.2f, cy - h*0.1f, 3.5f, paint)
+            canvas.drawCircle(cx + w * 0.15f, headCy - h * 0.05f, 3.5f, paint)
+            canvas.drawCircle(cx - w * 0.15f, headCy - h * 0.05f, 3.5f, paint)
         } else {
-            canvas.drawCircle(cx - w*0.15f, cy - h*0.1f, 3.5f, paint)
-            canvas.drawCircle(cx + w*0.2f, cy - h*0.1f, 3.5f, paint)
+            canvas.drawCircle(cx - w * 0.15f, headCy - h * 0.05f, 3.5f, paint)
+            canvas.drawCircle(cx + w * 0.15f, headCy - h * 0.05f, 3.5f, paint)
         }
 
-        // Mouth (･ω･)
+        // 7. Draw Mouth (･ω･)
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = 2f
         paint.strokeCap = Paint.Cap.ROUND
         val mouthPath = Path()
-        mouthPath.moveTo(cx - 5f, cy + 4f)
-        mouthPath.quadTo(cx - 2.5f, cy + 8f, cx, cy + 4f)
-        mouthPath.quadTo(cx + 2.5f, cy + 8f, cx + 5f, cy + 4f)
+        mouthPath.moveTo(cx - 5f, headCy + 6f)
+        mouthPath.quadTo(cx - 2.5f, headCy + 10f, cx, headCy + 6f)
+        mouthPath.quadTo(cx + 2.5f, headCy + 10f, cx + 5f, headCy + 6f)
         canvas.drawPath(mouthPath, paint)
         paint.style = Paint.Style.FILL
     }
