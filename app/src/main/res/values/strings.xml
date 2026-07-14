@@ -500,4 +500,22 @@
     <string name="starfighter_ship_solar_desc">Double starting firepower, but fragile (1 Life).</string>
     <string name="starfighter_ship_phoenix">Phoenix</string>
     <string name="starfighter_ship_phoenix_desc">Balanced speed with a one-time automatic revive shield.</string>
+    <string name="syobon_settings_title">MEOWIO SETTINGS</string>
+    <string name="syobon_character_label">Character</string>
+    <string name="syobon_char_classic">Classic Syobon</string>
+    <string name="syobon_char_gold">Golden Neko</string>
+    <string name="syobon_char_shadow">Shadow Nya</string>
+    <string name="syobon_lives_label">Lives Type</string>
+    <string name="syobon_lives_3">3 LIVES</string>
+    <string name="syobon_lives_1">1 LIFE</string>
+    <string name="syobon_lives_inf">INFINITE (Joke)</string>
+    <string name="syobon_lives_desc">Choose your tolerance for trolls.</string>
+    <string name="syobon_instructions">• D-PAD to move and jump.\n• Watch out for hidden traps!\n• Bricks may break or fall.\n• Touch the flagpole to win.</string>
+    <string name="syobon_difficulty_desc">How many trolls are active.</string>
+    <string-array name="win_syobon">
+        <item>YOU SURVIVED!</item>
+        <item>TROLL MASTERED!</item>
+        <item>LEGENDARY CAT!</item>
+        <item>UNSTOPPABLE!</item>
+    </string-array>
 </resources>

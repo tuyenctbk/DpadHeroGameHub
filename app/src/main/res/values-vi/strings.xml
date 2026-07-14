@@ -419,4 +419,23 @@
     <string name="trex_desc_weather_sunny">Thời tiết nắng đẹp.</string>
     <string name="trex_desc_weather_rainy">Mưa và mây mù.</string>
     <string name="trex_desc_weather_snowy">Tuyết rơi lãng mạn.</string>
+    <string name="game_syobon">CAT MEOWIO</string>
+    <string name="syobon_settings_title">CÀI ĐẶT MEOWIO</string>
+    <string name="syobon_character_label">Nhân vật</string>
+    <string name="syobon_char_classic">Syobon Cổ điển</string>
+    <string name="syobon_char_gold">Mèo Vàng</string>
+    <string name="syobon_char_shadow">Mèo Bóng đêm</string>
+    <string name="syobon_lives_label">Chế độ mạng</string>
+    <string name="syobon_lives_3">3 MẠNG</string>
+    <string name="syobon_lives_1">1 MẠNG</string>
+    <string name="syobon_lives_inf">VÔ HẠN (Đùa thôi)</string>
+    <string name="syobon_lives_desc">Chọn mức độ chịu đựng cạm bẫy của bạn.</string>
+    <string name="syobon_instructions">• D-PAD để di chuyển và nhảy.\n• Cẩn thận với các cạm bẫy ẩn!\n• Gạch có thể vỡ hoặc rơi.\n• Chạm vào cột cờ để thắng.</string>
+    <string name="syobon_difficulty_desc">Số lượng cạm bẫy đang hoạt động.</string>
+    <string-array name="win_syobon">
+        <item>BẠN ĐÃ SỐNG SÓT!</item>
+        <item>BẬC THẦY CẠM BẪY!</item>
+        <item>MÈO HUYỀN THOẠI!</item>
+        <item>KHÔNG THỂ CẢN PHÁ!</item>
+    </string-array>
 </resources>

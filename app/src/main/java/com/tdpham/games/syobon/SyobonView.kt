@@ -12,6 +12,7 @@ import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
+import com.tdpham.games.R
 
 class SyobonView @JvmOverloads constructor(
     context: Context,
@@ -19,7 +20,7 @@ class SyobonView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
 
-    override var gameKey: String = "syobon_action"
+    override var gameKey: String = "cat_meowio"
     override var onGameOver: ((Int) -> Unit)? = null
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -30,6 +31,7 @@ class SyobonView @JvmOverloads constructor(
     private var gamePaused = false
     private var isLevelCleared = false
     private var currentLevel = 1
+    private var isInitialized = false
     
     // Lives & death count
     private var currentLives = 3
@@ -37,6 +39,9 @@ class SyobonView @JvmOverloads constructor(
     private var initialLivesOption = 3 // 3, 1, or -99
     private var catType = 0
     private var spikeLauncherPipeCol = 55
+    private val PREFS_NAME = "cat_meowio_settings"
+    private var hintShowFrames = 0
+    private var best = 0
 
     // Screen dimension and view scaling
     private var cellW = 0f
@@ -104,7 +109,9 @@ class SyobonView @JvmOverloads constructor(
     private var lastUpdate = 0L
     private val gameLoop = object : Runnable {
         override fun run() {
-            update()
+            if (!gamePaused && !gameOver && !isLevelCleared) {
+                update()
+            }
             invalidate()
             mainHandler.postDelayed(this, 16)
         }
@@ -113,7 +120,6 @@ class SyobonView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-        resetGame()
     }
 
     override fun startGame() {
@@ -139,7 +145,7 @@ class SyobonView @JvmOverloads constructor(
     override fun resetGame() {
         currentLevel = 1
         // Load preferences
-        val prefs = context.getSharedPreferences("syobon_settings", Context.MODE_PRIVATE)
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val livesOption = prefs.getInt(SyobonOptionsDialog.KEY_LIVES_TYPE, 0)
         initialLivesOption = when (livesOption) {
             1 -> 1
@@ -158,6 +164,7 @@ class SyobonView @JvmOverloads constructor(
         gameOver = false
         gamePaused = false
         isLevelCleared = false
+        hintShowFrames = 100
         
         startGame()
     }
@@ -400,7 +407,7 @@ class SyobonView @JvmOverloads constructor(
         }
 
         // Read options difficulty
-        val prefs = context.getSharedPreferences("syobon_settings", Context.MODE_PRIVATE)
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val difficulty = prefs.getInt(SyobonOptionsDialog.KEY_DIFFICULTY, 1) // 0: Calm, 1: Brisk, 2: Chaotic
 
         // Handle Horizontal Input (Inertia)
@@ -477,9 +484,9 @@ class SyobonView @JvmOverloads constructor(
         checkTrapTriggers(difficulty)
 
         // Update Trap Entities
-        val iterator = trapEntities.iterator()
-        while (iterator.hasNext()) {
-            val ent = iterator.next()
+        val trapIter = trapEntities.toMutableList().iterator()
+        while (trapIter.hasNext()) {
+            val ent = trapIter.next()
             
             if (ent.type == 1 || ent.type == 3) {
                 // Apply gravity to poison mushroom and companion slime
@@ -506,7 +513,7 @@ class SyobonView @JvmOverloads constructor(
                 if (ent.type == 3) {
                     // Companion slime gives extra protection or points
                     SoundManager.playScore()
-                    iterator.remove()
+                    trapEntities.remove(ent)
                     continue
                 } else {
                     die()
@@ -515,16 +522,15 @@ class SyobonView @JvmOverloads constructor(
             
             // Remove off-screen/fallen entities
             if (ent.x < cameraX - 2 || ent.x > cameraX + cols + 2 || ent.y > rows + 2) {
-                iterator.remove()
+                trapEntities.remove(ent)
             }
         }
 
         // Update Land Enemies
-        val enemyIterator = landEnemies.iterator()
-        while (enemyIterator.hasNext()) {
-            val enemy = enemyIterator.next()
+        val enemyList = landEnemies.toMutableList()
+        for (enemy in enemyList) {
             if (enemy.isDead) {
-                enemyIterator.remove()
+                landEnemies.remove(enemy)
                 continue
             }
             
@@ -573,14 +579,14 @@ class SyobonView @JvmOverloads constructor(
         // 1. The classic invisible block trap at col 11 (X ~ 10-12)
         if (px in 10..12 && !trapTriggered[11]) {
             if (difficulty > 0) { // Only in Brisk or Chaotic
-                trapTriggered[11] = true
+                trapTriggered[11.coerceAtMost(totalMapCols-1)] = true
                 // We don't spawn a nyan cat immediately, but change invisible block hints
             }
         }
 
         // 2. Spawn a flying spike (Nyan Cat style) at col 32 when passing near pipe
         if (playerX > 28f && !trapTriggered[32]) {
-            trapTriggered[32] = true
+            trapTriggered[32.coerceAtMost(totalMapCols-1)] = true
             // Spawn nyan cat flying from right side
             val speedFactor = if (difficulty == 2) 1.5f else 1.0f
             trapEntities.add(
@@ -597,7 +603,7 @@ class SyobonView @JvmOverloads constructor(
 
         // 3. Falling floor/bridge at col 45-47
         if (playerX >= 43.5f && playerX <= 49f && !trapTriggered[45]) {
-            trapTriggered[45] = true
+            trapTriggered[45.coerceAtMost(totalMapCols-1)] = true
             // Begin bridge collapse!
             mainHandler.postDelayed(object : Runnable {
                 var ticks = 0
@@ -615,8 +621,8 @@ class SyobonView @JvmOverloads constructor(
         }
 
         // 3b. Spike flying from randomized pipe
-        if (playerX >= (spikeLauncherPipeCol - 2) && playerX <= (spikeLauncherPipeCol + 2) && !trapTriggered[55]) {
-            trapTriggered[55] = true
+        if (playerX >= (spikeLauncherPipeCol - 2) && playerX <= (spikeLauncherPipeCol + 2) && !trapTriggered[spikeLauncherPipeCol.coerceAtMost(totalMapCols-1)]) {
+            trapTriggered[spikeLauncherPipeCol.coerceAtMost(totalMapCols-1)] = true
             if (difficulty > 0) {
                 trapEntities.add(
                     TrapEntity(
@@ -632,8 +638,8 @@ class SyobonView @JvmOverloads constructor(
         }
 
         // 4. Pole flag popup trap (when very close to the flagpole)
-        if (playerX >= 83f && !trapTriggered[85]) {
-            trapTriggered[85] = true
+        if (playerX >= 83f && !trapTriggered[85.coerceAtMost(totalMapCols-1)]) {
+            trapTriggered[85.coerceAtMost(totalMapCols-1)] = true
             // Spawn popup ground spikes right near flag base!
             if (difficulty > 0) {
                 trapEntities.add(
@@ -869,7 +875,7 @@ class SyobonView @JvmOverloads constructor(
     private fun showOptions() {
         pause()
         SyobonOptionsDialog.show(context) {
-            resetGame()
+            resume()
         }
     }
 
@@ -929,10 +935,19 @@ class SyobonView @JvmOverloads constructor(
         super.onSizeChanged(w, h, oldw, oldh)
         cellW = w.toFloat() / cols
         cellH = h.toFloat() / rows
+        if (w > 0 && h > 0 && !isInitialized) {
+            resetGame()
+            isInitialized = true
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        
+        if (hintShowFrames > 0) {
+            hintShowFrames--
+        }
+
         val skyColor = when (currentLevel) {
             1 -> "#80D8FF" // Sky Blue
             2 -> "#151B26" // Cavern Dark
@@ -1000,15 +1015,32 @@ class SyobonView @JvmOverloads constructor(
         canvas.restore()
 
         // 4. Draw HUD (Level, Ouchies, Lives)
+        paint.reset()
+        paint.isAntiAlias = true
         paint.color = if (currentLevel == 1) Color.BLACK else Color.WHITE
         paint.textSize = 32f
         paint.typeface = Typeface.MONOSPACE
         paint.textAlign = Paint.Align.LEFT
         
+        val hudY = height * 0.05f
         val livesStr = if (currentLives < 0) "$currentLives" else "$currentLives"
-        canvas.drawText("LEVEL: $currentLevel", 30f, 50f, paint)
-        canvas.drawText("OUCHIES: $deaths", 30f, 95f, paint)
-        canvas.drawText("LIVES: $livesStr", 30f, 140f, paint)
+        canvas.drawText("LEVEL: $currentLevel", 30f, hudY, paint)
+        canvas.drawText("OUCHIES: $deaths", 30f, hudY + 45f, paint)
+        canvas.drawText("LIVES: $livesStr", 30f, hudY + 90f, paint)
+        
+        // Best Score (Deaths in this game context)
+        paint.textAlign = Paint.Align.RIGHT
+        canvas.drawText("BEST: $best", width - 30f, hudY, paint)
+
+        // Quick Hint
+        if (hintShowFrames > 0) {
+            paint.textAlign = Paint.Align.LEFT
+            paint.textSize = 28f
+            paint.color = if (currentLevel == 1) Color.BLACK else Color.WHITE
+            paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), 30f, hudY + 135f, paint)
+            paint.alpha = 255
+        }
 
         // 5. Success overlay
         if (isLevelCleared) {
@@ -1134,6 +1166,9 @@ class SyobonView @JvmOverloads constructor(
             8 -> { // Flagpole
                 paint.color = Color.parseColor("#ECEFF1")
                 canvas.drawRect(l + w * 0.42f, t, l + w * 0.58f, b, paint)
+                if (row <= 11) {
+                    // Draw pole segments
+                }
                 if (row == 3) {
                     // Gold flagpole cap
                     paint.color = Color.parseColor("#FFD700")

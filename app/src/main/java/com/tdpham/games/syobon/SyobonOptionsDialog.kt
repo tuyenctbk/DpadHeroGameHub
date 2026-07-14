@@ -3,9 +3,10 @@ package com.tdpham.games.syobon
 import android.content.Context
 import androidx.core.content.edit
 import com.tdpham.games.common.BaseOptionsDialog
+import com.tdpham.games.R
 
 object SyobonOptionsDialog {
-    private const val PREFS_NAME = "syobon_settings"
+    private const val PREFS_NAME = "cat_meowio_settings"
     const val KEY_LIVES_TYPE = "lives_type"
     const val KEY_DIFFICULTY = "difficulty_index"
 
@@ -13,18 +14,18 @@ object SyobonOptionsDialog {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
         BaseOptionsDialog(context)
-            .setTitle("CAT MEOWIO SETTINGS")
+            .setTitle(context.getString(R.string.syobon_settings_title))
             .addOption(
-                label = "Starting Lives",
+                label = context.getString(R.string.syobon_lives_label),
                 valueProvider = {
                     when (prefs.getInt(KEY_LIVES_TYPE, 0)) {
-                        1 -> "Hardcore (1 Life)"
-                        2 -> "Syobon Trolled (-99 Lives)"
-                        else -> "Standard (3 Lives)"
+                        1 -> context.getString(R.string.syobon_lives_1)
+                        2 -> context.getString(R.string.syobon_lives_inf)
+                        else -> context.getString(R.string.syobon_lives_3)
                     }
                 },
                 descProvider = {
-                    "Choose starting lives. Warning: -99 Lives starts you with negative lives!"
+                    context.getString(R.string.syobon_lives_desc)
                 },
                 onClick = {
                     val current = prefs.getInt(KEY_LIVES_TYPE, 0)
@@ -32,16 +33,16 @@ object SyobonOptionsDialog {
                 }
             )
             .addOption(
-                label = "Difficulty Mode",
+                label = context.getString(R.string.mode_label),
                 valueProvider = {
                     when (prefs.getInt(KEY_DIFFICULTY, 1)) {
-                        0 -> "Calm (Less Traps)"
-                        2 -> "Chaotic (Maximum Traps!)"
-                        else -> "Brisk (Normal)"
+                        0 -> context.getString(R.string.simon_says_speed_1) // Reusing Calm/Slow
+                        2 -> context.getString(R.string.simon_says_speed_3) // Reusing Chaotic/Fast
+                        else -> context.getString(R.string.simon_says_speed_2) // Reusing Brisk/Normal
                     }
                 },
                 descProvider = {
-                    "Calm mode disables some hidden traps; Chaotic increases trap triggers."
+                    context.getString(R.string.syobon_difficulty_desc)
                 },
                 onClick = {
                     val current = prefs.getInt(KEY_DIFFICULTY, 1)
@@ -49,20 +50,18 @@ object SyobonOptionsDialog {
                 }
             )
             .addOption(
-                label = "Cat Selection",
+                label = context.getString(R.string.syobon_character_label),
                 valueProvider = {
                     when (prefs.getInt("selected_cat_type", 0)) {
-                        1 -> "Golden Neko"
-                        2 -> "Shadow Nya"
-                        else -> "Classic Syobon"
+                        1 -> context.getString(R.string.syobon_char_gold)
+                        2 -> context.getString(R.string.syobon_char_shadow)
+                        else -> context.getString(R.string.syobon_char_classic)
                     }
                 },
                 descProvider = {
-                    when (prefs.getInt("selected_cat_type", 0)) {
-                        1 -> "A sparkly, auspicious golden cat."
-                        2 -> "A sleek, mysterious shadow cat."
-                        else -> "The classic, iconic white Syobon cat."
-                    }
+                    val index = prefs.getInt("selected_cat_type", 0)
+                    // Simplified desc provider for characters
+                    context.getString(R.string.syobon_character_label) + " " + (index + 1)
                 },
                 onClick = {
                     val current = prefs.getInt("selected_cat_type", 0)
