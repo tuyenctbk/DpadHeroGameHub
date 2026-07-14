@@ -29,6 +29,7 @@ class SyobonView @JvmOverloads constructor(
     private var gameOver = false
     private var gamePaused = false
     private var isLevelCleared = false
+    private var currentLevel = 1
     
     // Lives & death count
     private var currentLives = 3
@@ -133,6 +134,7 @@ class SyobonView @JvmOverloads constructor(
     }
 
     override fun resetGame() {
+        currentLevel = 1
         // Load preferences
         val prefs = context.getSharedPreferences("syobon_settings", Context.MODE_PRIVATE)
         val livesOption = prefs.getInt(SyobonOptionsDialog.KEY_LIVES_TYPE, 0)
@@ -185,6 +187,14 @@ class SyobonView @JvmOverloads constructor(
             map[r].fill(0)
         }
 
+        when (currentLevel) {
+            1 -> buildLevel1()
+            2 -> buildLevel2()
+            else -> buildLevel3()
+        }
+    }
+
+    private fun buildLevel1() {
         // 1. Ground bricks
         for (c in 0 until totalMapCols) {
             // Classic Mario gap at col 21-23 and col 45-47
@@ -223,6 +233,97 @@ class SyobonView @JvmOverloads constructor(
         map[12][88] = 8 // Flagpole base
         for (r in 3..11) {
             map[r][88] = 8 // flagpole shaft
+        }
+    }
+
+    private fun buildLevel2() {
+        // Underground Cavern
+        // 1. Ground bricks
+        for (c in 0 until totalMapCols) {
+            if (c in 18..20 || c in 42..45 || c in 70..73) {
+                continue
+            }
+            map[13][c] = 1 // Ground top
+            map[14][c] = 1 // Ground deep
+        }
+
+        // 2. Ceiling blocks
+        for (c in 0 until totalMapCols) {
+            map[2][c] = 1 // Solid ceiling
+        }
+
+        // Floating blocks group
+        map[9][10] = 2
+        map[9][11] = 3
+        map[9][12] = 2
+        map[9][13] = 4 // Invisible block
+        map[9][14] = 2
+        invisibleBlocks[Pair(9, 13)] = false
+
+        // Pipe
+        buildPipe(30, 4)
+
+        // Collapsible floating bridge tiles
+        map[9][41] = 2
+        map[9][42] = 10
+        map[9][43] = 10
+        map[9][44] = 10
+        map[9][45] = 2
+        fallingBlocks[Pair(9, 42)] = 0f
+        fallingBlocks[Pair(9, 43)] = 0f
+        fallingBlocks[Pair(9, 44)] = 0f
+
+        // Floating bricks
+        map[8][60] = 2
+        map[8][61] = 3
+        map[8][62] = 2
+        map[8][63] = 3
+        map[8][64] = 2
+
+        // Flagpole at col 88
+        map[12][88] = 8
+        for (r in 3..11) {
+            map[r][88] = 8
+        }
+    }
+
+    private fun buildLevel3() {
+        // Castle / Lava Style
+        for (c in 0 until totalMapCols) {
+            if (c in 15..28 || c in 42..58 || c in 70..83) {
+                map[13][c] = 9 // Lava Top
+                map[14][c] = 9 // Lava Deep
+            } else {
+                map[13][c] = 1 // Ground top
+                map[14][c] = 1 // Ground deep
+            }
+        }
+
+        // Stepping stone bricks over lava
+        map[9][18] = 2
+        map[9][20] = 2
+        map[9][22] = 3
+        map[9][24] = 2
+        map[9][26] = 2
+
+        // Pipes
+        buildPipe(35, 3)
+        buildPipe(63, 4)
+
+        // Stepping stone platforms
+        map[10][45] = 2
+        map[9][50] = 2
+        map[10][55] = 2
+
+        // Castle wall blocks
+        for (r in 5..12) {
+            map[r][68] = 1
+        }
+
+        // Flagpole at col 88
+        map[12][88] = 8
+        for (r in 3..11) {
+            map[r][88] = 8
         }
     }
 
@@ -308,7 +409,7 @@ class SyobonView @JvmOverloads constructor(
             die()
         }
 
-        // Spike collision check
+        // Spike & Lava collision check
         val pLeft = playerX
         val pRight = playerX + playerW
         val pTop = playerY
@@ -319,7 +420,8 @@ class SyobonView @JvmOverloads constructor(
         val sRMax = Math.min(rows - 1, pBottom.toInt())
         for (r in sRMin..sRMax) {
             for (c in sCMin..sCMax) {
-                if (map[r][c] == 5) {
+                val tile = map[r][c]
+                if (tile == 5 || tile == 9) {
                     if (pRight > c && pLeft < c + 1 && pBottom > r && pTop < r + 1) {
                         die()
                     }
@@ -657,10 +759,25 @@ class SyobonView @JvmOverloads constructor(
         SoundManager.playSuccess() // victory chime
     }
 
+    private fun handleNextLevelOrReset() {
+        if (isLevelCleared) {
+            if (currentLevel < 3) {
+                currentLevel++
+                resetLevelState()
+                isLevelCleared = false
+            } else {
+                currentLevel = 1
+                resetGame()
+            }
+        } else {
+            resetGame()
+        }
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver || isLevelCleared) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
-                resetGame()
+                handleNextLevelOrReset()
                 return true
             }
             return super.onKeyDown(keyCode, event)
@@ -700,7 +817,7 @@ class SyobonView @JvmOverloads constructor(
         if (gameOver || isLevelCleared) {
             if (event.action == MotionEvent.ACTION_DOWN) {
                 performClick()
-                resetGame()
+                handleNextLevelOrReset()
             }
             return true
         }
@@ -740,7 +857,12 @@ class SyobonView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawColor(Color.parseColor("#80D8FF")) // Retro Sky Blue
+        val skyColor = when (currentLevel) {
+            1 -> "#80D8FF" // Sky Blue
+            2 -> "#151B26" // Cavern Dark
+            else -> "#1A0A0A" // Castle Dark Red
+        }
+        canvas.drawColor(Color.parseColor(skyColor))
 
         // Apply camera scroll translation
         canvas.save()
@@ -801,20 +923,25 @@ class SyobonView @JvmOverloads constructor(
 
         canvas.restore()
 
-        // 4. Draw HUD (Ouchies, Lives)
-        paint.color = Color.BLACK
-        paint.textSize = 36f
+        // 4. Draw HUD (Level, Ouchies, Lives)
+        paint.color = if (currentLevel == 1) Color.BLACK else Color.WHITE
+        paint.textSize = 32f
         paint.typeface = Typeface.MONOSPACE
         paint.textAlign = Paint.Align.LEFT
         
         val livesStr = if (currentLives < 0) "$currentLives" else "$currentLives"
-        canvas.drawText("OUCHIES: $deaths", 30f, 60f, paint)
-        canvas.drawText("LIVES: $livesStr", 30f, 110f, paint)
+        canvas.drawText("LEVEL: $currentLevel", 30f, 50f, paint)
+        canvas.drawText("OUCHIES: $deaths", 30f, 95f, paint)
+        canvas.drawText("LIVES: $livesStr", 30f, 140f, paint)
 
         // 5. Success overlay
         if (isLevelCleared) {
             celebrationManager.draw(canvas)
-            drawOverlayScreen(canvas, "LEVEL CLEARED!", "Press OK/Center to Play Again")
+            if (currentLevel < 3) {
+                drawOverlayScreen(canvas, "LEVEL $currentLevel CLEAR!", "Press OK/Center for Level ${currentLevel + 1}")
+            } else {
+                drawOverlayScreen(canvas, "YOU ARE A CAT HERO!", "All Levels Cleared! Press OK/Center to Replay")
+            }
         } else if (gameOver) {
             drawOverlayScreen(canvas, "GAME OVER", "Press OK/Center to Retry")
         }
@@ -901,6 +1028,16 @@ class SyobonView @JvmOverloads constructor(
                     flagPath.close()
                     canvas.drawPath(flagPath, paint)
                 }
+            }
+            9 -> { // Lava (Animated orange red)
+                val pulse = (Math.sin(System.currentTimeMillis() / 150.0) * 15).toInt()
+                paint.color = Color.rgb(255, 69 + pulse, 0)
+                canvas.drawRect(l, t, r, b, paint)
+                
+                // Draw hot yellow bubbles
+                paint.color = Color.YELLOW
+                canvas.drawCircle(l + (r - l) * 0.3f, t + (b - t) * 0.4f, 3f, paint)
+                canvas.drawCircle(l + (r - l) * 0.7f, t + (b - t) * 0.7f, 4f, paint)
             }
             10 -> { // Collapsible bridge/floor (same texture as ground but reddish)
                 paint.color = Color.parseColor("#A349A4")
