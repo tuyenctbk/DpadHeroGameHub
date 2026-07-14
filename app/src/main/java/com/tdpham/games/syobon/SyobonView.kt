@@ -89,7 +89,8 @@ class SyobonView @JvmOverloads constructor(
         var y: Float,
         var vx: Float,
         var vy: Float,
-        val type: Int // 0: Nyan Cat, 1: Flying Spike, 2: Popup Ground Spike
+        val type: Int, // 0: Nyan Cat, 1: Flying Spike, 2: Popup Ground Spike
+        val variant: Int = 0
     )
     private val trapEntities = mutableListOf<TrapEntity>()
 
@@ -183,8 +184,8 @@ class SyobonView @JvmOverloads constructor(
         val rand = java.util.Random()
 
         // 1. Randomize parameters
-        val p1 = rand.nextInt(7) - 3 // -3 to +3
-        val p2 = rand.nextInt(9) - 4 // -4 to +4
+        val p1 = rand.nextInt(4) - 3 // -3 to 0 (ensures col 16..19 range for Pipe 1)
+        val p2 = rand.nextInt(7) - 3 // -3 to +3
         val h1 = rand.nextInt(2) + 2 // 2 to 3
         val h2 = rand.nextInt(2) + 3 // 3 to 4
         val h3 = rand.nextInt(2) + 2 // 2 to 3
@@ -238,7 +239,7 @@ class SyobonView @JvmOverloads constructor(
 
         // 4. Randomize the active spike launcher pipe column
         spikeLauncherPipeCol = when (currentLevel) {
-            1 -> listOf(20 + p1, 35 + p2, 55).shuffled().first()
+            1 -> listOf(19 + p1, 35 + p2, 55).shuffled().first()
             2 -> 30 + p1
             else -> listOf(35 + p1, 63 + p2).shuffled().first()
         }
@@ -291,7 +292,7 @@ class SyobonView @JvmOverloads constructor(
                 continue
             }
             map[13][c] = 1 // Ground top
-            map[14][c] = 1 // Ground deep
+            map[14][c] = 12 // Ground deep (new type without grass)
         }
 
         // 2. Standard structures
@@ -309,8 +310,9 @@ class SyobonView @JvmOverloads constructor(
         invisibleBlocks[Pair(9, 20)] = false
 
         // Pipes with randomized offsets and heights
-        // Shifted Pipe 1 further right to ensure no overlap with block group (group ends at max 11, pipe starts at min 18)
-        buildPipe(20 + p1, h1) 
+        // Shifted Pipe 1 further right to ensure no overlap with block group (group ends at max 11, pipe starts at min 15)
+        // And ensure it stays on solid ground before col 21. 19+1 = 20 (safe).
+        buildPipe(19 + p1, h1)
         buildPipe(35 + p2, h2)
         buildPipe(55, h3) 
 
@@ -325,6 +327,10 @@ class SyobonView @JvmOverloads constructor(
         for (r in 3..11) {
             map[r][88] = 8 // flagpole shaft
         }
+        
+        // Invisible stepping stone for the final long gap (col 72-75)
+        map[10][73] = 4
+        invisibleBlocks[Pair(10, 73)] = false
     }
 
     private fun buildLevel2(p1: Int, h1: Int) {
@@ -335,12 +341,12 @@ class SyobonView @JvmOverloads constructor(
                 continue
             }
             map[13][c] = 1 // Ground top
-            map[14][c] = 1 // Ground deep
+            map[14][c] = 12 // Ground deep (new type without grass)
         }
 
         // 2. Ceiling blocks
         for (c in 0 until totalMapCols) {
-            map[2][c] = 1 // Solid ceiling
+            map[2][c] = 12 // Solid ceiling (deep type)
         }
 
         // Floating blocks group
@@ -353,6 +359,14 @@ class SyobonView @JvmOverloads constructor(
 
         // Pipe
         buildPipe(30 + p1, h1)
+
+        // Stepping stone for first wide gap (troll invisible blocks)
+        map[10][19] = 4
+        invisibleBlocks[Pair(10, 19)] = false
+        
+        // Stepping stone for second wide gap
+        map[10][43] = 4
+        invisibleBlocks[Pair(10, 43)] = false
 
         // Collapsible floating bridge tiles
         map[9][41] = 2
@@ -386,7 +400,7 @@ class SyobonView @JvmOverloads constructor(
                 map[14][c] = 9 // Lava Deep
             } else {
                 map[13][c] = 1 // Ground top
-                map[14][c] = 1 // Ground deep
+                map[14][c] = 12 // Ground deep
             }
         }
 
@@ -401,10 +415,12 @@ class SyobonView @JvmOverloads constructor(
         buildPipe(35 + p1, h1)
         buildPipe(63 + p2, h2)
 
-        // Stepping stone platforms
+        // Stepping stone platforms (added more to make it workable)
         map[10][45] = 2
-        map[9][50] = 2
-        map[10][55] = 2
+        map[10][48] = 2
+        map[9][51] = 2
+        map[10][54] = 2
+        map[10][57] = 2
 
         // Castle wall blocks
         for (r in 5..12) {
@@ -500,7 +516,7 @@ class SyobonView @JvmOverloads constructor(
             die()
         }
 
-        // Spike & Lava collision check
+        // Trigger Checks (Spike, Lava, Flagpole)
         val pLeft = playerX
         val pRight = playerX + playerW
         val pTop = playerY
@@ -512,9 +528,13 @@ class SyobonView @JvmOverloads constructor(
         for (r in sRMin..sRMax) {
             for (c in sCMin..sCMax) {
                 val tile = map[r][c]
-                if (tile == 5 || tile == 9) {
+                if (tile == 5 || tile == 9) { // Spike or Lava
                     if (pRight > c && pLeft < c + 1 && pBottom > r && pTop < r + 1) {
                         die()
+                    }
+                } else if (tile == 8) { // Flagpole
+                    if (pRight > c && pLeft < c + 1 && pBottom > r && pTop < r + 1) {
+                        triggerVictory()
                     }
                 }
             }
@@ -621,6 +641,15 @@ class SyobonView @JvmOverloads constructor(
                 }
             }
             
+            // Crater awareness: turn back at edges of gaps
+            val gridXFront = if (enemy.vx > 0) (enemy.x + 0.8f).toInt() else (enemy.x - 0.1f).toInt()
+            val gridYBelow = (enemy.y + 1.2f).toInt()
+            if (gridYBelow in 0 until rows && gridXFront in 0 until totalMapCols) {
+                if (!isSolid(gridYBelow, gridXFront) && map[gridYBelow][gridXFront] != 9) { // Not solid and not lava
+                    enemy.vx = -enemy.vx
+                }
+            }
+            
             // Bounding box collision check with player
             if (Math.abs(enemy.x - playerX) < 0.7f && Math.abs(enemy.y - playerY) < 0.7f) {
                 // If player is falling onto the enemy's head
@@ -649,6 +678,7 @@ class SyobonView @JvmOverloads constructor(
         // 2. Spawn a flying spike (Nyan Cat style) at col 32 when passing near pipe
         if (playerX > 28f && !trapTriggered[32]) {
             trapTriggered[32.coerceAtMost(totalMapCols-1)] = true
+            val rand = java.util.Random()
             // Spawn nyan cat flying from right side
             val speedFactor = if (difficulty == 2) 1.5f else 1.0f
             trapEntities.add(
@@ -657,7 +687,8 @@ class SyobonView @JvmOverloads constructor(
                     y = 8f,
                     vx = -0.18f * speedFactor,
                     vy = 0f,
-                    type = 0 // Nyan Cat
+                    type = 0, // Nyan Cat
+                    variant = rand.nextInt(3)
                 )
             )
             SoundManager.playError() // Spawn/Alert warning beep
@@ -692,7 +723,8 @@ class SyobonView @JvmOverloads constructor(
                         y = 10f,
                         vx = 0f,
                         vy = -0.12f,
-                        type = 2 // Spike flying up
+                        type = 2, // Spike flying up
+                        variant = 0
                     )
                 )
                 SoundManager.playError()
@@ -710,7 +742,8 @@ class SyobonView @JvmOverloads constructor(
                         y = 12f,
                         vx = 0f,
                         vy = -0.05f,
-                        type = 2 // Popup spike
+                        type = 2, // Popup spike
+                        variant = 0
                     )
                 )
                 SoundManager.playError()
@@ -807,7 +840,7 @@ class SyobonView @JvmOverloads constructor(
 
         // 2. Question block hit
         if (cellType == 3) {
-            map[r][c] = 2 // turn into hit brick
+            map[r][c] = 11 // Turn into an indestructible "Spent" block
             SoundManager.playClick()
 
             val randVal = (Math.random() * 100).toInt()
@@ -823,7 +856,8 @@ class SyobonView @JvmOverloads constructor(
                         y = r - 1f,
                         vx = -0.06f,
                         vy = 0f,
-                        type = 3 // Companion Slime
+                        type = 3, // Companion Slime
+                        variant = 0
                     )
                 )
             } else {
@@ -834,7 +868,8 @@ class SyobonView @JvmOverloads constructor(
                         y = r - 1f,
                         vx = -0.06f,
                         vy = 0f,
-                        type = 1 // Poison Mushroom
+                        type = 1, // Poison Mushroom
+                        variant = 0
                     )
                 )
                 SoundManager.playError()
@@ -865,12 +900,8 @@ class SyobonView @JvmOverloads constructor(
             return yOffset < 0.2f
         }
         
-        // Spikes and flagpoles are triggers, not solid blocks!
-        if (cell == 5 || cell == 8) {
-            // Flagpole collision -> Victory check!
-            if (cell == 8 && !isDying && !isLevelCleared) {
-                triggerVictory()
-            }
+        // Spikes (5), Flagpoles (8), and Lava (9) are triggers, not solid blocks!
+        if (cell == 5 || cell == 8 || cell == 9) {
             return false
         }
         
@@ -894,10 +925,10 @@ class SyobonView @JvmOverloads constructor(
 
     private fun handleNextLevelOrReset() {
         if (isLevelCleared) {
+            isLevelCleared = false
             if (currentLevel < 3) {
                 currentLevel++
                 resetLevelState()
-                isLevelCleared = false
             } else {
                 currentLevel = 1
                 resetGame()
@@ -1258,23 +1289,66 @@ class SyobonView @JvmOverloads constructor(
                 paint.color = Color.parseColor("#BA68C8")
                 canvas.drawRect(l + 3, t + 3, r - 3, b - 3, paint)
             }
+            11 -> { // Spent/Used Block (from Question Block)
+                paint.color = Color.parseColor("#5D4037") // Dull Brown
+                canvas.drawRect(l, t, r, b, paint)
+                // Draw a simple border to show it's spent
+                paint.style = Paint.Style.STROKE
+                paint.color = Color.parseColor("#3E2723")
+                paint.strokeWidth = 3f
+                canvas.drawRect(l + 2, t + 2, r - 2, b - 2, paint)
+                paint.style = Paint.Style.FILL
+            }
+            12 -> { // Deep Ground / Ceiling (No grass cap)
+                paint.color = Color.parseColor("#8D6E63")
+                canvas.drawRect(l, t, r, b, paint)
+                // Decoration: Subtle dark spots
+                paint.color = Color.parseColor("#795548")
+                canvas.drawCircle(l + w * 0.3f, t + h * 0.4f, 3f, paint)
+                canvas.drawCircle(l + w * 0.7f, t + h * 0.7f, 2.5f, paint)
+            }
         }
     }
 
     private fun drawTrapEntity(canvas: Canvas, ent: TrapEntity, l: Float, t: Float, r: Float, b: Float) {
         when (ent.type) {
-            0 -> { // Nyan Cat (white rectangular body, yellow tail lines, cute face)
+            0 -> { // Nyan Cat variants
                 paint.color = Color.WHITE
                 canvas.drawRoundRect(l, t + 4, r, b - 4, 8f, 8f, paint)
+                val cx = (l + r) / 2f
+                val cy = (t + b) / 2f
+                
                 // Eyes
                 paint.color = Color.BLACK
-                canvas.drawCircle(l + (r - l)*0.7f, t + (b - t)*0.4f, 4f, paint)
-                canvas.drawCircle(l + (r - l)*0.4f, t + (b - t)*0.4f, 4f, paint)
-                // Rainbow tail trailing to the right
-                paint.color = Color.parseColor("#E040FB")
-                canvas.drawRect(r, t + 6, r + 15, t + 10, paint)
-                paint.color = Color.parseColor("#00E5FF")
-                canvas.drawRect(r, t + 10, r + 15, t + 14, paint)
+                canvas.drawCircle(l + (r - l) * 0.7f, t + (b - t) * 0.4f, 4f, paint)
+                canvas.drawCircle(l + (r - l) * 0.4f, t + (b - t) * 0.4f, 4f, paint)
+
+                when (ent.variant) {
+                    0 -> { // Classic Rainbow Tail
+                        paint.color = Color.parseColor("#E040FB")
+                        canvas.drawRect(r, t + 6, r + 15, t + 10, paint)
+                        paint.color = Color.parseColor("#00E5FF")
+                        canvas.drawRect(r, t + 10, r + 15, t + 14, paint)
+                    }
+                    1 -> { // Blue Bow Tie
+                        paint.color = Color.parseColor("#1976D2")
+                        val path = Path()
+                        path.moveTo(cx - 8, cy + 4)
+                        path.lineTo(cx + 8, cy + 12)
+                        path.lineTo(cx + 8, cy + 4)
+                        path.lineTo(cx - 8, cy + 12)
+                        path.close()
+                        canvas.drawPath(path, paint)
+                        paint.color = Color.parseColor("#FFD54F")
+                        canvas.drawCircle(cx, cy + 8, 3f, paint)
+                    }
+                    2 -> { // Cool Shades
+                        paint.color = Color.BLACK
+                        canvas.drawRect(l + (r - l) * 0.3f, t + (b - t) * 0.35f, l + (r - l) * 0.8f, t + (b - t) * 0.45f, paint)
+                        paint.strokeWidth = 2f
+                        canvas.drawLine(l + (r - l) * 0.55f, t + (b - t) * 0.4f, l + (r - l) * 0.65f, t + (b - t) * 0.4f, paint)
+                    }
+                }
             }
             1 -> { // Poison Mushroom (Purple body, white spots)
                 paint.color = Color.parseColor("#7B1FA2")
