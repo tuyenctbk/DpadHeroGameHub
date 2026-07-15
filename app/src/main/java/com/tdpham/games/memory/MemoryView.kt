@@ -115,11 +115,10 @@ class MemoryView @JvmOverloads constructor(
         val allSymbols = symbolThemes[currentThemeIndex].shuffled()
         
         val pairCount = (rows * cols) / 2
-        val activeSymbols = if (allSymbols.size >= pairCount) {
-            allSymbols.take(pairCount)
-        } else {
-            // Fallback if theme doesn't have enough symbols
-            allSymbols + allSymbols.take(pairCount - allSymbols.size)
+        val activeSymbols = mutableListOf<String>()
+        while (activeSymbols.size < pairCount) {
+            val needed = pairCount - activeSymbols.size
+            activeSymbols.addAll(allSymbols.shuffled().take(needed))
         }
 
         val deck = (activeSymbols + activeSymbols).shuffled()

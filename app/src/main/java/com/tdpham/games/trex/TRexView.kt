@@ -98,6 +98,7 @@ class TRexView @JvmOverloads constructor(
     
     // Obstacles
     private val obstacles = mutableListOf<Obstacle>()
+    private val pendingObstacles = mutableListOf<Obstacle>()
     private val explosions = mutableListOf<Explosion>()
     private val craters = mutableListOf<Crater>()
     private val random = Random()
@@ -253,6 +254,7 @@ class TRexView @JvmOverloads constructor(
         dinoVelocityY = 0f
         isJumping = false
         obstacles.clear()
+        pendingObstacles.clear()
         explosions.clear()
         craters.clear()
         clouds.clear()
@@ -448,6 +450,11 @@ class TRexView @JvmOverloads constructor(
             
             if (obs.x + obs.width < -200) iterator.remove()
         }
+
+        if (pendingObstacles.isNotEmpty()) {
+            obstacles.addAll(pendingObstacles)
+            pendingObstacles.clear()
+        }
     }
 
     private fun updateParticles(effectiveSpeed: Float) {
@@ -543,7 +550,7 @@ class TRexView @JvmOverloads constructor(
         }
         
         if (targetsFound == 0 && obs.type == ObstacleType.THUNDERBOLT) {
-            obstacles.add(Obstacle(obs.x - 100f, height * groundY - 200f, 200f, 200f, ObstacleType.FIRE, 0))
+            pendingObstacles.add(Obstacle(obs.x - 100f, height * groundY - 200f, 200f, 200f, ObstacleType.FIRE, 0))
         }
         SoundManager.playClick()
     }

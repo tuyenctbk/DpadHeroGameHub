@@ -60,7 +60,9 @@ class Lines98View @JvmOverloads constructor(
         Color.parseColor("#FFEB3B"), // Yellow
         Color.parseColor("#9C27B0"), // Purple
         Color.parseColor("#FF9800"), // Orange
-        Color.parseColor("#00BCD4")  // Cyan
+        Color.parseColor("#00BCD4"), // Cyan
+        Color.parseColor("#E91E63"), // Pink
+        Color.parseColor("#795548")  // Brown
     )
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -407,7 +409,7 @@ class Lines98View @JvmOverloads constructor(
         for (i in nextPositions.indices) {
             val (r, c) = nextPositions[i]
             if (board[r][c] == 0 && i < nextBalls.size) {
-                paint.color = ballColors[nextBalls[i] - 1]
+                paint.color = ballColors[(nextBalls[i] - 1) % ballColors.size]
                 paint.alpha = 180
                 val cx = offsetX + c * cellSize + cellSize / 2
                 val cy = offsetY + r * cellSize + cellSize / 2
@@ -435,24 +437,33 @@ class Lines98View @JvmOverloads constructor(
                         else -> cellSize * 0.4f
                     }
 
+                    val bounceOffset = if (isSelected) {
+                        val t = (pulseFactor - 0.85f) / 0.30f
+                        val maxBounce = cellSize * 0.25f
+                        (maxBounce * Math.sin(t * Math.PI).toFloat()).coerceAtLeast(0f)
+                    } else {
+                        0f
+                    }
+
                     // Shadow
                     paint.color = Color.BLACK
-                    paint.alpha = 50
-                    canvas.drawCircle(cx + 4, cy + 4, drawRadius, paint)
+                    paint.alpha = if (isSelected) (50 * (1f - (bounceOffset / (cellSize * 0.25f)) * 0.4f)).toInt() else 50
+                    val shadowRadius = if (isSelected) drawRadius * (1f - (bounceOffset / (cellSize * 0.25f)) * 0.15f) else drawRadius
+                    canvas.drawCircle(cx + 4, cy + 4, shadowRadius, paint)
                     paint.alpha = 255
 
                     // Ball
-                    paint.color = ballColors[ballColorIdx - 1]
-                    canvas.drawCircle(cx, cy, drawRadius, paint)
+                    paint.color = ballColors[(ballColorIdx - 1) % ballColors.size]
+                    canvas.drawCircle(cx, cy - bounceOffset, drawRadius, paint)
 
                     // Highlight (3D effect)
                     val gradient = RadialGradient(
-                        cx - drawRadius * 0.4f, cy - drawRadius * 0.4f, drawRadius * 0.8f,
+                        cx - drawRadius * 0.4f, cy - bounceOffset - drawRadius * 0.4f, drawRadius * 0.8f,
                         Color.WHITE, Color.TRANSPARENT, Shader.TileMode.CLAMP
                     )
                     paint.shader = gradient
                     paint.alpha = 150
-                    canvas.drawCircle(cx, cy, drawRadius, paint)
+                    canvas.drawCircle(cx, cy - bounceOffset, drawRadius, paint)
                     paint.shader = null
                     paint.alpha = 255
 
@@ -514,7 +525,7 @@ class Lines98View @JvmOverloads constructor(
         val nextLabel = context.getString(R.string.next_label)
         canvas.drawText("$nextLabel:", width - 250f, hudY1 + 60f, paint)
         for (i in nextBalls.indices) {
-            paint.color = ballColors[nextBalls[i] - 1]
+            paint.color = ballColors[(nextBalls[i] - 1) % ballColors.size]
             canvas.drawCircle(width - 200f + i * 50f, hudY1 + 50f, 15f, paint)
         }
 
@@ -524,6 +535,10 @@ class Lines98View @JvmOverloads constructor(
             drawOverlay(canvas, title, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         } else if (isPaused) {
             drawOverlay(canvas, context.getString(R.string.paused), context.getString(R.string.resume_hint))
+        }
+
+        if (!isGameOver && !isPaused) {
+            postInvalidateOnAnimation()
         }
     }
 

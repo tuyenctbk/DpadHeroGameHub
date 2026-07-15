@@ -100,7 +100,7 @@ class HangmanView @JvmOverloads constructor(
     override fun resetGame() {
         // Load category from settings
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val selectedCat = prefs.getInt(KEY_CATEGORY, -1)
+        val selectedCat = prefs.getInt(KEY_CATEGORY, -1).coerceIn(-1, words.size - 1)
 
         // Collect all available words that haven't been used yet
         celebrationManager.start(0f, 0f)
