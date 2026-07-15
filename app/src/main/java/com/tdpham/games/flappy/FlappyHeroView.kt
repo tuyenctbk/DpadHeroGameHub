@@ -538,6 +538,14 @@ class FlappyHeroView @JvmOverloads constructor(
                     paint.color = Color.argb(40, 0, 229, 255)
                     canvas.drawRect(pipe.x, 0f, pipe.x + 100f, h, paint)
                     
+                    // Storm Core / Vortex Hub (Lethal Center)
+                    val cx = pipe.x + 50f
+                    val cy = h / 2f
+                    paint.color = Color.argb(100, 0, 229, 255)
+                    canvas.drawCircle(cx, cy, 40f, paint)
+                    paint.color = if (frameCount % 10 < 5) Color.WHITE else Color.CYAN
+                    canvas.drawCircle(cx, cy, 15f, paint)
+
                     // Flowing vectors
                     paint.color = Color.argb(160, 0, 229, 255)
                     paint.style = Paint.Style.STROKE
@@ -1114,9 +1122,11 @@ class FlappyHeroView @JvmOverloads constructor(
                         val closureDistance = (cycleVal + 1f) * 45f
                         val topJawBottom = p.gapY + closureDistance
                         val bottomJawTop = p.gapY + p.gapH - closureDistance
-                        birdY - birdSize < topJawBottom || birdY + birdSize > bottomJawTop
+                        // Collision check includes the 20px spikes/teeth
+                        birdY - birdSize < topJawBottom + 20f || birdY + birdSize > bottomJawTop - 20f
                     }
                     ObstacleType.FALLING_STALACTITE -> {
+                        // Lethal if bird is above the tip AND horizontally aligned
                         birdY - birdSize < p.gapY
                     }
                     ObstacleType.SPIKED_MINE -> {
@@ -1128,7 +1138,13 @@ class FlappyHeroView @JvmOverloads constructor(
                         distance < (birdSize + 39f)
                     }
                     ObstacleType.WIND_ZONE -> {
-                        false
+                        // Lethal Storm Core in the center
+                        val cx = p.x + 50f
+                        val cy = h / 2f
+                        val dx = 150f - cx
+                        val dy = birdY - cy
+                        val distance = Math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
+                        distance < (birdSize + 25f)
                     }
                 }
             } else {
@@ -1143,7 +1159,7 @@ class FlappyHeroView @JvmOverloads constructor(
                     ObstacleType.CLOSING_GATE -> Pair("Chomped by the closing metal gates!", DeathType.SPIKES)
                     ObstacleType.FALLING_STALACTITE -> Pair("Crushed by a falling stalactite!", DeathType.CRATE)
                     ObstacleType.SPIKED_MINE -> Pair("Blew up on a floating spiked mine!", DeathType.MINE)
-                    ObstacleType.WIND_ZONE -> Pair("", DeathType.NONE)
+                    ObstacleType.WIND_ZONE -> Pair("Vaporized by the storm vortex core!", DeathType.MINE)
                 }
                 die(reason, deathType)
                 return
@@ -1251,11 +1267,13 @@ class FlappyHeroView @JvmOverloads constructor(
                 guidePath.quadTo((150f + p.x) / 2f, targetY, p.x + 50f, targetY)
             }
             ObstacleType.WIND_ZONE -> {
-                textHint = if (p.movingDirection > 0) "FIGHT UPDRAFT" else "FIGHT DOWNDRAFT"
+                textHint = if (p.movingDirection > 0) "AVOID CORE | FIGHT UP" else "AVOID CORE | FIGHT DOWN"
                 val targetY = h / 2f
                 textY = 120f
                 guidePath.moveTo(150f, birdY)
-                guidePath.quadTo((150f + p.x) / 2f, targetY, p.x + 50f, targetY)
+                // Guide player to fly around the core
+                val guideOffset = if (birdY < h / 2f) -120f else 120f
+                guidePath.quadTo((150f + p.x) / 2f, h / 2f + guideOffset, p.x + 50f, h / 2f + guideOffset)
             }
             ObstacleType.FALLING_STALACTITE -> {
                 textHint = "FLY UNDER"
