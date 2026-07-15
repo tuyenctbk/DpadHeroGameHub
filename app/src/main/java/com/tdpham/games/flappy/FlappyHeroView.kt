@@ -26,7 +26,9 @@ class FlappyHeroView @JvmOverloads constructor(
     enum class Difficulty(val gapHMult: Float, val speed: Float, val interval: Long) {
         LEVEL_1(0.32f, 6.0f, 2400L),
         LEVEL_2(0.27f, 7.5f, 2000L),
-        LEVEL_3(0.22f, 9.0f, 1600L)
+        LEVEL_3(0.22f, 9.0f, 1600L),
+        LEVEL_4(0.18f, 11.0f, 1300L),
+        LEVEL_5(0.14f, 13.5f, 1000L)
     }
 
     enum class BirdCharacter(
