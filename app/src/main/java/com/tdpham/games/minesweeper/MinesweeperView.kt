@@ -572,9 +572,17 @@ class MinesweeperView @JvmOverloads constructor(
         paint.color = GamePalette.SCORE
         canvas.drawText("${context.getString(R.string.flags_label)}: ${getFlaggedCount()}", Math.round(width / 2f).toFloat(), headerY, paint)
 
-        for (r in 0 until rows) {
-            for (c in 0 until cols) {
-                val cell = grid[r][c]
+        val currentRows = rows
+        val currentCols = cols
+        val currentGrid = grid
+
+        for (r in 0 until currentRows) {
+            if (r >= currentGrid.size) continue
+            val currentRow = currentGrid[r]
+            
+            for (c in 0 until currentCols) {
+                if (c >= currentRow.size) continue
+                val cell = currentRow[c]
                 val rectLeft = offsetX + c * cellSize
                 val rectTop = offsetY + r * cellSize
                 val rectRight = rectLeft + cellSize

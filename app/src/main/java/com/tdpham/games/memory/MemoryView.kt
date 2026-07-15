@@ -327,16 +327,19 @@ class MemoryView @JvmOverloads constructor(
         }
 
         // Board
+        val currentRows = rows
+        val currentCols = cols
         val currentCards = cards
-        for (r in 0 until rows) {
-            for (c in 0 until cols) {
-                val idx = r * cols + c
+        
+        for (r in 0 until currentRows) {
+            for (c in 0 until currentCols) {
+                val idx = r * currentCols + c
                 if (idx < currentCards.size) {
                     val card = currentCards[idx]
                     val x = left + c * cellSize
                     val y = top + r * cellSize
                     
-                    drawCard(canvas, x, y, cellSize, card, !gameOver && idx == (cursorR * cols + cursorC))
+                    drawCard(canvas, x, y, cellSize, card, !gameOver && idx == (cursorR * currentCols + cursorC))
                 }
             }
         }
