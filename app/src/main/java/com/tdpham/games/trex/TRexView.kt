@@ -427,10 +427,10 @@ class TRexView @JvmOverloads constructor(
         updateEvents(effectiveSpeed)
 
         if (score > 1500 && currentWeather == Weather.RAINY && random.nextInt(400) == 0) {
-            obstacles.add(Obstacle(random.nextFloat() * width + 200f, -100f, 30f, 100f, ObstacleType.THUNDERBOLT, random.nextInt(4)))
+            pendingObstacles.add(Obstacle(random.nextFloat() * width + 200f, -100f, 30f, 100f, ObstacleType.THUNDERBOLT, random.nextInt(4)))
         }
         if (score > 3000 && isNightMode && random.nextInt(800) == 0) {
-            obstacles.add(Obstacle(random.nextFloat() * width + 400f, -200f, 80f, 80f, ObstacleType.METEOR, random.nextInt(4)))
+            pendingObstacles.add(Obstacle(random.nextFloat() * width + 400f, -200f, 80f, 80f, ObstacleType.METEOR, random.nextInt(4)))
         }
 
         nextObstacleDistance -= effectiveSpeed
@@ -605,10 +605,10 @@ class TRexView @JvmOverloads constructor(
                 val etype = if (random.nextInt(3) == 0) ObstacleType.CANYON else ObstacleType.RAISED_EDGE
                 val ew = if (etype == ObstacleType.CANYON) 250f + random.nextInt(200) else 150f + random.nextInt(100)
                 val eh = if (etype == ObstacleType.RAISED_EDGE) 40f + random.nextInt(40) else 30f
-                obstacles.add(Obstacle(width.toFloat() + 200f, height * groundY - eh, ew, eh, etype, random.nextInt(4)))
+                pendingObstacles.add(Obstacle(width.toFloat() + 200f, height * groundY - eh, ew, eh, etype, random.nextInt(4)))
             }
             if (earthquakeTimer % 80 == 0) {
-                obstacles.add(Obstacle(width.toFloat() + 300f, height * groundY - 40f, 220f, 40f, ObstacleType.FALLEN_TREE, random.nextInt(2)))
+                pendingObstacles.add(Obstacle(width.toFloat() + 300f, height * groundY - 40f, 220f, 40f, ObstacleType.FALLEN_TREE, random.nextInt(2)))
             }
         } else {
             earthquakeShake = 0f
@@ -775,7 +775,7 @@ class TRexView @JvmOverloads constructor(
                 (this.height * groundY) - h - random.nextInt(120)
             } else if (type == ObstacleType.METEOR || type == ObstacleType.THUNDERBOLT) {
                 val meteorOx = this.width.toFloat() * 0.8f + random.nextInt(400)
-                obstacles.add(Obstacle(meteorOx, -200f, width, height, type, variant))
+                pendingObstacles.add(Obstacle(meteorOx, -200f, width, height, type, variant))
                 continue 
             } else if (type == ObstacleType.CANYON) {
                 this.height * groundY - 10f 
@@ -783,7 +783,7 @@ class TRexView @JvmOverloads constructor(
                 (this.height * groundY) - height
             }
             
-            obstacles.add(Obstacle(ox, y, width, height, type, variant))
+            pendingObstacles.add(Obstacle(ox, y, width, height, type, variant))
             currentGroupWidth += groupSpacing + width
         }
         
