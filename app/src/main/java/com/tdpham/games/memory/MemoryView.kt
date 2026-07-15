@@ -98,23 +98,22 @@ class MemoryView @JvmOverloads constructor(
         // Load difficulty from settings
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val diffIndex = prefs.getInt(KEY_DIFFICULTY, 1)
-        currentDifficulty = Difficulty.entries[diffIndex.coerceIn(0, 3)]
+        val difficulty = Difficulty.entries[diffIndex.coerceIn(0, 3)]
 
-        rows = currentDifficulty.rows
-        cols = currentDifficulty.cols
+        val newRows = difficulty.rows
+        val newCols = difficulty.cols
         
         handler.removeCallbacksAndMessages(null)
-        cards.clear()
         celebrationManager.start(0f, 0f)
         
         var nextThemeIndex = random.nextInt(symbolThemes.size)
         while (nextThemeIndex == currentThemeIndex && symbolThemes.size > 1) {
             nextThemeIndex = random.nextInt(symbolThemes.size)
         }
-        currentThemeIndex = nextThemeIndex
-        val allSymbols = symbolThemes[currentThemeIndex].shuffled()
+        val themeIndex = nextThemeIndex
+        val allSymbols = symbolThemes[themeIndex].shuffled()
         
-        val pairCount = (rows * cols) / 2
+        val pairCount = (newRows * newCols) / 2
         val activeSymbols = mutableListOf<String>()
         while (activeSymbols.size < pairCount) {
             val needed = pairCount - activeSymbols.size
@@ -122,9 +121,15 @@ class MemoryView @JvmOverloads constructor(
         }
 
         val deck = (activeSymbols + activeSymbols).shuffled()
-        for (symbol in deck) {
-            cards.add(Card(symbol))
-        }
+        val newCards = deck.map { Card(it) }
+
+        // Atomic update of state to avoid sync issues in onDraw
+        this.currentDifficulty = difficulty
+        this.currentThemeIndex = themeIndex
+        this.rows = newRows
+        this.cols = newCols
+        this.cards = newCards.toMutableList()
+        
         cursorR = 0
         cursorC = 0
         selectedIdx1 = null
@@ -138,6 +143,7 @@ class MemoryView @JvmOverloads constructor(
         bestMoves = if (highScore == 0) Int.MAX_VALUE else (1000 - highScore)
         
         hintShowFrames = 100
+        handler.post(animRunnable)
         invalidate()
     }
 
@@ -321,14 +327,17 @@ class MemoryView @JvmOverloads constructor(
         }
 
         // Board
+        val currentCards = cards
         for (r in 0 until rows) {
             for (c in 0 until cols) {
                 val idx = r * cols + c
-                val card = cards[idx]
-                val x = left + c * cellSize
-                val y = top + r * cellSize
-                
-                drawCard(canvas, x, y, cellSize, card, !gameOver && idx == (cursorR * cols + cursorC))
+                if (idx < currentCards.size) {
+                    val card = currentCards[idx]
+                    val x = left + c * cellSize
+                    val y = top + r * cellSize
+                    
+                    drawCard(canvas, x, y, cellSize, card, !gameOver && idx == (cursorR * cols + cursorC))
+                }
             }
         }
 

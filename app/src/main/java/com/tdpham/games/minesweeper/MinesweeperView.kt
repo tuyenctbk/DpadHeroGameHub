@@ -162,10 +162,10 @@ class MinesweeperView @JvmOverloads constructor(
     }
 
     private fun setupGame() {
-        rows = currentDifficulty.rows
-        cols = currentDifficulty.cols
-        minesCount = currentDifficulty.mines
-        grid = Array(rows) { Array(cols) { Cell() } }
+        val newRows = currentDifficulty.rows
+        val newCols = currentDifficulty.cols
+        val newMinesCount = currentDifficulty.mines
+        val newGrid = Array(newRows) { Array(newCols) { Cell() } }
 
         revealHandler.removeCallbacks(processQueueRunnable)
         revealQueue.clear()
@@ -176,26 +176,26 @@ class MinesweeperView @JvmOverloads constructor(
         var currentConfig = ""
         
         do {
-            for (r in 0 until rows) {
-                for (c in 0 until cols) {
-                    grid[r][c] = Cell()
+            for (r in 0 until newRows) {
+                for (c in 0 until newCols) {
+                    newGrid[r][c] = Cell()
                 }
             }
             
             var placedMines = 0
-            while (placedMines < minesCount) {
-                val r = random.nextInt(rows)
-                val c = random.nextInt(cols)
-                if (!grid[r][c].isMine) {
-                    grid[r][c].isMine = true
+            while (placedMines < newMinesCount) {
+                val r = random.nextInt(newRows)
+                val c = random.nextInt(newCols)
+                if (!newGrid[r][c].isMine) {
+                    newGrid[r][c].isMine = true
                     placedMines++
                 }
             }
             
             val configList = mutableListOf<String>()
-            for (r in 0 until rows) {
-                for (c in 0 until cols) {
-                    if (grid[r][c].isMine) {
+            for (r in 0 until newRows) {
+                for (c in 0 until newCols) {
+                    if (newGrid[r][c].isMine) {
                         configList.add("$r,$c")
                     }
                 }
@@ -206,20 +206,40 @@ class MinesweeperView @JvmOverloads constructor(
         
         lastBoardConfig = currentConfig
         
-        for (r in 0 until rows) {
-            for (c in 0 until cols) {
-                if (!grid[r][c].isMine) {
-                    grid[r][c].neighborMines = countMinesAround(r, c)
+        for (r in 0 until newRows) {
+            for (c in 0 until newCols) {
+                if (!newGrid[r][c].isMine) {
+                    newGrid[r][c].neighborMines = countMinesAroundInGrid(newGrid, newRows, newCols, r, c)
                 }
             }
         }
         
+        // Atomic-like update
+        rows = newRows
+        cols = newCols
+        minesCount = newMinesCount
+        grid = newGrid
+
         isGameOver = false
         isWin = false
         isFirstClick = true
         cursorX = 0
         cursorY = 0
         invalidate()
+    }
+
+    private fun countMinesAroundInGrid(g: Array<Array<Cell>>, rs: Int, cs: Int, r: Int, c: Int): Int {
+        var count = 0
+        for (dr in -1..1) {
+            for (dc in -1..1) {
+                val nr = r + dr
+                val nc = c + dc
+                if (nr in 0 until rs && nc in 0 until cs && g[nr][nc].isMine) {
+                    count++
+                }
+            }
+        }
+        return count
     }
 
     private fun countMinesAround(r: Int, c: Int): Int {
