@@ -497,38 +497,44 @@ class FlappyHeroView @JvmOverloads constructor(
                 ObstacleType.CLOSING_GATE -> {
                     val px1 = pipe.x + 10f
                     val px2 = pipe.x + 90f
-                    val cycleVal = Math.sin(frameCount * 0.12).toFloat()
-                    val closureDistance = (cycleVal + 1f) * 45f
-                    val topJawBottom = pipe.gapY + closureDistance
-                    val bottomJawTop = pipe.gapY + pipe.gapH - closureDistance
+                    val cycleVal = Math.sin(frameCount * 0.15).toFloat()
+                    // Horizontal closure: jaws move inward from left/right sides of the obstacle width
+                    val closureWidth = (cycleVal + 1f) * 35f 
                     
-                    // Top jaw
+                    val leftJawRight = px1 + closureWidth
+                    val rightJawLeft = px2 - closureWidth
+                    
                     paint.color = Color.parseColor("#607D8B")
-                    canvas.drawRect(px1, 0f, px2, topJawBottom, paint)
-                    // Bottom jaw
-                    canvas.drawRect(px1, bottomJawTop, px2, h, paint)
+                    // Top part (static connector)
+                    canvas.drawRect(px1, 0f, px2, pipe.gapY, paint)
+                    // Bottom part (static connector)
+                    canvas.drawRect(px1, pipe.gapY + pipe.gapH, px2, h, paint)
                     
-                    // Warning stripe band
+                    // Left moving jaw
+                    canvas.drawRect(px1, pipe.gapY, leftJawRight, pipe.gapY + pipe.gapH, paint)
+                    // Right moving jaw
+                    canvas.drawRect(rightJawLeft, pipe.gapY, px2, pipe.gapY + pipe.gapH, paint)
+                    
+                    // Warning stripe band (Vertical)
                     paint.color = Color.parseColor("#FFD54F")
-                    canvas.drawRect(px1, topJawBottom - 10f, px2, topJawBottom, paint)
-                    canvas.drawRect(px1, bottomJawTop, px2, bottomJawTop + 10f, paint)
+                    canvas.drawRect(leftJawRight - 10f, pipe.gapY, leftJawRight, pipe.gapY + pipe.gapH, paint)
+                    canvas.drawRect(rightJawLeft, pipe.gapY, rightJawLeft + 10f, pipe.gapY + pipe.gapH, paint)
                     
-                    // Teeth
+                    // Teeth (Horizontal)
                     paint.color = Color.parseColor("#B0BEC5")
                     val toothPath = Path()
-                    for (x in (px1.toInt())..(px2.toInt() - 20) step 20) {
+                    for (y in (pipe.gapY.toInt())..(pipe.gapY + pipe.gapH - 20).toInt() step 20) {
                         toothPath.reset()
-                        toothPath.moveTo(x.toFloat(), topJawBottom)
-                        toothPath.lineTo(x + 10f, topJawBottom + 20f)
-                        toothPath.lineTo(x + 20f, topJawBottom)
+                        toothPath.moveTo(leftJawRight, y.toFloat())
+                        toothPath.lineTo(leftJawRight + 15f, y + 10f)
+                        toothPath.lineTo(leftJawRight, y + 20f)
                         toothPath.close()
                         canvas.drawPath(toothPath, paint)
-                    }
-                    for (x in (px1.toInt())..(px2.toInt() - 20) step 20) {
+                        
                         toothPath.reset()
-                        toothPath.moveTo(x.toFloat(), bottomJawTop)
-                        toothPath.lineTo(x + 10f, bottomJawTop - 20f)
-                        toothPath.lineTo(x + 20f, bottomJawTop)
+                        toothPath.moveTo(rightJawLeft, y.toFloat())
+                        toothPath.lineTo(rightJawLeft - 15f, y + 10f)
+                        toothPath.lineTo(rightJawLeft, y + 20f)
                         toothPath.close()
                         canvas.drawPath(toothPath, paint)
                     }
@@ -1043,13 +1049,13 @@ class FlappyHeroView @JvmOverloads constructor(
                     targetMinY
                 }
                 
-                val type = when (Random.nextInt(12)) {
+                val type = when (Random.nextInt(20)) {
                     0, 1 -> ObstacleType.MOVING
-                    2, 3 -> ObstacleType.BAT
-                    4, 5 -> ObstacleType.CLOSING_GATE
-                    6, 7 -> ObstacleType.WIND_ZONE
-                    8, 9 -> ObstacleType.FALLING_STALACTITE
-                    10 -> ObstacleType.SPIKED_MINE
+                    2 -> ObstacleType.BAT
+                    3 -> ObstacleType.CLOSING_GATE
+                    4, 5 -> ObstacleType.WIND_ZONE
+                    6 -> ObstacleType.FALLING_STALACTITE
+                    7 -> ObstacleType.SPIKED_MINE
                     else -> ObstacleType.STANDARD
                 }
                 
@@ -1092,7 +1098,8 @@ class FlappyHeroView @JvmOverloads constructor(
                         p.triggered = true
                     }
                     if (p.triggered) {
-                        p.gapY = (p.gapY + 15f).coerceAtMost(h - 80f)
+                        // Slower fall (10f instead of 15f) and stop 200px above ground for fairness
+                        p.gapY = (p.gapY + 10f).coerceAtMost(h - 280f)
                     }
                 }
                 ObstacleType.WIND_ZONE -> {
@@ -1118,12 +1125,20 @@ class FlappyHeroView @JvmOverloads constructor(
                         distance < (birdSize + 18f)
                     }
                     ObstacleType.CLOSING_GATE -> {
-                        val cycleVal = Math.sin(frameCount * 0.12).toFloat()
-                        val closureDistance = (cycleVal + 1f) * 45f
-                        val topJawBottom = p.gapY + closureDistance
-                        val bottomJawTop = p.gapY + p.gapH - closureDistance
-                        // Collision check includes the 20px spikes/teeth
-                        birdY - birdSize < topJawBottom + 20f || birdY + birdSize > bottomJawTop - 20f
+                        val px1 = p.x + 10f
+                        val px2 = p.x + 90f
+                        val cycleVal = Math.sin(frameCount * 0.15).toFloat()
+                        val closureWidth = (cycleVal + 1f) * 35f
+                        val leftJawRight = px1 + closureWidth
+                        val rightJawLeft = px2 - closureWidth
+                        
+                        // Collision with top/bottom bars OR the moving side jaws (including teeth)
+                        val hitsBase = birdY - birdSize < p.gapY || birdY + birdSize > p.gapY + p.gapH
+                        val inJawX = 150f + birdSize > px1 && 150f - birdSize < px2
+                        val inJawY = birdY + birdSize > p.gapY && birdY - birdSize < p.gapY + p.gapH
+                        val hitsJaws = inJawY && (150f + birdSize > rightJawLeft - 15f || 150f - birdSize < leftJawRight + 15f)
+                        
+                        hitsBase || (inJawX && hitsJaws)
                     }
                     ObstacleType.FALLING_STALACTITE -> {
                         // Lethal if bird is above the tip AND horizontally aligned
