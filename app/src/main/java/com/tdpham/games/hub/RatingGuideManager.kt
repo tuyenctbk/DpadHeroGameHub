@@ -44,7 +44,6 @@ object RatingGuideManager {
 
         val btnRate = dialog.findViewById<Button>(R.id.btn_rate_now)
         val btnLater = dialog.findViewById<Button>(R.id.btn_rate_later)
-        val btnNever = dialog.findViewById<Button>(R.id.btn_rate_never)
 
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
@@ -74,15 +73,8 @@ object RatingGuideManager {
             onDismiss()
         }
 
-        btnNever.setOnClickListener {
-            prefs.edit().putBoolean(KEY_SHOULD_SHOW, false).apply()
-            dialog.dismiss()
-            onDismiss()
-        }
-
         setupFocusEffect(btnRate)
         setupFocusEffect(btnLater)
-        setupFocusEffect(btnNever)
 
         try {
             dialog.show()

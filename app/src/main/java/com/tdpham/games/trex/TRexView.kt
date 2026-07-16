@@ -55,20 +55,20 @@ class TRexView @JvmOverloads constructor(
         val weakPointRes: Int
     ) {
         DADDY(6.5f, -30f, scoreMult = 1.2f, strongPointRes = R.string.trex_point_bonus_score, weakPointRes = R.string.trex_point_large_hitbox),
-        NINJA(6.0f, -31f, canDoubleJump = true, strongPointRes = R.string.trex_point_double_jump, weakPointRes = R.string.trex_point_fast_fall),
-        ASTRONAUT(6.0f, -30f, gravityMult = 0.6f, strongPointRes = R.string.trex_point_low_gravity, weakPointRes = R.string.trex_point_slow_landing),
-        BABY(3.5f, -26f, scoreMult = 0.8f, strongPointRes = R.string.trex_point_tiny_hitbox, weakPointRes = R.string.trex_point_short_jump),
-        GRANDPA(5.8f, -24f, scoreMult = 1.5f, strongPointRes = R.string.trex_point_elite_score, weakPointRes = R.string.trex_point_slow_movement),
+        NINJA(5.2f, -29f, gravityMult = 1.2f, scoreMult = 0.9f, canDoubleJump = true, strongPointRes = R.string.trex_point_double_jump, weakPointRes = R.string.trex_point_fast_fall),
+        ASTRONAUT(6.0f, -28f, gravityMult = 0.6f, strongPointRes = R.string.trex_point_low_gravity, weakPointRes = R.string.trex_point_slow_landing),
+        BABY(3.5f, -25f, scoreMult = 0.7f, strongPointRes = R.string.trex_point_tiny_hitbox, weakPointRes = R.string.trex_point_short_jump),
+        GRANDPA(5.8f, -24f, gravityMult = 1.1f, scoreMult = 1.6f, strongPointRes = R.string.trex_point_elite_score, weakPointRes = R.string.trex_point_slow_movement),
         SCIENTIST(5.8f, -28f, scoreMult = 1.3f, strongPointRes = R.string.trex_point_steady_score, weakPointRes = R.string.trex_point_average_agility),
-        PIRATE(6.2f, -33f, strongPointRes = R.string.trex_point_power_jump, weakPointRes = R.string.trex_point_heavy_body),
-        MUMMY(6.0f, -28f, scoreMult = 1.1f, strongPointRes = R.string.trex_point_stable_run, weakPointRes = R.string.trex_point_rigid_physics),
-        TEENAGER(5.5f, -29f, strongPointRes = R.string.trex_point_fast_reflexes, weakPointRes = R.string.trex_point_low_weight),
+        PIRATE(6.5f, -34f, gravityMult = 1.3f, scoreMult = 1.1f, strongPointRes = R.string.trex_point_power_jump, weakPointRes = R.string.trex_point_heavy_body),
+        MUMMY(6.0f, -29f, gravityMult = 1.05f, scoreMult = 1.2f, strongPointRes = R.string.trex_point_stable_run, weakPointRes = R.string.trex_point_rigid_physics),
+        TEENAGER(5.5f, -30f, gravityMult = 0.95f, scoreMult = 1.0f, strongPointRes = R.string.trex_point_fast_reflexes, weakPointRes = R.string.trex_point_low_weight),
         CHEF(6.0f, -28f, scoreMult = 1.25f, strongPointRes = R.string.trex_point_balanced, weakPointRes = R.string.trex_point_standard),
-        ATHLETE(6.0f, -32f, gravityMult = 1.1f, strongPointRes = R.string.trex_point_high_jump, weakPointRes = R.string.trex_point_fast_fall),
-        DRAGON(7.0f, -31f, scoreMult = 1.4f, strongPointRes = R.string.trex_point_giant_stature, weakPointRes = R.string.trex_point_huge_hitbox),
-        ZOMBIE(6.0f, -25f, scoreMult = 2.0f, strongPointRes = R.string.trex_point_max_score, weakPointRes = R.string.trex_point_very_slow),
-        ROBOT(6.0f, -29f, gravityMult = 0.8f, strongPointRes = R.string.trex_point_steady_physics, weakPointRes = R.string.trex_point_no_momentum),
-        KING(6.5f, -30f, scoreMult = 1.8f, strongPointRes = R.string.trex_point_royal_bonus, weakPointRes = R.string.trex_point_visible_target)
+        ATHLETE(6.0f, -32f, gravityMult = 1.15f, scoreMult = 1.1f, strongPointRes = R.string.trex_point_high_jump, weakPointRes = R.string.trex_point_fast_fall),
+        DRAGON(7.5f, -31f, scoreMult = 1.5f, strongPointRes = R.string.trex_point_giant_stature, weakPointRes = R.string.trex_point_huge_hitbox),
+        ZOMBIE(6.0f, -24f, gravityMult = 1.4f, scoreMult = 2.2f, strongPointRes = R.string.trex_point_max_score, weakPointRes = R.string.trex_point_very_slow),
+        ROBOT(6.0f, -29f, gravityMult = 0.85f, scoreMult = 1.0f, strongPointRes = R.string.trex_point_steady_physics, weakPointRes = R.string.trex_point_no_momentum),
+        KING(7.0f, -30f, scoreMult = 1.9f, strongPointRes = R.string.trex_point_royal_bonus, weakPointRes = R.string.trex_point_visible_target)
     }
 
     private var currentMember = DinoMember.DADDY
@@ -270,7 +270,7 @@ class TRexView @JvmOverloads constructor(
         }
         repeat(6) { spawnCloud(random.nextFloat() * 2000) }
         repeat(16) { spawnGroundDot(random.nextFloat() * 2000) }
-        nextObstacleDistance = 540f
+        nextObstacleDistance = 600f
         invalidate()
     }
 
@@ -794,10 +794,14 @@ class TRexView @JvmOverloads constructor(
             currentGroupWidth += groupSpacing + width
         }
         
+        nextObstacleDistance = calculateRandomGap(maxJumpDistance, currentGroupWidth)
+    }
+
+    private fun calculateRandomGap(maxJumpDistance: Float, currentGroupWidth: Float): Float {
         val reactionDistance = gameSpeed * 25f 
         val minGap = (maxJumpDistance + reactionDistance) * 0.81f
         val maxExtraGap = 567f 
-        nextObstacleDistance = (minGap + random.nextFloat() * maxExtraGap + currentGroupWidth).coerceAtLeast(486f)
+        return (minGap + random.nextFloat() * maxExtraGap + currentGroupWidth).coerceAtLeast(486f)
     }
 
     private fun checkCollision(obs: Obstacle): Boolean {
