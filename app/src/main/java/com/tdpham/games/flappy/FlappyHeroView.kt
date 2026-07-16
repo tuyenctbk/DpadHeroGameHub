@@ -542,23 +542,23 @@ class FlappyHeroView @JvmOverloads constructor(
                 ObstacleType.WIND_ZONE -> {
                     // Translucent Cyan draft background
                     paint.color = Color.argb(40, 0, 229, 255)
-                    canvas.drawRect(pipe.x, 0f, pipe.x + 100f, h, paint)
+                    canvas.drawRect(pipe.x, 0f, pipe.x + 80f, h, paint)
                     
                     // Storm Core / Vortex Hub (Lethal Center)
-                    val cx = pipe.x + 50f
+                    val cx = pipe.x + 40f
                     val cy = h / 2f
-                    paint.color = Color.argb(100, 0, 229, 255)
-                    canvas.drawCircle(cx, cy, 40f, paint)
+                    paint.color = Color.argb(80, 0, 229, 255)
+                    canvas.drawCircle(cx, cy, 35f, paint)
                     paint.color = if (frameCount % 10 < 5) Color.WHITE else Color.CYAN
-                    canvas.drawCircle(cx, cy, 15f, paint)
+                    canvas.drawCircle(cx, cy, 12f, paint)
 
                     // Flowing vectors
                     paint.color = Color.argb(160, 0, 229, 255)
                     paint.style = Paint.Style.STROKE
-                    paint.strokeWidth = 3f
+                    paint.strokeWidth = 2.5f
                     val direction = pipe.movingDirection
                     for (i in 0..2) {
-                        val lineX = pipe.x + 20f + i * 30f
+                        val lineX = pipe.x + 15f + i * 25f
                         val phase = (frameCount * 8f * direction) % 150f
                         for (y in -150..(h.toInt() + 150) step 150) {
                             val lineY = y + phase
@@ -584,23 +584,26 @@ class FlappyHeroView @JvmOverloads constructor(
                     val px2 = pipe.x + 90f
                     val tipY = pipe.gapY
                     
+                    // Shaking effect when triggered but not yet fallen far
+                    val shakeX = if (pipe.triggered && pipe.gapY < 200f) (Math.sin(frameCount * 1.5).toFloat() * 5f) else 0f
+                    
                     paint.color = Color.parseColor("#424242")
-                    canvas.drawRect(px1 - 10f, 0f, px2 + 10f, 30f, paint)
+                    canvas.drawRect(px1 - 10f + shakeX, 0f, px2 + 10f + shakeX, 30f, paint)
                     
                     paint.color = Color.parseColor("#757575")
                     val bodyPath = Path().apply {
-                        moveTo(px1, 30f)
-                        lineTo(px2, 30f)
-                        lineTo(pipe.x + 50f, tipY)
+                        moveTo(px1 + shakeX, 30f)
+                        lineTo(px2 + shakeX, 30f)
+                        lineTo(pipe.x + 50f + shakeX, tipY)
                         close()
                     }
                     canvas.drawPath(bodyPath, paint)
                     
                     paint.color = Color.parseColor("#9E9E9E")
                     val texPath = Path().apply {
-                        moveTo(pipe.x + 50f, tipY)
-                        lineTo(px1 + 15f, 30f)
-                        lineTo(pipe.x + 40f, 30f)
+                        moveTo(pipe.x + 50f + shakeX, tipY)
+                        lineTo(px1 + 15f + shakeX, 30f)
+                        lineTo(pipe.x + 40f + shakeX, 30f)
                         close()
                     }
                     canvas.drawPath(texPath, paint)
@@ -616,14 +619,17 @@ class FlappyHeroView @JvmOverloads constructor(
                     val cy = pipe.gapY + pipe.gapH / 2f
                     val r = 25f
                     
+                    // Pulsing spikes
+                    val pulse = (Math.sin(frameCount * 0.2).toFloat() + 1f) * 6f
+                    
                     paint.color = Color.parseColor("#E53935")
                     paint.strokeWidth = 6f
                     for (i in 0 until 8) {
                         val angle = i * Math.PI / 4
                         val sx1 = (cx + Math.cos(angle) * r).toFloat()
                         val sy1 = (cy + Math.sin(angle) * r).toFloat()
-                        val sx2 = (cx + Math.cos(angle) * (r + 14f)).toFloat()
-                        val sy2 = (cy + Math.sin(angle) * (r + 14f)).toFloat()
+                        val sx2 = (cx + Math.cos(angle) * (r + 14f + pulse)).toFloat()
+                        val sy2 = (cy + Math.sin(angle) * (r + 14f + pulse)).toFloat()
                         canvas.drawLine(sx1, sy1, sx2, sy2, paint)
                     }
                     
@@ -1091,21 +1097,25 @@ class FlappyHeroView @JvmOverloads constructor(
                     }
                 }
                 ObstacleType.BAT -> {
-                    p.gapY = p.initialGapY + Math.sin(frameCount * 0.15).toFloat() * 60f
+                    p.gapY = p.initialGapY + Math.sin(frameCount * 0.18).toFloat() * 80f
                 }
                 ObstacleType.FALLING_STALACTITE -> {
-                    if (p.x - 150f < 320f) {
+                    if (p.x - 150f < 350f) {
                         p.triggered = true
                     }
                     if (p.triggered) {
-                        // Slower fall (10f instead of 15f) and stop 200px above ground for fairness
-                        p.gapY = (p.gapY + 10f).coerceAtMost(h - 280f)
+                        // Slower fall (7f instead of 10f) and stop much earlier (380px gap) for fairness
+                        p.gapY = (p.gapY + 7f).coerceAtMost(h - 380f)
                     }
                 }
                 ObstacleType.WIND_ZONE -> {
-                    if (150f + birdSize > p.x && 150f - birdSize < p.x + 100f) {
-                        birdV -= p.movingDirection * 0.8f
+                    if (150f + birdSize > p.x && 150f - birdSize < p.x + 80f) {
+                        birdV -= p.movingDirection * 0.5f
                     }
+                }
+                ObstacleType.SPIKED_MINE -> {
+                    // Floating mine moves up/down to be less "easy"
+                    p.gapY = p.initialGapY + Math.sin(frameCount * 0.08).toFloat() * 60f
                 }
                 else -> {}
             }
@@ -1150,16 +1160,17 @@ class FlappyHeroView @JvmOverloads constructor(
                         val dx = 150f - cx
                         val dy = birdY - cy
                         val distance = Math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
-                        distance < (birdSize + 39f)
+                        // Increased lethal distance for pulse effect
+                        distance < (birdSize + 42f)
                     }
                     ObstacleType.WIND_ZONE -> {
                         // Lethal Storm Core in the center
-                        val cx = p.x + 50f
+                        val cx = p.x + 40f
                         val cy = h / 2f
                         val dx = 150f - cx
                         val dy = birdY - cy
                         val distance = Math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
-                        distance < (birdSize + 25f)
+                        distance < (birdSize + 18f)
                     }
                 }
             } else {
