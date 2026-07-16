@@ -53,7 +53,8 @@ object AdManager {
             }
             
             val appContext = context.applicationContext
-            mainHandler.post {
+            // Initialize MobileAds on a background thread to prevent blocking the UI thread
+            Thread {
                 try {
                     MobileAds.initialize(appContext) {
                         isInitialized = true
@@ -61,10 +62,10 @@ object AdManager {
                         loadInterstitial(appContext)
                     }
                 } catch (e: Throwable) {
-                    Log.e(TAG, "Failed to initialize MobileAds on main thread: ${e.message}")
+                    Log.e(TAG, "Failed to initialize MobileAds: ${e.message}", e)
                     isInitializing = false
                 }
-            }
+            }.start()
         } catch (e: Throwable) {
             Log.e(TAG, "Failed to initialize MobileAds: ${e.message}", e)
             isInitializing = false

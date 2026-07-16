@@ -500,18 +500,18 @@ class TRexView @JvmOverloads constructor(
                 val freqFactor = (0.1 + (score / 3000.0) + (Math.sin(seed.toDouble()) * 0.08)).coerceIn(0.08, 0.4)
                 val ampFactor = (5f + (score / 600f) + (Math.cos(seed.toDouble()).toFloat() * 15f)).coerceIn(5f, 30f)
                 
-                // Use a safer oscillation that prevents underground drift
-                val dy = (Math.sin(animationFrame * freqFactor + obs.variant) + Math.sin(animationFrame * freqFactor * 0.6 + seed)).toFloat() * (ampFactor * 0.5f)
-                obs.y = (obs.y + dy).coerceAtMost(height * groundY - obs.height - 120f)
-                
-                // Occasional sudden vertical adjustment, also clamped
+                // Occasional sudden vertical adjustment, shifting the baseline oscillation center (clamped)
                 if (random.nextInt(120) == 0) {
-                    obs.y = (obs.y + (random.nextFloat() - 0.5f) * 30f).coerceAtMost(height * groundY - obs.height - 120f)
+                    obs.initialY = (obs.initialY + (random.nextFloat() - 0.5f) * 30f).coerceAtMost(height * groundY - obs.height - 120f)
                 }
 
                 if (score > 1000 && obs.x < width * 0.7f && obs.x > width * 0.05f && obs.variant % 2 == 0) {
-                    obs.y = (obs.y + 5f).coerceAtMost(height * groundY - obs.height - 120f)
+                    obs.initialY = (obs.initialY + 5f).coerceAtMost(height * groundY - obs.height - 120f)
                 }
+
+                // Oscillation relative to initialY that prevents underground drift
+                val dy = (Math.sin(animationFrame * freqFactor + obs.variant) + Math.sin(animationFrame * freqFactor * 0.6 + seed)).toFloat() * (ampFactor * 0.5f)
+                obs.y = (obs.initialY + dy).coerceAtMost(height * groundY - obs.height - 120f)
             }
             ObstacleType.BIG_DINO -> {
                 val sway = Math.sin(animationFrame * 0.05 + obs.variant).toFloat() * 1.5f
@@ -1202,5 +1202,5 @@ class TRexView @JvmOverloads constructor(
 
     data class Theme(val bgColor: Int, val textColor: Int, val dinoColor: Int, val cloudColor: Int, val groundColor: Int, val secondaryColor: Int, val cactusColor: Int, val treeColor: Int, val birdColor: Int, val weatherColor: Int)
     enum class ObstacleType { CACTUS, PTEROSAUR, TREE, ROCK, CANYON, METEOR, THUNDERBOLT, STUMP, FIRE, FALLEN_TREE, RAISED_EDGE, BIG_DINO }
-    data class Obstacle(var x: Float, var y: Float, var width: Float, var height: Float, var type: ObstacleType, var variant: Int = 0)
+    data class Obstacle(var x: Float, var y: Float, var width: Float, var height: Float, var type: ObstacleType, var variant: Int = 0, var initialY: Float = y)
 }
