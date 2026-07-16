@@ -37,6 +37,8 @@ object TRexOptionsDialog {
 
         BaseOptionsDialog(context)
             .setTitle(context.getString(R.string.game_trex).uppercase() + " " + context.getString(R.string.settings).uppercase())
+            .setTitleColor(context.getColor(R.color.white).let { android.graphics.Color.parseColor("#FFEB3B") })
+            .setBackgroundResource(R.drawable.dialog_trex_bg)
             .addOption(
                 label = context.getString(R.string.trex_character_label),
                 valueProvider = {
@@ -51,7 +53,20 @@ object TRexOptionsDialog {
                 },
                 descProvider = {
                     val mode = prefs.getString("trex_char_mode", "specific")
-                    context.getString(if (mode == "random") R.string.trex_desc_char_random else R.string.trex_desc_char_specific)
+                    if (mode == "random") {
+                        context.getString(R.string.trex_desc_char_random)
+                    } else {
+                        val index = prefs.getInt("selected_char_index", 0)
+                        val charKey = if (index >= 0 && index < characters.size - 1) characters[index] else "DADDY"
+                        try {
+                            val member = TRexView.DinoMember.valueOf(charKey)
+                            val strong = context.getString(R.string.trex_strong_prefix) + context.getString(member.strongPointRes)
+                            val weak = context.getString(R.string.trex_weak_prefix) + context.getString(member.weakPointRes)
+                            "$strong\n$weak"
+                        } catch (_: Exception) {
+                            context.getString(R.string.trex_desc_char_specific)
+                        }
+                    }
                 },
                 onClick = {
                     val mode = prefs.getString("trex_char_mode", "specific")

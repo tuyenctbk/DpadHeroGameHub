@@ -159,7 +159,6 @@
     <string name="settings_button_description">Cài đặt</string>
     <string name="sound_effects">Âm thanh</string>
     <string name="sound_effects_description">Bật hoặc tắt hiệu ứng âm thanh.</string>
-    <string name="privacy_policy">Chính sách bảo mật</string>
     <string name="back">Quay lại</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">Hỗ trợ: D-pad / Remote control</string>
@@ -203,6 +202,14 @@
     <string name="continue_hint">Nhấn Center để tiếp tục</string>
     <string name="finish_hint">Nhấn Center để hoàn thành</string>
     <string name="total_wins_label">Tổng số trận thắng</string>
+    <string name="rating_title">Bạn thích Dpad Arcade chứ?</string>
+    <string name="rating_content">Hãy đánh giá sao cho chúng mình, hoặc chia sẻ ý tưởng về trò chơi mới mà bạn muốn chơi nhé!</string>
+    <string name="rate_now">ĐÁNH GIÁ</string>
+    <string name="rate_later">ĐỂ SAU</string>
+    <string name="rate_never">KHÔNG, CẢM ƠN</string>
+    <string name="update_title">Có bản cập nhật mới!</string>
+    <string name="update_content">Phiên bản mới của Dpad Arcade đã sẵn sàng. Hãy cập nhật để trải nghiệm thêm nhiều trò chơi và tính năng mới nhé.</string>
+    <string name="update_now">Cập nhật ngay</string>
 
     <string-array name="win_generic">
         <item>CHIẾN THẮNG!</item>
@@ -336,7 +343,6 @@
         <item>ANH HÙNG ẾCH!</item>
         <item>LÀM CHỦ DÒNG SÔNG!</item>
     </string-array>
-    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
     <string name="trex_daddy">Bố Khủng Long</string>
     <string name="trex_mummy">Mẹ Khủng Long</string>
     <string name="trex_baby">Khủng Long Con</string>

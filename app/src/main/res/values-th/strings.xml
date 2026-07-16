@@ -105,7 +105,6 @@
     <string name="settings_button_description">การตั้งค่า</string>
     <string name="sound_effects">เอฟเฟกต์เสียง</string>
     <string name="sound_effects_description">เปิดหรือปิดเสียงในเกม</string>
-    <string name="privacy_policy">นโยบายความเป็นส่วนตัว</string>
     <string name="back">กลับ</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">รองรับ: D-pad / รีโมทคอนโทรล</string>
@@ -152,6 +151,14 @@
     <string name="sokoban_restart_hint">CENTER: เริ่มด่านใหม่</string>
     <string name="sudoku_controls_hint">CENTER: วนเลข 0-9 (0 คือลบ)</string>
     <string name="total_wins_label">ชนะทั้งหมด</string>
+    <string name="rating_title">คุณสนุกกับ Dpad Arcade ไหม?</string>
+    <string name="rating_content">โปรดให้ดาวเรา หรือแบ่งปันข้อเสนอแนะเกี่ยวกับเกมที่คุณอยากเล่น!</string>
+    <string name="rate_now">ให้คะแนน</string>
+    <string name="rate_later">ไว้ทีหลัง</string>
+    <string name="rate_never">ไม่ ขอบคุณ</string>
+    <string name="update_title">มีการอัปเดตใหม่!</string>
+    <string name="update_content">Dpad Arcade: Retro Game Hub เวอร์ชันใหม่พร้อมใช้งานแล้ว อัปเดตทันทีเพื่อรับเกม ฟีเจอร์ และการปรับปรุงความเสถียรล่าสุด</string>
+    <string name="update_now">อัปเดตตอนนี้</string>
     <string name="mines_label">ระเบิด</string>
     <string name="flags_label">ธง</string>
     <string name="high_score_prefix">สูงสุด</string>
@@ -305,7 +312,6 @@
         <item>ฮีโร่กบ!</item>
         <item>จ้าวแห่งสายน้ำ!</item>
     </string-array>
-    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
     <string name="trex_daddy">คุณพ่อทีเร็กซ์</string>
     <string name="trex_mummy">คุณแม่ทีเร็กซ์</string>
     <string name="trex_baby">ลูกทีเร็กซ์</string>

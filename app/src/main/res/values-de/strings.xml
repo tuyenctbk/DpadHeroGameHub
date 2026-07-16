@@ -159,7 +159,6 @@
     <string name="settings_button_description">Einstellungen</string>
     <string name="sound_effects">Soundeffekte</string>
     <string name="sound_effects_description">In-Game Soundeffekte ein- oder ausschalten.</string>
-    <string name="privacy_policy">Datenschutz-Bestimmungen</string>
     <string name="back">Zurück</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">Unterstützt: D-pad / Fernbedienung</string>
@@ -203,6 +202,14 @@
     <string name="continue_hint">Drücke Center zum Fortfahren</string>
     <string name="finish_hint">Drücke Center zum Beenden</string>
     <string name="total_wins_label">Gesamtsiege</string>
+    <string name="rating_title">Gefällt dir Dpad Arcade?</string>
+    <string name="rating_content">Bitte gib uns Sterne oder teile deine Vorschläge für weitere Spiele, die du spielen möchtest!</string>
+    <string name="rate_now">BEWERTEN</string>
+    <string name="rate_later">SPÄTER</string>
+    <string name="rate_never">NEIN, DANKE</string>
+    <string name="update_title">Neues Update verfügbar!</string>
+    <string name="update_content">Eine neue Version von Dpad Arcade: Retro Game Hub ist verfügbar. Jetzt aktualisieren, um die neuesten Spiele, Funktionen und Stabilitätsverbesserungen zu erhalten.</string>
+    <string name="update_now">Jetzt aktualisieren</string>
     <string name="tictactoe_size_hint">OBEN/UNTEN für Brettgröße</string>
     <string name="sokoban_restart_hint">CENTER: LEVEL NEUSTART</string>
     <string name="sudoku_controls_hint">CENTER: 0-9 ZYKLUS (0 LÖSCHEN)</string>
@@ -374,7 +381,6 @@
         <item>FROGGY-HELD!</item>
         <item>FLUSS-MEISTER!</item>
     </string-array>
-    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
     <string name="trex_daddy">Papa T-Rex</string>
     <string name="trex_mummy">Mama T-Rex</string>
     <string name="trex_baby">Baby T-Rex</string>

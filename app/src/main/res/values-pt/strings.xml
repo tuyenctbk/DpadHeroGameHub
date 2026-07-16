@@ -105,7 +105,6 @@
     <string name="settings_button_description">Ajustes</string>
     <string name="sound_effects">Efeitos de Som</string>
     <string name="sound_effects_description">Ativar ou desativar os sons.</string>
-    <string name="privacy_policy">Política de Privacidade</string>
     <string name="back">Voltar</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">Suporta: D-pad / Controle remoto</string>
@@ -149,6 +148,14 @@
     <string name="continue_hint">Pressione Center para Continuar</string>
     <string name="finish_hint">Pressione Center para Terminar</string>
     <string name="total_wins_label">Total de Vitórias</string>
+    <string name="rating_title">Gosta do Dpad Arcade?</string>
+    <string name="rating_content">Por favor, dê-nos estrelas ou partilhe as suas sugestões de novos jogos que gostaria de jogar!</string>
+    <string name="rate_now">AVALIAR</string>
+    <string name="rate_later">MAIS TARDE</string>
+    <string name="rate_never">NÃO, OBRIGADO</string>
+    <string name="update_title">Nova atualização disponível!</string>
+    <string name="update_content">Uma nova versão do Dpad Arcade: Retro Game Hub está disponível. Atualize agora para obter os jogos, funcionalidades e correções de estabilidade mais recentes.</string>
+    <string name="update_now">Atualizar agora</string>
 
     <string-array name="win_generic">
         <item>VITÓRIA!</item>
@@ -282,7 +289,6 @@
         <item>HERÓI FROGGY!</item>
         <item>MESTRE DO RIO!</item>
     </string-array>
-    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
     <string name="trex_daddy">Papai T-Rex</string>
     <string name="trex_mummy">Mamãe T-Rex</string>
     <string name="trex_baby">Bebê T-Rex</string>

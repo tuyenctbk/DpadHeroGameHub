@@ -105,7 +105,6 @@
     <string name="settings_button_description">Настройки</string>
     <string name="sound_effects">Звуки</string>
     <string name="sound_effects_description">Включить или выключить звуки.</string>
-    <string name="privacy_policy">Конфиденциальность</string>
     <string name="back">Назад</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">Поддержка: D-pad / Пульт</string>
@@ -149,6 +148,14 @@
     <string name="continue_hint">CENTER для продолжения</string>
     <string name="finish_hint">CENTER для завершения</string>
     <string name="total_wins_label">Всего побед</string>
+    <string name="rating_title">Нравится Dpad Arcade?</string>
+    <string name="rating_content">Пожалуйста, поставьте нам звезды или поделитесь предложениями о новых играх, в которые вы хотите поиграть!</string>
+    <string name="rate_now">ОЦЕНИТЬ</string>
+    <string name="rate_later">ПОЗЖЕ</string>
+    <string name="rate_never">НЕТ, СПАСИБО</string>
+    <string name="update_title">Доступно новое обновление!</string>
+    <string name="update_content">Доступна новая версия Dpad Arcade: Retro Game Hub. Обновите сейчас, чтобы получить последние игры, функции и исправления стабильности.</string>
+    <string name="update_now">Обновить сейчас</string>
 
     <string-array name="win_generic">
         <item>ПОБЕДА!</item>
@@ -282,7 +289,6 @@
         <item>ГЕРОЙ-ЛЯГУШКА!</item>
         <item>ХОЗЯИН РЕКИ!</item>
     </string-array>
-    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
     <string name="trex_daddy">Папа Ти-Рекс</string>
     <string name="trex_mummy">Мама Ти-Рекс</string>
     <string name="trex_baby">Малыш Ти-Рекс</string>

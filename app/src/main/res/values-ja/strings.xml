@@ -105,7 +105,6 @@
     <string name="settings_button_description">設定</string>
     <string name="sound_effects">効果音</string>
     <string name="sound_effects_description">効果音のON/OFF。</string>
-    <string name="privacy_policy">プライバシーポリシー</string>
     <string name="back">戻る</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">対応: 十字キー / リモコン</string>
@@ -149,6 +148,14 @@
     <string name="continue_hint">決定ボタンで続ける</string>
     <string name="finish_hint">決定ボタンで終了</string>
     <string name="total_wins_label">合計勝利数</string>
+    <string name="rating_title">Dpad Arcade をお楽しみいただけていますか？</string>
+    <string name="rating_content">星を付けて評価していただくか、新しくプレイしたいゲームのリクエストをお寄せください！</string>
+    <string name="rate_now">評価する</string>
+    <string name="rate_later">後で</string>
+    <string name="rate_never">いいえ、結構です</string>
+    <string name="update_title">新しいアップデートがあります！</string>
+    <string name="update_content">Dpad Arcade: Retro Game Hub の新バージョンが利用可能です。最新のゲーム、機能、安定性の向上のために今すぐアップデートしてください。</string>
+    <string name="update_now">今すぐアップデート</string>
 
     <string-array name="win_generic">
         <item>勝利！</item>
@@ -282,7 +289,6 @@
         <item>フロギーヒーロー！</item>
         <item>川の覇者！</item>
     </string-array>
-    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
     <string name="trex_daddy">パパ T-Rex</string>
     <string name="trex_mummy">ママ T-Rex</string>
     <string name="trex_baby">ベビー T-Rex</string>

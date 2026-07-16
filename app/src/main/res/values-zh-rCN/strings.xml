@@ -159,7 +159,6 @@
     <string name="settings_button_description">设置</string>
     <string name="sound_effects">音效</string>
     <string name="sound_effects_description">开启或关闭游戏音效。</string>
-    <string name="privacy_policy">隐私政策</string>
     <string name="back">返回</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">支持: 方向键 / 遥控器</string>
@@ -203,6 +202,14 @@
     <string name="continue_hint">按确定键继续</string>
     <string name="finish_hint">按确定键结束</string>
     <string name="total_wins_label">总胜利次数</string>
+    <string name="rating_title">喜欢 Dpad Arcade 吗？</string>
+    <string name="rating_content">请给我们评分，或分享您对更多想玩游戏的建议！</string>
+    <string name="rate_now">评分</string>
+    <string name="rate_later">稍后</string>
+    <string name="rate_never">不，谢谢</string>
+    <string name="update_title">新版本可用！</string>
+    <string name="update_content">Dpad Arcade: 复古游戏中心有新版本可用。立即更新以获取最新的游戏、功能和稳定性修复。</string>
+    <string name="update_now">立即更新</string>
 
     <string-array name="win_generic">
         <item>获胜！</item>
@@ -336,7 +343,6 @@
         <item>青蛙英雄！</item>
         <item>河流大师！</item>
     </string-array>
-    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
     <string name="trex_daddy">霸王龙爸爸</string>
     <string name="trex_mummy">霸王龙妈妈</string>
     <string name="trex_baby">霸王龙宝宝</string>

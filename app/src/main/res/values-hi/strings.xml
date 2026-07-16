@@ -146,7 +146,6 @@
     <string name="settings_button_description">सेटिंग्स</string>
     <string name="sound_effects">आवाज़</string>
     <string name="sound_effects_description">खेल की आवाज़ चालू या बंद करें।</string>
-    <string name="privacy_policy">गोपनीयता नीति</string>
     <string name="back">पीछे</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">सपोर्ट: D-pad / रिमोट कंट्रोल</string>
@@ -190,6 +189,14 @@
     <string name="continue_hint">जारी रखने के लिए CENTER दबाएं</string>
     <string name="finish_hint">खत्म करने के लिए CENTER दबाएं</string>
     <string name="total_wins_label">कुल जीत</string>
+    <string name="rating_title">क्या आप Dpad Arcade का आनंद ले रहे हैं?</string>
+    <string name="rating_content">कृपया हमें स्टार दें, या उन और खेलों के लिए अपने सुझाव साझा करें जिन्हें आप खेलना चाहते हैं!</string>
+    <string name="rate_now">रेट करें</string>
+    <string name="rate_later">बाद में</string>
+    <string name="rate_never">नहीं, धन्यवाद</string>
+    <string name="update_title">नया अपडेट उपलब्ध है!</string>
+    <string name="update_content">Dpad Arcade: Retro Game Hub का एक नया संस्करण उपलब्ध है। नवीनतम गेम, सुविधाएँ और स्थिरता सुधार प्राप्त करने के लिए अभी अपडेट करें।</string>
+    <string name="update_now">अभी अपडेट करें</string>
 
     <string-array name="win_generic">
         <item>जीत!</item>
@@ -323,7 +330,6 @@
         <item>मेंढक हीरो!</item>
         <item>नदी के राजा!</item>
     </string-array>
-    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
     <string name="trex_daddy">डैडी टी-रेक्स</string>
     <string name="trex_mummy">मम्मी टी-रेक्स</string>
     <string name="trex_baby">बेबी टी-रेक्स</string>

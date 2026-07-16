@@ -105,7 +105,6 @@
     <string name="settings_button_description">Ayarlar</string>
     <string name="sound_effects">Ses Efektleri</string>
     <string name="sound_effects_description">Oyun seslerini açın veya kapatın.</string>
-    <string name="privacy_policy">Gizlilik Politikası</string>
     <string name="back">Geri</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">Destekler: D-pad / Uzaktan Kumanda</string>
@@ -149,6 +148,14 @@
     <string name="continue_hint">Devam Etmek için Center</string>
     <string name="finish_hint">Bitirmek için Center</string>
     <string name="total_wins_label">Toplam Galibiyet</string>
+    <string name="rating_title">Dpad Arcade\'den memnun musunuz?</string>
+    <string name="rating_content">Lütfen bize yıldız verin veya oynamak istediğiniz daha fazla oyun için önerilerinizi paylaşın!</string>
+    <string name="rate_now">OYLA</string>
+    <string name="rate_later">DAHA SONRA</string>
+    <string name="rate_never">HAYIR, TEŞEKKÜRLER</string>
+    <string name="update_title">Yeni Güncelleme Mevcut!</string>
+    <string name="update_content">Dpad Arcade: Retro Game Hub\'ın yeni bir sürümü mevcut. En yeni oyunları, özellikleri ve kararlılık düzeltmelerini almak için şimdi güncelleyin.</string>
+    <string name="update_now">Şimdi Güncelle</string>
 
     <string-array name="win_generic">
         <item>ZAFER!</item>
@@ -282,7 +289,6 @@
         <item>KURBAĞA KAHRAMAN!</item>
         <item>NEHİR USTASI!</item>
     </string-array>
-    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
     <string name="trex_daddy">Baba T-Rex</string>
     <string name="trex_mummy">Anne T-Rex</string>
     <string name="trex_baby">Bebek T-Rex</string>

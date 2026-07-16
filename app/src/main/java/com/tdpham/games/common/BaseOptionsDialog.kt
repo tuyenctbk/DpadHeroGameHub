@@ -42,6 +42,16 @@ class BaseOptionsDialog(context: Context) : Dialog(context) {
         return this
     }
 
+    fun setTitleColor(color: Int): BaseOptionsDialog {
+        titleView.setTextColor(color)
+        return this
+    }
+
+    fun setBackgroundResource(resId: Int): BaseOptionsDialog {
+        findViewById<View>(R.id.root_container).setBackgroundResource(resId)
+        return this
+    }
+
     fun setOnDismiss(action: () -> Unit): BaseOptionsDialog {
         onDismissAction = action
         return this

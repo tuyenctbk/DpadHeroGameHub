@@ -105,7 +105,6 @@
     <string name="settings_button_description">الإعدادات</string>
     <string name="sound_effects">المؤثرات الصوتية</string>
     <string name="sound_effects_description">تفعيل أو تعطيل أصوات اللعبة.</string>
-    <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="back">رجوع</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">يدعم: D-pad / جهاز التحكم</string>
@@ -149,6 +148,14 @@
     <string name="continue_hint">اضغط Center للاستمرار</string>
     <string name="finish_hint">اضغط Center للإنهاء</string>
     <string name="total_wins_label">إجمالي الانتصارات</string>
+    <string name="rating_title">هل تستمتع بـ Dpad Arcade؟</string>
+    <string name="rating_content">يرجى تقييمنا بالنجوم، أو مشاركة اقتراحاتك لمزيد من الألعاب التي ترغب في لعبها!</string>
+    <string name="rate_now">تقييم</string>
+    <string name="rate_later">لاحقاً</string>
+    <string name="rate_never">لا، شكراً</string>
+    <string name="update_title">تحديث جديد متاح!</string>
+    <string name="update_content">نسخة جديدة من Dpad Arcade: Retro Game Hub متاحة الآن. قم بالتحديث الآن للحصول على أحدث الألعاب والميزات وإصلاحات الاستقرار.</string>
+    <string name="update_now">تحديث الآن</string>
 
     <string-array name="win_generic">
         <item>انتصار!</item>
@@ -282,7 +289,6 @@
         <item>بطل فروجي!</item>
         <item>سيد النهر!</item>
     </string-array>
-    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
     <string name="trex_daddy">بابا تي ريكس</string>
     <string name="trex_mummy">ماما تي ريكس</string>
     <string name="trex_baby">بيبي تي ريكس</string>

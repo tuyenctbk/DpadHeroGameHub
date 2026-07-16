@@ -45,7 +45,7 @@ class TRexView @JvmOverloads constructor(
     private var animationFrame = 0
     private var walkFrame = 0
 
-    private enum class DinoMember(
+    enum class DinoMember(
         val scale: Float,
         val jump: Float,
         val gravityMult: Float = 1.0f,

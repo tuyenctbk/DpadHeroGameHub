@@ -31,7 +31,7 @@
     <string name="slide_puzzle_level_1">NIVEAU 1 : 3x3 (Facile)</string>
     <string name="slide_puzzle_level_2">NIVEAU 2 : 4x4 (Normal)</string>
     <string name="slide_puzzle_level_3">NIVEAU 3 : 5x5 (Difficile)</string>
-    <string name="tictactoe_settings_title">PARAMÈTRES DU TIC-TAC-TOE</string>
+    <string name="tictactoe_settings_title">PARAMÈTRES DU MORPION</string>
     <string name="tictactoe_size_3">PLATEAU : 3x3</string>
     <string name="tictactoe_size_4">PLATEAU : 4x4</string>
     <string name="tictactoe_size_5">PLATEAU : 5x5</string>
@@ -79,26 +79,9 @@
     <string name="game_slide_puzzle">PUZZLE COULISSANT</string>
     <string name="game_mental_math">CALCUL MENTAL</string>
     <string name="game_froggy">FROGGY CROSS</string>
+    <string name="game_syobon">CAT MEOWIO</string>
     <string name="game_simon">SIMON SAYS</string>
     <string name="game_tanks">BATAILLE DE TANKS</string>
-    <string name="flappy_hero_settings_title">PARAMÈTRES DE FLAPPY</string>
-    <string name="flappy_hero_level_1">NIVEAU 1 : FACILE</string>
-    <string name="flappy_hero_level_2">NIVEAU 2 : NORMAL</string>
-    <string name="flappy_hero_level_3">NIVEAU 3 : DIFFICILE</string>
-    <string name="flappy_hero_level_1_desc">Larges espaces. Tuyaux lents.</string>
-    <string name="flappy_hero_level_2_desc">Espaces et vitesse standard.</string>
-    <string name="flappy_hero_level_3_desc">Espaces étroits. Tuyaux rapides.</string>
-    <string name="brick_break_settings_title">PARAMÈTRES DE BRIQUES</string>
-    <string name="brick_break_paddle_label">Taille de Raquette</string>
-    <string name="brick_break_paddle_large">TAILLE : GRANDE</string>
-    <string name="brick_break_paddle_medium">TAILLE : MOYENNE</string>
-    <string name="brick_break_paddle_small">TAILLE : PETITE</string>
-    <string name="brick_break_paddle_desc">Une grande raquette facilite la capture.</string>
-    <string name="lines98_settings_title">PARAMÈTRES DE LINES 98</string>
-    <string name="lines98_difficulty_easy">NIVEAU : FACILE (5 Couleurs)</string>
-    <string name="lines98_difficulty_normal">NIVEAU : NORMAL (7 Couleurs)</string>
-    <string name="lines98_difficulty_hard">NIVEAU : DIFFICILE (9 Couleurs)</string>
-    <string name="lines98_difficulty_desc">Plus de couleurs augmentent la difficulté.</string>
     <string name="word_quest_settings_title">PARAMÈTRES DE WORD QUEST</string>
     <string name="word_quest_category_all">CAT : TOUS LES MOTS</string>
     <string name="word_quest_category_nature">CAT : NATURE</string>
@@ -112,7 +95,38 @@
     <string name="road_racer_density_desc">Plus de trafic est plus difficile.</string>
     <string name="game_word_quest">WORD QUEST</string>
     <string name="game_dungeon">ÉVASION DU DONJON</string>
+    <string name="flappy_hero_settings_title">PARAMÈTRES DE FLAPPY</string>
+    <string name="flappy_hero_level_1">NIVEAU 1 : FACILE</string>
+    <string name="flappy_hero_level_2">NIVEAU 2 : NORMAL</string>
+    <string name="flappy_hero_level_3">NIVEAU 3 : DIFFICILE</string>
+    <string name="flappy_hero_level_4">NIVEAU 4 : EXPERT</string>
+    <string name="flappy_hero_level_5">NIVEAU 5 : MAESTRO</string>
+    <string name="flappy_hero_level_1_desc">Espaces standard, vitesse confortable.</string>
+    <string name="flappy_hero_level_2_desc">Espaces standard, vitesse rapide.</string>
+    <string name="flappy_hero_level_3_desc">Espaces étroits, vitesse plus rapide.</string>
+    <string name="flappy_hero_level_4_desc">Espaces très étroits, vitesse extrême.</string>
+    <string name="flappy_hero_level_5_desc">Espaces ultra étroits, vitesse légendaire.</string>
+    <string name="flappy_hero_char_label">Personnage</string>
+    <string name="flappy_char_classic">Oiseau Classique</string>
+    <string name="flappy_char_classic_desc">Équilibré. Vitesse et saut standard.</string>
+    <string name="flappy_char_swift">Faucon Véloce</string>
+    <string name="flappy_char_swift_desc">Saute haut, mais tombe plus vite.</string>
+    <string name="flappy_char_heavy">Pélican Lourd</string>
+    <string name="flappy_char_heavy_desc">Descente lourde, saut puissant.</string>
+    <string name="flappy_char_floaty">Colibri Léger</string>
+    <string name="flappy_char_floaty_desc">Vol fluide. Saut bas.</string>
+    <string name="brick_break_settings_title">PARAMÈTRES DE BRIQUES</string>
+    <string name="brick_break_paddle_label">Taille de Raquette</string>
+    <string name="brick_break_paddle_large">TAILLE : GRANDE</string>
+    <string name="brick_break_paddle_medium">TAILLE : MOYENNE</string>
+    <string name="brick_break_paddle_small">TAILLE : PETITE</string>
+    <string name="brick_break_paddle_desc">Une grande raquette facilite la capture.</string>
     <string name="game_flappy">FLAPPY HERO</string>
+    <string name="lines98_settings_title">PARAMÈTRES DE LINES 98</string>
+    <string name="lines98_difficulty_easy">NIVEAU : FACILE (5 Couleurs)</string>
+    <string name="lines98_difficulty_normal">NIVEAU : NORMAL (7 Couleurs)</string>
+    <string name="lines98_difficulty_hard">NIVEAU : DIFFICILE (9 Couleurs)</string>
+    <string name="lines98_difficulty_desc">Plus de couleurs augmentent la difficulté.</string>
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLITAIRE</string>
     <string name="game_road_racer">ROAD RACER</string>
@@ -149,17 +163,16 @@
     <string name="game_tanks_instructions">• Contrôlez votre tank avec le D-PAD.\n• Tir automatique.\n• Détruisez les tanks ennemis.\n• Protégez votre BASE (l\'étoile).</string>
     <string name="game_word_quest_instructions">• Devinez le mot de 5 lettres en 6 essais.\n• Utilisez le D-PAD pour le clavier.\n• CENTER pour choisir une lettre.\n• VERT : Lettre et position correctes.\n• JAUNE : Lettre correcte, position fausse.\n• GRIS : Lettre absente du mot.</string>
     <string name="game_dungeon_instructions">• Naviguez dans le donjon avec le D-PAD.\n• Collectez la CLÉ DORÉE.\n• Atteignez la PORTE DE SORTIE.\n• ÉVITEZ LES PICS ROUGES !</string>
-    <string name="game_flappy_instructions">• Appuyez sur CENTER pour battre des ailes.\n• Volez à travers les tuyaux.\n• Ne touchez rien !\n• 1 point par tuyau franchi.</string>
+    <string name="game_flappy_instructions">• Pressez CENTER/HAUT pour ailer.\n• ÉVITEZ LES 7 TYPES DE DANGERS :\n  - Tuyaux Verts (classiques)\n  - Tuyaux Mobiles (mouvants)\n  - Chauve-souris (vol vertical)\n  - Mâchoires (se ferment)\n  - Zones de Vent (courants d\'air)\n  - Stalactites (tombent du plafond)\n  - Mines à Pointes (flottantes)\n• 1 point par obstacle franchi.</string>
     <string name="game_lines98_instructions">• Utilisez le D-PAD pour le curseur.\n• CENTER pour déplacer les balles.\n• Alignez 5 balles ou plus de même couleur.\n• Le jeu s\'arrête si le plateau est plein.</string>
     <string name="game_solitaire_instructions">• Utilisez le D-PAD pour le curseur.\n• CENTER pour choisir/poser des cartes.\n• Triez les cartes par couleur de l\'As au Roi.</string>
     <string name="game_road_racer_instructions">• Évitez le trafic.\n• Survivez aussi longtemps que possible !\n• Appuyez sur CENTER pour pause.</string>
     <string name="game_hangman_instructions">• Choisissez des lettres pour deviner.\n• Vous avez 6 essais.\n• Appuyez sur CENTER pour choisir.</string>
-    <string name="select_game_hint">UTILISEZ ◄ ► POUR PARCOURIR • APPUYEZ SUR [OK] POUR JOUER</string>
+    <string name="select_game_hint">UTILISEZ ◄ ► POUR PARCOURIR • APPUYEZ SUR [OK] POUR JUGAR</string>
     <string name="settings">Paramètres</string>
     <string name="settings_button_description">Paramètres</string>
     <string name="sound_effects">Effets Sonores</string>
     <string name="sound_effects_description">Activer ou désactiver les sons.</string>
-    <string name="privacy_policy">Politique de Confidentialité</string>
     <string name="back">Retour</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">Supporte : D-pad / Télécommande</string>
@@ -203,6 +216,14 @@
     <string name="continue_hint">Appuyez sur Center pour continuer</string>
     <string name="finish_hint">Appuyez sur Center pour terminer</string>
     <string name="total_wins_label">Total des Victoires</string>
+    <string name="rating_title">Vous aimez Dpad Arcade ?</string>
+    <string name="rating_content">Donnez-nous des étoiles ou suggérez des jeux auxquels vous voulez jouer !</string>
+    <string name="rate_now">NOTER</string>
+    <string name="rate_later">PLUS TARD</string>
+    <string name="rate_never">NON MERCI</string>
+    <string name="update_title">Nouvelle mise à jour !</string>
+    <string name="update_content">Une nouvelle version est disponible. Mettez à jour pour de nouveaux jeux et correctifs.</string>
+    <string name="update_now">Mettre à jour</string>
 
     <string-array name="win_generic">
         <item>VICTOIRE !</item>
@@ -336,7 +357,6 @@
         <item>HÉROS FROGGY !</item>
         <item>MAÎTRE DE LA RIVIÈRE !</item>
     </string-array>
-    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
     <string name="trex_daddy">Papa T-Rex</string>
     <string name="trex_mummy">Maman T-Rex</string>
     <string name="trex_baby">Bébé T-Rex</string>
@@ -419,4 +439,33 @@
     <string name="trex_desc_weather_sunny">Temps clair parfait.</string>
     <string name="trex_desc_weather_rainy">Pluie et nuages sombres.</string>
     <string name="trex_desc_weather_snowy">Chutes de neige magnifiques.</string>
+    <string name="starfighter_ship_label">Sélection de Vaisseau</string>
+    <string name="starfighter_ship_balanced">Intercepteur</string>
+    <string name="starfighter_ship_balanced_desc">Vitesse et santé équilibrées.</string>
+    <string name="starfighter_ship_fast">Ombre Véloce</string>
+    <string name="starfighter_ship_fast_desc">Haute vitesse, mais très fragile (1 Vie).</string>
+    <string name="starfighter_ship_tank">Dreadnought</string>
+    <string name="starfighter_ship_tank_desc">Blindage massif (5 Vies), mais lent.</string>
+    <string name="starfighter_ship_solar">Éclat Solaire</string>
+    <string name="starfighter_ship_solar_desc">Double puissance de feu, mais fragile (1 Vie).</string>
+    <string name="starfighter_ship_phoenix">Phoenix</string>
+    <string name="starfighter_ship_phoenix_desc">Équilibré avec bouclier de résurrection automatique à usage unique.</string>
+    <string name="syobon_settings_title">PARAMÈTRES MEOWIO</string>
+    <string name="syobon_character_label">Personnage</string>
+    <string name="syobon_char_classic">Syobon Classique</string>
+    <string name="syobon_char_gold">Neko d\'Or</string>
+    <string name="syobon_char_shadow">Shadow Nya</string>
+    <string name="syobon_lives_label">Mode de Vie</string>
+    <string name="syobon_lives_3">3 VIES</string>
+    <string name="syobon_lives_1">1 VIE</string>
+    <string name="syobon_lives_inf">INFINI (Blague)</string>
+    <string name="syobon_lives_desc">Choisissez votre tolérance aux trolls.</string>
+    <string name="syobon_instructions">• D-PAD pour bouger et sauter.\n• Gare aux pièges cachés !\n• Les briques peuvent tomber.\n• Touchez le drapeau pour gagner.</string>
+    <string name="syobon_difficulty_desc">Combien de trolls sont actifs.</string>
+    <string-array name="win_syobon">
+        <item>SURVIVANT !</item>
+        <item>MAÎTRE TROLL !</item>
+        <item>CHAT LÉGENDAIRE !</item>
+        <item>INARRÊTABLE !</item>
+    </string-array>
 </resources>

@@ -54,6 +54,7 @@
     <string name="game_slide_puzzle">PUZZLE SCORREVOLE</string>
     <string name="game_mental_math">CALCOLO MENTALE</string>
     <string name="game_froggy">FROGGY CROSS</string>
+    <string name="game_syobon">CAT MEOWIO</string>
     <string name="game_simon">SIMON SAYS</string>
     <string name="game_tanks">BATTAGLIA DI TANK</string>
     <string name="game_word_quest">WORD QUEST</string>
@@ -105,7 +106,6 @@
     <string name="settings_button_description">Impostazioni</string>
     <string name="sound_effects">Effetti Sonori</string>
     <string name="sound_effects_description">Attiva o disattiva i suoni.</string>
-    <string name="privacy_policy">Privacy Policy</string>
     <string name="back">Indietro</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">Supporta: D-pad / Telecomando</string>
@@ -149,6 +149,14 @@
     <string name="continue_hint">Premi Center per Continuare</string>
     <string name="finish_hint">Premi Center per Finire</string>
     <string name="total_wins_label">Vittorie Totali</string>
+    <string name="rating_title">Ti piace Dpad Arcade?</string>
+    <string name="rating_content">Dacci delle stelle o suggerisci altri giochi che vorresti giocare!</string>
+    <string name="rate_now">VALUTA</string>
+    <string name="rate_later">PIÙ TARDI</string>
+    <string name="rate_never">NO, GRAZIE</string>
+    <string name="update_title">Nuovo aggiornamento disponibile!</string>
+    <string name="update_content">È disponibile una nuova versione di Dpad Arcade: Retro Game Hub. Aggiorna ora per avere gli ultimi giochi, funzioni e correzioni.</string>
+    <string name="update_now">Aggiorna ora</string>
 
     <string-array name="win_generic">
         <item>VITTORIA!</item>
@@ -282,7 +290,6 @@
         <item>EROE FROGGY!</item>
         <item>MAESTRO DEL FIUME!</item>
     </string-array>
-    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
     <string name="trex_daddy">Papà T-Rex</string>
     <string name="trex_mummy">Mamma T-Rex</string>
     <string name="trex_baby">Piccolo T-Rex</string>
@@ -349,7 +356,7 @@
     <string name="trex_point_royal_bonus">Bonus Reale</string>
     <string name="trex_point_visible_target">Bersaglio Visibile</string>
     <string name="trex_ninja">Ninja T-Rex</string>
-    <string name="trex_character_label">Personaggio</string>
+    <string name="trex_character_label">Personagem</string>
 
     <string name="trex_desc_char_random">Ogni corsa un Dino a sorpresa!</string>
     <string name="trex_desc_char_specific">Usa il Dino selezionato nella lobby.</string>
