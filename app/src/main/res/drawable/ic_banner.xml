@@ -14,8 +14,8 @@
                 android:endY="180"
                 android:startY="0"
                 android:type="linear">
-                <item android:color="#0A0A0F" android:offset="0" />
-                <item android:color="#1A1A2E" android:offset="1" />
+                <item android:color="#05050A" android:offset="0" />
+                <item android:color="#121225" android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
@@ -29,7 +29,7 @@
                 android:centerY="180"
                 android:gradientRadius="180"
                 android:type="radial">
-                <item android:color="#33FF00CC" android:offset="0" />
+                <item android:color="#44FF00CC" android:offset="0" />
                 <item android:color="#00FF00CC" android:offset="1" />
             </gradient>
         </aapt:attr>
@@ -45,28 +45,34 @@
         android:strokeWidth="1"
         android:pathData="M160,100 L0,180 M160,100 L80,180 M160,100 L160,180 M160,100 L240,180 M160,100 L320,180" />
 
+    <!-- Neon Arcade Arc -->
+    <path
+        android:strokeColor="#3300F2FF"
+        android:strokeWidth="2"
+        android:pathData="M40,180 Q160,100 280,180" />
+
     <!-- Central Logo Glow -->
     <path
-        android:pathData="M160,85m-60,0a60,60 0 1,1 120,0a60,60 0 1,1 -120,0">
+        android:pathData="M160,85m-65,0a65,65 0 1,1 130,0a65,65 0 1,1 -130,0">
         <aapt:attr name="android:fillColor">
             <gradient
                 android:centerX="160"
                 android:centerY="85"
-                android:gradientRadius="60"
+                android:gradientRadius="65"
                 android:type="radial">
-                <item android:color="#4D00F2FF" android:offset="0" />
+                <item android:color="#5500F2FF" android:offset="0" />
                 <item android:color="#0000F2FF" android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
 
-    <!-- Retro Controller Body -->
+    <!-- Hexagonal D-Pad Shield -->
     <path
-        android:pathData="M120,75 h80 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-80 a10,10 0 0 1 -10,-10 v-30 a10,10 0 0 1 10,-10 z">
+        android:pathData="M160,50 L195,65 L195,105 L160,120 L125,105 L125,65 Z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:endY="125"
-                android:startY="75"
+                android:endY="120"
+                android:startY="50"
                 android:type="linear">
                 <item android:color="#2D2D44" android:offset="0" />
                 <item android:color="#161625" android:offset="1" />
@@ -74,38 +80,42 @@
         </aapt:attr>
     </path>
     <path
-        android:strokeColor="#444466"
-        android:strokeWidth="1"
-        android:pathData="M120,75 h80 a10,10 0 0 1 10,10 v30 a10,10 0 0 1 -10,10 h-80 a10,10 0 0 1 -10,-10 v-30 a10,10 0 0 1 10,-10 z" />
+        android:strokeColor="#00F2FF"
+        android:strokeWidth="2"
+        android:pathData="M160,50 L195,65 L195,105 L160,120 L125,105 L125,65 Z" />
 
-    <!-- D-Pad -->
+    <!-- The "Hero" D-Pad -->
+    <!-- D-Pad Base -->
     <path
         android:fillColor="#111111"
-        android:pathData="M130,90 h20 v5 h-20 z M137.5,82.5 v20 h5 v-20 z" />
+        android:pathData="M145,80 h30 v10 h-30 z M155,70 v30 h10 v-30 z" />
+
+    <!-- D-Pad Directional Neon Accents -->
     <path
         android:fillColor="#00F2FF"
-        android:pathData="M137.5,82.5 h5 v5 h-5 z M137.5,102.5 h5 v5 h-5 z M125,90 v5 h5 v-5 z M150,90 v5 h5 v-5 z" />
+        android:pathData="M155,70 h10 v5 h-10 z" /> <!-- Up -->
+    <path
+        android:fillColor="#00F2FF"
+        android:pathData="M155,95 h10 v5 h-10 z" /> <!-- Down -->
+    <path
+        android:fillColor="#00F2FF"
+        android:pathData="M145,80 h5 v10 h-5 z" /> <!-- Left -->
+    <path
+        android:fillColor="#00F2FF"
+        android:pathData="M170,80 h5 v10 h-5 z" /> <!-- Right -->
 
-    <!-- Buttons -->
+    <!-- Center OK/Action Button -->
     <path
         android:fillColor="#FF00CC"
-        android:pathData="M185,85 m-6,0 a6,6 0 1,1 12,0 a6,6 0 1,1 -12,0" />
-    <path
-        android:fillColor="#FFD600"
-        android:pathData="M173,95 m-6,0 a6,6 0 1,1 12,0 a6,6 0 1,1 -12,0" />
+        android:pathData="M160,85 m-6,0 a6,6 0 1,1 12,0 a6,6 0 1,1 -12,0" />
 
-    <!-- Logo Text Accent -->
+    <!-- Top Gloss Shine on Shield -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M150,110 h20 v2 h-20 z" />
-
-    <!-- Top Gloss Shine -->
-    <path
-        android:pathData="M120,75 h80 a10,10 0 0 1 10,10 v5 h-100 v-5 a10,10 0 0 1 10,-10 z">
+        android:pathData="M160,50 L195,65 v10 h-70 v-10 z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:endY="90"
-                android:startY="75"
+                android:endY="75"
+                android:startY="50"
                 android:type="linear">
                 <item android:color="#22FFFFFF" android:offset="0" />
                 <item android:color="#00FFFFFF" android:offset="1" />

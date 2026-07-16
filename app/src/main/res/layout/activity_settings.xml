@@ -52,27 +52,6 @@
         android:textColor="#888888"
         android:textSize="14sp" />
 
-    <LinearLayout
-        android:id="@+id/layout_privacy_policy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/privacy_policy"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
-
-    </LinearLayout>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"

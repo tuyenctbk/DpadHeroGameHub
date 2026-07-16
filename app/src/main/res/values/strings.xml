@@ -196,7 +196,6 @@
     <string name="settings_button_description">Settings</string>
     <string name="sound_effects">Sound Effects</string>
     <string name="sound_effects_description">Enable or disable in-game sound effects.</string>
-    <string name="privacy_policy">Privacy Policy</string>
     <string name="back">Back</string>
     <string name="retro_game_studio">DPADHERO STUDIO</string>
     <string name="supported_devices_hint">Supports: D-pad / Remote control</string>
@@ -286,7 +285,6 @@
     <string name="update_title">New Update Available!</string>
     <string name="update_content">A new version of Dpad Arcade: Retro Game Hub is available. Update now to get the latest games, features, and stability fixes.</string>
     <string name="update_now">Update Now</string>
-    <string name="privacy_policy_url">URL: https://github.com/tuyenctbk/DpadHeroGameHub</string>
     <string name="trex_daddy">Daddy T-Rex</string>
     <string name="trex_mummy">Mummy T-Rex</string>
     <string name="trex_baby">Baby T-Rex</string>

@@ -1,8 +1,6 @@
 package com.tdpham.games.hub
 
-import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -29,18 +27,6 @@ class SettingsActivity : AppCompatActivity() {
             soundSwitch.isChecked = isEnabled
         }
         setupFocusEffect(soundToggleLayout)
-
-        // Information
-        val privacyPolicyLayout = findViewById<LinearLayout>(R.id.layout_privacy_policy)
-        privacyPolicyLayout.setOnClickListener {
-            try {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/tuyenctbk/DpadHeroGameHub/blob/main/PRIVACY_POLICY.md"))
-                startActivity(browserIntent)
-            } catch (e: Exception) {
-                android.widget.Toast.makeText(this, getString(R.string.privacy_policy_url), android.widget.Toast.LENGTH_LONG).show()
-            }
-        }
-        setupFocusEffect(privacyPolicyLayout)
 
         val btnBack = findViewById<Button>(R.id.btn_back)
         btnBack.setOnClickListener { finish() }
