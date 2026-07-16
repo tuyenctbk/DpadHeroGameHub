@@ -270,7 +270,7 @@ class TRexView @JvmOverloads constructor(
         }
         repeat(6) { spawnCloud(random.nextFloat() * 2000) }
         repeat(16) { spawnGroundDot(random.nextFloat() * 2000) }
-        nextObstacleDistance = 600f
+        nextObstacleDistance = 540f
         invalidate()
     }
 
@@ -500,15 +500,17 @@ class TRexView @JvmOverloads constructor(
                 val freqFactor = (0.1 + (score / 3000.0) + (Math.sin(seed.toDouble()) * 0.08)).coerceIn(0.08, 0.4)
                 val ampFactor = (5f + (score / 600f) + (Math.cos(seed.toDouble()).toFloat() * 15f)).coerceIn(5f, 30f)
                 
-                obs.y += (Math.sin(animationFrame * freqFactor + obs.variant) + Math.sin(animationFrame * freqFactor * 0.6 + seed)).toFloat() * (ampFactor * 0.5f)
+                // Use a safer oscillation that prevents underground drift
+                val dy = (Math.sin(animationFrame * freqFactor + obs.variant) + Math.sin(animationFrame * freqFactor * 0.6 + seed)).toFloat() * (ampFactor * 0.5f)
+                obs.y = (obs.y + dy).coerceAtMost(height * groundY - obs.height - 120f)
                 
-                // Occasional sudden vertical adjustment
+                // Occasional sudden vertical adjustment, also clamped
                 if (random.nextInt(120) == 0) {
-                    obs.y += (random.nextFloat() - 0.5f) * 30f
+                    obs.y = (obs.y + (random.nextFloat() - 0.5f) * 30f).coerceAtMost(height * groundY - obs.height - 120f)
                 }
 
                 if (score > 1000 && obs.x < width * 0.7f && obs.x > width * 0.05f && obs.variant % 2 == 0) {
-                    obs.y += 5f 
+                    obs.y = (obs.y + 5f).coerceAtMost(height * groundY - obs.height - 120f)
                 }
             }
             ObstacleType.BIG_DINO -> {
@@ -711,6 +713,7 @@ class TRexView @JvmOverloads constructor(
         } else 1
         
         var currentGroupWidth = 0f
+        var groupBaseY = -1f
 
         for (i in 0 until count) {
             val type = if (i > 0 && isGroupable && random.nextBoolean()) {
@@ -769,10 +772,14 @@ class TRexView @JvmOverloads constructor(
 
             val ox = this.width.toFloat() + currentGroupWidth + groupSpacing
             val y = if (type == ObstacleType.PTEROSAUR) {
-                // More variety in starting heights
-                val heights = listOf(80f, 120f, 180f, 250f, 300f)
-                val h = heights.random()
-                (this.height * groundY) - h - random.nextInt(120)
+                if (groupBaseY < 0) {
+                    // More variety in starting heights
+                    val heights = listOf(100f, 150f, 220f, 280f, 350f)
+                    val h = heights.random()
+                    groupBaseY = (this.height * groundY) - h - random.nextInt(100)
+                }
+                // Keep birds in the same flock at similar heights
+                groupBaseY + (random.nextFloat() - 0.5f) * 40f
             } else if (type == ObstacleType.METEOR || type == ObstacleType.THUNDERBOLT) {
                 val meteorOx = this.width.toFloat() * 0.8f + random.nextInt(400)
                 pendingObstacles.add(Obstacle(meteorOx, -200f, width, height, type, variant))
@@ -788,9 +795,9 @@ class TRexView @JvmOverloads constructor(
         }
         
         val reactionDistance = gameSpeed * 25f 
-        val minGap = (maxJumpDistance + reactionDistance) * 0.9f
-        val maxExtraGap = 630f 
-        nextObstacleDistance = (minGap + random.nextFloat() * maxExtraGap + currentGroupWidth).coerceAtLeast(540f)
+        val minGap = (maxJumpDistance + reactionDistance) * 0.81f
+        val maxExtraGap = 567f 
+        nextObstacleDistance = (minGap + random.nextFloat() * maxExtraGap + currentGroupWidth).coerceAtLeast(486f)
     }
 
     private fun checkCollision(obs: Obstacle): Boolean {

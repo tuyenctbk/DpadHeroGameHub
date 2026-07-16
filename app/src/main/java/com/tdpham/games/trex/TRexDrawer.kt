@@ -81,27 +81,36 @@ internal object TRexDrawer {
                     else -> Color.parseColor("#37474F") 
                 }
                 paint.color = pterosaurColor
-                canvas.drawOval(obs.x + 20, obs.y + 20, obs.x + obs.width - 20, obs.y + obs.height - 10, paint)
                 
+                // Use relative coordinates for body
+                val bodyLeft = obs.x + obs.width * 0.22f
+                val bodyTop = obs.y + obs.height * 0.33f
+                val bodyRight = obs.x + obs.width * 0.88f
+                val bodyBottom = obs.y + obs.height * 0.83f
+                canvas.drawOval(bodyLeft, bodyTop, bodyRight, bodyBottom, paint)
+                
+                // Beak/Head (Relative to body)
                 pathBuffer.reset()
-                pathBuffer.moveTo(obs.x + 40, obs.y + 25)
-                pathBuffer.lineTo(obs.x - 10, obs.y + 15)
-                pathBuffer.lineTo(obs.x + 40, obs.y + 45)
+                pathBuffer.moveTo(obs.x + obs.width * 0.44f, obs.y + obs.height * 0.41f)
+                pathBuffer.lineTo(obs.x - obs.width * 0.11f, obs.y + obs.height * 0.25f)
+                pathBuffer.lineTo(obs.x + obs.width * 0.44f, obs.y + obs.height * 0.75f)
                 pathBuffer.close()
                 canvas.drawPath(pathBuffer, paint)
                 
+                // Back of head (Relative to body)
                 pathBuffer.reset()
-                pathBuffer.moveTo(obs.x + 40, obs.y + 25)
-                pathBuffer.lineTo(obs.x + 60, obs.y + 5)
-                pathBuffer.lineTo(obs.x + 50, obs.y + 35)
+                pathBuffer.moveTo(obs.x + obs.width * 0.44f, obs.y + obs.height * 0.41f)
+                pathBuffer.lineTo(obs.x + obs.width * 0.66f, obs.y + obs.height * 0.08f)
+                pathBuffer.lineTo(obs.x + obs.width * 0.55f, obs.y + obs.height * 0.58f)
                 pathBuffer.close()
                 canvas.drawPath(pathBuffer, paint)
 
-                val wingSpan = if (walkFrame == 0) -40f else 40f
+                // Wing (Relative to body)
+                val wingSpan = if (walkFrame == 0) -obs.height * 0.66f else obs.height * 0.66f
                 pathBuffer.reset()
-                pathBuffer.moveTo(obs.x + 30, obs.y + 30)
-                pathBuffer.lineTo(obs.x + 50, obs.y + 30 + wingSpan)
-                pathBuffer.lineTo(obs.x + 70, obs.y + 30)
+                pathBuffer.moveTo(obs.x + obs.width * 0.33f, obs.y + obs.height * 0.5f)
+                pathBuffer.lineTo(obs.x + obs.width * 0.55f, obs.y + obs.height * 0.5f + wingSpan)
+                pathBuffer.lineTo(obs.x + obs.width * 0.77f, obs.y + obs.height * 0.5f)
                 pathBuffer.close()
                 canvas.drawPath(pathBuffer, paint)
             }
