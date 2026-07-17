@@ -31,7 +31,7 @@ class TRexView @JvmOverloads constructor(
     private var causeOfDeath: ObstacleType? = null
     private var currentVictoryWord = ""
     private val celebrationManager = CelebrationManager()
-    private var gameSpeed = 16f
+    private var gameSpeed = 9.6f
     private var distanceTravelled = 0f
 
     // Dino Properties
@@ -248,7 +248,7 @@ class TRexView @JvmOverloads constructor(
         lastEnvironmentChangeTime = System.currentTimeMillis()
         updateEnvironment(force = true)
         
-        gameSpeed = 16f
+        gameSpeed = 9.6f
         distanceTravelled = 0f
         dinoY = 0f
         dinoVelocityY = 0f
@@ -406,7 +406,7 @@ class TRexView @JvmOverloads constructor(
 
         updateEnvironment()
 
-        gameSpeed += 0.0025f
+        gameSpeed += 0.0015f
         val effectiveSpeed = gameSpeed
         dinoVelocityY += gravity * currentMember.gravityMult
         dinoY += dinoVelocityY
