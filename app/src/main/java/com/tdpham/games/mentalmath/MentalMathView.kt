@@ -416,13 +416,6 @@ class MentalMathView @JvmOverloads constructor(
             paint.textAlign = Paint.Align.CENTER
             canvas.drawText(question, width / 2f, height / 2f - 100f, paint)
 
-            // If correct and reviewing, draw the victory word (e.g. "EXCELLENT!", "CORRECT!") in the middle space
-            if (isReviewing && isCorrect) {
-                paint.color = Color.GREEN
-                paint.textSize = 48f
-                canvas.drawText(currentVictoryWord, width / 2f, height / 2f + 40f, paint)
-            }
-
             // Options
             val optW = 280f
             val optH = 120f
