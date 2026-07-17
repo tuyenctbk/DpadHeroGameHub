@@ -125,7 +125,7 @@ class MentalMathView @JvmOverloads constructor(
         isReviewing = false
         isCorrect = false
         isPaused = false
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         generateQuestion()
         
         hintShowFrames = 100
