@@ -402,4 +402,8 @@
         <item>KUCING LEGENDA!</item>
         <item>TAK TERBENDUNG!</item>
     </string-array>
+    <string name="quit_game_title">Keluar dari Game</string>
+    <string name="quit_game_confirm">Apakah Anda yakin ingin keluar dari game?</string>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
 </resources>

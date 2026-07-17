@@ -529,4 +529,8 @@
         <item>¡GATO LEGENDARIO!</item>
         <item>¡IMPARABLE!</item>
     </string-array>
+    <string name="quit_game_title">Salir del juego</string>
+    <string name="quit_game_confirm">¿Estás seguro de que quieres salir del juego?</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
 </resources>

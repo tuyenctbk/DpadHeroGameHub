@@ -371,4 +371,8 @@
     <string name="trex_desc_weather_sunny">완벽하게 맑은 날씨입니다.</string>
     <string name="trex_desc_weather_rainy">비와 어두운 구름입니다.</string>
     <string name="trex_desc_weather_snowy">아름다운 함박눈이 내립니다.</string>
+    <string name="quit_game_title">게임 종료</string>
+    <string name="quit_game_confirm">정말로 게임을 종료하시겠습니까?</string>
+    <string name="yes">예</string>
+    <string name="no">아니요</string>
 </resources>

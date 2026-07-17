@@ -371,4 +371,8 @@
     <string name="trex_desc_weather_sunny">Mükemmel açık hava.</string>
     <string name="trex_desc_weather_rainy">Yağmur ve koyu bulutlar.</string>
     <string name="trex_desc_weather_snowy">Güzel kar yağışı.</string>
+    <string name="quit_game_title">Oyundan Çık</string>
+    <string name="quit_game_confirm">Oyundan çıkmak istediğinize emin misiniz?</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
 </resources>

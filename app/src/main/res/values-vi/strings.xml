@@ -444,4 +444,8 @@
         <item>MÈO HUYỀN THOẠI!</item>
         <item>KHÔNG THỂ CẢN PHÁ!</item>
     </string-array>
+    <string name="quit_game_title">Thoát trò chơi</string>
+    <string name="quit_game_confirm">Bạn có chắc chắn muốn thoát trò chơi không?</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
 </resources>

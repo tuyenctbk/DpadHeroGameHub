@@ -371,4 +371,8 @@
     <string name="trex_desc_weather_sunny">Идеальная ясная погода.</string>
     <string name="trex_desc_weather_rainy">Дождь и темные тучи.</string>
     <string name="trex_desc_weather_snowy">Красивый снегопад.</string>
+    <string name="quit_game_title">Выйти из игры</string>
+    <string name="quit_game_confirm">Вы уверены, что хотите выйти из игры?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 </resources>

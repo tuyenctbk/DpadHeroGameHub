@@ -372,4 +372,8 @@
     <string name="trex_desc_weather_sunny">Meteo sereno perfetto.</string>
     <string name="trex_desc_weather_rainy">Pioggia e nuvole scure.</string>
     <string name="trex_desc_weather_snowy">Bellissima nevicata.</string>
+    <string name="quit_game_title">Esci dal gioco</string>
+    <string name="quit_game_confirm">Sei sicuro di voler uscire dal gioco?</string>
+    <string name="yes">Sì</string>
+    <string name="no">No</string>
 </resources>

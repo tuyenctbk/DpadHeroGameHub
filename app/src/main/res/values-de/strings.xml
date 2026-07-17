@@ -463,4 +463,8 @@
     <string name="trex_desc_weather_sunny">Perfekt klarer Himmel.</string>
     <string name="trex_desc_weather_rainy">Regen und dunklere Wolken.</string>
     <string name="trex_desc_weather_snowy">Wunderschöner Schneefall.</string>
+    <string name="quit_game_title">Spiel beenden</string>
+    <string name="quit_game_confirm">Möchtest du das Spiel wirklich beenden?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
 </resources>

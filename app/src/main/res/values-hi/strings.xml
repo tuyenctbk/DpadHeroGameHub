@@ -412,4 +412,8 @@
     <string name="trex_desc_weather_sunny">एकदम साफ मौसम।</string>
     <string name="trex_desc_weather_rainy">बारिश और काले बादल।</string>
     <string name="trex_desc_weather_snowy">खूबसूरत बर्फबारी।</string>
+    <string name="quit_game_title">खेल से बाहर निकलें</string>
+    <string name="quit_game_confirm">क्या आप वाकई खेल से बाहर निकलना चाहते हैं?</string>
+    <string name="yes">हाँ</string>
+    <string name="no">नहीं</string>
 </resources>
