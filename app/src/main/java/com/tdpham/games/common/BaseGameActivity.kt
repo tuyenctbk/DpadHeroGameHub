@@ -417,6 +417,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
             }
             val dialog = builder.create()
             dialog.show()
+            dialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE)?.requestFocus()
             return true
         }
         
