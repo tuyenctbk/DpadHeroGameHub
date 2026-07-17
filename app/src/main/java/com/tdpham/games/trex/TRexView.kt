@@ -78,6 +78,8 @@ class TRexView @JvmOverloads constructor(
     private var memberName = ""
     private var nameShowFrames = 0
     private var hasDoubleJumped = false
+    private var isNewGame = true
+    private var gameRunStartTime = 0L
     
     private var highScoreFlash = 0
     
@@ -202,6 +204,10 @@ class TRexView @JvmOverloads constructor(
 
     override fun resume() {
         isPaused = false
+        if (isNewGame) {
+            gameRunStartTime = System.currentTimeMillis()
+            isNewGame = false
+        }
         android.view.Choreographer.getInstance().removeFrameCallback(frameCallback)
         android.view.Choreographer.getInstance().postFrameCallback(frameCallback)
     }
@@ -241,6 +247,8 @@ class TRexView @JvmOverloads constructor(
         })
         nameShowFrames = 120 
         hasDoubleJumped = false
+        isNewGame = true
+        gameRunStartTime = 0L
 
         earthquakeShake = 0f
         earthquakeTimer = 0
@@ -372,6 +380,9 @@ class TRexView @JvmOverloads constructor(
     }
 
     private fun jump() {
+        if (System.currentTimeMillis() - gameRunStartTime < 1000L) {
+            return
+        }
         if (!isJumping) {
             dinoVelocityY = currentMember.jump
             isJumping = true

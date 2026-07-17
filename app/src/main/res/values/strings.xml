@@ -529,4 +529,8 @@
         <item>LEGENDARY CAT!</item>
         <item>UNSTOPPABLE!</item>
     </string-array>
+    <string name="quit_game_title">Quit Game</string>
+    <string name="quit_game_confirm">Are you sure you want to quit the game?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

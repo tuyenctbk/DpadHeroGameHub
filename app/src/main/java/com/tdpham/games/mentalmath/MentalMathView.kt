@@ -59,6 +59,16 @@ class MentalMathView @JvmOverloads constructor(
     private var timerStart = 0L
     private var timeLeft = timerMax
 
+    private val nextQuestionRunnable = Runnable {
+        if (!isPaused && !gameOver && isReviewing && isCorrect) {
+            stage++
+            generateQuestion()
+            isReviewing = false
+            isCorrect = false
+            invalidate()
+        }
+    }
+
     init {
         isFocusable = true
         isFocusableInTouchMode = true
@@ -76,6 +86,7 @@ class MentalMathView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         animHandler.removeCallbacks(animRunnable)
+        animHandler.removeCallbacks(nextQuestionRunnable)
     }
 
     override fun startGame() {
@@ -102,6 +113,7 @@ class MentalMathView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
+        animHandler.removeCallbacks(nextQuestionRunnable)
         // Load difficulty from settings
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         currentMode = prefs.getInt(KEY_DIFFICULTY, 1).coerceIn(0, 2)
@@ -111,6 +123,7 @@ class MentalMathView @JvmOverloads constructor(
         best = ScoreManager.getHighScore(context, gameKey, currentMode)
         gameOver = false
         isReviewing = false
+        isCorrect = false
         isPaused = false
         celebrationManager.start(0f, 0f)
         generateQuestion()
@@ -222,14 +235,10 @@ class MentalMathView @JvmOverloads constructor(
         if (isPaused) return true
 
         if (isReviewing) {
+            if (isCorrect) return true
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
-                if (isCorrect) {
-                    stage++
-                    generateQuestion()
-                } else {
-                    gameOver = true
-                    onGameOver?.invoke(score)
-                }
+                gameOver = true
+                onGameOver?.invoke(score)
                 invalidate()
                 return true
             }
@@ -275,13 +284,9 @@ class MentalMathView @JvmOverloads constructor(
             if (isPaused) return true
 
             if (isReviewing) {
-                if (isCorrect) {
-                    stage++
-                    generateQuestion()
-                } else {
-                    gameOver = true
-                    onGameOver?.invoke(score)
-                }
+                if (isCorrect) return true
+                gameOver = true
+                onGameOver?.invoke(score)
                 invalidate()
                 return true
             }
@@ -332,6 +337,9 @@ class MentalMathView @JvmOverloads constructor(
                 highScore = oldBest
             )
             SoundManager.playSuccess()
+            
+            animHandler.removeCallbacks(nextQuestionRunnable)
+            animHandler.postDelayed(nextQuestionRunnable, 1500L)
         } else {
             celebrationManager.startOutcome(
                 width = width.toFloat(),
@@ -402,19 +410,22 @@ class MentalMathView @JvmOverloads constructor(
             invalidate()
         }
 
-        // Question
-        paint.color = Color.WHITE
-        paint.textSize = 80f
-        paint.textAlign = Paint.Align.CENTER
-        canvas.drawText(question, width / 2f, height / 2f - 100f, paint)
+        // Only draw question and options if we're NOT showing a full-screen overlay (GameOver or Wrong Answer)
+        val showOverlay = gameOver || (isReviewing && !isCorrect)
+        if (!showOverlay) {
+            // Question
+            paint.color = Color.WHITE
+            paint.textSize = 80f
+            paint.textAlign = Paint.Align.CENTER
+            canvas.drawText(question, width / 2f, height / 2f - 100f, paint)
 
-        // Options
-        val optW = 280f
-        val optH = 120f
-        val centerX = width / 2f
-        val centerY = height / 2f + 150f
-        
-        for (i in 0 until 4) {
+            // Options
+            val optW = 280f
+            val optH = 120f
+            val centerX = width / 2f
+            val centerY = height / 2f + 150f
+            
+            for (i in 0 until 4) {
             val r = i / 2
             val c = i % 2
             val x = centerX + (c - 0.5f) * (optW + 40f)
@@ -467,11 +478,13 @@ class MentalMathView @JvmOverloads constructor(
 
         celebrationManager.draw(canvas)
 
+        } // Close: if (!showOverlay)
+
         if (gameOver) {
             drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
-        } else if (isReviewing) {
-            val title = if (isCorrect) currentVictoryWord else "${context.getString(R.string.wrong_label)} ${context.getString(R.string.answer_was_label)} $correctAnswer"
-            val sub = if (isCorrect) context.getString(R.string.continue_hint) else context.getString(R.string.finish_hint)
+        } else if (isReviewing && !isCorrect) {
+            val title = "${context.getString(R.string.wrong_label)} ${context.getString(R.string.answer_was_label)} $correctAnswer"
+            val sub = context.getString(R.string.finish_hint)
             drawOverlay(canvas, title, sub)
         }
     }

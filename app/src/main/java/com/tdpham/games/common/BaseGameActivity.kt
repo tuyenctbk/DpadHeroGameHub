@@ -403,9 +403,20 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            AdManager.showInterstitial(this) {
-                finish()
+            val builder = androidx.appcompat.app.AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+            builder.setTitle(getString(R.string.quit_game_title))
+            builder.setMessage(getString(R.string.quit_game_confirm))
+            builder.setPositiveButton(getString(R.string.yes)) { dialog, _ ->
+                dialog.dismiss()
+                AdManager.showInterstitial(this) {
+                    finish()
+                }
             }
+            builder.setNegativeButton(getString(R.string.no)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            val dialog = builder.create()
+            dialog.show()
             return true
         }
         
