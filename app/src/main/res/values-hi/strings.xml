@@ -190,8 +190,8 @@
     <string name="finish_hint">खत्म करने के लिए CENTER दबाएं</string>
     <string name="total_wins_label">कुल जीत</string>
     <string name="rating_title">क्या आप Dpad Arcade का आनंद ले रहे हैं?</string>
-    <string name="rating_content">कृपया हमें स्टार दें, या उन और खेलों के लिए अपने सुझाव साझा करें जिन्हें आप खेलना चाहते हैं!</string>
-    <string name="rate_now">रेट करें</string>
+    <string name="rating_content">कृपया हमें Play Store पर 5 स्टार दें, या उन खेलों के लिए अपने सुझाव साझा करें जिन्हें आप खेलना चाहते हैं!</string>
+    <string name="rate_now">5 स्टार रेट करें</string>
     <string name="rate_later">बाद में</string>
     <string name="rate_never">नहीं, धन्यवाद</string>
     <string name="update_title">नया अपडेट उपलब्ध है!</string>

@@ -149,8 +149,8 @@
     <string name="finish_hint">CENTER для завершения</string>
     <string name="total_wins_label">Всего побед</string>
     <string name="rating_title">Нравится Dpad Arcade?</string>
-    <string name="rating_content">Пожалуйста, поставьте нам звезды или поделитесь предложениями о новых играх, в которые вы хотите поиграть!</string>
-    <string name="rate_now">ОЦЕНИТЬ</string>
+    <string name="rating_content">Пожалуйста, поставьте нам 5 звезд в Play Store или предложите игры, в которые вы хотите поиграть!</string>
+    <string name="rate_now">ОЦЕНИТЬ НА 5 ЗВЕЗД</string>
     <string name="rate_later">ПОЗЖЕ</string>
     <string name="rate_never">НЕТ, СПАСИБО</string>
     <string name="update_title">Доступно новое обновление!</string>

@@ -151,8 +151,8 @@
     <string name="finish_hint">Tekan Center untuk Selesai</string>
     <string name="total_wins_label">Total Kemenangan</string>
     <string name="rating_title">Suka Dpad Arcade?</string>
-    <string name="rating_content">Beri kami bintang, atau bagikan saran game apa yang ingin kamu mainkan!</string>
-    <string name="rate_now">RATE</string>
+    <string name="rating_content">Beri kami 5 bintang di Play Store, atau bagikan saran Anda untuk game lain yang ingin Anda mainkan!</string>
+    <string name="rate_now">BERI 5 BINTANG</string>
     <string name="rate_later">NANTI</string>
     <string name="rate_never">TIDAK, TERIMA KASIH</string>
     <string name="update_title">Update Baru Tersedia!</string>

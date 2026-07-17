@@ -203,8 +203,8 @@
     <string name="finish_hint">Nhấn Center để hoàn thành</string>
     <string name="total_wins_label">Tổng số trận thắng</string>
     <string name="rating_title">Bạn thích Dpad Arcade chứ?</string>
-    <string name="rating_content">Hãy đánh giá sao cho chúng mình, hoặc chia sẻ ý tưởng về trò chơi mới mà bạn muốn chơi nhé!</string>
-    <string name="rate_now">ĐÁNH GIÁ</string>
+    <string name="rating_content">Hãy đánh giá 5 sao cho chúng mình trên Play Store, hoặc chia sẻ ý tưởng về trò chơi mới mà bạn muốn chơi nhé!</string>
+    <string name="rate_now">ĐÁNH GIÁ 5 SAO</string>
     <string name="rate_later">ĐỂ SAU</string>
     <string name="rate_never">KHÔNG, CẢM ƠN</string>
     <string name="update_title">Có bản cập nhật mới!</string>

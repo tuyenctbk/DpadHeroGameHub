@@ -47,6 +47,7 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity() {
 
     private var firebaseAnalytics: FirebaseAnalytics? = null
+    private var returnedFromGame = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -185,6 +186,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupGameButton(button: Button, action: () -> Unit) {
         button.isFocusableInTouchMode = true
         button.setOnClickListener { 
+            returnedFromGame = true
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, button.text.toString())
             bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "game")
@@ -220,6 +222,20 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             false
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (returnedFromGame) {
+            returnedFromGame = false
+            // Check for rating prompt when returning from a game, 
+            // as this is a high-engagement moment ("Having Fun").
+            if (RatingGuideManager.shouldShowRating(this)) {
+                RatingGuideManager.showRatingDialog(this) {
+                    if (!isFinishing && !isDestroyed) focusLastPlayed()
+                }
+            }
         }
     }
 

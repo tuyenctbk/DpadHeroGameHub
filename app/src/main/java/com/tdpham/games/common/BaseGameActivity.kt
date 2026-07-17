@@ -12,6 +12,7 @@ import com.google.firebase.analytics.analytics
 import com.google.firebase.Firebase
 import com.tdpham.games.R
 import com.tdpham.games.hub.GuideManager
+import com.tdpham.games.hub.RatingGuideManager
 import com.tdpham.games.trex.TRexOptionsDialog
 import com.tdpham.games.trex.TRexView
 
@@ -60,6 +61,15 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
                 bundle.putInt(FirebaseAnalytics.Param.SCORE, score)
                 firebaseAnalytics?.logEvent("level_end", bundle)
+
+                // Record event for rating algorithm:
+                // Consider it a 'win' if score > 0 (engaged)
+                // We check if score >= currentBest because the High Score is often updated
+                // right before onGameOver is called.
+                val currentBest = ScoreManager.getHighScore(this, gameKey)
+                val isHighScore = score > 0 && score >= currentBest
+                
+                RatingGuideManager.recordGameEvent(this, isWin = score > 0, isHighScore = isHighScore)
             }
         } else {
             throw IllegalStateException("View must implement GameView interface")

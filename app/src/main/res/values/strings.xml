@@ -278,8 +278,8 @@
     <string name="cat_games">GAMES</string>
     <string name="cat_foods">FOODS</string>
     <string name="rating_title">Enjoying Dpad Arcade?</string>
-    <string name="rating_content">Please give us stars, or share your suggestions for more games you want to play!</string>
-    <string name="rate_now">RATE</string>
+    <string name="rating_content">Please give us 5 stars on the Play Store, or share your suggestions for more games you want to play!</string>
+    <string name="rate_now">RATE 5 STARS</string>
     <string name="rate_later">LATER</string>
     <string name="rate_never">NO, THANKS</string>
     <string name="update_title">New Update Available!</string>

@@ -203,8 +203,8 @@
     <string name="finish_hint">按确定键结束</string>
     <string name="total_wins_label">总胜利次数</string>
     <string name="rating_title">喜欢 Dpad Arcade 吗？</string>
-    <string name="rating_content">请给我们评分，或分享您对更多想玩游戏的建议！</string>
-    <string name="rate_now">评分</string>
+    <string name="rating_content">请在 Play 商店给我们 5 星好评，或分享您想玩的更多游戏的建议！</string>
+    <string name="rate_now">5星好评</string>
     <string name="rate_later">稍后</string>
     <string name="rate_never">不，谢谢</string>
     <string name="update_title">新版本可用！</string>

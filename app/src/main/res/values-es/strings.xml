@@ -278,8 +278,8 @@
     <string name="cat_games">JUEGOS</string>
     <string name="cat_foods">COMIDAS</string>
     <string name="rating_title">¿Te gusta Dpad Arcade?</string>
-    <string name="rating_content">¡Danos estrellas o sugiere juegos que quieras jugar!</string>
-    <string name="rate_now">VALORAR</string>
+    <string name="rating_content">¡Danos 5 estrellas en la Play Store o sugiere nuevos juegos que quieras jugar!</string>
+    <string name="rate_now">VALORAR 5 ESTRELLAS</string>
     <string name="rate_later">LUEGO</string>
     <string name="rate_never">NO, GRACIAS</string>
     <string name="update_title">¡Actualización Disponible!</string>

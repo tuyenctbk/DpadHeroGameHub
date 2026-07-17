@@ -152,8 +152,8 @@
     <string name="sudoku_controls_hint">CENTER: วนเลข 0-9 (0 คือลบ)</string>
     <string name="total_wins_label">ชนะทั้งหมด</string>
     <string name="rating_title">คุณสนุกกับ Dpad Arcade ไหม?</string>
-    <string name="rating_content">โปรดให้ดาวเรา หรือแบ่งปันข้อเสนอแนะเกี่ยวกับเกมที่คุณอยากเล่น!</string>
-    <string name="rate_now">ให้คะแนน</string>
+    <string name="rating_content">โปรดให้ 5 ดาวแก่เราใน Play Store หรือแชร์คำแนะนำสำหรับเกมที่คุณต้องการเล่น!</string>
+    <string name="rate_now">ให้ 5 ดาว</string>
     <string name="rate_later">ไว้ทีหลัง</string>
     <string name="rate_never">ไม่ ขอบคุณ</string>
     <string name="update_title">มีการอัปเดตใหม่!</string>

@@ -150,8 +150,8 @@
     <string name="finish_hint">Premi Center per Finire</string>
     <string name="total_wins_label">Vittorie Totali</string>
     <string name="rating_title">Ti piace Dpad Arcade?</string>
-    <string name="rating_content">Dacci delle stelle o suggerisci altri giochi che vorresti giocare!</string>
-    <string name="rate_now">VALUTA</string>
+    <string name="rating_content">Dacci 5 stelle sul Play Store o suggerisci nuovi giochi che vorresti giocare!</string>
+    <string name="rate_now">VOTA 5 STELLE</string>
     <string name="rate_later">PIÙ TARDI</string>
     <string name="rate_never">NO, GRAZIE</string>
     <string name="update_title">Nuovo aggiornamento disponibile!</string>

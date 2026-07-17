@@ -203,8 +203,8 @@
     <string name="finish_hint">Drücke Center zum Beenden</string>
     <string name="total_wins_label">Gesamtsiege</string>
     <string name="rating_title">Gefällt dir Dpad Arcade?</string>
-    <string name="rating_content">Bitte gib uns Sterne oder teile deine Vorschläge für weitere Spiele, die du spielen möchtest!</string>
-    <string name="rate_now">BEWERTEN</string>
+    <string name="rating_content">Bitte gib uns 5 Sterne im Play Store oder teile uns deine Vorschläge für weitere Spiele mit!</string>
+    <string name="rate_now">5 STERNE BEWERTEN</string>
     <string name="rate_later">SPÄTER</string>
     <string name="rate_never">NEIN, DANKE</string>
     <string name="update_title">Neues Update verfügbar!</string>

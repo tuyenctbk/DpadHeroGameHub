@@ -149,8 +149,8 @@
     <string name="finish_hint">확인 키로 종료</string>
     <string name="total_wins_label">총 승리수</string>
     <string name="rating_title">Dpad Arcade가 마음에 드시나요?</string>
-    <string name="rating_content">별점을 남겨주시거나, 더 즐기고 싶은 게임에 대한 제안을 공유해 주세요!</string>
-    <string name="rate_now">평가하기</string>
+    <string name="rating_content">Play 스토어에서 별 5개를 주시거나, 플레이하고 싶은 게임에 대한 제안을 공유해 주세요!</string>
+    <string name="rate_now">별 5개 평점</string>
     <string name="rate_later">나중에</string>
     <string name="rate_never">아니요, 괜찮습니다</string>
     <string name="update_title">새 업데이트 가능!</string>

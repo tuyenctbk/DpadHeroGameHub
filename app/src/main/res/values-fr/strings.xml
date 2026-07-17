@@ -217,8 +217,8 @@
     <string name="finish_hint">Appuyez sur Center pour terminer</string>
     <string name="total_wins_label">Total des Victoires</string>
     <string name="rating_title">Vous aimez Dpad Arcade ?</string>
-    <string name="rating_content">Donnez-nous des étoiles ou suggérez des jeux auxquels vous voulez jouer !</string>
-    <string name="rate_now">NOTER</string>
+    <string name="rating_content">Merci de nous donner 5 étoiles sur le Play Store ou de nous suggérer des jeux que vous aimeriez voir !</string>
+    <string name="rate_now">NOTER 5 ÉTOILES</string>
     <string name="rate_later">PLUS TARD</string>
     <string name="rate_never">NON MERCI</string>
     <string name="update_title">Nouvelle mise à jour !</string>

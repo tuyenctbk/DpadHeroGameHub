@@ -149,8 +149,8 @@
     <string name="finish_hint">決定ボタンで終了</string>
     <string name="total_wins_label">合計勝利数</string>
     <string name="rating_title">Dpad Arcade をお楽しみいただけていますか？</string>
-    <string name="rating_content">星を付けて評価していただくか、新しくプレイしたいゲームのリクエストをお寄せください！</string>
-    <string name="rate_now">評価する</string>
+    <string name="rating_content">Playストアで星5つを付けていただくか、遊びたいゲームのリクエストを教えてください！</string>
+    <string name="rate_now">星5で評価</string>
     <string name="rate_later">後で</string>
     <string name="rate_never">いいえ、結構です</string>
     <string name="update_title">新しいアップデートがあります！</string>

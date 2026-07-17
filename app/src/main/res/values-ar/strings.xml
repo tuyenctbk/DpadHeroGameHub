@@ -149,8 +149,8 @@
     <string name="finish_hint">اضغط Center للإنهاء</string>
     <string name="total_wins_label">إجمالي الانتصارات</string>
     <string name="rating_title">هل تستمتع بـ Dpad Arcade؟</string>
-    <string name="rating_content">يرجى تقييمنا بالنجوم، أو مشاركة اقتراحاتك لمزيد من الألعاب التي ترغب في لعبها!</string>
-    <string name="rate_now">تقييم</string>
+    <string name="rating_content">يرجى تقييمنا بـ 5 نجوم على متجر Play، أو شاركنا اقتراحاتك للألعاب التي تريد لعبها!</string>
+    <string name="rate_now">تقييم 5 نجوم</string>
     <string name="rate_later">لاحقاً</string>
     <string name="rate_never">لا، شكراً</string>
     <string name="update_title">تحديث جديد متاح!</string>

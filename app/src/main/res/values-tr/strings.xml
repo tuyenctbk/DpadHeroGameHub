@@ -149,8 +149,8 @@
     <string name="finish_hint">Bitirmek için Center</string>
     <string name="total_wins_label">Toplam Galibiyet</string>
     <string name="rating_title">Dpad Arcade\'den memnun musunuz?</string>
-    <string name="rating_content">Lütfen bize yıldız verin veya oynamak istediğiniz daha fazla oyun için önerilerinizi paylaşın!</string>
-    <string name="rate_now">OYLA</string>
+    <string name="rating_content">Lütfen Play Store\'da bize 5 yıldız verin veya oynamak istediğiniz oyunlar için önerilerinizi paylaşın!</string>
+    <string name="rate_now">5 YILDIZ VER</string>
     <string name="rate_later">DAHA SONRA</string>
     <string name="rate_never">HAYIR, TEŞEKKÜRLER</string>
     <string name="update_title">Yeni Güncelleme Mevcut!</string>
