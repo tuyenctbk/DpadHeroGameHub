@@ -395,7 +395,7 @@
     <string name="trex_desc_weather_rainy">ฝนตกและเมฆครึ้ม</string>
     <string name="trex_desc_weather_snowy">หิมะตกสวยงาม</string>
     <string name="quit_game_title">ออกจากเกม</string>
-    <string name="quit_game_confirm">คุณแน่ใจหรือไม่ว่าต้องการออกจากเกม?</string>
+    <string name="quit_game_confirm">คุณต้องการออกจากเกมหรือไม่?</string>
     <string name="yes">ใช่</string>
     <string name="no">ไม่</string>
 </resources>

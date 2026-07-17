@@ -371,8 +371,8 @@
     <string name="trex_desc_weather_sunny">طقس صافٍ مثالي.</string>
     <string name="trex_desc_weather_rainy">مطر وغيوم داكنة.</string>
     <string name="trex_desc_weather_snowy">تساقط ثلوج جميل.</string>
-    <string name="quit_game_title">إنهاء اللعبة</string>
-    <string name="quit_game_confirm">هل أنت متأكد أنك تريد إنهاء اللعبة؟</string>
+    <string name="quit_game_title">الخروج من اللعبة</string>
+    <string name="quit_game_confirm">هل تريد الخروج من اللعبة؟</string>
     <string name="yes">نعم</string>
     <string name="no">لا</string>
 </resources>
