@@ -35,8 +35,8 @@ class SpinballView @JvmOverloads constructor(
     private var hintShowFrames = 0
 
     // Physics constants
-    private val radius = 300f
-    private val ballRadius = 15f
+    private var radius = 300f
+    private val ballRadius = 22f
     private val rotationSpeed = 5f
     private var currentRotation = 0f
     private val pressedKeys = mutableSetOf<Int>()
@@ -88,12 +88,23 @@ class SpinballView @JvmOverloads constructor(
         isFocusableInTouchMode = true
         resetGame()
         mainHandler.post(animRunnable)
-        
-        // Pre-create spike path
-        spikePath.moveTo(radius - 30f, -15f)
+        updateSpikePath()
+    }
+
+    private fun updateSpikePath() {
+        spikePath.reset()
+        val spikeLength = (radius * 0.12f).coerceIn(30f, 45f)
+        val spikeWidth = (radius * 0.12f).coerceIn(30f, 45f) * 0.5f
+        spikePath.moveTo(radius - spikeLength, -spikeWidth)
         spikePath.lineTo(radius, 0f)
-        spikePath.lineTo(radius - 30f, 15f)
+        spikePath.lineTo(radius - spikeLength, spikeWidth)
         spikePath.close()
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        radius = (min(w, h) / 2f - 95f).coerceAtLeast(200f)
+        updateSpikePath()
     }
 
     private fun resetBall() {
@@ -101,9 +112,9 @@ class SpinballView @JvmOverloads constructor(
         ballY = 0f
         val angle = random.nextFloat() * 2 * PI.toFloat()
         val speed = when(currentDifficultyIndex) {
-            0 -> 4.5f
-            2 -> 8.5f
-            else -> 6.5f
+            0 -> 5.5f
+            2 -> 10.0f
+            else -> 7.8f
         }
         ballVX = cos(angle) * speed
         ballVY = sin(angle) * speed
@@ -259,7 +270,7 @@ class SpinballView @JvmOverloads constructor(
             
             val dx = ballX - starScreenX
             val dy = ballY - starScreenY
-            if (dx * dx + dy * dy < (ballRadius + 22f).pow(2)) {
+            if (dx * dx + dy * dy < (ballRadius + 28f).pow(2)) {
                 iterator.remove()
                 score += when(star.type) {
                     StarType.GOLD -> 10
@@ -324,20 +335,20 @@ class SpinballView @JvmOverloads constructor(
                 SpikeStyle.SAWBLADE -> {
                     paint.style = Paint.Style.FILL
                     paint.color = Color.parseColor("#FF5722")
-                    canvas.drawCircle(radius - 10f, 0f, 15f, paint)
+                    canvas.drawCircle(radius - 12f, 0f, 22f, paint)
                     paint.color = Color.parseColor("#E64A19")
                     val teethCount = 8
                     val timeAngle = (System.currentTimeMillis() / 4L) % 360f
                     canvas.save()
-                    canvas.translate(radius - 10f, 0f)
+                    canvas.translate(radius - 12f, 0f)
                     canvas.rotate(timeAngle)
                     for (t in 0 until teethCount) {
                         canvas.save()
                         canvas.rotate(t * (360f / teethCount))
                         tempPath.reset()
-                        tempPath.moveTo(0f, -15f)
-                        tempPath.lineTo(8f, -22f)
-                        tempPath.lineTo(0f, -18f)
+                        tempPath.moveTo(0f, -22f)
+                        tempPath.lineTo(10f, -30f)
+                        tempPath.lineTo(0f, -26f)
                         tempPath.close()
                         canvas.drawPath(tempPath, paint)
                         canvas.restore()
@@ -348,21 +359,21 @@ class SpinballView @JvmOverloads constructor(
                     paint.style = Paint.Style.FILL
                     paint.color = Color.parseColor("#78909C")
                     tempPath.reset()
-                    tempPath.moveTo(radius - 15f, -10f)
-                    tempPath.lineTo(radius, -10f)
-                    tempPath.lineTo(radius, 10f)
-                    tempPath.lineTo(radius - 15f, 10f)
+                    tempPath.moveTo(radius - 22f, -14f)
+                    tempPath.lineTo(radius, -14f)
+                    tempPath.lineTo(radius, 14f)
+                    tempPath.lineTo(radius - 22f, 14f)
                     tempPath.close()
                     canvas.drawPath(tempPath, paint)
                     paint.color = Color.RED
-                    canvas.drawCircle(radius - 12f, 0f, 4f, paint)
+                    canvas.drawCircle(radius - 16f, 0f, 6f, paint)
                     paint.strokeCap = Paint.Cap.ROUND
                     paint.color = Color.parseColor("#AAFF0000")
-                    paint.strokeWidth = 10f
-                    canvas.drawLine(radius - 12f, 0f, radius - 45f, 0f, paint)
+                    paint.strokeWidth = 14f
+                    canvas.drawLine(radius - 16f, 0f, radius - 65f, 0f, paint)
                     paint.color = Color.WHITE
-                    paint.strokeWidth = 4f
-                    canvas.drawLine(radius - 12f, 0f, radius - 45f, 0f, paint)
+                    paint.strokeWidth = 6f
+                    canvas.drawLine(radius - 16f, 0f, radius - 65f, 0f, paint)
                     paint.strokeCap = Paint.Cap.BUTT
                 }
                 else -> {
@@ -472,8 +483,8 @@ class SpinballView @JvmOverloads constructor(
         
         val cx = star.x
         val cy = star.y
-        val outerRadius = 14f
-        val innerRadius = 6f
+        val outerRadius = 20f
+        val innerRadius = 9f
         tempPath.reset()
         for (i in 0 until 10) {
             val r = if (i % 2 == 0) outerRadius else innerRadius
@@ -486,7 +497,7 @@ class SpinballView @JvmOverloads constructor(
         canvas.drawPath(tempPath, paint)
         
         paint.color = Color.WHITE
-        canvas.drawCircle(cx, cy, 3f, paint)
+        canvas.drawCircle(cx, cy, 4.5f, paint)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, sub: String) {
