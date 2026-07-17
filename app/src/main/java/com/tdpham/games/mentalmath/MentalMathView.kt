@@ -133,6 +133,7 @@ class MentalMathView @JvmOverloads constructor(
     }
 
     private fun generateQuestion() {
+        celebrationManager.clear()
         val op = when (currentMode) {
             0 -> if (Random.nextBoolean()) "+" else "-"
             1 -> listOf("+", "-", "*").random()
@@ -237,9 +238,7 @@ class MentalMathView @JvmOverloads constructor(
         if (isReviewing) {
             if (isCorrect) return true
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
-                gameOver = true
-                onGameOver?.invoke(score)
-                invalidate()
+                endGame()
                 return true
             }
             return true
@@ -285,9 +284,7 @@ class MentalMathView @JvmOverloads constructor(
 
             if (isReviewing) {
                 if (isCorrect) return true
-                gameOver = true
-                onGameOver?.invoke(score)
-                invalidate()
+                endGame()
                 return true
             }
 
@@ -328,28 +325,28 @@ class MentalMathView @JvmOverloads constructor(
                 best = score
             }
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-            celebrationManager.startOutcome(
-                width = width.toFloat(),
-                height = height.toFloat(),
-                isWin = true,
-                isNewHigh = isNewHigh,
-                score = score,
-                highScore = oldBest
-            )
             SoundManager.playSuccess()
             
             animHandler.removeCallbacks(nextQuestionRunnable)
             animHandler.postDelayed(nextQuestionRunnable, 1500L)
         } else {
-            celebrationManager.startOutcome(
-                width = width.toFloat(),
-                height = height.toFloat(),
-                isWin = false,
-                score = score,
-                highScore = best
-            )
             SoundManager.playError()
         }
+    }
+
+    private fun endGame() {
+        gameOver = true
+        val isNewHigh = score >= best && score > 0
+        celebrationManager.startOutcome(
+            width = width.toFloat(),
+            height = height.toFloat(),
+            isWin = isNewHigh,
+            isNewHigh = isNewHigh,
+            score = score,
+            highScore = best
+        )
+        onGameOver?.invoke(score)
+        invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -418,6 +415,13 @@ class MentalMathView @JvmOverloads constructor(
             paint.textSize = 80f
             paint.textAlign = Paint.Align.CENTER
             canvas.drawText(question, width / 2f, height / 2f - 100f, paint)
+
+            // If correct and reviewing, draw the victory word (e.g. "EXCELLENT!", "CORRECT!") in the middle space
+            if (isReviewing && isCorrect) {
+                paint.color = Color.GREEN
+                paint.textSize = 48f
+                canvas.drawText(currentVictoryWord, width / 2f, height / 2f + 40f, paint)
+            }
 
             // Options
             val optW = 280f

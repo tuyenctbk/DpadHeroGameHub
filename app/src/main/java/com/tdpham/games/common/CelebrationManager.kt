@@ -171,6 +171,10 @@ class CelebrationManager {
         start(width, height, type)
     }
 
+    fun clear() {
+        particles.clear()
+    }
+
     private fun initParticles() {
         when (currentType) {
             CelebrationType.FIREWORKS -> {
