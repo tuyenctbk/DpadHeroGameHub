@@ -24,11 +24,11 @@ class FlappyHeroView @JvmOverloads constructor(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     enum class Difficulty(val gapHMult: Float, val speed: Float, val interval: Long) {
-        LEVEL_1(0.32f, 6.0f, 2400L),
-        LEVEL_2(0.27f, 7.5f, 2000L),
-        LEVEL_3(0.22f, 9.0f, 1600L),
-        LEVEL_4(0.18f, 11.0f, 1300L),
-        LEVEL_5(0.14f, 13.5f, 1000L)
+        LEVEL_1(0.35f, 6.0f, 2400L),
+        LEVEL_2(0.30f, 7.5f, 2100L),
+        LEVEL_3(0.26f, 9.0f, 1800L),
+        LEVEL_4(0.22f, 11.0f, 1500L),
+        LEVEL_5(0.18f, 13.0f, 1200L)
     }
 
     enum class BirdCharacter(
@@ -1033,8 +1033,8 @@ class FlappyHeroView @JvmOverloads constructor(
         // Pipes
         if (now - pipeSpawnTime > pipeInterval) {
             val prevPipe = pipes.lastOrNull()
-            // Horizontal spacing validation: guarantee minimum horizontal separation (35% of screen width)
-            val canSpawnPipe = prevPipe == null || (w - prevPipe.x) >= (w * 0.35f)
+            // Horizontal spacing validation: guarantee minimum horizontal separation (48% of screen width)
+            val canSpawnPipe = prevPipe == null || (w - prevPipe.x) >= (w * 0.48f)
             
             if (canSpawnPipe) {
                 val gapH = (h * currentDifficulty.gapHMult).coerceAtLeast(birdSize * 4f)

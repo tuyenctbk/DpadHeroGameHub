@@ -346,7 +346,7 @@ class SyobonView @JvmOverloads constructor(
                 val groundOk = gridX in 0 until TOTAL_MAP_COLS - 1 && isSolid(floorY, gridX) && isSolid(floorY, gridX + 1)
                 var tooCloseToOther = false
                 for (other in landEnemies) {
-                    if (Math.abs(other.x - spawnX) < 4.0f) {
+                    if (Math.abs(other.x - spawnX) < 8.0f) { // Increased minimum distance from 4.0 to 8.0
                         tooCloseToOther = true
                         break
                     }
@@ -884,7 +884,7 @@ class SyobonView @JvmOverloads constructor(
                 enemy.vx = if (playerX > enemy.x) Math.abs(huntSpeed) else -Math.abs(huntSpeed)
             } else {
                 val distToPlayer = Math.abs(enemy.x - playerX)
-                if (distToPlayer < 6f && Math.abs(enemy.y - playerY) < 2f) {
+                if (distToPlayer < 4.5f && Math.abs(enemy.y - playerY) < 2f) { // Reduced chase radius from 6f to 4.5f
                     enemy.isChasing = true
                     val chaseSpeed = 0.08f
                     enemy.vx = if (playerX > enemy.x) Math.abs(chaseSpeed) else -Math.abs(chaseSpeed)

@@ -41,10 +41,13 @@ class StarFighterView @JvmOverloads constructor(
 
     private val KEY_SHIP_TYPE = "selected_ship_index"
     private var currentShipType = 0 // 0: Balanced, 1: Fast, 2: Tank
-    private var playerSpeed = 12f
+    private var playerSpeed = 16f
+    private var currentTilt = 0f
+    private var targetTilt = 0f
 
     private var playerX = 0f
     private var playerY = 0f
+    private var lastPlayerX = 0f
     private val playerSize = 70f
     private var lives = 3
     private var invulnerableUntil = 0L
@@ -141,24 +144,24 @@ class StarFighterView @JvmOverloads constructor(
         hasPhoenixRevived = false
         when(currentShipType) {
             1 -> { // Fast
-                playerSpeed = 18f
+                playerSpeed = 24f
                 lives = 1
             }
             2 -> { // Tank
-                playerSpeed = 8f
+                playerSpeed = 14f
                 lives = 5
             }
             3 -> { // Solar Flare (Glass Cannon)
-                playerSpeed = 15f
+                playerSpeed = 20f
                 lives = 1
                 gunLevel = 2
             }
             4 -> { // Phoenix
-                playerSpeed = 12f
+                playerSpeed = 18f
                 lives = 2
             }
             else -> { // Balanced
-                playerSpeed = 13f
+                playerSpeed = 18f
                 lives = 3
             }
         }
@@ -268,10 +271,29 @@ class StarFighterView @JvmOverloads constructor(
     private fun update() {
         if (isPaused || gameOver) return
 
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) playerX = (playerX - playerSpeed).coerceAtLeast(playerSize)
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) playerX = (playerX + playerSpeed).coerceAtMost(width - playerSize)
+        lastPlayerX = playerX
+        targetTilt = 0f
+        
+        // DPAD Movement
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) {
+            playerX = (playerX - playerSpeed).coerceAtLeast(playerSize)
+            targetTilt = -25f
+        } else if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) {
+            playerX = (playerX + playerSpeed).coerceAtMost(width - playerSize)
+            targetTilt = 25f
+        }
+        
         if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_UP)) playerY = (playerY - playerSpeed).coerceAtLeast(playerSize)
         if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_DOWN)) playerY = (playerY + playerSpeed).coerceAtMost(height - playerSize)
+
+        // Touch/Mouse Tilt Calculation
+        if (pressedKeys.isEmpty()) {
+            val dx = playerX - lastPlayerX
+            targetTilt = (dx * 2f).coerceIn(-30f, 30f)
+        }
+
+        // Smooth tilt interpolation
+        currentTilt += (targetTilt - currentTilt) * 0.12f
 
         val now = System.currentTimeMillis()
         
@@ -738,13 +760,17 @@ class StarFighterView @JvmOverloads constructor(
         }
 
         bullets.forEach {
+            // Bullet Glow
+            paint.color = if (it.isEnemy) Color.parseColor("#44FF0000") else Color.parseColor("#4400E5FF")
+            canvas.drawCircle(it.x, it.y, 14f, paint)
+            
             paint.color = if (it.isEnemy) Color.RED else Color.CYAN
             paint.style = Paint.Style.FILL
-            drawRect.set(it.x - 3, it.y - 12, it.x + 3, it.y + 12)
-            canvas.drawRect(drawRect, paint)
-            paint.alpha = 100
-            canvas.drawCircle(it.x, it.y, 8f, paint)
-            paint.alpha = 255
+            drawRect.set(it.x - 3.5f, it.y - 14f, it.x + 3.5f, it.y + 14f)
+            canvas.drawRoundRect(drawRect, 3f, 3f, paint)
+            
+            paint.color = Color.WHITE
+            canvas.drawRect(it.x - 1f, it.y - 8f, it.x + 1f, it.y + 8f, paint)
         }
 
         powerUps.forEach { pu ->
@@ -855,11 +881,8 @@ class StarFighterView @JvmOverloads constructor(
     private fun drawPlayerShip(canvas: Canvas, x: Float, y: Float) {
         canvas.save()
         
-        // Tilt effect based on horizontal movement
-        var tilt = 0f
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) tilt = -15f
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) tilt = 15f
-        canvas.rotate(tilt, x, y)
+        // Use smoothed tilt
+        canvas.rotate(currentTilt, x, y)
 
         paint.style = Paint.Style.FILL
         
@@ -963,12 +986,20 @@ class StarFighterView @JvmOverloads constructor(
         paint.color = Color.WHITE
         canvas.drawCircle(x, y - 10, 8f, paint)
 
-        if ((System.currentTimeMillis() / 50) % 2 == 0L) {
-            paint.color = Color.YELLOW
+        if ((System.currentTimeMillis() / 40) % 2 == 0L) {
             val engineY = if (currentShipType == 2) 55f else 45f
-            canvas.drawCircle(x, y + engineY, 10f, paint)
-            paint.color = Color.RED
-            canvas.drawCircle(x, y + engineY + 10, 6f, paint)
+            
+            // Outer flame
+            paint.color = Color.parseColor("#FFFF5722") // Deep Orange
+            canvas.drawCircle(x, y + engineY + 12, 12f + random.nextFloat() * 5, paint)
+            
+            // Inner flame
+            paint.color = Color.YELLOW
+            canvas.drawCircle(x, y + engineY + 5, 8f + random.nextFloat() * 3, paint)
+            
+            // Core
+            paint.color = Color.WHITE
+            canvas.drawCircle(x, y + engineY, 5f, paint)
         }
         
         canvas.restore()
