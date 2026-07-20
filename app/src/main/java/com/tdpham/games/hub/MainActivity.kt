@@ -2,10 +2,14 @@ package com.tdpham.games.hub
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.View
 import android.widget.Button
-import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.tdpham.games.R
 import com.tdpham.games.brickbreak.BrickBreakActivity
@@ -35,6 +39,9 @@ import com.tdpham.games.spinball.SpinballActivity
 import com.tdpham.games.froggy.FroggyCrossActivity
 import com.tdpham.games.syobon.SyobonActivity
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.profile.ProfileManager
+import com.tdpham.games.hub.profile.ProfileSelectionActivity
+import com.tdpham.games.hub.profile.ProfileCreationActivity
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.Firebase
@@ -53,12 +60,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Initialize Firebase Analytics in background to avoid blocking main thread during Binder contention
         lifecycleScope.launch(Dispatchers.Default) {
             val analytics = try {
                 Firebase.analytics
             } catch (e: Throwable) {
-                android.util.Log.e("MainActivity", "Failed to initialize Firebase Analytics: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -66,36 +71,34 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val title = findViewById<android.view.View>(R.id.main_title)
+        val title = findViewById<View>(R.id.main_title)
         title.alpha = 0f
         title.translationY = -50f
         title.animate().alpha(1f).translationY(0f).setDuration(800).setStartDelay(300).start()
 
-        findViewById<ImageButton>(R.id.btn_settings).apply {
+        findViewById<Button>(R.id.btn_leaderboard).apply {
             setOnClickListener {
-                startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
+                startActivity(Intent(this@MainActivity, LeaderboardActivity::class.java))
             }
             setOnFocusChangeListener { view, hasFocus ->
                 if (hasFocus) {
-                    view.animate().scaleX(1.2f).scaleY(1.2f).setDuration(200).start()
+                    view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
                 } else {
                     view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
                 }
             }
-            setOnHoverListener { view, event ->
-                if (event.action == MotionEvent.ACTION_HOVER_ENTER) {
-                    view.requestFocus()
-                }
-                false
-            }
         }
 
         setupGameButtons()
+        updateProfileDisplay()
+
+        if (intent.getBooleanExtra("AUTO_LOGGED_IN", false)) {
+            animateProfilePulse()
+        }
 
         RatingGuideManager.incrementPlayCount(this)
         UpdateManager.checkForUpdates(this) { hasUpdate ->
             if (isFinishing || isDestroyed) return@checkForUpdates
-            
             if (!hasUpdate) {
                 if (RatingGuideManager.shouldShowRating(this)) {
                     RatingGuideManager.showRatingDialog(this) {
@@ -108,6 +111,79 @@ class MainActivity : AppCompatActivity() {
                 focusLastPlayed()
             }
         }
+    }
+
+    private fun updateProfileDisplay() {
+        val activeProfile = ProfileManager.getActiveProfile(this) ?: return
+        val nameView = findViewById<TextView>(R.id.active_profile_name)
+        val iconView = findViewById<ImageView>(R.id.active_profile_icon)
+        val layout = findViewById<View>(R.id.active_profile_layout)
+
+        nameView.text = activeProfile.name
+        
+        // Neutral background for the layout
+        layout.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#22FFFFFF"))
+        
+        // Color applies to the icon tint
+        val avatars = listOf(
+            R.drawable.ic_avatar_smile, R.drawable.ic_avatar_alien,
+            R.drawable.ic_avatar_cat, R.drawable.ic_avatar_star,
+            R.drawable.ic_avatar_heart, R.drawable.ic_avatar_robot,
+            R.drawable.ic_avatar_rocket, R.drawable.ic_avatar_ghost,
+            R.drawable.ic_avatar_gamepad, R.drawable.ic_avatar_bolt
+        )
+
+        if (activeProfile.avatarId in avatars.indices) {
+            iconView.setImageResource(avatars[activeProfile.avatarId])
+            iconView.imageTintList = android.content.res.ColorStateList.valueOf(activeProfile.avatarColor)
+        }
+
+        layout.setOnClickListener {
+            showProfileMenu()
+        }
+        layout.isFocusable = true
+        layout.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
+            } else {
+                view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+            }
+        }
+    }
+
+    private fun animateProfilePulse() {
+        val layout = findViewById<View>(R.id.active_profile_layout)
+        layout.animate()
+            .scaleX(1.2f).scaleY(1.2f)
+            .setDuration(400)
+            .withEndAction {
+                layout.animate().scaleX(1.0f).scaleY(1.0f).setDuration(400).start()
+            }
+            .start()
+    }
+
+    private fun showProfileMenu() {
+        val activeProfile = ProfileManager.getActiveProfile(this) ?: return
+        val options = arrayOf(
+            getString(R.string.edit_profile),
+            getString(R.string.switch_profile)
+        )
+        
+        AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+            .setTitle(activeProfile.name)
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> { // Edit
+                        val intent = Intent(this, ProfileCreationActivity::class.java)
+                        intent.putExtra("EDIT_PROFILE_ID", activeProfile.id)
+                        startActivity(intent)
+                    }
+                    1 -> { // Switch
+                        startActivity(Intent(this, ProfileSelectionActivity::class.java))
+                    }
+                }
+            }
+            .show()
     }
 
     private fun setupGameButtons() {
@@ -151,36 +227,36 @@ class MainActivity : AppCompatActivity() {
     private fun focusLastPlayed() {
         val prefs = getSharedPreferences("game_settings", Context.MODE_PRIVATE)
         val lastPlayed = prefs.getString("last_played", "snake")
-        
-        when (lastPlayed) {
-            "snake" -> findViewById<Button>(R.id.btn_snake).requestFocus()
-            "tetris" -> findViewById<Button>(R.id.btn_tetris).requestFocus()
-            "minesweeper" -> findViewById<Button>(R.id.btn_minesweeper).requestFocus()
-            "trex" -> findViewById<Button>(R.id.btn_trex).requestFocus()
-            "4096" -> findViewById<Button>(R.id.btn_4096).requestFocus()
-            "memory" -> findViewById<Button>(R.id.btn_memory).requestFocus()
-            "brick_break" -> findViewById<Button>(R.id.btn_brick_break).requestFocus()
-            "solitaire" -> findViewById<Button>(R.id.btn_solitaire).requestFocus()
-            "lines98" -> findViewById<Button>(R.id.btn_lines98).requestFocus()
-            "mental_math" -> findViewById<Button>(R.id.btn_mental_math).requestFocus()
-            "sudoku" -> findViewById<Button>(R.id.btn_sudoku).requestFocus()
-            "tic_tac_toe" -> findViewById<Button>(R.id.btn_tictactoe).requestFocus()
-            "word_quest" -> findViewById<Button>(R.id.btn_word_quest).requestFocus()
-            "road_racer" -> findViewById<Button>(R.id.btn_road_racer).requestFocus()
-            "sokoban" -> findViewById<Button>(R.id.btn_sokoban).requestFocus()
-            "battle_tanks" -> findViewById<Button>(R.id.btn_tanks).requestFocus()
-            "star_fighter" -> findViewById<Button>(R.id.btn_starfighter).requestFocus()
-            "dungeon_escape" -> findViewById<Button>(R.id.btn_dungeon).requestFocus()
-            "slide_puzzle" -> findViewById<Button>(R.id.btn_slide_puzzle).requestFocus()
-            "hangman" -> findViewById<Button>(R.id.btn_hangman).requestFocus()
-            "simon_says" -> findViewById<Button>(R.id.btn_simon).requestFocus()
-            "flappy_hero" -> findViewById<Button>(R.id.btn_flappy).requestFocus()
-            "froggy_cross" -> findViewById<Button>(R.id.btn_froggy).requestFocus()
-            "syobon_action" -> findViewById<Button>(R.id.btn_syobon).requestFocus()
-            "checkers" -> findViewById<Button>(R.id.btn_checkers).requestFocus()
-            "spinball" -> findViewById<Button>(R.id.btn_spinball).requestFocus()
-            else -> findViewById<Button>(R.id.btn_snake).requestFocus()
+        val viewId = when (lastPlayed) {
+            "snake" -> R.id.btn_snake
+            "tetris" -> R.id.btn_tetris
+            "minesweeper" -> R.id.btn_minesweeper
+            "trex" -> R.id.btn_trex
+            "4096" -> R.id.btn_4096
+            "memory" -> R.id.btn_memory
+            "brick_break" -> R.id.btn_brick_break
+            "solitaire" -> R.id.btn_solitaire
+            "lines98" -> R.id.btn_lines98
+            "mental_math" -> R.id.btn_mental_math
+            "sudoku" -> R.id.btn_sudoku
+            "tic_tac_toe" -> R.id.btn_tictactoe
+            "word_quest" -> R.id.btn_word_quest
+            "road_racer" -> R.id.btn_road_racer
+            "sokoban" -> R.id.btn_sokoban
+            "battle_tanks" -> R.id.btn_tanks
+            "starfighter" -> R.id.btn_starfighter
+            "dungeon_escape" -> R.id.btn_dungeon
+            "slide_puzzle" -> R.id.btn_slide_puzzle
+            "hangman" -> R.id.btn_hangman
+            "simon_says" -> R.id.btn_simon
+            "flappy_hero" -> R.id.btn_flappy
+            "froggy_cross" -> R.id.btn_froggy
+            "syobon_action" -> R.id.btn_syobon
+            "checkers" -> R.id.btn_checkers
+            "spinball" -> R.id.btn_spinball
+            else -> R.id.btn_snake
         }
+        findViewById<Button>(viewId)?.requestFocus()
     }
 
     private fun setupGameButton(button: Button, action: () -> Unit) {
@@ -196,7 +272,6 @@ class MainActivity : AppCompatActivity() {
         
         button.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
-                // "Light Up" Animation: Scale up + Elevation + Overshoot for punchy feel
                 view.animate()
                     .scaleX(1.15f)
                     .scaleY(1.15f)
@@ -205,7 +280,6 @@ class MainActivity : AppCompatActivity() {
                     .setDuration(350)
                     .start()
             } else {
-                // Return to normal
                 view.animate()
                     .scaleX(1.0f)
                     .scaleY(1.0f)
@@ -227,10 +301,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        updateProfileDisplay()
         if (returnedFromGame) {
             returnedFromGame = false
-            // Check for rating prompt when returning from a game, 
-            // as this is a high-engagement moment ("Having Fun").
             if (RatingGuideManager.shouldShowRating(this)) {
                 RatingGuideManager.showRatingDialog(this) {
                     if (!isFinishing && !isDestroyed) focusLastPlayed()

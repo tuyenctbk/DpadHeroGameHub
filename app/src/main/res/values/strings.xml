@@ -186,7 +186,7 @@
     <string name="game_tanks_instructions">• Control your tank with D-PAD.\n• Tank fires automatically.\n• Destroy enemy tanks.\n• Protect your BASE (the star).\n• Bricks can be destroyed.</string>
     <string name="game_word_quest_instructions">• Guess the 5-letter word in 6 tries.\n• Use D-PAD to navigate keyboard.\n• Press CENTER to select letter.\n• GREEN: Correct letter &amp; position.\n• YELLOW: Correct letter, wrong position.\n• GRAY: Letter not in word.</string>
     <string name="game_dungeon_instructions">• Navigate the dungeon with D-PAD.\n• Collect the GOLDEN KEY.\n• Reach the EXIT DOOR to advance.\n• AVOID RED SPIKES at all costs!\n• Levels get harder with more obstacles.</string>
-    <string name="game_flappy_instructions">• Press CENTER/UP to flap your wings.\n• AVOID ALL 7 UNIQUE HAZARD TYPES:\n  - Green Pipes (classic tubes)\n  - Moving Pipes (shifting tubes)\n  - Patrol Bat (fast vertical flying enemy)\n  - Closing Gates (metal jaws that snap shut)\n  - Wind Zone (updraft/downdraft air currents)\n  - Falling Stalactite (ceiling hazard that drops)\n  - Spiked Mine (floating center hazard block)\n• Score 1 point for every obstacle cleared.</string>
+    <string name="game_flappy_instructions">• Press CENTER/UP to flap your wings.\n• AVOID ALL 7 UNIQUE HAZARD TYPES:\n  - Green Pipes (classic tubes)\n  - Moving Pipes (shifting tubes)\n  - Patrol Bat (fast vertical flying enemy)\n  - Closing Gates (metal jaws that snap shut)\n  - Wind Zone (updraft/draft air currents)\n  - Falling Stalactite (ceiling hazard that drops)\n  - Spiked Mine (floating center hazard block)\n• Score 1 point for every obstacle cleared.</string>
     <string name="game_lines98_instructions">• Use D-PAD to move the cursor.\n• Press CENTER to select a ball, then press CENTER on an empty cell to move it.\n• Align 5 or more balls of the same color (horizontal, vertical, or diagonal) to score and clear them.\n• Each move that doesn\'t clear lines adds 3 new balls.\n• Game ends when the board is full.\n• Press \'S\' or MUTE to toggle sound.</string>
     <string name="game_solitaire_instructions">• Use D-PAD to move the cursor.\n• Press CENTER to select/pick up cards, and CENTER to place them.\n• Build foundations by suit from Ace to King.\n• Build tableaus by alternating color and descending rank.\n• Press \'S\' or MUTE to toggle sound.</string>
     <string name="game_road_racer_instructions">• Move Left/Right to avoid traffic.\n• Survive as long as you can!\n• Press Center to Start/Pause.</string>
@@ -533,4 +533,31 @@
     <string name="quit_game_confirm">Are you sure you want to quit the game?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="choose_hero" translatable="true">CHOOSE YOUR PLAYER</string>
+    <string name="create_hero" translatable="true">CREATE NEW PLAYER</string>
+    <string name="enter_hero_name" translatable="true">ENTER PLAYER NAME</string>
+    <string name="add_profile" translatable="true">ADD PLAYER</string>
+    <string name="switch_profile" translatable="true">SWITCH PLAYER</string>
+    <string name="profile_selection_hint" translatable="true">USE ◄ ► TO BROWSE • PRESS [OK] TO SELECT</string>
+    <string name="please_enter_name" translatable="true">Please enter a name</string>
+    <string name="enter_pin" translatable="true">ENTER 4-DIGIT PIN</string>
+    <string name="setup_pin" translatable="true">SET PLAYER LOCK (PIN)</string>
+    <string name="wrong_pin" translatable="true">Incorrect PIN. Try again.</string>
+    <string name="manage_profiles" translatable="true">MANAGE PLAYERS</string>
+    <string name="edit_profile" translatable="true">EDIT PLAYER</string>
+    <string name="delete_profile" translatable="true">DELETE PLAYER</string>
+    <string name="confirm_delete_profile" translatable="true">Are you sure you want to delete this player? All scores will be lost.</string>
+    <string name="leave_blank_no_pin" translatable="true">Leave blank for no lock</string>
+    <string name="hall_of_fame" translatable="true">HALL OF FAME</string>
+    <string name="no_records" translatable="true">NO RECORDS YET</string>
+    <string name="save" translatable="true">SAVE</string>
+    <string name="choose_avatar" translatable="true">CHOOSE AVATAR</string>
+    <string name="choose_color" translatable="true">CHOOSE COLOR</string>
+    <string name="security_pin_label" translatable="true">SECURITY PIN (OPTIONAL)</string>
+    <string name="pin_digits_hint" translatable="true">PIN must be 4 digits</string>
+    <string name="rank_1st" translatable="true">1st</string>
+    <string name="rank_2nd" translatable="true">2nd</string>
+    <string name="rank_3rd" translatable="true">3rd</string>
+    <string name="placeholder_name" translatable="false">---</string>
+    <string name="placeholder_score" translatable="false">0</string>
 </resources>

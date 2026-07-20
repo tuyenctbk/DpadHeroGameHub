@@ -5,13 +5,20 @@ import android.os.Bundle
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
+import com.tdpham.games.common.profile.ProfileManager
 
 object ScoreManager {
     private const val PREFS_NAME = "game_scores"
 
+    private fun getProfileScopedKey(context: Context, gameKey: String, level: Int): String {
+        val activeId = ProfileManager.getActiveProfileId(context) ?: "global"
+        val baseKey = if (level >= 0) "high_score_${gameKey}_l$level" else "high_score_$gameKey"
+        return "${activeId}_$baseKey"
+    }
+
     fun getHighScore(context: Context, gameKey: String, level: Int = -1): Int {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val key = if (level >= 0) "high_score_${gameKey}_l$level" else "high_score_$gameKey"
+        val key = getProfileScopedKey(context, gameKey, level)
         return prefs.getInt(key, 0)
     }
 
@@ -19,8 +26,15 @@ object ScoreManager {
         val currentHigh = getHighScore(context, gameKey, level)
         if (newScore > currentHigh) {
             val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            val key = if (level >= 0) "high_score_${gameKey}_l$level" else "high_score_$gameKey"
+            val key = getProfileScopedKey(context, gameKey, level)
             prefs.edit().putInt(key, newScore).apply()
+
+            // Also update global if active id is not null (for backward compatibility)
+            val activeId = ProfileManager.getActiveProfileId(context)
+            if (activeId != null) {
+                val globalKey = if (level >= 0) "high_score_${gameKey}_l$level" else "high_score_$gameKey"
+                prefs.edit().putInt(globalKey, newScore).apply()
+            }
 
             // Log high score to Firebase
             try {
@@ -36,5 +50,21 @@ object ScoreManager {
             return true
         }
         return false
+    }
+
+    fun migrateGlobalToProfile(context: Context, profileId: String) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val allEntries = prefs.all
+        val editor = prefs.edit()
+        
+        for ((key, value) in allEntries) {
+            if (key.startsWith("high_score_") && value is Int) {
+                val profileKey = "${profileId}_$key"
+                if (prefs.getInt(profileKey, 0) < value) {
+                    editor.putInt(profileKey, value)
+                }
+            }
+        }
+        editor.apply()
     }
 }

@@ -93,10 +93,28 @@
         </activity>
 
         <activity
+            android:name="com.tdpham.games.hub.profile.ProfileSelectionActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.hub.profile.ProfileCreationActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
             android:name="com.tdpham.games.hub.MainActivity"
             android:exported="true"
             android:screenOrientation="landscape"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name="com.tdpham.games.hub.LeaderboardActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
             tools:ignore="LockedOrientationActivity" />
 
         <activity

@@ -13,7 +13,9 @@ import com.tdpham.games.R
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.ConfigManager
 import com.tdpham.games.common.AdManager
-
+import com.tdpham.games.common.profile.ProfileManager
+import com.tdpham.games.hub.profile.ProfileSelectionActivity
+import com.tdpham.games.hub.profile.ProfileCreationActivity
 
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +25,20 @@ import kotlinx.coroutines.launch
 class SplashActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val startMainRunnable = Runnable {
-        startActivity(Intent(this, MainActivity::class.java))
+        val lastPlayerId = ProfileManager.getLastPlayerId(this)
+        val profiles = ProfileManager.getProfiles(this)
+        
+        val intent = when {
+            profiles.isEmpty() -> Intent(this, ProfileCreationActivity::class.java)
+            lastPlayerId != null && profiles.any { it.id == lastPlayerId } -> {
+                ProfileManager.setActiveProfileId(this, lastPlayerId)
+                Intent(this, MainActivity::class.java).apply {
+                    putExtra("AUTO_LOGGED_IN", true)
+                }
+            }
+            else -> Intent(this, ProfileSelectionActivity::class.java)
+        }
+        startActivity(intent)
         finish()
     }
     private var pulseRunnable: Runnable? = null

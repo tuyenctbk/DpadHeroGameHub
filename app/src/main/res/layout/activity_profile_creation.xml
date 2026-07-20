@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:clipToPadding="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/create_hero_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="@string/create_hero"
+            android:textColor="#FFFFFF"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+        <!-- 1. Player Name on Top -->
+        <EditText
+            android:id="@+id/edit_profile_name"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#22FFFFFF"
+            android:hint="@string/enter_hero_name"
+            android:imeOptions="actionNext"
+            android:inputType="textCapWords"
+            android:maxLength="12"
+            android:padding="16dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#66FFFFFF"
+            android:textSize="20sp" />
+
+        <!-- 2. Avatar Selection (Very Compact) -->
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:scrollbars="none"
+            android:clipToPadding="false">
+            <LinearLayout
+                android:id="@+id/avatar_selection_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center" />
+        </HorizontalScrollView>
+
+        <!-- 3. Color Selection (Very Compact) -->
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:scrollbars="none"
+            android:clipToPadding="false">
+            <LinearLayout
+                android:id="@+id/color_selection_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center" />
+        </HorizontalScrollView>
+
+        <!-- 4. Security PIN -->
+        <LinearLayout
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/security_pin_label"
+                android:textColor="#88FFFFFF"
+                android:textSize="12sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/edit_profile_pin"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="#22FFFFFF"
+                android:hint="____"
+                android:imeOptions="actionDone"
+                android:inputType="numberPassword"
+                android:maxLength="4"
+                android:padding="12dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#33FFFFFF"
+                android:textSize="22sp"
+                android:letterSpacing="0.8"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/leave_blank_no_pin"
+                android:textColor="#66FFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Actions -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="#333333"
+                android:text="@string/back"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_create_profile"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="#4CAF50"
+                android:text="@string/save"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_delete_profile"
+            android:layout_width="332dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#B71C1C"
+            android:text="@string/delete_profile"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+    </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

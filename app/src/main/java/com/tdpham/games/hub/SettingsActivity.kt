@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.tdpham.games.R
 import com.tdpham.games.common.SoundManager
+import com.tdpham.games.hub.profile.ProfileSelectionActivity
+import android.content.Intent
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -27,6 +29,13 @@ class SettingsActivity : AppCompatActivity() {
             soundSwitch.isChecked = isEnabled
         }
         setupFocusEffect(soundToggleLayout)
+
+        findViewById<Button>(R.id.btn_switch_profile).apply {
+            setOnClickListener {
+                startActivity(Intent(this@SettingsActivity, ProfileSelectionActivity::class.java))
+            }
+            setupFocusEffect(this)
+        }
 
         val btnBack = findViewById<Button>(R.id.btn_back)
         btnBack.setOnClickListener { finish() }

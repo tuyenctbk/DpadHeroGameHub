@@ -1,6 +1,7 @@
 package com.tdpham.games.common
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.InputDevice
 import android.view.KeyEvent
@@ -441,7 +442,16 @@ abstract class BaseGameActivity : AppCompatActivity() {
             showGameGuide()
             return true
         }
+        if (keyCode == KeyEvent.KEYCODE_L || keyCode == KeyEvent.KEYCODE_PROG_BLUE) {
+            showInGameLeaderboard()
+            return true
+        }
         return (gameView as View).onKeyDown(keyCode, event)
+    }
+
+    private fun showInGameLeaderboard() {
+        val intent = Intent(this, com.tdpham.games.hub.LeaderboardActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {

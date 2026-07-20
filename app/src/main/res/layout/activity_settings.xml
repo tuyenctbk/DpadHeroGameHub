@@ -58,6 +58,15 @@
         android:layout_weight="1" />
 
     <Button
+        android:id="@+id/btn_switch_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#444444"
+        android:text="@string/switch_profile"
+        android:textColor="#FFFFFF" />
+
+    <Button
         android:id="@+id/btn_back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
