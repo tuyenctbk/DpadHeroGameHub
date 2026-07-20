@@ -106,7 +106,8 @@ abstract class BaseGameActivity : AppCompatActivity() {
             if (GuideManager.shouldShowMasteryHint(this, gameKey)) {
                 showMasteryHint()
             }
-            // Do not auto-start game here to allow user to see lobby/options
+            // Auto-start game if guide is skipped for smoother UX
+            startGameWithAnalytics()
             focusGame()
         }
         GuideManager.incrementLaunchCount(this, gameKey)

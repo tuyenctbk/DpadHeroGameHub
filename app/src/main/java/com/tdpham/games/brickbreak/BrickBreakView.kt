@@ -558,7 +558,9 @@ class BrickBreakView @JvmOverloads constructor(
         canvas.drawText(sizeStr, width / 2f, height * 0.05f, paint)
 
         if (isPaused && !isGameOver && !isWin) {
-            drawOverlay(canvas, context.getString(R.string.game_brick_break), context.getString(R.string.launch_hint))
+            val title = if (!isBallLaunched) context.getString(R.string.game_brick_break) else context.getString(R.string.paused)
+            val hint = if (!isBallLaunched) context.getString(R.string.launch_hint) else context.getString(R.string.resume_hint)
+            drawOverlay(canvas, title, hint)
         } else if (isGameOver || isWin) {
             celebrationManager.draw(canvas)
             

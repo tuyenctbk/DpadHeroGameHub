@@ -430,7 +430,11 @@ class RoadRacerView @JvmOverloads constructor(
             val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.crashed_label)
             drawOverlay(canvas, title, "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         }
-        else if (isPaused) drawOverlay(canvas, context.getString(R.string.game_road_racer), context.getString(R.string.start_game))
+        else if (isPaused) {
+            val title = if (score == 0) context.getString(R.string.game_road_racer) else context.getString(R.string.paused)
+            val hint = if (score == 0) context.getString(R.string.start_game) else context.getString(R.string.resume_hint)
+            drawOverlay(canvas, title, hint)
+        }
     }
 
     private fun drawObstacle(canvas: Canvas, x: Float, y: Float, obs: Obstacle, theme: RoadTheme) {

@@ -869,7 +869,11 @@ class StarFighterView @JvmOverloads constructor(
             val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.mission_failed_label)
             drawOverlay(canvas, title, "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         }
-        else if (isPaused) drawOverlay(canvas, context.getString(R.string.game_starfighter), context.getString(R.string.start_game))
+        else if (isPaused) {
+            val title = if (score == 0) context.getString(R.string.game_starfighter) else context.getString(R.string.paused)
+            val hint = if (score == 0) context.getString(R.string.start_game) else context.getString(R.string.resume_hint)
+            drawOverlay(canvas, title, hint)
+        }
         
         if (!isPaused && !gameOver) {
             celebrationManager.update()

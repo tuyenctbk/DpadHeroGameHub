@@ -29,21 +29,23 @@ class LeaderboardActivity : AppCompatActivity() {
         R.drawable.ic_avatar_gamepad, R.drawable.ic_avatar_bolt
     )
 
-    private val games = listOf(
-        GameTab("snake", "SNAKE"),
-        GameTab("tetris", "TETRIS", listOf("LVL 1", "LVL 5", "LVL 10")),
-        GameTab("minesweeper", "MINESWEEPER", listOf("EASY", "NORMAL", "HARD")),
-        GameTab("sudoku", "SUDOKU", listOf("EASY", "MEDIUM", "HARD")),
-        GameTab("trex", "T-REX RUN"),
-        GameTab("4096", "4096", listOf("4x4", "5x5")),
-        GameTab("flappy_hero", "FLAPPY HERO", listOf("LVL 1", "LVL 2", "LVL 3", "LVL 4", "LVL 5")),
-        GameTab("starfighter", "STAR FIGHTER", listOf("EASY", "NORMAL", "HARD")),
-        GameTab("syobon_action", "CAT MEOWIO"),
-        GameTab("road_racer", "ROAD RACER"),
-        GameTab("brick_break", "BRICK BREAK"),
-        GameTab("froggy_cross", "FROGGY CROSS"),
-        GameTab("tanks", "BATTLE TANKS")
-    )
+    private val games by lazy {
+        listOf(
+            GameTab("snake", getString(R.string.snake)),
+            GameTab("tetris", getString(R.string.game_tetris), listOf("LVL 1", "LVL 5", "LVL 10")),
+            GameTab("minesweeper", getString(R.string.minesweeper), listOf(getString(R.string.level_label) + " 1", getString(R.string.level_label) + " 2", getString(R.string.level_label) + " 3")),
+            GameTab("sudoku", getString(R.string.game_sudoku), listOf(getString(R.string.sudoku_level_1).split(":")[0], getString(R.string.sudoku_level_2).split(":")[0], getString(R.string.sudoku_level_3).split(":")[0])),
+            GameTab("trex", getString(R.string.game_trex)),
+            GameTab("4096", getString(R.string.game_4096), listOf("4x4", "5x5")),
+            GameTab("flappy_hero", getString(R.string.game_flappy), listOf("LVL 1", "LVL 2", "LVL 3", "LVL 4", "LVL 5")),
+            GameTab("starfighter", getString(R.string.game_starfighter), listOf(getString(R.string.level_label) + " 1", getString(R.string.level_label) + " 2", getString(R.string.level_label) + " 3")),
+            GameTab("syobon_action", getString(R.string.game_syobon)),
+            GameTab("road_racer", getString(R.string.game_road_racer)),
+            GameTab("brick_break", getString(R.string.game_brick_break)),
+            GameTab("froggy_cross", getString(R.string.game_froggy)),
+            GameTab("tanks", getString(R.string.game_tanks))
+        )
+    }
 
     data class GameTab(val key: String, val title: String, val levels: List<String>? = null)
 

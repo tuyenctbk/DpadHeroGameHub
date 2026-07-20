@@ -499,7 +499,9 @@ class SnakeGameView @JvmOverloads constructor(
         } else if (isPaused) {
             val resumeHint = context.getString(R.string.resume_hint)
             val exitHint = context.getString(R.string.exit_hint)
-            drawOverlay(canvas, context.getString(R.string.paused), "$resumeHint\n$exitHint")
+            // Use game name as title if game hasn't really started yet (score is 0)
+            val title = if (score == 0) context.getString(R.string.snake) else context.getString(R.string.paused)
+            drawOverlay(canvas, title, "$resumeHint\n$exitHint")
         }
 
         // Draw Score Header

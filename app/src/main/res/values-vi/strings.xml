@@ -448,4 +448,31 @@
     <string name="quit_game_confirm">Bạn có chắc chắn muốn thoát trò chơi không?</string>
     <string name="yes">Có</string>
     <string name="no">Không</string>
+    <string name="choose_hero" translatable="true">CHỌN NGƯỜI CHƠI</string>
+    <string name="create_hero" translatable="true">TẠO NGƯỜI CHƠI MỚI</string>
+    <string name="enter_hero_name" translatable="true">NHẬP TÊN NGƯỜI CHƠI</string>
+    <string name="add_profile" translatable="true">THÊM NGƯỜI CHƠI</string>
+    <string name="switch_profile" translatable="true">ĐỔI NGƯỜI CHƠI</string>
+    <string name="profile_selection_hint" translatable="true">DÙNG ◄ ► ĐỂ DUYỆT • NHẤN [OK] ĐỂ CHỌN</string>
+    <string name="please_enter_name" translatable="true">Vui lòng nhập tên</string>
+    <string name="enter_pin" translatable="true">NHẬP MÃ PIN 4 SỐ</string>
+    <string name="setup_pin" translatable="true">ĐẶT KHÓA NGƯỜI CHƠI (PIN)</string>
+    <string name="wrong_pin" translatable="true">Mã PIN không đúng. Thử lại.</string>
+    <string name="manage_profiles" translatable="true">QUẢN LÝ NGƯỜI CHƠI</string>
+    <string name="edit_profile" translatable="true">SỬA NGƯỜI CHƠI</string>
+    <string name="delete_profile" translatable="true">XÓA NGƯỜI CHƠI</string>
+    <string name="confirm_delete_profile" translatable="true">Bạn có chắc muốn xóa người chơi này? Toàn bộ điểm số sẽ bị mất.</string>
+    <string name="leave_blank_no_pin" translatable="true">Để trống nếu không muốn dùng khóa</string>
+    <string name="hall_of_fame" translatable="true">ĐỀN THỜ HUYỀN THOẠI</string>
+    <string name="no_records" translatable="true">CHƯA CÓ KỶ LỤC</string>
+    <string name="save" translatable="true">LƯU</string>
+    <string name="choose_avatar" translatable="true">CHỌN ẢNH ĐẠI DIỆN</string>
+    <string name="choose_color" translatable="true">CHỌN MÀU SẮC</string>
+    <string name="security_pin_label" translatable="true">MÃ PIN BẢO MẬT (TÙY CHỌN)</string>
+    <string name="pin_digits_hint" translatable="true">Mã PIN phải có 4 chữ số</string>
+    <string name="rank_1st" translatable="true">Hạng 1</string>
+    <string name="rank_2nd" translatable="true">Hạng 2</string>
+    <string name="rank_3rd" translatable="true">Hạng 3</string>
+    <string name="placeholder_name" translatable="false">---</string>
+    <string name="placeholder_score" translatable="false">0</string>
 </resources>

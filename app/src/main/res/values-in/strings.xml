@@ -406,4 +406,31 @@
     <string name="quit_game_confirm">Apakah Anda yakin ingin keluar dari game?</string>
     <string name="yes">Ya</string>
     <string name="no">Tidak</string>
+    <string name="choose_hero" translatable="true">PILIH PEMAINMU</string>
+    <string name="create_hero" translatable="true">BUAT PEMAIN BARU</string>
+    <string name="enter_hero_name" translatable="true">MASUKKAN NAMA PEMAIN</string>
+    <string name="add_profile" translatable="true">TAMBAH PEMAIN</string>
+    <string name="switch_profile" translatable="true">GANTI PEMAIN</string>
+    <string name="profile_selection_hint" translatable="true">GUNAKAN ◄ ► UNTUK MEMILIH • TEKAN [OK] UNTUK PILIH</string>
+    <string name="please_enter_name" translatable="true">Harap masukkan nama</string>
+    <string name="enter_pin" translatable="true">MASUKKAN PIN 4 ANGKA</string>
+    <string name="setup_pin" translatable="true">SETEL KUNCI PEMAIN (PIN)</string>
+    <string name="wrong_pin" translatable="true">PIN salah. Coba lagi.</string>
+    <string name="manage_profiles" translatable="true">KELOLA PEMAIN</string>
+    <string name="edit_profile" translatable="true">EDIT PEMAIN</string>
+    <string name="delete_profile" translatable="true">HAPUS PEMAIN</string>
+    <string name="confirm_delete_profile" translatable="true">Yakin ingin menghapus pemain ini? Semua skor akan hilang.</string>
+    <string name="leave_blank_no_pin" translatable="true">Kosongkan jika tanpa kunci</string>
+    <string name="hall_of_fame" translatable="true">HALL OF FAME</string>
+    <string name="no_records" translatable="true">BELUM ADA REKOR</string>
+    <string name="save" translatable="true">SIMPAN</string>
+    <string name="choose_avatar" translatable="true">PILIH AVATAR</string>
+    <string name="choose_color" translatable="true">PILIH WARNA</string>
+    <string name="security_pin_label" translatable="true">PIN KEAMANAN (OPSIONAL)</string>
+    <string name="pin_digits_hint" translatable="true">PIN harus 4 angka</string>
+    <string name="rank_1st" translatable="true">Pertama</string>
+    <string name="rank_2nd" translatable="true">Kedua</string>
+    <string name="rank_3rd" translatable="true">Ketiga</string>
+    <string name="placeholder_name" translatable="false">---</string>
+    <string name="placeholder_score" translatable="false">0</string>
 </resources>

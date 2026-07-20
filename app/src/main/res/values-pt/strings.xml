@@ -375,4 +375,31 @@
     <string name="quit_game_confirm">Tem certeza de que deseja sair do jogo?</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
+    <string name="choose_hero" translatable="true">ESCOLHA SEU JOGADOR</string>
+    <string name="create_hero" translatable="true">CRIAR NOVO JOGADOR</string>
+    <string name="enter_hero_name" translatable="true">INSIRA NOME DO JOGADOR</string>
+    <string name="add_profile" translatable="true">ADICIONAR JOGADOR</string>
+    <string name="switch_profile" translatable="true">TROCAR JOGADOR</string>
+    <string name="profile_selection_hint" translatable="true">USE ◄ ► PARA NAVEGAR • PRESSIONE [OK] PARA ESCOLHER</string>
+    <string name="please_enter_name" translatable="true">Por favor, insira um nome</string>
+    <string name="enter_pin" translatable="true">INSIRA PIN DE 4 DÍGITOS</string>
+    <string name="setup_pin" translatable="true">BLOQUEAR JOGADOR (PIN)</string>
+    <string name="wrong_pin" translatable="true">PIN incorreto. Tente novamente.</string>
+    <string name="manage_profiles" translatable="true">GERENCIAR JOGADORES</string>
+    <string name="edit_profile" translatable="true">EDITAR JOGADOR</string>
+    <string name="delete_profile" translatable="true">EXCLUIR JOGADOR</string>
+    <string name="confirm_delete_profile" translatable="true">Tem certeza que deseja excluir este jogador? Todos os recordes serão perdidos.</string>
+    <string name="leave_blank_no_pin" translatable="true">Deixe em branco para não bloquear</string>
+    <string name="hall_of_fame" translatable="true">HALL DA FAMA</string>
+    <string name="no_records" translatable="true">SEM RECORDES AINDA</string>
+    <string name="save" translatable="true">SALVAR</string>
+    <string name="choose_avatar" translatable="true">ESCOLHER AVATAR</string>
+    <string name="choose_color" translatable="true">ESCOLHER COR</string>
+    <string name="security_pin_label" translatable="true">PIN DE SEGURANÇA (OPCIONAL)</string>
+    <string name="pin_digits_hint" translatable="true">O PIN deve ter 4 dígitos</string>
+    <string name="rank_1st" translatable="true">1º</string>
+    <string name="rank_2nd" translatable="true">2º</string>
+    <string name="rank_3rd" translatable="true">3º</string>
+    <string name="placeholder_name" translatable="false">---</string>
+    <string name="placeholder_score" translatable="false">0</string>
 </resources>

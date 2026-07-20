@@ -375,4 +375,31 @@
     <string name="quit_game_confirm">정말로 게임을 종료하시겠습니까?</string>
     <string name="yes">예</string>
     <string name="no">아니오</string>
+    <string name="choose_hero" translatable="true">플레이어를 선택하세요</string>
+    <string name="create_hero" translatable="true">새 플레이어 생성</string>
+    <string name="enter_hero_name" translatable="true">플레이어 이름 입력</string>
+    <string name="add_profile" translatable="true">플레이어 추가</string>
+    <string name="switch_profile" translatable="true">플레이어 전환</string>
+    <string name="profile_selection_hint" translatable="true">◄ ► 키로 선택 • [OK] 버튼으로 결정</string>
+    <string name="please_enter_name" translatable="true">이름을 입력해 주세요</string>
+    <string name="enter_pin" translatable="true">4자리 PIN 입력</string>
+    <string name="setup_pin" translatable="true">플레이어 잠금 설정 (PIN)</string>
+    <string name="wrong_pin" translatable="true">PIN이 틀렸습니다. 다시 시도하세요.</string>
+    <string name="manage_profiles" translatable="true">플레이어 관리</string>
+    <string name="edit_profile" translatable="true">플레이어 편집</string>
+    <string name="delete_profile" translatable="true">플레이어 삭제</string>
+    <string name="confirm_delete_profile" translatable="true">이 플레이어를 삭제하시겠습니까? 모든 기록이 삭제됩니다.</string>
+    <string name="leave_blank_no_pin" translatable="true">잠금 없음 (공란)</string>
+    <string name="hall_of_fame" translatable="true">명예의 전당</string>
+    <string name="no_records" translatable="true">기록 없음</string>
+    <string name="save" translatable="true">저장</string>
+    <string name="choose_avatar" translatable="true">아바타 선택</string>
+    <string name="choose_color" translatable="true">색상 선택</string>
+    <string name="security_pin_label" translatable="true">보안 PIN (선택 사항)</string>
+    <string name="pin_digits_hint" translatable="true">PIN은 4자리여야 합니다</string>
+    <string name="rank_1st" translatable="true">1위</string>
+    <string name="rank_2nd" translatable="true">2위</string>
+    <string name="rank_3rd" translatable="true">3위</string>
+    <string name="placeholder_name" translatable="false">---</string>
+    <string name="placeholder_score" translatable="false">0</string>
 </resources>
