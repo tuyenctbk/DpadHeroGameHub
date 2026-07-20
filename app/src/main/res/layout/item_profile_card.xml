@@ -40,7 +40,7 @@
             android:textColor="#FFFFFF"
             android:textSize="40sp"
             android:textStyle="bold"
-            android:text="A" />
+            android:text="@string/placeholder_name" />
 
         <ImageView
             android:id="@+id/icon_lock"
@@ -61,6 +61,6 @@
         android:textColor="#FFFFFF"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:text="NAME" />
+        android:text="@string/placeholder_name" />
 
 </LinearLayout>

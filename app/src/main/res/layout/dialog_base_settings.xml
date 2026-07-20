@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="SETTINGS"
+        android:text="@string/settings"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold"

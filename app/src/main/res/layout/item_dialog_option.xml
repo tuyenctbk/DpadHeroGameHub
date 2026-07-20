@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/option_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/game_item_background"
+    android:backgroundTint="#22FFFFFF"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
-    android:padding="12dp"
-    android:layout_marginLeft="12dp"
-    android:layout_marginRight="12dp"
-    android:layout_marginBottom="4dp">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/option_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Difficulty"
+        android:text="@string/snake_level_label"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -27,7 +27,7 @@
         android:layout_marginTop="2dp"
         android:textColor="#4FC3F7"
         android:textSize="16sp"
-        android:text="Normal" />
+        android:text="@string/snake_level_2" />
 
     <TextView
         android:id="@+id/option_desc"
@@ -37,6 +37,6 @@
         android:textColor="#BBBBBB"
         android:textSize="14sp"
         android:lineSpacingExtra="2dp"
-        android:text="Standard challenge." />
+        android:text="@string/snake_level_2_desc" />
 
 </LinearLayout>
