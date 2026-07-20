@@ -43,7 +43,7 @@
             android:textColorHint="#66FFFFFF"
             android:textSize="20sp" />
 
-        <!-- 2. Avatar Selection (Very Compact) -->
+        <!-- 2. Avatar Selection (Compact) -->
         <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,10 +55,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center" />
+                android:gravity="center"
+                android:padding="4dp" />
         </HorizontalScrollView>
 
-        <!-- 3. Color Selection (Very Compact) -->
+        <!-- 3. Color Selection (Compact) -->
         <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,7 +71,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center" />
+                android:gravity="center"
+                android:padding="4dp" />
         </HorizontalScrollView>
 
         <!-- 4. Security PIN -->
@@ -121,7 +123,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="24dp"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="24dp">
 
             <Button
                 android:id="@+id/btn_cancel"

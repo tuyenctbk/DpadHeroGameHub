@@ -4,9 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -40,6 +44,7 @@ import com.tdpham.games.froggy.FroggyCrossActivity
 import com.tdpham.games.syobon.SyobonActivity
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.profile.ProfileManager
+import com.tdpham.games.common.profile.UserProfile
 import com.tdpham.games.hub.profile.ProfileSelectionActivity
 import com.tdpham.games.hub.profile.ProfileCreationActivity
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -121,10 +126,9 @@ class MainActivity : AppCompatActivity() {
 
         nameView.text = activeProfile.name
         
-        // Neutral background for the layout
-        layout.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#22FFFFFF"))
+        // Transparent background for the layout
+        layout.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.TRANSPARENT)
         
-        // Color applies to the icon tint
         val avatars = listOf(
             R.drawable.ic_avatar_smile, R.drawable.ic_avatar_alien,
             R.drawable.ic_avatar_cat, R.drawable.ic_avatar_star,
@@ -135,6 +139,7 @@ class MainActivity : AppCompatActivity() {
 
         if (activeProfile.avatarId in avatars.indices) {
             iconView.setImageResource(avatars[activeProfile.avatarId])
+            // Color applies to the icon itself
             iconView.imageTintList = android.content.res.ColorStateList.valueOf(activeProfile.avatarColor)
         }
 
@@ -145,8 +150,10 @@ class MainActivity : AppCompatActivity() {
         layout.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
                 view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
+                view.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#22FFFFFF"))
             } else {
                 view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                view.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.TRANSPARENT)
             }
         }
     }
@@ -174,9 +181,17 @@ class MainActivity : AppCompatActivity() {
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> { // Edit
-                        val intent = Intent(this, ProfileCreationActivity::class.java)
-                        intent.putExtra("EDIT_PROFILE_ID", activeProfile.id)
-                        startActivity(intent)
+                        if (activeProfile.pin != null) {
+                            showPinDialog(activeProfile) {
+                                val intent = Intent(this, ProfileCreationActivity::class.java)
+                                intent.putExtra("EDIT_PROFILE_ID", activeProfile.id)
+                                startActivity(intent)
+                            }
+                        } else {
+                            val intent = Intent(this, ProfileCreationActivity::class.java)
+                            intent.putExtra("EDIT_PROFILE_ID", activeProfile.id)
+                            startActivity(intent)
+                        }
                     }
                     1 -> { // Switch
                         startActivity(Intent(this, ProfileSelectionActivity::class.java))
@@ -184,6 +199,38 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             .show()
+    }
+
+    private fun showPinDialog(profile: UserProfile, onSuccess: () -> Unit) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_pin_entry, null)
+        val editPin = dialogView.findViewById<EditText>(R.id.edit_pin)
+        val errorView = dialogView.findViewById<TextView>(R.id.pin_error)
+        val titleView = dialogView.findViewById<TextView>(R.id.pin_title)
+        titleView.text = getString(R.string.edit_profile)
+
+        val dialog = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+            .setView(dialogView)
+            .create()
+
+        editPin.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (s?.length == 4) {
+                    if (s.toString() == profile.pin) {
+                        dialog.dismiss()
+                        onSuccess()
+                    } else {
+                        errorView.visibility = View.VISIBLE
+                        s.clear()
+                        SoundManager.playError()
+                    }
+                } else {
+                    errorView.visibility = View.INVISIBLE
+                }
+            }
+        })
+        dialog.show()
     }
 
     private fun setupGameButtons() {
