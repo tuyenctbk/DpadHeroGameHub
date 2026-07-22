@@ -14,7 +14,8 @@ object SoundManager {
 
     fun init(context: Context) {
         prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        isSoundEnabled = prefs?.getBoolean(KEY_SOUND_ENABLED, true) ?: true
+        isSoundEnabled = true
+        prefs?.edit()?.putBoolean(KEY_SOUND_ENABLED, true)?.apply()
 
         if (toneGenerator == null) {
             try {
@@ -26,16 +27,13 @@ object SoundManager {
     }
 
     fun toggleSound(): Boolean {
-        isSoundEnabled = !isSoundEnabled
-        prefs?.edit()?.putBoolean(KEY_SOUND_ENABLED, isSoundEnabled)?.apply()
-
-        if (isSoundEnabled) {
-            playTone(ToneGenerator.TONE_PROP_BEEP)
-        }
-        return isSoundEnabled
+        isSoundEnabled = true
+        prefs?.edit()?.putBoolean(KEY_SOUND_ENABLED, true)?.apply()
+        playTone(ToneGenerator.TONE_PROP_BEEP)
+        return true
     }
 
-    fun isSoundEnabled() = isSoundEnabled
+    fun isSoundEnabled() = true
 
     fun playTone(toneType: Int) {
         if (isSoundEnabled) {

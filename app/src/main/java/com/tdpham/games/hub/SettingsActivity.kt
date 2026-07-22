@@ -23,10 +23,10 @@ class SettingsActivity : AppCompatActivity() {
         val soundToggleLayout = findViewById<LinearLayout>(R.id.layout_sound_toggle)
         val soundSwitch = findViewById<SwitchCompat>(R.id.switch_sound)
         
-        soundSwitch.isChecked = SoundManager.isSoundEnabled()
+        soundSwitch.isChecked = true
+        soundSwitch.isEnabled = false
         soundToggleLayout.setOnClickListener {
-            val isEnabled = SoundManager.toggleSound()
-            soundSwitch.isChecked = isEnabled
+            // Sound is always enabled, clicking is a no-op
         }
         setupFocusEffect(soundToggleLayout)
 
