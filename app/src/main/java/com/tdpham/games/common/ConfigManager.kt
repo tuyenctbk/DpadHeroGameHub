@@ -80,11 +80,11 @@ object ConfigManager {
     }
 
     fun getAdsMinDays(): Int {
-        val rc = remoteConfig ?: return 20
+        val rc = remoteConfig ?: return 7
         return try {
             rc.getLong("ads_min_days").toInt()
         } catch (_: Exception) {
-            20
+            7
         }
     }
 
@@ -98,11 +98,11 @@ object ConfigManager {
     }
 
     fun getAdsMinSessionSeconds(): Int {
-        val rc = remoteConfig ?: return 30
+        val rc = remoteConfig ?: return 900
         return try {
             rc.getLong("ads_min_session_seconds").toInt()
         } catch (_: Exception) {
-            30
+            900
         }
     }
 

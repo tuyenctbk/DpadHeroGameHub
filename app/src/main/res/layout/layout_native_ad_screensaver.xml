@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:focusable="false"
     android:descendantFocusability="blocksDescendants"
-    android:background="#F2000000">
+    android:background="#FF000000">
 
     <com.google.android.gms.ads.nativead.NativeAdView
         android:id="@+id/native_ad_view"
@@ -16,7 +16,7 @@
             android:id="@+id/drift_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="48dp">
+            android:padding="32dp">
 
             <!-- Top Message -->
             <TextView
@@ -28,90 +28,108 @@
                 android:text="@string/ad_screensaver_message"
                 android:textAlignment="center"
                 android:textColor="#B0BEC5"
-                android:textSize="18sp"
-                android:lineSpacingExtra="4dp" />
+                android:textSize="16sp"
+                android:lineSpacingExtra="2dp" />
 
-            <!-- Large Media Content -->
-            <com.google.android.gms.ads.nativead.MediaView
-                android:id="@+id/ad_media"
-                android:layout_width="640dp"
-                android:layout_height="360dp"
-                android:layout_centerInParent="true"
-                android:background="#1A1A1A" />
-
-            <!-- Ad Attribution -->
-            <TextView
-                android:id="@+id/ad_badge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@id/ad_media"
-                android:layout_above="@id/ad_media"
-                android:layout_marginBottom="8dp"
-                android:background="#FFCA28"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:text="@string/advertisement_label"
-                android:textColor="#000000"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <!-- Info Section -->
+            <!-- Main Ad Card Container (Centered) -->
             <LinearLayout
-                android:layout_width="640dp"
+                android:id="@+id/ad_card_container"
+                android:layout_width="600dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ad_media"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="#CC1E1E2C"
+                android:padding="24dp">
 
-                <ImageView
-                    android:id="@+id/ad_app_icon"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:scaleType="fitCenter"
-                    android:contentDescription="@string/ad_label" />
-
+                <!-- Badge & Title Header -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
-                        android:id="@+id/ad_headline"
-                        android:layout_width="match_parent"
+                        android:id="@+id/ad_badge"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#FFFFFF"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:ellipsize="end"
-                        android:maxLines="1" />
-
-                    <TextView
-                        android:id="@+id/ad_body"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#B0BEC5"
-                        android:textSize="16sp"
-                        android:ellipsize="end"
-                        android:maxLines="2"
-                        android:layout_marginTop="4dp" />
+                        android:background="#FFCA28"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:text="@string/advertisement_label"
+                        android:textColor="#000000"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/ad_call_to_action"
-                    android:layout_width="wrap_content"
+                <!-- Media Content (Visible when ad has video/image) -->
+                <com.google.android.gms.ads.nativead.MediaView
+                    android:id="@+id/ad_media"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:layout_marginBottom="16dp"
+                    android:visibility="gone" />
+
+                <!-- Details Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:background="@drawable/game_item_background"
-                    android:backgroundTint="#4CAF50"
-                    android:paddingStart="24dp"
-                    android:paddingEnd="24dp"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/ad_app_icon"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:scaleType="fitCenter"
+                        android:contentDescription="@string/ad_label" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/ad_headline"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:ellipsize="end"
+                            android:maxLines="1" />
+
+                        <TextView
+                            android:id="@+id/ad_body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#B0BEC5"
+                            android:textSize="14sp"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/ad_call_to_action"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/game_item_background"
+                        android:backgroundTint="#4CAF50"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <!-- Bottom Wake Hint -->
@@ -123,7 +141,7 @@
                 android:layout_centerHorizontal="true"
                 android:text="@string/ad_screensaver_hint"
                 android:textColor="#66FFFFFF"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textAllCaps="true"
                 android:letterSpacing="0.1" />
 

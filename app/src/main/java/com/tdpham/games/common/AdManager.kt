@@ -24,6 +24,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.view.View
 import com.tdpham.games.R
+import com.tdpham.games.BuildConfig
+import java.util.concurrent.Executors
 
 object AdManager {
     private const val TAG = "AdManager"
@@ -49,6 +51,16 @@ object AdManager {
     private var adsShownInSession = 0
     private var idleAdsShownInSession = 0
     private val mainHandler = Handler(Looper.getMainLooper())
+    private var onNativeAdLoadedListener: ((NativeAd) -> Unit)? = null
+    private var onNativeAdFailedListener: (() -> Unit)? = null
+
+    fun setOnNativeAdLoadedListener(listener: ((NativeAd) -> Unit)?) {
+        onNativeAdLoadedListener = listener
+    }
+
+    fun setOnNativeAdFailedListener(listener: (() -> Unit)?) {
+        onNativeAdFailedListener = listener
+    }
 
     fun init(context: Context) {
         if (sessionStartTime == 0L) {
@@ -63,31 +75,26 @@ object AdManager {
         if (isInitialized || isInitializing) return
         isInitializing = true
 
-        try {
-            if (!ConfigManager.isAdsEnabled()) {
-                Log.d(TAG, "AdMob is disabled by default.")
-                isInitializing = false
-                return
-            }
-            
-            val appContext = context.applicationContext
-            // Initialize MobileAds on a background thread to prevent blocking the UI thread
-            Thread {
-                try {
-                    MobileAds.initialize(appContext) {
-                        isInitialized = true
-                        isInitializing = false
-                        loadInterstitial(appContext)
-                        loadNativeAd(appContext)
-                    }
-                } catch (e: Throwable) {
-                    Log.e(TAG, "Failed to initialize MobileAds: ${e.message}", e)
+        val appContext = context.applicationContext
+        mainHandler.post {
+            try {
+                if (!ConfigManager.isAdsEnabled()) {
+                    Log.d(TAG, "AdMob is disabled by default.")
                     isInitializing = false
+                    return@post
                 }
-            }.start()
-        } catch (e: Throwable) {
-            Log.e(TAG, "Failed to initialize MobileAds: ${e.message}", e)
-            isInitializing = false
+
+                MobileAds.initialize(appContext) {
+                    Log.d(TAG, "MobileAds initialized successfully.")
+                    isInitialized = true
+                    isInitializing = false
+                    loadInterstitial(appContext)
+                    loadNativeAd(appContext)
+                }
+            } catch (e: Throwable) {
+                Log.e(TAG, "Failed to initialize MobileAds: ${e.message}", e)
+                isInitializing = false
+            }
         }
     }
 
@@ -141,12 +148,14 @@ object AdManager {
                         Log.d(TAG, "Native Ad loaded.")
                         prefetchedNativeAd = nativeAd
                         isNativeLoading = false
+                        onNativeAdLoadedListener?.invoke(nativeAd)
                     }
                     .withNativeAdOptions(adOptions)
                     .withAdListener(object : com.google.android.gms.ads.AdListener() {
                         override fun onAdFailedToLoad(adError: LoadAdError) {
                             Log.d(TAG, "Native Ad failed to load: ${adError.message}")
                             isNativeLoading = false
+                            onNativeAdFailedListener?.invoke()
                         }
                     })
                     .build()
@@ -155,6 +164,7 @@ object AdManager {
         } catch (e: Throwable) {
             Log.e(TAG, "Failed to load native ad: ${e.message}", e)
             isNativeLoading = false
+            onNativeAdFailedListener?.invoke()
         }
     }
 
@@ -198,7 +208,13 @@ object AdManager {
 
         // The headline and mediaContent are guaranteed to be in every NativeAd.
         (adView.headlineView as TextView).text = nativeAd.headline
-        adView.mediaView?.setMediaContent(nativeAd.mediaContent!!)
+        val mediaContent = nativeAd.mediaContent
+        if (mediaContent != null && (mediaContent.hasVideoContent() || mediaContent.aspectRatio > 0f)) {
+            adView.mediaView?.setMediaContent(mediaContent)
+            adView.mediaView?.visibility = View.VISIBLE
+        } else {
+            adView.mediaView?.visibility = View.GONE
+        }
 
         // These assets aren't guaranteed to be in every NativeAd, so it's important to
         // check before assigning them.
@@ -226,6 +242,27 @@ object AdManager {
         // This method tells the Google Mobile Ads SDK that you have finished populating your
         // native ad view with this native ad.
         adView.setNativeAd(nativeAd)
+    }
+
+    fun populateFallbackAdView(adView: NativeAdView) {
+        val headlineView = adView.findViewById<TextView>(R.id.ad_headline)
+        val bodyView = adView.findViewById<TextView>(R.id.ad_body)
+        val ctaView = adView.findViewById<Button>(R.id.ad_call_to_action)
+        val iconView = adView.findViewById<ImageView>(R.id.ad_app_icon)
+
+        headlineView?.text = "D-Pad Game Hub [Test Ad]"
+        bodyView?.apply {
+            text = "Enjoy endless classic arcade games with TV D-Pad controls!"
+            visibility = View.VISIBLE
+        }
+        ctaView?.apply {
+            text = "Play Now"
+            visibility = View.VISIBLE
+        }
+        iconView?.apply {
+            setImageResource(R.mipmap.ic_launcher)
+            visibility = View.VISIBLE
+        }
     }
 
     fun showInterstitial(activity: Activity, onAdDismissed: () -> Unit = {}) {

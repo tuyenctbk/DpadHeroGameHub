@@ -37,6 +37,18 @@ class BaseOptionsDialog(context: Context) : Dialog(context) {
         setOnDismissListener { onDismissAction?.invoke() }
     }
 
+    override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        if (event.action == android.view.KeyEvent.ACTION_DOWN) {
+            IdleAdManager.notifyInteraction()
+        }
+        return super.dispatchKeyEvent(event)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        IdleAdManager.notifyInteraction()
+        return super.dispatchTouchEvent(ev)
+    }
+
     fun setTitle(title: String): BaseOptionsDialog {
         titleView.text = title
         return this
@@ -90,6 +102,7 @@ class BaseOptionsDialog(context: Context) : Dialog(context) {
     private fun setupFocusEffect(view: View) {
         view.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
+                IdleAdManager.notifyInteraction()
                 v.animate().scaleX(1.08f).scaleY(1.08f).setDuration(200).start()
                 v.setBackgroundColor("#33FFFFFF".toColorInt())
             } else {

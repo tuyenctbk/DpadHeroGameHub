@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 import com.tdpham.games.R
+import com.tdpham.games.common.IdleAdManager
 import com.tdpham.games.trex.TRexOptionsDialog
 
 object GuideManager {
@@ -66,6 +67,7 @@ object GuideManager {
         }
 
         btnClose.setOnClickListener {
+            IdleAdManager.notifyInteraction()
             if (showCheckbox && checkBox.isChecked) {
                 val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                 prefs.edit().putBoolean("show_$gameKey", false).apply()
@@ -79,6 +81,7 @@ object GuideManager {
 
         dialog.setOnKeyListener { _, keyCode, event ->
             if (event.action == android.view.KeyEvent.ACTION_DOWN) {
+                IdleAdManager.notifyInteraction()
                 if (keyCode == android.view.KeyEvent.KEYCODE_M || keyCode == android.view.KeyEvent.KEYCODE_O ||
                     keyCode == android.view.KeyEvent.KEYCODE_MENU || keyCode == android.view.KeyEvent.KEYCODE_SETTINGS) {
                     if (gameKey == "trex") {
@@ -101,14 +104,22 @@ object GuideManager {
     private fun setupFocusEffect(view: View) {
         view.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
-                v.animate().scaleX(1.05f).scaleY(1.05f).setDuration(200).start()
+                IdleAdManager.notifyInteraction()
+                v.animate().scaleX(1.08f).scaleY(1.08f).setDuration(200).start()
+                v.setBackgroundColor(Color.parseColor("#33FFFFFF"))
             } else {
                 v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                v.setBackgroundColor(Color.TRANSPARENT)
             }
         }
         view.setOnHoverListener { v, event ->
             if (event.action == MotionEvent.ACTION_HOVER_ENTER) {
-                v.requestFocus()
+                IdleAdManager.notifyInteraction()
+                v.animate().scaleX(1.08f).scaleY(1.08f).setDuration(200).start()
+                v.setBackgroundColor(Color.parseColor("#33FFFFFF"))
+            } else if (event.action == MotionEvent.ACTION_HOVER_EXIT) {
+                v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                v.setBackgroundColor(Color.TRANSPARENT)
             }
             false
         }
