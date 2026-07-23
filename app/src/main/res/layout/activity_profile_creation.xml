@@ -83,38 +83,58 @@
             android:layout_marginTop="16dp"
             android:gravity="center_horizontal">
 
-            <TextView
+            <CheckBox
+                android:id="@+id/check_protected_hero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/security_pin_label"
-                android:textColor="#88FFFFFF"
-                android:textSize="12sp"
-                android:layout_marginBottom="4dp" />
-
-            <EditText
-                android:id="@+id/edit_profile_pin"
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/game_item_background"
-                android:backgroundTint="#22FFFFFF"
-                android:hint="____"
-                android:imeOptions="actionDone"
-                android:inputType="numberPassword"
-                android:maxLength="4"
-                android:padding="12dp"
+                android:text="@string/protected_hero"
                 android:textColor="#FFFFFF"
-                android:textColorHint="#33FFFFFF"
-                android:textSize="22sp"
-                android:letterSpacing="0.8"
-                android:gravity="center" />
+                android:buttonTint="#4CAF50"
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"
+                android:focusable="true" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/pin_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/leave_blank_no_pin"
-                android:textColor="#66FFFFFF"
-                android:textSize="12sp" />
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/security_pin_label"
+                    android:textColor="#88FFFFFF"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="4dp" />
+
+                <EditText
+                    android:id="@+id/edit_profile_pin"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/game_item_background"
+                    android:backgroundTint="#22FFFFFF"
+                    android:hint="____"
+                    android:imeOptions="actionDone"
+                    android:inputType="numberPassword"
+                    android:maxLength="4"
+                    android:padding="12dp"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#33FFFFFF"
+                    android:textSize="22sp"
+                    android:letterSpacing="0.8"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/leave_blank_no_pin"
+                    android:textColor="#66FFFFFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Actions -->

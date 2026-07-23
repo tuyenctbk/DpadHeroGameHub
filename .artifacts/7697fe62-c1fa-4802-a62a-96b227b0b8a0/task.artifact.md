@@ -1,0 +1,6 @@
+- [ ] Fix compilation error in `MonkeyView.kt`
+- [ ] Hide Retro Racer in `MainActivity.kt`
+- [ ] Hide Retro Racer in `activity_main.xml`
+- [ ] Update `translate.py` with multi-language dictionaries
+- [ ] Run `translate.py` to update all resource files
+- [ ] Verify build with `./gradlew assembleDebug`

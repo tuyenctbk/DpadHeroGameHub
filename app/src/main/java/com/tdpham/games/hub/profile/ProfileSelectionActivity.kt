@@ -74,16 +74,16 @@ class ProfileSelectionActivity : AppCompatActivity() {
         val iconView = card.findViewById<ImageView>(R.id.avatar_icon)
         
         val avatars = listOf(
-            R.drawable.ic_avatar_smile,
-            R.drawable.ic_avatar_alien,
-            R.drawable.ic_avatar_cat,
-            R.drawable.ic_avatar_star,
-            R.drawable.ic_avatar_heart,
-            R.drawable.ic_avatar_robot,
-            R.drawable.ic_avatar_rocket,
-            R.drawable.ic_avatar_ghost,
-            R.drawable.ic_avatar_gamepad,
-            R.drawable.ic_avatar_bolt
+            R.drawable.ic_hero_knight,
+            R.drawable.ic_hero_wizard,
+            R.drawable.ic_hero_archer,
+            R.drawable.ic_hero_ninja,
+            R.drawable.ic_hero_viking,
+            R.drawable.ic_hero_dragon,
+            R.drawable.ic_hero_phoenix,
+            R.drawable.ic_hero_shield,
+            R.drawable.ic_hero_sword,
+            R.drawable.ic_hero_crown
         )
         
         if (profile.avatarId in avatars.indices) {

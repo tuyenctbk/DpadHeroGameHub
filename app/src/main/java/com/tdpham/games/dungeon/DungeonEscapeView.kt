@@ -32,6 +32,8 @@ class DungeonEscapeView @JvmOverloads constructor(
     private val sentinels = mutableListOf<Sentinel>()
     private var playerX = 1
     private var playerY = 1
+    private var doorRow = rows - 2
+    private var doorCol = cols - 2
     private var hasKey = false
     private var level = 1
     private var startingLevel = 1
@@ -140,13 +142,36 @@ class DungeonEscapeView @JvmOverloads constructor(
             grid[r][c] = if (r == 0 || r == rows - 1 || c == 0 || c == cols - 1) 1 else 0
         }
         
+        // Enforce distant start and door placement (opposite corners)
+        val startCorner = Random.nextInt(4)
+        val (startR, startC) = when (startCorner) {
+            0 -> 1 to 1                         // Top-Left
+            1 -> 1 to cols - 2                  // Top-Right
+            2 -> rows - 2 to 1                  // Bottom-Left
+            else -> rows - 2 to cols - 2        // Bottom-Right
+        }
+        playerX = startC
+        playerY = startR
+        
+        val (endR, endC) = when (startCorner) {
+            0 -> rows - 2 to cols - 2        // Bottom-Right
+            1 -> rows - 2 to 1               // Bottom-Left
+            2 -> 1 to cols - 2               // Top-Right
+            else -> 1 to 1                   // Top-Left
+        }
+        doorRow = endR
+        doorCol = endC
+
+        grid[doorRow][doorCol] = 4 // Door
+        hasKey = false
+        
         // Random obstacles (relaxed dynamically as attempts increase)
         val baseObstacleCount = (level * 3 + 10).coerceAtMost(50)
         val obstacleCount = (baseObstacleCount - attempt).coerceAtLeast(0)
         repeat(obstacleCount) {
             val r = Random.nextInt(1, rows - 1)
             val c = Random.nextInt(1, cols - 1)
-            if ((r != 1 || c != 1) && (r != rows - 2 || c != cols - 2)) {
+            if ((r != playerY || c != playerX) && (r != doorRow || c != doorCol)) {
                 grid[r][c] = if (Random.nextBoolean()) 1 else 2
             }
         }
@@ -164,15 +189,10 @@ class DungeonEscapeView @JvmOverloads constructor(
             }
         }
 
-        playerX = 1
-        playerY = 1
-        hasKey = false
-        grid[rows - 2][cols - 2] = 4 // Door
-        
-        // Place key
+        // Place key (must be on empty floor and not at start or door)
         var kr = Random.nextInt(1, rows - 1)
         var kc = Random.nextInt(1, cols - 1)
-        while (grid[kr][kc] != 0 || (kr == 1 && kc == 1)) {
+        while (grid[kr][kc] != 0 || (kr == playerY && kc == playerX) || (kr == doorRow && kc == doorCol)) {
             kr = Random.nextInt(1, rows - 1)
             kc = Random.nextInt(1, cols - 1)
         }
@@ -190,12 +210,12 @@ class DungeonEscapeView @JvmOverloads constructor(
         }
         if (kr == -1) return false
 
-        // Path from (1,1) to Key
-        val toKey = hasPath(1, 1, kc, kr)
+        // Path from player start position to Key
+        val toKey = hasPath(playerX, playerY, kc, kr)
         if (!toKey) return false
 
-        // Path from Key to Door (rows-2, cols-2)
-        return hasPath(kc, kr, cols - 2, rows - 2)
+        // Path from Key to Door
+        return hasPath(kc, kr, doorCol, doorRow)
     }
 
     private fun hasPath(sx: Int, sy: Int, ex: Int, ey: Int): Boolean {
@@ -345,48 +365,120 @@ class DungeonEscapeView @JvmOverloads constructor(
 
         // update() - Moved to gameLoop
 
-        canvas.drawColor(Color.parseColor("#1A1A1A"))
+        canvas.drawColor(Color.parseColor("#150E0C")) // Dark stone background
 
         for (r in 0 until rows) for (c in 0 until cols) {
             val x = offsetX + c * cellS
             val y = offsetY + r * cellS
             val type = grid[r][c]
             
-            paint.style = Paint.Style.FILL
-            paint.color = when (type) {
-                1 -> Color.parseColor("#424242") // Wall
-                2 -> Color.parseColor("#D32F2F") // Spike
-                3 -> Color.parseColor("#FFD600") // Key
-                4 -> if (hasKey) Color.parseColor("#4CAF50") else Color.parseColor("#5D4037") // Door
-                else -> Color.parseColor("#212121") // Floor
-            }
-            gridRect.set(x + 1, y + 1, x + cellS - 1, y + cellS - 1)
-            canvas.drawRect(gridRect, paint)
-            
-            // Subtle texture/detail
-            if (type == 1) { // Wall bevel
-                paint.color = Color.parseColor("#616161")
-                gridRect.set(x + 2, y + 2, x + cellS - 2, y + 6)
+            if (type == 1) { // Wall: bricks
+                paint.style = Paint.Style.FILL
+                paint.color = Color.parseColor("#3E2723") // Dark brick
+                gridRect.set(x + 1, y + 1, x + cellS - 1, y + cellS - 1)
                 canvas.drawRect(gridRect, paint)
-                gridRect.set(x + 2, y + 2, x + 6, y + cellS - 2)
+
+                // Horizontal brick lines
+                paint.color = Color.parseColor("#271510")
+                paint.strokeWidth = 3f
+                canvas.drawLine(x, y + cellS * 0.33f, x + cellS, y + cellS * 0.33f, paint)
+                canvas.drawLine(x, y + cellS * 0.66f, x + cellS, y + cellS * 0.66f, paint)
+
+                // Vertical brick joints
+                canvas.drawLine(x + cellS * 0.5f, y, x + cellS * 0.5f, y + cellS * 0.33f, paint)
+                canvas.drawLine(x + cellS * 0.25f, y + cellS * 0.33f, x + cellS * 0.25f, y + cellS * 0.66f, paint)
+                canvas.drawLine(x + cellS * 0.75f, y + cellS * 0.33f, x + cellS * 0.75f, y + cellS * 0.66f, paint)
+                canvas.drawLine(x + cellS * 0.5f, y + cellS * 0.66f, x + cellS * 0.5f, y + cellS, paint)
+
+                // Bevel glow
+                paint.color = Color.parseColor("#5D4037")
+                canvas.drawLine(x, y, x + cellS, y, paint)
+                canvas.drawLine(x, y, x, y + cellS, paint)
+            } else if (type == 0) { // Floor
+                paint.style = Paint.Style.FILL
+                paint.color = Color.parseColor("#211512")
+                gridRect.set(x + 1, y + 1, x + cellS - 1, y + cellS - 1)
                 canvas.drawRect(gridRect, paint)
-            } else if (type == 0) { // Floor detail
-                if ((r + c) % 4 == 0) {
-                    paint.color = Color.parseColor("#252525")
-                    canvas.drawCircle(x + cellS/2, y + cellS/2, 4f, paint)
+
+                // Stone joints
+                paint.color = Color.parseColor("#150E0C")
+                paint.strokeWidth = 2f
+                paint.style = Paint.Style.STROKE
+                canvas.drawRect(gridRect, paint)
+
+                // Floor cracks
+                if ((r * 7 + c * 13) % 11 == 0) {
+                    paint.color = Color.parseColor("#1B110E")
+                    canvas.drawLine(x + cellS * 0.2f, y + cellS * 0.2f, x + cellS * 0.5f, y + cellS * 0.6f, paint)
+                    canvas.drawLine(x + cellS * 0.5f, y + cellS * 0.6f, x + cellS * 0.8f, y + cellS * 0.5f, paint)
                 }
-            } else if (type == 3) { // Key glow
-                paint.setShadowLayer(10f, 0f, 0f, Color.YELLOW)
-                canvas.drawCircle(x + cellS/2, y + cellS/2, cellS * 0.2f, paint)
+            } else if (type == 3) { // Key
+                // Draw floor background first
+                paint.style = Paint.Style.FILL
+                paint.color = Color.parseColor("#211512")
+                gridRect.set(x + 1, y + 1, x + cellS - 1, y + cellS - 1)
+                canvas.drawRect(gridRect, paint)
+
+                // Draw Golden Key
+                paint.color = Color.parseColor("#FFD600")
+                paint.style = Paint.Style.FILL
+                // Handle ring
+                canvas.drawCircle(x + cellS * 0.4f, y + cellS * 0.5f, cellS * 0.15f, paint)
+                paint.color = Color.parseColor("#211512")
+                canvas.drawCircle(x + cellS * 0.4f, y + cellS * 0.5f, cellS * 0.08f, paint)
+                // Stem
+                paint.color = Color.parseColor("#FFD600")
+                paint.strokeWidth = 4f
+                canvas.drawLine(x + cellS * 0.55f, y + cellS * 0.5f, x + cellS * 0.85f, y + cellS * 0.5f, paint)
+                // Teeth
+                canvas.drawLine(x + cellS * 0.75f, y + cellS * 0.5f, x + cellS * 0.75f, y + cellS * 0.65f, paint)
+                canvas.drawLine(x + cellS * 0.82f, y + cellS * 0.5f, x + cellS * 0.82f, y + cellS * 0.65f, paint)
+
+                // Key glow
+                paint.setShadowLayer(15f, 0f, 0f, Color.YELLOW)
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = 2f
+                canvas.drawCircle(x + cellS * 0.4f, y + cellS * 0.5f, cellS * 0.15f, paint)
                 paint.clearShadowLayer()
-            }
-            
-            if (type == 2) { // Draw spike triangles
-                paint.color = Color.WHITE
+            } else if (type == 4) { // Door
+                paint.style = Paint.Style.FILL
+                // Wooden planks
+                paint.color = if (hasKey) Color.parseColor("#388E3C") else Color.parseColor("#5D4037")
+                gridRect.set(x + 1, y + 1, x + cellS - 1, y + cellS - 1)
+                canvas.drawRect(gridRect, paint)
+
+                // Vertical planks lines
+                paint.color = Color.parseColor("#271510")
+                paint.strokeWidth = 3f
+                canvas.drawLine(x + cellS * 0.33f, y, x + cellS * 0.33f, y + cellS, paint)
+                canvas.drawLine(x + cellS * 0.66f, y, x + cellS * 0.66f, y + cellS, paint)
+
+                // Iron bands
+                paint.color = Color.parseColor("#78909C")
+                canvas.drawRect(x + 4f, y + cellS * 0.2f, x + cellS - 4f, y + cellS * 0.32f, paint)
+                canvas.drawRect(x + 4f, y + cellS * 0.7f, x + cellS - 4f, y + cellS * 0.82f, paint)
+
+                // Golden handle
+                paint.color = Color.parseColor("#FFD600")
+                canvas.drawCircle(x + cellS * 0.8f, y + cellS * 0.5f, 6f, paint)
+            } else if (type == 2) { // Spikes
+                // Floor background first
+                paint.style = Paint.Style.FILL
+                paint.color = Color.parseColor("#211512")
+                gridRect.set(x + 1, y + 1, x + cellS - 1, y + cellS - 1)
+                canvas.drawRect(gridRect, paint)
+
+                // Draw spikes
+                paint.color = Color.parseColor("#B0BEC5")
                 spikePath.reset()
-                spikePath.moveTo(x + cellS * 0.2f, y + cellS * 0.8f)
-                spikePath.lineTo(x + cellS * 0.5f, y + cellS * 0.2f)
-                spikePath.lineTo(x + cellS * 0.8f, y + cellS * 0.8f)
+                // Left spike
+                spikePath.moveTo(x + cellS * 0.15f, y + cellS * 0.85f)
+                spikePath.lineTo(x + cellS * 0.35f, y + cellS * 0.15f)
+                spikePath.lineTo(x + cellS * 0.55f, y + cellS * 0.85f)
+                // Right spike
+                spikePath.moveTo(x + cellS * 0.45f, y + cellS * 0.85f)
+                spikePath.lineTo(x + cellS * 0.65f, y + cellS * 0.15f)
+                spikePath.lineTo(x + cellS * 0.85f, y + cellS * 0.85f)
                 spikePath.close()
                 canvas.drawPath(spikePath, paint)
             }
@@ -409,10 +501,34 @@ class DungeonEscapeView @JvmOverloads constructor(
         val px = offsetX + playerX * cellS + cellS/2
         val py = offsetY + playerY * cellS + cellS/2
         
-        paint.color = Color.CYAN
-        paint.setShadowLayer(15f, 0f, 0f, Color.CYAN)
-        canvas.drawCircle(px, py, cellS * 0.35f * jumpScale, paint)
-        paint.clearShadowLayer()
+        val radius = cellS * 0.35f * jumpScale
+
+        // Draw Plume (Red)
+        paint.color = Color.parseColor("#D32F2F")
+        canvas.drawCircle(px, py - radius * 0.9f, radius * 0.3f, paint)
+
+        // Draw Armor/Body (Iron gray)
+        paint.color = Color.parseColor("#455A64")
+        canvas.drawCircle(px, py, radius, paint)
+
+        // Draw Helmet Visor (Black)
+        paint.color = Color.parseColor("#212121")
+        val visorRect = RectF(px - radius * 0.7f, py - radius * 0.4f, px + radius * 0.7f, py)
+        canvas.drawRoundRect(visorRect, 4f, 4f, paint)
+
+        // Glowing Eyes
+        paint.color = Color.parseColor("#00E676") // Glowing green eyes
+        canvas.drawCircle(px - radius * 0.3f, py - radius * 0.2f, radius * 0.1f, paint)
+        canvas.drawCircle(px + radius * 0.3f, py - radius * 0.2f, radius * 0.1f, paint)
+
+        // Shield (Silver)
+        paint.color = Color.parseColor("#B0BEC5")
+        val shieldPath = Path()
+        shieldPath.moveTo(px - radius * 0.8f, py + radius * 0.1f)
+        shieldPath.lineTo(px - radius * 0.3f, py + radius * 0.1f)
+        shieldPath.lineTo(px - radius * 0.55f, py + radius * 0.7f)
+        shieldPath.close()
+        canvas.drawPath(shieldPath, paint)
         
         // Torch flicker effect (simulated on floor near player)
         if (!gamePaused && !gameOver) {

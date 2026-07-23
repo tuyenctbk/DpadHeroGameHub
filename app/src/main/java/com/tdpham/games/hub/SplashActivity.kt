@@ -14,9 +14,6 @@ import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.ConfigManager
 import com.tdpham.games.common.AdManager
 import com.tdpham.games.common.profile.ProfileManager
-import com.tdpham.games.hub.profile.ProfileSelectionActivity
-import com.tdpham.games.hub.profile.ProfileCreationActivity
-
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -25,18 +22,20 @@ import kotlinx.coroutines.launch
 class SplashActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val startMainRunnable = Runnable {
+        ProfileManager.ensureDefaultProfileExists(this)
         val lastPlayerId = ProfileManager.getLastPlayerId(this)
         val profiles = ProfileManager.getProfiles(this)
         
-        val intent = when {
-            profiles.isEmpty() -> Intent(this, ProfileCreationActivity::class.java)
-            lastPlayerId != null && profiles.any { it.id == lastPlayerId } -> {
-                ProfileManager.setActiveProfileId(this, lastPlayerId)
-                Intent(this, MainActivity::class.java).apply {
-                    putExtra("AUTO_LOGGED_IN", true)
-                }
+        val intent = if (lastPlayerId != null && profiles.any { it.id == lastPlayerId }) {
+            ProfileManager.setActiveProfileId(this, lastPlayerId)
+            Intent(this, MainActivity::class.java).apply {
+                putExtra("AUTO_LOGGED_IN", true)
             }
-            else -> Intent(this, ProfileSelectionActivity::class.java)
+        } else {
+            // Since we ensured default exists, profiles is never empty here
+            val activeId = ProfileManager.getActiveProfileId(this) ?: profiles.first().id
+            ProfileManager.setActiveProfileId(this, activeId)
+            Intent(this, MainActivity::class.java)
         }
         startActivity(intent)
         finish()

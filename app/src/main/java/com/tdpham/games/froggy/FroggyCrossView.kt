@@ -35,14 +35,23 @@ class FroggyCrossView @JvmOverloads constructor(
         LAVA
     }
 
+    private val rowTerrains = Array(16) { TerrainType.GRASS }
+
     private fun getTerrainType(r: Int): TerrainType {
-        return when (r) {
-            15, 11, 8, 5, 1, 0 -> TerrainType.GRASS
-            14, 13, 4 -> TerrainType.ROAD
-            12, 2 -> TerrainType.RAILROAD
-            10, 9, 3 -> TerrainType.RIVER
-            7, 6 -> TerrainType.LAVA
-            else -> TerrainType.GRASS
+        if (r in 0 until 16) {
+            return rowTerrains[r]
+        }
+        return TerrainType.GRASS
+    }
+
+    private fun generateMap() {
+        for (r in 0 until 16) {
+            if (r == 0 || r == 5 || r == 10 || r == 15) {
+                rowTerrains[r] = TerrainType.GRASS // Safe zones
+            } else {
+                // Randomly choose from ROAD, RIVER, RAILROAD, LAVA
+                rowTerrains[r] = TerrainType.values()[Random.nextInt(1, 5)]
+            }
         }
     }
 
@@ -158,6 +167,7 @@ class FroggyCrossView @JvmOverloads constructor(
         gamePaused = true
         isLevelCleared = false
         resetFrog()
+        generateMap()
         setupLanes()
         hintShowFrames = 100
         invalidate()
@@ -360,6 +370,7 @@ class FroggyCrossView @JvmOverloads constructor(
         frogR = (frogR + dr).coerceIn(0, rows - 1)
         frogX = (frogX + dc).coerceIn(0f, (cols - 1).toFloat())
         jumpStartTime = System.currentTimeMillis()
+        SoundManager.playJump()
         
         if (frogR == 0) {
             score += 1000

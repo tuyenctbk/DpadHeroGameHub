@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Retro Neon Sunset Background -->
+    <path
+        android:fillColor="#1A0F2E"
+        android:pathData="M0,0 H120 V120 H0 Z" />
+    <path
+        android:fillColor="#E91E63"
+        android:pathData="M60,60 A 35,35 0 1 1 59.9,60 Z" />
+    <!-- Sun Grid Lines -->
+    <path
+        android:strokeColor="#1A0F2E"
+        android:strokeWidth="2"
+        android:pathData="M25,45 H95 M20,52 H100 M25,58 H95" />
+
+    <!-- Perspective Grid Road -->
+    <path
+        android:fillColor="#212121"
+        android:pathData="M10,120 L50,60 L70,60 L110,120 Z" />
+    <!-- Glowing Magenta Grid Lines -->
+    <path
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="2.5"
+        android:pathData="M10,120 L50,60 M110,120 L70,60 M30,120 L55,60 M90,120 L65,60" />
+    <!-- Horizontal Perspective Lines -->
+    <path
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="1.5"
+        android:pathData="M30,90 H90 M40,75 H80 M46,67 H74" />
+
+    <!-- Retro Motorcycle (Rear View) -->
+    <!-- Rear Tire -->
+    <path
+        android:fillColor="#151515"
+        android:pathData="M 55,90 H 65 V 110 H 55 Z" />
+    
+    <!-- Exhaust Pipes -->
+    <path
+        android:fillColor="#90A4AE"
+        android:pathData="M 46,98 H 51 V 104 H 46 Z M 69,98 H 74 V 104 H 69 Z" />
+    
+    <!-- Chassis / Body Fairing -->
+    <path
+        android:fillColor="#FF1744"
+        android:pathData="M 48,82 C 48,82 45,98 52,98 H 68 C 75,98 72,82 72,82 Z" />
+    
+    <!-- License Plate -->
+    <path
+        android:fillColor="#FFEB3B"
+        android:pathData="M 56,92 H 64 V 97 H 56 Z" />
+    
+    <!-- Red Taillight -->
+    <path
+        android:fillColor="#FF5252"
+        android:pathData="M 54,80 H 66 V 83 H 54 Z" />
+    
+    <!-- Rider Torso (Black Leather Jacket) -->
+    <path
+        android:fillColor="#37474F"
+        android:pathData="M 48,70 C 48,70 42,82 48,82 H 72 C 78,82 72,70 72,70 Z" />
+    
+    <!-- Rider Helmet -->
+    <path
+        android:fillColor="#212121"
+        android:pathData="M 52,58 A 8,8 0 0 1 68,58 Z" />
+    
+    <!-- Helmet Visor (Cyan Neon) -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M 54,61 H 66 V 64 H 54 Z" />
+</vector>

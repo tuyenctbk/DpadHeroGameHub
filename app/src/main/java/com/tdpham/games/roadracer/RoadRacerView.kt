@@ -85,6 +85,8 @@ class RoadRacerView @JvmOverloads constructor(
     )
     data class RoadTheme(val roadColor: Int, val sideColor: Int, val dashColor: Int, val carColors: List<Int>)
 
+    private val drawPath = Path()
+
     init {
         isFocusable = true
         isFocusableInTouchMode = true
@@ -448,12 +450,12 @@ class RoadRacerView @JvmOverloads constructor(
             }
             ObstacleType.CONE -> {
                 paint.color = Color.parseColor("#FF6D00")
-                val path = Path()
-                path.moveTo(x + 20, y)
-                path.lineTo(x, y + 40)
-                path.lineTo(x + 40, y + 40)
-                path.close()
-                canvas.drawPath(path, paint)
+                drawPath.reset()
+                drawPath.moveTo(x + 20, y)
+                drawPath.lineTo(x, y + 40)
+                drawPath.lineTo(x + 40, y + 40)
+                drawPath.close()
+                canvas.drawPath(drawPath, paint)
                 paint.color = Color.WHITE
                 canvas.drawRect(x + 10, y + 20, x + 30, y + 25, paint)
             }

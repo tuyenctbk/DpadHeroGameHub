@@ -76,6 +76,7 @@ class FlappyHeroView @JvmOverloads constructor(
     }
     private var currentDeathType = DeathType.NONE
     private val seenObstacleTypes = mutableSetOf<ObstacleType>()
+    private val drawRectF = RectF()
     private val celebrationManager = CelebrationManager()
     private val animHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private val animRunnable = object : Runnable {
@@ -975,11 +976,11 @@ class FlappyHeroView @JvmOverloads constructor(
         birdY += birdV
 
         if (birdY - birdSize < 0) {
-            die("Flew too high and hit the ceiling!", DeathType.CEILING)
+            die(context.getString(R.string.flappy_death_ceiling), DeathType.CEILING)
             return
         }
         if (birdY + birdSize > h - 80f) {
-            die("Crashed into the grassy ground!", DeathType.GROUND)
+            die(context.getString(R.string.flappy_death_ground), DeathType.GROUND)
             return
         }
 
@@ -1179,13 +1180,13 @@ class FlappyHeroView @JvmOverloads constructor(
 
             if (collides) {
                 val (reason, deathType) = when (p.type) {
-                    ObstacleType.STANDARD -> Pair("Crashed into a green pipe!", DeathType.PIPE)
-                    ObstacleType.MOVING -> Pair("Crashed into a moving pipe!", DeathType.PIPE)
-                    ObstacleType.BAT -> Pair("Collided with a patrolling bat!", DeathType.SPIDER)
-                    ObstacleType.CLOSING_GATE -> Pair("Chomped by the closing metal gates!", DeathType.SPIKES)
-                    ObstacleType.FALLING_STALACTITE -> Pair("Crushed by a falling stalactite!", DeathType.CRATE)
-                    ObstacleType.SPIKED_MINE -> Pair("Blew up on a floating spiked mine!", DeathType.MINE)
-                    ObstacleType.WIND_ZONE -> Pair("Vaporized by the storm vortex core!", DeathType.MINE)
+                    ObstacleType.STANDARD -> Pair(context.getString(R.string.flappy_death_pipe), DeathType.PIPE)
+                    ObstacleType.MOVING -> Pair(context.getString(R.string.flappy_death_moving_pipe), DeathType.PIPE)
+                    ObstacleType.BAT -> Pair(context.getString(R.string.flappy_death_bat), DeathType.SPIDER)
+                    ObstacleType.CLOSING_GATE -> Pair(context.getString(R.string.flappy_death_gate), DeathType.SPIKES)
+                    ObstacleType.FALLING_STALACTITE -> Pair(context.getString(R.string.flappy_death_stalactite), DeathType.CRATE)
+                    ObstacleType.SPIKED_MINE -> Pair(context.getString(R.string.flappy_death_mine), DeathType.MINE)
+                    ObstacleType.WIND_ZONE -> Pair(context.getString(R.string.flappy_death_vortex), DeathType.MINE)
                 }
                 die(reason, deathType)
                 return
@@ -1272,14 +1273,14 @@ class FlappyHeroView @JvmOverloads constructor(
         
         when (p.type) {
             ObstacleType.STANDARD, ObstacleType.MOVING -> {
-                textHint = "FLY THROUGH"
+                textHint = context.getString(R.string.flappy_hint_fly_through)
                 val targetY = p.gapY + p.gapH / 2f
                 textY = targetY - 45f
                 guidePath.moveTo(150f, birdY)
                 guidePath.quadTo((150f + p.x) / 2f, targetY, p.x + 50f, targetY)
             }
             ObstacleType.BAT -> {
-                textHint = "AVOID BAT"
+                textHint = context.getString(R.string.flappy_hint_avoid_bat)
                 val targetY = p.gapY
                 textY = targetY - 45f
                 guidePath.moveTo(150f, birdY)
@@ -1302,7 +1303,7 @@ class FlappyHeroView @JvmOverloads constructor(
                 guidePath.quadTo((150f + p.x) / 2f, h / 2f + guideOffset, p.x + 50f, h / 2f + guideOffset)
             }
             ObstacleType.FALLING_STALACTITE -> {
-                textHint = "FLY UNDER"
+                textHint = context.getString(R.string.flappy_hint_fly_under)
                 val targetY = h - 220f
                 textY = targetY - 45f
                 guidePath.moveTo(150f, birdY)
@@ -1324,26 +1325,31 @@ class FlappyHeroView @JvmOverloads constructor(
         canvas.drawPath(guidePath, paint)
         
         // Draw helper text badge
-        paint.reset()
-        paint.isAntiAlias = true
-        paint.style = Paint.Style.FILL
-        paint.color = Color.parseColor("#00E676")
-        paint.textSize = 26f
-        paint.typeface = Typeface.DEFAULT_BOLD
-        paint.textAlign = Paint.Align.CENTER
-        
-        val textWidth = paint.measureText(textHint)
-        val textBgPaint = Paint().apply {
-            color = Color.argb(180, 0, 0, 0)
-            style = Paint.Style.FILL
+        val textWidth = paint.let {
+            it.reset()
+            it.isAntiAlias = true
+            it.style = Paint.Style.FILL
+            it.color = Color.parseColor("#00E676")
+            it.textSize = 26f
+            it.typeface = Typeface.DEFAULT_BOLD
+            it.textAlign = Paint.Align.CENTER
+            it.measureText(textHint)
         }
-        val bgRect = RectF(
+        
+        // Draw background badge using the same paint object
+        paint.color = Color.argb(180, 0, 0, 0)
+        paint.style = Paint.Style.FILL
+        
+        drawRectF.set(
             (150f + p.x) / 2f - textWidth / 2f - 15f,
             textY - 30f,
             (150f + p.x) / 2f + textWidth / 2f + 15f,
             textY + 10f
         )
-        canvas.drawRoundRect(bgRect, 8f, 8f, textBgPaint)
+        canvas.drawRoundRect(drawRectF, 8f, 8f, paint)
+        
+        // Draw text
+        paint.color = Color.parseColor("#00E676")
         canvas.drawText(textHint, (150f + p.x) / 2f, textY, paint)
     }
 }

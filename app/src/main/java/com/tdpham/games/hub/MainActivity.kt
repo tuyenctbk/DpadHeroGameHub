@@ -42,6 +42,10 @@ import com.tdpham.games.checkers.CheckersActivity
 import com.tdpham.games.spinball.SpinballActivity
 import com.tdpham.games.froggy.FroggyCrossActivity
 import com.tdpham.games.syobon.SyobonActivity
+import com.tdpham.games.monkey.MonkeyActivity
+import com.tdpham.games.retrodriver.RetroDriverActivity
+import com.tdpham.games.frenzy.FrenzyActivity
+import com.tdpham.games.fruit.FruitActivity
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.profile.ProfileManager
 import com.tdpham.games.common.profile.UserProfile
@@ -123,18 +127,22 @@ class MainActivity : AppCompatActivity() {
         val nameView = findViewById<TextView>(R.id.active_profile_name)
         val iconView = findViewById<ImageView>(R.id.active_profile_icon)
         val layout = findViewById<View>(R.id.active_profile_layout)
+        val customizationHint = findViewById<TextView>(R.id.hero_customization_hint)
 
         nameView.text = activeProfile.name
         
+        // Show/Hide customization hint for default guest profile
+        customizationHint.visibility = if (ProfileManager.isDefaultProfile(activeProfile)) View.VISIBLE else View.GONE
+
         // Transparent background for the layout
         layout.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.TRANSPARENT)
         
         val avatars = listOf(
-            R.drawable.ic_avatar_smile, R.drawable.ic_avatar_alien,
-            R.drawable.ic_avatar_cat, R.drawable.ic_avatar_star,
-            R.drawable.ic_avatar_heart, R.drawable.ic_avatar_robot,
-            R.drawable.ic_avatar_rocket, R.drawable.ic_avatar_ghost,
-            R.drawable.ic_avatar_gamepad, R.drawable.ic_avatar_bolt
+            R.drawable.ic_hero_knight, R.drawable.ic_hero_wizard,
+            R.drawable.ic_hero_archer, R.drawable.ic_hero_ninja,
+            R.drawable.ic_hero_viking, R.drawable.ic_hero_dragon,
+            R.drawable.ic_hero_phoenix, R.drawable.ic_hero_shield,
+            R.drawable.ic_hero_sword, R.drawable.ic_hero_crown
         )
 
         if (activeProfile.avatarId in avatars.indices) {
@@ -249,7 +257,6 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_sudoku to SudokuActivity::class.java,
             R.id.btn_tictactoe to TicTacToeActivity::class.java,
             R.id.btn_word_quest to WordQuestActivity::class.java,
-            R.id.btn_road_racer to RoadRacerActivity::class.java,
             R.id.btn_sokoban to SokobanActivity::class.java,
             R.id.btn_tanks to BattleTanksActivity::class.java,
             R.id.btn_starfighter to StarFighterActivity::class.java,
@@ -260,7 +267,10 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_flappy to FlappyHeroActivity::class.java,
             R.id.btn_checkers to CheckersActivity::class.java,
             R.id.btn_spinball to SpinballActivity::class.java,
-            R.id.btn_froggy to FroggyCrossActivity::class.java
+            R.id.btn_froggy to FroggyCrossActivity::class.java,
+            R.id.btn_monkey to MonkeyActivity::class.java,
+            R.id.btn_retrodriver to RetroDriverActivity::class.java,
+            R.id.btn_frenzy to FrenzyActivity::class.java
         )
 
         for ((id, activityClass) in games) {
@@ -288,7 +298,6 @@ class MainActivity : AppCompatActivity() {
             "sudoku" -> R.id.btn_sudoku
             "tic_tac_toe" -> R.id.btn_tictactoe
             "word_quest" -> R.id.btn_word_quest
-            "road_racer" -> R.id.btn_road_racer
             "sokoban" -> R.id.btn_sokoban
             "battle_tanks" -> R.id.btn_tanks
             "starfighter" -> R.id.btn_starfighter
@@ -301,6 +310,9 @@ class MainActivity : AppCompatActivity() {
             "syobon_action" -> R.id.btn_syobon
             "checkers" -> R.id.btn_checkers
             "spinball" -> R.id.btn_spinball
+            "monkey" -> R.id.btn_monkey
+            "retrodriver" -> R.id.btn_retrodriver
+            "frenzy" -> R.id.btn_frenzy
             else -> R.id.btn_snake
         }
         findViewById<Button>(viewId)?.requestFocus()

@@ -11,6 +11,7 @@ This document maps all integrated APIs to their primary, secondary, and offline 
 | **Speech-to-Text** | Google Cloud STT | AssemblyAI | ML Kit (On-Device) |
 | **Text-to-Speech** | Cloud TTS | Play.ht | `flutter_tts` (Local) |
 | **Translation** | **DeepL API** | Google Translate | Local Dictionary |
+| **Sound Effects (SFX)** | **ElevenLabs SFX** | Freesound API | ToneGenerator (Synthetic) |
 
 ## 2. Infrastructure & Data (Firebase Bedrock)
 | Category | Primary Provider | Secondary Provider | Offline Fallback |
@@ -356,15 +357,21 @@ This document maps all integrated APIs to their primary, secondary, and offline 
 * **Acoustid** (https://acoustid.org/webservice) — Audio fingerprinting and database lookup.
 * **Apple Music API** (https://developer.apple.com/documentation/applemusicapi) — Access apple music catalog and user playlists.
 * **Audible API** — Audiobook catalogs, narrator details, and listening metrics.
+* **BBC Sound Effects** (https://sound-effects.bbcrewind.co.uk/) — 33,000+ field recordings and professional foley sounds (personal/educational use only).
 * **Deepgram** (https://deepgram.com/) — Speech-to-text, diarization, and audio intelligence.
 * **Deepgram API** — Enterprise-grade speech-to-text, audio intelligence, and voice AI platform.
 * **Deezer API** (https://developers.deezer.com/) — Music streaming catalog and search.
 * **ElevenLabs** (https://elevenlabs.io/) — Generative AI voice cloning and speech synthesis.
 * **ElevenLabs API** — Ultra-realistic generative AI voice cloning and text-to-speech synthesis.
+* **ElevenLabs Sound Effects** (https://elevenlabs.io/features/ai-sound-effects) — AI platform generating realistic audio clips from prompt descriptions.
+* **Epidemic Sound Connect** (https://www.epidemicsound.com/) — Commercial API to integrate a premium music/sound catalog.
 * **Free Music Archive** (https://freemusicarchive.org/api) — Search and download royalty-free music.
 * **Freesound API** (https://freesound.org/docs/api/) — Search and download audio samples under Creative Commons.
 * **Genius API** — Lyrics search, annotations, and artist song metadata.
 * **Last.fm API** — Music catalog metadata, artist tracks, user scrobbles, and recommendations.
+* **Mixkit** (https://mixkit.co/free-sound-effects/) — Free repository of categorized sound effects for YouTube, transitions, and animations.
+* **MyEdit (CyberLink)** (https://myedit.online/) — AI sound effect generator from prompt text.
+* **Pixabay Sound Effects** (https://pixabay.com/sound-effects/) — Thousands of royalty-free sound effects with no attribution required.
 * **Play.ht** (https://play.ht/) — AI text-to-speech voice generation.
 * **Play.ht API** — AI text-to-speech audio generation and podcast hosting tools.
 * **Radio-Browser** (https://www.radio-browser.info/) — Open directory of streaming online radio stations.
@@ -374,6 +381,7 @@ This document maps all integrated APIs to their primary, secondary, and offline 
 * **Speechmatics** (https://www.speechmatics.com/) — Advanced speech recognition and multilingual transcription.
 * **Speechmatics API** — Advanced speech recognition and multilingual transcription.
 * **VocalRemover API** — AI-powered vocal isolation and music stem separation.
+* **ZapSplat** (https://www.zapsplat.com/) — 160,000+ professional sound effects in WAV and MP3 formats.
 
 ### 4.15 Gaming, Anime & Pop Culture
 * **Anilist API** -- GraphQL API for tracking anime, manga, and character stats.

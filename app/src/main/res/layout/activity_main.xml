@@ -199,6 +199,44 @@
                 android:textStyle="bold" />
 
             <Button
+                android:id="@+id/btn_monkey"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="@color/btn_monkey_color"
+                android:elevation="12dp"
+                android:focusable="true"
+                android:text="@string/game_monkey"
+                android:textAllCaps="true"
+                android:drawableTop="@drawable/ic_game_monkey"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+
+
+            <Button
+                android:id="@+id/btn_frenzy"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="@color/btn_frenzy_color"
+                android:elevation="12dp"
+                android:focusable="true"
+                android:text="@string/game_frenzy"
+                android:textAllCaps="true"
+                android:drawableTop="@drawable/ic_game_frenzy"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <Button
                 android:id="@+id/btn_trex"
                 android:layout_width="200dp"
                 android:layout_height="240dp"
@@ -307,6 +345,25 @@
                 android:textStyle="bold" />
 
             <Button
+                android:id="@+id/btn_retrodriver"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="@color/btn_retrodriver_color"
+                android:elevation="12dp"
+                android:focusable="true"
+                android:text="@string/game_retrodriver"
+                android:textAllCaps="true"
+                android:drawableTop="@drawable/ic_game_retrodriver"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <Button
                 android:id="@+id/btn_lines98"
                 android:layout_width="200dp"
                 android:layout_height="240dp"
@@ -324,23 +381,6 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btn_mental_math"
-                android:layout_width="200dp"
-                android:layout_height="240dp"
-                android:layout_marginStart="32dp"
-                android:background="@drawable/game_item_background"
-                android:backgroundTint="@color/btn_mental_math_color"
-                android:elevation="12dp"
-                android:focusable="true"
-                android:text="@string/game_mental_math"
-                android:textAllCaps="true"
-                android:drawableTop="@drawable/ic_game_mental_math"
-                android:paddingTop="32dp"
-                android:drawablePadding="16dp"
-                android:textColor="#FFFFFF"
-                android:textSize="22sp"
-                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_sudoku"
@@ -396,23 +436,7 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btn_road_racer"
-                android:layout_width="200dp"
-                android:layout_height="240dp"
-                android:layout_marginStart="32dp"
-                android:background="@drawable/game_item_background"
-                android:backgroundTint="@color/btn_road_racer_color"
-                android:elevation="12dp"
-                android:focusable="true"
-                android:text="@string/game_road_racer"
-                android:textAllCaps="true"
-                android:drawableTop="@drawable/ic_game_road_racer"
-                android:paddingTop="32dp"
-                android:drawablePadding="16dp"
-                android:textColor="#FFFFFF"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+
 
             <Button
                 android:id="@+id/btn_sokoban"
@@ -612,8 +636,43 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
+
+
+            <Button
+                android:id="@+id/btn_mental_math"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="@color/btn_mental_math_color"
+                android:elevation="12dp"
+                android:focusable="true"
+                android:text="@string/game_mental_math"
+                android:textAllCaps="true"
+                android:drawableTop="@drawable/ic_game_mental_math"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
         </LinearLayout>
     </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/hero_customization_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/hero_customization_hint"
+        android:textColor="#FFCA28"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:shadowColor="#80000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2"
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="wrap_content"

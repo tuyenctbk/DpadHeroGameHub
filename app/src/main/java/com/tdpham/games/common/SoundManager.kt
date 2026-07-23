@@ -50,6 +50,68 @@ object SoundManager {
     fun playClick() = playTone(ToneGenerator.TONE_PROP_BEEP)
     fun playSuccess() = playTone(ToneGenerator.TONE_PROP_PROMPT)
     fun playFlag() = playTone(ToneGenerator.TONE_PROP_ACK)
+    
+    fun playExplosion() {
+        if (isSoundEnabled) {
+            Thread {
+                try {
+                    toneGenerator?.startTone(ToneGenerator.TONE_SUP_ERROR, 250)
+                    Thread.sleep(150)
+                    toneGenerator?.startTone(ToneGenerator.TONE_DTMF_0, 200)
+                } catch (e: Throwable) {
+                    // Ignore
+                }
+            }.start()
+        }
+    }
+
+    fun playJump() {
+        if (isSoundEnabled) {
+            Thread {
+                try {
+                    toneGenerator?.startTone(ToneGenerator.TONE_DTMF_4, 70)
+                    Thread.sleep(50)
+                    toneGenerator?.startTone(ToneGenerator.TONE_DTMF_8, 70)
+                } catch (_: Throwable) {}
+            }.start()
+        }
+    }
+
+    fun playSwoosh() {
+        if (isSoundEnabled) {
+            Thread {
+                try {
+                    toneGenerator?.startTone(ToneGenerator.TONE_DTMF_D, 50)
+                    Thread.sleep(40)
+                    toneGenerator?.startTone(ToneGenerator.TONE_DTMF_B, 50)
+                } catch (_: Throwable) {}
+            }.start()
+        }
+    }
+
+    fun playSlice() {
+        if (isSoundEnabled) {
+            Thread {
+                try {
+                    toneGenerator?.startTone(ToneGenerator.TONE_DTMF_2, 80)
+                    Thread.sleep(40)
+                    toneGenerator?.startTone(ToneGenerator.TONE_DTMF_6, 80)
+                } catch (_: Throwable) {}
+            }.start()
+        }
+    }
+
+    fun playMonkeyEat() {
+        if (isSoundEnabled) {
+            Thread {
+                try {
+                    toneGenerator?.startTone(ToneGenerator.TONE_DTMF_8, 70)
+                    Thread.sleep(50)
+                    toneGenerator?.startTone(ToneGenerator.TONE_DTMF_A, 90)
+                } catch (_: Throwable) {}
+            }.start()
+        }
+    }
 
     fun release() {
         toneGenerator?.release()

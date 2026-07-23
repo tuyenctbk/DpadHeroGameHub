@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Winding Green Jungle Vine -->
+    <path
+        android:strokeColor="#2E7D32"
+        android:strokeWidth="6"
+        android:strokeLineCap="round"
+        android:pathData="M 60,0 Q 45,30 70,60 T 55,120" />
+
+    <!-- Vine Leaves -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M 52,20 C 42,18 42,30 52,30 Z M 64,45 C 74,47 74,35 64,35 Z M 62,80 C 72,82 72,70 62,70 Z M 58,100 C 48,98 48,110 58,110 Z" />
+
+    <!-- Yellow Banana at the top right -->
+    <path
+        android:fillColor="#FFEB3B"
+        android:pathData="M 85,15 C 80,17 76,24 78,32 C 84,32 90,26 92,18 C 93,16 90,14 85,15 Z" />
+    <path
+        android:fillColor="#FBC02D"
+        android:pathData="M 77,15 L 75,13 L 78,14 Z" />
+
+    <!-- Monkey Body -->
+    <path
+        android:fillColor="#8D6E63"
+        android:pathData="M 60,65 A 18,18 0 1 1 59.9,65 Z" />
+
+    <!-- Monkey Ears -->
+    <path
+        android:fillColor="#A1887F"
+        android:pathData="M 40,65 A 6,6 0 1 1 39.9,65 Z M 80,65 A 6,6 0 1 1 79.9,65 Z" />
+    <path
+        android:fillColor="#D7CCC8"
+        android:pathData="M 41,65 A 3,3 0 1 1 40.9,65 Z M 79,65 A 3,3 0 1 1 78.9,65 Z" />
+
+    <!-- Monkey Face Shield (Heart shape style face) -->
+    <path
+        android:fillColor="#F5CBA7"
+        android:pathData="M 60,73 C 50,73 48,61 60,55 C 72,61 70,73 60,73 Z" />
+
+    <!-- Monkey Eyes -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M 54,61 A 2,2 0 1 1 53.9,61 Z M 66,61 A 2,2 0 1 1 65.9,61 Z" />
+    <!-- White Eye shines -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 53.5,60.5 A 0.7,0.7 0 1 1 53.4,60.5 Z M 65.5,60.5 A 0.7,0.7 0 1 1 65.4,60.5 Z" />
+
+    <!-- Smiling Mouth -->
+    <path
+        android:strokeColor="#5D4037"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:pathData="M 56,67 Q 60,70 64,67" />
+
+</vector>

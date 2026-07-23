@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -26,16 +27,16 @@ class ProfileCreationActivity : AppCompatActivity() {
     private var selectedColor = Color.WHITE
     
     private val avatars = listOf(
-        0 to R.drawable.ic_avatar_smile,
-        1 to R.drawable.ic_avatar_alien,
-        2 to R.drawable.ic_avatar_cat,
-        3 to R.drawable.ic_avatar_star,
-        4 to R.drawable.ic_avatar_heart,
-        5 to R.drawable.ic_avatar_robot,
-        6 to R.drawable.ic_avatar_rocket,
-        7 to R.drawable.ic_avatar_ghost,
-        8 to R.drawable.ic_avatar_gamepad,
-        9 to R.drawable.ic_avatar_bolt
+        0 to R.drawable.ic_hero_knight,
+        1 to R.drawable.ic_hero_wizard,
+        2 to R.drawable.ic_hero_archer,
+        3 to R.drawable.ic_hero_ninja,
+        4 to R.drawable.ic_hero_viking,
+        5 to R.drawable.ic_hero_dragon,
+        6 to R.drawable.ic_hero_phoenix,
+        7 to R.drawable.ic_hero_shield,
+        8 to R.drawable.ic_hero_sword,
+        9 to R.drawable.ic_hero_crown
     )
 
     private val colors = listOf(
@@ -53,6 +54,8 @@ class ProfileCreationActivity : AppCompatActivity() {
 
         val editName = findViewById<EditText>(R.id.edit_profile_name)
         val editPin = findViewById<EditText>(R.id.edit_profile_pin)
+        val pinContainer = findViewById<LinearLayout>(R.id.pin_container)
+        val checkProtected = findViewById<CheckBox>(R.id.check_protected_hero)
         val btnCreate = findViewById<Button>(R.id.btn_create_profile)
         val btnCancel = findViewById<Button>(R.id.btn_cancel)
         val btnDelete = findViewById<Button>(R.id.btn_delete_profile)
@@ -63,6 +66,8 @@ class ProfileCreationActivity : AppCompatActivity() {
             if (profile != null) {
                 editName.setText(profile.name)
                 editPin.setText(profile.pin)
+                checkProtected.isChecked = profile.pin != null
+                pinContainer.visibility = if (profile.pin != null) View.VISIBLE else View.GONE
                 selectedAvatarId = profile.avatarId
                 selectedColor = profile.avatarColor
                 btnCreate.text = getString(R.string.save)
@@ -77,6 +82,11 @@ class ProfileCreationActivity : AppCompatActivity() {
             selectedColor = Color.parseColor(colors.random())
         }
 
+        checkProtected.setOnCheckedChangeListener { _, isChecked ->
+            pinContainer.visibility = if (isChecked) View.VISIBLE else View.GONE
+            if (!isChecked) editPin.setText("")
+        }
+
         setupAvatarSelection()
         setupColorSelection()
 
@@ -84,10 +94,10 @@ class ProfileCreationActivity : AppCompatActivity() {
             val name = editName.text.toString().trim()
             val pin = editPin.text.toString().trim()
             if (name.isNotEmpty()) {
-                if (pin.isNotEmpty() && pin.length < 4) {
+                if (checkProtected.isChecked && pin.length < 4) {
                     Toast.makeText(this, getString(R.string.pin_digits_hint), Toast.LENGTH_SHORT).show()
                 } else {
-                    saveProfile(name, if (pin.isEmpty()) null else pin)
+                    saveProfile(name, if (!checkProtected.isChecked || pin.isEmpty()) null else pin)
                 }
             } else {
                 Toast.makeText(this, getString(R.string.please_enter_name), Toast.LENGTH_SHORT).show()

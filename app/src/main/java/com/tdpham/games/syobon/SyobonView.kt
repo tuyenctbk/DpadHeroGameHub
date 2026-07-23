@@ -233,7 +233,7 @@ class SyobonView @JvmOverloads constructor(
                 update()
             }
             invalidate()
-            mainHandler.postDelayed(this, 16)
+            mainHandler.postDelayed(this, 18)
         }
     }
 
@@ -589,13 +589,31 @@ class SyobonView @JvmOverloads constructor(
     }
 
     private fun buildPipe(col: Int, height: Int, isLauncher: Boolean = false) {
-        val startRow = 13 - height
-        for (r in startRow until 13) {
-            map[r][col] = 6 // Pipe left body
-            map[r][col + 1] = 6 // Pipe right body
+        val groundSurfaceRow = if (currentLevel in 11..15) 12 else 13
+        
+        // Force solid ground underneath the pipe columns to connect it to the ground
+        for (c in col..col + 1) {
+            if (c in 0 until TOTAL_MAP_COLS) {
+                map[groundSurfaceRow][c] = 1 // Solid ground surface
+                if (groundSurfaceRow + 1 < ROWS) {
+                    map[groundSurfaceRow + 1][c] = 12 // Solid ground body
+                }
+            }
         }
-        map[startRow][col] = 7 // Pipe top left
-        map[startRow][col + 1] = 7 // Pipe top right
+
+        val startRow = groundSurfaceRow - height
+        for (r in startRow until groundSurfaceRow) {
+            if (r in 0 until ROWS && col in 0 until TOTAL_MAP_COLS) {
+                map[r][col] = 6 // Pipe left body
+            }
+            if (r in 0 until ROWS && col + 1 in 0 until TOTAL_MAP_COLS) {
+                map[r][col + 1] = 6 // Pipe right body
+            }
+        }
+        if (startRow in 0 until ROWS) {
+            if (col in 0 until TOTAL_MAP_COLS) map[startRow][col] = 7 // Pipe top left
+            if (col + 1 in 0 until TOTAL_MAP_COLS) map[startRow][col + 1] = 7 // Pipe top right
+        }
         
         if (isLauncher) {
             pipeLaunchers.add(PipeLauncher(col + 0.5f, (startRow - 1).toFloat(), 0f, -0.15f))
@@ -1190,7 +1208,7 @@ class SyobonView @JvmOverloads constructor(
                         SoundManager.playError()
                     }
                 }
-                feedbackPopups.add(FeedbackPopup(c.toFloat(), r.toFloat() - 0.5f, "SURPRISE!", Color.WHITE))
+                feedbackPopups.add(FeedbackPopup(c.toFloat(), r.toFloat() - 0.5f, context.getString(R.string.syobon_surprise), Color.WHITE))
             }, 200)
             return
         }
@@ -1493,12 +1511,12 @@ class SyobonView @JvmOverloads constructor(
         if (isLevelCleared) {
             celebrationManager.draw(canvas)
             if (currentLevel < 3) {
-                drawOverlayScreen(canvas, "LEVEL $currentLevel CLEAR!", "Press OK/Center for Level ${currentLevel + 1}")
+                drawOverlayScreen(canvas, context.getString(R.string.syobon_level_clear, currentLevel), context.getString(R.string.syobon_next_level, currentLevel + 1))
             } else {
-                drawOverlayScreen(canvas, "YOU ARE A CAT HERO!", "All Levels Cleared! Press OK/Center to Replay")
+                drawOverlayScreen(canvas, context.getString(R.string.syobon_victory_title), context.getString(R.string.syobon_victory_desc))
             }
         } else if (gameOver) {
-            drawOverlayScreen(canvas, "GAME OVER", "Press OK/Center to Retry")
+            drawOverlayScreen(canvas, context.getString(R.string.game_over), context.getString(R.string.syobon_retry_hint))
         }
     }
 

@@ -289,7 +289,7 @@ class MinesweeperView @JvmOverloads constructor(
 
         if (grid[r][c].isMine) {
             isGameOver = true
-            SoundManager.playError()
+            SoundManager.playExplosion()
             revealAllMines(r, c)
             celebrationManager.startOutcome(
                 width = width.toFloat(),

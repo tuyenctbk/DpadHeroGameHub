@@ -117,6 +117,10 @@
     <string name="road_racer_density_desc">More traffic is harder to avoid.</string>
     <string name="game_word_quest">WORD QUEST</string>
     <string name="game_dungeon">DUNGEON ESCAPE</string>
+    <string name="game_monkey">GIBBON ASCENT</string>
+    <string name="game_retrodriver">RETRO RACER</string>
+    <string name="game_frenzy">FRENZY FEEDING</string>
+    <string name="game_fruit">FRUIT SLICER</string>
     <string name="flappy_hero_settings_title">FLAPPY SETTINGS</string>
     <string name="flappy_hero_level_1">LEVEL 1: EASY</string>
     <string name="flappy_hero_level_2">LEVEL 2: NORMAL</string>
@@ -190,6 +194,10 @@
     <string name="game_lines98_instructions">• Use D-PAD to move the cursor.\n• Press CENTER to select a ball, then press CENTER on an empty cell to move it.\n• Align 5 or more balls of the same color (horizontal, vertical, or diagonal) to score and clear them.\n• Each move that doesn\'t clear lines adds 3 new balls.\n• Game ends when the board is full.\n• Press \'S\' or MUTE to toggle sound.</string>
     <string name="game_solitaire_instructions">• Use D-PAD to move the cursor.\n• Press CENTER to select/pick up cards, and CENTER to place them.\n• Build foundations by suit from Ace to King.\n• Build tableaus by alternating color and descending rank.\n• Press \'S\' or MUTE to toggle sound.</string>
     <string name="game_road_racer_instructions">• Move Left/Right to avoid traffic.\n• Survive as long as you can!\n• Press Center to Start/Pause.</string>
+    <string name="game_monkey_instructions">• Climb the vines to escape.\n• Collect fruits for score.\n• Dodge spiders, coconuts, and vine-cutting beetles!\n• Use D-PAD to climb and jump vines.</string>
+    <string name="game_retrodriver_instructions">• Ride your synthwave motorcycle!\n• Steer Left/Right and hold UP to accelerate.\n• Overtake all 20 competitors to rank 1st.\n• Cross the finish line to complete the race!</string>
+    <string name="game_frenzy_instructions">• Swim around the ocean with D-PAD.\n• Eat fish smaller than you to grow.\n• Avoid being eaten by larger predator fish!\n• Eat 30 fish to win the level.</string>
+    <string name="game_fruit_instructions">• Fruits are tossed in the air.\n• Move the glowing blade with D-PAD to slice them.\n• Avoid bombs at all costs!\n• Slice as many fruits as you can.</string>
     <string name="game_hangman_instructions">• Select letters to guess the word.\n• You have 6 attempts.\n• Press Center to Guess.</string>
     <string name="select_game_hint">USE ◄ ► TO BROWSE • PRESS [OK] TO PLAY</string>
     <string name="settings">Settings</string>
@@ -533,31 +541,101 @@
     <string name="quit_game_confirm">Are you sure you want to quit the game?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="choose_hero" translatable="true">CHOOSE YOUR PLAYER</string>
-    <string name="create_hero" translatable="true">CREATE NEW PLAYER</string>
-    <string name="enter_hero_name" translatable="true">ENTER PLAYER NAME</string>
-    <string name="add_profile" translatable="true">ADD PLAYER</string>
-    <string name="switch_profile" translatable="true">SWITCH PLAYER</string>
+    <string name="choose_hero" translatable="true">CHOOSE YOUR HERO</string>
+    <string name="create_hero" translatable="true">CREATE NEW HERO</string>
+    <string name="enter_hero_name" translatable="true">ENTER HERO NAME</string>
+    <string name="add_profile" translatable="true">ADD HERO</string>
+    <string name="switch_profile" translatable="true">SWITCH HERO</string>
     <string name="profile_selection_hint" translatable="true">USE ◄ ► TO BROWSE • PRESS [OK] TO SELECT</string>
-    <string name="please_enter_name" translatable="true">Please enter a name</string>
+    <string name="please_enter_name" translatable="true">Please enter a hero name</string>
     <string name="enter_pin" translatable="true">ENTER 4-DIGIT PIN</string>
-    <string name="setup_pin" translatable="true">SET PLAYER LOCK (PIN)</string>
+    <string name="setup_pin" translatable="true">SET HERO LOCK (PIN)</string>
     <string name="wrong_pin" translatable="true">Incorrect PIN. Try again.</string>
-    <string name="manage_profiles" translatable="true">MANAGE PLAYERS</string>
-    <string name="edit_profile" translatable="true">EDIT PLAYER</string>
-    <string name="delete_profile" translatable="true">DELETE PLAYER</string>
-    <string name="confirm_delete_profile" translatable="true">Are you sure you want to delete this player? All scores will be lost.</string>
+    <string name="manage_profiles" translatable="true">MANAGE HEROES</string>
+    <string name="edit_profile" translatable="true">EDIT HERO</string>
+    <string name="delete_profile" translatable="true">DELETE HERO</string>
+    <string name="confirm_delete_profile" translatable="true">Are you sure you want to delete this hero? All scores will be lost.</string>
     <string name="leave_blank_no_pin" translatable="true">Leave blank for no lock</string>
     <string name="hall_of_fame" translatable="true">HALL OF FAME</string>
     <string name="no_records" translatable="true">NO RECORDS YET</string>
     <string name="save" translatable="true">SAVE</string>
     <string name="choose_avatar" translatable="true">CHOOSE AVATAR</string>
     <string name="choose_color" translatable="true">CHOOSE COLOR</string>
-    <string name="security_pin_label" translatable="true">SECURITY PIN (OPTIONAL)</string>
+    <string name="security_pin_label" translatable="true">SECURITY PIN</string>
     <string name="pin_digits_hint" translatable="true">PIN must be 4 digits</string>
+    <string name="protected_hero" translatable="true">PROTECTED HERO</string>
+    <string name="guest_hero_name" translatable="true">GUEST HERO</string>
+    <string name="hero_customization_hint" translatable="true">Press [OK] on your Name to customize your Hero!</string>
     <string name="rank_1st" translatable="true">1st</string>
     <string name="rank_2nd" translatable="true">2nd</string>
     <string name="rank_3rd" translatable="true">3rd</string>
     <string name="placeholder_name" translatable="false">---</string>
     <string name="placeholder_score" translatable="false">0</string>
+    <string name="monkey_spring">SPRING</string>
+    <string name="monkey_summer">SUMMER</string>
+    <string name="monkey_autumn">AUTUMN</string>
+    <string name="monkey_winter">WINTER</string>
+    <string name="retro_driver_speed">Speed: %1$d MPH</string>
+    <string name="frenzy_stage">STAGE: %1$s (%2$d / %3$d)</string>
+    <string name="frenzy_guppy">GUPPY</string>
+    <string name="frenzy_angelfish">ANGELFISH</string>
+    <string name="frenzy_lionfish">LIONFISH</string>
+    <string name="frenzy_dolphin">DOLPHIN</string>
+    <string name="frenzy_victory_title">VICTORY!</string>
+    <string name="frenzy_victory_desc">You are the King of the Deep Sea!\nFinal Score: %1$d</string>
+    <string name="frenzy_resume_desc">Eat smaller fish to grow bigger!\nBite Shark tails from behind!</string>
+    <string name="fruit_blade_steel">STEEL KATANA</string>
+    <string name="fruit_blade_flame">FLAME BLADE</string>
+    <string name="fruit_blade_cyber">CYBER GLOW</string>
+    <string name="fruit_blade_shadow">SHADOW SMOKE</string>
+    <string name="fruit_resume_desc">Blade: %1$s\n(Press D-PAD UP/DOWN to swap swords)</string>
+    <string name="syobon_level_clear">LEVEL %1$d CLEAR!</string>
+    <string name="syobon_next_level">Press OK/Center for Level %1$d</string>
+    <string name="syobon_victory_title">YOU ARE A CAT HERO!</string>
+    <string name="syobon_victory_desc">All Levels Cleared! Press OK/Center to Replay</string>
+    <string name="syobon_retry_hint">Press OK/Center to Retry</string>
+    <string name="frenzy_apex">APEX KING</string>
+    <string name="monkey_death_fell" translatable="true">FELL OFF SEVERED VINE!</string>
+    <string name="monkey_death_eagle" translatable="true">CARRIED AWAY BY HARPY EAGLE!</string>
+    <string name="monkey_death_coconut" translatable="true">HIT BY SPINNING COCONUT!</string>
+    <string name="monkey_death_spider" translatable="true">BITTEN BY POISONOUS SPIDER!</string>
+    <string name="monkey_death_snake" translatable="true">BITTEN BY WAVY JUNGLE SNAKE!</string>
+    <string name="monkey_death_bird" translatable="true">HIT BY FLYING BIRD!</string>
+    <string name="monkey_eagle_warning" translatable="true">▼ EAGLE WARNING ▼</string>
+    <string name="monkey_beetle_warning" translatable="true">⚠️ BEETLE</string>
+    <string name="monkey_char_gibbon" translatable="true">GOLDEN GIBBON</string>
+    <string name="monkey_char_climber" translatable="true">TARZAN CLIMBER</string>
+    <string name="monkey_char_spider" translatable="true">SPIDER MONKEY</string>
+    <string name="monkey_char_chimp" translatable="true">PUNK CHIMP</string>
+    <string name="monkey_char_default" translatable="true">MONKEY</string>
+    <string name="monkey_jaguar_warning" translatable="true">▲ JAGUAR BELOW ▲</string>
+    <string name="monkey_death_jaguar" translatable="true">EATEN BY BLACK JAGUAR!</string>
+
+    <string name="frenzy_death_pufferfish" translatable="true">MOUTH HURT BY INFLATED PUFFERFISH!</string>
+    <string name="frenzy_death_eel" translatable="true">SHOCKED BY ELECTRIC EEL (STUNNED)!</string>
+    <string name="frenzy_death_lionfish" translatable="true">POISONED BY LIONFISH (STUNNED)!</string>
+    <string name="frenzy_death_clam" translatable="true">CANNOT EAT: CLAM IS CLOSED!</string>
+    <string name="frenzy_death_too_large" translatable="true">CANNOT EAT: %1$s IS TOO LARGE!</string>
+    <string name="frenzy_death_eaten" translatable="true">EATEN BY %1$s!</string>
+    <string name="frenzy_death_mine" translatable="true">BLOWN UP BY UNDERSEA MINE!</string>
+
+    <string name="flappy_death_ceiling" translatable="true">Flew too high and hit the ceiling!</string>
+    <string name="flappy_death_ground" translatable="true">Crashed into the grassy ground!</string>
+    <string name="flappy_death_pipe" translatable="true">Crashed into a green pipe!</string>
+    <string name="flappy_death_moving_pipe" translatable="true">Crashed into a moving pipe!</string>
+    <string name="flappy_death_bat" translatable="true">Collided with a patrolling bat!</string>
+    <string name="flappy_death_gate" translatable="true">Chomped by the closing metal gates!</string>
+    <string name="flappy_death_stalactite" translatable="true">Crushed by a falling stalactite!</string>
+    <string name="flappy_death_mine" translatable="true">Blew up on a floating spiked mine!</string>
+    <string name="flappy_death_vortex" translatable="true">Vaporized by the storm vortex core!</string>
+    <string name="flappy_hint_fly_through" translatable="true">FLY THROUGH</string>
+    <string name="flappy_hint_avoid_bat" translatable="true">AVOID BAT</string>
+    <string name="flappy_hint_fly_under" translatable="true">FLY UNDER</string>
+
+    <string name="retro_driver_final_lap" translatable="true">FINAL LAP!</string>
+    <string name="retro_driver_lap_count" translatable="true">LAP %1$d / %2$d</string>
+    <string name="retro_driver_go" translatable="true">GO!</string>
+    <string name="retro_driver_finish" translatable="true">FINISH!</string>
+
+    <string name="syobon_surprise" translatable="true">SURPRISE!</string>
 </resources>

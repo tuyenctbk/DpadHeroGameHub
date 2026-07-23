@@ -1,6 +1,7 @@
 package com.tdpham.games.common.profile
 
 import android.content.Context
+import com.tdpham.games.R
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -32,6 +33,26 @@ object ProfileManager {
             e.printStackTrace()
         }
         return profiles
+    }
+
+    fun ensureDefaultProfileExists(context: Context) {
+        val profiles = getProfiles(context)
+        if (profiles.isEmpty()) {
+            val guestName = context.getString(R.string.guest_hero_name)
+            val defaultProfile = UserProfile(
+                id = "guest_hero_id",
+                name = guestName,
+                avatarColor = android.graphics.Color.parseColor("#4CAF50"), // Green
+                avatarId = 0, // Knight
+                pin = null
+            )
+            saveProfile(context, defaultProfile)
+            setActiveProfileId(context, defaultProfile.id)
+        }
+    }
+
+    fun isDefaultProfile(profile: UserProfile): Boolean {
+        return profile.id == "guest_hero_id"
     }
 
     fun saveProfile(context: Context, profile: UserProfile) {
