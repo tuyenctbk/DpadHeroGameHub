@@ -1,0 +1,7 @@
+- [ ] Update `ConfigManager.kt` with 3-tier adaptive seconds-based defaults
+- [ ] Implement Native Ad support in `AdManager.kt` (using Test ID)
+- [ ] Create `IdleAdManager.kt` for centralized tracking and snooze logic
+- [ ] Create `layout_native_ad_corner.xml` (Compact card)
+- [ ] Create `layout_native_ad_screensaver.xml` (Full-screen + OLED drift + Mute toggle)
+- [ ] Update `BaseGameActivity.kt` and `MainActivity.kt` to integrate the idle system
+- [ ] Final verification and polishing
