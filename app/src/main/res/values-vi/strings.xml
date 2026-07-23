@@ -541,4 +541,9 @@
     <string name="monkey_jaguar_warning">▲ CẢNH BÁO BÁO ĐEN ▲</string>
     <string name="monkey_death_jaguar">BỊ BÁO ĐEN ĂN THỊT!</string>
     <string name="monkey_char_spider">KHỈ NHỆN</string>
+    <string name="ad_screensaver_message">Để duy trì các trò chơi miễn phí, chúng tôi hiển thị quảng cáo khi nghỉ.\nCảm ơn sự ủng hộ của bạn!</string>
+    <string name="ad_screensaver_hint">Nhấn phím bất kỳ để quay lại trò chơi</string>
+    <string name="ad_warning_prefix">Quảng cáo toàn màn hình sẽ bắt đầu sau %1$d...</string>
+    <string name="ad_label">QC</string>
+    <string name="advertisement_label">QUẢNG CÁO</string>
 </resources>

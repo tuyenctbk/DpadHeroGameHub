@@ -16,6 +16,8 @@ import com.tdpham.games.hub.GuideManager
 import com.tdpham.games.hub.RatingGuideManager
 import com.tdpham.games.trex.TRexOptionsDialog
 import com.tdpham.games.trex.TRexView
+import com.tdpham.games.common.IdleAdManager
+import com.tdpham.games.common.IdleAdOverlayHelper
 
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +36,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     private var isGuideShowing = false
     private var hasStarted = false
     private var activeOverlay: View? = null
+    private lateinit var adOverlayHelper: IdleAdOverlayHelper
 
     protected open fun shouldShowHelpButton(): Boolean = false
 
@@ -57,6 +60,12 @@ abstract class BaseGameActivity : AppCompatActivity() {
         if (view is GameView) {
             gameView = view
             gameView.gameKey = gameKey
+            
+            adOverlayHelper = IdleAdOverlayHelper(this).apply { init() }
+            IdleAdManager.init { state, remaining ->
+                adOverlayHelper.showState(state, remaining)
+            }
+
             gameView.onGameOver = { score ->
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
@@ -168,6 +177,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     private fun startGameWithAnalytics() {
         hasStarted = true
+        IdleAdManager.isWaitingMode = isGuideShowing
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
         firebaseAnalytics?.logEvent(FirebaseAnalytics.Event.LEVEL_START, bundle)
@@ -185,6 +195,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     protected fun showGameGuide() {
         removeActiveOverlay()
         isGuideShowing = true
+        IdleAdManager.isWaitingMode = true
         gameView.pause()
         val btnText = if (hasStarted) getString(R.string.resume) else getString(R.string.start_game)
         
@@ -196,6 +207,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
             showCheckbox = showCheckbox,
             onDismiss = {
                 isGuideShowing = false
+                IdleAdManager.isWaitingMode = false
                 if (!hasStarted) {
                     startGameWithAnalytics()
                 } else {
@@ -208,6 +220,9 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        IdleAdManager.isGameMode = true
+        IdleAdManager.isWaitingMode = !hasStarted || isGuideShowing
+        IdleAdManager.startTracking()
         if (!isGuideShowing) {
             gameView.resume()
         }
@@ -215,7 +230,19 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        IdleAdManager.stopTracking()
         gameView.pause()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        // If we lose focus but are still resumed, a dialog is likely showing
+        IdleAdManager.isWaitingMode = !hasFocus || isGuideShowing || !hasStarted
+    }
+
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        IdleAdManager.notifyInteraction()
     }
 
     override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {

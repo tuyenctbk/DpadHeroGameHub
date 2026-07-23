@@ -65,25 +65,21 @@ class IdleAdOverlayHelper(private val activity: Activity) {
     }
 
     private fun showWarning(seconds: Int) {
-        // If full screen is already showing, don't show warning
-        if (isAdShowing && adOverlay?.id == R.id.screensaver_root) return
-        
         if (adOverlay?.id != R.id.screensaver_root) {
-            // If corner ad is showing, we can just show the warning on top or replace
-            if (adOverlay == null) {
-                val inflater = LayoutInflater.from(activity)
-                adOverlay = inflater.inflate(R.layout.layout_native_ad_screensaver, rootContainer, false)
-                rootContainer?.addView(adOverlay)
-            }
-            
-            val warningContainer = adOverlay?.findViewById<View>(R.id.warning_container)
-            val warningText = adOverlay?.findViewById<TextView>(R.id.warning_text)
-            warningContainer?.visibility = View.VISIBLE
-            warningText?.text = activity.getString(R.string.ad_warning_prefix, seconds)
-            
-            // Hide the ad parts during warning
-            adOverlay?.findViewById<View>(R.id.native_ad_view)?.visibility = View.GONE
+            rootContainer?.removeAllViews()
+            val inflater = LayoutInflater.from(activity)
+            adOverlay = inflater.inflate(R.layout.layout_native_ad_screensaver, rootContainer, false)
+            rootContainer?.addView(adOverlay)
         }
+        
+        val warningContainer = adOverlay?.findViewById<View>(R.id.warning_container)
+        val warningText = adOverlay?.findViewById<TextView>(R.id.warning_text)
+        warningContainer?.visibility = View.VISIBLE
+        warningText?.text = activity.getString(R.string.ad_warning_prefix, seconds)
+        
+        // Hide the ad parts during warning
+        adOverlay?.findViewById<View>(R.id.native_ad_view)?.visibility = View.GONE
+        isAdShowing = true
     }
 
     private fun showFullScreenAd() {
@@ -109,11 +105,13 @@ class IdleAdOverlayHelper(private val activity: Activity) {
 
     private fun startDriftAnimation() {
         val driftView = adOverlay?.findViewById<View>(R.id.drift_container) ?: return
+        driftView.animate().cancel()
         val anim = driftView.animate()
             .translationX(20f).translationY(15f)
             .setDuration(15000)
             .withEndAction {
-                driftView.animate()
+                val nextDrift = adOverlay?.findViewById<View>(R.id.drift_container) ?: return@withEndAction
+                nextDrift.animate()
                     .translationX(-20f).translationY(-15f)
                     .setDuration(15000)
                     .withEndAction { startDriftAnimation() }
@@ -123,7 +121,8 @@ class IdleAdOverlayHelper(private val activity: Activity) {
     }
 
     private fun hideAd() {
-        if (!isAdShowing) return
+        adOverlay?.findViewById<View>(R.id.drift_container)?.animate()?.cancel()
+        if (!isAdShowing && rootContainer?.childCount == 0) return
         rootContainer?.removeAllViews()
         adOverlay = null
         isAdShowing = false

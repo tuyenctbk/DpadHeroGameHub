@@ -468,4 +468,9 @@
     <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
     <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
     <string name="monkey_char_spider">SPIDER MONKEY</string>
+    <string name="ad_screensaver_message">To keep these games free, we show ads during breaks.\nThank you for your support!</string>
+    <string name="ad_screensaver_hint">Press any key to resume instantly</string>
+    <string name="ad_warning_prefix">Full-screen ad starting in %1$d...</string>
+    <string name="ad_label">AD</string>
+    <string name="advertisement_label">ADVERTISEMENT</string>
 </resources>

@@ -51,6 +51,8 @@ import com.tdpham.games.common.profile.ProfileManager
 import com.tdpham.games.common.profile.UserProfile
 import com.tdpham.games.hub.profile.ProfileSelectionActivity
 import com.tdpham.games.hub.profile.ProfileCreationActivity
+import com.tdpham.games.common.IdleAdManager
+import com.tdpham.games.common.IdleAdOverlayHelper
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.Firebase
@@ -64,10 +66,17 @@ class MainActivity : AppCompatActivity() {
 
     private var firebaseAnalytics: FirebaseAnalytics? = null
     private var returnedFromGame = false
+    private lateinit var adOverlayHelper: IdleAdOverlayHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        adOverlayHelper = IdleAdOverlayHelper(this).apply { init() }
+        IdleAdManager.isGameMode = false
+        IdleAdManager.init { state, remaining ->
+            adOverlayHelper.showState(state, remaining)
+        }
 
         lifecycleScope.launch(Dispatchers.Default) {
             val analytics = try {
@@ -360,6 +369,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        IdleAdManager.isGameMode = false
+        IdleAdManager.startTracking()
         updateProfileDisplay()
         if (returnedFromGame) {
             returnedFromGame = false
@@ -369,6 +380,21 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        IdleAdManager.stopTracking()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        IdleAdManager.isWaitingMode = !hasFocus
+    }
+
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        IdleAdManager.notifyInteraction()
     }
 
     override fun onDestroy() {

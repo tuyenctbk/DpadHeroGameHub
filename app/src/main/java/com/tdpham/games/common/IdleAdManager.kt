@@ -1,6 +1,5 @@
 package com.tdpham.games.common
 
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -21,7 +20,7 @@ object IdleAdManager {
     private var currentState = IdleState.ACTIVE
     
     var isGameMode = false
-    var isDialogShowing = false
+    var isWaitingMode = false
     
     private var lastInteractionTime = System.currentTimeMillis()
     private var adShownStartTime = 0L
@@ -80,8 +79,18 @@ object IdleAdManager {
         val now = System.currentTimeMillis()
         val idleSec = ((now - lastInteractionTime) / 1000).toInt()
         
-        val cornerThreshold = (if (isGameMode) ConfigManager.getAdsIdlePlayCornerSec() else ConfigManager.getAdsIdleMenuCornerSec()) * snoozeMultiplier
-        val fullThreshold = (if (isGameMode) ConfigManager.getAdsIdlePlayFullSec() else ConfigManager.getAdsIdleMenuFullSec()) * snoozeMultiplier
+        val cornerThreshold = when {
+            isWaitingMode -> ConfigManager.getAdsIdleWaitCornerSec()
+            isGameMode -> ConfigManager.getAdsIdlePlayCornerSec()
+            else -> ConfigManager.getAdsIdleMenuCornerSec()
+        } * snoozeMultiplier
+
+        val fullThreshold = when {
+            isWaitingMode -> ConfigManager.getAdsIdleWaitFullSec()
+            isGameMode -> ConfigManager.getAdsIdlePlayFullSec()
+            else -> ConfigManager.getAdsIdleMenuFullSec()
+        } * snoozeMultiplier
+        
         val yieldThreshold = 20 * 60 // 20 minutes fixed yield
         
         val newState = when {
@@ -92,12 +101,15 @@ object IdleAdManager {
             else -> IdleState.ACTIVE
         }
 
+        val remainingToFull = (fullThreshold - idleSec).toInt().coerceAtLeast(0)
+        
         if (newState != currentState) {
             currentState = newState
             if (newState == IdleState.IDLE_FULL) {
                 adShownStartTime = System.currentTimeMillis()
             }
-            val remainingToFull = (fullThreshold - idleSec).toInt().coerceAtLeast(0)
+            onStateChangeListener?.invoke(currentState, remainingToFull)
+        } else if (currentState == IdleState.IDLE_PRE_FULL) {
             onStateChangeListener?.invoke(currentState, remainingToFull)
         } else if (currentState == IdleState.IDLE_FULL || currentState == IdleState.IDLE_LOOP) {
             // Handle Looping logic

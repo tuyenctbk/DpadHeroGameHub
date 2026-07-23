@@ -3,6 +3,8 @@
     android:id="@+id/screensaver_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="false"
+    android:descendantFocusability="blocksDescendants"
     android:background="#F2000000">
 
     <com.google.android.gms.ads.nativead.NativeAdView
@@ -23,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:text="To keep these games free, we show ads during breaks.\nThank you for your support!"
+                android:text="@string/ad_screensaver_message"
                 android:textAlignment="center"
                 android:textColor="#B0BEC5"
                 android:textSize="18sp"
@@ -48,7 +50,7 @@
                 android:background="#FFCA28"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="ADVERTISEMENT"
+                android:text="@string/advertisement_label"
                 android:textColor="#000000"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -67,7 +69,8 @@
                     android:id="@+id/ad_app_icon"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:scaleType="fitCenter" />
+                    android:scaleType="fitCenter"
+                    android:contentDescription="@string/ad_label" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -118,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:text="Press any key to resume instantly"
+                android:text="@string/ad_screensaver_hint"
                 android:textColor="#66FFFFFF"
                 android:textSize="14sp"
                 android:textAllCaps="true"
@@ -144,7 +147,7 @@
             android:id="@+id/warning_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Full-screen ad starting in 3..."
+            android:text="@string/ad_warning_prefix"
             android:textColor="#FFCA28"
             android:textSize="18sp"
             android:textStyle="bold" />

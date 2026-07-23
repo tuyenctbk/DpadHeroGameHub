@@ -13,15 +13,32 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.nativead.NativeAdView
+import com.google.android.gms.ads.nativead.MediaView
+import com.google.android.gms.ads.VideoOptions
+import com.google.android.gms.ads.nativead.NativeAdOptions
+import android.widget.TextView
+import android.widget.Button
+import android.widget.ImageView
+import android.view.View
+import com.tdpham.games.R
 
 object AdManager {
     private const val TAG = "AdManager"
     private const val INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-5190563950149825/9226641952"
+    private const val NATIVE_AD_UNIT_ID = "ca-app-pub-5190563950149825/5584626448"
     
     private var isInitialized = false
     private var isInitializing = false
     private var mInterstitialAd: InterstitialAd? = null
     private var isLoading = false
+
+    // Native Ad Double Buffering
+    private var currentNativeAd: NativeAd? = null
+    private var prefetchedNativeAd: NativeAd? = null
+    private var isNativeLoading = false
 
     // Session tracking
     private var sessionStartTime: Long = 0L
@@ -30,6 +47,7 @@ object AdManager {
     // Frequency control
     private var lastAdShowTime: Long = 0L
     private var adsShownInSession = 0
+    private var idleAdsShownInSession = 0
     private val mainHandler = Handler(Looper.getMainLooper())
 
     fun init(context: Context) {
@@ -60,6 +78,7 @@ object AdManager {
                         isInitialized = true
                         isInitializing = false
                         loadInterstitial(appContext)
+                        loadNativeAd(appContext)
                     }
                 } catch (e: Throwable) {
                     Log.e(TAG, "Failed to initialize MobileAds: ${e.message}", e)
@@ -100,6 +119,113 @@ object AdManager {
             mInterstitialAd = null
             isLoading = false
         }
+    }
+
+    fun loadNativeAd(context: Context) {
+        try {
+            if (!ConfigManager.isAdsEnabled() || isNativeLoading || (prefetchedNativeAd != null)) return
+            isNativeLoading = true
+
+            val appContext = context.applicationContext
+            mainHandler.post {
+                val videoOptions = VideoOptions.Builder()
+                    .setStartMuted(true)
+                    .build()
+
+                val adOptions = NativeAdOptions.Builder()
+                    .setVideoOptions(videoOptions)
+                    .build()
+
+                val adLoader = AdLoader.Builder(appContext, NATIVE_AD_UNIT_ID)
+                    .forNativeAd { nativeAd ->
+                        Log.d(TAG, "Native Ad loaded.")
+                        prefetchedNativeAd = nativeAd
+                        isNativeLoading = false
+                    }
+                    .withNativeAdOptions(adOptions)
+                    .withAdListener(object : com.google.android.gms.ads.AdListener() {
+                        override fun onAdFailedToLoad(adError: LoadAdError) {
+                            Log.d(TAG, "Native Ad failed to load: ${adError.message}")
+                            isNativeLoading = false
+                        }
+                    })
+                    .build()
+                adLoader.loadAd(AdRequest.Builder().build())
+            }
+        } catch (e: Throwable) {
+            Log.e(TAG, "Failed to load native ad: ${e.message}", e)
+            isNativeLoading = false
+        }
+    }
+
+    fun getNextNativeAd(context: Context): NativeAd? {
+        val nextAd = prefetchedNativeAd
+        currentNativeAd?.destroy()
+        currentNativeAd = nextAd
+        prefetchedNativeAd = null
+        
+        // Trigger prefetch for next cycle
+        loadNativeAd(context)
+        
+        if (nextAd != null) {
+            idleAdsShownInSession++
+        }
+        return nextAd
+    }
+
+    fun canShowIdleAd(context: Context): Boolean {
+        if (!ConfigManager.isAdsEnabled()) return false
+        
+        // Check session cap for idle ads
+        val maxIdleAds = ConfigManager.getAdsMaxPerSessionIdle()
+        if (idleAdsShownInSession >= maxIdleAds) {
+            Log.d(TAG, "Idle Ad skipped: Max ads per session ($maxIdleAds) reached")
+            return false
+        }
+
+        return shouldShowAds(context)
+    }
+
+    fun populateNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
+        // Set the media view.
+        adView.mediaView = adView.findViewById<MediaView>(R.id.ad_media)
+
+        // Set other ad assets.
+        adView.headlineView = adView.findViewById(R.id.ad_headline)
+        adView.bodyView = adView.findViewById(R.id.ad_body)
+        adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
+        adView.iconView = adView.findViewById(R.id.ad_app_icon)
+
+        // The headline and mediaContent are guaranteed to be in every NativeAd.
+        (adView.headlineView as TextView).text = nativeAd.headline
+        adView.mediaView?.setMediaContent(nativeAd.mediaContent!!)
+
+        // These assets aren't guaranteed to be in every NativeAd, so it's important to
+        // check before assigning them.
+        if (nativeAd.body == null) {
+            adView.bodyView?.visibility = View.INVISIBLE
+        } else {
+            adView.bodyView?.visibility = View.VISIBLE
+            (adView.bodyView as TextView).text = nativeAd.body
+        }
+
+        if (nativeAd.callToAction == null) {
+            adView.callToActionView?.visibility = View.INVISIBLE
+        } else {
+            adView.callToActionView?.visibility = View.VISIBLE
+            (adView.callToActionView as Button).text = nativeAd.callToAction
+        }
+
+        if (nativeAd.icon == null) {
+            adView.iconView?.visibility = View.GONE
+        } else {
+            (adView.iconView as ImageView).setImageDrawable(nativeAd.icon?.drawable)
+            adView.iconView?.visibility = View.VISIBLE
+        }
+
+        // This method tells the Google Mobile Ads SDK that you have finished populating your
+        // native ad view with this native ad.
+        adView.setNativeAd(nativeAd)
     }
 
     fun showInterstitial(activity: Activity, onAdDismissed: () -> Unit = {}) {

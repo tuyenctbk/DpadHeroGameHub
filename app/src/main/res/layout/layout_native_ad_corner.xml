@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     android:background="@drawable/game_item_background"
     android:backgroundTint="#D9000000"
+    android:focusable="false"
+    android:descendantFocusability="blocksDescendants"
     android:padding="8dp">
 
     <RelativeLayout
@@ -21,7 +23,7 @@
             android:background="#FFCA28"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
-            android:text="Ad"
+            android:text="@string/ad_label"
             android:textColor="#000000"
             android:textSize="10sp"
             android:textStyle="bold" />
@@ -32,7 +34,8 @@
             android:layout_height="48dp"
             android:layout_below="@id/ad_badge"
             android:layout_marginTop="4dp"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/ad_label" />
 
         <LinearLayout
             android:layout_width="match_parent"
