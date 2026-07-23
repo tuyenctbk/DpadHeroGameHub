@@ -509,7 +509,6 @@
     <string name="monkey_beetle_warning">⚠️ BỌ CÁNH CỨNG</string>
     <string name="monkey_char_gibbon">VƯỢN VÀNG</string>
     <string name="monkey_char_climber">NGƯỜI RỪNG TARZAN</string>
-    <string name="monkey_char_gorilla">GORILLA CÔNG NGHỆ</string>
     <string name="monkey_char_chimp">TINH TINH NỔI LOẠN</string>
     <string name="retro_driver_final_lap">VÒNG CUỐI!</string>
     <string name="retro_driver_lap_count">VÒNG %1$d / %2$d</string>

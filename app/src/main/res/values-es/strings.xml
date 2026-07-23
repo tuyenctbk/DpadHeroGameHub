@@ -594,7 +594,6 @@
     <string name="monkey_beetle_warning">⚠️ BEETLE</string>
     <string name="monkey_char_gibbon">GOLDEN GIBBON</string>
     <string name="monkey_char_climber">TARZAN CLIMBER</string>
-    <string name="monkey_char_gorilla">CYBER GORILLA</string>
     <string name="monkey_char_chimp">PUNK CHIMP</string>
     <string name="retro_driver_final_lap">FINAL LAP!</string>
     <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
