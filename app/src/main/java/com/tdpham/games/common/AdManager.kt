@@ -76,20 +76,22 @@ object AdManager {
         isInitializing = true
 
         val appContext = context.applicationContext
-        mainHandler.post {
+        Executors.newSingleThreadExecutor().execute {
             try {
                 if (!ConfigManager.isAdsEnabled()) {
                     Log.d(TAG, "AdMob is disabled by default.")
                     isInitializing = false
-                    return@post
+                    return@execute
                 }
 
                 MobileAds.initialize(appContext) {
                     Log.d(TAG, "MobileAds initialized successfully.")
                     isInitialized = true
                     isInitializing = false
-                    loadInterstitial(appContext)
-                    loadNativeAd(appContext)
+                    mainHandler.post {
+                        loadInterstitial(appContext)
+                        loadNativeAd(appContext)
+                    }
                 }
             } catch (e: Throwable) {
                 Log.e(TAG, "Failed to initialize MobileAds: ${e.message}", e)
