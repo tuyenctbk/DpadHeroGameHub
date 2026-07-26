@@ -1,0 +1,542 @@
+================================================================================
+           DPAD ARCADE GAME HUB - COMPREHENSIVE SOUND EFFECTS SPECIFICATION
+================================================================================
+
+Document Purpose:
+This document details the complete sound effect (SFX) specifications for all 30 games 
+in the Dpad Arcade Game Hub. It covers universal game lifecycle sounds (Game Start, 
+Game Pause, Game Resume, Game End - Win/Lose) as well as specific gameplay event SFX.
+It also outlines a sound reuse framework across games to ensure audio consistency, 
+lightweight footprint, and efficient memory usage.
+
+--------------------------------------------------------------------------------
+PART 1: GLOBAL REUSABLE SOUND LIBRARY MATRIX
+--------------------------------------------------------------------------------
+
+To minimize asset bloat and maintain a cohesive arcade aesthetic, sound effects are 
+categorized into Shared Core SFX (reused across multiple games) and Game-Specific SFX.
+
+SHARED CORE SFX REGISTRY:
+1.  SFX_GAME_START        : Upward 3-note ascending chime (C4-E4-G4) - Signals round/game start.
+2.  SFX_GAME_PAUSE        : Soft double low-tone blip (E4-C4) - Triggered when pause overlay opens.
+3.  SFX_GAME_RESUME       : Quick bright single tone (G4) - Triggered when resuming play.
+4.  SFX_GAME_OVER_WIN     : Victory fanfare / 4-note ascending triumph sequence.
+5.  SFX_GAME_OVER_LOSE    : Downward 3-note descending sad tone / low thud.
+6.  SFX_UI_CLICK          : Short crisp click/tick - Menu navigation, button presses.
+7.  SFX_UI_ERROR          : Low double buzz - Invalid moves, locked options, wrong input.
+8.  SFX_SCORE_POINT       : High-pitched coin/ping - Small score gains, eating items, simple points.
+9.  SFX_HIGH_SCORE        : Sparkling ascending chime - Breaking a high score record.
+10. SFX_EXPLOSION         : Deep noise rumble / explosion burst - Destruction, bomb detonation, crashes.
+11. SFX_JUMP              : Quick pitch slide upward - Character jumping or leaping.
+12. SFX_SWOOSH            : Fast air movement / slide sound - Fast movement, dash, or card drag.
+13. SFX_TILE_SELECT       : Soft wooden/plastic click - Selecting grid cells, cards, or puzzle pieces.
+14. SFX_TILE_PLACE        : Firm snap / click - Dropping pieces, placing cards, locking tetrominos.
+15. SFX_MATCH_SUCCESS     : Harmonic twin-chime - Clearing lines, matching pairs, solving equations.
+16. SFX_POWERUP           : Bright ascending arpeggio - Collecting special items or buff activations.
+17. SFX_HAZARD_HIT        : Sharp punch / slap - Taking damage, losing a life, hitting wall.
+
+--------------------------------------------------------------------------------
+PART 2: GAME-BY-GAME SOUND EFFECTS BREAKDOWN (30 GAMES)
+--------------------------------------------------------------------------------
+
+================================================================================
+1. BRICK BREAK (brickbreak)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (All bricks cleared)
+- Game Over Lose : SFX_GAME_OVER_LOSE (All lives lost)
+
+[Gameplay Events]
+- Paddle Bounce  : SFX_TILE_SELECT (Firm wooden bounce sound)
+- Wall Bounce    : SFX_UI_CLICK (Soft blip)
+- Brick Hit      : SFX_SCORE_POINT (Single brick destroyed)
+- Power-brick Hit: SFX_POWERUP (Multi-hit / special brick hit)
+- Powerup Collect: SFX_POWERUP (Paddle widen, multi-ball, laser boost)
+- Laser Fire     : Quick blaster laser SFX (Reused from Star Fighter SFX_LASER)
+- Life Lost      : SFX_HAZARD_HIT (Ball falls below paddle)
+
+================================================================================
+2. CHECKERS (checkers)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (Player wins match)
+- Game Over Lose : SFX_GAME_OVER_LOSE (AI wins match)
+
+[Gameplay Events]
+- Piece Select   : SFX_TILE_SELECT (Soft wooden click)
+- Piece Move     : SFX_TILE_PLACE (Felt/wood board placement)
+- Jump / Capture : SFX_MATCH_SUCCESS (Double click + capture chime)
+- King Crowned   : SFX_POWERUP (Majestic double chime)
+- Invalid Move   : SFX_UI_ERROR (Low double blip)
+
+================================================================================
+3. DUNGEON ESCAPE (dungeon)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (Escaped final level)
+- Game Over Lose : SFX_GAME_OVER_LOSE (Player dies in dungeon)
+
+[Gameplay Events]
+- Step / Move    : SFX_SWOOSH (Quiet footstep / tile step)
+- Attack / Slash : SFX_SWOOSH (Sword swing)
+- Monster Hit    : SFX_HAZARD_HIT (Impact sound on enemy)
+- Monster Defeat : SFX_EXPLOSION (Small enemy vanish / drop)
+- Chest Open     : SFX_MATCH_SUCCESS (Creak + treasure reveal)
+- Key Collect    : SFX_SCORE_POINT (Metallic key chime)
+- Door Unlock    : SFX_TILE_PLACE (Heavy latch unlocking)
+- Trap Trigger   : SFX_HAZARD_HIT (Spike / arrow hit player)
+
+================================================================================
+4. FLAPPY HERO (flappy)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Lose : SFX_GAME_OVER_LOSE (Hero crashes)
+
+[Gameplay Events]
+- Flap / Wing    : SFX_JUMP (Quick pitch-slide up / wing flap)
+- Pass Pipe      : SFX_SCORE_POINT (Point chime)
+- Pipe Collision : SFX_HAZARD_HIT (Thud impact)
+- Ground Fall    : SFX_EXPLOSION (Crash landing)
+- High Score Beat: SFX_HIGH_SCORE
+
+================================================================================
+5. FISH FRENZY (frenzy)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (Max size reached / level clear)
+- Game Over Lose : SFX_GAME_OVER_LOSE (Eaten by larger predator)
+
+[Gameplay Events]
+- Swim Boost     : SFX_SWOOSH (Underwater bubble glide)
+- Eat Smaller    : SFX_SCORE_POINT (Chomp / gulp sound)
+- Grow Up        : SFX_POWERUP (Size upgrade chime)
+- Eaten by Big   : SFX_HAZARD_HIT + SFX_GAME_OVER_LOSE (Large bite impact)
+- Pearl Collect  : SFX_MATCH_SUCCESS (Bonus pearl chime)
+
+================================================================================
+6. FROGGY CROSS (froggy)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (All frogs reach home)
+- Game Over Lose : SFX_GAME_OVER_LOSE (All lives lost)
+
+[Gameplay Events]
+- Frog Hop       : SFX_JUMP (Ribbit / high jump pitch)
+- Reach Home     : SFX_MATCH_SUCCESS (Triumphant frog home chime)
+- Car Hit        : SFX_HAZARD_HIT (Splat / crash)
+- Water Splash   : SFX_EXPLOSION (Plop splash down)
+- Fly Caught     : SFX_SCORE_POINT (Bonus point pop)
+
+================================================================================
+7. FRUIT SLICER (fruit)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Lose : SFX_GAME_OVER_LOSE (3 fruits dropped or bomb sliced)
+
+[Gameplay Events]
+- Blade Swipe    : SFX_SWOOSH (Sharp katana slice in air)
+- Fruit Slice    : SFX_SCORE_POINT (Juicy squish sound)
+- Combo Slice    : SFX_POWERUP (Multi-fruit combo chime)
+- Bomb Splode    : SFX_EXPLOSION (Boom explosion sound)
+- Fruit Dropped  : SFX_UI_ERROR (Missed fruit drop thud)
+
+================================================================================
+8. HANGMAN (hangman)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (Word guessed correctly)
+- Game Over Lose : SFX_GAME_OVER_LOSE (Hangman completed)
+
+[Gameplay Events]
+- Correct Letter : SFX_SCORE_POINT (Chime + letter revealed)
+- Wrong Letter   : SFX_UI_ERROR (Drawing stroke sound / error buzz)
+- Hint Used      : SFX_TILE_SELECT (Light click)
+
+================================================================================
+9. LINES 98 (lines98)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Lose : SFX_GAME_OVER_LOSE (Board full)
+
+[Gameplay Events]
+- Ball Select    : SFX_TILE_SELECT (Pop / select ball)
+- Ball Move      : SFX_SWOOSH (Rolling sound along path)
+- Invalid Path   : SFX_UI_ERROR (Unable to move alert)
+- Line Clear     : SFX_MATCH_SUCCESS (5+ balls line dissolve chime)
+- New Balls Spawn: SFX_TILE_PLACE (Triple soft pop)
+
+================================================================================
+10. MEMORY MATCH (memory)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (All pairs matched)
+
+[Gameplay Events]
+- Card Flip      : SFX_TILE_SELECT (Card turn over)
+- Match Pair     : SFX_MATCH_SUCCESS (Sparkling match tone)
+- Mismatch Pair  : SFX_UI_ERROR (Card flip back double click)
+
+================================================================================
+11. MENTAL MATH (mentalmath)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (Completed streak target)
+- Game Over Lose : SFX_GAME_OVER_LOSE (Time out or max wrong answers)
+
+[Gameplay Events]
+- Keypad Input   : SFX_UI_CLICK (Number tap)
+- Correct Answer : SFX_SCORE_POINT (High bell chime)
+- Wrong Answer   : SFX_UI_ERROR (Low buzzer)
+- Time Ticking   : SFX_UI_CLICK (Fast ticking tone in final 5 sec)
+
+================================================================================
+12. MINESWEEPER (minesweeper)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (All safe tiles revealed)
+- Game Over Lose : SFX_GAME_OVER_LOSE (Mine detonated)
+
+[Gameplay Events]
+- Reveal Tile    : SFX_TILE_SELECT (Dig / click sound)
+- Flag Toggle    : SFX_TILE_PLACE (Flag pin plant sound)
+- Unflag Tile    : SFX_UI_CLICK (Flag remove sound)
+- Chord Reveal   : SFX_SWOOSH (Multi-tile click cluster)
+- Mine Explosion : SFX_EXPLOSION (Detonation boom)
+
+================================================================================
+13. MONKEY CATCH (monkey)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Lose : SFX_GAME_OVER_LOSE (Basket missed too many items)
+
+[Gameplay Events]
+- Move Basket    : SFX_SWOOSH (Basket slide sound)
+- Catch Banana   : SFX_SCORE_POINT (Gulp / cheerful eating pop)
+- Catch Golden   : SFX_POWERUP (Golden bonus chime)
+- Catch Anvil    : SFX_HAZARD_HIT + SFX_EXPLOSION (Heavy bonk / clunk)
+
+================================================================================
+14. RETRO DRIVER (retrodriver)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Lose : SFX_GAME_OVER_LOSE (Car crash)
+
+[Gameplay Events]
+- Steering Dodge : SFX_SWOOSH (Tire screech / lane switch)
+- Speed Boost    : SFX_POWERUP (Engine rev pitch up)
+- Pass Car       : SFX_UI_CLICK (Whoosh sound)
+- Crash Obstacle : SFX_EXPLOSION (Metal impact boom)
+
+================================================================================
+15. ROAD RACER (roadracer)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Lose : SFX_GAME_OVER_LOSE (Total loss of health / crash)
+
+[Gameplay Events]
+- Lane Shift     : SFX_SWOOSH (Quick tire hum)
+- Collect Coin   : SFX_SCORE_POINT (Metallic coin chime)
+- Fuel Refill    : SFX_POWERUP (Fuel pump ding)
+- Traffic Crash  : SFX_EXPLOSION (Vehicle collision crash)
+
+================================================================================
+16. SIMON SAYS (simon)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (Max sequence completed)
+- Game Over Lose : SFX_GAME_OVER_LOSE (Sequence mistyped)
+
+[Gameplay Events]
+- Red Pad Light  : Tone pitch 440 Hz (A4)
+- Blue Pad Light : Tone pitch 554 Hz (C#5)
+- Yellow Pad Light: Tone pitch 659 Hz (E5)
+- Green Pad Light: Tone pitch 880 Hz (A5)
+- Round Complete : SFX_MATCH_SUCCESS (Speedup sequence chime)
+- Wrong Pad Tap  : SFX_UI_ERROR (Harsh dissonant error buzz)
+
+================================================================================
+17. SLIDE PUZZLE (slidepuzzle)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (Picture solved)
+
+[Gameplay Events]
+- Tile Slide     : SFX_TILE_SELECT (Smooth sliding wooden block tap)
+- Invalid Move   : SFX_UI_ERROR (Blocked tile knock)
+- Puzzle Solved  : SFX_GAME_OVER_WIN (Fanfare + final tile lock)
+
+================================================================================
+18. SNAKE (snake)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Lose : SFX_GAME_OVER_LOSE (Snake hits self or wall)
+
+[Gameplay Events]
+- Turn Direction : SFX_UI_CLICK (Soft click on key turn)
+- Eat Normal Apple: SFX_SCORE_POINT (Chomp / bite pop)
+- Eat Bonus Item : SFX_POWERUP (High score bonus melody)
+- Wall / Self Collision: SFX_HAZARD_HIT (Bonk / thud death)
+
+================================================================================
+19. SOKOBAN (sokoban)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (All boxes placed on targets)
+
+[Gameplay Events]
+- Push Box       : SFX_TILE_PLACE (Heavy crate scraping grid)
+- Box On Target  : SFX_MATCH_SUCCESS (Target lock chime)
+- Box Off Target : SFX_UI_CLICK (Target unlock tone)
+- Undo Step      : SFX_SWOOSH (Rewind click)
+
+================================================================================
+20. SOLITAIRE (solitaire)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (Card cascade win animation)
+
+[Gameplay Events]
+- Draw Stock Card: SFX_TILE_SELECT (Card deck flip)
+- Card Drag / Drop: SFX_TILE_PLACE (Felt table card drop)
+- Foundation Drop: SFX_SCORE_POINT (Ascending suit point chime)
+- Auto Complete  : SFX_POWERUP (Rapid cascade cards sound)
+
+================================================================================
+21. SPINBALL (spinball)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Lose : SFX_GAME_OVER_LOSE (Ball drains out of bounds)
+
+[Gameplay Events]
+- Flipper Strike : SFX_TILE_PLACE (Mechanical flipper thud)
+- Bumper Hit     : SFX_SCORE_POINT (High pinball bell / ricochet)
+- Target Hit     : SFX_POWERUP (Drop target pop)
+- Spinner Spin   : SFX_SWOOSH (Whirring spinner rattle)
+- Drain Ball     : SFX_HAZARD_HIT (Sad whistle / drain chime)
+
+================================================================================
+22. STAR FIGHTER (starfighter)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (Boss destroyed / mission clear)
+- Game Over Lose : SFX_GAME_OVER_LOSE (Ship destroyed)
+
+[Gameplay Events]
+- Laser Shot     : SFX_SWOOSH (Pew-pew blaster sound)
+- Missile Launch : SFX_POWERUP (Rocket swoosh)
+- Enemy Destroyed: SFX_EXPLOSION (Space blast explosion)
+- Ship Hit / Hurt: SFX_HAZARD_HIT (Shield damage alert)
+- Powerup Grab   : SFX_MATCH_SUCCESS (Weapon upgrade chime)
+
+================================================================================
+23. SUDOKU (sudoku)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (Puzzle completed error-free)
+
+[Gameplay Events]
+- Cell Select    : SFX_UI_CLICK (Soft cursor highlight)
+- Number Enter   : SFX_TILE_PLACE (Pencil / digit entry tap)
+- Conflict / Error: SFX_UI_ERROR (Duplicate number buzz)
+- Box / Row Solved: SFX_MATCH_SUCCESS (Subgrid completion chime)
+
+================================================================================
+24. SYOBON ACTION (syobon)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (Flag pole reached)
+- Game Over Lose : SFX_GAME_OVER_LOSE (Lives depleted)
+
+[Gameplay Events]
+- Cat Jump       : SFX_JUMP (Boing jump sound)
+- Trap Triggered : SFX_HAZARD_HIT (Surprise trap click / bonk)
+- Troll Death    : SFX_EXPLOSION (Comical squish / death tone)
+- Checkpoint Hit : SFX_POWERUP (Ring chime)
+
+================================================================================
+25. BATTLE TANKS (tanks)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (All enemy tanks destroyed)
+- Game Over Lose : SFX_GAME_OVER_LOSE (Base or player tank destroyed)
+
+[Gameplay Events]
+- Tank Cannon Shot: SFX_EXPLOSION (Heavy tank shell fire blast)
+- Bullet Wall Hit : SFX_HAZARD_HIT (Brick ricochet / metal ping)
+- Tank Blast      : SFX_EXPLOSION (Full tank explosion)
+- Base Destroyed  : SFX_EXPLOSION + SFX_GAME_OVER_LOSE (Catastrophic explosion)
+- Eagle Shield Up : SFX_POWERUP (Armor active ding)
+
+================================================================================
+26. TETRIS (tetris)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Lose : SFX_GAME_OVER_LOSE (Stack touches top)
+
+[Gameplay Events]
+- Piece Move     : SFX_UI_CLICK (Soft lateral tick)
+- Piece Rotate   : SFX_SWOOSH (Rotate blip)
+- Hard Drop      : SFX_TILE_PLACE (Firm thud)
+- Single Line    : SFX_SCORE_POINT (Line clear chime)
+- Tetris (4 Lines): SFX_POWERUP (Grand 4-line sweep fanfare)
+
+================================================================================
+27. TIC TAC TOE (tictactoe)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (3-in-a-row achieved)
+- Game Over Lose : SFX_GAME_OVER_LOSE (Opponent 3-in-a-row)
+
+[Gameplay Events]
+- Place 'X'      : SFX_TILE_PLACE (Crisp chalk mark / pop)
+- Place 'O'      : SFX_TILE_SELECT (Smooth bubble pop)
+- Draw Match     : SFX_UI_ERROR (Flat tie sound)
+
+================================================================================
+28. T-REX RUN (trex)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Lose : SFX_GAME_OVER_LOSE (Collided with cactus or pterodactyl)
+
+[Gameplay Events]
+- Dino Jump      : SFX_JUMP (Beep-up jump sound)
+- Duck Down      : SFX_SWOOSH (Quick crouch slide)
+- Milestone 100pt: SFX_SCORE_POINT (Double beep score milestone)
+- Crash          : SFX_HAZARD_HIT (Thud collision sound)
+
+================================================================================
+29. 2048 (twentyfortyeight)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (Reached 2048 tile)
+- Game Over Lose : SFX_GAME_OVER_LOSE (No valid moves remaining)
+
+[Gameplay Events]
+- Swipe / Shift  : SFX_SWOOSH (Smooth grid slide sound)
+- Merge Tiles    : SFX_TILE_PLACE (Pop merge tone)
+- High Tile Merge: SFX_MATCH_SUCCESS (Higher pitch merge for 512, 1024, 2048)
+
+================================================================================
+30. WORD QUEST (wordquest)
+================================================================================
+[Lifecycle Events]
+- Game Start     : SFX_GAME_START
+- Game Pause     : SFX_GAME_PAUSE
+- Game Resume    : SFX_GAME_RESUME
+- Game Over Win  : SFX_GAME_OVER_WIN (All hidden words found)
+- Game Over Lose : SFX_GAME_OVER_LOSE (Timer expired)
+
+[Gameplay Events]
+- Select Letter  : SFX_UI_CLICK (Letter node tap)
+- Drag Line      : SFX_SWOOSH (Continuous tone / highlight line)
+- Valid Word     : SFX_MATCH_SUCCESS (Word solved sparkle)
+- Invalid Word   : SFX_UI_ERROR (Selection cancel buzz)
+
+--------------------------------------------------------------------------------
+PART 3: IMPLEMENTATION & REUSE GUIDELINES FOR SOUNDMANAGER
+--------------------------------------------------------------------------------
+
+1. Centralized Event Dispatching:
+   All activities inheriting from BaseGameActivity receive standard lifecycle SFX 
+   calls automatically in:
+   - startGameWithAnalytics() -> SoundManager.playGameStart()
+   - showGameGuide() / onPause() -> SoundManager.playGamePause()
+   - resume() / dismiss guide  -> SoundManager.playGameResume()
+   - gameView.onGameOver       -> SoundManager.playGameOver(isWin)
+
+2. Pitch Shifting / Dynamic Synthesis Strategy:
+   To keep app size lightweight under 15MB:
+   - Use ToneGenerator / SoundPool with frequency modulation for variable SFX 
+     (e.g., 2048 tile pitch ramping, Simon Says notes, Simon pad tones).
+   - Reuse core PCM samples across similar genres (e.g., StarFighter laser used in 
+     BrickBreak laser powerup; Explosion sample shared across Tanks, Fruit Slicer, 
+     Dungeon, and StarFighter).
+
+================================================================================

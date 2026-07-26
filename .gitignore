@@ -17,3 +17,6 @@
 .cxx
 local.properties
 app/release/
+dpad-arcade-game-hub/
+.gradle-home/
+gradle-home/
