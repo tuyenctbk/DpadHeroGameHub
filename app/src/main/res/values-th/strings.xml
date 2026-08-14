@@ -2,6 +2,7 @@
     <string name="app_name">Dpad Arcade</string>
     <string name="app_name_full">Dpad Arcade: เกมเรโทร</string>
     <string name="game_center">DPAD ARCADE</string>
+    <string name="snake">งู</string>
     <string name="snake_settings_title">ตั้งค่าเกมงู</string>
     <string name="snake_level_1">ระดับ 1: มือใหม่</string>
     <string name="snake_level_2">ระดับ 2: ปกติ</string>
@@ -10,7 +11,7 @@
     <string name="snake_level_2_desc">ชนกำแพงตาย ความเร็วปกติ</string>
     <string name="snake_level_3_desc">ชนกำแพงตาย ความเร็วสูง</string>
     <string name="snake_level_label">ระดับความยาก</string>
-    <string name="snake">งู</string>
+    <string name="minesweeper">กับระเบิด</string>
     <string name="minesweeper_settings_title">ตั้งค่าเกมหาทุ่นระเบิด</string>
     <string name="minesweeper_level_1">ระดับ 1: มือใหม่ (10x10, 12 ระเบิด)</string>
     <string name="minesweeper_level_2">ระดับ 2: ปกติ (16x16, 40 ระเบิด)</string>
@@ -40,12 +41,58 @@
     <string name="tictactoe_size_4_desc">เรียง 4 เพื่อชนะ</string>
     <string name="tictactoe_size_5_desc">เรียง 5 เพื่อชนะ</string>
     <string name="tictactoe_size_label">ขนาดกระดาน</string>
-    <string name="minesweeper">กับระเบิด</string>
+    <string name="game_4096_settings_title">ตั้งค่า 4096</string>
+    <string name="game_4096_size_4">ตาราง: 4x4 (คลาสสิก)</string>
+    <string name="game_4096_size_5">ตาราง: 5x5 (ขนาดใหญ่)</string>
+    <string name="game_4096_size_desc">เลือกขนาดตารางความท้าทาย</string>
+    <string name="mental_math_settings_title">ตั้งค่าคณิตศาสตร์</string>
+    <string name="mental_math_mode_easy">โหมด: ง่าย (+, -)</string>
+    <string name="mental_math_mode_normal">โหมด: ปกติ (+, -, *)</string>
+    <string name="mental_math_mode_hard">โหมด: ยาก (+, -, *, /)</string>
+    <string name="mental_math_mode_desc">เลือกเครื่องหมายคำนวณ</string>
+    <string name="tetris_settings_title">ตั้งค่าเตตริส</string>
+    <string name="tetris_start_level">ระดับเริ่มต้น</string>
+    <string name="tetris_level_desc">ระดับที่สูงขึ้นจะเริ่มด้วยความเร็วที่มากขึ้น</string>
+    <string name="checkers_settings_title">ตั้งค่าหมากฮอส</string>
+    <string name="checkers_difficulty_1">AI: สุ่ม (ง่าย)</string>
+    <string name="checkers_difficulty_2">AI: กลยุทธ์ (ปกติ)</string>
+    <string name="checkers_difficulty_desc">AI ที่เก่งขึ้นจะเดินหมากอย่างชาญฉลาด</string>
+    <string name="spinball_settings_title">ตั้งค่าสปินบอล</string>
+    <string name="spinball_difficulty_1">โหมด: นุ่มนวล (ช้า)</string>
+    <string name="spinball_difficulty_2">โหมด: คล่องตัว (ปกติ)</string>
+    <string name="spinball_difficulty_3">โหมด: ปั่นป่วน (เร็ว)</string>
+    <string name="spinball_difficulty_desc">ความเร็วเพิ่มความท้าทาย</string>
+    <string name="simon_says_settings_title">ตั้งค่าไซมอน</string>
+    <string name="simon_says_speed_1">ความเร็ว: ผ่อนคลาย (ช้า)</string>
+    <string name="simon_says_speed_2">ความเร็ว: ปกติ (ปานกลาง)</string>
+    <string name="simon_says_speed_3">ความเร็ว: สายฟ้า (เร็ว)</string>
+    <string name="simon_says_speed_desc">ความเร็วในการเล่นลำดับสี</string>
+    <string name="dungeon_escape_settings_title">ตั้งค่าหลบหนีคุกใต้ดิน</string>
+    <string name="dungeon_escape_start_level">ชั้นเริ่มต้น</string>
+    <string name="dungeon_escape_level_desc">เลือกชั้นใต้ดินที่จะเริ่ม</string>
+    <string name="froggy_cross_settings_title">ตั้งค่ากบข้ามถนน</string>
+    <string name="froggy_cross_difficulty_1">ความยาก: ช้า (การจราจรเบาบาง)</string>
+    <string name="froggy_cross_difficulty_2">ความยาก: ปกติ (มาตรฐาน)</string>
+    <string name="froggy_cross_difficulty_3">ความยาก: ชั่วโมงเร่งด่วน (รถเร็ว)</string>
+    <string name="froggy_cross_difficulty_desc">ความเร็วของรถและท่อนซุง</string>
     <string name="game_4096">4096</string>
     <string name="game_trex">T-REX RUN</string>
     <string name="game_brick_break">ทำลายอิฐ</string>
     <string name="game_tictactoe">โอเอ็กซ์</string>
     <string name="game_checkers">หมากฮอส</string>
+    <string name="sokoban_settings_title">ตั้งค่าโซโคบัน</string>
+    <string name="sokoban_start_level">ด่านเริ่มต้น</string>
+    <string name="sokoban_level_desc">เลือกด่านที่จะเริ่มเล่น</string>
+    <string name="battle_tanks_settings_title">ตั้งค่าสมรภูมิรถถัง</string>
+    <string name="battle_tanks_difficulty_1">ความยาก: นักเรียนทหาร (รถถังช้า)</string>
+    <string name="battle_tanks_difficulty_2">ความยาก: ทหารผ่านศึก (มาตรฐาน)</string>
+    <string name="battle_tanks_difficulty_3">ความยาก: นายพล (ยิงรัว)</string>
+    <string name="battle_tanks_difficulty_desc">ความเร็วและพลังทำลายล้างของศัตรู</string>
+    <string name="starfighter_settings_title">ตั้งค่าสตาร์ไฟเตอร์</string>
+    <string name="starfighter_difficulty_1">ระดับ 1: นักเรียนนายร้อย (ง่าย)</string>
+    <string name="starfighter_difficulty_2">ระดับ 2: ทหารผ่านศึก (ปกติ)</string>
+    <string name="starfighter_difficulty_3">ระดับ 3: ยอดนักบิน (ยาก)</string>
+    <string name="starfighter_difficulty_desc">พลังชีวิตและอัตราการยิงของศัตรู</string>
     <string name="game_sokoban">โซโกบัน</string>
     <string name="game_sudoku">ซูโดกุ</string>
     <string name="game_tetris">เตตริส</string>
@@ -54,11 +101,58 @@
     <string name="game_slide_puzzle">สไลด์พัซเซิล</string>
     <string name="game_mental_math">คิดเลขเร็ว</string>
     <string name="game_froggy">กบข้ามถนน</string>
+    <string name="game_syobon">CAT MEOWIO</string>
     <string name="game_simon">ไซมอน เซย์</string>
     <string name="game_tanks">สงครามรถถัง</string>
+    <string name="word_quest_settings_title">ตั้งค่าค้นหาคำศัพท์</string>
+    <string name="word_quest_category_all">หมวดหมู่: ทุกคำศัพท์</string>
+    <string name="word_quest_category_nature">หมวดหมู่: ธรรมชาติ &amp; สัตว์</string>
+    <string name="word_quest_category_tech">หมวดหมู่: เทคโนโลยี &amp; วิทยาศาสตร์</string>
+    <string name="word_quest_category_desc">เลือกธีมปริศนาคำศัพท์ของคุณ</string>
+    <string name="road_racer_settings_title">ตั้งค่าโรดเรเซอร์</string>
+    <string name="road_racer_density_label">ความหนาแน่นของการจราจร</string>
+    <string name="road_racer_density_low">ความหนาแน่น: เบาบาง (ง่าย)</string>
+    <string name="road_racer_density_normal">ความหนาแน่น: ปานกลาง (ปกติ)</string>
+    <string name="road_racer_density_high">ความหนาแน่น: หนาแน่น (ยาก)</string>
+    <string name="road_racer_density_desc">ปริมาณรถบนทางหลวง</string>
     <string name="game_word_quest">ทายคำ</string>
     <string name="game_dungeon">หนีคุกใต้ดิน</string>
+    <string name="game_monkey">ชะนีไต่เถาวัลย์</string>
+    <string name="game_retrodriver">นักแข่งเรโทร</string>
+    <string name="game_frenzy">ปลาใหญ่กินปลาเล็ก</string>
+    <string name="game_fruit">นักฟันผลไม้</string>
+    <string name="flappy_hero_settings_title">ตั้งค่าแฟลปปี้ฮีโร่</string>
+    <string name="flappy_hero_level_1">ระดับ 1: ทุ่งหญ้า (ท่อกว้าง)</string>
+    <string name="flappy_hero_level_2">ระดับ 2: ป่าไม้ (สิ่งกีดขวางเคลื่อนที่)</string>
+    <string name="flappy_hero_level_3">ระดับ 3: หุบเขา (ช่องแคบ)</string>
+    <string name="flappy_hero_level_4">ระดับ 4: ท้องฟ้ายามค่ำคืน (กระแสลม)</string>
+    <string name="flappy_hero_level_5">ระดับ 5: นรกานต์ (โหมดเคออส)</string>
+    <string name="flappy_hero_level_1_desc">ช่องว่างกว้างที่สุดเพื่อการฝึกฝน</string>
+    <string name="flappy_hero_level_2_desc">สิ่งกีดขวางแกว่งขึ้นลงตามแนวตั้ง</string>
+    <string name="flappy_hero_level_3_desc">ระยะห่างระหว่างท่อแคบลง</string>
+    <string name="flappy_hero_level_4_desc">ลมมีผลต่อความเร็วในการตก</string>
+    <string name="flappy_hero_level_5_desc">เลื่อนหน้าจออย่างรวดเร็วและช่องแคบที่สุด</string>
+    <string name="flappy_hero_char_label">ตัวละคร</string>
+    <string name="flappy_char_classic">นกคลาสสิก (มาตรฐาน)</string>
+    <string name="flappy_char_classic_desc">ระบบฟิสิกส์และการกระโดดแบบคลาสสิก</string>
+    <string name="flappy_char_swift">ศรเร็ว (กระพือปีกไว)</string>
+    <string name="flappy_char_swift_desc">ทะยานขึ้นไว แตะต่อเนื่องอย่างรวดเร็ว</string>
+    <string name="flappy_char_heavy">ปีกเหล็ก (ตกเร็ว)</string>
+    <string name="flappy_char_heavy_desc">แรงโน้มถ่วงสูง ต้องใช้การตอบสนองที่รวดเร็ว</string>
+    <string name="flappy_char_floaty">ขนนกเบา (ร่อนนุ่มนวล)</string>
+    <string name="flappy_char_floaty_desc">แรงโน้มถ่วงต่ำ ควบคุมง่าย</string>
+    <string name="brick_break_settings_title">ตั้งค่าทำลายอิฐ</string>
+    <string name="brick_break_paddle_label">ขนาดไม้ตี</string>
+    <string name="brick_break_paddle_large">ไม้ตี: กว้าง (ง่าย)</string>
+    <string name="brick_break_paddle_medium">ไม้ตี: มาตรฐาน (ปกติ)</string>
+    <string name="brick_break_paddle_small">ไม้ตี: แคบ (ยาก)</string>
+    <string name="brick_break_paddle_desc">ไม้ตีที่กว้างขึ้นช่วยรับลูกบอลได้ง่ายขึ้น</string>
     <string name="game_flappy">แฟลปปี้ ฮีโร่</string>
+    <string name="lines98_settings_title">ตั้งค่าไลน์ส 98</string>
+    <string name="lines98_difficulty_easy">สี: 5 สี (ง่าย)</string>
+    <string name="lines98_difficulty_normal">สี: 7 สี (มาตรฐาน)</string>
+    <string name="lines98_difficulty_hard">สี: 9 สี (ผู้เชี่ยวชาญ)</string>
+    <string name="lines98_difficulty_desc">สีน้อยลงช่วยให้เรียงแถวง่ายขึ้น</string>
     <string name="game_lines98">ไลน์ 98</string>
     <string name="game_solitaire">โซลิแทร์</string>
     <string name="game_road_racer">โรด เรเซอร์</string>
@@ -91,6 +185,7 @@
     <string name="game_slide_puzzle_instructions">• ใช้ D-PAD เพื่อเลื่อน\n• กด CENTER เพื่อสลับช่อง\n• เรียงรูปภาพให้ถูกต้อง</string>
     <string name="game_mental_math_instructions">• แก้โจทย์คณิตศาสตร์\n• ใช้ D-PAD เลือกคำตอบ\n• กด CENTER เพื่อยืนยัน\n• เร็วเข้า! เวลากำลังหมด</string>
     <string name="game_froggy_instructions">• ข้ามถนนและแม่น้ำ\n• หลบรถบนถนน\n• กระโดดขอนไม้ในแม่น้ำ\n• ถึงเป้าหมายเพื่อคะแนน!</string>
+    <string name="game_syobon_instructions">• เคลื่อนที่ด้วย ซ้าย/ขวา\n• กด ขึ้น หรือ ปุ่มกลาง เพื่อกระโดด\n• กระโดดโหม่งบล็อก\n• ไปให้ถึงเสาธงเพื่อชนะ!\n• ระวังกับดักที่คาดไม่ถึง!</string>
     <string name="game_simon_instructions">• ดูลำดับสี\n• ทำตามด้วย D-PAD\n• ลำดับจะยาวขึ้นเรื่อยๆ!</string>
     <string name="game_tanks_instructions">• บังคับรถถังด้วย D-PAD\n• ยิงอัตโนมัติ\n• ทำลายรถถังศัตรู\n• ปกป้องฐานของคุณ</string>
     <string name="game_word_quest_instructions">• ทายคำ 5 ตัวอักษรใน 6 ครั้ง\n• ใช้ D-PAD บนคีย์บอร์ด\n• CENTER เพื่อเลือกตัวอักษร\n• เขียว: ตัวอักษรและตำแหน่งถูก</string>
@@ -99,6 +194,10 @@
     <string name="game_lines98_instructions">• ใช้ D-PAD เลื่อนเคอร์เซอร์\n• CENTER เพื่อเลือกและย้ายลูกบอล\n• เรียงสีเดียวกัน 5 ลูกเพื่อทำคะแนน</string>
     <string name="game_solitaire_instructions">• ใช้ D-PAD เลื่อนเคอร์เซอร์\n• CENTER เพื่อเลือก/วางการ์ด\n• เรียงการ์ดจาก A ถึง K</string>
     <string name="game_road_racer_instructions">• เลื่อน ซ้าย/ขวา เพื่อหลบรถ\n• อยู่รอดให้นานที่สุด!\n• กด CENTER เพื่อเริ่ม/พักเกม</string>
+    <string name="game_monkey_instructions">• ไต่เถาวัลย์เพื่อหลบหนี\n• เก็บผลไม้เพื่อทำคะแนน\n• หลบแมงมุม มะพร้าว และแมลงตัดเถาวัลย์!\n• ใช้ D-PAD เพื่อปีนและกระโดดข้ามเถาวัลย์</string>
+    <string name="game_retrodriver_instructions">• ขี่ซูเปอร์ไบค์สไตล์ซินธ์เวฟ!\n• เลี้ยวซ้าย/ขวา และกดขึ้นค้างเพื่อเร่งความเร็ว\n• แซงคู่แข่งทั้ง 20 คันเพื่อคว้าอันดับ 1\n• เข้าเส้นชัยเพื่อจบการแข่งขัน!</string>
+    <string name="game_frenzy_instructions">• ว่ายน้ำในมหาสมุทรด้วย D-PAD\n• กินปลาที่เล็กกว่าเพื่อเติบโต\n• ระวังอย่าโดนผู้ล่าขนาดใหญ่กิน!\n• กินปลาครบ 30 ตัวเพื่อชนะด่าน</string>
+    <string name="game_fruit_instructions">• ผลไม้จะถูกโยนขึ้นไปในอากาศ\n• ขยับดาบเรืองแสงด้วย D-PAD เพื่อฟันผลไม้\n• หลีกเลี่ยงระเบิดโดยเด็ดขาด!\n• ฟันผลไม้ให้ได้มากที่สุด</string>
     <string name="game_hangman_instructions">• เลือกตัวอักษรเพื่อทายคำ\n• คุณมี 6 โอกาส\n• กด CENTER เพื่อทาย</string>
     <string name="select_game_hint">ใช้ ◄ ► เพื่อเลือกเกม • กด [OK] เพื่อเล่น</string>
     <string name="settings">การตั้งค่า</string>
@@ -147,10 +246,45 @@
     <string name="next_stage_hint">กด Center เพื่อด่านถัดไป</string>
     <string name="continue_hint">กด Center เพื่อไปต่อ</string>
     <string name="finish_hint">กด Center เพื่อจบเกม</string>
-    <string name="tictactoe_size_hint">ขึ้น/ลง เพื่อเปลี่ยนขนาดกระดาน</string>
-    <string name="sokoban_restart_hint">CENTER: เริ่มด่านใหม่</string>
-    <string name="sudoku_controls_hint">CENTER: วนเลข 0-9 (0 คือลบ)</string>
+    <string name="tictactoe_size_hint">กด ขึ้น/ลง เพื่อเปลี่ยนขนาดตาราง (3x3, 4x4, 5x5) หรือ MENU สำหรับตัวเลือก</string>
+    <string name="sokoban_restart_hint">กด R เพื่อเริ่มใหม่</string>
+    <string name="sudoku_controls_hint">D-PAD: เลื่อน/ตัวเลข | กลาง: เปลี่ยน | MENU: ระดับ</string>
     <string name="total_wins_label">ชนะทั้งหมด</string>
+    <string name="mines_label">กับระเบิด: </string>
+    <string name="flags_label">ธง: </string>
+    <string name="high_score_prefix">สถิติ: </string>
+    <string name="cpu_wins_label">คอมพิวเตอร์ชนะ!</string>
+    <string name="your_turn_label">ตาของคุณ</string>
+    <string name="watch_label">สังเกตให้ดี...</string>
+    <string name="grid_mastered_label">พิชิตตารางสำเร็จ!</string>
+    <string name="puzzle_solved_label">ไขปริศนาสำเร็จ!</string>
+    <string name="picture_restored_label">กู้คืนรูปภาพสำเร็จ!</string>
+    <string name="crashed_label">ชนแล้ว!</string>
+    <string name="score_prefix">คะแนน: </string>
+    <string name="high_score_label">คะแนนสูงสุด</string>
+    <string name="wrong_label">ผิดพลาด!</string>
+    <string name="answer_was_label">คำที่ถูกต้องคือ: </string>
+    <string name="finish_label">เข้าเส้นชัย</string>
+    <string name="continue_label">เล่นต่อ</string>
+    <string name="next_stage_label">ด่านถัดไป</string>
+    <string name="out_of_tries">หมดโอกาสแล้ว!</string>
+    <string name="cpu_thinking_label">คอมพิวเตอร์กำลังคิด...</string>
+    <string name="no_moves_label">ไม่มีตาเดินเหลืออยู่</string>
+    <string name="victory_label">ชนะแล้ว!</string>
+    <string name="draw_label">เสมอ!</string>
+    <string name="hit_wall_label">ชนกำแพง!</string>
+    <string name="bit_self_label">กัดตัวเอง!</string>
+    <string name="cpu_starting_label">คอมพิวเตอร์เริ่มก่อนในเกมถัดไป</string>
+    <string name="jump_again_label">กระโดดอีกครั้ง</string>
+    <string name="draw_status">เสมอ</string>
+    <string name="cat_animals">สัตว์</string>
+    <string name="cat_fruits">ผลไม้</string>
+    <string name="cat_countries">ประเทศ</string>
+    <string name="cat_sports">กีฬา</string>
+    <string name="cat_flowers">ดอกไม้</string>
+    <string name="cat_vehicles">ยานพาหนะ</string>
+    <string name="cat_games">เกม</string>
+    <string name="cat_foods">อาหาร</string>
     <string name="rating_title">คุณสนุกกับ Dpad Arcade ไหม?</string>
     <string name="rating_content">โปรดให้ 5 ดาวแก่เราใน Play Store หรือแชร์คำแนะนำสำหรับเกมที่คุณต้องการเล่น!</string>
     <string name="rate_now">ให้ 5 ดาว</string>
@@ -159,159 +293,6 @@
     <string name="update_title">มีการอัปเดตใหม่!</string>
     <string name="update_content">Dpad Arcade: Retro Game Hub เวอร์ชันใหม่พร้อมใช้งานแล้ว อัปเดตทันทีเพื่อรับเกม ฟีเจอร์ และการปรับปรุงความเสถียรล่าสุด</string>
     <string name="update_now">อัปเดตตอนนี้</string>
-    <string name="mines_label">ระเบิด</string>
-    <string name="flags_label">ธง</string>
-    <string name="high_score_prefix">สูงสุด</string>
-    <string name="cpu_wins_label">บอทชนะ</string>
-    <string name="your_turn_label">ตาคุณ</string>
-    <string name="watch_label">จ้องมอง...</string>
-    <string name="grid_mastered_label">เชี่ยวชาญกระดาน!</string>
-    <string name="puzzle_solved_label">แก้ปริศนาแล้ว!</string>
-    <string name="picture_restored_label">คืนรูปภาพแล้ว!</string>
-    <string name="score_prefix">คะแนน</string>
-    <string name="high_score_label">คะแนนสูงสุด</string>
-    <string name="wrong_label">ผิด!</string>
-    <string name="answer_was_label">คำตอบคือ</string>
-    <string name="finish_label">จบ</string>
-    <string name="continue_label">ต่อ</string>
-    <string name="next_stage_label">ด่านถัดไป</string>
-    <string name="out_of_tries">โอกาสหมด</string>
-    <string name="crashed_label">ชน!</string>
-    <string name="cpu_thinking_label">บอทกำลังคิด...</string>
-    <string name="no_moves_label">ไม่มีตาเดิน</string>
-
-    <string-array name="win_generic">
-        <item>ชนะ!</item>
-        <item>เก่งมาก!</item>
-        <item>สุดยอด!</item>
-        <item>อัจฉริยะ!</item>
-        <item>ตระการตา!</item>
-        <item>คุณแน่มาก!</item>
-        <item>ยอดเยี่ยม!</item>
-        <item>มหัศจรรย์!</item>
-        <item>เจ๋งมาก!</item>
-        <item>ทำได้ดี!</item>
-    </string-array>
-
-    <string-array name="win_highscore">
-        <item>สถิติใหม่!</item>
-        <item>หยุดไม่อยู่!</item>
-        <item>ดีที่สุดที่เคยมี!</item>
-        <item>ดั่งพระเจ้า!</item>
-        <item>คะแนนสูงสุด!</item>
-    </string-array>
-
-    <string-array name="win_minesweeper">
-        <item>เคลียร์พื้นที่!</item>
-        <item>จ้าวแห่งระเบิด!</item>
-        <item>ทางผ่านปลอดภัย!</item>
-        <item>ผู้เชี่ยวชาญ!</item>
-    </string-array>
-
-    <string-array name="win_sudoku">
-        <item>พิชิตกระดาน!</item>
-        <item>ราชาตรรกะ!</item>
-        <item>แก้ปริศนาแล้ว!</item>
-        <item>สมองใส!</item>
-    </string-array>
-
-    <string-array name="win_tictactoe">
-        <item>ฉลาดกว่าบอท!</item>
-        <item>เรียง 3 แล้ว!</item>
-        <item>ชนะด้วยกลยุทธ์!</item>
-        <item>เหนือชั้น!</item>
-    </string-array>
-
-    <string-array name="win_4096">
-        <item>พ่อมดคณิตศาสตร์!</item>
-        <item>ถึง 4096 แล้ว!</item>
-        <item>จอมบดขยี้!</item>
-        <item>แผ่นสุดท้าย!</item>
-    </string-array>
-
-    <string-array name="win_memory">
-        <item>ความจำแม่นยำ!</item>
-        <item>จ้าวแห่งการจับคู่!</item>
-        <item>สมองไว!</item>
-        <item>จำได้หมด!</item>
-    </string-array>
-
-    <string-array name="win_hangman">
-        <item>ช่วยชีวิตสำเร็จ!</item>
-        <item>จ้าวแห่งคำศัพท์!</item>
-        <item>รอดตายเพราะคำ!</item>
-        <item>ราชาพจนานุกรม!</item>
-    </string-array>
-
-    <string-array name="win_brick_break">
-        <item>ผ่านด่าน!</item>
-        <item>นักบดอิฐ!</item>
-        <item>ผู้ทำลายกำแพง!</item>
-        <item>มือโปร!</item>
-    </string-array>
-
-    <string-array name="win_word_quest">
-        <item>พบคำศัพท์!</item>
-        <item>นักสะกดคำ!</item>
-        <item>ฮีโร่ภาษา!</item>
-        <item>เควสสำเร็จ!</item>
-    </string-array>
-
-    <string-array name="win_solitaire">
-        <item>เคลียร์สำรับ!</item>
-        <item>เอซสูงสุด!</item>
-        <item>เรียงดอกครบ!</item>
-        <item>ราชาไพ่!</item>
-    </string-array>
-
-    <string-array name="win_sokoban">
-        <item>ฮีโร่คลังสินค้า!</item>
-        <item>มือผลักโปร!</item>
-        <item>ครบทุกเป้าหมาย!</item>
-        <item>โซโกมาสเตอร์!</item>
-    </string-array>
-
-    <string-array name="win_checkers">
-        <item>บอทแพ้พ่าย!</item>
-        <item>ราชาแห่งกระดาน!</item>
-        <item>แกรนด์มาสเตอร์!</item>
-        <item>จ้าวกลยุทธ์!</item>
-    </string-array>
-
-    <string-array name="win_slide_puzzle">
-        <item>คืนรูปภาพเดิม!</item>
-        <item>แก้ปริศนาสำเร็จ!</item>
-        <item>ลงตัวเป๊ะ!</item>
-        <item>จ้าวแห่งสไลด์!</item>
-    </string-array>
-
-    <string-array name="win_dungeon">
-        <item>หนีพ้นคุก!</item>
-        <item>นักสำรวจตำนาน!</item>
-        <item>เคลียร์ชั้นแล้ว!</item>
-        <item>พบขุมทรัพย์!</item>
-    </string-array>
-
-    <string-array name="win_tanks">
-        <item>ป้องกันฐานสำเร็จ!</item>
-        <item>ศัตรูถูกกวาดล้าง!</item>
-        <item>ผู้บัญชาการรถถัง!</item>
-        <item>วีรบุรุษสงคราม!</item>
-    </string-array>
-
-    <string-array name="win_mental_math">
-        <item>อัจฉริยะคณิต!</item>
-        <item>พลังสมอง!</item>
-        <item>ราชาคิดเลข!</item>
-        <item>จ้าวแห่งตัวเลข!</item>
-    </string-array>
-
-    <string-array name="win_froggy">
-        <item>ถึงจุดหมาย!</item>
-        <item>ข้ามปลอดภัย!</item>
-        <item>ฮีโร่กบ!</item>
-        <item>จ้าวแห่งสายน้ำ!</item>
-    </string-array>
     <string name="trex_daddy">คุณพ่อทีเร็กซ์</string>
     <string name="trex_mummy">คุณแม่ทีเร็กซ์</string>
     <string name="trex_baby">ลูกทีเร็กซ์</string>
@@ -322,11 +303,12 @@
     <string name="trex_pirate">โจรสลัดทีเร็กซ์</string>
     <string name="trex_chef">เชฟทีเร็กซ์</string>
     <string name="trex_astronaut">นักบินอวกาศทีเร็กซ์</string>
+    <string name="trex_ninja">นินจาทีเร็กซ์</string>
     <string name="trex_dragon">ไดโนมังกร</string>
     <string name="trex_zombie">ไดโนซอมบี้</string>
     <string name="trex_robot">ไดโนหุ่นยนต์</string>
     <string name="trex_king">ไดโนราชา</string>
-
+    <string name="trex_character_label">ตัวละคร</string>
     <string name="trex_select_character">เลือกตัวละคร</string>
     <string name="trex_strong_prefix">จุดแข็ง: </string>
     <string name="trex_weak_prefix">จุดอ่อน: </string>
@@ -348,6 +330,20 @@
     <string name="trex_sunny">แดดจ้า</string>
     <string name="trex_rainy">ฝนตก</string>
     <string name="trex_snowy">หิมะตก</string>
+    <string name="trex_desc_char_random">สุ่มไดโนเสาร์ทุกครั้งที่เล่น!</string>
+    <string name="trex_desc_char_specific">ใช้ไดโนเสาร์ที่คุณเลือกในหน้าแรก</string>
+    <string name="trex_desc_time_random">สลับกลางวันและกลางคืน</string>
+    <string name="trex_desc_time_day">ท้องฟ้าแจ่มใสตอนกลางวัน</string>
+    <string name="trex_desc_time_night">กลางคืนที่เต็มไปด้วยดวงดาว</string>
+    <string name="trex_desc_season_random">เปลี่ยนไปตามฤดูกาลต่างๆ</string>
+    <string name="trex_desc_season_spring">ต้นไม้สีเขียวและหญ้าสด</string>
+    <string name="trex_desc_season_summer">ทุ่งหญ้าสว่างสดใสและแสงแดด</string>
+    <string name="trex_desc_season_autumn">ใบไม้ร่วงและพื้นดินที่มีหมอก</string>
+    <string name="trex_desc_season_winter">พื้นที่ที่เต็มไปด้วยหิมะและน้ำค้างแข็ง</string>
+    <string name="trex_desc_weather_random">เปลี่ยนสภาพอากาศแบบไดนามิก</string>
+    <string name="trex_desc_weather_sunny">อากาศแจ่มใสไร้เมฆ</string>
+    <string name="trex_desc_weather_rainy">ฝนตกและเมฆครึ้ม</string>
+    <string name="trex_desc_weather_snowy">หิมะตกสวยงาม</string>
     <string name="trex_point_bonus_score">คะแนนโบนัส</string>
     <string name="trex_point_large_hitbox">ฮิตบ็อกซ์ใหญ่</string>
     <string name="trex_point_double_jump">กระโดดสองชั้น</string>
@@ -377,54 +373,184 @@
     <string name="trex_point_no_momentum">ไม่มีแรงเฉื่อย</string>
     <string name="trex_point_royal_bonus">โบนัสราชวงศ์</string>
     <string name="trex_point_visible_target">เป้าหมายชัดเจน</string>
-    <string name="trex_ninja">นินจาทีเร็กซ์</string>
-    <string name="trex_character_label">ตัวละคร</string>
-
-    <string name="trex_desc_char_random">สุ่มไดโนเสาร์ทุกครั้งที่เล่น!</string>
-    <string name="trex_desc_char_specific">ใช้ไดโนเสาร์ที่คุณเลือกในหน้าแรก</string>
-    <string name="trex_desc_time_random">สลับกลางวันและกลางคืน</string>
-    <string name="trex_desc_time_day">ท้องฟ้าแจ่มใสตอนกลางวัน</string>
-    <string name="trex_desc_time_night">กลางคืนที่เต็มไปด้วยดวงดาว</string>
-    <string name="trex_desc_season_random">เปลี่ยนไปตามฤดูกาลต่างๆ</string>
-    <string name="trex_desc_season_spring">ต้นไม้สีเขียวและหญ้าสด</string>
-    <string name="trex_desc_season_summer">ทุ่งหญ้าสว่างสดใสและแสงแดด</string>
-    <string name="trex_desc_season_autumn">ใบไม้ร่วงและพื้นดินที่มีหมอก</string>
-    <string name="trex_desc_season_winter">พื้นที่ที่เต็มไปด้วยหิมะและน้ำค้างแข็ง</string>
-    <string name="trex_desc_weather_random">เปลี่ยนสภาพอากาศแบบไดนามิก</string>
-    <string name="trex_desc_weather_sunny">อากาศแจ่มใสไร้เมฆ</string>
-    <string name="trex_desc_weather_rainy">ฝนตกและเมฆครึ้ม</string>
-    <string name="trex_desc_weather_snowy">หิมะตกสวยงาม</string>
+    <string-array name="win_generic">
+        <item>ชนะ!</item>
+        <item>เก่งมาก!</item>
+        <item>สุดยอด!</item>
+        <item>อัจฉริยะ!</item>
+        <item>ตระการตา!</item>
+        <item>คุณแน่มาก!</item>
+        <item>ยอดเยี่ยม!</item>
+        <item>มหัศจรรย์!</item>
+        <item>เจ๋งมาก!</item>
+        <item>ทำได้ดี!</item>
+    </string-array>
+    <string-array name="win_highscore">
+        <item>สถิติใหม่!</item>
+        <item>หยุดไม่อยู่!</item>
+        <item>ดีที่สุดที่เคยมี!</item>
+        <item>ดั่งพระเจ้า!</item>
+        <item>คะแนนสูงสุด!</item>
+    </string-array>
+    <string-array name="win_minesweeper">
+        <item>เคลียร์พื้นที่!</item>
+        <item>จ้าวแห่งระเบิด!</item>
+        <item>ทางผ่านปลอดภัย!</item>
+        <item>ผู้เชี่ยวชาญ!</item>
+    </string-array>
+    <string-array name="win_sudoku">
+        <item>พิชิตกระดาน!</item>
+        <item>ราชาตรรกะ!</item>
+        <item>แก้ปริศนาแล้ว!</item>
+        <item>สมองใส!</item>
+    </string-array>
+    <string-array name="win_tictactoe">
+        <item>ฉลาดกว่าบอท!</item>
+        <item>เรียง 3 แล้ว!</item>
+        <item>ชนะด้วยกลยุทธ์!</item>
+        <item>เหนือชั้น!</item>
+    </string-array>
+    <string-array name="win_4096">
+        <item>พ่อมดคณิตศาสตร์!</item>
+        <item>ถึง 4096 แล้ว!</item>
+        <item>จอมบดขยี้!</item>
+        <item>แผ่นสุดท้าย!</item>
+    </string-array>
+    <string-array name="win_memory">
+        <item>ความจำแม่นยำ!</item>
+        <item>จ้าวแห่งการจับคู่!</item>
+        <item>สมองไว!</item>
+        <item>จำได้หมด!</item>
+    </string-array>
+    <string-array name="win_hangman">
+        <item>ช่วยชีวิตสำเร็จ!</item>
+        <item>จ้าวแห่งคำศัพท์!</item>
+        <item>รอดตายเพราะคำ!</item>
+        <item>ราชาพจนานุกรม!</item>
+    </string-array>
+    <string-array name="win_brick_break">
+        <item>ผ่านด่าน!</item>
+        <item>นักบดอิฐ!</item>
+        <item>ผู้ทำลายกำแพง!</item>
+        <item>มือโปร!</item>
+    </string-array>
+    <string-array name="win_word_quest">
+        <item>พบคำศัพท์!</item>
+        <item>นักสะกดคำ!</item>
+        <item>ฮีโร่ภาษา!</item>
+        <item>เควสสำเร็จ!</item>
+    </string-array>
+    <string-array name="win_solitaire">
+        <item>เคลียร์สำรับ!</item>
+        <item>เอซสูงสุด!</item>
+        <item>เรียงดอกครบ!</item>
+        <item>ราชาไพ่!</item>
+    </string-array>
+    <string-array name="win_sokoban">
+        <item>ฮีโร่คลังสินค้า!</item>
+        <item>มือผลักโปร!</item>
+        <item>ครบทุกเป้าหมาย!</item>
+        <item>โซโกมาสเตอร์!</item>
+    </string-array>
+    <string-array name="win_checkers">
+        <item>บอทแพ้พ่าย!</item>
+        <item>ราชาแห่งกระดาน!</item>
+        <item>แกรนด์มาสเตอร์!</item>
+        <item>จ้าวกลยุทธ์!</item>
+    </string-array>
+    <string-array name="win_slide_puzzle">
+        <item>คืนรูปภาพเดิม!</item>
+        <item>แก้ปริศนาสำเร็จ!</item>
+        <item>ลงตัวเป๊ะ!</item>
+        <item>จ้าวแห่งสไลด์!</item>
+    </string-array>
+    <string-array name="win_dungeon">
+        <item>หนีพ้นคุก!</item>
+        <item>นักสำรวจตำนาน!</item>
+        <item>เคลียร์ชั้นแล้ว!</item>
+        <item>พบขุมทรัพย์!</item>
+    </string-array>
+    <string-array name="win_tanks">
+        <item>ป้องกันฐานสำเร็จ!</item>
+        <item>ศัตรูถูกกวาดล้าง!</item>
+        <item>ผู้บัญชาการรถถัง!</item>
+        <item>วีรบุรุษสงคราม!</item>
+    </string-array>
+    <string-array name="win_mental_math">
+        <item>อัจฉริยะคณิต!</item>
+        <item>พลังสมอง!</item>
+        <item>ราชาคิดเลข!</item>
+        <item>จ้าวแห่งตัวเลข!</item>
+    </string-array>
+    <string-array name="win_froggy">
+        <item>ถึงจุดหมาย!</item>
+        <item>ข้ามปลอดภัย!</item>
+        <item>ฮีโร่กบ!</item>
+        <item>จ้าวแห่งสายน้ำ!</item>
+    </string-array>
+    <string name="starfighter_ship_label">รุ่นยานอวกาศ</string>
+    <string name="starfighter_ship_balanced">สไตรเกอร์ (สมดุล)</string>
+    <string name="starfighter_ship_balanced_desc">ยานรบอวกาศมาตรฐาน</string>
+    <string name="starfighter_ship_fast">อินเตอร์เซปเตอร์ (รวดเร็ว &amp; คล่องแคล่ว)</string>
+    <string name="starfighter_ship_fast_desc">ความเร็วสูง เกราะเบาลง</string>
+    <string name="starfighter_ship_tank">เดรดนอท (เกราะหนาพิเศษ)</string>
+    <string name="starfighter_ship_tank_desc">เกราะสูงสุด ความเร็วลดลง</string>
+    <string name="starfighter_ship_solar">โซลาริส (อาวุธพลังงานสูง)</string>
+    <string name="starfighter_ship_solar_desc">เพิ่มความเสียหายของเลเซอร์</string>
+    <string name="starfighter_ship_phoenix">ฟีนิกซ์ (ฟื้นฟูเกราะป้องกัน)</string>
+    <string name="starfighter_ship_phoenix_desc">ฟื้นฟูเกราะป้องกันอัตโนมัติตามเวลา</string>
+    <string name="syobon_settings_title">ตั้งค่าแมวเหมียวผจญภัย</string>
+    <string name="syobon_character_label">ลายแมว</string>
+    <string name="syobon_char_classic">ขาวคลาสสิก (เนโกะ)</string>
+    <string name="syobon_char_gold">ส้มลายเสือ (โชคดี)</string>
+    <string name="syobon_char_shadow">เสือดาวเงา (นินจา)</string>
+    <string name="syobon_lives_label">ชีวิตเริ่มต้น</string>
+    <string name="syobon_lives_3">3 ชีวิต (คลาสสิก)</string>
+    <string name="syobon_lives_1">1 ชีวิต (ฮาร์ดคอร์)</string>
+    <string name="syobon_lives_inf">ชีวิตไม่จำกัด (โหมดฝึกซ้อม)</string>
+    <string name="syobon_lives_desc">จำนวนชีวิตก่อนจบเกม</string>
+    <string name="syobon_instructions">• เคลื่อนที่ด้วย ซ้าย/ขวา\n• กด ขึ้น หรือ ปุ่มกลาง เพื่อกระโดด\n• กระโดดโหม่งบล็อก\n• ไปให้ถึงเสาธงเพื่อชนะ!\n• ระวังกับดักที่คาดไม่ถึง!</string>
+    <string name="syobon_difficulty_desc">เลือกรูปลักษณ์ฮีโร่แมวของคุณ</string>
+    <string-array name="win_syobon">
+        <item>ปรมาจารย์เหมียว!</item>
+        <item>ผู้รอดจากกับดัก!</item>
+        <item>แชมป์ยอดเสาธง!</item>
+        <item>ฮีโร่เจ้าเหมียว!</item>
+    </string-array>
     <string name="quit_game_title">ออกจากเกม</string>
     <string name="quit_game_confirm">คุณต้องการออกจากเกมหรือไม่?</string>
     <string name="yes">ใช่</string>
     <string name="no">ไม่</string>
-    <string name="choose_hero" translatable="true">เลือกผู้เล่นของคุณ</string>
-    <string name="create_hero" translatable="true">สร้างผู้เล่นใหม่</string>
-    <string name="enter_hero_name" translatable="true">ป้อนชื่อผู้เล่น</string>
-    <string name="add_profile" translatable="true">เพิ่มผู้เล่น</string>
-    <string name="switch_profile" translatable="true">เปลี่ยนผู้เล่น</string>
-    <string name="profile_selection_hint" translatable="true">ใช้ ◄ ► เพื่อเลื่อน • กด [OK] เพื่อเลือก</string>
-    <string name="please_enter_name" translatable="true">กรุณาป้อนชื่อ</string>
-    <string name="enter_pin" translatable="true">ป้อน PIN 4 หลัก</string>
-    <string name="setup_pin" translatable="true">ตั้งค่าล็อคผู้เล่น (PIN)</string>
-    <string name="wrong_pin" translatable="true">PIN ไม่ถูกต้อง ลองใหม่อีกครั้ง</string>
-    <string name="manage_profiles" translatable="true">จัดการผู้เล่น</string>
-    <string name="edit_profile" translatable="true">แก้ไขผู้เล่น</string>
-    <string name="delete_profile" translatable="true">ลบผู้เล่น</string>
-    <string name="confirm_delete_profile" translatable="true">คุณแน่ใจหรือไม่ว่าต้องการลบผู้เล่นนี้? สถิติทั้งหมดจะหายไป</string>
-    <string name="leave_blank_no_pin" translatable="true">เว้นว่างไว้หากไม่ต้องการล็อค</string>
-    <string name="hall_of_fame" translatable="true">หอเกียรติยศ</string>
-    <string name="no_records" translatable="true">ยังไม่มีสถิติ</string>
-    <string name="save" translatable="true">บันทึก</string>
-    <string name="choose_avatar" translatable="true">เลือกอวตาร</string>
-    <string name="choose_color" translatable="true">เลือกสี</string>
-    <string name="security_pin_label" translatable="true">รหัส PIN ความปลอดภัย (ไม่บังคับ)</string>
-    <string name="pin_digits_hint" translatable="true">PIN ต้องมี 4 หลัก</string>
-    <string name="rank_1st" translatable="true">ที่ 1</string>
-    <string name="rank_2nd" translatable="true">ที่ 2</string>
-    <string name="rank_3rd" translatable="true">ที่ 3</string>
-    <string name="placeholder_name" translatable="false">---</string>
-    <string name="placeholder_score" translatable="false">0</string>
+    <string name="choose_hero">เลือกผู้เล่นของคุณ</string>
+    <string name="create_hero">สร้างผู้เล่นใหม่</string>
+    <string name="enter_hero_name">ป้อนชื่อผู้เล่น</string>
+    <string name="add_profile">เพิ่มผู้เล่น</string>
+    <string name="switch_profile">เปลี่ยนผู้เล่น</string>
+    <string name="profile_selection_hint">ใช้ ◄ ► เพื่อเลื่อน • กด [OK] เพื่อเลือก</string>
+    <string name="please_enter_name">กรุณาป้อนชื่อ</string>
+    <string name="enter_pin">ป้อน PIN 4 หลัก</string>
+    <string name="setup_pin">ตั้งค่าล็อคผู้เล่น (PIN)</string>
+    <string name="wrong_pin">PIN ไม่ถูกต้อง ลองใหม่อีกครั้ง</string>
+    <string name="manage_profiles">จัดการผู้เล่น</string>
+    <string name="edit_profile">แก้ไขผู้เล่น</string>
+    <string name="delete_profile">ลบผู้เล่น</string>
+    <string name="confirm_delete_profile">คุณแน่ใจหรือไม่ว่าต้องการลบผู้เล่นนี้? สถิติทั้งหมดจะหายไป</string>
+    <string name="leave_blank_no_pin">เว้นว่างไว้หากไม่ต้องการล็อค</string>
+    <string name="hall_of_fame">หอเกียรติยศ</string>
+    <string name="no_records">ยังไม่มีสถิติ</string>
+    <string name="save">บันทึก</string>
+    <string name="choose_avatar">เลือกอวตาร</string>
+    <string name="choose_color">เลือกสี</string>
+    <string name="security_pin_label">รหัส PIN ความปลอดภัย (ไม่บังคับ)</string>
+    <string name="pin_digits_hint">PIN ต้องมี 4 หลัก</string>
+    <string name="protected_hero">PROTECTED HERO</string>
+    <string name="guest_hero_name">GUEST HERO</string>
+    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
+    <string name="rank_1st">ที่ 1</string>
+    <string name="rank_2nd">ที่ 2</string>
+    <string name="rank_3rd">ที่ 3</string>
+    <string name="placeholder_name">---</string>
+    <string name="placeholder_score">0</string>
     <string name="monkey_spring">SPRING</string>
     <string name="monkey_summer">SUMMER</string>
     <string name="monkey_autumn">AUTUMN</string>
@@ -459,11 +585,11 @@
     <string name="monkey_beetle_warning">⚠️ BEETLE</string>
     <string name="monkey_char_gibbon">GOLDEN GIBBON</string>
     <string name="monkey_char_climber">TARZAN CLIMBER</string>
+    <string name="monkey_char_spider">SPIDER MONKEY</string>
     <string name="monkey_char_chimp">PUNK CHIMP</string>
-    <string name="retro_driver_final_lap">FINAL LAP!</string>
-    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
-    <string name="retro_driver_go">GO!</string>
-    <string name="retro_driver_finish">FINISH!</string>
+    <string name="monkey_char_default">MONKEY</string>
+    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
+    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
     <string name="frenzy_death_pufferfish">MOUTH HURT BY INFLATED PUFFERFISH!</string>
     <string name="frenzy_death_eel">SHOCKED BY ELECTRIC EEL (STUNNED)!</string>
     <string name="frenzy_death_lionfish">POISONED BY LIONFISH (STUNNED)!</string>
@@ -471,7 +597,6 @@
     <string name="frenzy_death_too_large">CANNOT EAT: %1$s IS TOO LARGE!</string>
     <string name="frenzy_death_eaten">EATEN BY %1$s!</string>
     <string name="frenzy_death_mine">BLOWN UP BY UNDERSEA MINE!</string>
-    <string name="syobon_surprise">SURPRISE!</string>
     <string name="flappy_death_ceiling">Flew too high and hit the ceiling!</string>
     <string name="flappy_death_ground">Crashed into the grassy ground!</string>
     <string name="flappy_death_pipe">Crashed into a green pipe!</string>
@@ -484,16 +609,92 @@
     <string name="flappy_hint_fly_through">FLY THROUGH</string>
     <string name="flappy_hint_avoid_bat">AVOID BAT</string>
     <string name="flappy_hint_fly_under">FLY UNDER</string>
-    <string name="protected_hero">PROTECTED HERO</string>
-    <string name="guest_hero_name">GUEST HERO</string>
-    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
-    <string name="monkey_char_default">MONKEY</string>
-    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
-    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
-    <string name="monkey_char_spider">SPIDER MONKEY</string>
+    <string name="retro_driver_final_lap">FINAL LAP!</string>
+    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
+    <string name="retro_driver_go">GO!</string>
+    <string name="retro_driver_finish">FINISH!</string>
+    <string name="syobon_surprise">SURPRISE!</string>
     <string name="ad_screensaver_message">To keep these games free, we show ads during breaks.\nThank you for your support!</string>
     <string name="ad_screensaver_hint">Press any key to resume instantly</string>
     <string name="ad_warning_prefix">Full-screen ad starting in %1$d...</string>
     <string name="ad_label">AD</string>
     <string name="advertisement_label">ADVERTISEMENT</string>
+    <string name="monkey_settings_title">ตั้งค่าชะนีไต่เถาวัลย์</string>
+    <string name="monkey_character_label">ตัวละคร</string>
+    <string name="monkey_character_desc">เลือกสายพันธุ์นักปีนป่ายของคุณ</string>
+    <string name="monkey_season_label">ธีมฤดูกาล</string>
+    <string name="monkey_season_desc">เลือกสภาพอากาศและพืชพรรณในป่า</string>
+    <string name="frenzy_settings_title">ตั้งค่าปลาใหญ่กินปลาเล็ก</string>
+    <string name="frenzy_difficulty_label">ระดับความยาก</string>
+    <string name="frenzy_difficulty_easy">ง่าย (ผู้ล่าว่ายช้า)</string>
+    <string name="frenzy_difficulty_normal">ปกติ (สมดุล)</string>
+    <string name="frenzy_difficulty_hard">ยาก (ฉลามดุร้าย)</string>
+    <string name="frenzy_difficulty_desc">ความเร็วและความหนาแน่นของผู้ล่า</string>
+    <string name="frenzy_starting_size_label">ขนาดเริ่มต้น</string>
+    <string name="frenzy_starting_size_guppy">ปลาหางนกยูง (เล็กสุด)</string>
+    <string name="frenzy_starting_size_angelfish">ปลาเทวดา (ปานกลาง)</string>
+    <string name="frenzy_starting_size_desc">ระยะการเติบโตเริ่มต้นของปลา</string>
+    <string name="retrodriver_settings_title">ตั้งค่านักแข่งเรโทร</string>
+    <string name="retrodriver_vehicle_label">ยานพาหนะ</string>
+    <string name="retrodriver_vehicle_desc">เลือกรุ่นซูเปอร์ไบค์ของคุณ</string>
+    <string name="retrodriver_theme_label">สภาพแวดล้อมสนามแข่ง</string>
+    <string name="retrodriver_theme_desc">เลือกทิวทัศน์สนามแข่ง</string>
+    <string name="retrodriver_theme_neon">เมืองไซเบอร์ (นีออน)</string>
+    <string name="retrodriver_theme_desert">พระอาทิตย์ตกหุบเขา (พลบค่ำ)</string>
+    <string name="retrodriver_theme_cyber">ตารางซินธ์เวฟ (เรโทร)</string>
+    <string name="retrodriver_theme_snow">เทือกเขาแอลป์ (หิมะ)</string>
+    <string-array name="win_monkey">
+        <item>ปรมาจารย์เถาวัลย์!</item>
+        <item>สุดยอดนักปีน!</item>
+        <item>ราชาแห่งป่า!</item>
+        <item>พิชิตยอดไม้!</item>
+    </string-array>
+    <string-array name="win_frenzy">
+        <item>เจ้าแห่งมหาสมุทร!</item>
+        <item>สุดยอดผู้ล่า!</item>
+        <item>ราชาแนวปะการัง!</item>
+        <item>นักล่าในตำนาน!</item>
+    </string-array>
+    <string-array name="win_retrodriver">
+        <item>จอมปีศาจความเร็ว!</item>
+        <item>แชมป์สนามแข่ง!</item>
+        <item>นักซิ่งซินธ์เวฟ!</item>
+        <item>คว้าชัยบนโพเดียม!</item>
+    </string-array>
+    <string-array name="win_tetris">
+        <item>เซียนเตตริส!</item>
+        <item>มือโปรลบแถว!</item>
+        <item>การจัดวางที่สมบูรณ์แบบ!</item>
+        <item>ผู้พิชิตบล็อก!</item>
+    </string-array>
+    <string-array name="win_snake">
+        <item>ราชาเจ้างูดิน!</item>
+        <item>ตำนานงูหลาม!</item>
+        <item>แชมป์งานเลี้ยง!</item>
+        <item>จอมเลื้อยไร้พ่าย!</item>
+    </string-array>
+    <string-array name="win_flappy">
+        <item>ตำนานเวหา!</item>
+        <item>ฮีโร่ติดปีก!</item>
+        <item>ปรมาจารย์ขนนก!</item>
+        <item>โบยบินสู่ฟ้า!</item>
+    </string-array>
+    <string-array name="win_lines98">
+        <item>ปรมาจารย์เส้นตรง!</item>
+        <item>เคลียร์สีสุดอัศจรรย์!</item>
+        <item>พ่อมดลูกแก้ว!</item>
+        <item>อัจฉริยะแห่งตาราง!</item>
+    </string-array>
+    <string-array name="win_spinball">
+        <item>จอมเวทแห่งการหมุน!</item>
+        <item>ปรมาจารย์วงโคจร!</item>
+        <item>มือโปรพินบอล!</item>
+        <item>ผู้รอดชีวิตแห่งวงกลม!</item>
+    </string-array>
+    <string-array name="win_simon">
+        <item>ความจำเป็นเลิศ!</item>
+        <item>ไซมอนบอกว่า: ชนะแล้ว!</item>
+        <item>มือโปรจับคู่!</item>
+        <item>ความจำอัจฉริยะ!</item>
+    </string-array>
 </resources>

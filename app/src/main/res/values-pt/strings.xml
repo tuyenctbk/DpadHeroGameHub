@@ -2,6 +2,7 @@
     <string name="app_name">Dpad Arcade</string>
     <string name="app_name_full">Dpad Arcade: Jogos Retro</string>
     <string name="game_center">DPAD ARCADE</string>
+    <string name="snake">COBRA</string>
     <string name="snake_settings_title">CONFIGURAÇÕES DA COBRA</string>
     <string name="snake_level_1">NÍVEL 1: INICIANTE</string>
     <string name="snake_level_2">NÍVEL 2: NORMAL</string>
@@ -10,7 +11,7 @@
     <string name="snake_level_2_desc">Paredes letais. Velocidade normal.</string>
     <string name="snake_level_3_desc">Paredes letais. Velocidade rápida.</string>
     <string name="snake_level_label">Nível de Dificuldade</string>
-    <string name="snake">COBRA</string>
+    <string name="minesweeper">CAMPO MINADO</string>
     <string name="minesweeper_settings_title">CONFIGURAÇÕES DO CAMPO MINADO</string>
     <string name="minesweeper_level_1">NÍVEL 1: INICIANTE (10x10, 12 minas)</string>
     <string name="minesweeper_level_2">NÍVEL 2: NORMAL (16x16, 40 minas)</string>
@@ -40,12 +41,58 @@
     <string name="tictactoe_size_4_desc">4 em linha para ganhar.</string>
     <string name="tictactoe_size_5_desc">5 em linha para ganhar.</string>
     <string name="tictactoe_size_label">Tamanho do Tabuleiro</string>
-    <string name="minesweeper">CAMPO MINADO</string>
+    <string name="game_4096_settings_title">CONFIGURAÇÕES DO 4096</string>
+    <string name="game_4096_size_4">GRADE: 4x4 (Clássico)</string>
+    <string name="game_4096_size_5">GRADE: 5x5 (Grande)</string>
+    <string name="game_4096_size_desc">Escolha o tamanho do desafio.</string>
+    <string name="mental_math_settings_title">CONFIGURAÇÕES DE MATEMÁTICA</string>
+    <string name="mental_math_mode_easy">MODO: FÁCIL (+, -)</string>
+    <string name="mental_math_mode_normal">MODO: NORMAL (+, -, *)</string>
+    <string name="mental_math_mode_hard">MODO: DIFÍCIL (+, -, *, /)</string>
+    <string name="mental_math_mode_desc">Selecione as operações de teste.</string>
+    <string name="tetris_settings_title">CONFIGURAÇÕES DO TETRIS</string>
+    <string name="tetris_start_level">Nível inicial</string>
+    <string name="tetris_level_desc">Níveis mais altos começam em maior velocidade.</string>
+    <string name="checkers_settings_title">CONFIGURAÇÕES DE DAMAS</string>
+    <string name="checkers_difficulty_1">IA: ALEATÓRIA (Fácil)</string>
+    <string name="checkers_difficulty_2">IA: ESTRATÉGICA (Normal)</string>
+    <string name="checkers_difficulty_desc">Uma IA mais forte faz jogadas mais inteligentes.</string>
+    <string name="spinball_settings_title">CONFIGURAÇÕES DO SPINBALL</string>
+    <string name="spinball_difficulty_1">MODO: CALMO (Lento)</string>
+    <string name="spinball_difficulty_2">MODO: DINÂMICO (Normal)</string>
+    <string name="spinball_difficulty_3">MODO: CAÓTICO (Rápido)</string>
+    <string name="spinball_difficulty_desc">A velocidade aumenta o desafio.</string>
+    <string name="simon_says_settings_title">CONFIGURAÇÕES DO SIMON</string>
+    <string name="simon_says_speed_1">VELOCIDADE: RELAXADA (Lenta)</string>
+    <string name="simon_says_speed_2">VELOCIDADE: NORMAL (Média)</string>
+    <string name="simon_says_speed_3">VELOCIDADE: RELÂMPAGO (Rápida)</string>
+    <string name="simon_says_speed_desc">Velocidade de exibição da sequência.</string>
+    <string name="dungeon_escape_settings_title">CONFIGURAÇÕES DE FUGA DA MASMORRA</string>
+    <string name="dungeon_escape_start_level">Andar inicial</string>
+    <string name="dungeon_escape_level_desc">Selecione o andar por onde começar.</string>
+    <string name="froggy_cross_settings_title">CONFIGURAÇÕES DO FROGGY CROSS</string>
+    <string name="froggy_cross_difficulty_1">DIFICULDADE: LENTA (Trânsito leve)</string>
+    <string name="froggy_cross_difficulty_2">DIFICULDADE: NORMAL (Padrão)</string>
+    <string name="froggy_cross_difficulty_3">DIFICULDADE: HORA DO RUSH (Trânsito rápido)</string>
+    <string name="froggy_cross_difficulty_desc">Velocidade dos veículos e troncos.</string>
     <string name="game_4096">4096</string>
     <string name="game_trex">T-REX RUN</string>
     <string name="game_brick_break">BRICK BREAK</string>
     <string name="game_tictactoe">JOGO DA VELHA</string>
     <string name="game_checkers">DAMAS</string>
+    <string name="sokoban_settings_title">CONFIGURAÇÕES DO SOKOBAN</string>
+    <string name="sokoban_start_level">Fase inicial</string>
+    <string name="sokoban_level_desc">Selecione a fase por onde começar.</string>
+    <string name="battle_tanks_settings_title">CONFIGURAÇÕES DO BATTLE TANKS</string>
+    <string name="battle_tanks_difficulty_1">DIFICULDADE: CADETE (Tanques lentos)</string>
+    <string name="battle_tanks_difficulty_2">DIFICULDADE: VETERANO (Padrão)</string>
+    <string name="battle_tanks_difficulty_3">DIFICULDADE: GENERAL (Tiro rápido)</string>
+    <string name="battle_tanks_difficulty_desc">Velocidade e poder de fogo dos inimigos.</string>
+    <string name="starfighter_settings_title">CONFIGURAÇÕES DO STAR FIGHTER</string>
+    <string name="starfighter_difficulty_1">NÍVEL 1: CADETE (Fácil)</string>
+    <string name="starfighter_difficulty_2">NÍVEL 2: VETERANO (Normal)</string>
+    <string name="starfighter_difficulty_3">NÍVEL 3: ÁS (Difícil)</string>
+    <string name="starfighter_difficulty_desc">Vida e cadência de tiro dos inimigos.</string>
     <string name="game_sokoban">SOKOBAN</string>
     <string name="game_sudoku">SUDOKU</string>
     <string name="game_tetris">TETRIS</string>
@@ -54,11 +101,58 @@
     <string name="game_slide_puzzle">PUZZLE DESLIZANTE</string>
     <string name="game_mental_math">CÁLCULO MENTAL</string>
     <string name="game_froggy">FROGGY CROSS</string>
+    <string name="game_syobon">CAT MEOWIO</string>
     <string name="game_simon">SIMON SAYS</string>
     <string name="game_tanks">BATALHA DE TANQUES</string>
+    <string name="word_quest_settings_title">CONFIGURAÇÕES DO WORD QUEST</string>
+    <string name="word_quest_category_all">CATEGORIA: TODAS AS PALAVRAS</string>
+    <string name="word_quest_category_nature">CATEGORIA: NATUREZA &amp; ANIMAIS</string>
+    <string name="word_quest_category_tech">CATEGORIA: TECNOLOGIA &amp; CIÊNCIA</string>
+    <string name="word_quest_category_desc">Escolha o tema das palavras.</string>
+    <string name="road_racer_settings_title">CONFIGURAÇÕES DO ROAD RACER</string>
+    <string name="road_racer_density_label">Densidade do tráfego</string>
+    <string name="road_racer_density_low">DENSIDADE: LEVE (Fácil)</string>
+    <string name="road_racer_density_normal">DENSIDADE: MODERADA (Normal)</string>
+    <string name="road_racer_density_high">DENSIDADE: PESADA (Difícil)</string>
+    <string name="road_racer_density_desc">Quantidade de tráfego na rodovia.</string>
     <string name="game_word_quest">WORD QUEST</string>
     <string name="game_dungeon">FUGA DA MASMORRA</string>
+    <string name="game_monkey">GIBBON ASCENT</string>
+    <string name="game_retrodriver">RETRO RACER</string>
+    <string name="game_frenzy">FRENZY FEEDING</string>
+    <string name="game_fruit">CORTADOR DE FRUTAS</string>
+    <string name="flappy_hero_settings_title">CONFIGURAÇÕES DO FLAPPY HERO</string>
+    <string name="flappy_hero_level_1">NÍVEL 1: PRADO (Canos espaçados)</string>
+    <string name="flappy_hero_level_2">NÍVEL 2: FLORESTA (Obstáculos móveis)</string>
+    <string name="flappy_hero_level_3">NÍVEL 3: CANYON (Espaços estreitos)</string>
+    <string name="flappy_hero_level_4">NÍVEL 4: CÉU NOTURNO (Correntes de vento)</string>
+    <string name="flappy_hero_level_5">NÍVEL 5: INFERNO (Modo Caos)</string>
+    <string name="flappy_hero_level_1_desc">Espaços amplos para aprender.</string>
+    <string name="flappy_hero_level_2_desc">Obstáculos balançam suavemente.</string>
+    <string name="flappy_hero_level_3_desc">Passagens mais apertadas.</string>
+    <string name="flappy_hero_level_4_desc">O vento afeta a velocidade de queda.</string>
+    <string name="flappy_hero_level_5_desc">Rolagem rápida e passagens muito estreitas.</string>
+    <string name="flappy_hero_char_label">Personagem</string>
+    <string name="flappy_char_classic">PÁSSARO CLÁSSICO (Padrão)</string>
+    <string name="flappy_char_classic_desc">Física e salto clássicos.</string>
+    <string name="flappy_char_swift">DARDO VELOZ (Batida rápida)</string>
+    <string name="flappy_char_swift_desc">Subida rápida, toques ágeis.</string>
+    <string name="flappy_char_heavy">ASA DE FERRO (Queda rápida)</string>
+    <string name="flappy_char_heavy_desc">Gravidade maior, reflexos rápidos exigidos.</string>
+    <string name="flappy_char_floaty">PENA FLUTUANTE (Voo suave)</string>
+    <string name="flappy_char_floaty_desc">Gravidade menor, controle mais fácil.</string>
+    <string name="brick_break_settings_title">CONFIGURAÇÕES DO BRICK BREAK</string>
+    <string name="brick_break_paddle_label">Tamanho da raquete</string>
+    <string name="brick_break_paddle_large">RAQUETE: LARGA (Fácil)</string>
+    <string name="brick_break_paddle_medium">RAQUETE: PADRÃO (Normal)</string>
+    <string name="brick_break_paddle_small">RAQUETE: ESTREITA (Difícil)</string>
+    <string name="brick_break_paddle_desc">Raquete maior facilita rebater as bolinhas.</string>
     <string name="game_flappy">FLAPPY HERO</string>
+    <string name="lines98_settings_title">CONFIGURAÇÕES DO LINES 98</string>
+    <string name="lines98_difficulty_easy">CORES: 5 CORES (Fácil)</string>
+    <string name="lines98_difficulty_normal">CORES: 7 CORES (Padrão)</string>
+    <string name="lines98_difficulty_hard">CORES: 9 CORES (Expert)</string>
+    <string name="lines98_difficulty_desc">Menos cores tornam os alinhamentos mais fáceis.</string>
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLITÁRIO</string>
     <string name="game_road_racer">ROAD RACER</string>
@@ -91,6 +185,7 @@
     <string name="game_slide_puzzle_instructions">• Use o DPAD para mover.\n• Pressione CENTER para deslizar.\n• Reordene as peças para a imagem.</string>
     <string name="game_mental_math_instructions">• Resolva a operação.\n• Use o DPAD para a resposta.\n• Pressione CENTER para confirmar.\n• Rápido! O tempo corre.</string>
     <string name="game_froggy_instructions">• Cruze estrada e rio.\n• Evite os carros.\n• Pule nos troncos.\n• Chegue à meta!</string>
+    <string name="game_syobon_instructions">• Mova-se para Esquerda/Direita.\n• Pressione CIMA ou CENTRO para pular.\n• Pule embaixo dos blocos para acertá-los.\n• Chegue ao mastro para vencer!\n• CUIDADO COM AS ARMADILHAS!</string>
     <string name="game_simon_instructions">• Veja as cores.\n• Repita com o D-PAD.\n• A sequência aumenta!</string>
     <string name="game_tanks_instructions">• Controle o tanque com o D-PAD.\n• Tiro automático.\n• Destrua tanques inimigos.\n• Proteja a BASE.</string>
     <string name="game_word_quest_instructions">• Adivinhe a palavra de 5 letras.\n• Use o D-PAD para o teclado.\n• CENTER para escolher.\n• VERDE: Letra e lugar corretos.</string>
@@ -99,6 +194,10 @@
     <string name="game_lines98_instructions">• Use o D-PAD para o cursor.\n• CENTER para mover bolas.\n• Alinhe 5 bolas iguais.\n• O jogo termina se cheio.</string>
     <string name="game_solitaire_instructions">• Use o D-PAD para o cursor.\n• CENTER para cartas.\n• Ordene de Ás a Rei.</string>
     <string name="game_road_racer_instructions">• Evite o tráfego.\n• Sobreviva!\n• Pressione CENTER para pausa.</string>
+    <string name="game_monkey_instructions">• Escale os cipós para escapar.\n• Colete frutas para ganhar pontos.\n• Desvie de aranhas, cocos e besouros cortadores de cipó!\n• Use o D-PAD para escalar e pular.</string>
+    <string name="game_retrodriver_instructions">• Pilote sua supermoto synthwave!\n• Vire para Esquerda/Direita e segure CIMA para acelerar.\n• Ultrapasse todos os 20 rivais para ficar em 1º.\n• Cruze a linha de chegada para terminar a corrida!</string>
+    <string name="game_frenzy_instructions">• Nade pelo oceano com o D-PAD.\n• Coma peixes menores que você para crescer.\n• Evite ser devorado por predadores maiores!\n• Coma 30 peixes para vencer a fase.</string>
+    <string name="game_fruit_instructions">• As frutas são lançadas no ar.\n• Mova a lâmina brilhante com o D-PAD para cortá-las.\n• Evite as bombas a todo custo!\n• Fatie o máximo de frutas possível.</string>
     <string name="game_hangman_instructions">• Escolha letras para adivinhar.\n• Você tem 6 tentativas.\n• Pressione CENTER para escolher.</string>
     <string name="select_game_hint">USE ◄ ► PARA NAVEGAR • PRESSIONE [OK] PARA JOGAR</string>
     <string name="settings">Ajustes</string>
@@ -147,7 +246,45 @@
     <string name="next_stage_hint">Pressione Center para Próxima Fase</string>
     <string name="continue_hint">Pressione Center para Continuar</string>
     <string name="finish_hint">Pressione Center para Terminar</string>
+    <string name="tictactoe_size_hint">Pressione CIMA/BAIXO para o tamanho (3x3, 4x4, 5x5) ou MENU para Opções</string>
+    <string name="sokoban_restart_hint">Pressione R para reiniciar</string>
+    <string name="sudoku_controls_hint">D-PAD: Mover/Número | CENTRO: Alternar | MENU: Nível</string>
     <string name="total_wins_label">Total de Vitórias</string>
+    <string name="mines_label">MINAS: </string>
+    <string name="flags_label">BANDEIRAS: </string>
+    <string name="high_score_prefix">MELHOR: </string>
+    <string name="cpu_wins_label">A CPU VENCEU!</string>
+    <string name="your_turn_label">Sua vez</string>
+    <string name="watch_label">OBSERVE...</string>
+    <string name="grid_mastered_label">TABULEIRO DOMINADO!</string>
+    <string name="puzzle_solved_label">QUEBRA-CABEÇA RESOLVIDO!</string>
+    <string name="picture_restored_label">IMAGEM RESTAURADA!</string>
+    <string name="crashed_label">BATEU!</string>
+    <string name="score_prefix">PONTOS: </string>
+    <string name="high_score_label">RECORDE</string>
+    <string name="wrong_label">ERRADO!</string>
+    <string name="answer_was_label">A palavra era: </string>
+    <string name="finish_label">CHEGADA</string>
+    <string name="continue_label">CONTINUAR</string>
+    <string name="next_stage_label">PRÓXIMA FASE</string>
+    <string name="out_of_tries">SEM TENTATIVAS!</string>
+    <string name="cpu_thinking_label">CPU pensando...</string>
+    <string name="no_moves_label">Sem jogadas restantes</string>
+    <string name="victory_label">VITÓRIA!</string>
+    <string name="draw_label">EMPATE!</string>
+    <string name="hit_wall_label">BATEU NA PAREDE!</string>
+    <string name="bit_self_label">MORDEU A SI MESMO!</string>
+    <string name="cpu_starting_label">CPU começa a próxima partida</string>
+    <string name="jump_again_label">PULAR NOVAMENTE</string>
+    <string name="draw_status">EMPATE</string>
+    <string name="cat_animals">ANIMAIS</string>
+    <string name="cat_fruits">FRUTAS</string>
+    <string name="cat_countries">PAÍSES</string>
+    <string name="cat_sports">ESPORTES</string>
+    <string name="cat_flowers">FLORES</string>
+    <string name="cat_vehicles">VEÍCULOS</string>
+    <string name="cat_games">JOGOS</string>
+    <string name="cat_foods">COMIDAS</string>
     <string name="rating_title">Gosta do Dpad Arcade?</string>
     <string name="rating_content">Dê-nos 5 estrelas na Play Store ou sugira novos jogos que você queira jogar!</string>
     <string name="rate_now">AVALIAR 5 ESTRELAS</string>
@@ -156,139 +293,6 @@
     <string name="update_title">Nova atualização disponível!</string>
     <string name="update_content">Uma nova versão do Dpad Arcade: Retro Game Hub está disponível. Atualize agora para obter os jogos, funcionalidades e correções de estabilidade mais recentes.</string>
     <string name="update_now">Atualizar agora</string>
-
-    <string-array name="win_generic">
-        <item>VITÓRIA!</item>
-        <item>BEM FEITO!</item>
-        <item>INCRÍVEL!</item>
-        <item>BRILHANTE!</item>
-        <item>ESPETACULAR!</item>
-        <item>GRANDE!</item>
-        <item>EXCELENTE!</item>
-        <item>FANTÁSTICO!</item>
-        <item>FABULOSO!</item>
-        <item>ÓTIMO TRABALHO!</item>
-    </string-array>
-
-    <string-array name="win_highscore">
-        <item>NOVO RECORDE!</item>
-        <item>IMPARÁVEL!</item>
-        <item>O MELHOR!</item>
-        <item>LENDÁRIO!</item>
-        <item>RECORDE!</item>
-    </string-array>
-
-    <string-array name="win_minesweeper">
-        <item>ÁREA LIMPA!</item>
-        <item>MESTRE MINADOR!</item>
-        <item>PASSAGEM SEGURA!</item>
-        <item>ESPECIALISTA!</item>
-    </string-array>
-
-    <string-array name="win_sudoku">
-        <item>GRADE DOMINADA!</item>
-        <item>REI DA LÓGICA!</item>
-        <item>RESOLVIDO!</item>
-        <item>MENTE BRILHANTE!</item>
-    </string-array>
-
-    <string-array name="win_tictactoe">
-        <item>SUPERADO!</item>
-        <item>TRÊS EM LINHA!</item>
-        <item>VITÓRIA TÁTICA!</item>
-        <item>IMPARÁVEL!</item>
-    </string-array>
-
-    <string-array name="win_4096">
-        <item>GÉNIO MATEMÁTICO!</item>
-        <item>4096 ALCANÇADO!</item>
-        <item>REI DOS NÚMEROS!</item>
-        <item>QUADRADO FINAL!</item>
-    </string-array>
-
-    <string-array name="win_memory">
-        <item>MEMÓRIA PERFEITA!</item>
-        <item>MESTRE DE PARES!</item>
-        <item>MENTE AGUDA!</item>
-        <item>SABIA TUDO!</item>
-    </string-array>
-
-    <string-array name="win_hangman">
-        <item>PALAVRA SALVA!</item>
-        <item>MESTRE DE PALAVRAS!</item>
-        <item>SALVO!</item>
-        <item>REI DO LÉXICO!</item>
-    </string-array>
-
-    <string-array name="win_brick_break">
-        <item>NÍVEL CONCLUÍDO!</item>
-        <item>QUEBRA-TIJOLOS!</item>
-        <item>DESTRUIDOR!</item>
-        <item>PRO DA RAQUETE!</item>
-    </string-array>
-
-    <string-array name="win_word_quest">
-        <item>PALAVRA ENCONTRADA!</item>
-        <item>PRO DA ORTOGRAFIA!</item>
-        <item>HERÓI DO DICIONÁRIO!</item>
-        <item>MESTRE QUEST!</item>
-    </string-array>
-
-    <string-array name="win_solitaire">
-        <item>BARALHO LIMPO!</item>
-        <item>ÁS VENCEDOR!</item>
-        <item>NAIPE COMPLETO!</item>
-        <item>REI DAS CARTAS!</item>
-    </string-array>
-
-    <string-array name="win_sokoban">
-        <item>HERÓI DO ARMAZÉM!</item>
-        <item>PRO DO EMPURRÃO!</item>
-        <item>OBJETIVOS ATINGIDOS!</item>
-        <item>SOKO-MASTER!</item>
-    </string-array>
-
-    <string-array name="win_checkers">
-        <item>CPU DERROTADO!</item>
-        <item>REI DO TABULEIRO!</item>
-        <item>GRANDE MESTRE!</item>
-        <item>MESTRE ESTRATEGISTA!</item>
-    </string-array>
-
-    <string-array name="win_slide_puzzle">
-        <item>IMAGEM RESTAURADA!</item>
-        <item>PUZZLE RESOLVIDO!</item>
-        <item>PERFEITO!</item>
-        <item>MESTRE DO SLIDE!</item>
-    </string-array>
-
-    <string-array name="win_dungeon">
-        <item>SAIU DA MASMORRA!</item>
-        <item>EXPLORADOR LENDÁRIO!</item>
-        <item>ANDAR LIMPO!</item>
-        <item>TESOURO ENCONTRADO!</item>
-    </string-array>
-
-    <string-array name="win_tanks">
-        <item>BASE DEFENDIDA!</item>
-        <item>INIMIGOS ELIMINADOS!</item>
-        <item>COMANDANTE!</item>
-        <item>HERÓI DE GUERRA!</item>
-    </string-array>
-
-    <string-array name="win_mental_math">
-        <item>GÉNIO MATEMÁTICO!</item>
-        <item>PODER MENTAL!</item>
-        <item>REI DO CÁLCULO!</item>
-        <item>MESTRE DOS NÚMEROS!</item>
-    </string-array>
-
-    <string-array name="win_froggy">
-        <item>META ALCANÇADA!</item>
-        <item>TRAVESSIA SEGURA!</item>
-        <item>HERÓI FROGGY!</item>
-        <item>MESTRE DO RIO!</item>
-    </string-array>
     <string name="trex_daddy">Papai T-Rex</string>
     <string name="trex_mummy">Mamãe T-Rex</string>
     <string name="trex_baby">Bebê T-Rex</string>
@@ -299,11 +303,12 @@
     <string name="trex_pirate">T-Rex Pirata</string>
     <string name="trex_chef">T-Rex Chef</string>
     <string name="trex_astronaut">T-Rex Astronauta</string>
+    <string name="trex_ninja">Ninja T-Rex</string>
     <string name="trex_dragon">Dinossauro Dragão</string>
     <string name="trex_zombie">Dinossauro Zumbi</string>
     <string name="trex_robot">Dinossauro Robô</string>
     <string name="trex_king">Dinossauro Rei</string>
-
+    <string name="trex_character_label">Personagem</string>
     <string name="trex_select_character">SELECIONAR PERSONAGEM</string>
     <string name="trex_strong_prefix">FORTE: </string>
     <string name="trex_weak_prefix">FRACO: </string>
@@ -325,6 +330,20 @@
     <string name="trex_sunny">ENSOLARADO</string>
     <string name="trex_rainy">CHUVOSO</string>
     <string name="trex_snowy">NEVADO</string>
+    <string name="trex_desc_char_random">Cada corrida um Dino surpresa!</string>
+    <string name="trex_desc_char_specific">Use o Dino selecionado no lobby.</string>
+    <string name="trex_desc_time_random">Ciclo de Dia ou Noite.</string>
+    <string name="trex_desc_time_day">Céu limpo durante o dia.</string>
+    <string name="trex_desc_time_night">Noite escura e estrelada.</string>
+    <string name="trex_desc_season_random">Ciclo por todas as estações.</string>
+    <string name="trex_desc_season_spring">Verdes e grama fresca.</string>
+    <string name="trex_desc_season_summer">Campos iluminados e sol.</string>
+    <string name="trex_desc_season_autumn">Folhas caídas e névoa.</string>
+    <string name="trex_desc_season_winter">Terreno nevado e geada.</string>
+    <string name="trex_desc_weather_random">Mudanças climáticas dinâmicas.</string>
+    <string name="trex_desc_weather_sunny">Tempo limpo perfeito.</string>
+    <string name="trex_desc_weather_rainy">Chuva e nuvens escuras.</string>
+    <string name="trex_desc_weather_snowy">Bela queda de neve.</string>
     <string name="trex_point_bonus_score">Pontos Bônus</string>
     <string name="trex_point_large_hitbox">Hitbox Grande</string>
     <string name="trex_point_double_jump">Salto Duplo</string>
@@ -354,54 +373,184 @@
     <string name="trex_point_no_momentum">Sem Inércia</string>
     <string name="trex_point_royal_bonus">Bônus Real</string>
     <string name="trex_point_visible_target">Alvo Visível</string>
-    <string name="trex_ninja">Ninja T-Rex</string>
-    <string name="trex_character_label">Personagem</string>
-
-    <string name="trex_desc_char_random">Cada corrida um Dino surpresa!</string>
-    <string name="trex_desc_char_specific">Use o Dino selecionado no lobby.</string>
-    <string name="trex_desc_time_random">Ciclo de Dia ou Noite.</string>
-    <string name="trex_desc_time_day">Céu limpo durante o dia.</string>
-    <string name="trex_desc_time_night">Noite escura e estrelada.</string>
-    <string name="trex_desc_season_random">Ciclo por todas as estações.</string>
-    <string name="trex_desc_season_spring">Verdes e grama fresca.</string>
-    <string name="trex_desc_season_summer">Campos iluminados e sol.</string>
-    <string name="trex_desc_season_autumn">Folhas caídas e névoa.</string>
-    <string name="trex_desc_season_winter">Terreno nevado e geada.</string>
-    <string name="trex_desc_weather_random">Mudanças climáticas dinâmicas.</string>
-    <string name="trex_desc_weather_sunny">Tempo limpo perfeito.</string>
-    <string name="trex_desc_weather_rainy">Chuva e nuvens escuras.</string>
-    <string name="trex_desc_weather_snowy">Bela queda de neve.</string>
+    <string-array name="win_generic">
+        <item>VITÓRIA!</item>
+        <item>BEM FEITO!</item>
+        <item>INCRÍVEL!</item>
+        <item>BRILHANTE!</item>
+        <item>ESPETACULAR!</item>
+        <item>GRANDE!</item>
+        <item>EXCELENTE!</item>
+        <item>FANTÁSTICO!</item>
+        <item>FABULOSO!</item>
+        <item>ÓTIMO TRABALHO!</item>
+    </string-array>
+    <string-array name="win_highscore">
+        <item>NOVO RECORDE!</item>
+        <item>IMPARÁVEL!</item>
+        <item>O MELHOR!</item>
+        <item>LENDÁRIO!</item>
+        <item>RECORDE!</item>
+    </string-array>
+    <string-array name="win_minesweeper">
+        <item>ÁREA LIMPA!</item>
+        <item>MESTRE MINADOR!</item>
+        <item>PASSAGEM SEGURA!</item>
+        <item>ESPECIALISTA!</item>
+    </string-array>
+    <string-array name="win_sudoku">
+        <item>GRADE DOMINADA!</item>
+        <item>REI DA LÓGICA!</item>
+        <item>RESOLVIDO!</item>
+        <item>MENTE BRILHANTE!</item>
+    </string-array>
+    <string-array name="win_tictactoe">
+        <item>SUPERADO!</item>
+        <item>TRÊS EM LINHA!</item>
+        <item>VITÓRIA TÁTICA!</item>
+        <item>IMPARÁVEL!</item>
+    </string-array>
+    <string-array name="win_4096">
+        <item>GÉNIO MATEMÁTICO!</item>
+        <item>4096 ALCANÇADO!</item>
+        <item>REI DOS NÚMEROS!</item>
+        <item>QUADRADO FINAL!</item>
+    </string-array>
+    <string-array name="win_memory">
+        <item>MEMÓRIA PERFEITA!</item>
+        <item>MESTRE DE PARES!</item>
+        <item>MENTE AGUDA!</item>
+        <item>SABIA TUDO!</item>
+    </string-array>
+    <string-array name="win_hangman">
+        <item>PALAVRA SALVA!</item>
+        <item>MESTRE DE PALAVRAS!</item>
+        <item>SALVO!</item>
+        <item>REI DO LÉXICO!</item>
+    </string-array>
+    <string-array name="win_brick_break">
+        <item>NÍVEL CONCLUÍDO!</item>
+        <item>QUEBRA-TIJOLOS!</item>
+        <item>DESTRUIDOR!</item>
+        <item>PRO DA RAQUETE!</item>
+    </string-array>
+    <string-array name="win_word_quest">
+        <item>PALAVRA ENCONTRADA!</item>
+        <item>PRO DA ORTOGRAFIA!</item>
+        <item>HERÓI DO DICIONÁRIO!</item>
+        <item>MESTRE QUEST!</item>
+    </string-array>
+    <string-array name="win_solitaire">
+        <item>BARALHO LIMPO!</item>
+        <item>ÁS VENCEDOR!</item>
+        <item>NAIPE COMPLETO!</item>
+        <item>REI DAS CARTAS!</item>
+    </string-array>
+    <string-array name="win_sokoban">
+        <item>HERÓI DO ARMAZÉM!</item>
+        <item>PRO DO EMPURRÃO!</item>
+        <item>OBJETIVOS ATINGIDOS!</item>
+        <item>SOKO-MASTER!</item>
+    </string-array>
+    <string-array name="win_checkers">
+        <item>CPU DERROTADO!</item>
+        <item>REI DO TABULEIRO!</item>
+        <item>GRANDE MESTRE!</item>
+        <item>MESTRE ESTRATEGISTA!</item>
+    </string-array>
+    <string-array name="win_slide_puzzle">
+        <item>IMAGEM RESTAURADA!</item>
+        <item>PUZZLE RESOLVIDO!</item>
+        <item>PERFEITO!</item>
+        <item>MESTRE DO SLIDE!</item>
+    </string-array>
+    <string-array name="win_dungeon">
+        <item>SAIU DA MASMORRA!</item>
+        <item>EXPLORADOR LENDÁRIO!</item>
+        <item>ANDAR LIMPO!</item>
+        <item>TESOURO ENCONTRADO!</item>
+    </string-array>
+    <string-array name="win_tanks">
+        <item>BASE DEFENDIDA!</item>
+        <item>INIMIGOS ELIMINADOS!</item>
+        <item>COMANDANTE!</item>
+        <item>HERÓI DE GUERRA!</item>
+    </string-array>
+    <string-array name="win_mental_math">
+        <item>GÉNIO MATEMÁTICO!</item>
+        <item>PODER MENTAL!</item>
+        <item>REI DO CÁLCULO!</item>
+        <item>MESTRE DOS NÚMEROS!</item>
+    </string-array>
+    <string-array name="win_froggy">
+        <item>META ALCANÇADA!</item>
+        <item>TRAVESSIA SEGURA!</item>
+        <item>HERÓI FROGGY!</item>
+        <item>MESTRE DO RIO!</item>
+    </string-array>
+    <string name="starfighter_ship_label">Modelo de nave</string>
+    <string name="starfighter_ship_balanced">STRIKER (Equilibrado)</string>
+    <string name="starfighter_ship_balanced_desc">Caça estelar de combate padrão.</string>
+    <string name="starfighter_ship_fast">INTERCEPTOR (Rápido &amp; Ágil)</string>
+    <string name="starfighter_ship_fast_desc">Alta velocidade, blindagem mais leve.</string>
+    <string name="starfighter_ship_tank">ENCOURAÇADO (Blindagem pesada)</string>
+    <string name="starfighter_ship_tank_desc">Blindagem máxima, menor velocidade.</string>
+    <string name="starfighter_ship_solar">SOLARIS (Armas de alta energia)</string>
+    <string name="starfighter_ship_solar_desc">Maior dano de disparos laser.</string>
+    <string name="starfighter_ship_phoenix">FÊNIX (Regeneração de escudos)</string>
+    <string name="starfighter_ship_phoenix_desc">Regenera escudos ao longo do tempo.</string>
+    <string name="syobon_settings_title">CONFIGURAÇÕES DO CAT MEOWIO</string>
+    <string name="syobon_character_label">Visual do gato</string>
+    <string name="syobon_char_classic">BRANCO CLÁSSICO (Neko)</string>
+    <string name="syobon_char_gold">TIGRADO DOURADO (Sortudo)</string>
+    <string name="syobon_char_shadow">PANTERA DAS SOMBRAS (Ninja)</string>
+    <string name="syobon_lives_label">Vidas iniciais</string>
+    <string name="syobon_lives_3">3 VIDAS (Clássico)</string>
+    <string name="syobon_lives_1">1 VIDA (Extremo)</string>
+    <string name="syobon_lives_inf">VIDAS INFINITAS (Treino)</string>
+    <string name="syobon_lives_desc">Quantidade de vidas até o Game Over.</string>
+    <string name="syobon_instructions">• Mova-se para Esquerda/Direita.\n• Pressione CIMA ou CENTRO para pular.\n• Pule embaixo dos blocos para acertá-los.\n• Chegue ao mastro para vencer!\n• CUIDADO COM AS ARMADILHAS!</string>
+    <string name="syobon_difficulty_desc">Escolha a aparência do seu herói felino.</string>
+    <string-array name="win_syobon">
+        <item>MESTRE MEOWIO!</item>
+        <item>SOBREVIVENTE DE ARMADILHAS!</item>
+        <item>CAMPEÃO DO MASTRO!</item>
+        <item>HERÓI FELINO!</item>
+    </string-array>
     <string name="quit_game_title">Sair do jogo</string>
     <string name="quit_game_confirm">Tem certeza de que deseja sair do jogo?</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
-    <string name="choose_hero" translatable="true">ESCOLHA SEU JOGADOR</string>
-    <string name="create_hero" translatable="true">CRIAR NOVO JOGADOR</string>
-    <string name="enter_hero_name" translatable="true">INSIRA NOME DO JOGADOR</string>
-    <string name="add_profile" translatable="true">ADICIONAR JOGADOR</string>
-    <string name="switch_profile" translatable="true">TROCAR JOGADOR</string>
-    <string name="profile_selection_hint" translatable="true">USE ◄ ► PARA NAVEGAR • PRESSIONE [OK] PARA ESCOLHER</string>
-    <string name="please_enter_name" translatable="true">Por favor, insira um nome</string>
-    <string name="enter_pin" translatable="true">INSIRA PIN DE 4 DÍGITOS</string>
-    <string name="setup_pin" translatable="true">BLOQUEAR JOGADOR (PIN)</string>
-    <string name="wrong_pin" translatable="true">PIN incorreto. Tente novamente.</string>
-    <string name="manage_profiles" translatable="true">GERENCIAR JOGADORES</string>
-    <string name="edit_profile" translatable="true">EDITAR JOGADOR</string>
-    <string name="delete_profile" translatable="true">EXCLUIR JOGADOR</string>
-    <string name="confirm_delete_profile" translatable="true">Tem certeza que deseja excluir este jogador? Todos os recordes serão perdidos.</string>
-    <string name="leave_blank_no_pin" translatable="true">Deixe em branco para não bloquear</string>
-    <string name="hall_of_fame" translatable="true">HALL DA FAMA</string>
-    <string name="no_records" translatable="true">SEM RECORDES AINDA</string>
-    <string name="save" translatable="true">SALVAR</string>
-    <string name="choose_avatar" translatable="true">ESCOLHER AVATAR</string>
-    <string name="choose_color" translatable="true">ESCOLHER COR</string>
-    <string name="security_pin_label" translatable="true">PIN DE SEGURANÇA (OPCIONAL)</string>
-    <string name="pin_digits_hint" translatable="true">O PIN deve ter 4 dígitos</string>
-    <string name="rank_1st" translatable="true">1º</string>
-    <string name="rank_2nd" translatable="true">2º</string>
-    <string name="rank_3rd" translatable="true">3º</string>
-    <string name="placeholder_name" translatable="false">---</string>
-    <string name="placeholder_score" translatable="false">0</string>
+    <string name="choose_hero">ESCOLHA SEU JOGADOR</string>
+    <string name="create_hero">CRIAR NOVO JOGADOR</string>
+    <string name="enter_hero_name">INSIRA NOME DO JOGADOR</string>
+    <string name="add_profile">ADICIONAR JOGADOR</string>
+    <string name="switch_profile">TROCAR JOGADOR</string>
+    <string name="profile_selection_hint">USE ◄ ► PARA NAVEGAR • PRESSIONE [OK] PARA ESCOLHER</string>
+    <string name="please_enter_name">Por favor, insira um nome</string>
+    <string name="enter_pin">INSIRA PIN DE 4 DÍGITOS</string>
+    <string name="setup_pin">BLOQUEAR JOGADOR (PIN)</string>
+    <string name="wrong_pin">PIN incorreto. Tente novamente.</string>
+    <string name="manage_profiles">GERENCIAR JOGADORES</string>
+    <string name="edit_profile">EDITAR JOGADOR</string>
+    <string name="delete_profile">EXCLUIR JOGADOR</string>
+    <string name="confirm_delete_profile">Tem certeza que deseja excluir este jogador? Todos os recordes serão perdidos.</string>
+    <string name="leave_blank_no_pin">Deixe em branco para não bloquear</string>
+    <string name="hall_of_fame">HALL DA FAMA</string>
+    <string name="no_records">SEM RECORDES AINDA</string>
+    <string name="save">SALVAR</string>
+    <string name="choose_avatar">ESCOLHER AVATAR</string>
+    <string name="choose_color">ESCOLHER COR</string>
+    <string name="security_pin_label">PIN DE SEGURANÇA (OPCIONAL)</string>
+    <string name="pin_digits_hint">O PIN deve ter 4 dígitos</string>
+    <string name="protected_hero">PROTECTED HERO</string>
+    <string name="guest_hero_name">GUEST HERO</string>
+    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
+    <string name="rank_1st">1º</string>
+    <string name="rank_2nd">2º</string>
+    <string name="rank_3rd">3º</string>
+    <string name="placeholder_name">---</string>
+    <string name="placeholder_score">0</string>
     <string name="monkey_spring">SPRING</string>
     <string name="monkey_summer">SUMMER</string>
     <string name="monkey_autumn">AUTUMN</string>
@@ -436,11 +585,11 @@
     <string name="monkey_beetle_warning">⚠️ BEETLE</string>
     <string name="monkey_char_gibbon">GOLDEN GIBBON</string>
     <string name="monkey_char_climber">TARZAN CLIMBER</string>
+    <string name="monkey_char_spider">SPIDER MONKEY</string>
     <string name="monkey_char_chimp">PUNK CHIMP</string>
-    <string name="retro_driver_final_lap">FINAL LAP!</string>
-    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
-    <string name="retro_driver_go">GO!</string>
-    <string name="retro_driver_finish">FINISH!</string>
+    <string name="monkey_char_default">MONKEY</string>
+    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
+    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
     <string name="frenzy_death_pufferfish">MOUTH HURT BY INFLATED PUFFERFISH!</string>
     <string name="frenzy_death_eel">SHOCKED BY ELECTRIC EEL (STUNNED)!</string>
     <string name="frenzy_death_lionfish">POISONED BY LIONFISH (STUNNED)!</string>
@@ -448,7 +597,6 @@
     <string name="frenzy_death_too_large">CANNOT EAT: %1$s IS TOO LARGE!</string>
     <string name="frenzy_death_eaten">EATEN BY %1$s!</string>
     <string name="frenzy_death_mine">BLOWN UP BY UNDERSEA MINE!</string>
-    <string name="syobon_surprise">SURPRISE!</string>
     <string name="flappy_death_ceiling">Flew too high and hit the ceiling!</string>
     <string name="flappy_death_ground">Crashed into the grassy ground!</string>
     <string name="flappy_death_pipe">Crashed into a green pipe!</string>
@@ -461,16 +609,92 @@
     <string name="flappy_hint_fly_through">FLY THROUGH</string>
     <string name="flappy_hint_avoid_bat">AVOID BAT</string>
     <string name="flappy_hint_fly_under">FLY UNDER</string>
-    <string name="protected_hero">PROTECTED HERO</string>
-    <string name="guest_hero_name">GUEST HERO</string>
-    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
-    <string name="monkey_char_default">MONKEY</string>
-    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
-    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
-    <string name="monkey_char_spider">SPIDER MONKEY</string>
+    <string name="retro_driver_final_lap">FINAL LAP!</string>
+    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
+    <string name="retro_driver_go">GO!</string>
+    <string name="retro_driver_finish">FINISH!</string>
+    <string name="syobon_surprise">SURPRISE!</string>
     <string name="ad_screensaver_message">To keep these games free, we show ads during breaks.\nThank you for your support!</string>
     <string name="ad_screensaver_hint">Press any key to resume instantly</string>
     <string name="ad_warning_prefix">Full-screen ad starting in %1$d...</string>
     <string name="ad_label">AD</string>
     <string name="advertisement_label">ADVERTISEMENT</string>
+    <string name="monkey_settings_title">CONFIGURAÇÕES DO GIBBON ASCENT</string>
+    <string name="monkey_character_label">Personagem</string>
+    <string name="monkey_character_desc">Escolha sua espécie de escalador.</string>
+    <string name="monkey_season_label">Tema da estação</string>
+    <string name="monkey_season_desc">Escolha o clima e a vegetação da selva.</string>
+    <string name="frenzy_settings_title">CONFIGURAÇÕES DO FRENZY FEEDING</string>
+    <string name="frenzy_difficulty_label">Dificuldade</string>
+    <string name="frenzy_difficulty_easy">FÁCIL (Predadores lentos)</string>
+    <string name="frenzy_difficulty_normal">NORMAL (Equilibrado)</string>
+    <string name="frenzy_difficulty_hard">DIFÍCIL (Tubarões agressivos)</string>
+    <string name="frenzy_difficulty_desc">Velocidade e quantidade de predadores.</string>
+    <string name="frenzy_starting_size_label">Tamanho inicial</string>
+    <string name="frenzy_starting_size_guppy">GUPPY (Menorzinho)</string>
+    <string name="frenzy_starting_size_angelfish">ACARÁ-BANDEIRA (Médio)</string>
+    <string name="frenzy_starting_size_desc">Estágio de crescimento inicial do peixe.</string>
+    <string name="retrodriver_settings_title">CONFIGURAÇÕES DO RETRO RACER</string>
+    <string name="retrodriver_vehicle_label">Veículo</string>
+    <string name="retrodriver_vehicle_desc">Selecione seu modelo de supermoto.</string>
+    <string name="retrodriver_theme_label">Ambiente da pista</string>
+    <string name="retrodriver_theme_desc">Selecione o cenário da corrida.</string>
+    <string name="retrodriver_theme_neon">CIDADE CIBERNÉTICA (Neon)</string>
+    <string name="retrodriver_theme_desert">PÔR DO SOL NO CANYON (Entardecer)</string>
+    <string name="retrodriver_theme_cyber">GRADE SYNTHWAVE (Retro)</string>
+    <string name="retrodriver_theme_snow">PASSO ALPINO (Neve)</string>
+    <string-array name="win_monkey">
+        <item>MESTRE DOS CIPÓS!</item>
+        <item>ESCALADOR SUPREMO!</item>
+        <item>REI DA SELVA!</item>
+        <item>COPA CONQUISTADA!</item>
+    </string-array>
+    <string-array name="win_frenzy">
+        <item>PREDADOR SUPREMO!</item>
+        <item>REI DOS MARES!</item>
+        <item>SOBERANO DO RECIFE!</item>
+        <item>FRENESI TOTAL!</item>
+    </string-array>
+    <string-array name="win_retrodriver">
+        <item>DEMÔNIO DA VELOCIDADE!</item>
+        <item>CAMPEÃO DA PISTA!</item>
+        <item>PILOTO SYNTHWAVE!</item>
+        <item>CHEGADA NO PÓDIO!</item>
+    </string-array>
+    <string-array name="win_tetris">
+        <item>MESTRE DO TETRIS!</item>
+        <item>EXPERT EM LINHAS!</item>
+        <item>ENCAIXE PERFEITO!</item>
+        <item>DESTRUIDOR DE BLOCOS!</item>
+    </string-array>
+    <string-array name="win_snake">
+        <item>MESTRE DA COBRA!</item>
+        <item>LENDA DA PÍTON!</item>
+        <item>CAMPEÃO DO BANQUETE!</item>
+        <item>REI DO RASTEJO!</item>
+    </string-array>
+    <string-array name="win_flappy">
+        <item>LENDA DOS CÉUS!</item>
+        <item>HERÓI ALADO!</item>
+        <item>MESTRE DAS PENAS!</item>
+        <item>GRANDE PILOTO!</item>
+    </string-array>
+    <string-array name="win_lines98">
+        <item>MESTRE DAS LINHAS!</item>
+        <item>HARMONIA DE CORES!</item>
+        <item>MAGO DAS ESFERAS!</item>
+        <item>GÊNIO DO TABULEIRO!</item>
+    </string-array>
+    <string-array name="win_spinball">
+        <item>MAGO DO GIRO!</item>
+        <item>MESTRE DA ÓRBITA!</item>
+        <item>PRO DO PINBALL!</item>
+        <item>SOBREVIVENTE CIRCULAR!</item>
+    </string-array>
+    <string-array name="win_simon">
+        <item>MESTRE DA MEMÓRIA!</item>
+        <item>SIMON DIZ: VITÓRIA!</item>
+        <item>PRO DOS PADRÕES!</item>
+        <item>RECORDAÇÃO GENIAL!</item>
+    </string-array>
 </resources>

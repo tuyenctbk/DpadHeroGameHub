@@ -2,6 +2,7 @@
     <string name="app_name">Dpad Arcade</string>
     <string name="app_name_full">Dpad Arcade: ألعاب قديمة</string>
     <string name="game_center">DPAD ARCADE</string>
+    <string name="snake">الثعبان</string>
     <string name="snake_settings_title">إعدادات الثعبان</string>
     <string name="snake_level_1">المستوى 1: مبتدئ</string>
     <string name="snake_level_2">المستوى 2: عادي</string>
@@ -10,7 +11,7 @@
     <string name="snake_level_2_desc">الجدران مميتة. سرعة عادية.</string>
     <string name="snake_level_3_desc">الجدران مميتة. سرعة عالية.</string>
     <string name="snake_level_label">مستوى الصعوبة</string>
-    <string name="snake">الثعبان</string>
+    <string name="minesweeper">كنس الألغام</string>
     <string name="minesweeper_settings_title">إعدادات كاسحة الألغام</string>
     <string name="minesweeper_level_1">المستوى 1: مبتدئ (10x10، 12 لغم)</string>
     <string name="minesweeper_level_2">المستوى 2: عادي (16x16، 40 لغم)</string>
@@ -40,12 +41,58 @@
     <string name="tictactoe_size_4_desc">4 في الصف للفوز.</string>
     <string name="tictactoe_size_5_desc">5 في الصف للفوز.</string>
     <string name="tictactoe_size_label">حجم اللوحة</string>
-    <string name="minesweeper">كنس الألغام</string>
+    <string name="game_4096_settings_title">إعدادات 4096</string>
+    <string name="game_4096_size_4">الشبكة: 4x4 (كلاسيكي)</string>
+    <string name="game_4096_size_5">الشبكة: 5x5 (كبير)</string>
+    <string name="game_4096_size_desc">اختر حجم لوحة التحدي.</string>
+    <string name="mental_math_settings_title">إعدادات الرياضيات</string>
+    <string name="mental_math_mode_easy">النمط: سهل (+, -)</string>
+    <string name="mental_math_mode_normal">النمط: عادي (+, -, *)</string>
+    <string name="mental_math_mode_hard">النمط: صعب (+, -, *, /)</string>
+    <string name="mental_math_mode_desc">حدد العمليات الرياضية للاختبار.</string>
+    <string name="tetris_settings_title">إعدادات تتريس</string>
+    <string name="tetris_start_level">مستوى البداية</string>
+    <string name="tetris_level_desc">المستوى الأعلى يبدأ بسرعة أكبر.</string>
+    <string name="checkers_settings_title">إعدادات الداما</string>
+    <string name="checkers_difficulty_1">الذكاء: عشوائي (سهل)</string>
+    <string name="checkers_difficulty_2">الذكاء: استراتيجي (عادي)</string>
+    <string name="checkers_difficulty_desc">الذكاء الاصطناعي الأقوى يقوم بحركات أذكى.</string>
+    <string name="spinball_settings_title">إعدادات الكرة الدوارة</string>
+    <string name="spinball_difficulty_1">النمط: هادئ (بطيء)</string>
+    <string name="spinball_difficulty_2">النمط: نشط (عادي)</string>
+    <string name="spinball_difficulty_3">النمط: فوضوي (سريع)</string>
+    <string name="spinball_difficulty_desc">السرعة تزيد من التحدي.</string>
+    <string name="simon_says_settings_title">إعدادات سايمون</string>
+    <string name="simon_says_speed_1">السرعة: مريحة (بطيء)</string>
+    <string name="simon_says_speed_2">السرعة: عادية (متوسط)</string>
+    <string name="simon_says_speed_3">السرعة: برق (سريع)</string>
+    <string name="simon_says_speed_desc">سرعة عرض التسلسل.</string>
+    <string name="dungeon_escape_settings_title">إعدادات الهروب من الزنزانة</string>
+    <string name="dungeon_escape_start_level">طابق البداية</string>
+    <string name="dungeon_escape_level_desc">اختر الطابق الذي تبدأ منه.</string>
+    <string name="froggy_cross_settings_title">إعدادات عبور الضفدع</string>
+    <string name="froggy_cross_difficulty_1">الصعوبة: هادئ (مرور بطيء)</string>
+    <string name="froggy_cross_difficulty_2">الصعوبة: عادي (قياسي)</string>
+    <string name="froggy_cross_difficulty_3">الصعوبة: ساعة الذروة (مرور سريع)</string>
+    <string name="froggy_cross_difficulty_desc">سرعة المركبات وجذوع الأشجار.</string>
     <string name="game_4096">4096</string>
     <string name="game_trex">T-REX RUN</string>
     <string name="game_brick_break">كسر الطوب</string>
     <string name="game_tictactoe">إكس-أو</string>
     <string name="game_checkers">الداما</string>
+    <string name="sokoban_settings_title">إعدادات سوكوبان</string>
+    <string name="sokoban_start_level">مستوى البداية</string>
+    <string name="sokoban_level_desc">اختر المستوى الذي تبدأ منه.</string>
+    <string name="battle_tanks_settings_title">إعدادات معركة الدبابات</string>
+    <string name="battle_tanks_difficulty_1">الصعوبة: مبتدئ (دبابات بطيئة)</string>
+    <string name="battle_tanks_difficulty_2">الصعوبة: محارب (قياسي)</string>
+    <string name="battle_tanks_difficulty_3">الصعوبة: جنرال (إطلاق سريع)</string>
+    <string name="battle_tanks_difficulty_desc">سرعة وقوة نيران الأعداء.</string>
+    <string name="starfighter_settings_title">إعدادات المقاتل النجمي</string>
+    <string name="starfighter_difficulty_1">المستوى 1: مبتدئ (سهل)</string>
+    <string name="starfighter_difficulty_2">المستوى 2: متمرس (عادي)</string>
+    <string name="starfighter_difficulty_3">المستوى 3: طيار ماهر (صعب)</string>
+    <string name="starfighter_difficulty_desc">طاقة الأعداء وسرعة إطلاق النار.</string>
     <string name="game_sokoban">سوكوبان</string>
     <string name="game_sudoku">سودوكو</string>
     <string name="game_tetris">تتريس</string>
@@ -54,11 +101,58 @@
     <string name="game_slide_puzzle">لغز الانزلاق</string>
     <string name="game_mental_math">الحساب الذهني</string>
     <string name="game_froggy">عبور الضفدع</string>
+    <string name="game_syobon">CAT MEOWIO</string>
     <string name="game_simon">سيمون يقول</string>
     <string name="game_tanks">حرب الدبابات</string>
+    <string name="word_quest_settings_title">إعدادات البحث عن الكلمات</string>
+    <string name="word_quest_category_all">الفئة: جميع الكلمات</string>
+    <string name="word_quest_category_nature">الفئة: الطبيعة والحيوانات</string>
+    <string name="word_quest_category_tech">الفئة: التقنية والعلوم</string>
+    <string name="word_quest_category_desc">اختر موضوع لغز الكلمات.</string>
+    <string name="road_racer_settings_title">إعدادات سباق الطريق</string>
+    <string name="road_racer_density_label">كثافة المرور</string>
+    <string name="road_racer_density_low">الكثافة: خفيفة (سهل)</string>
+    <string name="road_racer_density_normal">الكثافة: متوسطة (عادي)</string>
+    <string name="road_racer_density_high">الكثافة: مزدحمة (صعب)</string>
+    <string name="road_racer_density_desc">حجم حركة السير على الطريق السريع.</string>
     <string name="game_word_quest">البحث عن الكلمات</string>
     <string name="game_dungeon">الهروب من السجن</string>
+    <string name="game_monkey">تسلق الغيبون</string>
+    <string name="game_retrodriver">متسابق ريترو</string>
+    <string name="game_frenzy">جنون الأسماك</string>
+    <string name="game_fruit">تقطيع الفواكه</string>
+    <string name="flappy_hero_settings_title">إعدادات البطل الطائر</string>
+    <string name="flappy_hero_level_1">المستوى 1: المروج (أنابيب واسعة)</string>
+    <string name="flappy_hero_level_2">المستوى 2: الغابة (عقبات متحركة)</string>
+    <string name="flappy_hero_level_3">المستوى 3: الوادي (فجوات ضيقة)</string>
+    <string name="flappy_hero_level_4">المستوى 4: سماء الليل (تيارات هوائية)</string>
+    <string name="flappy_hero_level_5">المستوى 5: الجحيم (نمط الفوضى)</string>
+    <string name="flappy_hero_level_1_desc">فجوات عريضة لتعلم الطيران.</string>
+    <string name="flappy_hero_level_2_desc">العقبات تتحرك عمودياً بلطف.</string>
+    <string name="flappy_hero_level_3_desc">مساحات أضيق بين الأنابيب.</string>
+    <string name="flappy_hero_level_4_desc">الرياح تؤثر على سرعة الهبوط.</string>
+    <string name="flappy_hero_level_5_desc">حركة سريعة ومسارات شديدة الضيق.</string>
+    <string name="flappy_hero_char_label">الشخصية</string>
+    <string name="flappy_char_classic">طائر كلاسيكي (قياسي)</string>
+    <string name="flappy_char_classic_desc">فيزياء قفز كلاسيكية ومألوفة.</string>
+    <string name="flappy_char_swift">السهم السريع (رفرفة رشيقة)</string>
+    <string name="flappy_char_swift_desc">صعود سريع ونقرات متتالية.</string>
+    <string name="flappy_char_heavy">الجناح الحديدي (سقوط سريع)</string>
+    <string name="flappy_char_heavy_desc">جاذبية أعلى، تتطلب ردود فعل سريعة.</string>
+    <string name="flappy_char_floaty">ريشة خفيفة (طيران سلس)</string>
+    <string name="flappy_char_floaty_desc">جاذبية أقل وتحكم أسهل.</string>
+    <string name="brick_break_settings_title">إعدادات تكسير الطوب</string>
+    <string name="brick_break_paddle_label">حجم المضرب</string>
+    <string name="brick_break_paddle_large">المضرب: عريض (سهل)</string>
+    <string name="brick_break_paddle_medium">المضرب: قياسي (عادي)</string>
+    <string name="brick_break_paddle_small">المضرب: ضيق (صعب)</string>
+    <string name="brick_break_paddle_desc">المضرب الأعرض يسهل صد الكرات.</string>
     <string name="game_flappy">فلابي هيرو</string>
+    <string name="lines98_settings_title">إعدادات خطوط 98</string>
+    <string name="lines98_difficulty_easy">الألوان: 5 ألوان (سهل)</string>
+    <string name="lines98_difficulty_normal">الألوان: 7 ألوان (قياسي)</string>
+    <string name="lines98_difficulty_hard">الألوان: 9 ألوان (خبير)</string>
+    <string name="lines98_difficulty_desc">ألوان أقل تجعل الترتيب أسهل.</string>
     <string name="game_lines98">لاينز 98</string>
     <string name="game_solitaire">سوليتير</string>
     <string name="game_road_racer">سباق الطرق</string>
@@ -91,6 +185,7 @@
     <string name="game_slide_puzzle_instructions">• استخدم DPAD للتحريك.\n• اضغط CENTER للانزلاق.\n• رتب القطع لتكوين الصورة.</string>
     <string name="game_mental_math_instructions">• حل المسألة الحسابية.\n• استخدم DPAD لاختيار الإجابة.\n• اضغط CENTER للتأكيد.\n• أسرع! الوقت ينفد.</string>
     <string name="game_froggy_instructions">• اعبر الطريق والنهر.\n• تجنب السيارات.\n• اقفز على جذوع الأشجار.\n• صل للنهاية للتسجيل!</string>
+    <string name="game_syobon_instructions">• تحرك يساراً/يميناً.\n• اضغط للأعلى أو الوسط للقفز.\n• اقفز تحت المكعبات لضربها.\n• اصل لسارية العلم للفوز!\n• احذر من الفخاخ المفاجئة!</string>
     <string name="game_simon_instructions">• شاهد تسلسل الألوان.\n• كررها باستخدام D-PAD.\n• التسلسل يزداد طولاً كل جولة!</string>
     <string name="game_tanks_instructions">• تحكم بالدبابة بـ D-PAD.\n• إطلاق نار تلقائي.\n• دمر دبابات الأعداء.\n• احمِ القاعدة.</string>
     <string name="game_word_quest_instructions">• خمن الكلمة المكونة من 5 أحرف.\n• استخدم D-PAD للوحة المفاتيح.\n• CENTER للاختيار.\n• أخضر: الحرف والمكان صحيحان.</string>
@@ -99,6 +194,10 @@
     <string name="game_lines98_instructions">• استخدم D-PAD للمؤشر.\n• CENTER لتحريك الكرة.\n• رتب 5 كرات أو أكثر.\n• تنتهي اللعبة إذا امتلأت اللوحة.</string>
     <string name="game_solitaire_instructions">• استخدم D-PAD للمؤشر.\n• CENTER للاختيار/الوضع.\n• رتب من الآص إلى الملك.</string>
     <string name="game_road_racer_instructions">• تجنب الزحام.\n• ابقَ حياً لأطول فترة!\n• اضغط CENTER للإيقاف.</string>
+    <string name="game_monkey_instructions">• تسلق الكروم للهروب.\n• اجمع الفواكه للنقاط.\n• تفادَ العناكب وجوز الهند وخنافس قطع الكروم!\n• استخدم لوحة الاتجاهات للتسلق والقفز.</string>
+    <string name="game_retrodriver_instructions">• قد دراجتك النارية على أنغام السينثويف!\n• وجّه يسار/يمين واضغط للأعلى للتسارع.\n• تجاوز جميع المنافسين العشرين لتكون الأول.\n• اعبر خط النهاية لإكمال السباق!</string>
+    <string name="game_frenzy_instructions">• اسبح في المحيط باستخدام لوحة الاتجاهات.\n• التهم الأسماك الأصغر منك لتنمو.\n• تجنب أن تفترسك الأسماك الكبيرة!\n• التهم 30 سمكة للفوز بالمستوى.</string>
+    <string name="game_fruit_instructions">• تُرمى الفواكه في الهواء.\n• حرّك النصل المتوهج بالاتجاهات لتقطيعها.\n• تجنب القنابل بأي ثمن!\n• قطّع أكبر عدد ممكن من الفواكه.</string>
     <string name="game_hangman_instructions">• اختر الحروف لتخمين الكلمة.\n• لديك 6 محاولات.\n• اضغط CENTER للاختيار.</string>
     <string name="select_game_hint">استخدم ◄ ► للتصفح • اضغط [OK] للعب</string>
     <string name="settings">الإعدادات</string>
@@ -147,7 +246,45 @@
     <string name="next_stage_hint">اضغط Center للمرحلة التالية</string>
     <string name="continue_hint">اضغط Center للاستمرار</string>
     <string name="finish_hint">اضغط Center للإنهاء</string>
+    <string name="tictactoe_size_hint">اضغط للأعلى/الأسفل لتغيير حجم اللوحة (3x3, 4x4, 5x5) أو MENU للخيارات</string>
+    <string name="sokoban_restart_hint">اضغط R لإعادة التشغيل</string>
+    <string name="sudoku_controls_hint">الاتجاهات: تحريك/رقم | الوسط: تدوير | MENU: المستوى</string>
     <string name="total_wins_label">إجمالي الانتصارات</string>
+    <string name="mines_label">الألغام: </string>
+    <string name="flags_label">الأعلام: </string>
+    <string name="high_score_prefix">الأفضل: </string>
+    <string name="cpu_wins_label">فاز الكمبيوتر!</string>
+    <string name="your_turn_label">دورك</string>
+    <string name="watch_label">شاهد بعناية...</string>
+    <string name="grid_mastered_label">أتقنت الشبكة!</string>
+    <string name="puzzle_solved_label">تم حل اللغز!</string>
+    <string name="picture_restored_label">تمت استعادة الصورة!</string>
+    <string name="crashed_label">تحطم!</string>
+    <string name="score_prefix">النقاط: </string>
+    <string name="high_score_label">أعلى نتيجة</string>
+    <string name="wrong_label">خطأ!</string>
+    <string name="answer_was_label">الكلمة الصحيحة كانت: </string>
+    <string name="finish_label">النهاية</string>
+    <string name="continue_label">استمرار</string>
+    <string name="next_stage_label">المرحلة التالية</string>
+    <string name="out_of_tries">نفدت المحاولات!</string>
+    <string name="cpu_thinking_label">الكمبيوتر يفكر...</string>
+    <string name="no_moves_label">لا توجد حركات متبقية</string>
+    <string name="victory_label">انتصار!</string>
+    <string name="draw_label">تعادل!</string>
+    <string name="hit_wall_label">اصطدام بالجدار!</string>
+    <string name="bit_self_label">عضضت نفسك!</string>
+    <string name="cpu_starting_label">الكمبيوتر يبدأ الجولة القادمة</string>
+    <string name="jump_again_label">اقفز مجدداً</string>
+    <string name="draw_status">تعادل</string>
+    <string name="cat_animals">حيوانات</string>
+    <string name="cat_fruits">فواكه</string>
+    <string name="cat_countries">دول</string>
+    <string name="cat_sports">رياضة</string>
+    <string name="cat_flowers">زهور</string>
+    <string name="cat_vehicles">مركبات</string>
+    <string name="cat_games">ألعاب</string>
+    <string name="cat_foods">أطعمة</string>
     <string name="rating_title">هل تستمتع بـ Dpad Arcade؟</string>
     <string name="rating_content">يرجى تقييمنا بـ 5 نجوم على متجر Play، أو شاركنا اقتراحاتك للألعاب التي تريد لعبها!</string>
     <string name="rate_now">تقييم 5 نجوم</string>
@@ -156,139 +293,6 @@
     <string name="update_title">تحديث جديد متاح!</string>
     <string name="update_content">نسخة جديدة من Dpad Arcade: Retro Game Hub متاحة الآن. قم بالتحديث الآن للحصول على أحدث الألعاب والميزات وإصلاحات الاستقرار.</string>
     <string name="update_now">تحديث الآن</string>
-
-    <string-array name="win_generic">
-        <item>انتصار!</item>
-        <item>أحسنت!</item>
-        <item>مذهل!</item>
-        <item>رائع!</item>
-        <item>مبهر!</item>
-        <item>أنت بطل!</item>
-        <item>ممتاز!</item>
-        <item>خرافي!</item>
-        <item>عمل عظيم!</item>
-        <item>عبقري!</item>
-    </string-array>
-
-    <string-array name="win_highscore">
-        <item>رقم قياسي جديد!</item>
-        <item>لا يمكن إيقافك!</item>
-        <item>الأفضل على الإطلاق!</item>
-        <item>أداء أسطوري!</item>
-        <item>أعلى نتيجة!</item>
-    </string-array>
-
-    <string-array name="win_minesweeper">
-        <item>تم تطهير المنطقة!</item>
-        <item>سيد الألغام!</item>
-        <item>عبور آمن!</item>
-        <item>خبير كنس!</item>
-    </string-array>
-
-    <string-array name="win_sudoku">
-        <item>إتقان الشبكة!</item>
-        <item>ملك المنطق!</item>
-        <item>تم حل اللغز!</item>
-        <item>عقل عبقري!</item>
-    </string-array>
-
-    <string-array name="win_tictactoe">
-        <item>ذكاء خارق!</item>
-        <item>3 على التوالي!</item>
-        <item>فوز استراتيجي!</item>
-        <item>لا يقهر!</item>
-    </string-array>
-
-    <string-array name="win_4096">
-        <item>عبقري رياضيات!</item>
-        <item>4096 وصل!</item>
-        <item>قاهر الأرقام!</item>
-        <item>البلاطة النهائية!</item>
-    </string-array>
-
-    <string-array name="win_memory">
-        <item>ذاكرة مثالية!</item>
-        <item>سيد التطابق!</item>
-        <item>عقل حاد!</item>
-        <item>تذكر كامل!</item>
-    </string-array>
-
-    <string-array name="win_hangman">
-        <item>تم إنقاذ الكلمة!</item>
-        <item>سيد المفردات!</item>
-        <item>نجاة بكلمة!</item>
-        <item>ملك المعجم!</item>
-    </string-array>
-
-    <string-array name="win_brick_break">
-        <item>تم إنهاء المرحلة!</item>
-        <item>ساحق الطوب!</item>
-        <item>محطم الجدران!</item>
-        <item>محترف المضرب!</item>
-    </string-array>
-
-    <string-array name="win_word_quest">
-        <item>تم العثور على الكلمة!</item>
-        <item>نجم الهجاء!</item>
-        <item>بطل القاموس!</item>
-        <item>اكتملت المهمة!</item>
-    </string-array>
-
-    <string-array name="win_solitaire">
-        <item>تم إنهاء المجموعة!</item>
-        <item>آص الفوز!</item>
-        <item>اكتمل اللون!</item>
-        <item>ملك الورق!</item>
-    </string-array>
-
-    <string-array name="win_sokoban">
-        <item>بطل المستودع!</item>
-        <item>دافع الصناديق!</item>
-        <item>تحققت الأهداف!</item>
-        <item>سيد سوكو!</item>
-    </string-array>
-
-    <string-array name="win_checkers">
-        <item>هزيمة الكمبيوتر!</item>
-        <item>ملك الرقعة!</item>
-        <item>أستاذ كبير!</item>
-        <item>خبير استراتيجي!</item>
-    </string-array>
-
-    <string-array name="win_slide_puzzle">
-        <item>تم استعادة الصورة!</item>
-        <item>تم حل اللغز!</item>
-        <item>تطابق مثالي!</item>
-        <item>سيد الانزلاق!</item>
-    </string-array>
-
-    <string-array name="win_dungeon">
-        <item>تم الهروب!</item>
-        <item>مستكشف أسطوري!</item>
-        <item>تم تطهير الدور!</item>
-        <item>تم العثور على الكنز!</item>
-    </string-array>
-
-    <string-array name="win_tanks">
-        <item>تمت حماية القاعدة!</item>
-        <item>تم إبادة الأعداء!</item>
-        <item>قائد الدبابات!</item>
-        <item>بطل حرب!</item>
-    </string-array>
-
-    <string-array name="win_mental_math">
-        <item>عبقري رياضيات!</item>
-        <item>قوة ذهنية!</item>
-        <item>ملك الحساب!</item>
-        <item>سيد الأرقام!</item>
-    </string-array>
-
-    <string-array name="win_froggy">
-        <item>صل للهدف!</item>
-        <item>عبور آمن!</item>
-        <item>بطل فروجي!</item>
-        <item>سيد النهر!</item>
-    </string-array>
     <string name="trex_daddy">بابا تي ريكس</string>
     <string name="trex_mummy">ماما تي ريكس</string>
     <string name="trex_baby">بيبي تي ريكس</string>
@@ -299,11 +303,12 @@
     <string name="trex_pirate">القرصان تي ريكس</string>
     <string name="trex_chef">الشيف تي ريكس</string>
     <string name="trex_astronaut">رائد الفضاء تي ريكس</string>
+    <string name="trex_ninja">نينجا تي ريكس</string>
     <string name="trex_dragon">ديناصور تنين</string>
     <string name="trex_zombie">ديناصور زومبي</string>
     <string name="trex_robot">ديناصور آلي</string>
     <string name="trex_king">ديناصور ملك</string>
-
+    <string name="trex_character_label">الشخصية</string>
     <string name="trex_select_character">اختر الشخصية</string>
     <string name="trex_strong_prefix">القوة: </string>
     <string name="trex_weak_prefix">الضعف: </string>
@@ -325,6 +330,20 @@
     <string name="trex_sunny">مشمس</string>
     <string name="trex_rainy">ممطر</string>
     <string name="trex_snowy">مثلج</string>
+    <string name="trex_desc_char_random">كل جولة ديناصور مفاجئ!</string>
+    <string name="trex_desc_char_specific">استخدم الديناصور الذي اخترته.</string>
+    <string name="trex_desc_time_random">دورة ليل ونهار.</string>
+    <string name="trex_desc_time_day">سماء نهارية صافية.</string>
+    <string name="trex_desc_time_night">ليلة مرصعة بالنجوم.</string>
+    <string name="trex_desc_season_random">يمر بجميع الفصول.</string>
+    <string name="trex_desc_season_spring">خضرة وعشب نضر.</string>
+    <string name="trex_desc_season_summer">حقول ساطعة وشمس.</string>
+    <string name="trex_desc_season_autumn">أوراق متساقطة وأرض ضبابية.</string>
+    <string name="trex_desc_season_winter">تضاريس مثلجة وصقيع.</string>
+    <string name="trex_desc_weather_random">تغييرات طقس ديناميكية.</string>
+    <string name="trex_desc_weather_sunny">طقس صافٍ مثالي.</string>
+    <string name="trex_desc_weather_rainy">مطر وغيوم داكنة.</string>
+    <string name="trex_desc_weather_snowy">تساقط ثلوج جميل.</string>
     <string name="trex_point_bonus_score">نقاط إضافية</string>
     <string name="trex_point_large_hitbox">منطقة إصابة كبيرة</string>
     <string name="trex_point_double_jump">قفزة مزدوجة</string>
@@ -354,54 +373,184 @@
     <string name="trex_point_no_momentum">بدون اندفاع</string>
     <string name="trex_point_royal_bonus">مكافأة ملكية</string>
     <string name="trex_point_visible_target">هدف مرئي</string>
-    <string name="trex_ninja">نينجا تي ريكس</string>
-    <string name="trex_character_label">الشخصية</string>
-
-    <string name="trex_desc_char_random">كل جولة ديناصور مفاجئ!</string>
-    <string name="trex_desc_char_specific">استخدم الديناصور الذي اخترته.</string>
-    <string name="trex_desc_time_random">دورة ليل ونهار.</string>
-    <string name="trex_desc_time_day">سماء نهارية صافية.</string>
-    <string name="trex_desc_time_night">ليلة مرصعة بالنجوم.</string>
-    <string name="trex_desc_season_random">يمر بجميع الفصول.</string>
-    <string name="trex_desc_season_spring">خضرة وعشب نضر.</string>
-    <string name="trex_desc_season_summer">حقول ساطعة وشمس.</string>
-    <string name="trex_desc_season_autumn">أوراق متساقطة وأرض ضبابية.</string>
-    <string name="trex_desc_season_winter">تضاريس مثلجة وصقيع.</string>
-    <string name="trex_desc_weather_random">تغييرات طقس ديناميكية.</string>
-    <string name="trex_desc_weather_sunny">طقس صافٍ مثالي.</string>
-    <string name="trex_desc_weather_rainy">مطر وغيوم داكنة.</string>
-    <string name="trex_desc_weather_snowy">تساقط ثلوج جميل.</string>
+    <string-array name="win_generic">
+        <item>انتصار!</item>
+        <item>أحسنت!</item>
+        <item>مذهل!</item>
+        <item>رائع!</item>
+        <item>مبهر!</item>
+        <item>أنت بطل!</item>
+        <item>ممتاز!</item>
+        <item>خرافي!</item>
+        <item>عمل عظيم!</item>
+        <item>عبقري!</item>
+    </string-array>
+    <string-array name="win_highscore">
+        <item>رقم قياسي جديد!</item>
+        <item>لا يمكن إيقافك!</item>
+        <item>الأفضل على الإطلاق!</item>
+        <item>أداء أسطوري!</item>
+        <item>أعلى نتيجة!</item>
+    </string-array>
+    <string-array name="win_minesweeper">
+        <item>تم تطهير المنطقة!</item>
+        <item>سيد الألغام!</item>
+        <item>عبور آمن!</item>
+        <item>خبير كنس!</item>
+    </string-array>
+    <string-array name="win_sudoku">
+        <item>إتقان الشبكة!</item>
+        <item>ملك المنطق!</item>
+        <item>تم حل اللغز!</item>
+        <item>عقل عبقري!</item>
+    </string-array>
+    <string-array name="win_tictactoe">
+        <item>ذكاء خارق!</item>
+        <item>3 على التوالي!</item>
+        <item>فوز استراتيجي!</item>
+        <item>لا يقهر!</item>
+    </string-array>
+    <string-array name="win_4096">
+        <item>عبقري رياضيات!</item>
+        <item>4096 وصل!</item>
+        <item>قاهر الأرقام!</item>
+        <item>البلاطة النهائية!</item>
+    </string-array>
+    <string-array name="win_memory">
+        <item>ذاكرة مثالية!</item>
+        <item>سيد التطابق!</item>
+        <item>عقل حاد!</item>
+        <item>تذكر كامل!</item>
+    </string-array>
+    <string-array name="win_hangman">
+        <item>تم إنقاذ الكلمة!</item>
+        <item>سيد المفردات!</item>
+        <item>نجاة بكلمة!</item>
+        <item>ملك المعجم!</item>
+    </string-array>
+    <string-array name="win_brick_break">
+        <item>تم إنهاء المرحلة!</item>
+        <item>ساحق الطوب!</item>
+        <item>محطم الجدران!</item>
+        <item>محترف المضرب!</item>
+    </string-array>
+    <string-array name="win_word_quest">
+        <item>تم العثور على الكلمة!</item>
+        <item>نجم الهجاء!</item>
+        <item>بطل القاموس!</item>
+        <item>اكتملت المهمة!</item>
+    </string-array>
+    <string-array name="win_solitaire">
+        <item>تم إنهاء المجموعة!</item>
+        <item>آص الفوز!</item>
+        <item>اكتمل اللون!</item>
+        <item>ملك الورق!</item>
+    </string-array>
+    <string-array name="win_sokoban">
+        <item>بطل المستودع!</item>
+        <item>دافع الصناديق!</item>
+        <item>تحققت الأهداف!</item>
+        <item>سيد سوكو!</item>
+    </string-array>
+    <string-array name="win_checkers">
+        <item>هزيمة الكمبيوتر!</item>
+        <item>ملك الرقعة!</item>
+        <item>أستاذ كبير!</item>
+        <item>خبير استراتيجي!</item>
+    </string-array>
+    <string-array name="win_slide_puzzle">
+        <item>تم استعادة الصورة!</item>
+        <item>تم حل اللغز!</item>
+        <item>تطابق مثالي!</item>
+        <item>سيد الانزلاق!</item>
+    </string-array>
+    <string-array name="win_dungeon">
+        <item>تم الهروب!</item>
+        <item>مستكشف أسطوري!</item>
+        <item>تم تطهير الدور!</item>
+        <item>تم العثور على الكنز!</item>
+    </string-array>
+    <string-array name="win_tanks">
+        <item>تمت حماية القاعدة!</item>
+        <item>تم إبادة الأعداء!</item>
+        <item>قائد الدبابات!</item>
+        <item>بطل حرب!</item>
+    </string-array>
+    <string-array name="win_mental_math">
+        <item>عبقري رياضيات!</item>
+        <item>قوة ذهنية!</item>
+        <item>ملك الحساب!</item>
+        <item>سيد الأرقام!</item>
+    </string-array>
+    <string-array name="win_froggy">
+        <item>صل للهدف!</item>
+        <item>عبور آمن!</item>
+        <item>بطل فروجي!</item>
+        <item>سيد النهر!</item>
+    </string-array>
+    <string name="starfighter_ship_label">طراز السفينة</string>
+    <string name="starfighter_ship_balanced">المهاجم (متوازن)</string>
+    <string name="starfighter_ship_balanced_desc">مقاتلة فضائية قياسية.</string>
+    <string name="starfighter_ship_fast">المعترض (سريع ورشيق)</string>
+    <string name="starfighter_ship_fast_desc">سرعة عالية ودرع خفيف.</string>
+    <string name="starfighter_ship_tank">الدرع الثقيل (حماية فائقة)</string>
+    <string name="starfighter_ship_tank_desc">أقصى دروع مع سرعة أقل.</string>
+    <string name="starfighter_ship_solar">سولاريس (أسلحة طاقة مكثفة)</string>
+    <string name="starfighter_ship_solar_desc">ضرر ليزر مضاعف.</string>
+    <string name="starfighter_ship_phoenix">العنقاء (تجديد الدروع)</string>
+    <string name="starfighter_ship_phoenix_desc">تجدد الدروع تلقائياً بمرور الوقت.</string>
+    <string name="syobon_settings_title">إعدادات القطة مياويو</string>
+    <string name="syobon_character_label">شكل القطة</string>
+    <string name="syobon_char_classic">أبيض كلاسيكي (نيكو)</string>
+    <string name="syobon_char_gold">مخطط ذهبي (محظوظ)</string>
+    <string name="syobon_char_shadow">فهد الظل (نينجا)</string>
+    <string name="syobon_lives_label">عدد المحاولات</string>
+    <string name="syobon_lives_3">3 محاولات (كلاسيكي)</string>
+    <string name="syobon_lives_1">محاولة واحدة (صعب جداً)</string>
+    <string name="syobon_lives_inf">محاولات لا نهائية (تدريب)</string>
+    <string name="syobon_lives_desc">عدد المحاولات قبل انتهاء اللعبة.</string>
+    <string name="syobon_instructions">• تحرك يساراً/يميناً.\n• اضغط للأعلى أو الوسط للقفز.\n• اقفز تحت المكعبات لضربها.\n• اصل لسارية العلم للفوز!\n• احذر من الفخاخ المفاجئة!</string>
+    <string name="syobon_difficulty_desc">اختر مظهر بطلك الأليف.</string>
+    <string-array name="win_syobon">
+        <item>سيد مياويو!</item>
+        <item>قاهر الفخاخ!</item>
+        <item>بطل سارية العلم!</item>
+        <item>البطل الأليف!</item>
+    </string-array>
     <string name="quit_game_title">الخروج من اللعبة</string>
     <string name="quit_game_confirm">هل تريد الخروج من اللعبة؟</string>
     <string name="yes">نعم</string>
     <string name="no">لا</string>
-    <string name="choose_hero" translatable="true">اختر اللاعب</string>
-    <string name="create_hero" translatable="true">إنشاء لاعب جديد</string>
-    <string name="enter_hero_name" translatable="true">أدخل اسم اللاعب</string>
-    <string name="add_profile" translatable="true">إضافة لاعب</string>
-    <string name="switch_profile" translatable="true">تبديل اللاعب</string>
-    <string name="profile_selection_hint" translatable="true">استخدم ◄ ► للتصفح • اضغط [OK] للاختيار</string>
-    <string name="please_enter_name" translatable="true">يرجى إدخال اسم</string>
-    <string name="enter_pin" translatable="true">أدخل رمز PIN المكون من 4 أرقام</string>
-    <string name="setup_pin" translatable="true">تعيين قفل اللاعب (PIN)</string>
-    <string name="wrong_pin" translatable="true">رمز PIN غير صحيح. حاول مرة أخرى.</string>
-    <string name="manage_profiles" translatable="true">إدارة اللاعبين</string>
-    <string name="edit_profile" translatable="true">تعديل اللاعب</string>
-    <string name="delete_profile" translatable="true">حذف اللاعب</string>
-    <string name="confirm_delete_profile" translatable="true">هل أنت متأكد أنك تريد حذف هذا اللاعب؟ سيتم فقدان جميع النتائج.</string>
-    <string name="leave_blank_no_pin" translatable="true">اتركه فارغاً لعدم القفل</string>
-    <string name="hall_of_fame" translatable="true">قاعة المشاهير</string>
-    <string name="no_records" translatable="true">لا توجد سجلات بعد</string>
-    <string name="save" translatable="true">حفظ</string>
-    <string name="choose_avatar" translatable="true">اختر الصورة الرمزية</string>
-    <string name="choose_color" translatable="true">اختر اللون</string>
-    <string name="security_pin_label" translatable="true">رمز الأمان (اختياري)</string>
-    <string name="pin_digits_hint" translatable="true">يجب أن يتكون رمز PIN من 4 أرقام</string>
-    <string name="rank_1st" translatable="true">الأول</string>
-    <string name="rank_2nd" translatable="true">الثاني</string>
-    <string name="rank_3rd" translatable="true">الثالث</string>
-    <string name="placeholder_name" translatable="false">---</string>
-    <string name="placeholder_score" translatable="false">0</string>
+    <string name="choose_hero">اختر اللاعب</string>
+    <string name="create_hero">إنشاء لاعب جديد</string>
+    <string name="enter_hero_name">أدخل اسم اللاعب</string>
+    <string name="add_profile">إضافة لاعب</string>
+    <string name="switch_profile">تبديل اللاعب</string>
+    <string name="profile_selection_hint">استخدم ◄ ► للتصفح • اضغط [OK] للاختيار</string>
+    <string name="please_enter_name">يرجى إدخال اسم</string>
+    <string name="enter_pin">أدخل رمز PIN المكون من 4 أرقام</string>
+    <string name="setup_pin">تعيين قفل اللاعب (PIN)</string>
+    <string name="wrong_pin">رمز PIN غير صحيح. حاول مرة أخرى.</string>
+    <string name="manage_profiles">إدارة اللاعبين</string>
+    <string name="edit_profile">تعديل اللاعب</string>
+    <string name="delete_profile">حذف اللاعب</string>
+    <string name="confirm_delete_profile">هل أنت متأكد أنك تريد حذف هذا اللاعب؟ سيتم فقدان جميع النتائج.</string>
+    <string name="leave_blank_no_pin">اتركه فارغاً لعدم القفل</string>
+    <string name="hall_of_fame">قاعة المشاهير</string>
+    <string name="no_records">لا توجد سجلات بعد</string>
+    <string name="save">حفظ</string>
+    <string name="choose_avatar">اختر الصورة الرمزية</string>
+    <string name="choose_color">اختر اللون</string>
+    <string name="security_pin_label">رمز الأمان (اختياري)</string>
+    <string name="pin_digits_hint">يجب أن يتكون رمز PIN من 4 أرقام</string>
+    <string name="protected_hero">PROTECTED HERO</string>
+    <string name="guest_hero_name">GUEST HERO</string>
+    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
+    <string name="rank_1st">الأول</string>
+    <string name="rank_2nd">الثاني</string>
+    <string name="rank_3rd">الثالث</string>
+    <string name="placeholder_name">---</string>
+    <string name="placeholder_score">0</string>
     <string name="monkey_spring">SPRING</string>
     <string name="monkey_summer">SUMMER</string>
     <string name="monkey_autumn">AUTUMN</string>
@@ -436,11 +585,11 @@
     <string name="monkey_beetle_warning">⚠️ BEETLE</string>
     <string name="monkey_char_gibbon">GOLDEN GIBBON</string>
     <string name="monkey_char_climber">TARZAN CLIMBER</string>
+    <string name="monkey_char_spider">SPIDER MONKEY</string>
     <string name="monkey_char_chimp">PUNK CHIMP</string>
-    <string name="retro_driver_final_lap">FINAL LAP!</string>
-    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
-    <string name="retro_driver_go">GO!</string>
-    <string name="retro_driver_finish">FINISH!</string>
+    <string name="monkey_char_default">MONKEY</string>
+    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
+    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
     <string name="frenzy_death_pufferfish">MOUTH HURT BY INFLATED PUFFERFISH!</string>
     <string name="frenzy_death_eel">SHOCKED BY ELECTRIC EEL (STUNNED)!</string>
     <string name="frenzy_death_lionfish">POISONED BY LIONFISH (STUNNED)!</string>
@@ -448,7 +597,6 @@
     <string name="frenzy_death_too_large">CANNOT EAT: %1$s IS TOO LARGE!</string>
     <string name="frenzy_death_eaten">EATEN BY %1$s!</string>
     <string name="frenzy_death_mine">BLOWN UP BY UNDERSEA MINE!</string>
-    <string name="syobon_surprise">SURPRISE!</string>
     <string name="flappy_death_ceiling">Flew too high and hit the ceiling!</string>
     <string name="flappy_death_ground">Crashed into the grassy ground!</string>
     <string name="flappy_death_pipe">Crashed into a green pipe!</string>
@@ -461,16 +609,92 @@
     <string name="flappy_hint_fly_through">FLY THROUGH</string>
     <string name="flappy_hint_avoid_bat">AVOID BAT</string>
     <string name="flappy_hint_fly_under">FLY UNDER</string>
-    <string name="protected_hero">PROTECTED HERO</string>
-    <string name="guest_hero_name">GUEST HERO</string>
-    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
-    <string name="monkey_char_default">MONKEY</string>
-    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
-    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
-    <string name="monkey_char_spider">SPIDER MONKEY</string>
+    <string name="retro_driver_final_lap">FINAL LAP!</string>
+    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
+    <string name="retro_driver_go">GO!</string>
+    <string name="retro_driver_finish">FINISH!</string>
+    <string name="syobon_surprise">SURPRISE!</string>
     <string name="ad_screensaver_message">To keep these games free, we show ads during breaks.\nThank you for your support!</string>
     <string name="ad_screensaver_hint">Press any key to resume instantly</string>
     <string name="ad_warning_prefix">Full-screen ad starting in %1$d...</string>
     <string name="ad_label">AD</string>
     <string name="advertisement_label">ADVERTISEMENT</string>
+    <string name="monkey_settings_title">إعدادات تسلق الغيبون</string>
+    <string name="monkey_character_label">الشخصية</string>
+    <string name="monkey_character_desc">اختر فصيلة المتسلق الخاصة بك.</string>
+    <string name="monkey_season_label">مظهر الموسم</string>
+    <string name="monkey_season_desc">اختر طقس الغابة وأوراق الشجر.</string>
+    <string name="frenzy_settings_title">إعدادات جنون الأسماك</string>
+    <string name="frenzy_difficulty_label">الصعوبة</string>
+    <string name="frenzy_difficulty_easy">سهل (مفترسون بطيئون)</string>
+    <string name="frenzy_difficulty_normal">عادي (متوازن)</string>
+    <string name="frenzy_difficulty_hard">صعب (قروش هجومية)</string>
+    <string name="frenzy_difficulty_desc">سرعة وكثافة الأسماك المفترسة.</string>
+    <string name="frenzy_starting_size_label">الحجم الابتدائي</string>
+    <string name="frenzy_starting_size_guppy">جوبي (الأصغر)</string>
+    <string name="frenzy_starting_size_angelfish">سمكة الملاك (متوسط)</string>
+    <string name="frenzy_starting_size_desc">مرحلة نمو السمكة الابتدائية.</string>
+    <string name="retrodriver_settings_title">إعدادات متسابق ريترو</string>
+    <string name="retrodriver_vehicle_label">المركبة</string>
+    <string name="retrodriver_vehicle_desc">اختر طراز دراجتك الخارقة.</string>
+    <string name="retrodriver_theme_label">بيئة الحلبة</string>
+    <string name="retrodriver_theme_desc">اختر مشاهد حلبة السباق.</string>
+    <string name="retrodriver_theme_neon">مدينة السايبر (نيون)</string>
+    <string name="retrodriver_theme_desert">غروب الوادي (غسق)</string>
+    <string name="retrodriver_theme_cyber">شبكة سينثويف (ريترو)</string>
+    <string name="retrodriver_theme_snow">الممر الجليدي (ثلج)</string>
+    <string-array name="win_monkey">
+        <item>سيد الكروم!</item>
+        <item>متسلق القمة!</item>
+        <item>ملك الغابة!</item>
+        <item>قاهر الأشجار!</item>
+    </string-array>
+    <string-array name="win_frenzy">
+        <item>سيد المحيط!</item>
+        <item>مفترس لا يُقهر!</item>
+        <item>حاكم الشعب المرجانية!</item>
+        <item>صياد أسطوري!</item>
+    </string-array>
+    <string-array name="win_retrodriver">
+        <item>أسطورة السرعة!</item>
+        <item>بطل الحلبة!</item>
+        <item>متسابق سينثويف!</item>
+        <item>تتويج مستحق!</item>
+    </string-array>
+    <string-array name="win_tetris">
+        <item>خبير التتريس!</item>
+        <item>محترف إخلاء السطور!</item>
+        <item>بناء مثالي!</item>
+        <item>محطم المكعبات!</item>
+    </string-array>
+    <string-array name="win_snake">
+        <item>سيد الأفعى!</item>
+        <item>أسطورة الثعبان!</item>
+        <item>بطل الوليمة!</item>
+        <item>ملك الزحف!</item>
+    </string-array>
+    <string-array name="win_flappy">
+        <item>أسطورة السماء!</item>
+        <item>بطل الأجنحة!</item>
+        <item>سيد الطيران!</item>
+        <item>نسر محلق!</item>
+    </string-array>
+    <string-array name="win_lines98">
+        <item>خبير الخطوط!</item>
+        <item>تناغم الألوان!</item>
+        <item>ساحر الكرات!</item>
+        <item>عبقري الشبكة!</item>
+    </string-array>
+    <string-array name="win_spinball">
+        <item>ساحر الدوران!</item>
+        <item>سيد المدار!</item>
+        <item>محترف البينبول!</item>
+        <item>الناجي الدائري!</item>
+    </string-array>
+    <string-array name="win_simon">
+        <item>ذاكرة حديدية!</item>
+        <item>سايمون يقول: فوز!</item>
+        <item>خبير الأنماط!</item>
+        <item>استدعاء عبقري!</item>
+    </string-array>
 </resources>

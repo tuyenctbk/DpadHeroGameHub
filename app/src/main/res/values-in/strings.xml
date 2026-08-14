@@ -2,6 +2,7 @@
     <string name="app_name">Dpad Arcade</string>
     <string name="app_name_full">Dpad Arcade: Game Retro</string>
     <string name="game_center">DPAD ARCADE</string>
+    <string name="snake">ULAR</string>
     <string name="snake_settings_title">PENGATURAN ULAR</string>
     <string name="snake_level_1">LEVEL 1: PEMULA</string>
     <string name="snake_level_2">LEVEL 2: NORMAL</string>
@@ -10,7 +11,7 @@
     <string name="snake_level_2_desc">Dinding mematikan. Kecepatan normal.</string>
     <string name="snake_level_3_desc">Dinding mematikan. Kecepatan cepat.</string>
     <string name="snake_level_label">Tingkat Kesulitan</string>
-    <string name="snake">ULAR</string>
+    <string name="minesweeper">RANJAU</string>
     <string name="minesweeper_settings_title">PENGATURAN MINESWEEPER</string>
     <string name="minesweeper_level_1">LEVEL 1: PEMULA (10x10, 12 Bom)</string>
     <string name="minesweeper_level_2">LEVEL 2: NORMAL (16x16, 40 Bom)</string>
@@ -40,12 +41,58 @@
     <string name="tictactoe_size_4_desc">4 berturut-turut untuk menang.</string>
     <string name="tictactoe_size_5_desc">5 berturut-turut untuk menang.</string>
     <string name="tictactoe_size_label">Ukuran Papan</string>
-    <string name="minesweeper">RANJAU</string>
+    <string name="game_4096_settings_title">PENGATURAN 4096</string>
+    <string name="game_4096_size_4">KISI: 4x4 (Klasik)</string>
+    <string name="game_4096_size_5">KISI: 5x5 (Besar)</string>
+    <string name="game_4096_size_desc">Pilih ukuran papan tantangan.</string>
+    <string name="mental_math_settings_title">PENGATURAN MATEMATIKA</string>
+    <string name="mental_math_mode_easy">MODE: MUDAH (+, -)</string>
+    <string name="mental_math_mode_normal">MODE: NORMAL (+, -, *)</string>
+    <string name="mental_math_mode_hard">MODE: SULIT (+, -, *, /)</string>
+    <string name="mental_math_mode_desc">Pilih operasi matematika yang diuji.</string>
+    <string name="tetris_settings_title">PENGATURAN TETRIS</string>
+    <string name="tetris_start_level">Level Awal</string>
+    <string name="tetris_level_desc">Level lebih tinggi dimulai dengan kecepatan lebih cepat.</string>
+    <string name="checkers_settings_title">PENGATURAN DAMA</string>
+    <string name="checkers_difficulty_1">AI: ACAK (Mudah)</string>
+    <string name="checkers_difficulty_2">AI: STRATEGIS (Normal)</string>
+    <string name="checkers_difficulty_desc">AI yang lebih kuat membuat langkah lebih cerdas.</string>
+    <string name="spinball_settings_title">PENGATURAN SPINBALL</string>
+    <string name="spinball_difficulty_1">MODE: TENANG (Lambat)</string>
+    <string name="spinball_difficulty_2">MODE: LINCAH (Normal)</string>
+    <string name="spinball_difficulty_3">MODE: KACAU (Cepat)</string>
+    <string name="spinball_difficulty_desc">Kecepatan meningkatkan tantangan.</string>
+    <string name="simon_says_settings_title">PENGATURAN SIMON</string>
+    <string name="simon_says_speed_1">KECEPATAN: SANTAI (Lambat)</string>
+    <string name="simon_says_speed_2">KECEPATAN: NORMAL (Sedang)</string>
+    <string name="simon_says_speed_3">KECEPATAN: KILAT (Cepat)</string>
+    <string name="simon_says_speed_desc">Kecepatan pemutaran urutan.</string>
+    <string name="dungeon_escape_settings_title">PENGATURAN KABUR DARI LABIRIN</string>
+    <string name="dungeon_escape_start_level">Lantai Awal</string>
+    <string name="dungeon_escape_level_desc">Pilih lantai untuk memulai.</string>
+    <string name="froggy_cross_settings_title">PENGATURAN FROGGY CROSS</string>
+    <string name="froggy_cross_difficulty_1">KESULITAN: LAMBAT (Lalu Lintas Sepi)</string>
+    <string name="froggy_cross_difficulty_2">KESULITAN: NORMAL (Standar)</string>
+    <string name="froggy_cross_difficulty_3">KESULITAN: JAM SIBUK (Lalu Lintas Cepat)</string>
+    <string name="froggy_cross_difficulty_desc">Kecepatan kendaraan dan batang kayu.</string>
     <string name="game_4096">4096</string>
     <string name="game_trex">T-REX RUN</string>
     <string name="game_brick_break">PENGHANCUR BATA</string>
     <string name="game_tictactoe">TIK-TAK-TO</string>
     <string name="game_checkers">DAMA</string>
+    <string name="sokoban_settings_title">PENGATURAN SOKOBAN</string>
+    <string name="sokoban_start_level">Level Awal</string>
+    <string name="sokoban_level_desc">Pilih level untuk memulai.</string>
+    <string name="battle_tanks_settings_title">PENGATURAN PERANG TANK</string>
+    <string name="battle_tanks_difficulty_1">KESULITAN: KADET (Tank Lambat)</string>
+    <string name="battle_tanks_difficulty_2">KESULITAN: VETERAN (Standar)</string>
+    <string name="battle_tanks_difficulty_3">KESULITAN: JENDERAL (Tembakan Cepat)</string>
+    <string name="battle_tanks_difficulty_desc">Kecepatan dan daya tembak musuh.</string>
+    <string name="starfighter_settings_title">PENGATURAN STAR FIGHTER</string>
+    <string name="starfighter_difficulty_1">LEVEL 1: TARUNA (Mudah)</string>
+    <string name="starfighter_difficulty_2">LEVEL 2: VETERAN (Normal)</string>
+    <string name="starfighter_difficulty_3">LEVEL 3: PENERBANG ULUNG (Sulit)</string>
+    <string name="starfighter_difficulty_desc">Kesehatan musuh dan laju tembakan.</string>
     <string name="game_sokoban">SOKOBAN</string>
     <string name="game_sudoku">SUDOKU</string>
     <string name="game_tetris">TETRIS</string>
@@ -57,9 +104,55 @@
     <string name="game_syobon">CAT MEOWIO</string>
     <string name="game_simon">SIMON BERKATA</string>
     <string name="game_tanks">PERANG TANK</string>
+    <string name="word_quest_settings_title">PENGATURAN WORD QUEST</string>
+    <string name="word_quest_category_all">KATEGORI: SEMUA KATA</string>
+    <string name="word_quest_category_nature">KATEGORI: ALAM &amp; HEWAN</string>
+    <string name="word_quest_category_tech">KATEGORI: TEKNOLOGI &amp; SAINS</string>
+    <string name="word_quest_category_desc">Pilih tema teka-teki kata Anda.</string>
+    <string name="road_racer_settings_title">PENGATURAN ROAD RACER</string>
+    <string name="road_racer_density_label">Kepadatan Lalu Lintas</string>
+    <string name="road_racer_density_low">KEPADATAN: SEPI (Mudah)</string>
+    <string name="road_racer_density_normal">KEPADATAN: SEDANG (Normal)</string>
+    <string name="road_racer_density_high">KEPADATAN: PADAT (Sulit)</string>
+    <string name="road_racer_density_desc">Banyaknya kendaraan di jalan raya.</string>
     <string name="game_word_quest">CARI KATA</string>
     <string name="game_dungeon">DUNGEON ESCAPE</string>
+    <string name="game_monkey">PANJAT GIBBON</string>
+    <string name="game_retrodriver">PEMBALAP RETRO</string>
+    <string name="game_frenzy">IKAN RAKUS</string>
+    <string name="game_fruit">PEMOTONG BUAH</string>
+    <string name="flappy_hero_settings_title">PENGATURAN FLAPPY HERO</string>
+    <string name="flappy_hero_level_1">LEVEL 1: PADANG RUMPUT (Pipa Lebar)</string>
+    <string name="flappy_hero_level_2">LEVEL 2: HUTAN (Rintangan Bergerak)</string>
+    <string name="flappy_hero_level_3">LEVEL 3: NGAI (Celah Sempit)</string>
+    <string name="flappy_hero_level_4">LEVEL 4: LANGIT MALAM (Arus Angin)</string>
+    <string name="flappy_hero_level_5">LEVEL 5: INFERNO (Mode Kekacauan)</string>
+    <string name="flappy_hero_level_1_desc">Celah terlebar untuk belajar.</string>
+    <string name="flappy_hero_level_2_desc">Rintangan berayun secara vertikal.</string>
+    <string name="flappy_hero_level_3_desc">Jarak antar pipa lebih ketat.</string>
+    <string name="flappy_hero_level_4_desc">Angin memengaruhi kecepatan jatuh.</string>
+    <string name="flappy_hero_level_5_desc">Gulir cepat dan celah paling sempit.</string>
+    <string name="flappy_hero_char_label">Karakter</string>
+    <string name="flappy_char_classic">BURUNG KLASIK (Standar)</string>
+    <string name="flappy_char_classic_desc">Fisika lompatan klasik yang familier.</string>
+    <string name="flappy_char_swift">ANAK PANAH CEPAT (Kepakan Cepat)</string>
+    <string name="flappy_char_swift_desc">Naik cepat, ketukan beruntun.</string>
+    <string name="flappy_char_heavy">SAYAP BESI (Jatuh Cepat)</string>
+    <string name="flappy_char_heavy_desc">Gravitasi tinggi, perlu refleks cepat.</string>
+    <string name="flappy_char_floaty">BULU HALUS (Meluncur Lembut)</string>
+    <string name="flappy_char_floaty_desc">Gravitasi rendah, kontrol lebih mudah.</string>
+    <string name="brick_break_settings_title">PENGATURAN BRICK BREAK</string>
+    <string name="brick_break_paddle_label">Ukuran Papan Pantul</string>
+    <string name="brick_break_paddle_large">PAPAN: LEBAR (Mudah)</string>
+    <string name="brick_break_paddle_medium">PAPAN: STANDAR (Normal)</string>
+    <string name="brick_break_paddle_small">PAPAN: SEMPIT (Sulit)</string>
+    <string name="brick_break_paddle_desc">Papan yang lebih lebar memudahkan menangkap bola.</string>
     <string name="game_flappy">FLAPPY HERO</string>
+    <string name="lines98_settings_title">PENGATURAN LINES 98</string>
+    <string name="lines98_difficulty_easy">WARNA: 5 WARNA (Mudah)</string>
+    <string name="lines98_difficulty_normal">WARNA: 7 WARNA (Standar)</string>
+    <string name="lines98_difficulty_hard">WARNA: 9 WARNA (Ahli)</string>
+    <string name="lines98_difficulty_desc">Lebih sedikit warna memudahkan pencocokan.</string>
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLITAIRE</string>
     <string name="game_road_racer">ROAD RACER</string>
@@ -92,7 +185,7 @@
     <string name="game_slide_puzzle_instructions">• Gunakan DPAD untuk kursor.\n• Tekan ATAS/BAWAH atau MENU untuk level.\n• CENTER untuk geser. Urutkan untuk menang.\n• Level tinggi = keping lebih banyak!</string>
     <string name="game_mental_math_instructions">• Jawab soal matematika.\n• Gunakan DPAD untuk pilih jawaban.\n• Tekan CENTER untuk konfirmasi.\n• Cepat! Waktu terus berjalan.\n• Jawaban salah mengakhiri game.</string>
     <string name="game_froggy_instructions">• Seberangi jalan dan sungai.\n• Hindari mobil di jalan.\n• Lompat ke kayu di sungai.\n• Capai garis finish untuk skor!\n• Gunakan D-PAD untuk bergerak.</string>
-    <string name="game_syobon_instructions">• KIRI/KANAN dengan D-PAD untuk gerak.\n• ATAS/CENTER dengan D-PAD untuk lompat.\n• Lompat di bawah blok untuk memukul.\n• Capai bendera untuk menang!\n• WASPADA JEBAKAN!</string>
+    <string name="game_syobon_instructions">• Bergerak dengan Kiri/Kanan.\n• Tekan ATAS atau TENGAH untuk melompat.\n• Lompat di bawah balok untuk memukulnya.\n• Capai tiang bendera untuk menang!\n• HATI-HATI TERHADAP JEBAKAN!</string>
     <string name="game_simon_instructions">• Lihat urutan warna.\n• Ulangi dengan D-PAD:\n  - ATAS: Kuning\n  - KANAN: Hijau\n  - BAWAH: Merah\n  - KIRI: Biru\n• Urutan makin panjang tiap ronde!</string>
     <string name="game_tanks_instructions">• Kontrol tank dengan D-PAD.\n• Tembak otomatis.\n• Hancurkan tank musuh.\n• Lindungi MARKAS (bintang).\n• Bata bisa dihancurkan.</string>
     <string name="game_word_quest_instructions">• Tebak kata 5 huruf dalam 6 kali coba.\n• Gunakan D-PAD untuk keyboard.\n• CENTER untuk pilih huruf.\n• HIJAU: Huruf dan posisi benar.\n• KUNING: Huruf benar, posisi salah.\n• ABU: Huruf tidak ada di kata.</string>
@@ -101,6 +194,10 @@
     <string name="game_lines98_instructions">• Gunakan D-PAD untuk kursor.\n• CENTER untuk pilih bola, lalu CENTER di kotak kosong.\n• Sejajarkan 5 bola warna sama (horizontal, vertikal, diagonal).\n• Tiap langkah tanpa pecah garis menambah 3 bola.\n• Penuh berarti game over.</string>
     <string name="game_solitaire_instructions">• Gunakan D-PAD untuk kursor.\n• CENTER untuk ambil kartu, CENTER untuk letak.\n• Urutkan kartu di atas dari As ke Raja.\n• Urutkan di bawah dengan warna selang-seling.\n• Tekan \'S\' untuk suara.</string>
     <string name="game_road_racer_instructions">• Hindari mobil.\n• Bertahan hidup selamanya!\n• Tekan CENTER untuk jeda.</string>
+    <string name="game_monkey_instructions">• Panjat sulur untuk melarikan diri.\n• Kumpulkan buah untuk skor.\n• Hindari laba-laba, kelapa, dan kumbang pemotong!\n• Gunakan D-PAD untuk memanjat dan melompat.</string>
+    <string name="game_retrodriver_instructions">• Kendarai motor synthwave Anda!\n• Belok Kiri/Kanan dan tahan ATAS untuk akselerasi.\n• Salip 20 pembalap untuk juara 1.\n• Lewati garis finis untuk menyelesaikan balapan!</string>
+    <string name="game_frenzy_instructions">• Berenang di laut dengan D-PAD.\n• Makan ikan yang lebih kecil untuk tumbuh.\n• Hindari dimakan predator yang lebih besar!\n• Makan 30 ikan untuk memenangkan level.</string>
+    <string name="game_fruit_instructions">• Buah dilempar ke udara.\n• Gerakkan pedang bercahaya dengan D-PAD untuk memotongnya.\n• Hindari bom dengan segala cara!\n• Potong buah sebanyak mungkin.</string>
     <string name="game_hangman_instructions">• Pilih huruf untuk tebak kata.\n• Kamu punya 6 kesempatan.\n• Tekan CENTER untuk pilih.</string>
     <string name="select_game_hint">GUNAKAN ◄ ► UNTUK MEMILIH • TEKAN [OK] UNTUK BERMAIN</string>
     <string name="settings">Pengaturan</string>
@@ -149,7 +246,45 @@
     <string name="next_stage_hint">Tekan Center untuk Tahap Berikutnya</string>
     <string name="continue_hint">Tekan Center untuk Lanjut</string>
     <string name="finish_hint">Tekan Center untuk Selesai</string>
+    <string name="tictactoe_size_hint">Tekan ATAS/BAWAH untuk ukuran papan (3x3, 4x4, 5x5) atau MENU untuk Opsi</string>
+    <string name="sokoban_restart_hint">Tekan R untuk memulai ulang</string>
+    <string name="sudoku_controls_hint">D-PAD: Gerak/Angka | TENGAH: Ganti | MENU: Level</string>
     <string name="total_wins_label">Total Kemenangan</string>
+    <string name="mines_label">RANJAU: </string>
+    <string name="flags_label">BENDERA: </string>
+    <string name="high_score_prefix">TERBAIK: </string>
+    <string name="cpu_wins_label">KOMPUTER MENANG!</string>
+    <string name="your_turn_label">Giliran Anda</string>
+    <string name="watch_label">PERHATIKAN...</string>
+    <string name="grid_mastered_label">PAPAN DIKUASAI!</string>
+    <string name="puzzle_solved_label">TEKA-TEKI TERSELESAIKAN!</string>
+    <string name="picture_restored_label">GAMBAR PULIH!</string>
+    <string name="crashed_label">TABRAKAN!</string>
+    <string name="score_prefix">SKOR: </string>
+    <string name="high_score_label">SKOR TERTINGGI</string>
+    <string name="wrong_label">SALAH!</string>
+    <string name="answer_was_label">Kata yang benar adalah: </string>
+    <string name="finish_label">FINIS</string>
+    <string name="continue_label">LANJUTKAN</string>
+    <string name="next_stage_label">TAHAP BERIKUTNYA</string>
+    <string name="out_of_tries">KESEMPATAN HABIS!</string>
+    <string name="cpu_thinking_label">Komputer sedang berpikir...</string>
+    <string name="no_moves_label">Tidak ada langkah tersisa</string>
+    <string name="victory_label">MENANG!</string>
+    <string name="draw_label">SERI!</string>
+    <string name="hit_wall_label">MENABRAK DINDING!</string>
+    <string name="bit_self_label">MENGGIGIT DIRI SENDIRI!</string>
+    <string name="cpu_starting_label">Komputer jalan pertama di ronde berikutnya</string>
+    <string name="jump_again_label">LOMPAT LAGI</string>
+    <string name="draw_status">SERI</string>
+    <string name="cat_animals">HEWAN</string>
+    <string name="cat_fruits">BUAH</string>
+    <string name="cat_countries">NEGARA</string>
+    <string name="cat_sports">OLAHRAGA</string>
+    <string name="cat_flowers">BUNGA</string>
+    <string name="cat_vehicles">KENDARAAN</string>
+    <string name="cat_games">PERMAINAN</string>
+    <string name="cat_foods">MAKANAN</string>
     <string name="rating_title">Suka Dpad Arcade?</string>
     <string name="rating_content">Beri kami 5 bintang di Play Store, atau bagikan saran Anda untuk game lain yang ingin Anda mainkan!</string>
     <string name="rate_now">BERI 5 BINTANG</string>
@@ -168,11 +303,12 @@
     <string name="trex_pirate">T-Rex Bajak Laut</string>
     <string name="trex_chef">T-Rex Koki</string>
     <string name="trex_astronaut">T-Rex Astronaut</string>
+    <string name="trex_ninja">Ninja T-Rex</string>
     <string name="trex_dragon">Dino Naga</string>
     <string name="trex_zombie">Dino Zombi</string>
     <string name="trex_robot">Dino Robot</string>
     <string name="trex_king">Dino Raja</string>
-
+    <string name="trex_character_label">Karakter</string>
     <string name="trex_select_character">PILIH KARAKTER</string>
     <string name="trex_strong_prefix">KELEBIHAN: </string>
     <string name="trex_weak_prefix">KEKURANGAN: </string>
@@ -194,6 +330,20 @@
     <string name="trex_sunny">CERAH</string>
     <string name="trex_rainy">HUJAN</string>
     <string name="trex_snowy">BERSALJU</string>
+    <string name="trex_desc_char_random">Setiap lari, Dino kejutan!</string>
+    <string name="trex_desc_char_specific">Gunakan Dino yang dipilih di lobi.</string>
+    <string name="trex_desc_time_random">Siklus Siang atau Malam.</string>
+    <string name="trex_desc_time_day">Langit siang yang cerah.</string>
+    <string name="trex_desc_time_night">Malam berbintang yang gelap.</string>
+    <string name="trex_desc_season_random">Berputar melewati semua musim.</string>
+    <string name="trex_desc_season_spring">Tanaman hijau dan rumput segar.</string>
+    <string name="trex_desc_season_summer">Ladang terang dan matahari.</string>
+    <string name="trex_desc_season_autumn">Daun berguguran dan tanah berkabut.</string>
+    <string name="trex_desc_season_winter">Medan bersalju dan embun beku.</string>
+    <string name="trex_desc_weather_random">Perubahan cuaca dinamis.</string>
+    <string name="trex_desc_weather_sunny">Cuaca cerah yang sempurna.</string>
+    <string name="trex_desc_weather_rainy">Hujan dan awan gelap.</string>
+    <string name="trex_desc_weather_snowy">Hujan salju yang indah.</string>
     <string name="trex_point_bonus_score">Skor Bonus</string>
     <string name="trex_point_large_hitbox">Hitbox Besar</string>
     <string name="trex_point_double_jump">Lompatan Ganda</string>
@@ -223,24 +373,6 @@
     <string name="trex_point_no_momentum">Tanpa Momentum</string>
     <string name="trex_point_royal_bonus">Bonus Kerajaan</string>
     <string name="trex_point_visible_target">Target Terlihat</string>
-    <string name="trex_ninja">Ninja T-Rex</string>
-    <string name="trex_character_label">Karakter</string>
-
-    <string name="trex_desc_char_random">Setiap lari, Dino kejutan!</string>
-    <string name="trex_desc_char_specific">Gunakan Dino yang dipilih di lobi.</string>
-    <string name="trex_desc_time_random">Siklus Siang atau Malam.</string>
-    <string name="trex_desc_time_day">Langit siang yang cerah.</string>
-    <string name="trex_desc_time_night">Malam berbintang yang gelap.</string>
-    <string name="trex_desc_season_random">Berputar melewati semua musim.</string>
-    <string name="trex_desc_season_spring">Tanaman hijau dan rumput segar.</string>
-    <string name="trex_desc_season_summer">Ladang terang dan matahari.</string>
-    <string name="trex_desc_season_autumn">Daun berguguran dan tanah berkabut.</string>
-    <string name="trex_desc_season_winter">Medan bersalju dan embun beku.</string>
-    <string name="trex_desc_weather_random">Perubahan cuaca dinamis.</string>
-    <string name="trex_desc_weather_sunny">Cuaca cerah yang sempurna.</string>
-    <string name="trex_desc_weather_rainy">Hujan dan awan gelap.</string>
-    <string name="trex_desc_weather_snowy">Hujan salju yang indah.</string>
-
     <string-array name="win_generic">
         <item>MENANG!</item>
         <item>KERJA BAGUS!</item>
@@ -253,7 +385,6 @@
         <item>DAHSYAT!</item>
         <item>Bagus Sekali!</item>
     </string-array>
-
     <string-array name="win_highscore">
         <item>REKOR BARU!</item>
         <item>TAK TERBENDUNG!</item>
@@ -261,178 +392,165 @@
         <item>SANGAT DEWA!</item>
         <item>SKOR TINGGI!</item>
     </string-array>
-
     <string-array name="win_minesweeper">
         <item>AREA BERSIH!</item>
         <item>MASTER RANJAU!</item>
         <item>JALAN AMAN!</item>
         <item>AHLI JINAK!</item>
     </string-array>
-
     <string-array name="win_sudoku">
         <item>PAPAN SELESAI!</item>
         <item>RAJA LOGIKA!</item>
         <item>SUDOKU TUNTAS!</item>
         <item>OTAK JENIUS!</item>
     </string-array>
-
     <string-array name="win_tictactoe">
         <item>KALAHKAN LAWAN!</item>
         <item>3 SEJAJAR!</item>
         <item>MENANG STRATEGI!</item>
         <item>TAK TERKALAHKAN!</item>
     </string-array>
-
     <string-array name="win_4096">
         <item>AHLI HITUNG!</item>
         <item>4096 TERCAPAI!</item>
         <item>PENGHANCUR ANGKA!</item>
         <item>KOTAK TERAKHIR!</item>
     </string-array>
-
     <string-array name="win_memory">
         <item>INGATAN KUAT!</item>
         <item>MASTER COCOK!</item>
         <item>OTAK TAJAM!</item>
         <item>INGAT SEMUA!</item>
     </string-array>
-
     <string-array name="win_hangman">
         <item>KATA TERSELAMAT!</item>
         <item>AHLI KATA!</item>
         <item>SELAMAT!</item>
         <item>RAJA KAMUS!</item>
     </string-array>
-
     <string-array name="win_brick_break">
         <item>LEVEL BERSIH!</item>
         <item>PENGHANCUR BATA!</item>
         <item>PEMBOBOL DINDING!</item>
         <item>PRO PAPAN!</item>
     </string-array>
-
     <string-array name="win_word_quest">
         <item>KATA KETEMU!</item>
         <item>AHLI EJA!</item>
         <item>PAHLAWAN KAMUS!</item>
         <item>MISI SELESAI!</item>
     </string-array>
-
     <string-array name="win_solitaire">
         <item>KARTU BERSIH!</item>
         <item>AS MENANG!</item>
         <item>WARNA LENGKAP!</item>
         <item>RAJA KARTU!</item>
     </string-array>
-
     <string-array name="win_sokoban">
         <item>PAHLAWAN GUDANG!</item>
         <item>PENDORONG PRO!</item>
         <item>TARGET TERCAPAI!</item>
         <item>SOKO-MASTER!</item>
     </string-array>
-
     <string-array name="win_checkers">
         <item>KOMPUTER KALAH!</item>
         <item>RAJA PAPAN!</item>
         <item>GRANDMASTER!</item>
         <item>MASTER STRATEGI!</item>
     </string-array>
-
     <string-array name="win_slide_puzzle">
         <item>GAMBAR UTUH!</item>
         <item>PUZEL TUNTAS!</item>
         <item>COCOK SEKALI!</item>
         <item>MASTER GESER!</item>
     </string-array>
-
     <string-array name="win_dungeon">
         <item>DUNGEON BEBAS!</item>
         <item>PENJELAJAH DEWA!</item>
         <item>LANTAI BERSIH!</item>
         <item>HARTA KETEMU!</item>
     </string-array>
-
     <string-array name="win_tanks">
         <item>MARKAS AMAN!</item>
         <item>MUSUH HABIS!</item>
         <item>KOMANDAN TANK!</item>
         <item>PAHLAWAN PERANG!</item>
     </string-array>
-
     <string-array name="win_mental_math">
         <item>JENIUS MATEMATIKA!</item>
         <item>KEKUATAN OTAK!</item>
         <item>RAJA HITUNG!</item>
         <item>MASTER ANGKA!</item>
     </string-array>
-
     <string-array name="win_froggy">
         <item>SAMPAI TUJUAN!</item>
         <item>PENYEBERANG AMAN!</item>
         <item>PAHLAWAN KODOK!</item>
         <item>MASTER SUNGAI!</item>
     </string-array>
-    <string name="starfighter_ship_label">Pilih Pesawat</string>
-    <string name="starfighter_ship_balanced">Interceptor</string>
-    <string name="starfighter_ship_balanced_desc">Kecepatan dan darah seimbang.</string>
-    <string name="starfighter_ship_fast">Swift Shadow</string>
-    <string name="starfighter_ship_fast_desc">Sangat cepat, tapi rapuh (1 Nyawa).</string>
-    <string name="starfighter_ship_tank">Dreadnought</string>
-    <string name="starfighter_ship_tank_desc">Zirah tebal (5 Nyawa), tapi gerak lambat.</string>
-    <string name="starfighter_ship_solar">Solar Flare</string>
-    <string name="starfighter_ship_solar_desc">Senjata ganda di awal, tapi rapuh (1 Nyawa).</string>
-    <string name="starfighter_ship_phoenix">Phoenix</string>
-    <string name="starfighter_ship_phoenix_desc">Kecepatan seimbang dengan perisai hidup kembali otomatis satu kali.</string>
-    <string name="syobon_settings_title">PENGATURAN MEOWIO</string>
-    <string name="syobon_character_label">Karakter</string>
-    <string name="syobon_char_classic">Syobon Klasik</string>
-    <string name="syobon_char_gold">Neko Emas</string>
-    <string name="syobon_char_shadow">Shadow Nya</string>
-    <string name="syobon_lives_label">Jenis Nyawa</string>
-    <string name="syobon_lives_3">3 NYAWA</string>
-    <string name="syobon_lives_1">1 NYAWA</string>
-    <string name="syobon_lives_inf">TAK TERBATAS (Bercanda)</string>
-    <string name="syobon_lives_desc">Pilih tingkat toleransi kamu pada jebakan.</string>
-    <string name="syobon_instructions">• D-PAD untuk gerak dan lompat.\n• Waspada jebakan tersembunyi!\n• Bata bisa pecah atau jatuh.\n• Sentuh tiang bendera untuk menang.</string>
-    <string name="syobon_difficulty_desc">Berapa banyak jebakan yang aktif.</string>
+    <string name="starfighter_ship_label">Model Pesawat</string>
+    <string name="starfighter_ship_balanced">STRIKER (Seimbang)</string>
+    <string name="starfighter_ship_balanced_desc">Pesawat tempur antariksa standar.</string>
+    <string name="starfighter_ship_fast">INTERCEPTOR (Cepat &amp; Lincah)</string>
+    <string name="starfighter_ship_fast_desc">Kecepatan tinggi, baja lebih ringan.</string>
+    <string name="starfighter_ship_tank">DREADNOUGHT (Lapisan Baja Tebal)</string>
+    <string name="starfighter_ship_tank_desc">Baja maksimal, kecepatan lebih lambat.</string>
+    <string name="starfighter_ship_solar">SOLARIS (Senjata Energi Tinggi)</string>
+    <string name="starfighter_ship_solar_desc">Kerusakan laser yang ditingkatkan.</string>
+    <string name="starfighter_ship_phoenix">PHOENIX (Regenerasi Perisai)</string>
+    <string name="starfighter_ship_phoenix_desc">Memulihkan perisai seiring waktu.</string>
+    <string name="syobon_settings_title">PENGATURAN KUCING MEOWIO</string>
+    <string name="syobon_character_label">Corak Kucing</string>
+    <string name="syobon_char_classic">PUTIH KLASIK (Neko)</string>
+    <string name="syobon_char_gold">TABBY EMAS (Beruntung)</string>
+    <string name="syobon_char_shadow">PANTER BAYANGAN (Ninja)</string>
+    <string name="syobon_lives_label">Nyawa Awal</string>
+    <string name="syobon_lives_3">3 NYAWA (Klasik)</string>
+    <string name="syobon_lives_1">1 NYAWA (Sangat Sulit)</string>
+    <string name="syobon_lives_inf">NYAWA TAK TERBATAS (Latihan)</string>
+    <string name="syobon_lives_desc">Jumlah nyawa sebelum game over.</string>
+    <string name="syobon_instructions">• Bergerak dengan Kiri/Kanan.\n• Tekan ATAS atau TENGAH untuk melompat.\n• Lompat di bawah balok untuk memukulnya.\n• Capai tiang bendera untuk menang!\n• HATI-HATI TERHADAP JEBAKAN!</string>
+    <string name="syobon_difficulty_desc">Pilih penampilan pahlawan kucing Anda.</string>
     <string-array name="win_syobon">
-        <item>KAMU BERTAHAN!</item>
-        <item>MASTER JEBAKAN!</item>
-        <item>KUCING LEGENDA!</item>
-        <item>TAK TERBENDUNG!</item>
+        <item>MASTER MEOWIO!</item>
+        <item>PENAKLUK JEBAKAN!</item>
+        <item>JUARA TIANG BENDERA!</item>
+        <item>PAHLAWAN KUCING!</item>
     </string-array>
     <string name="quit_game_title">Keluar dari Game</string>
     <string name="quit_game_confirm">Apakah Anda yakin ingin keluar dari game?</string>
     <string name="yes">Ya</string>
     <string name="no">Tidak</string>
-    <string name="choose_hero" translatable="true">PILIH PEMAINMU</string>
-    <string name="create_hero" translatable="true">BUAT PEMAIN BARU</string>
-    <string name="enter_hero_name" translatable="true">MASUKKAN NAMA PEMAIN</string>
-    <string name="add_profile" translatable="true">TAMBAH PEMAIN</string>
-    <string name="switch_profile" translatable="true">GANTI PEMAIN</string>
-    <string name="profile_selection_hint" translatable="true">GUNAKAN ◄ ► UNTUK MEMILIH • TEKAN [OK] UNTUK PILIH</string>
-    <string name="please_enter_name" translatable="true">Harap masukkan nama</string>
-    <string name="enter_pin" translatable="true">MASUKKAN PIN 4 ANGKA</string>
-    <string name="setup_pin" translatable="true">SETEL KUNCI PEMAIN (PIN)</string>
-    <string name="wrong_pin" translatable="true">PIN salah. Coba lagi.</string>
-    <string name="manage_profiles" translatable="true">KELOLA PEMAIN</string>
-    <string name="edit_profile" translatable="true">EDIT PEMAIN</string>
-    <string name="delete_profile" translatable="true">HAPUS PEMAIN</string>
-    <string name="confirm_delete_profile" translatable="true">Yakin ingin menghapus pemain ini? Semua skor akan hilang.</string>
-    <string name="leave_blank_no_pin" translatable="true">Kosongkan jika tanpa kunci</string>
-    <string name="hall_of_fame" translatable="true">HALL OF FAME</string>
-    <string name="no_records" translatable="true">BELUM ADA REKOR</string>
-    <string name="save" translatable="true">SIMPAN</string>
-    <string name="choose_avatar" translatable="true">PILIH AVATAR</string>
-    <string name="choose_color" translatable="true">PILIH WARNA</string>
-    <string name="security_pin_label" translatable="true">PIN KEAMANAN (OPSIONAL)</string>
-    <string name="pin_digits_hint" translatable="true">PIN harus 4 angka</string>
-    <string name="rank_1st" translatable="true">Pertama</string>
-    <string name="rank_2nd" translatable="true">Kedua</string>
-    <string name="rank_3rd" translatable="true">Ketiga</string>
-    <string name="placeholder_name" translatable="false">---</string>
-    <string name="placeholder_score" translatable="false">0</string>
+    <string name="choose_hero">PILIH PEMAINMU</string>
+    <string name="create_hero">BUAT PEMAIN BARU</string>
+    <string name="enter_hero_name">MASUKKAN NAMA PEMAIN</string>
+    <string name="add_profile">TAMBAH PEMAIN</string>
+    <string name="switch_profile">GANTI PEMAIN</string>
+    <string name="profile_selection_hint">GUNAKAN ◄ ► UNTUK MEMILIH • TEKAN [OK] UNTUK PILIH</string>
+    <string name="please_enter_name">Harap masukkan nama</string>
+    <string name="enter_pin">MASUKKAN PIN 4 ANGKA</string>
+    <string name="setup_pin">SETEL KUNCI PEMAIN (PIN)</string>
+    <string name="wrong_pin">PIN salah. Coba lagi.</string>
+    <string name="manage_profiles">KELOLA PEMAIN</string>
+    <string name="edit_profile">EDIT PEMAIN</string>
+    <string name="delete_profile">HAPUS PEMAIN</string>
+    <string name="confirm_delete_profile">Yakin ingin menghapus pemain ini? Semua skor akan hilang.</string>
+    <string name="leave_blank_no_pin">Kosongkan jika tanpa kunci</string>
+    <string name="hall_of_fame">HALL OF FAME</string>
+    <string name="no_records">BELUM ADA REKOR</string>
+    <string name="save">SIMPAN</string>
+    <string name="choose_avatar">PILIH AVATAR</string>
+    <string name="choose_color">PILIH WARNA</string>
+    <string name="security_pin_label">PIN KEAMANAN (OPSIONAL)</string>
+    <string name="pin_digits_hint">PIN harus 4 angka</string>
+    <string name="protected_hero">PROTECTED HERO</string>
+    <string name="guest_hero_name">GUEST HERO</string>
+    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
+    <string name="rank_1st">Pertama</string>
+    <string name="rank_2nd">Kedua</string>
+    <string name="rank_3rd">Ketiga</string>
+    <string name="placeholder_name">---</string>
+    <string name="placeholder_score">0</string>
     <string name="monkey_spring">SPRING</string>
     <string name="monkey_summer">SUMMER</string>
     <string name="monkey_autumn">AUTUMN</string>
@@ -467,11 +585,11 @@
     <string name="monkey_beetle_warning">⚠️ BEETLE</string>
     <string name="monkey_char_gibbon">GOLDEN GIBBON</string>
     <string name="monkey_char_climber">TARZAN CLIMBER</string>
+    <string name="monkey_char_spider">SPIDER MONKEY</string>
     <string name="monkey_char_chimp">PUNK CHIMP</string>
-    <string name="retro_driver_final_lap">FINAL LAP!</string>
-    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
-    <string name="retro_driver_go">GO!</string>
-    <string name="retro_driver_finish">FINISH!</string>
+    <string name="monkey_char_default">MONKEY</string>
+    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
+    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
     <string name="frenzy_death_pufferfish">MOUTH HURT BY INFLATED PUFFERFISH!</string>
     <string name="frenzy_death_eel">SHOCKED BY ELECTRIC EEL (STUNNED)!</string>
     <string name="frenzy_death_lionfish">POISONED BY LIONFISH (STUNNED)!</string>
@@ -479,7 +597,6 @@
     <string name="frenzy_death_too_large">CANNOT EAT: %1$s IS TOO LARGE!</string>
     <string name="frenzy_death_eaten">EATEN BY %1$s!</string>
     <string name="frenzy_death_mine">BLOWN UP BY UNDERSEA MINE!</string>
-    <string name="syobon_surprise">SURPRISE!</string>
     <string name="flappy_death_ceiling">Flew too high and hit the ceiling!</string>
     <string name="flappy_death_ground">Crashed into the grassy ground!</string>
     <string name="flappy_death_pipe">Crashed into a green pipe!</string>
@@ -492,16 +609,92 @@
     <string name="flappy_hint_fly_through">FLY THROUGH</string>
     <string name="flappy_hint_avoid_bat">AVOID BAT</string>
     <string name="flappy_hint_fly_under">FLY UNDER</string>
-    <string name="protected_hero">PROTECTED HERO</string>
-    <string name="guest_hero_name">GUEST HERO</string>
-    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
-    <string name="monkey_char_default">MONKEY</string>
-    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
-    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
-    <string name="monkey_char_spider">SPIDER MONKEY</string>
+    <string name="retro_driver_final_lap">FINAL LAP!</string>
+    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
+    <string name="retro_driver_go">GO!</string>
+    <string name="retro_driver_finish">FINISH!</string>
+    <string name="syobon_surprise">SURPRISE!</string>
     <string name="ad_screensaver_message">To keep these games free, we show ads during breaks.\nThank you for your support!</string>
     <string name="ad_screensaver_hint">Press any key to resume instantly</string>
     <string name="ad_warning_prefix">Full-screen ad starting in %1$d...</string>
     <string name="ad_label">AD</string>
     <string name="advertisement_label">ADVERTISEMENT</string>
+    <string name="monkey_settings_title">PENGATURAN PANJAT GIBBON</string>
+    <string name="monkey_character_label">Karakter</string>
+    <string name="monkey_character_desc">Pilih jenis primata pemanjat Anda.</string>
+    <string name="monkey_season_label">Tema Musim</string>
+    <string name="monkey_season_desc">Pilih cuaca dan dedaunan hutan.</string>
+    <string name="frenzy_settings_title">PENGATURAN IKAN RAKUS</string>
+    <string name="frenzy_difficulty_label">Tingkat Kesulitan</string>
+    <string name="frenzy_difficulty_easy">MUDAH (Predator lambat)</string>
+    <string name="frenzy_difficulty_normal">NORMAL (Seimbang)</string>
+    <string name="frenzy_difficulty_hard">SULIT (Hiu agresif)</string>
+    <string name="frenzy_difficulty_desc">Kecepatan dan kepadatan predator.</string>
+    <string name="frenzy_starting_size_label">Ukuran Awal</string>
+    <string name="frenzy_starting_size_guppy">GUPPY (Terkecil)</string>
+    <string name="frenzy_starting_size_angelfish">IKAN MANFISH (Sedang)</string>
+    <string name="frenzy_starting_size_desc">Tahap pertumbuhan awal ikan.</string>
+    <string name="retrodriver_settings_title">PENGATURAN PEMBALAP RETRO</string>
+    <string name="retrodriver_vehicle_label">Kendaraan</string>
+    <string name="retrodriver_vehicle_desc">Pilih model superbike Anda.</string>
+    <string name="retrodriver_theme_label">Lingkungan Lintasan</string>
+    <string name="retrodriver_theme_desc">Pilih pemandangan sirkuit balap.</string>
+    <string name="retrodriver_theme_neon">KOTA SIBER (Neon)</string>
+    <string name="retrodriver_theme_desert">SENJA NGAI (Senja)</string>
+    <string name="retrodriver_theme_cyber">KISI SYNTHWAVE (Retro)</string>
+    <string name="retrodriver_theme_snow">JALUR ALPIN (Salju)</string>
+    <string-array name="win_monkey">
+        <item>MASTER SULUR!</item>
+        <item>PEMANDJAT PUNCAK!</item>
+        <item>RAJA HUTAN!</item>
+        <item>KANOPI DITAKLUKKAN!</item>
+    </string-array>
+    <string-array name="win_frenzy">
+        <item>PENGUASA SAMUDRA!</item>
+        <item>PREDATOR SUPER!</item>
+        <item>RAJA TERUMBU KARANG!</item>
+        <item>MASTER PEMANGSA!</item>
+    </string-array>
+    <string-array name="win_retrodriver">
+        <item>MONSTER KECEPATAN!</item>
+        <item>JUARA LINTASAN!</item>
+        <item>PEMBALAP SYNTH!</item>
+        <item>KEMENANGAN PODIUM!</item>
+    </string-array>
+    <string-array name="win_tetris">
+        <item>MASTER TETRIS!</item>
+        <item>AHLI BERSIH BARIS!</item>
+        <item>SUSUNAN SEMPURNA!</item>
+        <item>PENGHANCUR BALOK!</item>
+    </string-array>
+    <string-array name="win_snake">
+        <item>MASTER ULAR!</item>
+        <item>LEGENDA PITON!</item>
+        <item>JUARA PESTA!</item>
+        <item>RAJA MELATA!</item>
+    </string-array>
+    <string-array name="win_flappy">
+        <item>LEGENDA ANGKASA!</item>
+        <item>PAHLAWAN SAYAP!</item>
+        <item>MASTER BULU!</item>
+        <item>PENERBANG TINGGI!</item>
+    </string-array>
+    <string-array name="win_lines98">
+        <item>MASTER GARIS!</item>
+        <item>HARMONI WARNA!</item>
+        <item>PENYIHIR BOLA!</item>
+        <item>GENIUS PAPAN!</item>
+    </string-array>
+    <string-array name="win_spinball">
+        <item>PENYIHIR PUTARAN!</item>
+        <item>MASTER ORBIT!</item>
+        <item>PRO PINBALL!</item>
+        <item>PENYINTAS LINGKARAN!</item>
+    </string-array>
+    <string-array name="win_simon">
+        <item>MASTER INGATAN!</item>
+        <item>SIMON BILANG: MENANG!</item>
+        <item>PRO POLA!</item>
+        <item>INGATAN CEMERLANG!</item>
+    </string-array>
 </resources>

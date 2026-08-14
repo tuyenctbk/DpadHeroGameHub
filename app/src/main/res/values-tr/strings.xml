@@ -2,6 +2,7 @@
     <string name="app_name">Dpad Arcade</string>
     <string name="app_name_full">Dpad Arcade: Retro Oyunlar</string>
     <string name="game_center">DPAD ARCADE</string>
+    <string name="snake">YILAN</string>
     <string name="snake_settings_title">YILAN AYARLARI</string>
     <string name="snake_level_1">SEVİYE 1: BAŞLANGIÇ</string>
     <string name="snake_level_2">SEVİYE 2: NORMAL</string>
@@ -10,7 +11,7 @@
     <string name="snake_level_2_desc">Duvarlar ölümcül. Normal hız.</string>
     <string name="snake_level_3_desc">Duvarlar ölümcül. Yüksek hız.</string>
     <string name="snake_level_label">Zorluk Seviyesi</string>
-    <string name="snake">YILAN</string>
+    <string name="minesweeper">MAYIN TARLASI</string>
     <string name="minesweeper_settings_title">MAYIN TARLASI AYARLARI</string>
     <string name="minesweeper_level_1">SEVİYE 1: BAŞLANGIÇ (10x10, 12 Mayın)</string>
     <string name="minesweeper_level_2">SEVİYE 2: NORMAL (16x16, 40 Mayın)</string>
@@ -40,12 +41,58 @@
     <string name="tictactoe_size_4_desc">Kazanmak için yan yana 4 tane.</string>
     <string name="tictactoe_size_5_desc">Kazanmak için yan yana 5 tane.</string>
     <string name="tictactoe_size_label">Tahta Boyutu</string>
-    <string name="minesweeper">MAYIN TARLASI</string>
+    <string name="game_4096_settings_title">4096 AYARLARI</string>
+    <string name="game_4096_size_4">IZGARA: 4x4 (Klasik)</string>
+    <string name="game_4096_size_5">IZGARA: 5x5 (Geniş)</string>
+    <string name="game_4096_size_desc">Mücadele alanınızı seçin.</string>
+    <string name="mental_math_settings_title">MATEMATİK AYARLARI</string>
+    <string name="mental_math_mode_easy">MOD: KOLAY (+, -)</string>
+    <string name="mental_math_mode_normal">MOD: NORMAL (+, -, *)</string>
+    <string name="mental_math_mode_hard">MOD: ZOR (+, -, *, /)</string>
+    <string name="mental_math_mode_desc">İşlem türlerini seçin.</string>
+    <string name="tetris_settings_title">TETRİS AYARLARI</string>
+    <string name="tetris_start_level">Başlangıç Seviyesi</string>
+    <string name="tetris_level_desc">Yüksek seviye daha hızlı başlar.</string>
+    <string name="checkers_settings_title">DAMA AYARLARI</string>
+    <string name="checkers_difficulty_1">YZ: RASTGELE (Kolay)</string>
+    <string name="checkers_difficulty_2">YZ: STRATEJİK (Normal)</string>
+    <string name="checkers_difficulty_desc">Güçlü yapay zeka akıllı hamleler yapar.</string>
+    <string name="spinball_settings_title">SPINBALL AYARLARI</string>
+    <string name="spinball_difficulty_1">MOD: SAKİN (Yavaş)</string>
+    <string name="spinball_difficulty_2">MOD: HAREKETLİ (Normal)</string>
+    <string name="spinball_difficulty_3">MOD: KAOTİK (Hızlı)</string>
+    <string name="spinball_difficulty_desc">Hız zorluğu artırır.</string>
+    <string name="simon_says_settings_title">SIMON AYARLARI</string>
+    <string name="simon_says_speed_1">HIZ: RAHAT (Yavaş)</string>
+    <string name="simon_says_speed_2">HIZ: NORMAL (Orta)</string>
+    <string name="simon_says_speed_3">HIZ: ŞİMŞEK (Hızlı)</string>
+    <string name="simon_says_speed_desc">Dizi oynatma hızı.</string>
+    <string name="dungeon_escape_settings_title">ZİNDANDAN KAÇIŞ AYARLARI</string>
+    <string name="dungeon_escape_start_level">Başlangıç Katı</string>
+    <string name="dungeon_escape_level_desc">Başlanacak katı seçin.</string>
+    <string name="froggy_cross_settings_title">FROGGY CROSS AYARLARI</string>
+    <string name="froggy_cross_difficulty_1">ZORLUK: YAVAŞ (Sakin Trafik)</string>
+    <string name="froggy_cross_difficulty_2">ZORLUK: NORMAL (Standart)</string>
+    <string name="froggy_cross_difficulty_3">ZORLUK: YOĞUN SAAT (Hızlı Trafik)</string>
+    <string name="froggy_cross_difficulty_desc">Araç ve kütük hızları.</string>
     <string name="game_4096">4096</string>
     <string name="game_trex">T-REX RUN</string>
     <string name="game_brick_break">TUĞLA KIRMA</string>
     <string name="game_tictactoe">SOS OYUNU</string>
     <string name="game_checkers">DAMA</string>
+    <string name="sokoban_settings_title">SOKOBAN AYARLARI</string>
+    <string name="sokoban_start_level">Başlangıç Seviyesi</string>
+    <string name="sokoban_level_desc">Başlanacak seviyeyi seçin.</string>
+    <string name="battle_tanks_settings_title">TANK SAVAŞI AYARLARI</string>
+    <string name="battle_tanks_difficulty_1">ZORLUK: ACEMİ (Yavaş Tanklar)</string>
+    <string name="battle_tanks_difficulty_2">ZORLUK: KIDEMLİ (Standart)</string>
+    <string name="battle_tanks_difficulty_3">ZORLUK: GENERAL (Seri Atış)</string>
+    <string name="battle_tanks_difficulty_desc">Düşman hızı ve ateş gücü.</string>
+    <string name="starfighter_settings_title">STAR FIGHTER AYARLARI</string>
+    <string name="starfighter_difficulty_1">SEVİYE 1: ASKER (Kolay)</string>
+    <string name="starfighter_difficulty_2">SEVİYE 2: GAZİ (Normal)</string>
+    <string name="starfighter_difficulty_3">SEVİYE 3: AS PİLOT (Zor)</string>
+    <string name="starfighter_difficulty_desc">Düşman canı ve atış hızı.</string>
     <string name="game_sokoban">SOKOBAN</string>
     <string name="game_sudoku">SUDOKU</string>
     <string name="game_tetris">TETRIS</string>
@@ -54,11 +101,58 @@
     <string name="game_slide_puzzle">KAYDIRMALI BULMACA</string>
     <string name="game_mental_math">ZİHİNDEN MATEMATİK</string>
     <string name="game_froggy">FROGGY CROSS</string>
+    <string name="game_syobon">CAT MEOWIO</string>
     <string name="game_simon">SİMON DİYOR Kİ</string>
     <string name="game_tanks">TANK SAVAŞI</string>
+    <string name="word_quest_settings_title">WORD QUEST AYARLARI</string>
+    <string name="word_quest_category_all">KATEGORİ: TÜM KELİMELER</string>
+    <string name="word_quest_category_nature">KATEGORİ: DOĞA &amp; HAYVANLAR</string>
+    <string name="word_quest_category_tech">KATEGORİ: TEKNOLOJİ &amp; BİLİM</string>
+    <string name="word_quest_category_desc">Kelime bulmaca temasını seçin.</string>
+    <string name="road_racer_settings_title">ROAD RACER AYARLARI</string>
+    <string name="road_racer_density_label">Trafik Yoğunluğu</string>
+    <string name="road_racer_density_low">YOĞUNLUK: AZ (Kolay)</string>
+    <string name="road_racer_density_normal">YOĞUNLUK: ORTA (Normal)</string>
+    <string name="road_racer_density_high">YOĞUNLUK: ÇOK (Zor)</string>
+    <string name="road_racer_density_desc">Otoyoldaki araç miktarı.</string>
     <string name="game_word_quest">KELİME AVI</string>
     <string name="game_dungeon">ZİNDANDAN KAÇIŞ</string>
+    <string name="game_monkey">GIBBON ASCENT</string>
+    <string name="game_retrodriver">RETRO RACER</string>
+    <string name="game_frenzy">FRENZY FEEDING</string>
+    <string name="game_fruit">MEYVE KESİCİ</string>
+    <string name="flappy_hero_settings_title">FLAPPY HERO AYARLARI</string>
+    <string name="flappy_hero_level_1">SEVİYE 1: ÇAYIR (Geniş Borular)</string>
+    <string name="flappy_hero_level_2">SEVİYE 2: ORMAN (Hareketli Engeller)</string>
+    <string name="flappy_hero_level_3">SEVİYE 3: KANYON (Dar Boşluklar)</string>
+    <string name="flappy_hero_level_4">SEVİYE 4: GECE GÖĞÜ (Rüzgar Akımları)</string>
+    <string name="flappy_hero_level_5">SEVİYE 5: CEHENNEM (Kaos Modu)</string>
+    <string name="flappy_hero_level_1_desc">Alışmak için geniş aralıklar.</string>
+    <string name="flappy_hero_level_2_desc">Engeller dikey hareket eder.</string>
+    <string name="flappy_hero_level_3_desc">Daha dar geçiş aralıkları.</string>
+    <string name="flappy_hero_level_4_desc">Rüzgar düşüş hızını etkiler.</string>
+    <string name="flappy_hero_level_5_desc">Hızlı kaydırma ve en dar boşluklar.</string>
+    <string name="flappy_hero_char_label">Karakter</string>
+    <string name="flappy_char_classic">KLASİK KUŞ (Standart)</string>
+    <string name="flappy_char_classic_desc">Klasik fizik ve zıplama hissi.</string>
+    <string name="flappy_char_swift">HIZLI OK (Seri Kanat)</string>
+    <string name="flappy_char_swift_desc">Hızlı yükseliş, seri dokunuşlar.</string>
+    <string name="flappy_char_heavy">DEMİR KANAT (Hızlı Düşüş)</string>
+    <string name="flappy_char_heavy_desc">Yüksek yerçekimi, hızlı refleksler gerekir.</string>
+    <string name="flappy_char_floaty">HAFİF TÜY (Yumuşak Süzülüş)</string>
+    <string name="flappy_char_floaty_desc">Düşük yerçekimi, kolay kontrol.</string>
+    <string name="brick_break_settings_title">BRICK BREAK AYARLARI</string>
+    <string name="brick_break_paddle_label">Raket Boyutu</string>
+    <string name="brick_break_paddle_large">RAKET: GENİŞ (Kolay)</string>
+    <string name="brick_break_paddle_medium">RAKET: STANDART (Normal)</string>
+    <string name="brick_break_paddle_small">RAKET: DAR (Zor)</string>
+    <string name="brick_break_paddle_desc">Geniş raket topları daha kolay yakalar.</string>
     <string name="game_flappy">FLAPPY HERO</string>
+    <string name="lines98_settings_title">LINES 98 AYARLARI</string>
+    <string name="lines98_difficulty_easy">RENKLER: 5 RENK (Kolay)</string>
+    <string name="lines98_difficulty_normal">RENKLER: 7 RENK (Standart)</string>
+    <string name="lines98_difficulty_hard">RENKLER: 9 RENK (Uzman)</string>
+    <string name="lines98_difficulty_desc">Daha az renk eşleştirmeyi kolaylaştırır.</string>
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLİTAİRE</string>
     <string name="game_road_racer">YOL YARIŞÇISI</string>
@@ -91,6 +185,7 @@
     <string name="game_slide_puzzle_instructions">• Hareket için DPAD kullanın.\n• Kaydırmak için CENTER\'a basın.\n• Parçaları düzenleyip resmi tamamlayın.</string>
     <string name="game_mental_math_instructions">• İşlemi çözün.\n• DPAD ile cevabı seçin.\n• CENTER ile onaylayın.\n• Çabuk olun! Zaman daralıyor.</string>
     <string name="game_froggy_instructions">• Yolu ve nehri geçin.\n• Arabalardan kaçının.\n• Kütüklere zıplayın.\n• Hedefe ulaşın!</string>
+    <string name="game_syobon_instructions">• Sol/Sağ ile hareket edin.\n• Zıplamak için YUKARI veya ORTA tuşa basın.\n• Vurmak için blokların altına zıplayın.\n• Kazanmak için bayrak direğine ulaşın!\n• TUZAKLARA DİKKAT EDİN!</string>
     <string name="game_simon_instructions">• Renk sırasını izleyin.\n• D-PAD ile tekrar edin.\n• Sıra her turda uzar!</string>
     <string name="game_tanks_instructions">• Tankı D-PAD ile kontrol edin.\n• Otomatik ateş.\n• Düşman tanklarını yok edin.\n• Üssü koruyun.</string>
     <string name="game_word_quest_instructions">• 5 harfli kelimeyi 6 hakta bulun.\n• Klavye için D-PAD kullanın.\n• Harf seçmek için CENTER\'a basın.\n• YEŞİL: Harf ve yer doğru.</string>
@@ -99,6 +194,10 @@
     <string name="game_lines98_instructions">• İmleç için D-PAD kullanın.\n• Topu taşımak için CENTER\'a basın.\n• 5 veya daha fazla aynı renk topu dizin.\n• Ekran dolarsa oyun biter.</string>
     <string name="game_solitaire_instructions">• İmleç için D-PAD kullanın.\n• Kart seçmek/koymak için CENTER\'a basın.\n• A\'dan K\'ya serileri tamamlayın.</string>
     <string name="game_road_racer_instructions">• Trafikten kaçının.\n• Hayatta kalın!\n• Duraklatmak için CENTER\'a basın.</string>
+    <string name="game_monkey_instructions">• Kaçmak için sarmaşıklara tırmanın.\n• Puan için meyveleri toplayın.\n• Örümceklerden, hindistan cevizlerinden ve böceklerden kaçının!\n• Tırmanmak ve zıplamak için YÖN TUŞLARINI kullanın.</string>
+    <string name="game_retrodriver_instructions">• Synthwave süper motorunuzu sürün!\n• Sol/Sağ yönlendirin ve hızlanmak için YUKARI tuşunu basılı tutun.\n• 1. olmak için 20 rakibin tümünü geçin.\n• Yarışı tamamlamak için bitiş çizgisini geçin!</string>
+    <string name="game_frenzy_instructions">• Yön tuşlarıyla okyanusta yüzün.\n• Büyümek için sizden küçük balıkları yiyin.\n• Büyük yırtıcı balıklardan kaçının!\n• Seviyeyi kazanmak için 30 balık yiyin.</string>
+    <string name="game_fruit_instructions">• Meyveler havaya fırlatılır.\n• Meyveleri dilimlemek için parlayan kılıcı yön tuşlarıyla hareket ettirin.\n• Bombalardan kesinlikle uzak durun!\n• Olabildiğince çok meyve kesin.</string>
     <string name="game_hangman_instructions">• Harf seçerek kelimeyi bulun.\n• 6 hakkınız var.\n• Seçmek için CENTER\'a basın.</string>
     <string name="select_game_hint">GEZİNMEK İÇİN ◄ ► KULLANIN • OYNAMAK İÇİN [OK] BASIN</string>
     <string name="settings">Ayarlar</string>
@@ -147,7 +246,45 @@
     <string name="next_stage_hint">Sıradaki Etap için Center</string>
     <string name="continue_hint">Devam Etmek için Center</string>
     <string name="finish_hint">Bitirmek için Center</string>
+    <string name="tictactoe_size_hint">Tahta boyutunu değiştirmek için YUKARI/AŞAĞI (3x3, 4x4, 5x5) veya Seçenekler için MENU</string>
+    <string name="sokoban_restart_hint">Yeniden başlatmak için R tuşuna basın</string>
+    <string name="sudoku_controls_hint">YÖN: Hareket/Sayı | ORTA: Döngü | MENU: Seviye</string>
     <string name="total_wins_label">Toplam Galibiyet</string>
+    <string name="mines_label">MAYINLAR: </string>
+    <string name="flags_label">BAYRAKLAR: </string>
+    <string name="high_score_prefix">EN İYİ: </string>
+    <string name="cpu_wins_label">YAPAY ZEKA KAZANDI!</string>
+    <string name="your_turn_label">Sıra Sizde</string>
+    <string name="watch_label">İZLEYİN...</string>
+    <string name="grid_mastered_label">IZGARA TAMAMLANDI!</string>
+    <string name="puzzle_solved_label">BULMACA ÇÖZÜLDÜ!</string>
+    <string name="picture_restored_label">RESİM TAMAMLANDI!</string>
+    <string name="crashed_label">KAZA YAPTI!</string>
+    <string name="score_prefix">SKOR: </string>
+    <string name="high_score_label">EN YÜKSEK SKOR</string>
+    <string name="wrong_label">YANLIŞ!</string>
+    <string name="answer_was_label">Doğru kelime: </string>
+    <string name="finish_label">BİTİŞ</string>
+    <string name="continue_label">DEVAM ET</string>
+    <string name="next_stage_label">SONRAKİ AŞAMA</string>
+    <string name="out_of_tries">HAKKINIZ BİTTİ!</string>
+    <string name="cpu_thinking_label">Yapay zeka düşünüyor...</string>
+    <string name="no_moves_label">Hamle Kalmadı</string>
+    <string name="victory_label">ZAFER!</string>
+    <string name="draw_label">BERABERE!</string>
+    <string name="hit_wall_label">DUVARA ÇARPTI!</string>
+    <string name="bit_self_label">KENDİNİ ISIRDI!</string>
+    <string name="cpu_starting_label">Sonraki maça yapay zeka başlar</string>
+    <string name="jump_again_label">TEKRAR ZIPLA</string>
+    <string name="draw_status">BERABERLİK</string>
+    <string name="cat_animals">HAYVANLAR</string>
+    <string name="cat_fruits">MEYVELER</string>
+    <string name="cat_countries">ÜLKELER</string>
+    <string name="cat_sports">SPORLAR</string>
+    <string name="cat_flowers">ÇİÇEKLER</string>
+    <string name="cat_vehicles">ARAÇLAR</string>
+    <string name="cat_games">OYUNLAR</string>
+    <string name="cat_foods">YEMEKLER</string>
     <string name="rating_title">Dpad Arcade\'den memnun musunuz?</string>
     <string name="rating_content">Lütfen Play Store\'da bize 5 yıldız verin veya oynamak istediğiniz oyunlar için önerilerinizi paylaşın!</string>
     <string name="rate_now">5 YILDIZ VER</string>
@@ -156,139 +293,6 @@
     <string name="update_title">Yeni Güncelleme Mevcut!</string>
     <string name="update_content">Dpad Arcade: Retro Game Hub\'ın yeni bir sürümü mevcut. En yeni oyunları, özellikleri ve kararlılık düzeltmelerini almak için şimdi güncelleyin.</string>
     <string name="update_now">Şimdi Güncelle</string>
-
-    <string-array name="win_generic">
-        <item>ZAFER!</item>
-        <item>TEBRİKLER!</item>
-        <item>İNANILMAZ!</item>
-        <item>HARİKA!</item>
-        <item>MUHTEŞEM!</item>
-        <item>SÜPERSİN!</item>
-        <item>MÜKEMMEL!</item>
-        <item>FANTASTİK!</item>
-        <item>HARİKULADE!</item>
-        <item>İYİ İŞ!</item>
-    </string-array>
-
-    <string-array name="win_highscore">
-        <item>YENİ REKOR!</item>
-        <item>DURDURULAMAZ!</item>
-        <item>EN İYİSİ!</item>
-        <item>EFSANEVİ!</item>
-        <item>REKOR!</item>
-    </string-array>
-
-    <string-array name="win_minesweeper">
-        <item>ALAN TEMİZLENDİ!</item>
-        <item>MAYIN USTASI!</item>
-        <item>GÜVENLİ GEÇİŞ!</item>
-        <item>UZMAN TARAYICI!</item>
-    </string-array>
-
-    <string-array name="win_sudoku">
-        <item>IZGARA TAMAMLANDI!</item>
-        <item>MANTIK KRALI!</item>
-        <item>BULMACA ÇÖZÜLDÜ!</item>
-        <item>KESKİN ZEKA!</item>
-    </string-array>
-
-    <string-array name="win_tictactoe">
-        <item>AKIL OYUNU!</item>
-        <item>3\'LÜ SIRA!</item>
-        <item>STRATEJİK ZAFER!</item>
-        <item>RAKİPSİZ!</item>
-    </string-array>
-
-    <string-array name="win_4096">
-        <item>MATEMATİK DAHİSİ!</item>
-        <item>4096\'YA ULAŞILDI!</item>
-        <item>SAYI CANAVARI!</item>
-        <item>FİNAL KAROSU!</item>
-    </string-array>
-
-    <string-array name="win_memory">
-        <item>KUSURSUZ HAFIZA!</item>
-        <item>EŞLEŞTİRME USTASI!</item>
-        <item>KESKİN ZİHİN!</item>
-        <item>HER ŞEY AKLIMDA!</item>
-    </string-array>
-
-    <string-array name="win_hangman">
-        <item>KELİME KURTARILDI!</item>
-        <item>KELİME USTASI!</item>
-        <item>KURTULUŞ!</item>
-        <item>SÖZLÜK KRALI!</item>
-    </string-array>
-
-    <string-array name="win_brick_break">
-        <item>BÖLÜM TAMAM!</item>
-        <item>TUĞLA KIRICI!</item>
-        <item>DUVAR YIKICI!</item>
-        <item>RAKET PROFESÖRÜ!</item>
-    </string-array>
-
-    <string-array name="win_word_quest">
-        <item>KELİME BULUNDU!</item>
-        <item>HECELEME USTASI!</item>
-        <item>SÖZLÜK KAHRAMANI!</item>
-        <item>GÖREV TAMAMLANDI!</item>
-    </string-array>
-
-    <string-array name="win_solitaire">
-        <item>DESTE BİTTİ!</item>
-        <item>AS KAZANDIRDI!</item>
-        <item>SERİ TAMAM!</item>
-        <item>KART KRALI!</item>
-    </string-array>
-
-    <string-array name="win_sokoban">
-        <item>DEPO KAHRAMANI!</item>
-        <item>KUTU İTİCİ PRO!</item>
-        <item>HEDEFLER TAMAM!</item>
-        <item>SOKO-MASTER!</item>
-    </string-array>
-
-    <string-array name="win_checkers">
-        <item>BİLGİSAYAR YENİLDİ!</item>
-        <item>TAHTANIN KRALI!</item>
-        <item>BÜYÜK USTA!</item>
-        <item>STRATEJİ USTASI!</item>
-    </string-array>
-
-    <string-array name="win_slide_puzzle">
-        <item>RESİM ONARILDI!</item>
-        <item>BULMACA BİTTİ!</item>
-        <item>MÜKEMMEL UYUM!</item>
-        <item>KAYDIRMA USTASI!</item>
-    </string-array>
-
-    <string-array name="win_dungeon">
-        <item>ZİNDANDAN ÇIKILDI!</item>
-        <item>EFSANEVİ KAŞİF!</item>
-        <item>KAT TEMİZLENDİ!</item>
-        <item>HAZİNE BULUNDU!</item>
-    </string-array>
-
-    <string-array name="win_tanks">
-        <item>ÜS KORUNDU!</item>
-        <item>DÜŞMANLAR YOK EDİLDİ!</item>
-        <item>TANK KOMUTANI!</item>
-        <item>SAVAŞ KAHRAMANI!</item>
-    </string-array>
-
-    <string-array name="win_mental_math">
-        <item>MATEMATİK DAHİSİ!</item>
-        <item>ZİHİN GÜCÜ!</item>
-        <item>HESAP KRALI!</item>
-        <item>SAYI USTASI!</item>
-    </string-array>
-
-    <string-array name="win_froggy">
-        <item>HEDEFE ULAŞILDI!</item>
-        <item>GÜVENLİ GEÇİŞ!</item>
-        <item>KURBAĞA KAHRAMAN!</item>
-        <item>NEHİR USTASI!</item>
-    </string-array>
     <string name="trex_daddy">Baba T-Rex</string>
     <string name="trex_mummy">Anne T-Rex</string>
     <string name="trex_baby">Bebek T-Rex</string>
@@ -299,11 +303,12 @@
     <string name="trex_pirate">Korsan T-Rex</string>
     <string name="trex_chef">Şef T-Rex</string>
     <string name="trex_astronaut">Astronot T-Rex</string>
+    <string name="trex_ninja">Ninja T-Rex</string>
     <string name="trex_dragon">Ejderha Dino</string>
     <string name="trex_zombie">Zombi Dino</string>
     <string name="trex_robot">Robot Dino</string>
     <string name="trex_king">Kral Dino</string>
-
+    <string name="trex_character_label">Karakter</string>
     <string name="trex_select_character">KARAKTER SEÇ</string>
     <string name="trex_strong_prefix">GÜÇLÜ: </string>
     <string name="trex_weak_prefix">ZAYIF: </string>
@@ -325,6 +330,20 @@
     <string name="trex_sunny">GÜNEŞLİ</string>
     <string name="trex_rainy">YAĞMURLU</string>
     <string name="trex_snowy">KARLI</string>
+    <string name="trex_desc_char_random">Her koşuda sürpriz bir Dino!</string>
+    <string name="trex_desc_char_specific">Lobide seçtiğiniz Dino\'yu kullanın.</string>
+    <string name="trex_desc_time_random">Gündüz veya Gece döngüsü.</string>
+    <string name="trex_desc_time_day">Açık gündüz gökyüzü.</string>
+    <string name="trex_desc_time_night">Karanlık yıldızlı gece.</string>
+    <string name="trex_desc_season_random">Tüm mevsimler döner.</string>
+    <string name="trex_desc_season_spring">Yeşillik ve taze çimenler.</string>
+    <string name="trex_desc_season_summer">Parlak alanlar ve güneş.</string>
+    <string name="trex_desc_season_autumn">Dökülen yapraklar ve sisli toprak.</string>
+    <string name="trex_desc_season_winter">Karlı arazi ve don.</string>
+    <string name="trex_desc_weather_random">Dinamik hava değişimleri.</string>
+    <string name="trex_desc_weather_sunny">Mükemmel açık hava.</string>
+    <string name="trex_desc_weather_rainy">Yağmur ve koyu bulutlar.</string>
+    <string name="trex_desc_weather_snowy">Güzel kar yağışı.</string>
     <string name="trex_point_bonus_score">Bonus Puan</string>
     <string name="trex_point_large_hitbox">Büyük Hitbox</string>
     <string name="trex_point_double_jump">Çift Zıplama</string>
@@ -354,54 +373,184 @@
     <string name="trex_point_no_momentum">Momentumsuz</string>
     <string name="trex_point_royal_bonus">Kraliyet Bonusu</string>
     <string name="trex_point_visible_target">Belirgin Hedef</string>
-    <string name="trex_ninja">Ninja T-Rex</string>
-    <string name="trex_character_label">Karakter</string>
-
-    <string name="trex_desc_char_random">Her koşuda sürpriz bir Dino!</string>
-    <string name="trex_desc_char_specific">Lobide seçtiğiniz Dino\'yu kullanın.</string>
-    <string name="trex_desc_time_random">Gündüz veya Gece döngüsü.</string>
-    <string name="trex_desc_time_day">Açık gündüz gökyüzü.</string>
-    <string name="trex_desc_time_night">Karanlık yıldızlı gece.</string>
-    <string name="trex_desc_season_random">Tüm mevsimler döner.</string>
-    <string name="trex_desc_season_spring">Yeşillik ve taze çimenler.</string>
-    <string name="trex_desc_season_summer">Parlak alanlar ve güneş.</string>
-    <string name="trex_desc_season_autumn">Dökülen yapraklar ve sisli toprak.</string>
-    <string name="trex_desc_season_winter">Karlı arazi ve don.</string>
-    <string name="trex_desc_weather_random">Dinamik hava değişimleri.</string>
-    <string name="trex_desc_weather_sunny">Mükemmel açık hava.</string>
-    <string name="trex_desc_weather_rainy">Yağmur ve koyu bulutlar.</string>
-    <string name="trex_desc_weather_snowy">Güzel kar yağışı.</string>
+    <string-array name="win_generic">
+        <item>ZAFER!</item>
+        <item>TEBRİKLER!</item>
+        <item>İNANILMAZ!</item>
+        <item>HARİKA!</item>
+        <item>MUHTEŞEM!</item>
+        <item>SÜPERSİN!</item>
+        <item>MÜKEMMEL!</item>
+        <item>FANTASTİK!</item>
+        <item>HARİKULADE!</item>
+        <item>İYİ İŞ!</item>
+    </string-array>
+    <string-array name="win_highscore">
+        <item>YENİ REKOR!</item>
+        <item>DURDURULAMAZ!</item>
+        <item>EN İYİSİ!</item>
+        <item>EFSANEVİ!</item>
+        <item>REKOR!</item>
+    </string-array>
+    <string-array name="win_minesweeper">
+        <item>ALAN TEMİZLENDİ!</item>
+        <item>MAYIN USTASI!</item>
+        <item>GÜVENLİ GEÇİŞ!</item>
+        <item>UZMAN TARAYICI!</item>
+    </string-array>
+    <string-array name="win_sudoku">
+        <item>IZGARA TAMAMLANDI!</item>
+        <item>MANTIK KRALI!</item>
+        <item>BULMACA ÇÖZÜLDÜ!</item>
+        <item>KESKİN ZEKA!</item>
+    </string-array>
+    <string-array name="win_tictactoe">
+        <item>AKIL OYUNU!</item>
+        <item>3\'LÜ SIRA!</item>
+        <item>STRATEJİK ZAFER!</item>
+        <item>RAKİPSİZ!</item>
+    </string-array>
+    <string-array name="win_4096">
+        <item>MATEMATİK DAHİSİ!</item>
+        <item>4096\'YA ULAŞILDI!</item>
+        <item>SAYI CANAVARI!</item>
+        <item>FİNAL KAROSU!</item>
+    </string-array>
+    <string-array name="win_memory">
+        <item>KUSURSUZ HAFIZA!</item>
+        <item>EŞLEŞTİRME USTASI!</item>
+        <item>KESKİN ZİHİN!</item>
+        <item>HER ŞEY AKLIMDA!</item>
+    </string-array>
+    <string-array name="win_hangman">
+        <item>KELİME KURTARILDI!</item>
+        <item>KELİME USTASI!</item>
+        <item>KURTULUŞ!</item>
+        <item>SÖZLÜK KRALI!</item>
+    </string-array>
+    <string-array name="win_brick_break">
+        <item>BÖLÜM TAMAM!</item>
+        <item>TUĞLA KIRICI!</item>
+        <item>DUVAR YIKICI!</item>
+        <item>RAKET PROFESÖRÜ!</item>
+    </string-array>
+    <string-array name="win_word_quest">
+        <item>KELİME BULUNDU!</item>
+        <item>HECELEME USTASI!</item>
+        <item>SÖZLÜK KAHRAMANI!</item>
+        <item>GÖREV TAMAMLANDI!</item>
+    </string-array>
+    <string-array name="win_solitaire">
+        <item>DESTE BİTTİ!</item>
+        <item>AS KAZANDIRDI!</item>
+        <item>SERİ TAMAM!</item>
+        <item>KART KRALI!</item>
+    </string-array>
+    <string-array name="win_sokoban">
+        <item>DEPO KAHRAMANI!</item>
+        <item>KUTU İTİCİ PRO!</item>
+        <item>HEDEFLER TAMAM!</item>
+        <item>SOKO-MASTER!</item>
+    </string-array>
+    <string-array name="win_checkers">
+        <item>BİLGİSAYAR YENİLDİ!</item>
+        <item>TAHTANIN KRALI!</item>
+        <item>BÜYÜK USTA!</item>
+        <item>STRATEJİ USTASI!</item>
+    </string-array>
+    <string-array name="win_slide_puzzle">
+        <item>RESİM ONARILDI!</item>
+        <item>BULMACA BİTTİ!</item>
+        <item>MÜKEMMEL UYUM!</item>
+        <item>KAYDIRMA USTASI!</item>
+    </string-array>
+    <string-array name="win_dungeon">
+        <item>ZİNDANDAN ÇIKILDI!</item>
+        <item>EFSANEVİ KAŞİF!</item>
+        <item>KAT TEMİZLENDİ!</item>
+        <item>HAZİNE BULUNDU!</item>
+    </string-array>
+    <string-array name="win_tanks">
+        <item>ÜS KORUNDU!</item>
+        <item>DÜŞMANLAR YOK EDİLDİ!</item>
+        <item>TANK KOMUTANI!</item>
+        <item>SAVAŞ KAHRAMANI!</item>
+    </string-array>
+    <string-array name="win_mental_math">
+        <item>MATEMATİK DAHİSİ!</item>
+        <item>ZİHİN GÜCÜ!</item>
+        <item>HESAP KRALI!</item>
+        <item>SAYI USTASI!</item>
+    </string-array>
+    <string-array name="win_froggy">
+        <item>HEDEFE ULAŞILDI!</item>
+        <item>GÜVENLİ GEÇİŞ!</item>
+        <item>KURBAĞA KAHRAMAN!</item>
+        <item>NEHİR USTASI!</item>
+    </string-array>
+    <string name="starfighter_ship_label">Gemi Modeli</string>
+    <string name="starfighter_ship_balanced">STRIKER (Dengeli)</string>
+    <string name="starfighter_ship_balanced_desc">Standart savaş gemisi.</string>
+    <string name="starfighter_ship_fast">INTERCEPTOR (Hızlı &amp; Çevik)</string>
+    <string name="starfighter_ship_fast_desc">Yüksek hız, hafif zırh.</string>
+    <string name="starfighter_ship_tank">DREADNOUGHT (Ağır Zırh)</string>
+    <string name="starfighter_ship_tank_desc">Maksimum zırh, daha yavaş hız.</string>
+    <string name="starfighter_ship_solar">SOLARIS (Yüksek Enerji Silahları)</string>
+    <string name="starfighter_ship_solar_desc">Artırılmış lazer hasarı.</string>
+    <string name="starfighter_ship_phoenix">ANKA (Kalkan Yenileme)</string>
+    <string name="starfighter_ship_phoenix_desc">Zamanla kalkanları yeniler.</string>
+    <string name="syobon_settings_title">CAT MEOWIO AYARLARI</string>
+    <string name="syobon_character_label">Kedi Görünümü</string>
+    <string name="syobon_char_classic">KLASİK BEYAZ (Neko)</string>
+    <string name="syobon_char_gold">ALTIN TEKİR (Şanslı)</string>
+    <string name="syobon_char_shadow">GÖLGE PANTER (Ninja)</string>
+    <string name="syobon_lives_label">Başlangıç Canı</string>
+    <string name="syobon_lives_3">3 CAN (Klasik)</string>
+    <string name="syobon_lives_1">1 CAN (Zorlu)</string>
+    <string name="syobon_lives_inf">SONSUZ CAN (Alıştırma)</string>
+    <string name="syobon_lives_desc">Oyun bitmeden önceki can sayısı.</string>
+    <string name="syobon_instructions">• Sol/Sağ ile hareket edin.\n• Zıplamak için YUKARI veya ORTA tuşa basın.\n• Vurmak için blokların altına zıplayın.\n• Kazanmak için bayrak direğine ulaşın!\n• TUZAKLARA DİKKAT EDİN!</string>
+    <string name="syobon_difficulty_desc">Kedi kahramanınızın görünümünü seçin.</string>
+    <string-array name="win_syobon">
+        <item>MEOWIO USTASI!</item>
+        <item>TUZAK KURTULANI!</item>
+        <item>DİREK ŞAMPİYONU!</item>
+        <item>KEDİ KAHRAMAN!</item>
+    </string-array>
     <string name="quit_game_title">Oyundan Çık</string>
     <string name="quit_game_confirm">Oyundan çıkmak istediğinizden emin misiniz?</string>
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
-    <string name="choose_hero" translatable="true">OYUNCUNU SEÇ</string>
-    <string name="create_hero" translatable="true">YENİ OYUNCU OLUŞTUR</string>
-    <string name="enter_hero_name" translatable="true">OYUNCU ADI GİRİN</string>
-    <string name="add_profile" translatable="true">OYUNCU EKLE</string>
-    <string name="switch_profile" translatable="true">OYUNCU DEĞİŞTİR</string>
-    <string name="profile_selection_hint" translatable="true">GEZİNMEK İÇİN ◄ ► KULLANIN • SEÇMEK İÇİN [OK]</string>
-    <string name="please_enter_name" translatable="true">Lütfen bir ad girin</string>
-    <string name="enter_pin" translatable="true">4 HANELİ PIN GİRİN</string>
-    <string name="setup_pin" translatable="true">OYUNCU KİLİDİ AYARLA (PIN)</string>
-    <string name="wrong_pin" translatable="true">Hatalı PIN. Tekrar deneyin.</string>
-    <string name="manage_profiles" translatable="true">OYUNCULARI YÖNET</string>
-    <string name="edit_profile" translatable="true">OYUNCUYU DÜZENLE</string>
-    <string name="delete_profile" translatable="true">OYUNCUYU SİL</string>
-    <string name="confirm_delete_profile" translatable="true">Bu oyuncuyu silmek istediğinizden emin misiniz? Tüm rekorlar silinecek.</string>
-    <string name="leave_blank_no_pin" translatable="true">Kilit istemiyorsanız boş bırakın</string>
-    <string name="hall_of_fame" translatable="true">ŞÖHRETLER KALDIRIMI</string>
-    <string name="no_records" translatable="true">HENÜZ REKOR YOK</string>
-    <string name="save" translatable="true">KAYDET</string>
-    <string name="choose_avatar" translatable="true">AVATAR SEÇ</string>
-    <string name="choose_color" translatable="true">RENK SEÇ</string>
-    <string name="security_pin_label" translatable="true">GÜVENLİK PIN\'I (İSTEĞE BAĞLI)</string>
-    <string name="pin_digits_hint" translatable="true">PIN 4 haneli olmalıdır</string>
-    <string name="rank_1st" translatable="true">1.</string>
-    <string name="rank_2nd" translatable="true">2.</string>
-    <string name="rank_3rd" translatable="true">3.</string>
-    <string name="placeholder_name" translatable="false">---</string>
-    <string name="placeholder_score" translatable="false">0</string>
+    <string name="choose_hero">OYUNCUNU SEÇ</string>
+    <string name="create_hero">YENİ OYUNCU OLUŞTUR</string>
+    <string name="enter_hero_name">OYUNCU ADI GİRİN</string>
+    <string name="add_profile">OYUNCU EKLE</string>
+    <string name="switch_profile">OYUNCU DEĞİŞTİR</string>
+    <string name="profile_selection_hint">GEZİNMEK İÇİN ◄ ► KULLANIN • SEÇMEK İÇİN [OK]</string>
+    <string name="please_enter_name">Lütfen bir ad girin</string>
+    <string name="enter_pin">4 HANELİ PIN GİRİN</string>
+    <string name="setup_pin">OYUNCU KİLİDİ AYARLA (PIN)</string>
+    <string name="wrong_pin">Hatalı PIN. Tekrar deneyin.</string>
+    <string name="manage_profiles">OYUNCULARI YÖNET</string>
+    <string name="edit_profile">OYUNCUYU DÜZENLE</string>
+    <string name="delete_profile">OYUNCUYU SİL</string>
+    <string name="confirm_delete_profile">Bu oyuncuyu silmek istediğinizden emin misiniz? Tüm rekorlar silinecek.</string>
+    <string name="leave_blank_no_pin">Kilit istemiyorsanız boş bırakın</string>
+    <string name="hall_of_fame">ŞÖHRETLER KALDIRIMI</string>
+    <string name="no_records">HENÜZ REKOR YOK</string>
+    <string name="save">KAYDET</string>
+    <string name="choose_avatar">AVATAR SEÇ</string>
+    <string name="choose_color">RENK SEÇ</string>
+    <string name="security_pin_label">GÜVENLİK PIN\'I (İSTEĞE BAĞLI)</string>
+    <string name="pin_digits_hint">PIN 4 haneli olmalıdır</string>
+    <string name="protected_hero">PROTECTED HERO</string>
+    <string name="guest_hero_name">GUEST HERO</string>
+    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
+    <string name="rank_1st">1.</string>
+    <string name="rank_2nd">2.</string>
+    <string name="rank_3rd">3.</string>
+    <string name="placeholder_name">---</string>
+    <string name="placeholder_score">0</string>
     <string name="monkey_spring">SPRING</string>
     <string name="monkey_summer">SUMMER</string>
     <string name="monkey_autumn">AUTUMN</string>
@@ -436,11 +585,11 @@
     <string name="monkey_beetle_warning">⚠️ BEETLE</string>
     <string name="monkey_char_gibbon">GOLDEN GIBBON</string>
     <string name="monkey_char_climber">TARZAN CLIMBER</string>
+    <string name="monkey_char_spider">SPIDER MONKEY</string>
     <string name="monkey_char_chimp">PUNK CHIMP</string>
-    <string name="retro_driver_final_lap">FINAL LAP!</string>
-    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
-    <string name="retro_driver_go">GO!</string>
-    <string name="retro_driver_finish">FINISH!</string>
+    <string name="monkey_char_default">MONKEY</string>
+    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
+    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
     <string name="frenzy_death_pufferfish">MOUTH HURT BY INFLATED PUFFERFISH!</string>
     <string name="frenzy_death_eel">SHOCKED BY ELECTRIC EEL (STUNNED)!</string>
     <string name="frenzy_death_lionfish">POISONED BY LIONFISH (STUNNED)!</string>
@@ -448,7 +597,6 @@
     <string name="frenzy_death_too_large">CANNOT EAT: %1$s IS TOO LARGE!</string>
     <string name="frenzy_death_eaten">EATEN BY %1$s!</string>
     <string name="frenzy_death_mine">BLOWN UP BY UNDERSEA MINE!</string>
-    <string name="syobon_surprise">SURPRISE!</string>
     <string name="flappy_death_ceiling">Flew too high and hit the ceiling!</string>
     <string name="flappy_death_ground">Crashed into the grassy ground!</string>
     <string name="flappy_death_pipe">Crashed into a green pipe!</string>
@@ -461,16 +609,92 @@
     <string name="flappy_hint_fly_through">FLY THROUGH</string>
     <string name="flappy_hint_avoid_bat">AVOID BAT</string>
     <string name="flappy_hint_fly_under">FLY UNDER</string>
-    <string name="protected_hero">PROTECTED HERO</string>
-    <string name="guest_hero_name">GUEST HERO</string>
-    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
-    <string name="monkey_char_default">MONKEY</string>
-    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
-    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
-    <string name="monkey_char_spider">SPIDER MONKEY</string>
+    <string name="retro_driver_final_lap">FINAL LAP!</string>
+    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
+    <string name="retro_driver_go">GO!</string>
+    <string name="retro_driver_finish">FINISH!</string>
+    <string name="syobon_surprise">SURPRISE!</string>
     <string name="ad_screensaver_message">To keep these games free, we show ads during breaks.\nThank you for your support!</string>
     <string name="ad_screensaver_hint">Press any key to resume instantly</string>
     <string name="ad_warning_prefix">Full-screen ad starting in %1$d...</string>
     <string name="ad_label">AD</string>
     <string name="advertisement_label">ADVERTISEMENT</string>
+    <string name="monkey_settings_title">GIBBON ASCENT AYARLARI</string>
+    <string name="monkey_character_label">Karakter</string>
+    <string name="monkey_character_desc">Tırmanıcı primat türünüzü seçin.</string>
+    <string name="monkey_season_label">Mevsim Teması</string>
+    <string name="monkey_season_desc">Orman havasını ve bitki örtüsünü seçin.</string>
+    <string name="frenzy_settings_title">FRENZY FEEDING AYARLARI</string>
+    <string name="frenzy_difficulty_label">Zorluk</string>
+    <string name="frenzy_difficulty_easy">KOLAY (Yavaş avcılar)</string>
+    <string name="frenzy_difficulty_normal">NORMAL (Dengeli)</string>
+    <string name="frenzy_difficulty_hard">ZOR (Saldırgan köpekbalıkları)</string>
+    <string name="frenzy_difficulty_desc">Avcı balıkların hızı ve yoğunluğu.</string>
+    <string name="frenzy_starting_size_label">Başlangıç Boyutu</string>
+    <string name="frenzy_starting_size_guppy">LEPİSTES (En küçük)</string>
+    <string name="frenzy_starting_size_angelfish">MELEK BALIĞI (Orta)</string>
+    <string name="frenzy_starting_size_desc">Başlangıç balık büyüme aşaması.</string>
+    <string name="retrodriver_settings_title">RETRO RACER AYARLARI</string>
+    <string name="retrodriver_vehicle_label">Araç</string>
+    <string name="retrodriver_vehicle_desc">Süper motor modelinizi seçin.</string>
+    <string name="retrodriver_theme_label">Pist Ortamı</string>
+    <string name="retrodriver_theme_desc">Yarış pisti manzarasını seçin.</string>
+    <string name="retrodriver_theme_neon">SİBER ŞEHİR (Neon)</string>
+    <string name="retrodriver_theme_desert">KANYON GÜNBATIMI (Akşam)</string>
+    <string name="retrodriver_theme_cyber">SYNTHWAVE IZGARASI (Retro)</string>
+    <string name="retrodriver_theme_snow">ALP GEÇİDİ (Kar)</string>
+    <string-array name="win_monkey">
+        <item>SARMAŞIK USTASI!</item>
+        <item>ZİRVE TIRMANICI!</item>
+        <item>ORMAN KRALI!</item>
+        <item>ZİRVE FETHEDİLDİ!</item>
+    </string-array>
+    <string-array name="win_frenzy">
+        <item>OKYANUS AVCISI!</item>
+        <item>SÜPER YIRTICI!</item>
+        <item>RESİF HÜKÜMDARI!</item>
+        <item>AV USTASI!</item>
+    </string-array>
+    <string-array name="win_retrodriver">
+        <item>HIZ ŞEYTANI!</item>
+        <item>PİST ŞAMPİYONU!</item>
+        <item>SYNTH YARIŞÇISI!</item>
+        <item>PODYUM ZAFERİ!</item>
+    </string-array>
+    <string-array name="win_tetris">
+        <item>TETRİS USTASI!</item>
+        <item>ÇİZGİ UZMANI!</item>
+        <item>KUSURSUZ DİZİLİM!</item>
+        <item>BLOK KIRICI!</item>
+    </string-array>
+    <string-array name="win_snake">
+        <item>YILAN USTASI!</item>
+        <item>PİTON EFSANESİ!</item>
+        <item>ZİYAFET ŞAMPİYONU!</item>
+        <item>KIVRILMA KRALI!</item>
+    </string-array>
+    <string-array name="win_flappy">
+        <item>GÖKYÜZÜ EFSANESİ!</item>
+        <item>KANATLI KAHRAMAN!</item>
+        <item>TÜY USTASI!</item>
+        <item>YÜKSEK UÇUCU!</item>
+    </string-array>
+    <string-array name="win_lines98">
+        <item>ÇİZGİ USTASI!</item>
+        <item>RENK UYUMU!</item>
+        <item>KÜRE BÜYÜCÜSÜ!</item>
+        <item>IZGARA DEHASI!</item>
+    </string-array>
+    <string-array name="win_spinball">
+        <item>DÖNÜŞ BÜYÜCÜSÜ!</item>
+        <item>YÖRÜNGE USTASI!</item>
+        <item>PINBALL PROSU!</item>
+        <item>DAİRE KURTULANI!</item>
+    </string-array>
+    <string-array name="win_simon">
+        <item>HAFIZA USTASI!</item>
+        <item>SIMON DİYOR Kİ: ZAFER!</item>
+        <item>DESEN PROSU!</item>
+        <item>PARLAK HAFIZA!</item>
+    </string-array>
 </resources>

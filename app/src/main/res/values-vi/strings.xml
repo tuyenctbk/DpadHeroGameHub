@@ -2,6 +2,7 @@
     <string name="app_name">Dpad Arcade</string>
     <string name="app_name_full">Dpad Arcade: Trò Chơi Retro</string>
     <string name="game_center">DPAD ARCADE</string>
+    <string name="snake">RẮN SĂN MỒI</string>
     <string name="snake_settings_title">CÀI ĐẶT RẮN</string>
     <string name="snake_level_1">LEVEL 1: NGƯỜI MỚI</string>
     <string name="snake_level_2">LEVEL 2: THƯỜNG</string>
@@ -10,7 +11,7 @@
     <string name="snake_level_2_desc">Đụng tường là chết. Tốc độ thường.</string>
     <string name="snake_level_3_desc">Đụng tường là chết. Tốc độ nhanh.</string>
     <string name="snake_level_label">Mức độ khó</string>
-    <string name="snake">RẮN SĂN MỒI</string>
+    <string name="minesweeper">DÒ MÌN</string>
     <string name="minesweeper_settings_title">CÀI ĐẶT DÒ MÌN</string>
     <string name="minesweeper_level_1">LEVEL 1: NGƯỜI MỚI (10x10, 12 Mìn)</string>
     <string name="minesweeper_level_2">LEVEL 2: THÔNG THƯỜNG (16x16, 40 Mìn)</string>
@@ -40,7 +41,6 @@
     <string name="tictactoe_size_4_desc">4 ô liên tiếp để thắng.</string>
     <string name="tictactoe_size_5_desc">5 ô liên tiếp để thắng.</string>
     <string name="tictactoe_size_label">Kích thước bàn cờ</string>
-    <string name="minesweeper">DÒ MÌN</string>
     <string name="game_4096_settings_title">CÀI ĐẶT 4096</string>
     <string name="game_4096_size_4">Ô: 4x4 (Cổ điển)</string>
     <string name="game_4096_size_5">Ô: 5x5 (Lớn)</string>
@@ -53,24 +53,46 @@
     <string name="tetris_settings_title">CÀI ĐẶT TETRIS</string>
     <string name="tetris_start_level">Cấp độ bắt đầu</string>
     <string name="tetris_level_desc">Cấp độ cao hơn sẽ bắt đầu nhanh hơn.</string>
+    <string name="checkers_settings_title">CÀI ĐẶT CỜ ĐAM</string>
+    <string name="checkers_difficulty_1">AI: NGẪU NHIÊN (Dễ)</string>
+    <string name="checkers_difficulty_2">AI: CHIẾN THUẬT (Bình thường)</string>
+    <string name="checkers_difficulty_desc">AI mạnh hơn sẽ đi những nước cờ thông minh hơn.</string>
+    <string name="spinball_settings_title">CÀI ĐẶT SPINBALL</string>
+    <string name="spinball_difficulty_1">CHẾ ĐỘ: ÊM ĐỀM (Chậm)</string>
+    <string name="spinball_difficulty_2">CHẾ ĐỘ: NHANH NHẸN (Bình thường)</string>
+    <string name="spinball_difficulty_3">CHẾ ĐỘ: HỖN LOẠN (Nhanh)</string>
+    <string name="spinball_difficulty_desc">Tốc độ tăng thêm độ thử thách.</string>
+    <string name="simon_says_settings_title">CÀI ĐẶT SIMON</string>
+    <string name="simon_says_speed_1">TỐC ĐỘ: THƯ GIÃN (Chậm)</string>
+    <string name="simon_says_speed_2">TỐC ĐỘ: BÌNH THƯỜNG (Vừa)</string>
+    <string name="simon_says_speed_3">TỐC ĐỘ: CHỚP NHOÁNG (Nhanh)</string>
+    <string name="simon_says_speed_desc">Tốc độ phát chuỗi ghi nhớ.</string>
+    <string name="dungeon_escape_settings_title">CÀI ĐẶT THOÁT KHỎI HẦM NGỤC</string>
+    <string name="dungeon_escape_start_level">Tầng bắt đầu</string>
+    <string name="dungeon_escape_level_desc">Chọn tầng hầm để bắt đầu.</string>
+    <string name="froggy_cross_settings_title">CÀI ĐẶT ẾCH QUA ĐƯỜNG</string>
+    <string name="froggy_cross_difficulty_1">ĐỘ KHÓ: CHẬM (Giao thông vắng)</string>
+    <string name="froggy_cross_difficulty_2">ĐỘ KHÓ: BÌNH THƯỜNG (Tiêu chuẩn)</string>
+    <string name="froggy_cross_difficulty_3">ĐỘ KHÓ: GIỜ CAO ĐIỂM (Xe chạy nhanh)</string>
+    <string name="froggy_cross_difficulty_desc">Tốc độ xe cộ và khúc gỗ trôi.</string>
     <string name="game_4096">4096</string>
     <string name="game_trex">T-REX RUN</string>
     <string name="game_brick_break">PHÁ GẠCH</string>
     <string name="game_tictactoe">CỜ CARO</string>
     <string name="game_checkers">CỜ ĐAM</string>
     <string name="sokoban_settings_title">CÀI ĐẶT SOKOBAN</string>
-    <string name="sokoban_start_level">Cấp độ bắt đầu</string>
-    <string name="sokoban_level_desc">Chọn tầng kho để bắt đầu.</string>
-    <string name="battle_tanks_settings_title">CÀI ĐẶT XE TĂNG</string>
-    <string name="battle_tanks_difficulty_1">CẤP 1: TÂN BINH</string>
-    <string name="battle_tanks_difficulty_2">CẤP 2: KỲ CỰU</string>
-    <string name="battle_tanks_difficulty_3">CẤP 3: TINH NHUỆ</string>
-    <string name="battle_tanks_difficulty_desc">Cấp độ cao hơn sẽ có kẻ địch hung hãn hơn.</string>
-    <string name="starfighter_settings_title">CÀI ĐẶT STARFIGHTER</string>
-    <string name="starfighter_difficulty_1">CHẾ ĐỘ: DO THÁM (Dễ)</string>
-    <string name="starfighter_difficulty_2">CHẾ ĐỘ: CHIẾN ĐẤU (Thường)</string>
-    <string name="starfighter_difficulty_3">CHẾ ĐỘ: PHI CÔNG (Khó)</string>
-    <string name="starfighter_difficulty_desc">Chế độ khó hơn sẽ có kẻ địch và đạn nhanh hơn.</string>
+    <string name="sokoban_start_level">Màn bắt đầu</string>
+    <string name="sokoban_level_desc">Chọn màn để bắt đầu chơi.</string>
+    <string name="battle_tanks_settings_title">CÀI ĐẶT XE TĂNG ĐẠI CHIẾN</string>
+    <string name="battle_tanks_difficulty_1">ĐỘ KHÓ: TẬP SỰ (Tăng di chuyển chậm)</string>
+    <string name="battle_tanks_difficulty_2">ĐỘ KHÓ: CHIẾN BINH (Tiêu chuẩn)</string>
+    <string name="battle_tanks_difficulty_3">ĐỘ KHÓ: ĐẠI TƯỚNG (Bắn liên thanh)</string>
+    <string name="battle_tanks_difficulty_desc">Tốc độ và hỏa lực của kẻ địch.</string>
+    <string name="starfighter_settings_title">CÀI ĐẶT CHIẾN CƠ VŨ TRỤ</string>
+    <string name="starfighter_difficulty_1">MỨC 1: HỌC VIÊN (Dễ)</string>
+    <string name="starfighter_difficulty_2">MỨC 2: KỲ CỰU (Bình thường)</string>
+    <string name="starfighter_difficulty_3">MỨC 3: PHI CÔNG ÁT (Khó)</string>
+    <string name="starfighter_difficulty_desc">Máu và tốc độ bắn của kẻ địch.</string>
     <string name="game_sokoban">SOKOBAN</string>
     <string name="game_sudoku">SUDOKU</string>
     <string name="game_tetris">TETRIS</string>
@@ -79,40 +101,58 @@
     <string name="game_slide_puzzle">XẾP HÌNH</string>
     <string name="game_mental_math">TÍNH NHẨM</string>
     <string name="game_froggy">ẾCH QUA ĐƯỜNG</string>
+    <string name="game_syobon">CAT MEOWIO</string>
     <string name="game_simon">SIMON SAYS</string>
     <string name="game_tanks">BẮN TĂNG</string>
-    <string name="flappy_hero_settings_title">CÀI ĐẶT FLAPPY</string>
-    <string name="flappy_hero_level_1">CẤP 1: DỄ</string>
-    <string name="flappy_hero_level_2">CẤP 2: THƯỜNG</string>
-    <string name="flappy_hero_level_3">CẤP 3: KHÓ</string>
-    <string name="flappy_hero_level_1_desc">Khoảng cách rộng. Ống di chuyển chậm.</string>
-    <string name="flappy_hero_level_2_desc">Khoảng cách và tốc độ tiêu chuẩn.</string>
-    <string name="flappy_hero_level_3_desc">Khoảng cách hẹp. Ống di chuyển nhanh.</string>
-    <string name="brick_break_settings_title">CÀI ĐẶT GẠCH</string>
-    <string name="brick_break_paddle_label">Kích thước thanh đỡ</string>
-    <string name="brick_break_paddle_large">CỠ: LỚN</string>
-    <string name="brick_break_paddle_medium">CỠ: VỪA</string>
-    <string name="brick_break_paddle_small">CỠ: NHỎ</string>
-    <string name="brick_break_paddle_desc">Thanh đỡ lớn giúp đón bóng dễ hơn.</string>
-    <string name="lines98_settings_title">CÀI ĐẶT LINES 98</string>
-    <string name="lines98_difficulty_easy">CẤP: DỄ (5 Màu)</string>
-    <string name="lines98_difficulty_normal">CẤP: THƯỜNG (7 Màu)</string>
-    <string name="lines98_difficulty_hard">CẤP: KHÓ (9 Màu)</string>
-    <string name="lines98_difficulty_desc">Càng nhiều màu càng khó chơi.</string>
     <string name="word_quest_settings_title">CÀI ĐẶT WORD QUEST</string>
-    <string name="word_quest_category_all">LOẠI: TẤT CẢ</string>
-    <string name="word_quest_category_nature">LOẠI: TỰ NHIÊN</string>
-    <string name="word_quest_category_tech">LOẠI: CÔNG NGHỆ</string>
-    <string name="word_quest_category_desc">Chọn chủ đề từ vựng.</string>
-    <string name="road_racer_settings_title">CÀI ĐẶT ĐUA XE</string>
+    <string name="word_quest_category_all">CHỦ ĐỀ: TẤT CẢ CÁC TỪ</string>
+    <string name="word_quest_category_nature">CHỦ ĐỀ: THIÊN NHIÊN &amp; ĐỘNG VẬT</string>
+    <string name="word_quest_category_tech">CHỦ ĐỀ: CÔNG NGHỆ &amp; KHOA HỌC</string>
+    <string name="word_quest_category_desc">Chọn chủ đề câu đố chữ của bạn.</string>
+    <string name="road_racer_settings_title">CÀI ĐẶT ĐUA XE ĐƯỜNG PHỐ</string>
     <string name="road_racer_density_label">Mật độ giao thông</string>
-    <string name="road_racer_density_low">MẬT ĐỘ: THẤP</string>
-    <string name="road_racer_density_normal">MẬT ĐỘ: THƯỜNG</string>
-    <string name="road_racer_density_high">MẬT ĐỘ: CAO</string>
-    <string name="road_racer_density_desc">Nhiều xe hơn sẽ khó né tránh hơn.</string>
+    <string name="road_racer_density_low">MẬT ĐỘ: THƯA (Dễ)</string>
+    <string name="road_racer_density_normal">MẬT ĐỘ: VỪA PHẢI (Bình thường)</string>
+    <string name="road_racer_density_high">MẬT ĐỘ: ĐÔNG ĐÚC (Khó)</string>
+    <string name="road_racer_density_desc">Lượng xe lưu thông trên đường cao tốc.</string>
     <string name="game_word_quest">WORD QUEST</string>
     <string name="game_dungeon">HẦM NGỤC</string>
+    <string name="game_monkey">VƯỢN LEO DÂY</string>
+    <string name="game_retrodriver">ĐUA XE RETRO</string>
+    <string name="game_frenzy">CÁ LỚN NUỐT CÁ BÉ</string>
+    <string name="game_fruit">CHÉM HOA QUẢ</string>
+    <string name="flappy_hero_settings_title">CÀI ĐẶT FLAPPY HERO</string>
+    <string name="flappy_hero_level_1">MÀN 1: ĐỒNG CỎ (Ống rộng)</string>
+    <string name="flappy_hero_level_2">MÀN 2: RỪNG CÂY (Chướng ngại di chuyển)</string>
+    <string name="flappy_hero_level_3">MÀN 3: HẺM NÚI (Khoảng cách hẹp)</string>
+    <string name="flappy_hero_level_4">MÀN 4: BẦU TRỜI ĐÊM (Luồng gió thổi)</string>
+    <string name="flappy_hero_level_5">MÀN 5: ĐỊA NGỤC (Chế độ hỗn loạn)</string>
+    <string name="flappy_hero_level_1_desc">Khoảng cách ống rộng nhất để làm quen.</string>
+    <string name="flappy_hero_level_2_desc">Chướng ngại vật đung đưa theo chiều dọc.</string>
+    <string name="flappy_hero_level_3_desc">Khoảng cách ống hẹp hơn.</string>
+    <string name="flappy_hero_level_4_desc">Gió ảnh hưởng đến tốc độ rơi.</string>
+    <string name="flappy_hero_level_5_desc">Cuộn màn hình nhanh và khe hẹp nhất.</string>
+    <string name="flappy_hero_char_label">Nhân vật</string>
+    <string name="flappy_char_classic">CHIM CỔ ĐIỂN (Tiêu chuẩn)</string>
+    <string name="flappy_char_classic_desc">Vật lý và cảm giác nhảy cổ điển.</string>
+    <string name="flappy_char_swift">MŨI TÊN NHANH (Đập cánh nhanh)</string>
+    <string name="flappy_char_swift_desc">Bay lên nhanh, chạm liên tục.</string>
+    <string name="flappy_char_heavy">CÁNH THÉP (Rơi nhanh)</string>
+    <string name="flappy_char_heavy_desc">Trọng lực cao, cần phản xạ nhanh.</string>
+    <string name="flappy_char_floaty">LÔNG VŨ BAY BỔNG (Lượn êm)</string>
+    <string name="flappy_char_floaty_desc">Trọng lực thấp, dễ điều khiển.</string>
+    <string name="brick_break_settings_title">CÀI ĐẶT PHÁ GẠCH</string>
+    <string name="brick_break_paddle_label">Kích thước thanh đỡ</string>
+    <string name="brick_break_paddle_large">THANH ĐỠ: RỘNG (Dễ)</string>
+    <string name="brick_break_paddle_medium">THANH ĐỠ: TIÊU CHUẨN (Bình thường)</string>
+    <string name="brick_break_paddle_small">THANH ĐỠ: HẸP (Khó)</string>
+    <string name="brick_break_paddle_desc">Thanh đỡ rộng hơn giúp đỡ bóng dễ dàng hơn.</string>
     <string name="game_flappy">FLAPPY HERO</string>
+    <string name="lines98_settings_title">CÀI ĐẶT LINES 98</string>
+    <string name="lines98_difficulty_easy">SỐ MÀU: 5 MÀU (Dễ)</string>
+    <string name="lines98_difficulty_normal">SỐ MÀU: 7 MÀU (Tiêu chuẩn)</string>
+    <string name="lines98_difficulty_hard">SỐ MÀU: 9 MÀU (Chuyên gia)</string>
+    <string name="lines98_difficulty_desc">Ít màu hơn giúp xếp hàng dễ hơn.</string>
     <string name="game_lines98">LINES 98</string>
     <string name="game_solitaire">SOLITAIRE</string>
     <string name="game_road_racer">ĐUA XE</string>
@@ -145,6 +185,7 @@
     <string name="game_slide_puzzle_instructions">• Dùng DPAD để di chuyển.\n• Nhấn LÊN/XUỐNG hoặc MENU để đổi LEVEL.\n• Nhấn CENTER để trượt ô.\n• Level càng cao thì càng nhiều mảnh ghép!</string>
     <string name="game_mental_math_instructions">• Giải phép tính.\n• Dùng DPAD chọn đáp án.\n• Nhấn CENTER để xác nhận.\n• Nhanh lên! Thời gian đang trôi.</string>
     <string name="game_froggy_instructions">• Băng qua đường và sông.\n• Tránh xe cộ.\n• Nhảy lên các khúc gỗ.\n• Về đích để ghi điểm!</string>
+    <string name="game_syobon_instructions">• Di chuyển Trái/Phải.\n• Nhấn LÊN hoặc NÚT GIỮA để nhảy.\n• Nhảy húc đầu vào các khối gạch.\n• Chạm vào cột cờ để chiến thắng!\n• CẨN THẬN VỚI CÁC CẠM BẪY!</string>
     <string name="game_simon_instructions">• Quan sát dãy màu.\n• Lặp lại bằng D-PAD.\n• Dãy màu sẽ dài hơn sau mỗi vòng!</string>
     <string name="game_tanks_instructions">• Điều khiển xe tăng bằng D-PAD.\n• Tự động bắn.\n• Tiêu diệt xe tăng địch.\n• Bảo vệ CĂN CỨ.</string>
     <string name="game_word_quest_instructions">• Đoán từ 5 chữ cái trong 6 lượt.\n• Dùng D-PAD để chọn chữ.\n• XANH LÁ: Đúng chữ và vị trí.</string>
@@ -153,6 +194,10 @@
     <string name="game_lines98_instructions">• Dùng D-PAD để di chuyển.\n• CENTER để chọn/di chuyển bóng.\n• Xếp 5 quả bóng cùng màu thành hàng.\n• Thua nếu bảng đầy bóng.</string>
     <string name="game_solitaire_instructions">• Dùng D-PAD để di chuyển.\n• CENTER để chọn/đặt bài.\n• Xếp từ Át đến Già theo chất.</string>
     <string name="game_road_racer_instructions">• Tránh xe cộ.\n• Sống sót lâu nhất có thể!\n• Nhấn CENTER để tạm dừng.</string>
+    <string name="game_monkey_instructions">• Leo các dây leo để trốn thoát.\n• Thu thập trái cây để ghi điểm.\n• Né nhện, dừa rơi và bọ cắt dây!\n• Dùng D-PAD để leo và nhảy giữa các dây.</string>
+    <string name="game_retrodriver_instructions">• Lái xe mô tô phong cách synthwave!\n• Lái Trái/Phải và giữ LÊN để tăng tốc.\n• Vượt qua tất cả 20 đối thủ để xếp hạng 1.\n• Về đích an toàn để hoàn thành cuộc đua!</string>
+    <string name="game_frenzy_instructions">• Bơi khắp đại dương bằng D-PAD.\n• Ăn cá nhỏ hơn để lớn lên.\n• Tránh bị cá săn mồi lớn hơn ăn thịt!\n• Ăn 30 cá để vượt qua màn chơi.</string>
+    <string name="game_fruit_instructions">• Hoa quả được phóng lên không trung.\n• Di chuyển lưỡi kiếm bằng D-PAD để chém hoa quả.\n• Tuyệt đối tránh chém phải bom!\n• Chém càng nhiều trái cây càng tốt.</string>
     <string name="game_hangman_instructions">• Chọn chữ cái để đoán từ.\n• Bạn có 6 lần thử.\n• Nhấn CENTER để chọn.</string>
     <string name="select_game_hint">DÙNG ◄ ► ĐỂ CHỌN TRÒ CHƠI • NHẤN [OK] ĐỂ CHƠI</string>
     <string name="settings">Cài đặt</string>
@@ -201,7 +246,45 @@
     <string name="next_stage_hint">Nhấn Center để sang màn tiếp theo</string>
     <string name="continue_hint">Nhấn Center để tiếp tục</string>
     <string name="finish_hint">Nhấn Center để hoàn thành</string>
+    <string name="tictactoe_size_hint">Nhấn LÊN/XUỐNG để đổi cỡ bàn cờ (3x3, 4x4, 5x5) hoặc MENU cho Tùy chọn</string>
+    <string name="sokoban_restart_hint">Nhấn R để chơi lại</string>
+    <string name="sudoku_controls_hint">D-PAD: Di chuyển/Số | GIỮA: Đổi số | MENU: Mức độ</string>
     <string name="total_wins_label">Tổng số trận thắng</string>
+    <string name="mines_label">MÌN: </string>
+    <string name="flags_label">CỜ: </string>
+    <string name="high_score_prefix">KỶ LỤC: </string>
+    <string name="cpu_wins_label">MÁY THẮNG!</string>
+    <string name="your_turn_label">Lượt của bạn</string>
+    <string name="watch_label">QUAN SÁT...</string>
+    <string name="grid_mastered_label">LÀM CHỦ BÀN CỜ!</string>
+    <string name="puzzle_solved_label">ĐÃ GIẢI ĐƯỢC CÂU ĐỐ!</string>
+    <string name="picture_restored_label">HÌNH ẢNH ĐÃ PHỤC HỒI!</string>
+    <string name="crashed_label">VA CHẠM!</string>
+    <string name="score_prefix">ĐIỂM: </string>
+    <string name="high_score_label">ĐIỂM CAO</string>
+    <string name="wrong_label">SAI RỒI!</string>
+    <string name="answer_was_label">Từ đúng là: </string>
+    <string name="finish_label">VỀ ĐÍCH</string>
+    <string name="continue_label">TIẾP TỤC</string>
+    <string name="next_stage_label">MÀN TIẾP THEO</string>
+    <string name="out_of_tries">HẾT LƯỢT!</string>
+    <string name="cpu_thinking_label">Máy đang suy nghĩ...</string>
+    <string name="no_moves_label">Hết nước đi</string>
+    <string name="victory_label">CHIẾN THẮNG!</string>
+    <string name="draw_label">HÒA!</string>
+    <string name="hit_wall_label">ĐỤNG TƯỜNG!</string>
+    <string name="bit_self_label">CẮN PHẢI MÌNH!</string>
+    <string name="cpu_starting_label">Máy đi trước ở ván tiếp theo</string>
+    <string name="jump_again_label">NHẢY LẠI</string>
+    <string name="draw_status">HÒA</string>
+    <string name="cat_animals">ĐỘNG VẬT</string>
+    <string name="cat_fruits">HOA QUẢ</string>
+    <string name="cat_countries">QUỐC GIA</string>
+    <string name="cat_sports">THỂ THAO</string>
+    <string name="cat_flowers">CÁC LOÀI HOA</string>
+    <string name="cat_vehicles">PHƯƠNG TIỆN</string>
+    <string name="cat_games">TRÒ CHƠI</string>
+    <string name="cat_foods">MÓN ĂN</string>
     <string name="rating_title">Bạn thích Dpad Arcade chứ?</string>
     <string name="rating_content">Hãy đánh giá 5 sao cho chúng mình trên Play Store, hoặc chia sẻ ý tưởng về trò chơi mới mà bạn muốn chơi nhé!</string>
     <string name="rate_now">ĐÁNH GIÁ 5 SAO</string>
@@ -210,139 +293,6 @@
     <string name="update_title">Có bản cập nhật mới!</string>
     <string name="update_content">Phiên bản mới của Dpad Arcade đã sẵn sàng. Hãy cập nhật để trải nghiệm thêm nhiều trò chơi và tính năng mới nhé.</string>
     <string name="update_now">Cập nhật ngay</string>
-
-    <string-array name="win_generic">
-        <item>CHIẾN THẮNG!</item>
-        <item>LÀM TỐT LẮM!</item>
-        <item>THẬT KHÔNG TIN ĐƯỢC!</item>
-        <item>XUẤT SẮC!</item>
-        <item>QUÁ TUYỆT VỜI!</item>
-        <item>BẠN QUÁ ĐỈNH!</item>
-        <item>HÀO HỨNG!</item>
-        <item>PHI THƯỜNG!</item>
-        <item>KỲ DIỆU!</item>
-        <item>CỐ GẮNG LẮM!</item>
-    </string-array>
-
-    <string-array name="win_highscore">
-        <item>KỶ LỤC MỚI!</item>
-        <item>KHÔNG THỂ CẢN PHÁ!</item>
-        <item>ĐỈNH CAO!</item>
-        <item>QUÁ KHỦNG!</item>
-        <item>ĐIỂM CAO!</item>
-    </string-array>
-
-    <string-array name="win_minesweeper">
-        <item>ĐÃ DỌN SẠCH!</item>
-        <item>BẬC THẦY DÒ MÌN!</item>
-        <item>LỐI ĐI AN TOÀN!</item>
-        <item>CHUYÊN GIA DÒ MÌN!</item>
-    </string-array>
-
-    <string-array name="win_sudoku">
-        <item>LÀM CHỦ BẢNG SỐ!</item>
-        <item>VUA LOGIC!</item>
-        <item>ĐÃ GIẢI XONG!</item>
-        <item>TRÍ TUỆ SIÊU PHÀM!</item>
-    </string-array>
-
-    <string-array name="win_tictactoe">
-        <item>THẮNG ÁP ĐẢO!</item>
-        <item>3 Ô LIÊN TIẾP!</item>
-        <item>THẮNG CHIẾN THUẬT!</item>
-        <item>BẤT KHẢ CHIẾN BẠI!</item>
-    </string-array>
-
-    <string-array name="win_4096">
-        <item>THIÊN TÀI TOÁN HỌC!</item>
-        <item>ĐẠT 4096!</item>
-        <item>BẬC THẦY CON SỐ!</item>
-        <item>Ô CUỐI CÙNG!</item>
-    </string-array>
-
-    <string-array name="win_memory">
-        <item>TRÍ NHỚ TUYỆT VỜI!</item>
-        <item>TRÚC XANH ĐẠI SƯ!</item>
-        <item>ĐẦU ÓC SẮC BÉN!</item>
-        <item>NHỚ TẤT TẦN TẬT!</item>
-    </string-array>
-
-    <string-array name="win_hangman">
-        <item>CỨU THÀNH CÔNG!</item>
-        <item>VUA TỪ VỰNG!</item>
-        <item>THẮNG KỲ TÍCH!</item>
-        <item>BẬC THẦY NGÔN NGỮ!</item>
-    </string-array>
-
-    <string-array name="win_brick_break">
-        <item>HOÀN THÀNH MÀN!</item>
-        <item>MÁY NGHIỀN GẠCH!</item>
-        <item>KẺ PHÁ TƯỜNG!</item>
-        <item>TAY VỢT ĐỈNH CAO!</item>
-    </string-array>
-
-    <string-array name="win_word_quest">
-        <item>ĐÃ TÌM THẤY TỪ!</item>
-        <item>BẬC THẦY ĐÁNH VẦN!</item>
-        <item>ANH HÙNG TỪ ĐIỂN!</item>
-        <item>NHIỆM VỤ HOÀN THÀNH!</item>
-    </string-array>
-
-    <string-array name="win_solitaire">
-        <item>ĐÃ DỌN BÀI!</item>
-        <item>ÁT CHỦ BÀI!</item>
-        <item>XONG BỘ BÀI!</item>
-        <item>VUA BÀI!</item>
-    </string-array>
-
-    <string-array name="win_sokoban">
-        <item>ANH HÙNG KHO BÃI!</item>
-        <item>VUA ĐẨY THÙNG!</item>
-        <item>ĐÃ VÀO MỤC TIÊU!</item>
-        <item>BẬC THẦY SOKOBAN!</item>
-    </string-array>
-
-    <string-array name="win_checkers">
-        <item>THẮNG MÁY TÍNH!</item>
-        <item>VUA BÀN CỜ!</item>
-        <item>ĐẠI KIỆN TƯỚNG!</item>
-        <item>BẬC THẦY CHIẾN THUẬT!</item>
-    </string-array>
-
-    <string-array name="win_slide_puzzle">
-        <item>HÌNH ĐÃ KHỚP!</item>
-        <item>GIẢI XONG ĐỐ VUI!</item>
-        <item>HOÀN HẢO!</item>
-        <item>BẬC THẦY XẾP HÌNH!</item>
-    </string-array>
-
-    <string-array name="win_dungeon">
-        <item>ĐÃ THOÁT HẦM NGỤC!</item>
-        <item>NHÀ THÁM HIỂM HUYỀN THOẠI!</item>
-        <item>DỌN SẠCH TẦNG!</item>
-        <item>TÌM THẤY KHO BÁU!</item>
-    </string-array>
-
-    <string-array name="win_tanks">
-        <item>BẢO VỆ CĂN CỨ!</item>
-        <item>QUÉT SẠCH KẺ ĐỊCH!</item>
-        <item>CHỈ HUY XE TĂNG!</item>
-        <item>ANH HÙNG CHIẾN TRANH!</item>
-    </string-array>
-
-    <string-array name="win_mental_math">
-        <item>THIÊN TÀI TOÁN HỌC!</item>
-        <item>SỨC MẠNH TRÍ TUỆ!</item>
-        <item>VUA TÍNH TOÁN!</item>
-        <item>TRÙM CON SỐ!</item>
-    </string-array>
-
-    <string-array name="win_froggy">
-        <item>ĐÃ VỀ ĐÍCH!</item>
-        <item>QUA ĐƯỜNG AN TOÀN!</item>
-        <item>ANH HÙNG ẾCH!</item>
-        <item>LÀM CHỦ DÒNG SÔNG!</item>
-    </string-array>
     <string name="trex_daddy">Bố Khủng Long</string>
     <string name="trex_mummy">Mẹ Khủng Long</string>
     <string name="trex_baby">Khủng Long Con</string>
@@ -353,11 +303,12 @@
     <string name="trex_pirate">Khủng Long Cướp Biển</string>
     <string name="trex_chef">Khủng Long Đầu Bếp</string>
     <string name="trex_astronaut">Khủng Long Phi Hành Gia</string>
+    <string name="trex_ninja">Khủng Long Ninja</string>
     <string name="trex_dragon">Khủng Long Rồng</string>
     <string name="trex_zombie">Khủng Long Zombie</string>
     <string name="trex_robot">Khủng Long Robot</string>
     <string name="trex_king">Khủng Long Vua</string>
-
+    <string name="trex_character_label">Nhân vật</string>
     <string name="trex_select_character">CHỌN NHÂN VẬT</string>
     <string name="trex_strong_prefix">ƯU ĐIỂM: </string>
     <string name="trex_weak_prefix">NHƯỢC ĐIỂM: </string>
@@ -379,6 +330,20 @@
     <string name="trex_sunny">NẮNG</string>
     <string name="trex_rainy">MƯA</string>
     <string name="trex_snowy">TUYẾT</string>
+    <string name="trex_desc_char_random">Mỗi lượt chạy là một khủng long bất ngờ!</string>
+    <string name="trex_desc_char_specific">Sử dụng khủng long bạn đã chọn trong sảnh.</string>
+    <string name="trex_desc_time_random">Chu kỳ Ngày hoặc Đêm.</string>
+    <string name="trex_desc_time_day">Bầu trời ban ngày trong xanh.</string>
+    <string name="trex_desc_time_night">Đêm đầy sao huyền bí.</string>
+    <string name="trex_desc_season_random">Xoay vòng qua các mùa.</string>
+    <string name="trex_desc_season_spring">Cây cối xanh tươi.</string>
+    <string name="trex_desc_season_summer">Đồng cỏ nắng vàng.</string>
+    <string name="trex_desc_season_autumn">Lá rụng và đất mù sương.</string>
+    <string name="trex_desc_season_winter">Tuyết trắng và giá lạnh.</string>
+    <string name="trex_desc_weather_random">Thay đổi thời tiết linh hoạt.</string>
+    <string name="trex_desc_weather_sunny">Thời tiết nắng đẹp.</string>
+    <string name="trex_desc_weather_rainy">Mưa và mây mù.</string>
+    <string name="trex_desc_weather_snowy">Tuyết rơi lãng mạn.</string>
     <string name="trex_point_bonus_score">Điểm thưởng</string>
     <string name="trex_point_large_hitbox">Hitbox lớn</string>
     <string name="trex_point_double_jump">Nhảy kép</string>
@@ -408,73 +373,184 @@
     <string name="trex_point_no_momentum">Không có đà</string>
     <string name="trex_point_royal_bonus">Thưởng hoàng gia</string>
     <string name="trex_point_visible_target">Mục tiêu rõ ràng</string>
-    <string name="trex_ninja">Khủng Long Ninja</string>
-    <string name="trex_character_label">Nhân vật</string>
-
-    <string name="trex_desc_char_random">Mỗi lượt chạy là một khủng long bất ngờ!</string>
-    <string name="trex_desc_char_specific">Sử dụng khủng long bạn đã chọn trong sảnh.</string>
-    <string name="trex_desc_time_random">Chu kỳ Ngày hoặc Đêm.</string>
-    <string name="trex_desc_time_day">Bầu trời ban ngày trong xanh.</string>
-    <string name="trex_desc_time_night">Đêm đầy sao huyền bí.</string>
-    <string name="trex_desc_season_random">Xoay vòng qua các mùa.</string>
-    <string name="trex_desc_season_spring">Cây cối xanh tươi.</string>
-    <string name="trex_desc_season_summer">Đồng cỏ nắng vàng.</string>
-    <string name="trex_desc_season_autumn">Lá rụng và đất mù sương.</string>
-    <string name="trex_desc_season_winter">Tuyết trắng và giá lạnh.</string>
-    <string name="trex_desc_weather_random">Thay đổi thời tiết linh hoạt.</string>
-    <string name="trex_desc_weather_sunny">Thời tiết nắng đẹp.</string>
-    <string name="trex_desc_weather_rainy">Mưa và mây mù.</string>
-    <string name="trex_desc_weather_snowy">Tuyết rơi lãng mạn.</string>
-    <string name="game_syobon">CAT MEOWIO</string>
-    <string name="syobon_settings_title">CÀI ĐẶT MEOWIO</string>
-    <string name="syobon_character_label">Nhân vật</string>
-    <string name="syobon_char_classic">Syobon Cổ điển</string>
-    <string name="syobon_char_gold">Mèo Vàng</string>
-    <string name="syobon_char_shadow">Mèo Bóng đêm</string>
-    <string name="syobon_lives_label">Chế độ mạng</string>
-    <string name="syobon_lives_3">3 MẠNG</string>
-    <string name="syobon_lives_1">1 MẠNG</string>
-    <string name="syobon_lives_inf">VÔ HẠN (Đùa thôi)</string>
-    <string name="syobon_lives_desc">Chọn mức độ chịu đựng cạm bẫy của bạn.</string>
-    <string name="syobon_instructions">• D-PAD để di chuyển và nhảy.\n• Cẩn thận với các cạm bẫy ẩn!\n• Gạch có thể vỡ hoặc rơi.\n• Chạm vào cột cờ để thắng.</string>
-    <string name="syobon_difficulty_desc">Số lượng cạm bẫy đang hoạt động.</string>
-    <string-array name="win_syobon">
-        <item>BẠN ĐÃ SỐNG SÓT!</item>
-        <item>BẬC THẦY CẠM BẪY!</item>
-        <item>MÈO HUYỀN THOẠI!</item>
+    <string-array name="win_generic">
+        <item>CHIẾN THẮNG!</item>
+        <item>LÀM TỐT LẮM!</item>
+        <item>THẬT KHÔNG TIN ĐƯỢC!</item>
+        <item>XUẤT SẮC!</item>
+        <item>QUÁ TUYỆT VỜI!</item>
+        <item>BẠN QUÁ ĐỈNH!</item>
+        <item>HÀO HỨNG!</item>
+        <item>PHI THƯỜNG!</item>
+        <item>KỲ DIỆU!</item>
+        <item>CỐ GẮNG LẮM!</item>
+    </string-array>
+    <string-array name="win_highscore">
+        <item>KỶ LỤC MỚI!</item>
         <item>KHÔNG THỂ CẢN PHÁ!</item>
+        <item>ĐỈNH CAO!</item>
+        <item>QUÁ KHỦNG!</item>
+        <item>ĐIỂM CAO!</item>
+    </string-array>
+    <string-array name="win_minesweeper">
+        <item>ĐÃ DỌN SẠCH!</item>
+        <item>BẬC THẦY DÒ MÌN!</item>
+        <item>LỐI ĐI AN TOÀN!</item>
+        <item>CHUYÊN GIA DÒ MÌN!</item>
+    </string-array>
+    <string-array name="win_sudoku">
+        <item>LÀM CHỦ BẢNG SỐ!</item>
+        <item>VUA LOGIC!</item>
+        <item>ĐÃ GIẢI XONG!</item>
+        <item>TRÍ TUỆ SIÊU PHÀM!</item>
+    </string-array>
+    <string-array name="win_tictactoe">
+        <item>THẮNG ÁP ĐẢO!</item>
+        <item>3 Ô LIÊN TIẾP!</item>
+        <item>THẮNG CHIẾN THUẬT!</item>
+        <item>BẤT KHẢ CHIẾN BẠI!</item>
+    </string-array>
+    <string-array name="win_4096">
+        <item>THIÊN TÀI TOÁN HỌC!</item>
+        <item>ĐẠT 4096!</item>
+        <item>BẬC THẦY CON SỐ!</item>
+        <item>Ô CUỐI CÙNG!</item>
+    </string-array>
+    <string-array name="win_memory">
+        <item>TRÍ NHỚ TUYỆT VỜI!</item>
+        <item>TRÚC XANH ĐẠI SƯ!</item>
+        <item>ĐẦU ÓC SẮC BÉN!</item>
+        <item>NHỚ TẤT TẦN TẬT!</item>
+    </string-array>
+    <string-array name="win_hangman">
+        <item>CỨU THÀNH CÔNG!</item>
+        <item>VUA TỪ VỰNG!</item>
+        <item>THẮNG KỲ TÍCH!</item>
+        <item>BẬC THẦY NGÔN NGỮ!</item>
+    </string-array>
+    <string-array name="win_brick_break">
+        <item>HOÀN THÀNH MÀN!</item>
+        <item>MÁY NGHIỀN GẠCH!</item>
+        <item>KẺ PHÁ TƯỜNG!</item>
+        <item>TAY VỢT ĐỈNH CAO!</item>
+    </string-array>
+    <string-array name="win_word_quest">
+        <item>ĐÃ TÌM THẤY TỪ!</item>
+        <item>BẬC THẦY ĐÁNH VẦN!</item>
+        <item>ANH HÙNG TỪ ĐIỂN!</item>
+        <item>NHIỆM VỤ HOÀN THÀNH!</item>
+    </string-array>
+    <string-array name="win_solitaire">
+        <item>ĐÃ DỌN BÀI!</item>
+        <item>ÁT CHỦ BÀI!</item>
+        <item>XONG BỘ BÀI!</item>
+        <item>VUA BÀI!</item>
+    </string-array>
+    <string-array name="win_sokoban">
+        <item>ANH HÙNG KHO BÃI!</item>
+        <item>VUA ĐẨY THÙNG!</item>
+        <item>ĐÃ VÀO MỤC TIÊU!</item>
+        <item>BẬC THẦY SOKOBAN!</item>
+    </string-array>
+    <string-array name="win_checkers">
+        <item>THẮNG MÁY TÍNH!</item>
+        <item>VUA BÀN CỜ!</item>
+        <item>ĐẠI KIỆN TƯỚNG!</item>
+        <item>BẬC THẦY CHIẾN THUẬT!</item>
+    </string-array>
+    <string-array name="win_slide_puzzle">
+        <item>HÌNH ĐÃ KHỚP!</item>
+        <item>GIẢI XONG ĐỐ VUI!</item>
+        <item>HOÀN HẢO!</item>
+        <item>BẬC THẦY XẾP HÌNH!</item>
+    </string-array>
+    <string-array name="win_dungeon">
+        <item>ĐÃ THOÁT HẦM NGỤC!</item>
+        <item>NHÀ THÁM HIỂM HUYỀN THOẠI!</item>
+        <item>DỌN SẠCH TẦNG!</item>
+        <item>TÌM THẤY KHO BÁU!</item>
+    </string-array>
+    <string-array name="win_tanks">
+        <item>BẢO VỆ CĂN CỨ!</item>
+        <item>QUÉT SẠCH KẺ ĐỊCH!</item>
+        <item>CHỈ HUY XE TĂNG!</item>
+        <item>ANH HÙNG CHIẾN TRANH!</item>
+    </string-array>
+    <string-array name="win_mental_math">
+        <item>THIÊN TÀI TOÁN HỌC!</item>
+        <item>SỨC MẠNH TRÍ TUỆ!</item>
+        <item>VUA TÍNH TOÁN!</item>
+        <item>TRÙM CON SỐ!</item>
+    </string-array>
+    <string-array name="win_froggy">
+        <item>ĐÃ VỀ ĐÍCH!</item>
+        <item>QUA ĐƯỜNG AN TOÀN!</item>
+        <item>ANH HÙNG ẾCH!</item>
+        <item>LÀM CHỦ DÒNG SÔNG!</item>
+    </string-array>
+    <string name="starfighter_ship_label">Mẫu tàu chiến</string>
+    <string name="starfighter_ship_balanced">TIÊN PHONG (Cân bằng)</string>
+    <string name="starfighter_ship_balanced_desc">Chiến đấu cơ không gian tiêu chuẩn.</string>
+    <string name="starfighter_ship_fast">ĐÁNH CHẶN (Nhanh &amp; Linh hoạt)</string>
+    <string name="starfighter_ship_fast_desc">Tốc độ cao, giáp nhẹ hơn.</string>
+    <string name="starfighter_ship_tank">THIẾT GIÁP HẠM (Giáp dày)</string>
+    <string name="starfighter_ship_tank_desc">Giáp tối đa, tốc độ chậm hơn.</string>
+    <string name="starfighter_ship_solar">THÁI DƯƠNG (Vũ khí năng lượng cao)</string>
+    <string name="starfighter_ship_solar_desc">Tăng sát thương tia laser.</string>
+    <string name="starfighter_ship_phoenix">PHƯỢNG HOÀNG (Hồi phục lá chắn)</string>
+    <string name="starfighter_ship_phoenix_desc">Tự động hồi phục lá chắn theo thời gian.</string>
+    <string name="syobon_settings_title">CÀI ĐẶT MÈO MEOWIO</string>
+    <string name="syobon_character_label">Màu lông mèo</string>
+    <string name="syobon_char_classic">TRẮNG CỔ ĐIỂN (Neko)</string>
+    <string name="syobon_char_gold">VÀNG MƯỚP (May mắn)</string>
+    <string name="syobon_char_shadow">BÁO ĐEN (Ninja)</string>
+    <string name="syobon_lives_label">Số mạng bắt đầu</string>
+    <string name="syobon_lives_3">3 MẠNG (Cổ điển)</string>
+    <string name="syobon_lives_1">1 MẠNG (Thử thách cao)</string>
+    <string name="syobon_lives_inf">VÔ HẠN MẠNG (Luyện tập)</string>
+    <string name="syobon_lives_desc">Số mạng có trước khi kết thúc trò chơi.</string>
+    <string name="syobon_instructions">• Di chuyển Trái/Phải.\n• Nhấn LÊN hoặc NÚT GIỮA để nhảy.\n• Nhảy húc đầu vào các khối gạch.\n• Chạm vào cột cờ để chiến thắng!\n• CẨN THẬN VỚI CÁC CẠM BẪY!</string>
+    <string name="syobon_difficulty_desc">Chọn diện mạo cho chú mèo anh hùng.</string>
+    <string-array name="win_syobon">
+        <item>BẬC THẦY MEOWIO!</item>
+        <item>VƯỢT BẪY THẦN KỲ!</item>
+        <item>CHẠM ĐỈNH CỘT CỜ!</item>
+        <item>ANH HÙNG MÈO!</item>
     </string-array>
     <string name="quit_game_title">Thoát trò chơi</string>
     <string name="quit_game_confirm">Bạn có chắc chắn muốn thoát trò chơi không?</string>
     <string name="yes">Có</string>
     <string name="no">Không</string>
-    <string name="choose_hero" translatable="true">CHỌN NGƯỜI CHƠI</string>
-    <string name="create_hero" translatable="true">TẠO NGƯỜI CHƠI MỚI</string>
-    <string name="enter_hero_name" translatable="true">NHẬP TÊN NGƯỜI CHƠI</string>
-    <string name="add_profile" translatable="true">THÊM NGƯỜI CHƠI</string>
-    <string name="switch_profile" translatable="true">ĐỔI NGƯỜI CHƠI</string>
-    <string name="profile_selection_hint" translatable="true">DÙNG ◄ ► ĐỂ DUYỆT • NHẤN [OK] ĐỂ CHỌN</string>
-    <string name="please_enter_name" translatable="true">Vui lòng nhập tên</string>
-    <string name="enter_pin" translatable="true">NHẬP MÃ PIN 4 SỐ</string>
-    <string name="setup_pin" translatable="true">ĐẶT KHÓA NGƯỜI CHƠI (PIN)</string>
-    <string name="wrong_pin" translatable="true">Mã PIN không đúng. Thử lại.</string>
-    <string name="manage_profiles" translatable="true">QUẢN LÝ NGƯỜI CHƠI</string>
-    <string name="edit_profile" translatable="true">SỬA NGƯỜI CHƠI</string>
-    <string name="delete_profile" translatable="true">XÓA NGƯỜI CHƠI</string>
-    <string name="confirm_delete_profile" translatable="true">Bạn có chắc muốn xóa người chơi này? Toàn bộ điểm số sẽ bị mất.</string>
-    <string name="leave_blank_no_pin" translatable="true">Để trống nếu không muốn dùng khóa</string>
-    <string name="hall_of_fame" translatable="true">ĐỀN THỜ HUYỀN THOẠI</string>
-    <string name="no_records" translatable="true">CHƯA CÓ KỶ LỤC</string>
-    <string name="save" translatable="true">LƯU</string>
-    <string name="choose_avatar" translatable="true">CHỌN ẢNH ĐẠI DIỆN</string>
-    <string name="choose_color" translatable="true">CHỌN MÀU SẮC</string>
-    <string name="security_pin_label" translatable="true">MÃ PIN BẢO MẬT (TÙY CHỌN)</string>
-    <string name="pin_digits_hint" translatable="true">Mã PIN phải có 4 chữ số</string>
-    <string name="rank_1st" translatable="true">Hạng 1</string>
-    <string name="rank_2nd" translatable="true">Hạng 2</string>
-    <string name="rank_3rd" translatable="true">Hạng 3</string>
-    <string name="placeholder_name" translatable="false">---</string>
-    <string name="placeholder_score" translatable="false">0</string>
+    <string name="choose_hero">CHỌN NGƯỜI CHƠI</string>
+    <string name="create_hero">TẠO NGƯỜI CHƠI MỚI</string>
+    <string name="enter_hero_name">NHẬP TÊN NGƯỜI CHƠI</string>
+    <string name="add_profile">THÊM NGƯỜI CHƠI</string>
+    <string name="switch_profile">ĐỔI NGƯỜI CHƠI</string>
+    <string name="profile_selection_hint">DÙNG ◄ ► ĐỂ DUYỆT • NHẤN [OK] ĐỂ CHỌN</string>
+    <string name="please_enter_name">Vui lòng nhập tên</string>
+    <string name="enter_pin">NHẬP MÃ PIN 4 SỐ</string>
+    <string name="setup_pin">ĐẶT KHÓA NGƯỜI CHƠI (PIN)</string>
+    <string name="wrong_pin">Mã PIN không đúng. Thử lại.</string>
+    <string name="manage_profiles">QUẢN LÝ NGƯỜI CHƠI</string>
+    <string name="edit_profile">SỬA NGƯỜI CHƠI</string>
+    <string name="delete_profile">XÓA NGƯỜI CHƠI</string>
+    <string name="confirm_delete_profile">Bạn có chắc muốn xóa người chơi này? Toàn bộ điểm số sẽ bị mất.</string>
+    <string name="leave_blank_no_pin">Để trống nếu không muốn dùng khóa</string>
+    <string name="hall_of_fame">ĐỀN THỜ HUYỀN THOẠI</string>
+    <string name="no_records">CHƯA CÓ KỶ LỤC</string>
+    <string name="save">LƯU</string>
+    <string name="choose_avatar">CHỌN ẢNH ĐẠI DIỆN</string>
+    <string name="choose_color">CHỌN MÀU SẮC</string>
+    <string name="security_pin_label">MÃ PIN BẢO MẬT (TÙY CHỌN)</string>
+    <string name="pin_digits_hint">Mã PIN phải có 4 chữ số</string>
+    <string name="protected_hero">ANH HÙNG BẢO MẬT</string>
+    <string name="guest_hero_name">ANH HÙNG KHÁCH</string>
+    <string name="hero_customization_hint">Nhấn [OK] vào Tên để tùy chỉnh Anh hùng!</string>
+    <string name="rank_1st">Hạng 1</string>
+    <string name="rank_2nd">Hạng 2</string>
+    <string name="rank_3rd">Hạng 3</string>
+    <string name="placeholder_name">---</string>
+    <string name="placeholder_score">0</string>
     <string name="monkey_spring">XUÂN</string>
     <string name="monkey_summer">HẠ</string>
     <string name="monkey_autumn">THU</string>
@@ -509,11 +585,11 @@
     <string name="monkey_beetle_warning">⚠️ BỌ CÁNH CỨNG</string>
     <string name="monkey_char_gibbon">VƯỢN VÀNG</string>
     <string name="monkey_char_climber">NGƯỜI RỪNG TARZAN</string>
+    <string name="monkey_char_spider">KHỈ NHỆN</string>
     <string name="monkey_char_chimp">TINH TINH NỔI LOẠN</string>
-    <string name="retro_driver_final_lap">VÒNG CUỐI!</string>
-    <string name="retro_driver_lap_count">VÒNG %1$d / %2$d</string>
-    <string name="retro_driver_go">CHẠY!</string>
-    <string name="retro_driver_finish">VỀ ĐÍCH!</string>
+    <string name="monkey_char_default">KHỈ</string>
+    <string name="monkey_jaguar_warning">▲ CẢNH BÁO BÁO ĐEN ▲</string>
+    <string name="monkey_death_jaguar">BỊ BÁO ĐEN ĂN THỊT!</string>
     <string name="frenzy_death_pufferfish">ĐAU MIỆNG VÌ CÁ NÓC!</string>
     <string name="frenzy_death_eel">BỊ ĐIỆN GIẬT (TÊ LIỆT)!</string>
     <string name="frenzy_death_lionfish">BỊ NHIỄM ĐỘC (TÊ LIỆT)!</string>
@@ -521,7 +597,6 @@
     <string name="frenzy_death_too_large">KHÔNG THỂ ĂN: %1$s QUÁ LỚN!</string>
     <string name="frenzy_death_eaten">BỊ %1$s ĂN THỊT!</string>
     <string name="frenzy_death_mine">BỊ NỔ BỞI MÌN BIỂN!</string>
-    <string name="syobon_surprise">BẤT NGỜ CHƯA!</string>
     <string name="flappy_death_ceiling">Bay quá cao và đụng trần!</string>
     <string name="flappy_death_ground">Rơi xuống đất cỏ!</string>
     <string name="flappy_death_pipe">Đâm vào ống xanh!</string>
@@ -534,16 +609,92 @@
     <string name="flappy_hint_fly_through">BAY XUYÊN QUA</string>
     <string name="flappy_hint_avoid_bat">TRÁNH DƠI</string>
     <string name="flappy_hint_fly_under">BAY PHÍA DƯỚI</string>
-    <string name="protected_hero">ANH HÙNG BẢO MẬT</string>
-    <string name="guest_hero_name">ANH HÙNG KHÁCH</string>
-    <string name="hero_customization_hint">Nhấn [OK] vào Tên để tùy chỉnh Anh hùng!</string>
-    <string name="monkey_char_default">KHỈ</string>
-    <string name="monkey_jaguar_warning">▲ CẢNH BÁO BÁO ĐEN ▲</string>
-    <string name="monkey_death_jaguar">BỊ BÁO ĐEN ĂN THỊT!</string>
-    <string name="monkey_char_spider">KHỈ NHỆN</string>
+    <string name="retro_driver_final_lap">VÒNG CUỐI!</string>
+    <string name="retro_driver_lap_count">VÒNG %1$d / %2$d</string>
+    <string name="retro_driver_go">CHẠY!</string>
+    <string name="retro_driver_finish">VỀ ĐÍCH!</string>
+    <string name="syobon_surprise">BẤT NGỜ CHƯA!</string>
     <string name="ad_screensaver_message">Để duy trì các trò chơi miễn phí, chúng tôi hiển thị quảng cáo khi nghỉ.\nCảm ơn sự ủng hộ của bạn!</string>
     <string name="ad_screensaver_hint">Nhấn phím bất kỳ để quay lại trò chơi</string>
     <string name="ad_warning_prefix">Quảng cáo toàn màn hình sẽ bắt đầu sau %1$d...</string>
     <string name="ad_label">QC</string>
     <string name="advertisement_label">QUẢNG CÁO</string>
+    <string name="monkey_settings_title">CÀI ĐẶT VƯỢN LEO DÂY</string>
+    <string name="monkey_character_label">Nhân vật</string>
+    <string name="monkey_character_desc">Chọn giống loài linh trưởng leo trèo.</string>
+    <string name="monkey_season_label">Chủ đề mùa</string>
+    <string name="monkey_season_desc">Chọn thời tiết và thảm thực vật rừng rậm.</string>
+    <string name="frenzy_settings_title">CÀI ĐẶT CÁ LỚN NUỐT CÁ BÉ</string>
+    <string name="frenzy_difficulty_label">Độ khó</string>
+    <string name="frenzy_difficulty_easy">DỄ (Kẻ săn mồi bơi chậm)</string>
+    <string name="frenzy_difficulty_normal">BÌNH THƯỜNG (Cân bằng)</string>
+    <string name="frenzy_difficulty_hard">KHÓ (Cá mập hung hãn)</string>
+    <string name="frenzy_difficulty_desc">Tốc độ và mật độ kẻ săn mồi.</string>
+    <string name="frenzy_starting_size_label">Kích thước bắt đầu</string>
+    <string name="frenzy_starting_size_guppy">CÁ BẢY MÀU (Nhỏ nhất)</string>
+    <string name="frenzy_starting_size_angelfish">CÁ THẦN TIÊN (Vừa)</string>
+    <string name="frenzy_starting_size_desc">Giai đoạn trưởng thành bắt đầu.</string>
+    <string name="retrodriver_settings_title">CÀI ĐẶT ĐUA XE RETRO</string>
+    <string name="retrodriver_vehicle_label">Phương tiện</string>
+    <string name="retrodriver_vehicle_desc">Chọn mẫu siêu xe mô tô của bạn.</string>
+    <string name="retrodriver_theme_label">Môi trường đường đua</string>
+    <string name="retrodriver_theme_desc">Chọn cảnh quan đường đua.</string>
+    <string name="retrodriver_theme_neon">THÀNH PHỐ CYBER (Neon)</string>
+    <string name="retrodriver_theme_desert">HOÀNG HÔN HẺM NÚI (Chiều tà)</string>
+    <string name="retrodriver_theme_cyber">LƯỚI SYNTHWAVE (Retro)</string>
+    <string name="retrodriver_theme_snow">ĐÈO TUYẾT (Mùa đông)</string>
+    <string-array name="win_monkey">
+        <item>BẬC THẦY LEO DÂY!</item>
+        <item>ĐỈNH CAO LINH HOẠT!</item>
+        <item>VUA RỪNG XANH!</item>
+        <item>CHINH PHỤC TÁN CÂY!</item>
+    </string-array>
+    <string-array name="win_frenzy">
+        <item>BÁ CHỦ ĐẠI DƯƠNG!</item>
+        <item>SIÊU SĂN MỒI!</item>
+        <item>THỐNG TRỊ RẠN SAN HÔ!</item>
+        <item>BẬC THẦY SĂN MỒI!</item>
+    </string-array>
+    <string-array name="win_retrodriver">
+        <item>QUÁI KIỆT TỐC ĐỘ!</item>
+        <item>QUÁN QUÂN ĐƯỜNG ĐUA!</item>
+        <item>TAY ĐUA SYNTHWAVE!</item>
+        <item>CÁN ĐÍCH ĐẦY ẤN TƯỢNG!</item>
+    </string-array>
+    <string-array name="win_tetris">
+        <item>BẬC THẦY TETRIS!</item>
+        <item>CHUYÊN GIA XÓA DÒNG!</item>
+        <item>XẾP GẠCH HOÀN HẢO!</item>
+        <item>CAO THỦ KHỐI HÌNH!</item>
+    </string-array>
+    <string-array name="win_snake">
+        <item>VUA RẮN SĂN MỒI!</item>
+        <item>HUYỀN THOẠI TRĂN KHỔNG LỒ!</item>
+        <item>QUÁN QUÂN BỮA TIỆC!</item>
+        <item>BẬC THẦY UỐN LƯỢN!</item>
+    </string-array>
+    <string-array name="win_flappy">
+        <item>HUYỀN THOẠI BẦU TRỜI!</item>
+        <item>ANH HÙNG VỖ CÁNH!</item>
+        <item>BẬC THẦY LÔNG VŨ!</item>
+        <item>PHI CÔNG SIÊU ĐẲNG!</item>
+    </string-array>
+    <string-array name="win_lines98">
+        <item>BẬC THẦY ĐƯỜNG THẲNG!</item>
+        <item>XÓA MÀU TUYỆT HẢO!</item>
+        <item>PHÙ THỦY BÓNG MÀU!</item>
+        <item>THIÊN TÀI BÀN CỜ!</item>
+    </string-array>
+    <string-array name="win_spinball">
+        <item>PHÙ THỦY VÒNG XOAY!</item>
+        <item>BẬC THẦY QUỸ ĐẠO!</item>
+        <item>CHUYÊN GIA PINBALL!</item>
+        <item>SINH TỒN VÒNG TRÒN!</item>
+    </string-array>
+    <string-array name="win_simon">
+        <item>BẬC THẦY TRÍ NHỚ!</item>
+        <item>SIMON GỌI CHIẾN THẮNG!</item>
+        <item>THIÊN TÀI GHI NHỚ!</item>
+        <item>PHẢN XẠ TUYỆT ĐỈNH!</item>
+    </string-array>
 </resources>

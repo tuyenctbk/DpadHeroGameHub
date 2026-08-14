@@ -2,6 +2,7 @@
     <string name="app_name">Dpad Arcade</string>
     <string name="app_name_full">Dpad Arcade: 复古游戏</string>
     <string name="game_center">DPAD ARCADE</string>
+    <string name="snake">贪吃蛇</string>
     <string name="snake_settings_title">贪吃蛇设置</string>
     <string name="snake_level_1">1级：初学者</string>
     <string name="snake_level_2">2级：普通</string>
@@ -10,7 +11,7 @@
     <string name="snake_level_2_desc">碰墙即死。速度正常。</string>
     <string name="snake_level_3_desc">碰墙即死。速度较快。</string>
     <string name="snake_level_label">难度等级</string>
-    <string name="snake">贪吃蛇</string>
+    <string name="minesweeper">扫雷</string>
     <string name="minesweeper_settings_title">扫雷设置</string>
     <string name="minesweeper_level_1">1级：初学者 (10x10, 12颗雷)</string>
     <string name="minesweeper_level_2">2级：普通 (16x16, 40颗雷)</string>
@@ -40,7 +41,6 @@
     <string name="tictactoe_size_4_desc">4连珠获胜。</string>
     <string name="tictactoe_size_5_desc">5连珠获胜。</string>
     <string name="tictactoe_size_label">棋盘大小</string>
-    <string name="minesweeper">扫雷</string>
     <string name="game_4096_settings_title">4096设置</string>
     <string name="game_4096_size_4">棋盘：4x4 (经典)</string>
     <string name="game_4096_size_5">棋盘：5x5 (大)</string>
@@ -53,6 +53,28 @@
     <string name="tetris_settings_title">俄罗斯方块设置</string>
     <string name="tetris_start_level">起始等级</string>
     <string name="tetris_level_desc">更高级别开始时速度更快。</string>
+    <string name="checkers_settings_title">西洋跳棋设置</string>
+    <string name="checkers_difficulty_1">AI: 随机 (简单)</string>
+    <string name="checkers_difficulty_2">AI: 策略 (普通)</string>
+    <string name="checkers_difficulty_desc">更强大的AI会走出更聪明的棋步。</string>
+    <string name="spinball_settings_title">旋球设置</string>
+    <string name="spinball_difficulty_1">模式: 平缓 (慢速)</string>
+    <string name="spinball_difficulty_2">模式: 欢快 (普通)</string>
+    <string name="spinball_difficulty_3">模式: 狂暴 (快速)</string>
+    <string name="spinball_difficulty_desc">速度提升挑战难度。</string>
+    <string name="simon_says_settings_title">西蒙说设置</string>
+    <string name="simon_says_speed_1">速度: 轻松 (慢速)</string>
+    <string name="simon_says_speed_2">速度: 普通 (中速)</string>
+    <string name="simon_says_speed_3">速度: 闪电 (快速)</string>
+    <string name="simon_says_speed_desc">序列播放速度。</string>
+    <string name="dungeon_escape_settings_title">地牢逃生设置</string>
+    <string name="dungeon_escape_start_level">起始楼层</string>
+    <string name="dungeon_escape_level_desc">选择从哪一层开始挑战。</string>
+    <string name="froggy_cross_settings_title">青蛙过河设置</string>
+    <string name="froggy_cross_difficulty_1">难度: 缓慢 (车流稀少)</string>
+    <string name="froggy_cross_difficulty_2">难度: 普通 (标准速度)</string>
+    <string name="froggy_cross_difficulty_3">难度: 高峰期 (疾速车流)</string>
+    <string name="froggy_cross_difficulty_desc">车辆和浮木的移动速度。</string>
     <string name="game_4096">4096</string>
     <string name="game_trex">T-REX RUN</string>
     <string name="game_brick_break">弹球消砖块</string>
@@ -60,17 +82,17 @@
     <string name="game_checkers">西洋跳棋</string>
     <string name="sokoban_settings_title">推箱子设置</string>
     <string name="sokoban_start_level">起始关卡</string>
-    <string name="sokoban_level_desc">选择要开始的仓库楼层。</string>
+    <string name="sokoban_level_desc">选择从哪一关开始挑战。</string>
     <string name="battle_tanks_settings_title">坦克大战设置</string>
-    <string name="battle_tanks_difficulty_1">等级 1: 新兵</string>
-    <string name="battle_tanks_difficulty_2">等级 2: 老兵</string>
-    <string name="battle_tanks_difficulty_3">等级 3: 精英</string>
-    <string name="battle_tanks_difficulty_desc">更高级别的敌人更具攻击性。</string>
-    <string name="starfighter_settings_title">星际战斗机设置</string>
-    <string name="starfighter_difficulty_1">模式：侦察 (简单)</string>
-    <string name="starfighter_difficulty_2">模式：战斗 (普通)</string>
-    <string name="starfighter_difficulty_3">模式：王牌 (困难)</string>
-    <string name="starfighter_difficulty_desc">更难的模式有更快的敌人和子弹。</string>
+    <string name="battle_tanks_difficulty_1">难度: 兵士 (慢速坦克)</string>
+    <string name="battle_tanks_difficulty_2">难度: 老兵 (标准坦克)</string>
+    <string name="battle_tanks_difficulty_3">难度: 将军 (快速射击)</string>
+    <string name="battle_tanks_difficulty_desc">敌方坦克的移动速度与火力。</string>
+    <string name="starfighter_settings_title">星际战机设置</string>
+    <string name="starfighter_difficulty_1">等级 1: 学员 (简单)</string>
+    <string name="starfighter_difficulty_2">等级 2: 老兵 (普通)</string>
+    <string name="starfighter_difficulty_3">等级 3: 王牌 (困难)</string>
+    <string name="starfighter_difficulty_desc">敌机生命值与开火速率。</string>
     <string name="game_sokoban">推箱子</string>
     <string name="game_sudoku">数独</string>
     <string name="game_tetris">俄罗斯方块</string>
@@ -79,40 +101,58 @@
     <string name="game_slide_puzzle">滑块拼图</string>
     <string name="game_mental_math">心算</string>
     <string name="game_froggy">青蛙过河</string>
+    <string name="game_syobon">CAT MEOWIO</string>
     <string name="game_simon">西蒙说</string>
     <string name="game_tanks">坦克大战</string>
-    <string name="flappy_hero_settings_title">像素小鸟设置</string>
-    <string name="flappy_hero_level_1">等级 1: 简单</string>
-    <string name="flappy_hero_level_2">等级 2: 普通</string>
-    <string name="flappy_hero_level_3">等级 3: 困难</string>
-    <string name="flappy_hero_level_1_desc">间隙大。水管慢。</string>
-    <string name="flappy_hero_level_2_desc">标准间隙和速度。</string>
-    <string name="flappy_hero_level_3_desc">间隙小。水管快。</string>
-    <string name="brick_break_settings_title">打砖块设置</string>
-    <string name="brick_break_paddle_label">挡板大小</string>
-    <string name="brick_break_paddle_large">尺寸：大</string>
-    <string name="brick_break_paddle_medium">尺寸：中</string>
-    <string name="brick_break_paddle_small">尺寸：小</string>
-    <string name="brick_break_paddle_desc">更大的挡板更容易接球。</string>
-    <string name="lines98_settings_title">五子彩球设置</string>
-    <string name="lines98_difficulty_easy">等级：简单 (5种颜色)</string>
-    <string name="lines98_difficulty_normal">等级：普通 (7种颜色)</string>
-    <string name="lines98_difficulty_hard">等级：困难 (9种颜色)</string>
-    <string name="lines98_difficulty_desc">更多颜色会增加难度。</string>
-    <string name="word_quest_settings_title">词汇探索设置</string>
-    <string name="word_quest_category_all">分类：全部词汇</string>
-    <string name="word_quest_category_nature">分类：自然</string>
-    <string name="word_quest_category_tech">分类：科技</string>
-    <string name="word_quest_category_desc">选择谜题的单词类别。</string>
+    <string name="word_quest_settings_title">寻字物语设置</string>
+    <string name="word_quest_category_all">分类: 全部词汇</string>
+    <string name="word_quest_category_nature">分类: 自然与动物</string>
+    <string name="word_quest_category_tech">分类: 科技与科学</string>
+    <string name="word_quest_category_desc">选择你的单词谜题主题。</string>
     <string name="road_racer_settings_title">公路赛车设置</string>
-    <string name="road_racer_density_label">交通密度</string>
-    <string name="road_racer_density_low">密度：低</string>
-    <string name="road_racer_density_normal">密度：普通</string>
-    <string name="road_racer_density_high">密度：高</string>
-    <string name="road_racer_density_desc">更多交通流量更难避让。</string>
+    <string name="road_racer_density_label">车流密度</string>
+    <string name="road_racer_density_low">密度: 稀疏 (简单)</string>
+    <string name="road_racer_density_normal">密度: 中等 (普通)</string>
+    <string name="road_racer_density_high">密度: 拥挤 (困难)</string>
+    <string name="road_racer_density_desc">高速公路上的车流数量。</string>
     <string name="game_word_quest">词汇探险</string>
     <string name="game_dungeon">地牢逃脱</string>
+    <string name="game_monkey">长臂猿攀登</string>
+    <string name="game_retrodriver">复古赛车</string>
+    <string name="game_frenzy">大鱼吃小鱼</string>
+    <string name="game_fruit">切水果</string>
+    <string name="flappy_hero_settings_title">飞翔小鸟设置</string>
+    <string name="flappy_hero_level_1">关卡 1: 草原 (宽阔管道)</string>
+    <string name="flappy_hero_level_2">关卡 2: 森林 (移动障碍)</string>
+    <string name="flappy_hero_level_3">关卡 3: 峡谷 (狭窄缝隙)</string>
+    <string name="flappy_hero_level_4">关卡 4: 夜空 (强风气流)</string>
+    <string name="flappy_hero_level_5">关卡 5: 炼狱 (狂暴模式)</string>
+    <string name="flappy_hero_level_1_desc">最宽的间隙，适合新手上手。</string>
+    <string name="flappy_hero_level_2_desc">障碍物会在垂直方向缓慢摆动。</string>
+    <string name="flappy_hero_level_3_desc">更紧凑的管道缝隙。</string>
+    <string name="flappy_hero_level_4_desc">风向会影响下落速度。</string>
+    <string name="flappy_hero_level_5_desc">急速卷轴与极窄间隙。</string>
+    <string name="flappy_hero_char_label">角色</string>
+    <string name="flappy_char_classic">经典小鸟 (标准)</string>
+    <string name="flappy_char_classic_desc">经典的飞行手感与物理效果。</string>
+    <string name="flappy_char_swift">迅捷之箭 (快速拍翼)</string>
+    <string name="flappy_char_swift_desc">快速爬升，敏捷点按。</string>
+    <string name="flappy_char_heavy">铁羽飞鹰 (快速坠落)</string>
+    <string name="flappy_char_heavy_desc">重力较高，考验极限反应。</string>
+    <string name="flappy_char_floaty">轻柔羽毛 (轻盈滑翔)</string>
+    <string name="flappy_char_floaty_desc">重力较低，更容易操控。</string>
+    <string name="brick_break_settings_title">打砖块设置</string>
+    <string name="brick_break_paddle_label">挡板尺寸</string>
+    <string name="brick_break_paddle_large">挡板: 宽大 (简单)</string>
+    <string name="brick_break_paddle_medium">挡板: 标准 (普通)</string>
+    <string name="brick_break_paddle_small">挡板: 狭窄 (困难)</string>
+    <string name="brick_break_paddle_desc">更宽的挡板更容易接住小球。</string>
     <string name="game_flappy">笨鸟先飞</string>
+    <string name="lines98_settings_title">五子彩球设置</string>
+    <string name="lines98_difficulty_easy">颜色: 5种颜色 (简单)</string>
+    <string name="lines98_difficulty_normal">颜色: 7种颜色 (标准)</string>
+    <string name="lines98_difficulty_hard">颜色: 9种颜色 (专家)</string>
+    <string name="lines98_difficulty_desc">较少的颜色更容易形成连线。</string>
     <string name="game_lines98">连珠五子</string>
     <string name="game_solitaire">接龙</string>
     <string name="game_road_racer">公路赛车</string>
@@ -145,6 +185,7 @@
     <string name="game_slide_puzzle_instructions">• 使用方向键移动。\n• 按确定键滑动。\n• 将图片恢复原状。</string>
     <string name="game_mental_math_instructions">• 解决数学题。\n• 使用方向键选择答案。\n• 确定键确认。\n• 动作要快！时间有限。</string>
     <string name="game_froggy_instructions">• 穿过马路和河流。\n• 避开车辆。\n• 跳上木头。\n• 到达终点得分！</string>
+    <string name="game_syobon_instructions">• 左/右移动。\n• 按“上”或中心键跳跃。\n• 顶撞砖块获取惊喜。\n• 触碰旗杆夺取胜利！\n• 千万当心隐藏陷阱！</string>
     <string name="game_simon_instructions">• 观察颜色序列。\n• 使用方向键复现。\n• 每回合序列会变长！</string>
     <string name="game_tanks_instructions">• 使用方向键控制坦克。\n• 自动射击。\n• 摧毁敌方坦克。\n• 保护基地（星号）。</string>
     <string name="game_word_quest_instructions">• 6 次机会猜出 5 字母单词。\n• 使用方向键操作键盘。\n• 确定键选择。\n• 绿色: 字母和位置正确。</string>
@@ -153,6 +194,10 @@
     <string name="game_lines98_instructions">• 使用方向键移动。\n• 确定键移动球。\n• 5 个同色球连线消除。\n• 满屏游戏结束。</string>
     <string name="game_solitaire_instructions">• 使用方向键移动。\n• 确定键选择/放置牌。\n• 按花色从 A 排序到 K。</string>
     <string name="game_road_racer_instructions">• 避开交通。\n• 尽可能生存！\n• 按确定键暂停。</string>
+    <string name="game_monkey_instructions">• 攀爬藤蔓逃离危险。\n• 收集水果获取分数。\n• 躲避蜘蛛、椰子和咬藤甲虫！\n• 使用方向键攀爬并在藤蔓间跳跃。</string>
+    <string name="game_retrodriver_instructions">• 驾驶复古电音超级摩托！\n• 左/右转向，按住“上”加速。\n• 超越全部20名对手夺得第一名。\n• 冲过终点线完成比赛！</string>
+    <string name="game_frenzy_instructions">• 使用方向键在海洋中畅游。\n• 吞食比你小的鱼类来长大。\n• 小心不要被大型掠食者吃掉！\n• 吞食30条鱼即可通关。</string>
+    <string name="game_fruit_instructions">• 水果会被抛向空中。\n• 使用方向键移动光刃切碎水果。\n• 千万小心不要切到炸弹！\n• 尽可能切碎更多的水果。</string>
     <string name="game_hangman_instructions">• 选择字母猜词。\n• 你有 6 次机会。\n• 确定键选择。</string>
     <string name="select_game_hint">使用 ◄ ► 选择游戏 • 按 [OK] 开始</string>
     <string name="settings">设置</string>
@@ -201,7 +246,45 @@
     <string name="next_stage_hint">按确定键下一关</string>
     <string name="continue_hint">按确定键继续</string>
     <string name="finish_hint">按确定键结束</string>
+    <string name="tictactoe_size_hint">按 上/下 切换棋盘尺寸 (3x3, 4x4, 5x5) 或按 MENU 开启选项</string>
+    <string name="sokoban_restart_hint">按 R 重置本关</string>
+    <string name="sudoku_controls_hint">方向键: 移动/数字 | 中心键: 切换 | MENU: 难度</string>
     <string name="total_wins_label">总胜利次数</string>
+    <string name="mines_label">地雷: </string>
+    <string name="flags_label">旗帜: </string>
+    <string name="high_score_prefix">最佳: </string>
+    <string name="cpu_wins_label">电脑获胜！</string>
+    <string name="your_turn_label">轮到你了</string>
+    <string name="watch_label">仔细观察...</string>
+    <string name="grid_mastered_label">棋盘通关！</string>
+    <string name="puzzle_solved_label">谜题解开！</string>
+    <string name="picture_restored_label">拼图复原！</string>
+    <string name="crashed_label">撞车！</string>
+    <string name="score_prefix">分数: </string>
+    <string name="high_score_label">最高分</string>
+    <string name="wrong_label">错误！</string>
+    <string name="answer_was_label">正确答案是: </string>
+    <string name="finish_label">终点</string>
+    <string name="continue_label">继续</string>
+    <string name="next_stage_label">下一阶段</string>
+    <string name="out_of_tries">机会用尽！</string>
+    <string name="cpu_thinking_label">电脑思考中...</string>
+    <string name="no_moves_label">无路可走</string>
+    <string name="victory_label">胜利！</string>
+    <string name="draw_label">平局！</string>
+    <string name="hit_wall_label">撞墙！</string>
+    <string name="bit_self_label">咬到自己！</string>
+    <string name="cpu_starting_label">电脑在下一局先手</string>
+    <string name="jump_again_label">再次跳跃</string>
+    <string name="draw_status">平局</string>
+    <string name="cat_animals">动物</string>
+    <string name="cat_fruits">水果</string>
+    <string name="cat_countries">国家</string>
+    <string name="cat_sports">体育</string>
+    <string name="cat_flowers">花卉</string>
+    <string name="cat_vehicles">载具</string>
+    <string name="cat_games">游戏</string>
+    <string name="cat_foods">美食</string>
     <string name="rating_title">喜欢 Dpad Arcade 吗？</string>
     <string name="rating_content">请在 Play 商店给我们 5 星好评，或分享您想玩的更多游戏的建议！</string>
     <string name="rate_now">5星好评</string>
@@ -210,139 +293,6 @@
     <string name="update_title">新版本可用！</string>
     <string name="update_content">Dpad Arcade: 复古游戏中心有新版本可用。立即更新以获取最新的游戏、功能和稳定性修复。</string>
     <string name="update_now">立即更新</string>
-
-    <string-array name="win_generic">
-        <item>获胜！</item>
-        <item>干得漂亮！</item>
-        <item>不可思议！</item>
-        <item>精彩！</item>
-        <item>壮观！</item>
-        <item>你真棒！</item>
-        <item>优秀！</item>
-        <item>太棒了！</item>
-        <item>令人惊叹！</item>
-        <item>好样儿的！</item>
-    </string-array>
-
-    <string-array name="win_highscore">
-        <item>新纪录！</item>
-        <item>无人能挡！</item>
-        <item>史上最佳！</item>
-        <item>神级表现！</item>
-        <item>最高分！</item>
-    </string-array>
-
-    <string-array name="win_minesweeper">
-        <item>清除完毕！</item>
-        <item>排雷专家！</item>
-        <item>安全通行！</item>
-        <item>拆弹大师！</item>
-    </string-array>
-
-    <string-array name="win_sudoku">
-        <item>征服数独！</item>
-        <item>逻辑之王！</item>
-        <item>破解成功！</item>
-        <item>天才大脑！</item>
-    </string-array>
-
-    <string-array name="win_tictactoe">
-        <item>智取！</item>
-        <item>三连！</item>
-        <item>策略致胜！</item>
-        <item>不可战胜！</item>
-    </string-array>
-
-    <string-array name="win_4096">
-        <item>数学奇才！</item>
-        <item>达到 4096！</item>
-        <item>数字终结者！</item>
-        <item>终极方块！</item>
-    </string-array>
-
-    <string-array name="win_memory">
-        <item>完美记忆！</item>
-        <item>配对达人！</item>
-        <item>思维敏捷！</item>
-        <item>全记住了！</item>
-    </string-array>
-
-    <string-array name="win_hangman">
-        <item>拯救成功！</item>
-        <item>词汇达人！</item>
-        <item>一词定乾坤！</item>
-        <item>词库之王！</item>
-    </string-array>
-
-    <string-array name="win_brick_break">
-        <item>关卡清除！</item>
-        <item>砖块粉碎机！</item>
-        <item>破墙者！</item>
-        <item>球板高手！</item>
-    </string-array>
-
-    <string-array name="win_word_quest">
-        <item>单词找到！</item>
-        <item>拼写专家！</item>
-        <item>词典英雄！</item>
-        <item>探险完成！</item>
-    </string-array>
-
-    <string-array name="win_solitaire">
-        <item>清空牌堆！</item>
-        <item>王牌！</item>
-        <item>花色凑齐！</item>
-        <item>卡牌之王！</item>
-    </string-array>
-
-    <string-array name="win_sokoban">
-        <item>仓库英雄！</item>
-        <item>推箱高手！</item>
-        <item>目标达成！</item>
-        <item>推箱子大师！</item>
-    </string-array>
-
-    <string-array name="win_checkers">
-        <item>击败电脑！</item>
-        <item>棋盘之王！</item>
-        <item>特级大师！</item>
-        <item>战略家！</item>
-    </string-array>
-
-    <string-array name="win_slide_puzzle">
-        <item>图片复原！</item>
-        <item>拼图完成！</item>
-        <item>丝严缝合！</item>
-        <item>滑动大师！</item>
-    </string-array>
-
-    <string-array name="win_dungeon">
-        <item>逃出地牢！</item>
-        <item>传奇探险家！</item>
-        <item>清空此层！</item>
-        <item>发现宝藏！</item>
-    </string-array>
-
-    <string-array name="win_tanks">
-        <item>基地保卫！</item>
-        <item>全歼敌军！</item>
-        <item>坦克指挥官！</item>
-        <item>战争英雄！</item>
-    </string-array>
-
-    <string-array name="win_mental_math">
-        <item>数学天才！</item>
-        <item>脑力无限！</item>
-        <item>心算王！</item>
-        <item>数字达人！</item>
-    </string-array>
-
-    <string-array name="win_froggy">
-        <item>到达终点！</item>
-        <item>安全过河！</item>
-        <item>青蛙英雄！</item>
-        <item>河流大师！</item>
-    </string-array>
     <string name="trex_daddy">霸王龙爸爸</string>
     <string name="trex_mummy">霸王龙妈妈</string>
     <string name="trex_baby">霸王龙宝宝</string>
@@ -353,11 +303,12 @@
     <string name="trex_pirate">霸王龙海盗</string>
     <string name="trex_chef">霸王龙厨师</string>
     <string name="trex_astronaut">霸王龙宇航员</string>
+    <string name="trex_ninja">忍者霸王龙</string>
     <string name="trex_dragon">龙龙</string>
     <string name="trex_zombie">僵尸龙</string>
     <string name="trex_robot">机器人龙</string>
     <string name="trex_king">国王龙</string>
-
+    <string name="trex_character_label">角色</string>
     <string name="trex_select_character">选择角色</string>
     <string name="trex_strong_prefix">优势：</string>
     <string name="trex_weak_prefix">劣势：</string>
@@ -379,6 +330,20 @@
     <string name="trex_sunny">晴天</string>
     <string name="trex_rainy">下雨</string>
     <string name="trex_snowy">下雪</string>
+    <string name="trex_desc_char_random">每次运行都有惊喜小恐龙！</string>
+    <string name="trex_desc_char_specific">使用您在准备界面选择的小恐龙。</string>
+    <string name="trex_desc_time_random">昼夜交替循环。</string>
+    <string name="trex_desc_time_day">晴朗的白天天空。</string>
+    <string name="trex_desc_time_night">繁星点点的黑夜。</string>
+    <string name="trex_desc_season_random">四季循环。</string>
+    <string name="trex_desc_season_spring">绿意盎然，芳草萋萋。</string>
+    <string name="trex_desc_season_summer">明亮的田野和阳光。</string>
+    <string name="trex_desc_season_autumn">落叶和薄雾覆盖的土地。</string>
+    <string name="trex_desc_season_winter">皑皑白雪和寒霜。</string>
+    <string name="trex_desc_weather_random">动态天气变化。</string>
+    <string name="trex_desc_weather_sunny">完美晴朗的天气。</string>
+    <string name="trex_desc_weather_rainy">雨水和乌云。</string>
+    <string name="trex_desc_weather_snowy">迷人的降雪。</string>
     <string name="trex_point_bonus_score">额外得分</string>
     <string name="trex_point_large_hitbox">判定区大</string>
     <string name="trex_point_double_jump">二段跳</string>
@@ -408,54 +373,184 @@
     <string name="trex_point_no_momentum">无惯性</string>
     <string name="trex_point_royal_bonus">皇家奖励</string>
     <string name="trex_point_visible_target">目标明显</string>
-    <string name="trex_ninja">忍者霸王龙</string>
-    <string name="trex_character_label">角色</string>
-
-    <string name="trex_desc_char_random">每次运行都有惊喜小恐龙！</string>
-    <string name="trex_desc_char_specific">使用您在准备界面选择的小恐龙。</string>
-    <string name="trex_desc_time_random">昼夜交替循环。</string>
-    <string name="trex_desc_time_day">晴朗的白天天空。</string>
-    <string name="trex_desc_time_night">繁星点点的黑夜。</string>
-    <string name="trex_desc_season_random">四季循环。</string>
-    <string name="trex_desc_season_spring">绿意盎然，芳草萋萋。</string>
-    <string name="trex_desc_season_summer">明亮的田野和阳光。</string>
-    <string name="trex_desc_season_autumn">落叶和薄雾覆盖的土地。</string>
-    <string name="trex_desc_season_winter">皑皑白雪和寒霜。</string>
-    <string name="trex_desc_weather_random">动态天气变化。</string>
-    <string name="trex_desc_weather_sunny">完美晴朗的天气。</string>
-    <string name="trex_desc_weather_rainy">雨水和乌云。</string>
-    <string name="trex_desc_weather_snowy">迷人的降雪。</string>
+    <string-array name="win_generic">
+        <item>获胜！</item>
+        <item>干得漂亮！</item>
+        <item>不可思议！</item>
+        <item>精彩！</item>
+        <item>壮观！</item>
+        <item>你真棒！</item>
+        <item>优秀！</item>
+        <item>太棒了！</item>
+        <item>令人惊叹！</item>
+        <item>好样儿的！</item>
+    </string-array>
+    <string-array name="win_highscore">
+        <item>新纪录！</item>
+        <item>无人能挡！</item>
+        <item>史上最佳！</item>
+        <item>神级表现！</item>
+        <item>最高分！</item>
+    </string-array>
+    <string-array name="win_minesweeper">
+        <item>清除完毕！</item>
+        <item>排雷专家！</item>
+        <item>安全通行！</item>
+        <item>拆弹大师！</item>
+    </string-array>
+    <string-array name="win_sudoku">
+        <item>征服数独！</item>
+        <item>逻辑之王！</item>
+        <item>破解成功！</item>
+        <item>天才大脑！</item>
+    </string-array>
+    <string-array name="win_tictactoe">
+        <item>智取！</item>
+        <item>三连！</item>
+        <item>策略致胜！</item>
+        <item>不可战胜！</item>
+    </string-array>
+    <string-array name="win_4096">
+        <item>数学奇才！</item>
+        <item>达到 4096！</item>
+        <item>数字终结者！</item>
+        <item>终极方块！</item>
+    </string-array>
+    <string-array name="win_memory">
+        <item>完美记忆！</item>
+        <item>配对达人！</item>
+        <item>思维敏捷！</item>
+        <item>全记住了！</item>
+    </string-array>
+    <string-array name="win_hangman">
+        <item>拯救成功！</item>
+        <item>词汇达人！</item>
+        <item>一词定乾坤！</item>
+        <item>词库之王！</item>
+    </string-array>
+    <string-array name="win_brick_break">
+        <item>关卡清除！</item>
+        <item>砖块粉碎机！</item>
+        <item>破墙者！</item>
+        <item>球板高手！</item>
+    </string-array>
+    <string-array name="win_word_quest">
+        <item>单词找到！</item>
+        <item>拼写专家！</item>
+        <item>词典英雄！</item>
+        <item>探险完成！</item>
+    </string-array>
+    <string-array name="win_solitaire">
+        <item>清空牌堆！</item>
+        <item>王牌！</item>
+        <item>花色凑齐！</item>
+        <item>卡牌之王！</item>
+    </string-array>
+    <string-array name="win_sokoban">
+        <item>仓库英雄！</item>
+        <item>推箱高手！</item>
+        <item>目标达成！</item>
+        <item>推箱子大师！</item>
+    </string-array>
+    <string-array name="win_checkers">
+        <item>击败电脑！</item>
+        <item>棋盘之王！</item>
+        <item>特级大师！</item>
+        <item>战略家！</item>
+    </string-array>
+    <string-array name="win_slide_puzzle">
+        <item>图片复原！</item>
+        <item>拼图完成！</item>
+        <item>丝严缝合！</item>
+        <item>滑动大师！</item>
+    </string-array>
+    <string-array name="win_dungeon">
+        <item>逃出地牢！</item>
+        <item>传奇探险家！</item>
+        <item>清空此层！</item>
+        <item>发现宝藏！</item>
+    </string-array>
+    <string-array name="win_tanks">
+        <item>基地保卫！</item>
+        <item>全歼敌军！</item>
+        <item>坦克指挥官！</item>
+        <item>战争英雄！</item>
+    </string-array>
+    <string-array name="win_mental_math">
+        <item>数学天才！</item>
+        <item>脑力无限！</item>
+        <item>心算王！</item>
+        <item>数字达人！</item>
+    </string-array>
+    <string-array name="win_froggy">
+        <item>到达终点！</item>
+        <item>安全过河！</item>
+        <item>青蛙英雄！</item>
+        <item>河流大师！</item>
+    </string-array>
+    <string name="starfighter_ship_label">战机型号</string>
+    <string name="starfighter_ship_balanced">突击者 (均衡型)</string>
+    <string name="starfighter_ship_balanced_desc">标准太空战斗机。</string>
+    <string name="starfighter_ship_fast">截击机 (高速敏捷)</string>
+    <string name="starfighter_ship_fast_desc">超高航速，装甲较轻。</string>
+    <string name="starfighter_ship_tank">无畏舰 (重型装甲)</string>
+    <string name="starfighter_ship_tank_desc">最高护甲防护，速度较慢。</string>
+    <string name="starfighter_ship_solar">日光号 (高能激光)</string>
+    <string name="starfighter_ship_solar_desc">大幅提升激光武器伤害。</string>
+    <string name="starfighter_ship_phoenix">凤凰号 (护盾再生)</string>
+    <string name="starfighter_ship_phoenix_desc">护盾会随时间自动缓慢恢复。</string>
+    <string name="syobon_settings_title">猫咪大冒险设置</string>
+    <string name="syobon_character_label">猫咪外观</string>
+    <string name="syobon_char_classic">经典小白猫 (原版)</string>
+    <string name="syobon_char_gold">金色虎斑 (幸运)</string>
+    <string name="syobon_char_shadow">暗影黑豹 (忍者)</string>
+    <string name="syobon_lives_label">初始生命</string>
+    <string name="syobon_lives_3">3条命 (经典模式)</string>
+    <string name="syobon_lives_1">1条命 (硬核挑战)</string>
+    <string name="syobon_lives_inf">无限生命 (练习模式)</string>
+    <string name="syobon_lives_desc">游戏结束前的生命总数。</string>
+    <string name="syobon_instructions">• 左/右移动。\n• 按“上”或中心键跳跃。\n• 顶撞砖块获取惊喜。\n• 触碰旗杆夺取胜利！\n• 千万当心隐藏陷阱！</string>
+    <string name="syobon_difficulty_desc">选择你的猫咪英雄外观。</string>
+    <string-array name="win_syobon">
+        <item>猫咪大师！</item>
+        <item>陷阱克星！</item>
+        <item>旗杆冠军！</item>
+        <item>猫咪英雄！</item>
+    </string-array>
     <string name="quit_game_title">退出游戏</string>
     <string name="quit_game_confirm">确定要退出游戏吗？</string>
     <string name="yes">是</string>
     <string name="no">否</string>
-    <string name="choose_hero" translatable="true">选择您的球员</string>
-    <string name="create_hero" translatable="true">创建新球员</string>
-    <string name="enter_hero_name" translatable="true">输入球员名称</string>
-    <string name="add_profile" translatable="true">添加球员</string>
-    <string name="switch_profile" translatable="true">切换球员</string>
-    <string name="profile_selection_hint" translatable="true">使用 ◄ ► 浏览 • 按 [OK] 选择</string>
-    <string name="please_enter_name" translatable="true">请输入名称</string>
-    <string name="enter_pin" translatable="true">输入4位数字密码</string>
-    <string name="setup_pin" translatable="true">设置球员锁定 (PIN)</string>
-    <string name="wrong_pin" translatable="true">密码错误，请重试。</string>
-    <string name="manage_profiles" translatable="true">球员管理</string>
-    <string name="edit_profile" translatable="true">编辑球员</string>
-    <string name="delete_profile" translatable="true">删除球员</string>
-    <string name="confirm_delete_profile" translatable="true">确定要删除此球员吗？所有得分记录都将丢失。</string>
-    <string name="leave_blank_no_pin" translatable="true">留空则不设密码</string>
-    <string name="hall_of_fame" translatable="true">名人堂</string>
-    <string name="no_records" translatable="true">暂无记录</string>
-    <string name="save" translatable="true">保存</string>
-    <string name="choose_avatar" translatable="true">选择头像</string>
-    <string name="choose_color" translatable="true">选择颜色</string>
-    <string name="security_pin_label" translatable="true">安全密码 (选填)</string>
-    <string name="pin_digits_hint" translatable="true">密码必须为4位数字</string>
-    <string name="rank_1st" translatable="true">第1名</string>
-    <string name="rank_2nd" translatable="true">第2名</string>
-    <string name="rank_3rd" translatable="true">第3名</string>
-    <string name="placeholder_name" translatable="false">---</string>
-    <string name="placeholder_score" translatable="false">0</string>
+    <string name="choose_hero">选择您的球员</string>
+    <string name="create_hero">创建新球员</string>
+    <string name="enter_hero_name">输入球员名称</string>
+    <string name="add_profile">添加球员</string>
+    <string name="switch_profile">切换球员</string>
+    <string name="profile_selection_hint">使用 ◄ ► 浏览 • 按 [OK] 选择</string>
+    <string name="please_enter_name">请输入名称</string>
+    <string name="enter_pin">输入4位数字密码</string>
+    <string name="setup_pin">设置球员锁定 (PIN)</string>
+    <string name="wrong_pin">密码错误，请重试。</string>
+    <string name="manage_profiles">球员管理</string>
+    <string name="edit_profile">编辑球员</string>
+    <string name="delete_profile">删除球员</string>
+    <string name="confirm_delete_profile">确定要删除此球员吗？所有得分记录都将丢失。</string>
+    <string name="leave_blank_no_pin">留空则不设密码</string>
+    <string name="hall_of_fame">名人堂</string>
+    <string name="no_records">暂无记录</string>
+    <string name="save">保存</string>
+    <string name="choose_avatar">选择头像</string>
+    <string name="choose_color">选择颜色</string>
+    <string name="security_pin_label">安全密码 (选填)</string>
+    <string name="pin_digits_hint">密码必须为4位数字</string>
+    <string name="protected_hero">PROTECTED HERO</string>
+    <string name="guest_hero_name">GUEST HERO</string>
+    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
+    <string name="rank_1st">第1名</string>
+    <string name="rank_2nd">第2名</string>
+    <string name="rank_3rd">第3名</string>
+    <string name="placeholder_name">---</string>
+    <string name="placeholder_score">0</string>
     <string name="monkey_spring">SPRING</string>
     <string name="monkey_summer">SUMMER</string>
     <string name="monkey_autumn">AUTUMN</string>
@@ -490,11 +585,11 @@
     <string name="monkey_beetle_warning">⚠️ BEETLE</string>
     <string name="monkey_char_gibbon">GOLDEN GIBBON</string>
     <string name="monkey_char_climber">TARZAN CLIMBER</string>
+    <string name="monkey_char_spider">SPIDER MONKEY</string>
     <string name="monkey_char_chimp">PUNK CHIMP</string>
-    <string name="retro_driver_final_lap">FINAL LAP!</string>
-    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
-    <string name="retro_driver_go">GO!</string>
-    <string name="retro_driver_finish">FINISH!</string>
+    <string name="monkey_char_default">MONKEY</string>
+    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
+    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
     <string name="frenzy_death_pufferfish">MOUTH HURT BY INFLATED PUFFERFISH!</string>
     <string name="frenzy_death_eel">SHOCKED BY ELECTRIC EEL (STUNNED)!</string>
     <string name="frenzy_death_lionfish">POISONED BY LIONFISH (STUNNED)!</string>
@@ -502,7 +597,6 @@
     <string name="frenzy_death_too_large">CANNOT EAT: %1$s IS TOO LARGE!</string>
     <string name="frenzy_death_eaten">EATEN BY %1$s!</string>
     <string name="frenzy_death_mine">BLOWN UP BY UNDERSEA MINE!</string>
-    <string name="syobon_surprise">SURPRISE!</string>
     <string name="flappy_death_ceiling">Flew too high and hit the ceiling!</string>
     <string name="flappy_death_ground">Crashed into the grassy ground!</string>
     <string name="flappy_death_pipe">Crashed into a green pipe!</string>
@@ -515,16 +609,92 @@
     <string name="flappy_hint_fly_through">FLY THROUGH</string>
     <string name="flappy_hint_avoid_bat">AVOID BAT</string>
     <string name="flappy_hint_fly_under">FLY UNDER</string>
-    <string name="protected_hero">PROTECTED HERO</string>
-    <string name="guest_hero_name">GUEST HERO</string>
-    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
-    <string name="monkey_char_default">MONKEY</string>
-    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
-    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
-    <string name="monkey_char_spider">SPIDER MONKEY</string>
+    <string name="retro_driver_final_lap">FINAL LAP!</string>
+    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
+    <string name="retro_driver_go">GO!</string>
+    <string name="retro_driver_finish">FINISH!</string>
+    <string name="syobon_surprise">SURPRISE!</string>
     <string name="ad_screensaver_message">To keep these games free, we show ads during breaks.\nThank you for your support!</string>
     <string name="ad_screensaver_hint">Press any key to resume instantly</string>
     <string name="ad_warning_prefix">Full-screen ad starting in %1$d...</string>
     <string name="ad_label">AD</string>
     <string name="advertisement_label">ADVERTISEMENT</string>
+    <string name="monkey_settings_title">长臂猿攀登设置</string>
+    <string name="monkey_character_label">角色</string>
+    <string name="monkey_character_desc">选择你的攀爬灵长类种类。</string>
+    <string name="monkey_season_label">季节主题</string>
+    <string name="monkey_season_desc">选择丛林天气和植被。</string>
+    <string name="frenzy_settings_title">大鱼吃小鱼设置</string>
+    <string name="frenzy_difficulty_label">难度</string>
+    <string name="frenzy_difficulty_easy">简单 (掠食者移动较慢)</string>
+    <string name="frenzy_difficulty_normal">普通 (均衡挑战)</string>
+    <string name="frenzy_difficulty_hard">困难 (凶猛的鲨鱼)</string>
+    <string name="frenzy_difficulty_desc">掠食者的速度与密度。</string>
+    <string name="frenzy_starting_size_label">初始体型</string>
+    <string name="frenzy_starting_size_guppy">孔雀鱼 (最小)</string>
+    <string name="frenzy_starting_size_angelfish">神仙鱼 (中等)</string>
+    <string name="frenzy_starting_size_desc">鱼儿的初始成长阶段。</string>
+    <string name="retrodriver_settings_title">复古赛车设置</string>
+    <string name="retrodriver_vehicle_label">赛车</string>
+    <string name="retrodriver_vehicle_desc">选择你的超级摩托款式。</string>
+    <string name="retrodriver_theme_label">赛道环境</string>
+    <string name="retrodriver_theme_desc">选择赛道场景。</string>
+    <string name="retrodriver_theme_neon">赛博都市 (霓虹)</string>
+    <string name="retrodriver_theme_desert">峡谷落日 (黄昏)</string>
+    <string name="retrodriver_theme_cyber">电音网格 (复古)</string>
+    <string name="retrodriver_theme_snow">高山雪道 (冰雪)</string>
+    <string-array name="win_monkey">
+        <item>藤蔓大师！</item>
+        <item>攀登巅峰！</item>
+        <item>丛林之王！</item>
+        <item>征服林冠！</item>
+    </string-array>
+    <string-array name="win_frenzy">
+        <item>海洋霸主！</item>
+        <item>顶级掠食者！</item>
+        <item>珊瑚礁统治者！</item>
+        <item>狂食大师！</item>
+    </string-array>
+    <string-array name="win_retrodriver">
+        <item>极速狂魔！</item>
+        <item>赛道冠军！</item>
+        <item>电音车神！</item>
+        <item>荣耀领奖台！</item>
+    </string-array>
+    <string-array name="win_tetris">
+        <item>俄罗斯方块大师！</item>
+        <item>消行达人！</item>
+        <item>完美堆叠！</item>
+        <item>方块终结者！</item>
+    </string-array>
+    <string-array name="win_snake">
+        <item>贪吃蛇大师！</item>
+        <item>巨蟒传说！</item>
+        <item>饕餮盛宴！</item>
+        <item>蜿蜒之王！</item>
+    </string-array>
+    <string-array name="win_flappy">
+        <item>天空传奇！</item>
+        <item>飞翔英雄！</item>
+        <item>羽翼大师！</item>
+        <item>翱翔天际！</item>
+    </string-array>
+    <string-array name="win_lines98">
+        <item>彩球大师！</item>
+        <item>色彩消消乐！</item>
+        <item>宝珠魔法师！</item>
+        <item>棋盘天才！</item>
+    </string-array>
+    <string-array name="win_spinball">
+        <item>旋转魔术师！</item>
+        <item>轨道大师！</item>
+        <item>弹珠专家！</item>
+        <item>环形幸存者！</item>
+    </string-array>
+    <string-array name="win_simon">
+        <item>记忆大师！</item>
+        <item>西蒙说：胜利！</item>
+        <item>图案专家！</item>
+        <item>超强记忆！</item>
+    </string-array>
 </resources>

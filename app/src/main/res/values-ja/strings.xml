@@ -2,6 +2,7 @@
     <string name="app_name">Dpad Arcade</string>
     <string name="app_name_full">Dpad Arcade: レトロゲーム</string>
     <string name="game_center">DPAD ARCADE</string>
+    <string name="snake">スネーク</string>
     <string name="snake_settings_title">スネーク設定</string>
     <string name="snake_level_1">レベル 1: 初心者</string>
     <string name="snake_level_2">レベル 2: 普通</string>
@@ -10,7 +11,7 @@
     <string name="snake_level_2_desc">壁に当たると終了。通常速度。</string>
     <string name="snake_level_3_desc">壁に当たると終了。高速。</string>
     <string name="snake_level_label">難易度レベル</string>
-    <string name="snake">スネーク</string>
+    <string name="minesweeper">マインスイーパー</string>
     <string name="minesweeper_settings_title">マインスイーパー設定</string>
     <string name="minesweeper_level_1">レベル 1: 初心者 (10x10, 12個の地雷)</string>
     <string name="minesweeper_level_2">レベル 2: 普通 (16x16, 40個の地雷)</string>
@@ -40,12 +41,58 @@
     <string name="tictactoe_size_4_desc">4つ並べて勝利。</string>
     <string name="tictactoe_size_5_desc">5つ並べて勝利。</string>
     <string name="tictactoe_size_label">ボードサイズ</string>
-    <string name="minesweeper">マインスイーパー</string>
+    <string name="game_4096_settings_title">4096 設定</string>
+    <string name="game_4096_size_4">グリッド: 4x4 (クラシック)</string>
+    <string name="game_4096_size_5">グリッド: 5x5 (ラージ)</string>
+    <string name="game_4096_size_desc">挑戦するボードサイズを選択。</string>
+    <string name="mental_math_settings_title">計算ゲーム 設定</string>
+    <string name="mental_math_mode_easy">モード: かんたん (+, -)</string>
+    <string name="mental_math_mode_normal">モード: ふつう (+, -, *)</string>
+    <string name="mental_math_mode_hard">モード: むずかしい (+, -, *, /)</string>
+    <string name="mental_math_mode_desc">出題される計算記号を選択。</string>
+    <string name="tetris_settings_title">テトリス 設定</string>
+    <string name="tetris_start_level">スタートレベル</string>
+    <string name="tetris_level_desc">レベルが高いほど速い速度で開始。</string>
+    <string name="checkers_settings_title">チェッカー 設定</string>
+    <string name="checkers_difficulty_1">AI: ランダム (かんたん)</string>
+    <string name="checkers_difficulty_2">AI: 戦略的 (ふつう)</string>
+    <string name="checkers_difficulty_desc">強いAIはより賢い手を打ちます。</string>
+    <string name="spinball_settings_title">スピンボール 設定</string>
+    <string name="spinball_difficulty_1">モード: おだやか (低速)</string>
+    <string name="spinball_difficulty_2">モード: 軽快 (通常)</string>
+    <string name="spinball_difficulty_3">モード: カオス (高速)</string>
+    <string name="spinball_difficulty_desc">スピードが上がるほど高難易度に。</string>
+    <string name="simon_says_settings_title">サイモン 設定</string>
+    <string name="simon_says_speed_1">スピード: ゆったり (低速)</string>
+    <string name="simon_says_speed_2">スピード: ふつう (中速)</string>
+    <string name="simon_says_speed_3">スピード: 電光石火 (高速)</string>
+    <string name="simon_says_speed_desc">シーケンスの再生速度。</string>
+    <string name="dungeon_escape_settings_title">ダンジョン脱出 設定</string>
+    <string name="dungeon_escape_start_level">開始フロア</string>
+    <string name="dungeon_escape_level_desc">スタートする階層を選択。</string>
+    <string name="froggy_cross_settings_title">フロギークロス 設定</string>
+    <string name="froggy_cross_difficulty_1">難易度: ゆったり (車が少ない)</string>
+    <string name="froggy_cross_difficulty_2">難易度: ふつう (標準速度)</string>
+    <string name="froggy_cross_difficulty_3">難易度: ラッシュアワー (高速車流)</string>
+    <string name="froggy_cross_difficulty_desc">車と丸太の流れる速度。</string>
     <string name="game_4096">4096</string>
     <string name="game_trex">T-REX RUN</string>
     <string name="game_brick_break">ブロック崩し</string>
     <string name="game_tictactoe">三目並べ</string>
     <string name="game_checkers">チェッカー</string>
+    <string name="sokoban_settings_title">倉庫番 設定</string>
+    <string name="sokoban_start_level">開始レベル</string>
+    <string name="sokoban_level_desc">スタートする面を選択。</string>
+    <string name="battle_tanks_settings_title">バトルタンク 設定</string>
+    <string name="battle_tanks_difficulty_1">難易度: 訓練兵 (低速タンク)</string>
+    <string name="battle_tanks_difficulty_2">難易度: ベテラン (標準タンク)</string>
+    <string name="battle_tanks_difficulty_3">難易度: 将軍 (連射モード)</string>
+    <string name="battle_tanks_difficulty_desc">敵の移動速度と火力。</string>
+    <string name="starfighter_settings_title">スターファイター 設定</string>
+    <string name="starfighter_difficulty_1">レベル 1: 訓練生 (かんたん)</string>
+    <string name="starfighter_difficulty_2">レベル 2: ベテラン (ふつう)</string>
+    <string name="starfighter_difficulty_3">レベル 3: エース (むずかしい)</string>
+    <string name="starfighter_difficulty_desc">敵の耐久力と攻撃頻度。</string>
     <string name="game_sokoban">倉庫番</string>
     <string name="game_sudoku">数独</string>
     <string name="game_tetris">テトリス</string>
@@ -54,11 +101,58 @@
     <string name="game_slide_puzzle">スライドパズル</string>
     <string name="game_mental_math">暗算</string>
     <string name="game_froggy">フロギークロス</string>
+    <string name="game_syobon">CAT MEOWIO</string>
     <string name="game_simon">サイモンセズ</string>
     <string name="game_tanks">戦車大戦</string>
+    <string name="word_quest_settings_title">ワードクエスト 設定</string>
+    <string name="word_quest_category_all">カテゴリ: すべての単語</string>
+    <string name="word_quest_category_nature">カテゴリ: 自然と動物</string>
+    <string name="word_quest_category_tech">カテゴリ: テクノロジー＆科学</string>
+    <string name="word_quest_category_desc">パズルの単語テーマを選択。</string>
+    <string name="road_racer_settings_title">ロードレーサー 設定</string>
+    <string name="road_racer_density_label">交通量</string>
+    <string name="road_racer_density_low">交通量: 少なめ (かんたん)</string>
+    <string name="road_racer_density_normal">交通量: 普通 (標準)</string>
+    <string name="road_racer_density_high">交通量: 激混み (むずかしい)</string>
+    <string name="road_racer_density_desc">ハイウェイ上を走る一般車の量。</string>
     <string name="game_word_quest">ワードクエスト</string>
     <string name="game_dungeon">ダンジョン脱出</string>
+    <string name="game_monkey">テナガザル登り</string>
+    <string name="game_retrodriver">レトロレーサー</string>
+    <string name="game_frenzy">フレンジーフィッシュ</string>
+    <string name="game_fruit">フルーツスライサー</string>
+    <string name="flappy_hero_settings_title">フラッピーヒーロー 設定</string>
+    <string name="flappy_hero_level_1">レベル 1: 草原 (広いパイプ)</string>
+    <string name="flappy_hero_level_2">レベル 2: 森林 (動く障害物)</string>
+    <string name="flappy_hero_level_3">レベル 3: 峡谷 (狭い隙間)</string>
+    <string name="flappy_hero_level_4">レベル 4: 夜空 (風の気流)</string>
+    <string name="flappy_hero_level_5">レベル 5: 煉獄 (カオスモード)</string>
+    <string name="flappy_hero_level_1_desc">練習に最適な広い隙間。</string>
+    <string name="flappy_hero_level_2_desc">障害物が上下に揺れます。</string>
+    <string name="flappy_hero_level_3_desc">さらに狭まるパイプ間隔。</string>
+    <string name="flappy_hero_level_4_desc">風が落下の挙動に影響を与えます。</string>
+    <string name="flappy_hero_level_5_desc">超高速スクロールと超極狭の間隔。</string>
+    <string name="flappy_hero_char_label">キャラクター</string>
+    <string name="flappy_char_classic">クラシックバード (標準)</string>
+    <string name="flappy_char_classic_desc">おなじみのジャンプ挙動。</string>
+    <string name="flappy_char_swift">クイックダート (高速羽ばたき)</string>
+    <string name="flappy_char_swift_desc">急上昇、素早い連打操作。</string>
+    <string name="flappy_char_heavy">アイアンウィング (急速落下)</string>
+    <string name="flappy_char_heavy_desc">重力が強く、素早い反射神経が必要。</string>
+    <string name="flappy_char_floaty">ふんわりフェザー (滑空)</string>
+    <string name="flappy_char_floaty_desc">重力が弱く、コントロールが容易。</string>
+    <string name="brick_break_settings_title">ブロック崩し 設定</string>
+    <string name="brick_break_paddle_label">パドルの大きさ</string>
+    <string name="brick_break_paddle_large">パドル: ワイド (かんたん)</string>
+    <string name="brick_break_paddle_medium">パドル: 標準 (ふつう)</string>
+    <string name="brick_break_paddle_small">パドル: ナロー (むずかしい)</string>
+    <string name="brick_break_paddle_desc">パドルが広いほどボールを拾いやすい。</string>
     <string name="game_flappy">フラッピーヒーロー</string>
+    <string name="lines98_settings_title">ラインズ98 設定</string>
+    <string name="lines98_difficulty_easy">カラー: 5色 (かんたん)</string>
+    <string name="lines98_difficulty_normal">カラー: 7色 (標準)</string>
+    <string name="lines98_difficulty_hard">カラー: 9色 (エキスパート)</string>
+    <string name="lines98_difficulty_desc">色が少ないほど並べやすくなります。</string>
     <string name="game_lines98">ライン98</string>
     <string name="game_solitaire">ソリティア</string>
     <string name="game_road_racer">ロードレーサー</string>
@@ -91,6 +185,7 @@
     <string name="game_slide_puzzle_instructions">• 十字キーで移動。\n• 決定でスライド。\n• 絵を完成させろ。</string>
     <string name="game_mental_math_instructions">• 計算を解け。\n• 十字キーで回答選択。\n• 決定で確定。\n• 急げ！時間制限あり。</string>
     <string name="game_froggy_instructions">• 道路と川を渡れ。\n• 車を避けろ。\n• 丸太に飛び乗れ。\n• ゴールを目指せ！</string>
+    <string name="game_syobon_instructions">• 左右キーで移動。\n• 上または中央キーでジャンプ。\n• ブロックを下から叩こう。\n• ゴールポール到達で勝利！\n• 隠し罠に要注意！</string>
     <string name="game_simon_instructions">• 色の順序を覚えろ。\n• 十字キーで再現。\n• 順序は毎ラウンド長くなる！</string>
     <string name="game_tanks_instructions">• 十字キーで操作。\n• 自動連射。\n• 敵戦車を破壊せよ。\n• 拠点を守れ。</string>
     <string name="game_word_quest_instructions">• 5文字の単語を6回で当てろ。\n• 十字キーでキーボード操作。\n• 決定で入力。\n• 緑: 文字と位置が正解。</string>
@@ -99,6 +194,10 @@
     <string name="game_lines98_instructions">• 十字キーでカーソル。\n• 決定で移動。\n• 同じ色を5つ並べろ。\n• 満杯で終了。</string>
     <string name="game_solitaire_instructions">• 十字キーでカーソル。\n• 決定で選択/配置。\n• AからKまで揃えろ。</string>
     <string name="game_road_racer_instructions">• 車を避けろ。\n• 生き残れ！\n• 決定ボタンで停止。</string>
+    <string name="game_monkey_instructions">• ツルを登って脱出しましょう。\n• フルーツを集めてスコアアップ。\n• クモ、ヤシの実、ツル切り昆虫を回避！\n• 十字キーで登り＆飛び移り。</string>
+    <string name="game_retrodriver_instructions">• シンセウェーブのスーパーバイクを操縦！\n• 左右でステアリング、上でアクセル。\n• ライバル20台を抜き去り1位を目指そう。\n• ゴールラインを通過して完走！</string>
+    <string name="game_frenzy_instructions">• 十字キーで海を泳ぎ回ろう。\n• 自分より小さい魚を食べて成長。\n• 大型肉食魚に食べられないように注意！\n• 魚を30匹食べるとステージクリア。</string>
+    <string name="game_fruit_instructions">• 空中に放り出されるフルーツ。\n• 十字キーで光る刃を動かして切断。\n• 爆弾は絶対に切らないこと！\n• できるだけ多くのフルーツを切ろう。</string>
     <string name="game_hangman_instructions">• 文字を選んで単語を当てろ。\n• 6回間違えると終了。\n• 決定で選択。</string>
     <string name="select_game_hint">◄ ► でゲームを選択 • [OK] でプレイ</string>
     <string name="settings">設定</string>
@@ -147,7 +246,45 @@
     <string name="next_stage_hint">決定ボタンで次のステージ</string>
     <string name="continue_hint">決定ボタンで続ける</string>
     <string name="finish_hint">決定ボタンで終了</string>
+    <string name="tictactoe_size_hint">上下で盤面サイズ変更 (3x3, 4x4, 5x5) / MENUでオプション</string>
+    <string name="sokoban_restart_hint">Rキーでやり直し</string>
+    <string name="sudoku_controls_hint">十字キー: 移動/数字 | 決定: 切り替え | MENU: 難易度</string>
     <string name="total_wins_label">合計勝利数</string>
+    <string name="mines_label">地雷: </string>
+    <string name="flags_label">旗: </string>
+    <string name="high_score_prefix">最高: </string>
+    <string name="cpu_wins_label">CPUの勝利！</string>
+    <string name="your_turn_label">あなたの番です</string>
+    <string name="watch_label">よく見て...</string>
+    <string name="grid_mastered_label">盤面コンプリート！</string>
+    <string name="puzzle_solved_label">パズルクリア！</string>
+    <string name="picture_restored_label">絵が完成しました！</string>
+    <string name="crashed_label">衝突！</string>
+    <string name="score_prefix">スコア: </string>
+    <string name="high_score_label">ハイスコア</string>
+    <string name="wrong_label">ミス！</string>
+    <string name="answer_was_label">正解の単語は: </string>
+    <string name="finish_label">ゴール</string>
+    <string name="continue_label">つづける</string>
+    <string name="next_stage_label">次のステージ</string>
+    <string name="out_of_tries">お手つき終了！</string>
+    <string name="cpu_thinking_label">CPU思考中...</string>
+    <string name="no_moves_label">置けるマスがありません</string>
+    <string name="victory_label">勝利！</string>
+    <string name="draw_label">引き分け！</string>
+    <string name="hit_wall_label">壁に激突！</string>
+    <string name="bit_self_label">自分を噛んでしまった！</string>
+    <string name="cpu_starting_label">次はCPUが先手です</string>
+    <string name="jump_again_label">もう一度ジャンプ</string>
+    <string name="draw_status">引き分け</string>
+    <string name="cat_animals">どうぶつ</string>
+    <string name="cat_fruits">くだもの</string>
+    <string name="cat_countries">くに</string>
+    <string name="cat_sports">スポーツ</string>
+    <string name="cat_flowers">おはな</string>
+    <string name="cat_vehicles">のりもの</string>
+    <string name="cat_games">ゲーム</string>
+    <string name="cat_foods">たべもの</string>
     <string name="rating_title">Dpad Arcade をお楽しみいただけていますか？</string>
     <string name="rating_content">Playストアで星5つを付けていただくか、遊びたいゲームのリクエストを教えてください！</string>
     <string name="rate_now">星5で評価</string>
@@ -156,139 +293,6 @@
     <string name="update_title">新しいアップデートがあります！</string>
     <string name="update_content">Dpad Arcade: Retro Game Hub の新バージョンが利用可能です。最新のゲーム、機能、安定性の向上のために今すぐアップデートしてください。</string>
     <string name="update_now">今すぐアップデート</string>
-
-    <string-array name="win_generic">
-        <item>勝利！</item>
-        <item>お見事！</item>
-        <item>信じられない！</item>
-        <item>素晴らしい！</item>
-        <item>最高！</item>
-        <item>君は最高だ！</item>
-        <item>優秀！</item>
-        <item>ファンタスティック！</item>
-        <item>見事な腕前！</item>
-        <item>よくやった！</item>
-    </string-array>
-
-    <string-array name="win_highscore">
-        <item>新記録達成！</item>
-        <item>止められない！</item>
-        <item>史上最高！</item>
-        <item>神業！</item>
-        <item>ハイスコア！</item>
-    </string-array>
-
-    <string-array name="win_minesweeper">
-        <item>制圧完了！</item>
-        <item>マインマスター！</item>
-        <item>安全確保！</item>
-        <item>開拓の達人！</item>
-    </string-array>
-
-    <string-array name="win_sudoku">
-        <item>盤面支配！</item>
-        <item>ロジック王！</item>
-        <item>解明完了！</item>
-        <item>明晰な頭脳！</item>
-    </string-array>
-
-    <string-array name="win_tictactoe">
-        <item>完全勝利！</item>
-        <item>三連達成！</item>
-        <item>知略の勝利！</item>
-        <item>圧倒的！</item>
-    </string-array>
-
-    <string-array name="win_4096">
-        <item>数学の天才！</item>
-        <item>4096 到達！</item>
-        <item>数字の覇者！</item>
-        <item>究極のタイル！</item>
-    </string-array>
-
-    <string-array name="win_memory">
-        <item>完璧な記憶！</item>
-        <item>一致の達人！</item>
-        <item>鋭い直感！</item>
-        <item>全正解！</item>
-    </string-array>
-
-    <string-array name="win_hangman">
-        <item>救出成功！</item>
-        <item>言葉の主！</item>
-        <item>奇跡の救出！</item>
-        <item>語彙の王！</item>
-    </string-array>
-
-    <string-array name="win_brick_break">
-        <item>ステージクリア！</item>
-        <item>粉砕者！</item>
-        <item>鉄壁破壊！</item>
-        <item>パドルプロ！</item>
-    </string-array>
-
-    <string-array name="win_word_quest">
-        <item>単語発見！</item>
-        <item>綴りの達人！</item>
-        <item>辞書の英雄！</item>
-        <item>クエスト達成！</item>
-    </string-array>
-
-    <string-array name="win_solitaire">
-        <item>全回収！</item>
-        <item>勝利のエース！</item>
-        <item>組札完成！</item>
-        <item>カードの王！</item>
-    </string-array>
-
-    <string-array name="win_sokoban">
-        <item>倉庫の英雄！</item>
-        <item>配置の達人！</item>
-        <item>ミッション完了！</item>
-        <item>倉庫番マスター！</item>
-    </string-array>
-
-    <string-array name="win_checkers">
-        <item>CPU撃破！</item>
-        <item>盤上の王！</item>
-        <item>グランドマスター！</item>
-        <item>戦略の大家！</item>
-    </string-array>
-
-    <string-array name="win_slide_puzzle">
-        <item>修復完了！</item>
-        <item>パズル解明！</item>
-        <item>完璧な配置！</item>
-        <item>スライドの達人！</item>
-    </string-array>
-
-    <string-array name="win_dungeon">
-        <item>脱出成功！</item>
-        <item>伝説の探検家！</item>
-        <item>フロア制覇！</item>
-        <item>秘宝発見！</item>
-    </string-array>
-
-    <string-array name="win_tanks">
-        <item>拠点防衛！</item>
-        <item>殲滅完了！</item>
-        <item>戦車隊長！</item>
-        <item>英雄の証！</item>
-    </string-array>
-
-    <string-array name="win_mental_math">
-        <item>数学の天才！</item>
-        <item>脳力全開！</item>
-        <item>計算王！</item>
-        <item>数字の達人！</item>
-    </string-array>
-
-    <string-array name="win_froggy">
-        <item>ゴール到達！</item>
-        <item>無事横断！</item>
-        <item>フロギーヒーロー！</item>
-        <item>川の覇者！</item>
-    </string-array>
     <string name="trex_daddy">パパ T-Rex</string>
     <string name="trex_mummy">ママ T-Rex</string>
     <string name="trex_baby">ベビー T-Rex</string>
@@ -299,11 +303,12 @@
     <string name="trex_pirate">海賊 T-Rex</string>
     <string name="trex_chef">シェフ T-Rex</string>
     <string name="trex_astronaut">宇宙飛行士 T-Rex</string>
+    <string name="trex_ninja">忍者 T-Rex</string>
     <string name="trex_dragon">ドラゴン Dino</string>
     <string name="trex_zombie">ゾンビ Dino</string>
     <string name="trex_robot">ロボット Dino</string>
     <string name="trex_king">キング Dino</string>
-
+    <string name="trex_character_label">キャラクター</string>
     <string name="trex_select_character">キャラクター選択</string>
     <string name="trex_strong_prefix">特技：</string>
     <string name="trex_weak_prefix">弱点：</string>
@@ -325,6 +330,20 @@
     <string name="trex_sunny">晴れ</string>
     <string name="trex_rainy">雨</string>
     <string name="trex_snowy">雪</string>
+    <string name="trex_desc_char_random">毎回ランダムな恐竜が登場！</string>
+    <string name="trex_desc_char_specific">ロビーで選んだ恐竜を使用します。</string>
+    <string name="trex_desc_time_random">昼夜が入れ替わります。</string>
+    <string name="trex_desc_time_day">澄み渡る昼の空。</string>
+    <string name="trex_desc_time_night">星が輝く静かな夜。</string>
+    <string name="trex_desc_season_random">四季が移り変わります。</string>
+    <string name="trex_desc_season_spring">青々と茂る新鮮な草。</string>
+    <string name="trex_desc_season_summer">輝く野原と太陽。</string>
+    <string name="trex_desc_season_autumn">落ち葉と霧深い大地。</string>
+    <string name="trex_desc_season_winter">雪景色と厳しい寒さ。</string>
+    <string name="trex_desc_weather_random">天気がダイナミックに変化。</string>
+    <string name="trex_desc_weather_sunny">最高の快晴。</string>
+    <string name="trex_desc_weather_rainy">雨と立ち込める暗雲。</string>
+    <string name="trex_desc_weather_snowy">美しく舞い落ちる雪。</string>
     <string name="trex_point_bonus_score">ボーナススコア</string>
     <string name="trex_point_large_hitbox">当たり判定大</string>
     <string name="trex_point_double_jump">二段ジャンプ</string>
@@ -354,54 +373,184 @@
     <string name="trex_point_no_momentum">慣性なし</string>
     <string name="trex_point_royal_bonus">ロイヤルボーナス</string>
     <string name="trex_point_visible_target">目立つ標的</string>
-    <string name="trex_ninja">忍者 T-Rex</string>
-    <string name="trex_character_label">キャラクター</string>
-
-    <string name="trex_desc_char_random">毎回ランダムな恐竜が登場！</string>
-    <string name="trex_desc_char_specific">ロビーで選んだ恐竜を使用します。</string>
-    <string name="trex_desc_time_random">昼夜が入れ替わります。</string>
-    <string name="trex_desc_time_day">澄み渡る昼の空。</string>
-    <string name="trex_desc_time_night">星が輝く静かな夜。</string>
-    <string name="trex_desc_season_random">四季が移り変わります。</string>
-    <string name="trex_desc_season_spring">青々と茂る新鮮な草。</string>
-    <string name="trex_desc_season_summer">輝く野原と太陽。</string>
-    <string name="trex_desc_season_autumn">落ち葉と霧深い大地。</string>
-    <string name="trex_desc_season_winter">雪景色と厳しい寒さ。</string>
-    <string name="trex_desc_weather_random">天気がダイナミックに変化。</string>
-    <string name="trex_desc_weather_sunny">最高の快晴。</string>
-    <string name="trex_desc_weather_rainy">雨と立ち込める暗雲。</string>
-    <string name="trex_desc_weather_snowy">美しく舞い落ちる雪。</string>
+    <string-array name="win_generic">
+        <item>勝利！</item>
+        <item>お見事！</item>
+        <item>信じられない！</item>
+        <item>素晴らしい！</item>
+        <item>最高！</item>
+        <item>君は最高だ！</item>
+        <item>優秀！</item>
+        <item>ファンタスティック！</item>
+        <item>見事な腕前！</item>
+        <item>よくやった！</item>
+    </string-array>
+    <string-array name="win_highscore">
+        <item>新記録達成！</item>
+        <item>止められない！</item>
+        <item>史上最高！</item>
+        <item>神業！</item>
+        <item>ハイスコア！</item>
+    </string-array>
+    <string-array name="win_minesweeper">
+        <item>制圧完了！</item>
+        <item>マインマスター！</item>
+        <item>安全確保！</item>
+        <item>開拓の達人！</item>
+    </string-array>
+    <string-array name="win_sudoku">
+        <item>盤面支配！</item>
+        <item>ロジック王！</item>
+        <item>解明完了！</item>
+        <item>明晰な頭脳！</item>
+    </string-array>
+    <string-array name="win_tictactoe">
+        <item>完全勝利！</item>
+        <item>三連達成！</item>
+        <item>知略の勝利！</item>
+        <item>圧倒的！</item>
+    </string-array>
+    <string-array name="win_4096">
+        <item>数学の天才！</item>
+        <item>4096 到達！</item>
+        <item>数字の覇者！</item>
+        <item>究極のタイル！</item>
+    </string-array>
+    <string-array name="win_memory">
+        <item>完璧な記憶！</item>
+        <item>一致の達人！</item>
+        <item>鋭い直感！</item>
+        <item>全正解！</item>
+    </string-array>
+    <string-array name="win_hangman">
+        <item>救出成功！</item>
+        <item>言葉の主！</item>
+        <item>奇跡の救出！</item>
+        <item>語彙の王！</item>
+    </string-array>
+    <string-array name="win_brick_break">
+        <item>ステージクリア！</item>
+        <item>粉砕者！</item>
+        <item>鉄壁破壊！</item>
+        <item>パドルプロ！</item>
+    </string-array>
+    <string-array name="win_word_quest">
+        <item>単語発見！</item>
+        <item>綴りの達人！</item>
+        <item>辞書の英雄！</item>
+        <item>クエスト達成！</item>
+    </string-array>
+    <string-array name="win_solitaire">
+        <item>全回収！</item>
+        <item>勝利のエース！</item>
+        <item>組札完成！</item>
+        <item>カードの王！</item>
+    </string-array>
+    <string-array name="win_sokoban">
+        <item>倉庫の英雄！</item>
+        <item>配置の達人！</item>
+        <item>ミッション完了！</item>
+        <item>倉庫番マスター！</item>
+    </string-array>
+    <string-array name="win_checkers">
+        <item>CPU撃破！</item>
+        <item>盤上の王！</item>
+        <item>グランドマスター！</item>
+        <item>戦略の大家！</item>
+    </string-array>
+    <string-array name="win_slide_puzzle">
+        <item>修復完了！</item>
+        <item>パズル解明！</item>
+        <item>完璧な配置！</item>
+        <item>スライドの達人！</item>
+    </string-array>
+    <string-array name="win_dungeon">
+        <item>脱出成功！</item>
+        <item>伝説の探検家！</item>
+        <item>フロア制覇！</item>
+        <item>秘宝発見！</item>
+    </string-array>
+    <string-array name="win_tanks">
+        <item>拠点防衛！</item>
+        <item>殲滅完了！</item>
+        <item>戦車隊長！</item>
+        <item>英雄の証！</item>
+    </string-array>
+    <string-array name="win_mental_math">
+        <item>数学の天才！</item>
+        <item>脳力全開！</item>
+        <item>計算王！</item>
+        <item>数字の達人！</item>
+    </string-array>
+    <string-array name="win_froggy">
+        <item>ゴール到達！</item>
+        <item>無事横断！</item>
+        <item>フロギーヒーロー！</item>
+        <item>川の覇者！</item>
+    </string-array>
+    <string name="starfighter_ship_label">機体モデル</string>
+    <string name="starfighter_ship_balanced">ストライカー (バランス型)</string>
+    <string name="starfighter_ship_balanced_desc">標準的な宇宙戦闘機。</string>
+    <string name="starfighter_ship_fast">インターセプター (高速・敏捷)</string>
+    <string name="starfighter_ship_fast_desc">最高クラスの機動力、装甲は軽め。</string>
+    <string name="starfighter_ship_tank">ドレッドノート (重装甲)</string>
+    <string name="starfighter_ship_tank_desc">圧倒的な防御力、スピードは低下。</string>
+    <string name="starfighter_ship_solar">ソラリス (高エネルギー兵器)</string>
+    <string name="starfighter_ship_solar_desc">レーザーの威力が大幅にアップ。</string>
+    <string name="starfighter_ship_phoenix">フェニックス (シールド自動回復)</string>
+    <string name="starfighter_ship_phoenix_desc">時間経過でシールドが自動回復。</string>
+    <string name="syobon_settings_title">キャットミャオビオ 設定</string>
+    <string name="syobon_character_label">ネコのスキン</string>
+    <string name="syobon_char_classic">白ネコ (クラシック)</string>
+    <string name="syobon_char_gold">金トラ (ラッキー)</string>
+    <string name="syobon_char_shadow">シャドウパンサー (忍者)</string>
+    <string name="syobon_lives_label">初期残機数</string>
+    <string name="syobon_lives_3">3機 (クラシック)</string>
+    <string name="syobon_lives_1">1機 (超ハードコア)</string>
+    <string name="syobon_lives_inf">無限 (練習モード)</string>
+    <string name="syobon_lives_desc">ゲームオーバーまでの残機数。</string>
+    <string name="syobon_instructions">• 左右キーで移動。\n• 上または中央キーでジャンプ。\n• ブロックを下から叩こう。\n• ゴールポール到達で勝利！\n• 隠し罠に要注意！</string>
+    <string name="syobon_difficulty_desc">ネコヒーローの外見を選択。</string>
+    <string-array name="win_syobon">
+        <item>ミャオビオマスター！</item>
+        <item>トラップ制覇！</item>
+        <item>ポールフラッグ王者！</item>
+        <item>ネコヒーロー！</item>
+    </string-array>
     <string name="quit_game_title">ゲーム終了</string>
     <string name="quit_game_confirm">本当にゲームを終了しますか？</string>
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
-    <string name="choose_hero" translatable="true">プレイヤーを選択</string>
-    <string name="create_hero" translatable="true">新規プレイヤー作成</string>
-    <string name="enter_hero_name" translatable="true">プレイヤー名を入力</string>
-    <string name="add_profile" translatable="true">プレイヤー追加</string>
-    <string name="switch_profile" translatable="true">プレイヤー切替</string>
-    <string name="profile_selection_hint" translatable="true">◄ ► で選択 • [OK] で決定</string>
-    <string name="please_enter_name" translatable="true">名前を入力してください</string>
-    <string name="enter_pin" translatable="true">4桁のPINを入力</string>
-    <string name="setup_pin" translatable="true">プレイヤーをロック (PIN)</string>
-    <string name="wrong_pin" translatable="true">PINが正しくありません。再入力してください。</string>
-    <string name="manage_profiles" translatable="true">プレイヤー管理</string>
-    <string name="edit_profile" translatable="true">プレイヤー編集</string>
-    <string name="delete_profile" translatable="true">プレイヤー削除</string>
-    <string name="confirm_delete_profile" translatable="true">このプレイヤーを削除しますか？すべての記録が失われます。</string>
-    <string name="leave_blank_no_pin" translatable="true">空欄でロックなし</string>
-    <string name="hall_of_fame" translatable="true">殿堂入り</string>
-    <string name="no_records" translatable="true">記録なし</string>
-    <string name="save" translatable="true">保存</string>
-    <string name="choose_avatar" translatable="true">アバター選択</string>
-    <string name="choose_color" translatable="true">カラー選択</string>
-    <string name="security_pin_label" translatable="true">セキュリティPIN (任意)</string>
-    <string name="pin_digits_hint" translatable="true">PINは4桁で入力してください</string>
-    <string name="rank_1st" translatable="true">1位</string>
-    <string name="rank_2nd" translatable="true">2位</string>
-    <string name="rank_3rd" translatable="true">3位</string>
-    <string name="placeholder_name" translatable="false">---</string>
-    <string name="placeholder_score" translatable="false">0</string>
+    <string name="choose_hero">プレイヤーを選択</string>
+    <string name="create_hero">新規プレイヤー作成</string>
+    <string name="enter_hero_name">プレイヤー名を入力</string>
+    <string name="add_profile">プレイヤー追加</string>
+    <string name="switch_profile">プレイヤー切替</string>
+    <string name="profile_selection_hint">◄ ► で選択 • [OK] で決定</string>
+    <string name="please_enter_name">名前を入力してください</string>
+    <string name="enter_pin">4桁のPINを入力</string>
+    <string name="setup_pin">プレイヤーをロック (PIN)</string>
+    <string name="wrong_pin">PINが正しくありません。再入力してください。</string>
+    <string name="manage_profiles">プレイヤー管理</string>
+    <string name="edit_profile">プレイヤー編集</string>
+    <string name="delete_profile">プレイヤー削除</string>
+    <string name="confirm_delete_profile">このプレイヤーを削除しますか？すべての記録が失われます。</string>
+    <string name="leave_blank_no_pin">空欄でロックなし</string>
+    <string name="hall_of_fame">殿堂入り</string>
+    <string name="no_records">記録なし</string>
+    <string name="save">保存</string>
+    <string name="choose_avatar">アバター選択</string>
+    <string name="choose_color">カラー選択</string>
+    <string name="security_pin_label">セキュリティPIN (任意)</string>
+    <string name="pin_digits_hint">PINは4桁で入力してください</string>
+    <string name="protected_hero">PROTECTED HERO</string>
+    <string name="guest_hero_name">GUEST HERO</string>
+    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
+    <string name="rank_1st">1位</string>
+    <string name="rank_2nd">2位</string>
+    <string name="rank_3rd">3位</string>
+    <string name="placeholder_name">---</string>
+    <string name="placeholder_score">0</string>
     <string name="monkey_spring">SPRING</string>
     <string name="monkey_summer">SUMMER</string>
     <string name="monkey_autumn">AUTUMN</string>
@@ -436,11 +585,11 @@
     <string name="monkey_beetle_warning">⚠️ BEETLE</string>
     <string name="monkey_char_gibbon">GOLDEN GIBBON</string>
     <string name="monkey_char_climber">TARZAN CLIMBER</string>
+    <string name="monkey_char_spider">SPIDER MONKEY</string>
     <string name="monkey_char_chimp">PUNK CHIMP</string>
-    <string name="retro_driver_final_lap">FINAL LAP!</string>
-    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
-    <string name="retro_driver_go">GO!</string>
-    <string name="retro_driver_finish">FINISH!</string>
+    <string name="monkey_char_default">MONKEY</string>
+    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
+    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
     <string name="frenzy_death_pufferfish">MOUTH HURT BY INFLATED PUFFERFISH!</string>
     <string name="frenzy_death_eel">SHOCKED BY ELECTRIC EEL (STUNNED)!</string>
     <string name="frenzy_death_lionfish">POISONED BY LIONFISH (STUNNED)!</string>
@@ -448,7 +597,6 @@
     <string name="frenzy_death_too_large">CANNOT EAT: %1$s IS TOO LARGE!</string>
     <string name="frenzy_death_eaten">EATEN BY %1$s!</string>
     <string name="frenzy_death_mine">BLOWN UP BY UNDERSEA MINE!</string>
-    <string name="syobon_surprise">SURPRISE!</string>
     <string name="flappy_death_ceiling">Flew too high and hit the ceiling!</string>
     <string name="flappy_death_ground">Crashed into the grassy ground!</string>
     <string name="flappy_death_pipe">Crashed into a green pipe!</string>
@@ -461,16 +609,92 @@
     <string name="flappy_hint_fly_through">FLY THROUGH</string>
     <string name="flappy_hint_avoid_bat">AVOID BAT</string>
     <string name="flappy_hint_fly_under">FLY UNDER</string>
-    <string name="protected_hero">PROTECTED HERO</string>
-    <string name="guest_hero_name">GUEST HERO</string>
-    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
-    <string name="monkey_char_default">MONKEY</string>
-    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
-    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
-    <string name="monkey_char_spider">SPIDER MONKEY</string>
+    <string name="retro_driver_final_lap">FINAL LAP!</string>
+    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
+    <string name="retro_driver_go">GO!</string>
+    <string name="retro_driver_finish">FINISH!</string>
+    <string name="syobon_surprise">SURPRISE!</string>
     <string name="ad_screensaver_message">To keep these games free, we show ads during breaks.\nThank you for your support!</string>
     <string name="ad_screensaver_hint">Press any key to resume instantly</string>
     <string name="ad_warning_prefix">Full-screen ad starting in %1$d...</string>
     <string name="ad_label">AD</string>
     <string name="advertisement_label">ADVERTISEMENT</string>
+    <string name="monkey_settings_title">テナガザル登り 設定</string>
+    <string name="monkey_character_label">キャラクター</string>
+    <string name="monkey_character_desc">お好みのクライマーを選択。</string>
+    <string name="monkey_season_label">季節テーマ</string>
+    <string name="monkey_season_desc">ジャングルの天候と植物を選択。</string>
+    <string name="frenzy_settings_title">フレンジーフィッシュ 設定</string>
+    <string name="frenzy_difficulty_label">難易度</string>
+    <string name="frenzy_difficulty_easy">イージー (捕食者が遅い)</string>
+    <string name="frenzy_difficulty_normal">ノーマル (標準バランス)</string>
+    <string name="frenzy_difficulty_hard">ハード (獰猛なサメ)</string>
+    <string name="frenzy_difficulty_desc">捕食者の速度と密度。</string>
+    <string name="frenzy_starting_size_label">初期サイズ</string>
+    <string name="frenzy_starting_size_guppy">グッピー (極小)</string>
+    <string name="frenzy_starting_size_angelfish">エンゼルフィッシュ (中)</string>
+    <string name="frenzy_starting_size_desc">魚のスタート成長段階。</string>
+    <string name="retrodriver_settings_title">レトロレーサー 設定</string>
+    <string name="retrodriver_vehicle_label">マシン</string>
+    <string name="retrodriver_vehicle_desc">スーパーバイクのモデルを選択。</string>
+    <string name="retrodriver_theme_label">コース環境</string>
+    <string name="retrodriver_theme_desc">レースコースの背景を選択。</string>
+    <string name="retrodriver_theme_neon">サイバーシティ (ネオン)</string>
+    <string name="retrodriver_theme_desert">キャニオンサンセット (夕暮れ)</string>
+    <string name="retrodriver_theme_cyber">シンセウェーブグリッド (レトロ)</string>
+    <string name="retrodriver_theme_snow">アルプス峠 (雪道)</string>
+    <string-array name="win_monkey">
+        <item>ツルマスター！</item>
+        <item>頂点クライマー！</item>
+        <item>ジャングルの王！</item>
+        <item>樹冠完全制覇！</item>
+    </string-array>
+    <string-array name="win_frenzy">
+        <item>海の覇者！</item>
+        <item>最強の捕食者！</item>
+        <item>サンゴ礁の支配者！</item>
+        <item>大食いマスター！</item>
+    </string-array>
+    <string-array name="win_retrodriver">
+        <item>スピードの悪魔！</item>
+        <item>コースチャンピオン！</item>
+        <item>シンセレーサー！</item>
+        <item>表彰台の頂点！</item>
+    </string-array>
+    <string-array name="win_tetris">
+        <item>テトリスマスター！</item>
+        <item>ライン消去のプロ！</item>
+        <item>パーフェクト積み！</item>
+        <item>ブロックバスター！</item>
+    </string-array>
+    <string-array name="win_snake">
+        <item>スネークマスター！</item>
+        <item>パイソンの伝説！</item>
+        <item>ごちそうチャンピオン！</item>
+        <item>蛇行の達人！</item>
+    </string-array>
+    <string-array name="win_flappy">
+        <item>天空のレジェンド！</item>
+        <item>飛翔のヒーロー！</item>
+        <item>翼のマスター！</item>
+        <item>ハイフライヤー！</item>
+    </string-array>
+    <string-array name="win_lines98">
+        <item>ラインマスター！</item>
+        <item>カラークリアの美技！</item>
+        <item>オーブの魔術師！</item>
+        <item>盤面の天才！</item>
+    </string-array>
+    <string-array name="win_spinball">
+        <item>スピンの魔術師！</item>
+        <item>オービットマスター！</item>
+        <item>ピンボールプロ！</item>
+        <item>サークルサバイバー！</item>
+    </string-array>
+    <string-array name="win_simon">
+        <item>記憶の魔術師！</item>
+        <item>サイモンの完全勝利！</item>
+        <item>パターンプロ！</item>
+        <item>驚異の記憶力！</item>
+    </string-array>
 </resources>

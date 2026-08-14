@@ -2,6 +2,7 @@
     <string name="app_name">Dpad Arcade</string>
     <string name="app_name_full">Dpad Arcade: रेट्रो गेम्स</string>
     <string name="game_center">DPAD ARCADE</string>
+    <string name="snake">साँप</string>
     <string name="snake_settings_title">साँप सेटिंग्स</string>
     <string name="snake_level_1">लेवल 1: शुरुआती</string>
     <string name="snake_level_2">लेवल 2: सामान्य</string>
@@ -10,7 +11,7 @@
     <string name="snake_level_2_desc">दीवारें जानलेवा। सामान्य गति।</string>
     <string name="snake_level_3_desc">दीवारें जानलेवा। तेज़ गति।</string>
     <string name="snake_level_label">कठिनाई स्तर</string>
-    <string name="snake">साँप</string>
+    <string name="minesweeper">माइनस्वीपर</string>
     <string name="minesweeper_settings_title">माइनस्वीपर सेटिंग्स</string>
     <string name="minesweeper_level_1">लेवल 1: शुरुआती (10x10, 12 माइन्स)</string>
     <string name="minesweeper_level_2">लेवल 2: सामान्य (16x16, 40 माइन्स)</string>
@@ -40,7 +41,6 @@
     <string name="tictactoe_size_4_desc">जीतने के लिए एक पंक्ति में 4।</string>
     <string name="tictactoe_size_5_desc">जीतने के लिए एक पंक्ति में 5।</string>
     <string name="tictactoe_size_label">बोर्ड का आकार</string>
-    <string name="minesweeper">माइनस्वीपर</string>
     <string name="game_4096_settings_title">4096 सेटिंग्स</string>
     <string name="game_4096_size_4">ग्रिड: 4x4 (क्लासिक)</string>
     <string name="game_4096_size_5">ग्रिड: 5x5 (बड़ा)</string>
@@ -53,40 +53,46 @@
     <string name="tetris_settings_title">टेट्रिस सेटिंग्स</string>
     <string name="tetris_start_level">शुरुआती स्तर</string>
     <string name="tetris_level_desc">उच्च स्तर तेज गति के साथ शुरू होता है।</string>
-    <string name="flappy_hero_settings_title">फ्लैपी सेटिंग्स</string>
-    <string name="flappy_hero_level_1">स्तर 1: आसान</string>
-    <string name="flappy_hero_level_2">स्तर 2: सामान्य</string>
-    <string name="flappy_hero_level_3">स्तर 3: कठिन</string>
-    <string name="flappy_hero_level_1_desc">बड़े अंतराल। धीमी पाइप।</string>
-    <string name="flappy_hero_level_2_desc">मानक अंतराल और गति।</string>
-    <string name="flappy_hero_level_3_desc">छोटे अंतराल। तेज पाइप।</string>
-    <string name="brick_break_settings_title">ब्रिक सेटिंग्स</string>
-    <string name="brick_break_paddle_label">पैडल का आकार</string>
-    <string name="brick_break_paddle_large">आकार: बड़ा</string>
-    <string name="brick_break_paddle_medium">आकार: मध्यम</string>
-    <string name="brick_break_paddle_small">आकार: छोटा</string>
-    <string name="brick_break_paddle_desc">बड़े पैडल से गेंद पकड़ना आसान है।</string>
-    <string name="lines98_settings_title">लाइन्स 98 सेटिंग्स</string>
-    <string name="lines98_difficulty_easy">स्तर: आसान (5 रंग)</string>
-    <string name="lines98_difficulty_normal">स्तर: सामान्य (7 रंग)</string>
-    <string name="lines98_difficulty_hard">स्तर: कठिन (9 रंग)</string>
-    <string name="lines98_difficulty_desc">अधिक रंग खेल को कठिन बनाते हैं।</string>
-    <string name="word_quest_settings_title">वर्ड क्वेस्ट सेटिंग्स</string>
-    <string name="word_quest_category_all">वर्ग: सभी शब्द</string>
-    <string name="word_quest_category_nature">वर्ग: प्रकृति</string>
-    <string name="word_quest_category_tech">वर्ग: तकनीक</string>
-    <string name="word_quest_category_desc">पहेलियों के लिए शब्द श्रेणी चुनें।</string>
-    <string name="road_racer_settings_title">रोड रेसर सेटिंग्स</string>
-    <string name="road_racer_density_label">ट्रैफिक घनत्व</string>
-    <string name="road_racer_density_low">घनत्व: कम</string>
-    <string name="road_racer_density_normal">घनत्व: सामान्य</string>
-    <string name="road_racer_density_high">घनत्व: उच्च</string>
-    <string name="road_racer_density_desc">अधिक ट्रैफिक से बचना कठिन है।</string>
+    <string name="checkers_settings_title">चेकर्स सेटिंग्स</string>
+    <string name="checkers_difficulty_1">एआई: यादृच्छिक (आसान)</string>
+    <string name="checkers_difficulty_2">एआई: रणनीतिक (सामान्य)</string>
+    <string name="checkers_difficulty_desc">मजबूत एआई समझदारी भरी चालें चलता है।</string>
+    <string name="spinball_settings_title">स्पिनबॉल सेटिंग्स</string>
+    <string name="spinball_difficulty_1">मोड: शांत (धीमा)</string>
+    <string name="spinball_difficulty_2">मोड: तेज (सामान्य)</string>
+    <string name="spinball_difficulty_3">मोड: अस्त-व्यस्त (तेज़)</string>
+    <string name="spinball_difficulty_desc">गति चुनौती को बढ़ाती है।</string>
+    <string name="simon_says_settings_title">साइमन सेटिंग्स</string>
+    <string name="simon_says_speed_1">गति: शांत (धीमी)</string>
+    <string name="simon_says_speed_2">गति: सामान्य (मध्यम)</string>
+    <string name="simon_says_speed_3">गति: बिजली (तेज़)</string>
+    <string name="simon_says_speed_desc">अनुक्रम प्लेबैक गति।</string>
+    <string name="dungeon_escape_settings_title">कालकोठरी से भागें सेटिंग्स</string>
+    <string name="dungeon_escape_start_level">प्रारंभिक तल</string>
+    <string name="dungeon_escape_level_desc">शुरू करने के लिए मंजिल चुनें।</string>
+    <string name="froggy_cross_settings_title">मेंढक पार सेटिंग्स</string>
+    <string name="froggy_cross_difficulty_1">कठिनाई: धीमी (कम ट्रैफ़िक)</string>
+    <string name="froggy_cross_difficulty_2">कठिनाई: सामान्य (मानक)</string>
+    <string name="froggy_cross_difficulty_3">कठिनाई: व्यस्त समय (तेज़ ट्रैफ़िक)</string>
+    <string name="froggy_cross_difficulty_desc">वाहनों और लकड़ियों की गति।</string>
     <string name="game_4096">4096</string>
     <string name="game_trex">T-REX RUN</string>
     <string name="game_brick_break">ईंट तोड़ो</string>
     <string name="game_tictactoe">टिक-टैक-टो</string>
     <string name="game_checkers">चेकर्स</string>
+    <string name="sokoban_settings_title">सोकोबन सेटिंग्स</string>
+    <string name="sokoban_start_level">प्रारंभिक स्तर</string>
+    <string name="sokoban_level_desc">शुरू करने के लिए स्तर चुनें।</string>
+    <string name="battle_tanks_settings_title">बैटल टैंक सेटिंग्स</string>
+    <string name="battle_tanks_difficulty_1">कठिनाई: कैडेट (धीमे टैंक)</string>
+    <string name="battle_tanks_difficulty_2">कठिनाई: अनुभवी (मानक)</string>
+    <string name="battle_tanks_difficulty_3">कठिनाई: जनरल (तेज़ गोलाबारी)</string>
+    <string name="battle_tanks_difficulty_desc">दुश्मन की गति और मारक क्षमता।</string>
+    <string name="starfighter_settings_title">स्टार फाइटर सेटिंग्स</string>
+    <string name="starfighter_difficulty_1">स्तर 1: कैडेट (आसान)</string>
+    <string name="starfighter_difficulty_2">स्तर 2: अनुभवी (सामान्य)</string>
+    <string name="starfighter_difficulty_3">स्तर 3: इक्का (कठिन)</string>
+    <string name="starfighter_difficulty_desc">दुश्मन की सेहत और फायरिंग दर।</string>
     <string name="game_sokoban">सोकोबान</string>
     <string name="game_sudoku">सुडोकू</string>
     <string name="game_tetris">टेट्रिस</string>
@@ -95,11 +101,58 @@
     <string name="game_slide_puzzle">स्लाइड पहेली</string>
     <string name="game_mental_math">गणित</string>
     <string name="game_froggy">मेंढक पार</string>
+    <string name="game_syobon">CAT MEOWIO</string>
     <string name="game_simon">साइमन कहता है</string>
     <string name="game_tanks">टैंक युद्ध</string>
+    <string name="word_quest_settings_title">वर्ड क्वेस्ट सेटिंग्स</string>
+    <string name="word_quest_category_all">श्रेणी: सभी शब्द</string>
+    <string name="word_quest_category_nature">श्रेणी: प्रकृति और जानवर</string>
+    <string name="word_quest_category_tech">श्रेणी: तकनीक और विज्ञान</string>
+    <string name="word_quest_category_desc">अपनी शब्द पहेली की थीम चुनें।</string>
+    <string name="road_racer_settings_title">रोड रेसर सेटिंग्स</string>
+    <string name="road_racer_density_label">ट्रैफ़िक घनत्व</string>
+    <string name="road_racer_density_low">घनत्व: हल्का (आसान)</string>
+    <string name="road_racer_density_normal">घनत्व: मध्यम (सामान्य)</string>
+    <string name="road_racer_density_high">घनत्व: भारी (कठिन)</string>
+    <string name="road_racer_density_desc">राजमार्ग पर वाहनों की संख्या।</string>
     <string name="game_word_quest">शब्द खोज</string>
     <string name="game_dungeon">कालकोठरी से भागना</string>
+    <string name="game_monkey">गिब्बन क्लाइम्ब</string>
+    <string name="game_retrodriver">रेट्रो रेसर</string>
+    <string name="game_frenzy">फ़्रेंज़ी फ़िश</string>
+    <string name="game_fruit">फ़्रूट कटर</string>
+    <string name="flappy_hero_settings_title">फ्लैपी हीरो सेटिंग्स</string>
+    <string name="flappy_hero_level_1">स्तर 1: घास का मैदान (चौड़े पाइप)</string>
+    <string name="flappy_hero_level_2">स्तर 2: जंगल (चलती बाधाएं)</string>
+    <string name="flappy_hero_level_3">स्तर 3: घाटी (संकीर्ण अंतराल)</string>
+    <string name="flappy_hero_level_4">स्तर 4: रात्रि आकाश (हवा की धाराएं)</string>
+    <string name="flappy_hero_level_5">स्तर 5: नरक (अराजक मोड)</string>
+    <string name="flappy_hero_level_1_desc">सीखने के लिए सबसे चौड़े अंतराल।</string>
+    <string name="flappy_hero_level_2_desc">बाधाएं लंबवत रूप से हिलती हैं।</string>
+    <string name="flappy_hero_level_3_desc">पाइपों के बीच कम दूरी।</string>
+    <string name="flappy_hero_level_4_desc">हवा गिरने की गति को प्रभावित करती है।</string>
+    <string name="flappy_hero_level_5_desc">तेज़ गति और सबसे संकीर्ण रास्ते।</string>
+    <string name="flappy_hero_char_label">पात्र</string>
+    <string name="flappy_char_classic">क्लासिक पक्षी (मानक)</string>
+    <string name="flappy_char_classic_desc">क्लासिक भौतिकी और कूदने का अहसास।</string>
+    <string name="flappy_char_swift">तेज़ बाण (त्वरित फड़फड़ाहट)</string>
+    <string name="flappy_char_swift_desc">तेज़ चढ़ाई, तेज़ टैप्स।</string>
+    <string name="flappy_char_heavy">लोहे का पंख (तेज़ गिरावट)</string>
+    <string name="flappy_char_heavy_desc">अधिक गुरुत्वाकर्षण, त्वरित सजगता आवश्यक।</string>
+    <string name="flappy_char_floaty">हल्का पंख (सहज उड़ान)</string>
+    <string name="flappy_char_floaty_desc">कम गुरुत्वाकर्षण, आसान नियंत्रण।</string>
+    <string name="brick_break_settings_title">ब्रिक ब्रेक सेटिंग्स</string>
+    <string name="brick_break_paddle_label">पैडल का आकार</string>
+    <string name="brick_break_paddle_large">पैडल: चौड़ा (आसान)</string>
+    <string name="brick_break_paddle_medium">पैडल: मानक (सामान्य)</string>
+    <string name="brick_break_paddle_small">पैडल: संकीर्ण (कठिन)</string>
+    <string name="brick_break_paddle_desc">चौड़ा पैडल गेंदों को पकड़ना आसान बनाता है।</string>
     <string name="game_flappy">फ्लैपी हीरो</string>
+    <string name="lines98_settings_title">लाइन्स 98 सेटिंग्स</string>
+    <string name="lines98_difficulty_easy">रंग: 5 रंग (आसान)</string>
+    <string name="lines98_difficulty_normal">रंग: 7 रंग (मानक)</string>
+    <string name="lines98_difficulty_hard">रंग: 9 रंग (विशेषज्ञ)</string>
+    <string name="lines98_difficulty_desc">कम रंग होने से मिलान आसान होता है।</string>
     <string name="game_lines98">लाइन्स 98</string>
     <string name="game_solitaire">सॉलिटेयर</string>
     <string name="game_road_racer">रोड रेसर</string>
@@ -132,6 +185,7 @@
     <string name="game_slide_puzzle_instructions">• हिलने के लिए DPAD का उपयोग करें।\n• स्लाइड के लिए CENTER दबाएं।\n• चित्र पूरा करने के लिए गोटियाँ सजाएं।</string>
     <string name="game_mental_math_instructions">• गणित हल करें।\n• उत्तर चुनने के लिए DPAD का उपयोग करें।\n• CENTER से पक्का करें।\n• जल्दी करें! समय कम है।</string>
     <string name="game_froggy_instructions">• सड़क और नदी पार करें।\n• कारों से बचें।\n• लकड़ी के लट्ठों पर कूदें।\n• लक्ष्य तक पहुँचें!</string>
+    <string name="game_syobon_instructions">• बाएँ/दाएँ जाएँ।\n• कूदने के लिए ऊपर या केंद्र दबाएँ।\n• ब्लॉक मारने के लिए उनके नीचे कूदें।\n• जीतने के लिए ध्वजस्तंभ तक पहुँचें!\n• जालों से सावधान रहें!</string>
     <string name="game_simon_instructions">• रंगों का क्रम देखें।\n• D-PAD से दोहराएं।\n• हर दौर में क्रम लंबा होगा!</string>
     <string name="game_tanks_instructions">• D-PAD से टैंक चलाएं।\n• ऑटो फ़ायर।\n• दुश्मन टैंक नष्ट करें।\n• बेस की रक्षा करें।</string>
     <string name="game_word_quest_instructions">• 6 बार में 5 अक्षरों का शब्द पहचानें।\n• कीबोर्ड के लिए D-PAD का उपयोग करें।\n• चुनने के लिए CENTER दबाएं।\n• हरा: अक्षर और स्थान सही।</string>
@@ -140,6 +194,10 @@
     <string name="game_lines98_instructions">• कर्सर के लिए D-PAD का उपयोग करें।\n• गेंद चलाने के लिए CENTER दबाएं।\n• एक ही रंग की 5 गेंदें जमाएँ।\n• बोर्ड भरने पर खेल खत्म।</string>
     <string name="game_solitaire_instructions">• कर्सर के लिए D-PAD का उपयोग करें।\n• कार्ड के लिए CENTER दबाएं।\n• A से K तक क्रम में लगाएं।</string>
     <string name="game_road_racer_instructions">• ट्रैफिक से बचें।\n• ज़िंदा रहें!\n• रोकने के लिए CENTER दबाएं।</string>
+    <string name="game_monkey_instructions">• बचने के लिए लताओं पर चढ़ें।\n• स्कोर के लिए फल इकट्ठा करें।\n• मकड़ियों, नारियल और लता-काटने वाले कीड़ों से बचें!\n• चढ़ने और कूदने के लिए डी-पैड का उपयोग करें।</string>
+    <string name="game_retrodriver_instructions">• अपनी सिंथवेव सुपरबाइक चलाएं!\n• बाएँ/दाएँ मुड़ें और गति बढ़ाने के लिए ऊपर दबाए रखें।\n• प्रथम स्थान पाने के लिए सभी 20 प्रतिस्पर्धियों से आगे निकलें।\n• रेस पूरी करने के लिए फ़िनिश लाइन पार करें!</string>
+    <string name="game_frenzy_instructions">• डी-पैड के साथ समुद्र में तैरें।\n• बड़े होने के लिए अपने से छोटी मछलियों को खाएं।\n• बड़ी शिकारी मछलियों द्वारा खाए जाने से बचें!\n• स्तर जीतने के लिए 30 मछलियाँ खाएं।</string>
+    <string name="game_fruit_instructions">• फल हवा में उछाले जाते हैं।\n• फलों को काटने के लिए डी-पैड के साथ चमकती तलवार चलाएं।\n• बमों से हर कीमत पर बचें!\n• जितने हो सके उतने फल काटें।</string>
     <string name="game_hangman_instructions">• शब्द पहचानने के लिए अक्षर चुनें।\n• आपके पास 6 मौके हैं।\n• चुनने के लिए CENTER दबाएं।</string>
     <string name="select_game_hint">चुनने के लिए ◄ ► का उपयोग करें • खेलने के लिए [OK] दबाएं</string>
     <string name="settings">सेटिंग्स</string>
@@ -188,7 +246,45 @@
     <string name="next_stage_hint">अगले चरण के लिए CENTER दबाएं</string>
     <string name="continue_hint">जारी रखने के लिए CENTER दबाएं</string>
     <string name="finish_hint">खत्म करने के लिए CENTER दबाएं</string>
+    <string name="tictactoe_size_hint">बोर्ड का आकार बदलने के लिए ऊपर/नीचे दबाएं (3x3, 4x4, 5x5) या विकल्पों के लिए MENU</string>
+    <string name="sokoban_restart_hint">पुनः आरंभ करने के लिए R दबाएं</string>
+    <string name="sudoku_controls_hint">डी-पैड: हिलें/संख्या | केंद्र: बदलें | MENU: स्तर</string>
     <string name="total_wins_label">कुल जीत</string>
+    <string name="mines_label">बारूदी सुरंगें: </string>
+    <string name="flags_label">झंडे: </string>
+    <string name="high_score_prefix">सर्वश्रेष्ठ: </string>
+    <string name="cpu_wins_label">एआई जीत गया!</string>
+    <string name="your_turn_label">आपकी बारी</string>
+    <string name="watch_label">ध्यान से देखें...</string>
+    <string name="grid_mastered_label">ग्रिड में महारत हासिल!</string>
+    <string name="puzzle_solved_label">पहेली सुलझ गई!</string>
+    <string name="picture_restored_label">तस्वीर बहाल!</string>
+    <string name="crashed_label">दुर्घटनाग्रस्त!</string>
+    <string name="score_prefix">स्कोर: </string>
+    <string name="high_score_label">सर्वोच्च स्कोर</string>
+    <string name="wrong_label">गलत!</string>
+    <string name="answer_was_label">सही शब्द था: </string>
+    <string name="finish_label">समाप्त</string>
+    <string name="continue_label">जारी रखें</string>
+    <string name="next_stage_label">अगला चरण</string>
+    <string name="out_of_tries">प्रयास समाप्त!</string>
+    <string name="cpu_thinking_label">एआई सोच रहा है...</string>
+    <string name="no_moves_label">कोई चाल नहीं बची</string>
+    <string name="victory_label">विजय!</string>
+    <string name="draw_label">मैच ड्रॉ!</string>
+    <string name="hit_wall_label">दीवार से टकरा गए!</string>
+    <string name="bit_self_label">खुद को काट लिया!</string>
+    <string name="cpu_starting_label">अगला मैच एआई शुरू करेगा</string>
+    <string name="jump_again_label">फिर से कूदें</string>
+    <string name="draw_status">ड्रॉ</string>
+    <string name="cat_animals">जानवर</string>
+    <string name="cat_fruits">फल</string>
+    <string name="cat_countries">देश</string>
+    <string name="cat_sports">खेल</string>
+    <string name="cat_flowers">फूल</string>
+    <string name="cat_vehicles">वाहन</string>
+    <string name="cat_games">खेलकूद</string>
+    <string name="cat_foods">भोजन</string>
     <string name="rating_title">क्या आप Dpad Arcade का आनंद ले रहे हैं?</string>
     <string name="rating_content">कृपया हमें Play Store पर 5 स्टार दें, या उन खेलों के लिए अपने सुझाव साझा करें जिन्हें आप खेलना चाहते हैं!</string>
     <string name="rate_now">5 स्टार रेट करें</string>
@@ -197,139 +293,6 @@
     <string name="update_title">नया अपडेट उपलब्ध है!</string>
     <string name="update_content">Dpad Arcade: Retro Game Hub का एक नया संस्करण उपलब्ध है। नवीनतम गेम, सुविधाएँ और स्थिरता सुधार प्राप्त करने के लिए अभी अपडेट करें।</string>
     <string name="update_now">अभी अपडेट करें</string>
-
-    <string-array name="win_generic">
-        <item>जीत!</item>
-        <item>शाबाश!</item>
-        <item>अद्भुत!</item>
-        <item>शानदार!</item>
-        <item>बेहतरीन!</item>
-        <item>आप महान हैं!</item>
-        <item>उत्कृष्ट!</item>
-        <item>लाजवाब!</item>
-        <item>कमाल कर दिया!</item>
-        <item>बहुत बढ़िया!</item>
-    </string-array>
-
-    <string-array name="win_highscore">
-        <item>नया रिकॉर्ड!</item>
-        <item>अजेय!</item>
-        <item>सबसे अच्छा!</item>
-        <item>दिव्य!</item>
-        <item>हाई-स्कोर!</item>
-    </string-array>
-
-    <string-array name="win_minesweeper">
-        <item>जगह साफ!</item>
-        <item>माइन मास्टर!</item>
-        <item>सुरक्षित रास्ता!</item>
-        <item>एक्सपर्ट स्वीपर!</item>
-    </string-array>
-
-    <string-array name="win_sudoku">
-        <item>ग्रिड फतेह!</item>
-        <item>लॉजिक किंग!</item>
-        <item>पहेली हल!</item>
-        <item>तेज़ दिमाग!</item>
-    </string-array>
-
-    <string-array name="win_tictactoe">
-        <item>मात दी!</item>
-        <item>3 एक साथ!</item>
-        <item>रणनीतिक जीत!</item>
-        <item>नाकाबिले बर्दाश्त!</item>
-    </string-array>
-
-    <string-array name="win_4096">
-        <item>गणित के जादूगर!</item>
-        <item>4096 तक पहुँचे!</item>
-        <item>नंबर क्रशर!</item>
-        <item>अंतिम टाइल!</item>
-    </string-array>
-
-    <string-array name="win_memory">
-        <item>परफेक्ट मेमोरी!</item>
-        <item>मैच मास्टर!</item>
-        <item>तेज़ तर्रार!</item>
-        <item>सब याद है!</item>
-    </string-array>
-
-    <string-array name="win_hangman">
-        <item>शब्द बचाया!</item>
-        <item>शब्दों के मालिक!</item>
-        <item>शब्द ने बचाया!</item>
-        <item>भाषा के राजा!</item>
-    </string-array>
-
-    <string-array name="win_brick_break">
-        <item>लेवल पूरा!</item>
-        <item>ईंट तोड़ने वाले!</item>
-        <item>दीवार तोड़ने वाले!</item>
-        <item>पैडल प्रो!</item>
-    </string-array>
-
-    <string-array name="win_word_quest">
-        <item>शब्द मिला!</item>
-        <item>स्पेलिंग एक्सपर्ट!</item>
-        <item>डिक्शनरी हीरो!</item>
-        <item>क्वेस्ट पूरा!</item>
-    </string-array>
-
-    <string-array name="win_solitaire">
-        <item>ताश साफ!</item>
-        <item>ऐस की जीत!</item>
-        <item>रंग पूरा!</item>
-        <item>कार्ड किंग!</item>
-    </string-array>
-
-    <string-array name="win_sokoban">
-        <item>गोदाम के हीरो!</item>
-        <item>बक्सा धकेलने वाले!</item>
-        <item>लक्ष्य पूरा!</item>
-        <item>सोको-मास्टर!</item>
-    </string-array>
-
-    <string-array name="win_checkers">
-        <item>कंप्यूटर को हराया!</item>
-        <item>बोर्ड के राजा!</item>
-        <item>ग्रैंडमास्टर!</item>
-        <item>रणनीति के उस्ताद!</item>
-    </string-array>
-
-    <string-array name="win_slide_puzzle">
-        <item>चित्र ठीक हुआ!</item>
-        <item>पहेली हल हुई!</item>
-        <item>बिल्कुल सही!</item>
-        <item>स्लाइड मास्टर!</item>
-    </string-array>
-
-    <string-array name="win_dungeon">
-        <item>कालकोठरी से बाहर!</item>
-        <item>महान खोजी!</item>
-        <item>मंज़िल साफ!</item>
-        <item>खज़ाना मिला!</item>
-    </string-array>
-
-    <string-array name="win_tanks">
-        <item>बेस सुरक्षित!</item>
-        <item>दुश्मन साफ!</item>
-        <item>टैंक कमांडर!</item>
-        <item>युद्ध के नायक!</item>
-    </string-array>
-
-    <string-array name="win_mental_math">
-        <item>गणित के जीनियस!</item>
-        <item>दिमागी शक्ति!</item>
-        <item>कैलकुलेशन किंग!</item>
-        <item>नंबरों के मास्टर!</item>
-    </string-array>
-
-    <string-array name="win_froggy">
-        <item>लक्ष्य तक पहुँचे!</item>
-        <item>सुरक्षित पार किया!</item>
-        <item>मेंढक हीरो!</item>
-        <item>नदी के राजा!</item>
-    </string-array>
     <string name="trex_daddy">डैडी टी-रेक्स</string>
     <string name="trex_mummy">मम्मी टी-रेक्स</string>
     <string name="trex_baby">बेबी टी-रेक्स</string>
@@ -340,11 +303,12 @@
     <string name="trex_pirate">समुद्री डाकू टी-रेक्स</string>
     <string name="trex_chef">शेफ टी-रेक्स</string>
     <string name="trex_astronaut">अंतरिक्ष यात्री टी-रेक्स</string>
+    <string name="trex_ninja">निंजा टी-रेक्स</string>
     <string name="trex_dragon">ड्रैगन डिनो</string>
     <string name="trex_zombie">ज़ोंबी डिनो</string>
     <string name="trex_robot">रोबोट डिनो</string>
     <string name="trex_king">किंग डिनो</string>
-
+    <string name="trex_character_label">पात्र</string>
     <string name="trex_select_character">पात्र चुनें</string>
     <string name="trex_strong_prefix">ताकत: </string>
     <string name="trex_weak_prefix">कमजोरी: </string>
@@ -366,6 +330,20 @@
     <string name="trex_sunny">धूप</string>
     <string name="trex_rainy">बारिश</string>
     <string name="trex_snowy">बर्फीला</string>
+    <string name="trex_desc_char_random">हर बार एक सरप्राइज डिनो!</string>
+    <string name="trex_desc_char_specific">लॉबी में चुने गए डिनो का उपयोग करें।</string>
+    <string name="trex_desc_time_random">दिन या रात का चक्र।</string>
+    <string name="trex_desc_time_day">साफ दिन का आसमान।</string>
+    <string name="trex_desc_time_night">अंधेरी तारों वाली रात।</string>
+    <string name="trex_desc_season_random">सभी ऋतुओं का चक्र।</string>
+    <string name="trex_desc_season_spring">हरियाली और ताजी घास।</string>
+    <string name="trex_desc_season_summer">चमकीले खेत और सूरज।</string>
+    <string name="trex_desc_season_autumn">गिरे हुए पत्ते और धुंधली मिट्टी।</string>
+    <string name="trex_desc_season_winter">बर्फीला इलाका और पाला।</string>
+    <string name="trex_desc_weather_random">गतिशील मौसम परिवर्तन।</string>
+    <string name="trex_desc_weather_sunny">एकदम साफ मौसम।</string>
+    <string name="trex_desc_weather_rainy">बारिश और काले बादल।</string>
+    <string name="trex_desc_weather_snowy">खूबसूरत बर्फबारी।</string>
     <string name="trex_point_bonus_score">बोनस स्कोर</string>
     <string name="trex_point_large_hitbox">बड़ा हिटबॉक्स</string>
     <string name="trex_point_double_jump">डबल जंप</string>
@@ -395,54 +373,184 @@
     <string name="trex_point_no_momentum">कोई संवेग नहीं</string>
     <string name="trex_point_royal_bonus">शाही बोनस</string>
     <string name="trex_point_visible_target">दृश्यमान लक्ष्य</string>
-    <string name="trex_ninja">निंजा टी-रेक्स</string>
-    <string name="trex_character_label">पात्र</string>
-
-    <string name="trex_desc_char_random">हर बार एक सरप्राइज डिनो!</string>
-    <string name="trex_desc_char_specific">लॉबी में चुने गए डिनो का उपयोग करें।</string>
-    <string name="trex_desc_time_random">दिन या रात का चक्र।</string>
-    <string name="trex_desc_time_day">साफ दिन का आसमान।</string>
-    <string name="trex_desc_time_night">अंधेरी तारों वाली रात।</string>
-    <string name="trex_desc_season_random">सभी ऋतुओं का चक्र।</string>
-    <string name="trex_desc_season_spring">हरियाली और ताजी घास।</string>
-    <string name="trex_desc_season_summer">चमकीले खेत और सूरज।</string>
-    <string name="trex_desc_season_autumn">गिरे हुए पत्ते और धुंधली मिट्टी।</string>
-    <string name="trex_desc_season_winter">बर्फीला इलाका और पाला।</string>
-    <string name="trex_desc_weather_random">गतिशील मौसम परिवर्तन।</string>
-    <string name="trex_desc_weather_sunny">एकदम साफ मौसम।</string>
-    <string name="trex_desc_weather_rainy">बारिश और काले बादल।</string>
-    <string name="trex_desc_weather_snowy">खूबसूरत बर्फबारी।</string>
+    <string-array name="win_generic">
+        <item>जीत!</item>
+        <item>शाबाश!</item>
+        <item>अद्भुत!</item>
+        <item>शानदार!</item>
+        <item>बेहतरीन!</item>
+        <item>आप महान हैं!</item>
+        <item>उत्कृष्ट!</item>
+        <item>लाजवाब!</item>
+        <item>कमाल कर दिया!</item>
+        <item>बहुत बढ़िया!</item>
+    </string-array>
+    <string-array name="win_highscore">
+        <item>नया रिकॉर्ड!</item>
+        <item>अजेय!</item>
+        <item>सबसे अच्छा!</item>
+        <item>दिव्य!</item>
+        <item>हाई-स्कोर!</item>
+    </string-array>
+    <string-array name="win_minesweeper">
+        <item>जगह साफ!</item>
+        <item>माइन मास्टर!</item>
+        <item>सुरक्षित रास्ता!</item>
+        <item>एक्सपर्ट स्वीपर!</item>
+    </string-array>
+    <string-array name="win_sudoku">
+        <item>ग्रिड फतेह!</item>
+        <item>लॉजिक किंग!</item>
+        <item>पहेली हल!</item>
+        <item>तेज़ दिमाग!</item>
+    </string-array>
+    <string-array name="win_tictactoe">
+        <item>मात दी!</item>
+        <item>3 एक साथ!</item>
+        <item>रणनीतिक जीत!</item>
+        <item>नाकाबिले बर्दाश्त!</item>
+    </string-array>
+    <string-array name="win_4096">
+        <item>गणित के जादूगर!</item>
+        <item>4096 तक पहुँचे!</item>
+        <item>नंबर क्रशर!</item>
+        <item>अंतिम टाइल!</item>
+    </string-array>
+    <string-array name="win_memory">
+        <item>परफेक्ट मेमोरी!</item>
+        <item>मैच मास्टर!</item>
+        <item>तेज़ तर्रार!</item>
+        <item>सब याद है!</item>
+    </string-array>
+    <string-array name="win_hangman">
+        <item>शब्द बचाया!</item>
+        <item>शब्दों के मालिक!</item>
+        <item>शब्द ने बचाया!</item>
+        <item>भाषा के राजा!</item>
+    </string-array>
+    <string-array name="win_brick_break">
+        <item>लेवल पूरा!</item>
+        <item>ईंट तोड़ने वाले!</item>
+        <item>दीवार तोड़ने वाले!</item>
+        <item>पैडल प्रो!</item>
+    </string-array>
+    <string-array name="win_word_quest">
+        <item>शब्द मिला!</item>
+        <item>स्पेलिंग एक्सपर्ट!</item>
+        <item>डिक्शनरी हीरो!</item>
+        <item>क्वेस्ट पूरा!</item>
+    </string-array>
+    <string-array name="win_solitaire">
+        <item>ताश साफ!</item>
+        <item>ऐस की जीत!</item>
+        <item>रंग पूरा!</item>
+        <item>कार्ड किंग!</item>
+    </string-array>
+    <string-array name="win_sokoban">
+        <item>गोदाम के हीरो!</item>
+        <item>बक्सा धकेलने वाले!</item>
+        <item>लक्ष्य पूरा!</item>
+        <item>सोको-मास्टर!</item>
+    </string-array>
+    <string-array name="win_checkers">
+        <item>कंप्यूटर को हराया!</item>
+        <item>बोर्ड के राजा!</item>
+        <item>ग्रैंडमास्टर!</item>
+        <item>रणनीति के उस्ताद!</item>
+    </string-array>
+    <string-array name="win_slide_puzzle">
+        <item>चित्र ठीक हुआ!</item>
+        <item>पहेली हल हुई!</item>
+        <item>बिल्कुल सही!</item>
+        <item>स्लाइड मास्टर!</item>
+    </string-array>
+    <string-array name="win_dungeon">
+        <item>कालकोठरी से बाहर!</item>
+        <item>महान खोजी!</item>
+        <item>मंज़िल साफ!</item>
+        <item>खज़ाना मिला!</item>
+    </string-array>
+    <string-array name="win_tanks">
+        <item>बेस सुरक्षित!</item>
+        <item>दुश्मन साफ!</item>
+        <item>टैंक कमांडर!</item>
+        <item>युद्ध के नायक!</item>
+    </string-array>
+    <string-array name="win_mental_math">
+        <item>गणित के जीनियस!</item>
+        <item>दिमागी शक्ति!</item>
+        <item>कैलकुलेशन किंग!</item>
+        <item>नंबरों के मास्टर!</item>
+    </string-array>
+    <string-array name="win_froggy">
+        <item>लक्ष्य तक पहुँचे!</item>
+        <item>सुरक्षित पार किया!</item>
+        <item>मेंढक हीरो!</item>
+        <item>नदी के राजा!</item>
+    </string-array>
+    <string name="starfighter_ship_label">स्टारशिप मॉडल</string>
+    <string name="starfighter_ship_balanced">स्ट्राइकर (संतुलित)</string>
+    <string name="starfighter_ship_balanced_desc">मानक लड़ाकू स्टारशिप।</string>
+    <string name="starfighter_ship_fast">इंटरसेप्टर (तेज़ और चुस्त)</string>
+    <string name="starfighter_ship_fast_desc">उच्च गति, हल्का कवच।</string>
+    <string name="starfighter_ship_tank">ड्रेडनॉट (भारी कवच)</string>
+    <string name="starfighter_ship_tank_desc">अधिकतम कवच, धीमी गति।</string>
+    <string name="starfighter_ship_solar">सोलारिस (उच्च ऊर्जा हथियार)</string>
+    <string name="starfighter_ship_solar_desc">लेजर क्षति में वृद्धि।</string>
+    <string name="starfighter_ship_phoenix">फीनिक्स (शील्ड पुनर्जनन)</string>
+    <string name="starfighter_ship_phoenix_desc">समय के साथ शील्ड्स को रीचार्ज करता है।</string>
+    <string name="syobon_settings_title">कैट मेओवियो सेटिंग्स</string>
+    <string name="syobon_character_label">बिल्ली की त्वचा</string>
+    <string name="syobon_char_classic">क्लासिक सफ़ेद (नेको)</string>
+    <string name="syobon_char_gold">गोल्डन टैबी (भाग्यशाली)</string>
+    <string name="syobon_char_shadow">शैडो पैंथर (निंजा)</string>
+    <string name="syobon_lives_label">प्रारंभिक जीवन</string>
+    <string name="syobon_lives_3">3 जीवन (क्लासिक)</string>
+    <string name="syobon_lives_1">1 जीवन (कठिन)</string>
+    <string name="syobon_lives_inf">अनंत जीवन (अभ्यास)</string>
+    <string name="syobon_lives_desc">गेम ओवर होने से पहले जीवन की संख्या।</string>
+    <string name="syobon_instructions">• बाएँ/दाएँ जाएँ।\n• कूदने के लिए ऊपर या केंद्र दबाएँ।\n• ब्लॉक मारने के लिए उनके नीचे कूदें।\n• जीतने के लिए ध्वजस्तंभ तक पहुँचें!\n• जालों से सावधान रहें!</string>
+    <string name="syobon_difficulty_desc">अपने बिल्ली नायक का रूप चुनें।</string>
+    <string-array name="win_syobon">
+        <item>मेओवियो मास्टर!</item>
+        <item>जाल विजेता!</item>
+        <item>ध्वज चैंपियन!</item>
+        <item>बिल्ली नायक!</item>
+    </string-array>
     <string name="quit_game_title">खेल से बाहर निकलें</string>
     <string name="quit_game_confirm">क्या आप वाकई खेल से बाहर निकलना चाहते हैं?</string>
     <string name="yes">हाँ</string>
     <string name="no">नहीं</string>
-    <string name="choose_hero" translatable="true">अपना खिलाड़ी चुनें</string>
-    <string name="create_hero" translatable="true">नया खिलाड़ी बनाएँ</string>
-    <string name="enter_hero_name" translatable="true">खिलाड़ी का नाम दर्ज करें</string>
-    <string name="add_profile" translatable="true">खिलाड़ी जोड़ें</string>
-    <string name="switch_profile" translatable="true">खिलाड़ी बदलें</string>
-    <string name="profile_selection_hint" translatable="true">चुनने के लिए ◄ ► का उपयोग करें • [OK] दबाएं</string>
-    <string name="please_enter_name" translatable="true">कृपया नाम दर्ज करें</string>
-    <string name="enter_pin" translatable="true">4-अंकों का पिन दर्ज करें</string>
-    <string name="setup_pin" translatable="true">खिलाड़ी लॉक सेट करें (पिन)</string>
-    <string name="wrong_pin" translatable="true">गलत पिन। पुनः प्रयास करें।</string>
-    <string name="manage_profiles" translatable="true">खिलाड़ी प्रबंधन</string>
-    <string name="edit_profile" translatable="true">खिलाड़ी संपादित करें</string>
-    <string name="delete_profile" translatable="true">खिलाड़ी हटाएं</string>
-    <string name="confirm_delete_profile" translatable="true">क्या आप वाकई इस खिलाड़ी को हटाना चाहते हैं? सभी रिकॉर्ड खो जाएंगे।</string>
-    <string name="leave_blank_no_pin" translatable="true">बिना लॉक के लिए खाली छोड़ दें</string>
-    <string name="hall_of_fame" translatable="true">हॉल ऑफ फेम</string>
-    <string name="no_records" translatable="true">अभी तक कोई रिकॉर्ड नहीं</string>
-    <string name="save" translatable="true">सहेजें</string>
-    <string name="choose_avatar" translatable="true">अवतार चुनें</string>
-    <string name="choose_color" translatable="true">रंग चुनें</string>
-    <string name="security_pin_label" translatable="true">सुरक्षा पिन (वैकल्पिक)</string>
-    <string name="pin_digits_hint" translatable="true">पिन 4 अंकों का होना चाहिए</string>
-    <string name="rank_1st" translatable="true">प्रथम</string>
-    <string name="rank_2nd" translatable="true">द्वितीय</string>
-    <string name="rank_3rd" translatable="true">तृतीय</string>
-    <string name="placeholder_name" translatable="false">---</string>
-    <string name="placeholder_score" translatable="false">0</string>
+    <string name="choose_hero">अपना खिलाड़ी चुनें</string>
+    <string name="create_hero">नया खिलाड़ी बनाएँ</string>
+    <string name="enter_hero_name">खिलाड़ी का नाम दर्ज करें</string>
+    <string name="add_profile">खिलाड़ी जोड़ें</string>
+    <string name="switch_profile">खिलाड़ी बदलें</string>
+    <string name="profile_selection_hint">चुनने के लिए ◄ ► का उपयोग करें • [OK] दबाएं</string>
+    <string name="please_enter_name">कृपया नाम दर्ज करें</string>
+    <string name="enter_pin">4-अंकों का पिन दर्ज करें</string>
+    <string name="setup_pin">खिलाड़ी लॉक सेट करें (पिन)</string>
+    <string name="wrong_pin">गलत पिन। पुनः प्रयास करें।</string>
+    <string name="manage_profiles">खिलाड़ी प्रबंधन</string>
+    <string name="edit_profile">खिलाड़ी संपादित करें</string>
+    <string name="delete_profile">खिलाड़ी हटाएं</string>
+    <string name="confirm_delete_profile">क्या आप वाकई इस खिलाड़ी को हटाना चाहते हैं? सभी रिकॉर्ड खो जाएंगे।</string>
+    <string name="leave_blank_no_pin">बिना लॉक के लिए खाली छोड़ दें</string>
+    <string name="hall_of_fame">हॉल ऑफ फेम</string>
+    <string name="no_records">अभी तक कोई रिकॉर्ड नहीं</string>
+    <string name="save">सहेजें</string>
+    <string name="choose_avatar">अवतार चुनें</string>
+    <string name="choose_color">रंग चुनें</string>
+    <string name="security_pin_label">सुरक्षा पिन (वैकल्पिक)</string>
+    <string name="pin_digits_hint">पिन 4 अंकों का होना चाहिए</string>
+    <string name="protected_hero">PROTECTED HERO</string>
+    <string name="guest_hero_name">GUEST HERO</string>
+    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
+    <string name="rank_1st">प्रथम</string>
+    <string name="rank_2nd">द्वितीय</string>
+    <string name="rank_3rd">तृतीय</string>
+    <string name="placeholder_name">---</string>
+    <string name="placeholder_score">0</string>
     <string name="monkey_spring">SPRING</string>
     <string name="monkey_summer">SUMMER</string>
     <string name="monkey_autumn">AUTUMN</string>
@@ -477,11 +585,11 @@
     <string name="monkey_beetle_warning">⚠️ BEETLE</string>
     <string name="monkey_char_gibbon">GOLDEN GIBBON</string>
     <string name="monkey_char_climber">TARZAN CLIMBER</string>
+    <string name="monkey_char_spider">SPIDER MONKEY</string>
     <string name="monkey_char_chimp">PUNK CHIMP</string>
-    <string name="retro_driver_final_lap">FINAL LAP!</string>
-    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
-    <string name="retro_driver_go">GO!</string>
-    <string name="retro_driver_finish">FINISH!</string>
+    <string name="monkey_char_default">MONKEY</string>
+    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
+    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
     <string name="frenzy_death_pufferfish">MOUTH HURT BY INFLATED PUFFERFISH!</string>
     <string name="frenzy_death_eel">SHOCKED BY ELECTRIC EEL (STUNNED)!</string>
     <string name="frenzy_death_lionfish">POISONED BY LIONFISH (STUNNED)!</string>
@@ -489,7 +597,6 @@
     <string name="frenzy_death_too_large">CANNOT EAT: %1$s IS TOO LARGE!</string>
     <string name="frenzy_death_eaten">EATEN BY %1$s!</string>
     <string name="frenzy_death_mine">BLOWN UP BY UNDERSEA MINE!</string>
-    <string name="syobon_surprise">SURPRISE!</string>
     <string name="flappy_death_ceiling">Flew too high and hit the ceiling!</string>
     <string name="flappy_death_ground">Crashed into the grassy ground!</string>
     <string name="flappy_death_pipe">Crashed into a green pipe!</string>
@@ -502,16 +609,92 @@
     <string name="flappy_hint_fly_through">FLY THROUGH</string>
     <string name="flappy_hint_avoid_bat">AVOID BAT</string>
     <string name="flappy_hint_fly_under">FLY UNDER</string>
-    <string name="protected_hero">PROTECTED HERO</string>
-    <string name="guest_hero_name">GUEST HERO</string>
-    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
-    <string name="monkey_char_default">MONKEY</string>
-    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
-    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
-    <string name="monkey_char_spider">SPIDER MONKEY</string>
+    <string name="retro_driver_final_lap">FINAL LAP!</string>
+    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
+    <string name="retro_driver_go">GO!</string>
+    <string name="retro_driver_finish">FINISH!</string>
+    <string name="syobon_surprise">SURPRISE!</string>
     <string name="ad_screensaver_message">To keep these games free, we show ads during breaks.\nThank you for your support!</string>
     <string name="ad_screensaver_hint">Press any key to resume instantly</string>
     <string name="ad_warning_prefix">Full-screen ad starting in %1$d...</string>
     <string name="ad_label">AD</string>
     <string name="advertisement_label">ADVERTISEMENT</string>
+    <string name="monkey_settings_title">गिब्बन क्लाइम्ब सेटिंग्स</string>
+    <string name="monkey_character_label">पात्र</string>
+    <string name="monkey_character_desc">अपनी पर्वतारोही प्रजाति चुनें।</string>
+    <string name="monkey_season_label">मौसम थीम</string>
+    <string name="monkey_season_desc">जंगल का मौसम और पेड़-पौधे चुनें।</string>
+    <string name="frenzy_settings_title">फ़्रेंज़ी फ़िश सेटिंग्स</string>
+    <string name="frenzy_difficulty_label">कठिनाई</string>
+    <string name="frenzy_difficulty_easy">आसान (धीमी शिकारी मछलियाँ)</string>
+    <string name="frenzy_difficulty_normal">सामान्य (संतुलित)</string>
+    <string name="frenzy_difficulty_hard">कठिन (आक्रामक शार्क)</string>
+    <string name="frenzy_difficulty_desc">शिकारी मछलियों की गति और घनत्व।</string>
+    <string name="frenzy_starting_size_label">प्रारंभिक आकार</string>
+    <string name="frenzy_starting_size_guppy">गप्पी (सबसे छोटी)</string>
+    <string name="frenzy_starting_size_angelfish">एंजेलफ़िश (मध्यम)</string>
+    <string name="frenzy_starting_size_desc">मछली का प्रारंभिक विकास चरण।</string>
+    <string name="retrodriver_settings_title">रेट्रो रेसर सेटिंग्स</string>
+    <string name="retrodriver_vehicle_label">वाहन</string>
+    <string name="retrodriver_vehicle_desc">अपना सुपरबाइक मॉडल चुनें।</string>
+    <string name="retrodriver_theme_label">ट्रैक वातावरण</string>
+    <string name="retrodriver_theme_desc">रेसट्रैक का दृश्य चुनें।</string>
+    <string name="retrodriver_theme_neon">साइबर सिटी (नियॉन)</string>
+    <string name="retrodriver_theme_desert">कैनियन सूर्यास्त (शाम)</string>
+    <string name="retrodriver_theme_cyber">सिंथवेव ग्रिड (रेट्रो)</string>
+    <string name="retrodriver_theme_snow">अल्पाइन दर्रा (बर्फ़)</string>
+    <string-array name="win_monkey">
+        <item>लता मास्टर!</item>
+        <item>शीर्ष पर्वतारोही!</item>
+        <item>जंगल का राजा!</item>
+        <item>शिखर विजय!</item>
+    </string-array>
+    <string-array name="win_frenzy">
+        <item>समुद्र का राजा!</item>
+        <item>सर्वोच्च शिकारी!</item>
+        <item>रीफ का शासक!</item>
+        <item>शिकार मास्टर!</item>
+    </string-array>
+    <string-array name="win_retrodriver">
+        <item>गति का बादशाह!</item>
+        <item>ट्रैक चैंपियन!</item>
+        <item>सिंथ रेसर!</item>
+        <item>शानदार जीत!</item>
+    </string-array>
+    <string-array name="win_tetris">
+        <item>टेट्रिस मास्टर!</item>
+        <item>लाइन क्लीयर प्रो!</item>
+        <item>परफेक्ट स्टैक!</item>
+        <item>ब्लॉक विजेता!</item>
+    </string-array>
+    <string-array name="win_snake">
+        <item>साँप मास्टर!</item>
+        <item>अजगर लीजेंड!</item>
+        <item>दावत चैंपियन!</item>
+        <item>रेंगने का राजा!</item>
+    </string-array>
+    <string-array name="win_flappy">
+        <item>आकाश लीजेंड!</item>
+        <item>पंखों वाला नायक!</item>
+        <item>उड़ान मास्टर!</item>
+        <item>ऊंची उड़ान!</item>
+    </string-array>
+    <string-array name="win_lines98">
+        <item>लाइन मास्टर!</item>
+        <item>रंगों का जादू!</item>
+        <item>गेंदों का जादूगर!</item>
+        <item>ग्रिड जीनियस!</item>
+    </string-array>
+    <string-array name="win_spinball">
+        <item>स्पिन जादूगर!</item>
+        <item>कक्षा मास्टर!</item>
+        <item>पिनबॉल प्रो!</item>
+        <item>घेरा विजेता!</item>
+    </string-array>
+    <string-array name="win_simon">
+        <item>मेमोरी मास्टर!</item>
+        <item>साइमन कहता है: जीत!</item>
+        <item>पैटर्न प्रो!</item>
+        <item>शानदार याददाश्त!</item>
+    </string-array>
 </resources>

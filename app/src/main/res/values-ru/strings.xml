@@ -2,6 +2,7 @@
     <string name="app_name">Dpad Arcade</string>
     <string name="app_name_full">Dpad Arcade: Ретро-игры</string>
     <string name="game_center">DPAD ARCADE</string>
+    <string name="snake">ЗМЕЙКА</string>
     <string name="snake_settings_title">НАСТРОЙКИ ЗМЕЙКИ</string>
     <string name="snake_level_1">УРОВЕНЬ 1: НОВИЧОК</string>
     <string name="snake_level_2">УРОВЕНЬ 2: НОРМА</string>
@@ -10,7 +11,7 @@
     <string name="snake_level_2_desc">Стены смертельны. Средняя скорость.</string>
     <string name="snake_level_3_desc">Стены смертельны. Высокая скорость.</string>
     <string name="snake_level_label">Уровень сложности</string>
-    <string name="snake">ЗМЕЙКА</string>
+    <string name="minesweeper">САПЕР</string>
     <string name="minesweeper_settings_title">НАСТРОЙКИ САПЕРА</string>
     <string name="minesweeper_level_1">УРОВЕНЬ 1: НОВИЧОК (10x10, 12 мин)</string>
     <string name="minesweeper_level_2">УРОВЕНЬ 2: НОРМА (16x16, 40 мин)</string>
@@ -40,12 +41,58 @@
     <string name="tictactoe_size_4_desc">4 в ряд для победы.</string>
     <string name="tictactoe_size_5_desc">5 в ряд для победы.</string>
     <string name="tictactoe_size_label">Размер поля</string>
-    <string name="minesweeper">САПЕР</string>
+    <string name="game_4096_settings_title">НАСТРОЙКИ 4096</string>
+    <string name="game_4096_size_4">ПОЛЕ: 4x4 (Классика)</string>
+    <string name="game_4096_size_5">ПОЛЕ: 5x5 (Большое)</string>
+    <string name="game_4096_size_desc">Выберите размер игрового поля.</string>
+    <string name="mental_math_settings_title">НАСТРОЙКИ МАТЕМАТИКИ</string>
+    <string name="mental_math_mode_easy">РЕЖИМ: ЛЕГКИЙ (+, -)</string>
+    <string name="mental_math_mode_normal">РЕЖИМ: НОРМАЛЬНЫЙ (+, -, *)</string>
+    <string name="mental_math_mode_hard">РЕЖИМ: СЛОЖНЫЙ (+, -, *, /)</string>
+    <string name="mental_math_mode_desc">Выберите математические операции.</string>
+    <string name="tetris_settings_title">НАСТРОЙКИ ТЕТРИСА</string>
+    <string name="tetris_start_level">Начальный уровень</string>
+    <string name="tetris_level_desc">Высокий уровень дает большую скорость.</string>
+    <string name="checkers_settings_title">НАСТРОЙКИ ШАШЕК</string>
+    <string name="checkers_difficulty_1">ИИ: СЛУЧАЙНЫЙ (Легко)</string>
+    <string name="checkers_difficulty_2">ИИ: СТРАТЕГИЧЕСКИЙ (Нормально)</string>
+    <string name="checkers_difficulty_desc">Сильный ИИ делает продуманные ходы.</string>
+    <string name="spinball_settings_title">НАСТРОЙКИ СПИНБОЛА</string>
+    <string name="spinball_difficulty_1">РЕЖИМ: СПОКОЙНЫЙ (Медленно)</string>
+    <string name="spinball_difficulty_2">РЕЖИМ: БОДРЫЙ (Нормально)</string>
+    <string name="spinball_difficulty_3">РЕЖИМ: ХАОТИЧНЫЙ (Быстро)</string>
+    <string name="spinball_difficulty_desc">Скорость усложняет игру.</string>
+    <string name="simon_says_settings_title">НАСТРОЙКИ САЙМОНА</string>
+    <string name="simon_says_speed_1">СКОРОСТЬ: ПЛАВНАЯ (Медленно)</string>
+    <string name="simon_says_speed_2">СКОРОСТЬ: НОРМАЛЬНАЯ (Средне)</string>
+    <string name="simon_says_speed_3">СКОРОСТЬ: МОЛНИЯ (Быстро)</string>
+    <string name="simon_says_speed_desc">Скорость воспроизведения последовательности.</string>
+    <string name="dungeon_escape_settings_title">НАСТРОЙКИ ПОБЕГА ИЗ ПОДЗЕМЕЛЬЯ</string>
+    <string name="dungeon_escape_start_level">Начальный этаж</string>
+    <string name="dungeon_escape_level_desc">Выберите этаж для старта.</string>
+    <string name="froggy_cross_settings_title">НАСТРОЙКИ ЛЯГУШОНКА</string>
+    <string name="froggy_cross_difficulty_1">СЛОЖНОСТЬ: ПЛАВНО (Мало машин)</string>
+    <string name="froggy_cross_difficulty_2">СЛОЖНОСТЬ: НОРМАЛЬНО (Стандарт)</string>
+    <string name="froggy_cross_difficulty_3">СЛОЖНОСТЬ: ЧАС ПИК (Быстрый поток)</string>
+    <string name="froggy_cross_difficulty_desc">Скорость транспорта и бревен.</string>
     <string name="game_4096">4096</string>
     <string name="game_trex">T-REX RUN</string>
     <string name="game_brick_break">АРКАНОИД</string>
     <string name="game_tictactoe">КРЕСТИКИ-НОЛИКИ</string>
     <string name="game_checkers">ШАШКИ</string>
+    <string name="sokoban_settings_title">НАСТРОЙКИ СОКОБАНА</string>
+    <string name="sokoban_start_level">Начальный уровень</string>
+    <string name="sokoban_level_desc">Выберите уровень для старта.</string>
+    <string name="battle_tanks_settings_title">НАСТРОЙКИ ТАНКОВ</string>
+    <string name="battle_tanks_difficulty_1">СЛОЖНОСТЬ: КАДЕТ (Медленные танки)</string>
+    <string name="battle_tanks_difficulty_2">СЛОЖНОСТЬ: ВЕТЕРАН (Стандарт)</string>
+    <string name="battle_tanks_difficulty_3">СЛОЖНОСТЬ: ГЕНЕРАЛ (Быстрый огонь)</string>
+    <string name="battle_tanks_difficulty_desc">Скорость и огневая мощь врагов.</string>
+    <string name="starfighter_settings_title">НАСТРОЙКИ ЗВЕЗДНОГО ИСТРЕБИТЕЛЯ</string>
+    <string name="starfighter_difficulty_1">УРОВЕНЬ 1: КАДЕТ (Легко)</string>
+    <string name="starfighter_difficulty_2">УРОВЕНЬ 2: ВЕТЕРАН (Нормально)</string>
+    <string name="starfighter_difficulty_3">УРОВЕНЬ 3: АС (Сложно)</string>
+    <string name="starfighter_difficulty_desc">Здоровье врагов и частота выстрелов.</string>
     <string name="game_sokoban">СОКОБАН</string>
     <string name="game_sudoku">СУДОКУ</string>
     <string name="game_tetris">ТЕТРИС</string>
@@ -54,11 +101,58 @@
     <string name="game_slide_puzzle">ПЯТНАШКИ</string>
     <string name="game_mental_math">МЕНТАЛЬНАЯ АРИФМЕТИКА</string>
     <string name="game_froggy">FROGGY CROSS</string>
+    <string name="game_syobon">CAT MEOWIO</string>
     <string name="game_simon">САЙМОН ГОВОРИТ</string>
     <string name="game_tanks">ТАНКИ</string>
+    <string name="word_quest_settings_title">НАСТРОЙКИ WORD QUEST</string>
+    <string name="word_quest_category_all">КАТЕГОРИЯ: ВСЕ СЛОВА</string>
+    <string name="word_quest_category_nature">КАТЕГОРИЯ: ПРИРОДА И ЖИВОТНЫЕ</string>
+    <string name="word_quest_category_tech">КАТЕГОРИЯ: ТЕХНОЛОГИИ И НАУКА</string>
+    <string name="word_quest_category_desc">Выберите тему головоломки.</string>
+    <string name="road_racer_settings_title">НАСТРОЙКИ ROAD RACER</string>
+    <string name="road_racer_density_label">Плотность трафика</string>
+    <string name="road_racer_density_low">ПЛОТНОСТЬ: СЛАБАЯ (Легко)</string>
+    <string name="road_racer_density_normal">ПЛОТНОСТЬ: СРЕДНЯЯ (Нормально)</string>
+    <string name="road_racer_density_high">ПЛОТНОСТЬ: ВЫСОКАЯ (Сложно)</string>
+    <string name="road_racer_density_desc">Количество машин на трассе.</string>
     <string name="game_word_quest">WORD QUEST</string>
     <string name="game_dungeon">ПОБЕГ ИЗ ПОДЗЕМЕЛЬЯ</string>
+    <string name="game_monkey">ПОДЪЕМ ГИББОНА</string>
+    <string name="game_retrodriver">РЕТРО ГОНЩИК</string>
+    <string name="game_frenzy">ПОДВОДНОЕ БЕЗУМИЕ</string>
+    <string name="game_fruit">ФРУКТОВЫЙ НИНДЗЯ</string>
+    <string name="flappy_hero_settings_title">НАСТРОЙКИ FLAPPY HERO</string>
+    <string name="flappy_hero_level_1">УРОВЕНЬ 1: ЛУГ (Широкие трубы)</string>
+    <string name="flappy_hero_level_2">УРОВЕНЬ 2: ЛЕС (Движущиеся преграды)</string>
+    <string name="flappy_hero_level_3">УРОВЕНЬ 3: КАНЬОН (Узкие пролеты)</string>
+    <string name="flappy_hero_level_4">УРОВЕНЬ 4: НОЧНОЕ НЕБО (Порывы ветра)</string>
+    <string name="flappy_hero_level_5">УРОВЕНЬ 5: ИНФЕРНО (Режим Хаоса)</string>
+    <string name="flappy_hero_level_1_desc">Широкие проходы для обучения.</string>
+    <string name="flappy_hero_level_2_desc">Преграды покачиваются по вертикали.</string>
+    <string name="flappy_hero_level_3_desc">Уменьшенные расстояния между трубами.</string>
+    <string name="flappy_hero_level_4_desc">Ветер влияет на скорость падения.</string>
+    <string name="flappy_hero_level_5_desc">Высокая скорость и тесные проходы.</string>
+    <string name="flappy_hero_char_label">Персонаж</string>
+    <string name="flappy_char_classic">КЛАССИЧЕСКАЯ ПТИЦА (Стандарт)</string>
+    <string name="flappy_char_classic_desc">Классическая физика полета.</string>
+    <string name="flappy_char_swift">БЫСТРЫЙ ДРОТИК (Частые взмахи)</string>
+    <string name="flappy_char_swift_desc">Быстрый подъем, резкие взмахи.</string>
+    <string name="flappy_char_heavy">СТАЛЬНОЕ КРЫЛО (Тяжелое падение)</string>
+    <string name="flappy_char_heavy_desc">Высокая гравитация, нужна быстрая реакция.</string>
+    <string name="flappy_char_floaty">ЛЕГКОЕ ПЕРО (Мягкое парение)</string>
+    <string name="flappy_char_floaty_desc">Сниженная гравитация, легкое управление.</string>
+    <string name="brick_break_settings_title">НАСТРОЙКИ BRICK BREAK</string>
+    <string name="brick_break_paddle_label">Размер платформы</string>
+    <string name="brick_break_paddle_large">ПЛАТФОРМА: ШИРОКАЯ (Легко)</string>
+    <string name="brick_break_paddle_medium">ПЛАТФОРМА: СТАНДАРТ (Нормально)</string>
+    <string name="brick_break_paddle_small">ПЛАТФОРМА: УЗКАЯ (Сложно)</string>
+    <string name="brick_break_paddle_desc">Широкой платформой легче ловить шарики.</string>
     <string name="game_flappy">FLAPPY HERO</string>
+    <string name="lines98_settings_title">НАСТРОЙКИ ЛИНИЙ 98</string>
+    <string name="lines98_difficulty_easy">ЦВЕТА: 5 ЦВЕТОВ (Легко)</string>
+    <string name="lines98_difficulty_normal">ЦВЕТА: 7 ЦВЕТОВ (Стандарт)</string>
+    <string name="lines98_difficulty_hard">ЦВЕТА: 9 ЦВЕТОВ (Эксперт)</string>
+    <string name="lines98_difficulty_desc">Меньше цветов облегчает сбор линий.</string>
     <string name="game_lines98">ЛИНИИ 98</string>
     <string name="game_solitaire">КОСЫНКА</string>
     <string name="game_road_racer">ROAD RACER</string>
@@ -91,6 +185,7 @@
     <string name="game_slide_puzzle_instructions">• Используйте D-PAD.\n• CENTER для сдвига.\n• Соберите картинку.</string>
     <string name="game_mental_math_instructions">• Решите задачу.\n• D-PAD для выбора ответа.\n• CENTER для подтверждения.\n• Быстрее! Время идет.</string>
     <string name="game_froggy_instructions">• Перейдите дорогу и реку.\n• Избегайте машин.\n• Прыгайте по бревнам.\n• Доберитесь до финиша!</string>
+    <string name="game_syobon_instructions">• Двигайтесь Влево/Вправо.\n• Нажмите ВВЕРХ или ЦЕНТР для прыжка.\n• Прыгайте под блоки, чтобы ударить их.\n• Доберитесь до флагштока для победы!\n• ОСТЕРЕГАЙТЕСЬ ЛОВУШЕК!</string>
     <string name="game_simon_instructions">• Запомните цвета.\n• Повторите кнопками D-PAD.\n• Последовательность растет!</string>
     <string name="game_tanks_instructions">• Управляйте танком через D-PAD.\n• Автострельба.\n• Уничтожьте врагов.\n• Защитите БАЗУ.</string>
     <string name="game_word_quest_instructions">• Угадайте слово из 5 букв за 6 попыток.\n• D-PAD для клавиатуры.\n• CENTER для выбора.\n• ЗЕЛЕНЫЙ: буква и место верны.</string>
@@ -99,6 +194,10 @@
     <string name="game_lines98_instructions">• Используйте D-PAD.\n• CENTER для перемещения.\n• Соберите 5 шаров в ряд.\n• Конец, если поле полно.</string>
     <string name="game_solitaire_instructions">• Используйте D-PAD.\n• CENTER для карт.\n• Разложите от Туза до Короля.</string>
     <string name="game_road_racer_instructions">• Избегайте машин.\n• Выживайте!\n• CENTER для паузы.</string>
+    <string name="game_monkey_instructions">• Карабкайтесь по лианам, чтобы сбежать.\n• Собирайте фрукты за очки.\n• Уворачивайтесь от пауков, кокосов и жуков-дровосеков!\n• Используйте D-PAD для лазания и прыжков.</string>
+    <string name="game_retrodriver_instructions">• Управляйте синтвейв-мотоциклом!\n• Рулите Влево/Вправо и удерживайте ВВЕРХ для разгона.\n• Обгоните всех 20 соперников, чтобы занять 1-е место.\n• Пересеките финишную черту!</string>
+    <string name="game_frenzy_instructions">• Плавайте в океане с помощью D-PAD.\n• Ешьте рыбу меньше вас, чтобы расти.\n• Не попадитесь крупным хищникам!\n• Съешьте 30 рыб для победы на уровне.</string>
+    <string name="game_fruit_instructions">• Фрукты подбрасываются в воздух.\n• Перемещайте клинок с помощью D-PAD, чтобы рубить фрукты.\n• Избегайте бомб любой ценой!\n• Нарежьте как можно больше фруктов.</string>
     <string name="game_hangman_instructions">• Угадайте буквы в слове.\n• У вас 6 попыток.\n• CENTER для выбора.</string>
     <string name="select_game_hint">ИСПОЛЬЗУЙТЕ ◄ ► ДЛЯ ВЫБОРА • НАЖМИТЕ [OK] ДЛЯ ИГРЫ</string>
     <string name="settings">Настройки</string>
@@ -147,7 +246,45 @@
     <string name="next_stage_hint">CENTER для следующего этапа</string>
     <string name="continue_hint">CENTER для продолжения</string>
     <string name="finish_hint">CENTER для завершения</string>
+    <string name="tictactoe_size_hint">Нажмите ВВЕРХ/ВНИЗ для размера поля (3x3, 4x4, 5x5) или MENU для настроек</string>
+    <string name="sokoban_restart_hint">Нажмите R для перезапуска</string>
+    <string name="sudoku_controls_hint">D-PAD: Движение/Цифра | ЦЕНТР: Смена | MENU: Уровень</string>
     <string name="total_wins_label">Всего побед</string>
+    <string name="mines_label">МИНЫ: </string>
+    <string name="flags_label">ФЛАГИ: </string>
+    <string name="high_score_prefix">ЛУЧШИЙ: </string>
+    <string name="cpu_wins_label">ПОБЕДА ИИ!</string>
+    <string name="your_turn_label">Ваш ход</string>
+    <string name="watch_label">СМОТРИТЕ...</string>
+    <string name="grid_mastered_label">ПОЛЕ ПРОЙДЕНО!</string>
+    <string name="puzzle_solved_label">ГОЛОВОЛОМКА РЕШЕНА!</string>
+    <string name="picture_restored_label">КАРТИНКА ВОССТАНОВЛЕНА!</string>
+    <string name="crashed_label">КРУШЕНИЕ!</string>
+    <string name="score_prefix">СЧЕТ: </string>
+    <string name="high_score_label">РЕКОРД</string>
+    <string name="wrong_label">НЕВЕРНО!</string>
+    <string name="answer_was_label">Загаданное слово: </string>
+    <string name="finish_label">ФИНИШ</string>
+    <string name="continue_label">ПРОДОЛЖИТЬ</string>
+    <string name="next_stage_label">СЛЕДУЮЩИЙ ЭТАП</string>
+    <string name="out_of_tries">ПОПЫТКИ ЗАКОНЧИЛИСЬ!</string>
+    <string name="cpu_thinking_label">ИИ думает...</string>
+    <string name="no_moves_label">Нет доступных ходов</string>
+    <string name="victory_label">ПОБЕДА!</string>
+    <string name="draw_label">НИЧЬЯ!</string>
+    <string name="hit_wall_label">УДАР О СТЕНУ!</string>
+    <string name="bit_self_label">УКУСИЛ СЕБЯ!</string>
+    <string name="cpu_starting_label">ИИ ходит первым в следующей игре</string>
+    <string name="jump_again_label">ПРЫГНУТЬ СНОВА</string>
+    <string name="draw_status">НИЧЬЯ</string>
+    <string name="cat_animals">ЖИВОТНЫЕ</string>
+    <string name="cat_fruits">ФРУКТЫ</string>
+    <string name="cat_countries">СТРАНЫ</string>
+    <string name="cat_sports">СПОРТ</string>
+    <string name="cat_flowers">ЦВЕТЫ</string>
+    <string name="cat_vehicles">ТРАНСПОРТ</string>
+    <string name="cat_games">ИГРЫ</string>
+    <string name="cat_foods">ЕДА</string>
     <string name="rating_title">Нравится Dpad Arcade?</string>
     <string name="rating_content">Пожалуйста, поставьте нам 5 звезд в Play Store или предложите игры, в которые вы хотите поиграть!</string>
     <string name="rate_now">ОЦЕНИТЬ НА 5 ЗВЕЗД</string>
@@ -156,139 +293,6 @@
     <string name="update_title">Доступно новое обновление!</string>
     <string name="update_content">Доступна новая версия Dpad Arcade: Retro Game Hub. Обновите сейчас, чтобы получить последние игры, функции и исправления стабильности.</string>
     <string name="update_now">Обновить сейчас</string>
-
-    <string-array name="win_generic">
-        <item>ПОБЕДА!</item>
-        <item>ОТЛИЧНО!</item>
-        <item>НЕВЕРОЯТНО!</item>
-        <item>БЛЕСТЯЩЕ!</item>
-        <item>ВПЕЧАТЛЯЮЩЕ!</item>
-        <item>ТЫ КРУТ!</item>
-        <item>ПРЕВОСХОДНО!</item>
-        <item>ФАНТАСТИКА!</item>
-        <item>ПОТРЯСАЮЩЕ!</item>
-        <item>ХОРОШАЯ РАБОТА!</item>
-    </string-array>
-
-    <string-array name="win_highscore">
-        <item>НОВЫЙ РЕКОРД!</item>
-        <item>НЕОСТАНОВИМ!</item>
-        <item>ЛУЧШИЙ!</item>
-        <item>БОЖЕСТВЕННО!</item>
-        <item>РЕКОРД!</item>
-    </string-array>
-
-    <string-array name="win_minesweeper">
-        <item>РАЗМИНИРОВАНО!</item>
-        <item>МАСТЕР САПЕР!</item>
-        <item>БЕЗОПАСНЫЙ ПУТЬ!</item>
-        <item>ЭКСПЕРТ!</item>
-    </string-array>
-
-    <string-array name="win_sudoku">
-        <item>СЕТКА ПОКОРЕНА!</item>
-        <item>КОРОЛЬ ЛОГИКИ!</item>
-        <item>РЕШЕНО!</item>
-        <item>БЛЕСТЯЩИЙ УМ!</item>
-    </string-array>
-
-    <string-array name="win_tictactoe">
-        <item>ПЕРЕХИТРИЛ!</item>
-        <item>ТРИ В РЯД!</item>
-        <item>ТАКТИЧЕСКАЯ ПОБЕДА!</item>
-        <item>НЕПОБЕДИМ!</item>
-    </string-array>
-
-    <string-array name="win_4096">
-        <item>МАТЕМАТИК!</item>
-        <item>4096 ВЗЯТО!</item>
-        <item>МАСТЕР ЧИСЕЛ!</item>
-        <item>ФИНАЛЬНЫЙ ТАЙЛ!</item>
-    </string-array>
-
-    <string-array name="win_memory">
-        <item>ИДЕАЛЬНАЯ ПАМЯТЬ!</item>
-        <item>МАСТЕР ПАР!</item>
-        <item>ОСТРЫЙ УМ!</item>
-        <item>ВСЕ ВСПОМНИЛ!</item>
-    </string-array>
-
-    <string-array name="win_hangman">
-        <item>СЛОВО СПАСЕНО!</item>
-        <item>ЗНАТОК СЛОВ!</item>
-        <item>СПАСЕН!</item>
-        <item>КОРОЛЬ ЛЕКСИКИ!</item>
-    </string-array>
-
-    <string-array name="win_brick_break">
-        <item>УРОВЕНЬ ПРОЙДЕН!</item>
-        <item>РАЗРУШИТЕЛЬ!</item>
-        <item>СТЕНОБИТ!</item>
-        <item>ПРО-ПЛАТФОРМА!</item>
-    </string-array>
-
-    <string-array name="win_word_quest">
-        <item>СЛОВО НАЙДЕНО!</item>
-        <item>МАСТЕР БУКВ!</item>
-        <item>ГЕРОЙ СЛОВАРЯ!</item>
-        <item>КВЕСТ ВЫПОЛНЕН!</item>
-    </string-array>
-
-    <string-array name="win_solitaire">
-        <item>КОЛОДА ПУСТА!</item>
-        <item>ТУЗОВОЙ ХОД!</item>
-        <item>МАСТЬ СОБРАНА!</item>
-        <item>КАРТОЧНЫЙ КОРОЛЬ!</item>
-    </string-array>
-
-    <string-array name="win_sokoban">
-        <item>ГЕРОЙ СКЛАДА!</item>
-        <item>ПРОФИ-ГРУЗЧИК!</item>
-        <item>ЦЕЛИ ДОСТИГНУТЫ!</item>
-        <item>СОКО-МАСТЕР!</item>
-    </string-array>
-
-    <string-array name="win_checkers">
-        <item>CPU ПОВЕРЖЕН!</item>
-        <item>КОРОЛЬ ДОСКИ!</item>
-        <item>ГРОССМЕЙСТЕР!</item>
-        <item>МАСТЕР СТРАТЕГИИ!</item>
-    </string-array>
-
-    <string-array name="win_slide_puzzle">
-        <item>КАРТИНКА СОБРАНА!</item>
-        <item>ГОЛОВОЛОМКА РЕШЕНА!</item>
-        <item>ИДЕАЛЬНО!</item>
-        <item>МАСТЕР СДВИГА!</item>
-    </string-array>
-
-    <string-array name="win_dungeon">
-        <item>ПОБЕГ УДАЛСЯ!</item>
-        <item>ЛЕГЕНДАРНЫЙ ИССЛЕДОВАТЕЛЬ!</item>
-        <item>ЭТАЖ ЗАЧИЩЕН!</item>
-        <item>КЛАД НАЙДЕН!</item>
-    </string-array>
-
-    <string-array name="win_tanks">
-        <item>БАЗА ЗАЩИЩЕНА!</item>
-        <item>ВРАГИ РАЗБИТЫ!</item>
-        <item>КОМАНДИР!</item>
-        <item>ГЕРОЙ ВОЙНЫ!</item>
-    </string-array>
-
-    <string-array name="win_mental_math">
-        <item>ГЕНИЙ МАТЕМАТИКИ!</item>
-        <item>СИЛА МЫСЛИ!</item>
-        <item>КОРОЛЬ СЧЕТА!</item>
-        <item>МАСТЕР ЧИСЕЛ!</item>
-    </string-array>
-
-    <string-array name="win_froggy">
-        <item>ЦЕЛЬ ДОСТИГНУТА!</item>
-        <item>БЕЗОПАСНЫЙ ПЕРЕХОД!</item>
-        <item>ГЕРОЙ-ЛЯГУШКА!</item>
-        <item>ХОЗЯИН РЕКИ!</item>
-    </string-array>
     <string name="trex_daddy">Папа Ти-Рекс</string>
     <string name="trex_mummy">Мама Ти-Рекс</string>
     <string name="trex_baby">Малыш Ти-Рекс</string>
@@ -299,11 +303,12 @@
     <string name="trex_pirate">Ти-Рекс Пират</string>
     <string name="trex_chef">Ти-Рекс Повар</string>
     <string name="trex_astronaut">Ти-Рекс Астронавт</string>
+    <string name="trex_ninja">Ниндзя Ти-Рекс</string>
     <string name="trex_dragon">Дино-Дракон</string>
     <string name="trex_zombie">Дино-Зомби</string>
     <string name="trex_robot">Дино-Робот</string>
     <string name="trex_king">Дино-Король</string>
-
+    <string name="trex_character_label">Персонаж</string>
     <string name="trex_select_character">ВЫБОР ПЕРСОНАЖА</string>
     <string name="trex_strong_prefix">СИЛА: </string>
     <string name="trex_weak_prefix">СЛАБОСТЬ: </string>
@@ -325,6 +330,20 @@
     <string name="trex_sunny">СОЛНЕЧНО</string>
     <string name="trex_rainy">ДОЖДЛИВО</string>
     <string name="trex_snowy">СНЕЖНО</string>
+    <string name="trex_desc_char_random">Каждый забег — новый Дино!</string>
+    <string name="trex_desc_char_specific">Использовать Дино, выбранного в лобби.</string>
+    <string name="trex_desc_time_random">Смена дня и ночи.</string>
+    <string name="trex_desc_time_day">Ясное дневное небо.</string>
+    <string name="trex_desc_time_night">Темная звездная ночь.</string>
+    <string name="trex_desc_season_random">Цикл всех сезонов.</string>
+    <string name="trex_desc_season_spring">Зелень и свежая трава.</string>
+    <string name="trex_desc_season_summer">Яркие поля и солнце.</string>
+    <string name="trex_desc_season_autumn">Опавшие листья и туман.</string>
+    <string name="trex_desc_season_winter">Снег и иней. </string>
+    <string name="trex_desc_weather_random">Динамическая погода.</string>
+    <string name="trex_desc_weather_sunny">Идеальная ясная погода.</string>
+    <string name="trex_desc_weather_rainy">Дождь и темные тучи.</string>
+    <string name="trex_desc_weather_snowy">Красивый снегопад.</string>
     <string name="trex_point_bonus_score">Бонусные очки</string>
     <string name="trex_point_large_hitbox">Большая хитбокс</string>
     <string name="trex_point_double_jump">Двойной прыжок</string>
@@ -354,54 +373,184 @@
     <string name="trex_point_no_momentum">Без инерции</string>
     <string name="trex_point_royal_bonus">Королевский бонус</string>
     <string name="trex_point_visible_target">Заметная цель</string>
-    <string name="trex_ninja">Ниндзя Ти-Рекс</string>
-    <string name="trex_character_label">Персонаж</string>
-
-    <string name="trex_desc_char_random">Каждый забег — новый Дино!</string>
-    <string name="trex_desc_char_specific">Использовать Дино, выбранного в лобби.</string>
-    <string name="trex_desc_time_random">Смена дня и ночи.</string>
-    <string name="trex_desc_time_day">Ясное дневное небо.</string>
-    <string name="trex_desc_time_night">Темная звездная ночь.</string>
-    <string name="trex_desc_season_random">Цикл всех сезонов.</string>
-    <string name="trex_desc_season_spring">Зелень и свежая трава.</string>
-    <string name="trex_desc_season_summer">Яркие поля и солнце.</string>
-    <string name="trex_desc_season_autumn">Опавшие листья и туман.</string>
-    <string name="trex_desc_season_winter">Снег и иней. </string>
-    <string name="trex_desc_weather_random">Динамическая погода.</string>
-    <string name="trex_desc_weather_sunny">Идеальная ясная погода.</string>
-    <string name="trex_desc_weather_rainy">Дождь и темные тучи.</string>
-    <string name="trex_desc_weather_snowy">Красивый снегопад.</string>
+    <string-array name="win_generic">
+        <item>ПОБЕДА!</item>
+        <item>ОТЛИЧНО!</item>
+        <item>НЕВЕРОЯТНО!</item>
+        <item>БЛЕСТЯЩЕ!</item>
+        <item>ВПЕЧАТЛЯЮЩЕ!</item>
+        <item>ТЫ КРУТ!</item>
+        <item>ПРЕВОСХОДНО!</item>
+        <item>ФАНТАСТИКА!</item>
+        <item>ПОТРЯСАЮЩЕ!</item>
+        <item>ХОРОШАЯ РАБОТА!</item>
+    </string-array>
+    <string-array name="win_highscore">
+        <item>НОВЫЙ РЕКОРД!</item>
+        <item>НЕОСТАНОВИМ!</item>
+        <item>ЛУЧШИЙ!</item>
+        <item>БОЖЕСТВЕННО!</item>
+        <item>РЕКОРД!</item>
+    </string-array>
+    <string-array name="win_minesweeper">
+        <item>РАЗМИНИРОВАНО!</item>
+        <item>МАСТЕР САПЕР!</item>
+        <item>БЕЗОПАСНЫЙ ПУТЬ!</item>
+        <item>ЭКСПЕРТ!</item>
+    </string-array>
+    <string-array name="win_sudoku">
+        <item>СЕТКА ПОКОРЕНА!</item>
+        <item>КОРОЛЬ ЛОГИКИ!</item>
+        <item>РЕШЕНО!</item>
+        <item>БЛЕСТЯЩИЙ УМ!</item>
+    </string-array>
+    <string-array name="win_tictactoe">
+        <item>ПЕРЕХИТРИЛ!</item>
+        <item>ТРИ В РЯД!</item>
+        <item>ТАКТИЧЕСКАЯ ПОБЕДА!</item>
+        <item>НЕПОБЕДИМ!</item>
+    </string-array>
+    <string-array name="win_4096">
+        <item>МАТЕМАТИК!</item>
+        <item>4096 ВЗЯТО!</item>
+        <item>МАСТЕР ЧИСЕЛ!</item>
+        <item>ФИНАЛЬНЫЙ ТАЙЛ!</item>
+    </string-array>
+    <string-array name="win_memory">
+        <item>ИДЕАЛЬНАЯ ПАМЯТЬ!</item>
+        <item>МАСТЕР ПАР!</item>
+        <item>ОСТРЫЙ УМ!</item>
+        <item>ВСЕ ВСПОМНИЛ!</item>
+    </string-array>
+    <string-array name="win_hangman">
+        <item>СЛОВО СПАСЕНО!</item>
+        <item>ЗНАТОК СЛОВ!</item>
+        <item>СПАСЕН!</item>
+        <item>КОРОЛЬ ЛЕКСИКИ!</item>
+    </string-array>
+    <string-array name="win_brick_break">
+        <item>УРОВЕНЬ ПРОЙДЕН!</item>
+        <item>РАЗРУШИТЕЛЬ!</item>
+        <item>СТЕНОБИТ!</item>
+        <item>ПРО-ПЛАТФОРМА!</item>
+    </string-array>
+    <string-array name="win_word_quest">
+        <item>СЛОВО НАЙДЕНО!</item>
+        <item>МАСТЕР БУКВ!</item>
+        <item>ГЕРОЙ СЛОВАРЯ!</item>
+        <item>КВЕСТ ВЫПОЛНЕН!</item>
+    </string-array>
+    <string-array name="win_solitaire">
+        <item>КОЛОДА ПУСТА!</item>
+        <item>ТУЗОВОЙ ХОД!</item>
+        <item>МАСТЬ СОБРАНА!</item>
+        <item>КАРТОЧНЫЙ КОРОЛЬ!</item>
+    </string-array>
+    <string-array name="win_sokoban">
+        <item>ГЕРОЙ СКЛАДА!</item>
+        <item>ПРОФИ-ГРУЗЧИК!</item>
+        <item>ЦЕЛИ ДОСТИГНУТЫ!</item>
+        <item>СОКО-МАСТЕР!</item>
+    </string-array>
+    <string-array name="win_checkers">
+        <item>CPU ПОВЕРЖЕН!</item>
+        <item>КОРОЛЬ ДОСКИ!</item>
+        <item>ГРОССМЕЙСТЕР!</item>
+        <item>МАСТЕР СТРАТЕГИИ!</item>
+    </string-array>
+    <string-array name="win_slide_puzzle">
+        <item>КАРТИНКА СОБРАНА!</item>
+        <item>ГОЛОВОЛОМКА РЕШЕНА!</item>
+        <item>ИДЕАЛЬНО!</item>
+        <item>МАСТЕР СДВИГА!</item>
+    </string-array>
+    <string-array name="win_dungeon">
+        <item>ПОБЕГ УДАЛСЯ!</item>
+        <item>ЛЕГЕНДАРНЫЙ ИССЛЕДОВАТЕЛЬ!</item>
+        <item>ЭТАЖ ЗАЧИЩЕН!</item>
+        <item>КЛАД НАЙДЕН!</item>
+    </string-array>
+    <string-array name="win_tanks">
+        <item>БАЗА ЗАЩИЩЕНА!</item>
+        <item>ВРАГИ РАЗБИТЫ!</item>
+        <item>КОМАНДИР!</item>
+        <item>ГЕРОЙ ВОЙНЫ!</item>
+    </string-array>
+    <string-array name="win_mental_math">
+        <item>ГЕНИЙ МАТЕМАТИКИ!</item>
+        <item>СИЛА МЫСЛИ!</item>
+        <item>КОРОЛЬ СЧЕТА!</item>
+        <item>МАСТЕР ЧИСЕЛ!</item>
+    </string-array>
+    <string-array name="win_froggy">
+        <item>ЦЕЛЬ ДОСТИГНУТА!</item>
+        <item>БЕЗОПАСНЫЙ ПЕРЕХОД!</item>
+        <item>ГЕРОЙ-ЛЯГУШКА!</item>
+        <item>ХОЗЯИН РЕКИ!</item>
+    </string-array>
+    <string name="starfighter_ship_label">Модель корабля</string>
+    <string name="starfighter_ship_balanced">СТРАЙКЕР (Сбалансированный)</string>
+    <string name="starfighter_ship_balanced_desc">Стандартный боевой истребитель.</string>
+    <string name="starfighter_ship_fast">ПЕРЕХВАТЧИК (Быстрый и юркий)</string>
+    <string name="starfighter_ship_fast_desc">Высокая скорость, легкая броня.</string>
+    <string name="starfighter_ship_tank">ДРЕДНОУТ (Тяжелая броня)</string>
+    <string name="starfighter_ship_tank_desc">Максимальная броня, меньшая скорость.</string>
+    <string name="starfighter_ship_solar">СОЛЯРИС (Мощные лазеры)</string>
+    <string name="starfighter_ship_solar_desc">Увеличенный урон лазеров.</string>
+    <string name="starfighter_ship_phoenix">ФЕНИКС (Регенерация щита)</string>
+    <string name="starfighter_ship_phoenix_desc">Постепенно восстанавливает щиты.</string>
+    <string name="syobon_settings_title">НАСТРОЙКИ CAT MEOWIO</string>
+    <string name="syobon_character_label">Окрас кота</string>
+    <string name="syobon_char_classic">БЕЛЫЙ КЛАССИК (Нэко)</string>
+    <string name="syobon_char_gold">ЗОЛОТОЙ ТАББИ (Везунчик)</string>
+    <string name="syobon_char_shadow">ТЕМНАЯ ПАНТЕРА (Ниндзя)</string>
+    <string name="syobon_lives_label">Начальные жизни</string>
+    <string name="syobon_lives_3">3 ЖИЗНИ (Классика)</string>
+    <string name="syobon_lives_1">1 ЖИЗНЬ (Хардкор)</string>
+    <string name="syobon_lives_inf">БЕСКОНЕЧНЫЕ ЖИЗНИ (Тренировка)</string>
+    <string name="syobon_lives_desc">Количество жизней до конца игры.</string>
+    <string name="syobon_instructions">• Двигайтесь Влево/Вправо.\n• Нажмите ВВЕРХ или ЦЕНТР для прыжка.\n• Прыгайте под блоки, чтобы ударить их.\n• Доберитесь до флагштока для победы!\n• ОСТЕРЕГАЙТЕСЬ ЛОВУШЕК!</string>
+    <string name="syobon_difficulty_desc">Выберите облик кошачьего героя.</string>
+    <string-array name="win_syobon">
+        <item>МАСТЕР MEOWIO!</item>
+        <item>ПОКОРИТЕЛЬ ЛОВУШЕК!</item>
+        <item>ЧЕМПИОН ФЛАГШТОКА!</item>
+        <item>ГЕРОЙ-КОТ!</item>
+    </string-array>
     <string name="quit_game_title">Выйти из игры</string>
     <string name="quit_game_confirm">Вы уверены, что хотите выйти из игры?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
-    <string name="choose_hero" translatable="true">ВЫБЕРИТЕ ИГРОКА</string>
-    <string name="create_hero" translatable="true">СОЗДАТЬ НОВОГО ИГРОКА</string>
-    <string name="enter_hero_name" translatable="true">ВВЕДИТЕ ИМЯ ИГРОКА</string>
-    <string name="add_profile" translatable="true">ДОБАВИТЬ ИГРОКА</string>
-    <string name="switch_profile" translatable="true">СМЕНИТЬ ИГРОКА</string>
-    <string name="profile_selection_hint" translatable="true">ИСПОЛЬЗУЙТЕ ◄ ► ДЛЯ ВЫБОРА • НАЖМИТЕ [OK] ДЛЯ ВЫБОРА</string>
-    <string name="please_enter_name" translatable="true">Пожалуйста, введите имя</string>
-    <string name="enter_pin" translatable="true">ВВЕДИТЕ 4-ЗНАЧНЫЙ PIN</string>
-    <string name="setup_pin" translatable="true">ЗАБЛОКИРОВАТЬ ИГРОКА (PIN)</string>
-    <string name="wrong_pin" translatable="true">Неверный PIN. Попробуйте еще раз.</string>
-    <string name="manage_profiles" translatable="true">УПРАВЛЕНИЕ ИГРОКАМИ</string>
-    <string name="edit_profile" translatable="true">ИЗМЕНИТЬ ИГРОКА</string>
-    <string name="delete_profile" translatable="true">УДАЛИТЬ ИГРОКА</string>
-    <string name="confirm_delete_profile" translatable="true">Вы уверены, что хотите удалить этого игрока? Все рекорды будут потеряны.</string>
-    <string name="leave_blank_no_pin" translatable="true">Оставьте пустым для доступа без PIN</string>
-    <string name="hall_of_fame" translatable="true">ЗАЛ СЛАВЫ</string>
-    <string name="no_records" translatable="true">РЕКОРДОВ ПОКА НЕТ</string>
-    <string name="save" translatable="true">СОХРАНИТЬ</string>
-    <string name="choose_avatar" translatable="true">ВЫБРАТЬ АВАТАР</string>
-    <string name="choose_color" translatable="true">ВЫБРАТЬ ЦВЕТ</string>
-    <string name="security_pin_label" translatable="true">PIN-КОД (ОПЦИОНАЛЬНО)</string>
-    <string name="pin_digits_hint" translatable="true">PIN должен состоять из 4 цифр</string>
-    <string name="rank_1st" translatable="true">1-е</string>
-    <string name="rank_2nd" translatable="true">2-е</string>
-    <string name="rank_3rd" translatable="true">3-е</string>
-    <string name="placeholder_name" translatable="false">---</string>
-    <string name="placeholder_score" translatable="false">0</string>
+    <string name="choose_hero">ВЫБЕРИТЕ ИГРОКА</string>
+    <string name="create_hero">СОЗДАТЬ НОВОГО ИГРОКА</string>
+    <string name="enter_hero_name">ВВЕДИТЕ ИМЯ ИГРОКА</string>
+    <string name="add_profile">ДОБАВИТЬ ИГРОКА</string>
+    <string name="switch_profile">СМЕНИТЬ ИГРОКА</string>
+    <string name="profile_selection_hint">ИСПОЛЬЗУЙТЕ ◄ ► ДЛЯ ВЫБОРА • НАЖМИТЕ [OK] ДЛЯ ВЫБОРА</string>
+    <string name="please_enter_name">Пожалуйста, введите имя</string>
+    <string name="enter_pin">ВВЕДИТЕ 4-ЗНАЧНЫЙ PIN</string>
+    <string name="setup_pin">ЗАБЛОКИРОВАТЬ ИГРОКА (PIN)</string>
+    <string name="wrong_pin">Неверный PIN. Попробуйте еще раз.</string>
+    <string name="manage_profiles">УПРАВЛЕНИЕ ИГРОКАМИ</string>
+    <string name="edit_profile">ИЗМЕНИТЬ ИГРОКА</string>
+    <string name="delete_profile">УДАЛИТЬ ИГРОКА</string>
+    <string name="confirm_delete_profile">Вы уверены, что хотите удалить этого игрока? Все рекорды будут потеряны.</string>
+    <string name="leave_blank_no_pin">Оставьте пустым для доступа без PIN</string>
+    <string name="hall_of_fame">ЗАЛ СЛАВЫ</string>
+    <string name="no_records">РЕКОРДОВ ПОКА НЕТ</string>
+    <string name="save">СОХРАНИТЬ</string>
+    <string name="choose_avatar">ВЫБРАТЬ АВАТАР</string>
+    <string name="choose_color">ВЫБРАТЬ ЦВЕТ</string>
+    <string name="security_pin_label">PIN-КОД (ОПЦИОНАЛЬНО)</string>
+    <string name="pin_digits_hint">PIN должен состоять из 4 цифр</string>
+    <string name="protected_hero">PROTECTED HERO</string>
+    <string name="guest_hero_name">GUEST HERO</string>
+    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
+    <string name="rank_1st">1-е</string>
+    <string name="rank_2nd">2-е</string>
+    <string name="rank_3rd">3-е</string>
+    <string name="placeholder_name">---</string>
+    <string name="placeholder_score">0</string>
     <string name="monkey_spring">SPRING</string>
     <string name="monkey_summer">SUMMER</string>
     <string name="monkey_autumn">AUTUMN</string>
@@ -436,11 +585,11 @@
     <string name="monkey_beetle_warning">⚠️ BEETLE</string>
     <string name="monkey_char_gibbon">GOLDEN GIBBON</string>
     <string name="monkey_char_climber">TARZAN CLIMBER</string>
+    <string name="monkey_char_spider">SPIDER MONKEY</string>
     <string name="monkey_char_chimp">PUNK CHIMP</string>
-    <string name="retro_driver_final_lap">FINAL LAP!</string>
-    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
-    <string name="retro_driver_go">GO!</string>
-    <string name="retro_driver_finish">FINISH!</string>
+    <string name="monkey_char_default">MONKEY</string>
+    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
+    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
     <string name="frenzy_death_pufferfish">MOUTH HURT BY INFLATED PUFFERFISH!</string>
     <string name="frenzy_death_eel">SHOCKED BY ELECTRIC EEL (STUNNED)!</string>
     <string name="frenzy_death_lionfish">POISONED BY LIONFISH (STUNNED)!</string>
@@ -448,7 +597,6 @@
     <string name="frenzy_death_too_large">CANNOT EAT: %1$s IS TOO LARGE!</string>
     <string name="frenzy_death_eaten">EATEN BY %1$s!</string>
     <string name="frenzy_death_mine">BLOWN UP BY UNDERSEA MINE!</string>
-    <string name="syobon_surprise">SURPRISE!</string>
     <string name="flappy_death_ceiling">Flew too high and hit the ceiling!</string>
     <string name="flappy_death_ground">Crashed into the grassy ground!</string>
     <string name="flappy_death_pipe">Crashed into a green pipe!</string>
@@ -461,16 +609,92 @@
     <string name="flappy_hint_fly_through">FLY THROUGH</string>
     <string name="flappy_hint_avoid_bat">AVOID BAT</string>
     <string name="flappy_hint_fly_under">FLY UNDER</string>
-    <string name="protected_hero">PROTECTED HERO</string>
-    <string name="guest_hero_name">GUEST HERO</string>
-    <string name="hero_customization_hint">Press [OK] on your Name to customize your Hero!</string>
-    <string name="monkey_char_default">MONKEY</string>
-    <string name="monkey_jaguar_warning">▲ JAGUAR BELOW ▲</string>
-    <string name="monkey_death_jaguar">EATEN BY BLACK JAGUAR!</string>
-    <string name="monkey_char_spider">SPIDER MONKEY</string>
+    <string name="retro_driver_final_lap">FINAL LAP!</string>
+    <string name="retro_driver_lap_count">LAP %1$d / %2$d</string>
+    <string name="retro_driver_go">GO!</string>
+    <string name="retro_driver_finish">FINISH!</string>
+    <string name="syobon_surprise">SURPRISE!</string>
     <string name="ad_screensaver_message">To keep these games free, we show ads during breaks.\nThank you for your support!</string>
     <string name="ad_screensaver_hint">Press any key to resume instantly</string>
     <string name="ad_warning_prefix">Full-screen ad starting in %1$d...</string>
     <string name="ad_label">AD</string>
     <string name="advertisement_label">ADVERTISEMENT</string>
+    <string name="monkey_settings_title">НАСТРОЙКИ ПОДЪЕМА ГИББОНА</string>
+    <string name="monkey_character_label">Персонаж</string>
+    <string name="monkey_character_desc">Выберите вид примата-альпиниста.</string>
+    <string name="monkey_season_label">Тема сезона</string>
+    <string name="monkey_season_desc">Выберите погоду и флору джунглей.</string>
+    <string name="frenzy_settings_title">НАСТРОЙКИ ПОДВОДНОГО БЕЗУМИЯ</string>
+    <string name="frenzy_difficulty_label">Сложность</string>
+    <string name="frenzy_difficulty_easy">ЛЕГКО (Медленные хищники)</string>
+    <string name="frenzy_difficulty_normal">НОРМАЛЬНО (Сбалансировано)</string>
+    <string name="frenzy_difficulty_hard">СЛОЖНО (Агрессивные акулы)</string>
+    <string name="frenzy_difficulty_desc">Скорость и плотность хищников.</string>
+    <string name="frenzy_starting_size_label">Начальный размер</string>
+    <string name="frenzy_starting_size_guppy">ГУППИ (Самый маленький)</string>
+    <string name="frenzy_starting_size_angelfish">СКАЛЯРИЯ (Средний)</string>
+    <string name="frenzy_starting_size_desc">Начальная стадия роста рыбы.</string>
+    <string name="retrodriver_settings_title">НАСТРОЙКИ РЕТРО ГОНЩИКА</string>
+    <string name="retrodriver_vehicle_label">Транспорт</string>
+    <string name="retrodriver_vehicle_desc">Выберите модель супербайка.</string>
+    <string name="retrodriver_theme_label">Окружение трассы</string>
+    <string name="retrodriver_theme_desc">Выберите пейзаж гоночной трассы.</string>
+    <string name="retrodriver_theme_neon">КИБЕР-ГОРОД (Неон)</string>
+    <string name="retrodriver_theme_desert">ЗАКАТ В КАНЬОНЕ (Сумерки)</string>
+    <string name="retrodriver_theme_cyber">СИНТВЕЙВ СЕТКА (Ретро)</string>
+    <string name="retrodriver_theme_snow">АЛЬПИЙСКИЙ ПЕРЕВАЛ (Снег)</string>
+    <string-array name="win_monkey">
+        <item>МАСТЕР ЛИАН!</item>
+        <item>ВЕРШИНА МАСТЕРСТВА!</item>
+        <item>КОРОЛЬ ДЖУНГЛЕЙ!</item>
+        <item>КРОНЫ ПОКОРЕНЫ!</item>
+    </string-array>
+    <string-array name="win_frenzy">
+        <item>ВЫСШИЙ ХИЩНИК!</item>
+        <item>ПОВЕЛИТЕЛЬ ОКЕАНА!</item>
+        <item>КОРОЛЬ РИФА!</item>
+        <item>МАСТЕР ОХОТЫ!</item>
+    </string-array>
+    <string-array name="win_retrodriver">
+        <item>ДЕМОН СКОРОСТИ!</item>
+        <item>ЧЕМПИОН ТРАССЫ!</item>
+        <item>СИНТВЕЙВ ГОНЩИК!</item>
+        <item>ТРИУМФ НА ПОДИУМЕ!</item>
+    </string-array>
+    <string-array name="win_tetris">
+        <item>МАСТЕР ТЕТРИСА!</item>
+        <item>АС ОЧИСТКИ ЛИНИЙ!</item>
+        <item>ИДЕАЛЬНАЯ УКЛАДКА!</item>
+        <item>СОКРУШИТЕЛЬ БЛОКОВ!</item>
+    </string-array>
+    <string-array name="win_snake">
+        <item>МАСТЕР ЗМЕЙКИ!</item>
+        <item>ЛЕГЕНДА ПИТОНА!</item>
+        <item>ЧЕМПИОН ПИРА!</item>
+        <item>КОРОЛЬ СКОЛЬЖЕНИЯ!</item>
+    </string-array>
+    <string-array name="win_flappy">
+        <item>ЛЕГЕНДА НЕБЕС!</item>
+        <item>КРЫЛАТЫЙ ГЕРОЙ!</item>
+        <item>МАСТЕР ПОЛЕТА!</item>
+        <item>ВЫСОКИЙ ПОЛЕТ!</item>
+    </string-array>
+    <string-array name="win_lines98">
+        <item>МАСТЕР ЛИНИЙ!</item>
+        <item>ГАРМОНИЯ ЦВЕТА!</item>
+        <item>МАГ ШАРОВ!</item>
+        <item>ГЕНИЙ ПОЛЯ!</item>
+    </string-array>
+    <string-array name="win_spinball">
+        <item>МАГ ВРАЩЕНИЯ!</item>
+        <item>МАСТЕР ОРБИТЫ!</item>
+        <item>ПРОФИ ПИНБОЛА!</item>
+        <item>ВЫЖИВШИЙ В КРУГЕ!</item>
+    </string-array>
+    <string-array name="win_simon">
+        <item>МАСТЕР ПАМЯТИ!</item>
+        <item>САЙМОН ГОВОРИТ: ПОБЕДА!</item>
+        <item>ПРОФИ ШАБЛОНОВ!</item>
+        <item>БЛЕСТЯЩАЯ ПАМЯТЬ!</item>
+    </string-array>
 </resources>
