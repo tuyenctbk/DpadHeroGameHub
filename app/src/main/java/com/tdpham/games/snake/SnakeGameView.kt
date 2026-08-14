@@ -49,7 +49,7 @@ class SnakeGameView @JvmOverloads constructor(
     private var nextDirection = Direction.RIGHT
     private var isGameOver = false
     private var gameOverReason = ""
-    private var isPaused = false
+    private var isPaused = true
     private var score = 0
     private var highScore = 0
 
@@ -85,11 +85,6 @@ class SnakeGameView @JvmOverloads constructor(
                 moveSnake()
                 animationFrame++
                 invalidate()
-            } else {
-                animationFrame++
-                invalidate()
-            }
-            if (!isGameOver) {
                 // Speed up game slightly as score increases, starting from difficulty base speed
                 val delay = (currentDifficulty.speed - (score / 20) * 5).coerceAtLeast(60)
                 handler.postDelayed(this, delay)
@@ -103,13 +98,13 @@ class SnakeGameView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
+        resetGame()
         animationHandler.post(animationRunnable)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (w > 0 && h > 0 && !isInitialized) {
-            resetGame()
             isInitialized = true
         }
     }
@@ -195,7 +190,8 @@ class SnakeGameView @JvmOverloads constructor(
     }
 
     private fun moveSnake() {
-        val head = snake.first()
+        if (snake.isEmpty()) return
+        val head = snake.firstOrNull() ?: return
         var nx = when (direction) {
             Direction.LEFT -> head.x - 1
             Direction.RIGHT -> head.x + 1
@@ -246,7 +242,9 @@ class SnakeGameView @JvmOverloads constructor(
             spawnFood()
             spawnBiteParticles(newHead)
         } else {
-            snake.removeAt(snake.size - 1)
+            if (snake.isNotEmpty()) {
+                snake.removeAt(snake.size - 1)
+            }
         }
     }
 
