@@ -123,10 +123,10 @@ class TicTacToeView @JvmOverloads constructor(
         }
         
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> cursorR = (cursorR - 1).coerceAtLeast(0)
-            KeyEvent.KEYCODE_DPAD_DOWN -> cursorR = (cursorR + 1).coerceAtMost(gridSize - 1)
-            KeyEvent.KEYCODE_DPAD_LEFT -> cursorC = (cursorC - 1).coerceAtLeast(0)
-            KeyEvent.KEYCODE_DPAD_RIGHT -> cursorC = (cursorC + 1).coerceAtMost(gridSize - 1)
+            KeyEvent.KEYCODE_DPAD_UP -> { cursorR = (cursorR - 1).coerceAtLeast(0); SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_DOWN -> { cursorR = (cursorR + 1).coerceAtMost(gridSize - 1); SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_LEFT -> { cursorC = (cursorC - 1).coerceAtLeast(0); SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> { cursorC = (cursorC + 1).coerceAtMost(gridSize - 1); SoundManager.playClick() }
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> if (isPlayerTurn) playerMove()
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()

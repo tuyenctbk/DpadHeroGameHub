@@ -115,10 +115,10 @@ class CheckersView @JvmOverloads constructor(
             return true
         }
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> cursorR = (cursorR + 7) % 8
-            KeyEvent.KEYCODE_DPAD_DOWN -> cursorR = (cursorR + 1) % 8
-            KeyEvent.KEYCODE_DPAD_LEFT -> cursorC = (cursorC + 7) % 8
-            KeyEvent.KEYCODE_DPAD_RIGHT -> cursorC = (cursorC + 1) % 8
+            KeyEvent.KEYCODE_DPAD_UP -> { cursorR = (cursorR + 7) % 8; SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_DOWN -> { cursorR = (cursorR + 1) % 8; SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_LEFT -> { cursorC = (cursorC + 7) % 8; SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> { cursorC = (cursorC + 1) % 8; SoundManager.playClick() }
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> onSelect()
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()

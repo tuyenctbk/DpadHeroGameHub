@@ -192,9 +192,11 @@ class DungeonEscapeView @JvmOverloads constructor(
         // Place key (must be on empty floor and not at start or door)
         var kr = Random.nextInt(1, rows - 1)
         var kc = Random.nextInt(1, cols - 1)
-        while (grid[kr][kc] != 0 || (kr == playerY && kc == playerX) || (kr == doorRow && kc == doorCol)) {
+        var keyAttempts = 0
+        while ((grid[kr][kc] != 0 || (kr == playerY && kc == playerX) || (kr == doorRow && kc == doorCol)) && keyAttempts < 100) {
             kr = Random.nextInt(1, rows - 1)
             kc = Random.nextInt(1, cols - 1)
+            keyAttempts++
         }
         grid[kr][kc] = 3
     }

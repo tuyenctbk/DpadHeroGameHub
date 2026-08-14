@@ -171,10 +171,10 @@ class HangmanView @JvmOverloads constructor(
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> cursorRow = (cursorRow - 1 + 3) % 3
-            KeyEvent.KEYCODE_DPAD_DOWN -> cursorRow = (cursorRow + 1) % 3
-            KeyEvent.KEYCODE_DPAD_LEFT -> cursorCol = (cursorCol - 1 + 9) % 9
-            KeyEvent.KEYCODE_DPAD_RIGHT -> cursorCol = (cursorCol + 1) % 9
+            KeyEvent.KEYCODE_DPAD_UP -> { cursorRow = (cursorRow - 1 + 3) % 3; SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_DOWN -> { cursorRow = (cursorRow + 1) % 3; SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_LEFT -> { cursorCol = (cursorCol - 1 + 9) % 9; SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> { cursorCol = (cursorCol + 1) % 9; SoundManager.playClick() }
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> makeGuess()
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()

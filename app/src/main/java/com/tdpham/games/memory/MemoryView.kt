@@ -64,11 +64,16 @@ class MemoryView @JvmOverloads constructor(
     }
 
     private val symbolThemes = listOf(
-        listOf("🍎", "🍌", "🍒", "🍇", "🍓", "🍍", "🥝", "🍉"), // Fruits
-        listOf("🐶", "🐱", "🦁", "🐯", "🐼", "🐻", "🐨", "🦊"), // Animals
-        listOf("⚽", "🏀", "🏈", "⚾", "🎾", "🏐", "🏉", "🎱"), // Sports
-        listOf("🚗", "🚲", "✈️", "🚀", "⛵", "🚁", "🚂", "🛸"), // Vehicles
-        listOf("🍕", "🍔", "🍟", "🌭", "🍿", "🍩", "🍪", "🍫")  // Foods
+        // Fruits & Veggies (18 unique)
+        listOf("🍎", "🍌", "🍒", "🍇", "🍓", "🍍", "🥝", "🍉", "🍑", "🍊", "🍋", "🥑", "🥥", "🥕", "🌽", "🥦", "🍄", "🥜"),
+        // Animals (18 unique)
+        listOf("🐶", "🐱", "🦁", "🐯", "🐼", "🐻", "🐨", "🦊", "🐰", "🐵", "🐸", "🐧", "🦉", "🦄", "🐙", "🦋", "🐬", "🐢"),
+        // Sports (18 unique)
+        listOf("⚽", "🏀", "🏈", "⚾", "🎾", "🏐", "🏓", "🎱", "🥊", "🎯", "⛳", "🛹", "⛸️", "🏹", "🏆", "🥇", "🚴", "🏊"),
+        // Vehicles (18 unique)
+        listOf("🚗", "🚲", "✈️", "🚀", "⛵", "🚁", "🚂", "🛸", "🚜", "🏎️", "🏍️", "🛴", "🚢", "🚠", "🚒", "🚑", "🚓", "🚕"),
+        // Foods & Desserts (18 unique)
+        listOf("🍕", "🍔", "🍟", "🌭", "🍿", "🍩", "🍪", "🍫", "🍰", "🧁", "🍦", "🥞", "🧇", "🥨", "🍣", "🌮", "🌯", "🥪")
     )
     private var currentThemeIndex = -1
     private val random = java.util.Random()

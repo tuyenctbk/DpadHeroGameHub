@@ -145,13 +145,21 @@ class WordQuestView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_UP -> {
                 keyR = (keyR - 1).coerceAtLeast(0)
                 if (keyC >= keyboard[keyR].length) keyC = keyboard[keyR].length - 1
+                SoundManager.playClick()
             }
             KeyEvent.KEYCODE_DPAD_DOWN -> {
                 keyR = (keyR + 1).coerceAtMost(keyboard.size - 1)
                 if (keyC >= keyboard[keyR].length) keyC = keyboard[keyR].length - 1
+                SoundManager.playClick()
             }
-            KeyEvent.KEYCODE_DPAD_LEFT -> keyC = (keyC - 1).coerceAtLeast(0)
-            KeyEvent.KEYCODE_DPAD_RIGHT -> keyC = (keyC + 1).coerceAtMost(keyboard[keyR].length - 1)
+            KeyEvent.KEYCODE_DPAD_LEFT -> {
+                keyC = (keyC - 1).coerceAtLeast(0)
+                SoundManager.playClick()
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                keyC = (keyC + 1).coerceAtMost(keyboard[keyR].length - 1)
+                SoundManager.playClick()
+            }
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> selectKey()
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()

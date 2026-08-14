@@ -172,12 +172,22 @@ class BattleTanksView @JvmOverloads constructor(
         }
         
         grid[rows - 1][cols / 2] = 3 // Base
-        // Ensure path to base is clear
+        // Ensure base fortress walls
         grid[rows - 1][cols / 2 - 1] = 1
         grid[rows - 1][cols / 2 + 1] = 1
         grid[rows - 2][cols / 2] = 1
         
-        player = Tank(cols / 2 - 2, rows - 1, 0, true)
+        // Ensure player spawn point and immediate egress are completely open
+        val playerCol = cols / 2 - 2
+        grid[rows - 1][playerCol] = 0
+        grid[rows - 2][playerCol] = 0
+        
+        // Ensure enemy top spawn lanes are open
+        grid[0][0] = 0
+        grid[0][cols / 2] = 0
+        grid[0][cols - 1] = 0
+        
+        player = Tank(playerCol, rows - 1, 0, true)
         enemies.clear()
         bullets.clear()
         particles.clear()

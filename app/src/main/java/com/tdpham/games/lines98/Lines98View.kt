@@ -276,10 +276,10 @@ class Lines98View @JvmOverloads constructor(
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> cursorY = (cursorY - 1 + gridSize) % gridSize
-            KeyEvent.KEYCODE_DPAD_DOWN -> cursorY = (cursorY + 1) % gridSize
-            KeyEvent.KEYCODE_DPAD_LEFT -> cursorX = (cursorX - 1 + gridSize) % gridSize
-            KeyEvent.KEYCODE_DPAD_RIGHT -> cursorX = (cursorX + 1) % gridSize
+            KeyEvent.KEYCODE_DPAD_UP -> { cursorY = (cursorY - 1 + gridSize) % gridSize; SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_DOWN -> { cursorY = (cursorY + 1) % gridSize; SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_LEFT -> { cursorX = (cursorX - 1 + gridSize) % gridSize; SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> { cursorX = (cursorX + 1) % gridSize; SoundManager.playClick() }
             KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DPAD_CENTER -> {
                 handleSelection()
             }

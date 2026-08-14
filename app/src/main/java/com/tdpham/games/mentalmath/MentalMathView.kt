@@ -186,7 +186,9 @@ class MentalMathView @JvmOverloads constructor(
         options.clear()
         options.add(correctAnswer)
         
-        while (options.size < 4) {
+        var attempts = 0
+        while (options.size < 4 && attempts < 50) {
+            attempts++
             val decoy = when (Random.nextInt(5)) {
                 0 -> correctAnswer + 10
                 1 -> correctAnswer - 10
@@ -220,6 +222,14 @@ class MentalMathView @JvmOverloads constructor(
             if (decoy != correctAnswer && decoy >= 0 && !options.contains(decoy)) {
                 options.add(decoy)
             }
+        }
+        var fallbackOffset = 1
+        while (options.size < 4) {
+            val candidate = (correctAnswer + fallbackOffset).coerceAtLeast(0)
+            if (!options.contains(candidate)) {
+                options.add(candidate)
+            }
+            fallbackOffset++
         }
         options.shuffle()
     }

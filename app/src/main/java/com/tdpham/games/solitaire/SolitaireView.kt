@@ -234,6 +234,7 @@ class SolitaireView @JvmOverloads constructor(
             if (cursorY == 0 && cursorX == 2) {
                 cursorX = (cursorX + dx + 7) % 7
             }
+            SoundManager.playClick()
         }
         if (dy != 0) {
             cursorY = if (dy > 0) 1 else 0
@@ -241,6 +242,7 @@ class SolitaireView @JvmOverloads constructor(
             if (cursorY == 0 && cursorX == 2) {
                 cursorX = 3 // Move to first foundation
             }
+            SoundManager.playClick()
         }
     }
 
