@@ -680,10 +680,10 @@ class FrenzyView @JvmOverloads constructor(
                 }
             }
 
-            // AI Vision & Reaction (Flee / Chase)
+            // AI Vision & Reaction (Flee / Chase) - Decreased by 30% for balanced player hunting
             if (fish.behavior != 4 && fish.behavior != 5 && fish.behavior != 17) {
-                val maxVisionDist = 300f
-                val maxVisionDepth = 120f
+                val maxVisionDist = 210f // Reduced from 300f (30% reduction)
+                val maxVisionDepth = 84f // Reduced from 120f (30% reduction)
                 
                 var threatOnLeft = false
                 var threatOnRight = false
