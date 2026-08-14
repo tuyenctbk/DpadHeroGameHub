@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="160dp"
+    android:height="160dp"
+    android:viewportWidth="160"
+    android:viewportHeight="160">
+
+    <!-- 1. Ambient Outer Radial Glow -->
+    <path
+        android:pathData="M80,80m-72,0a72,72 0,1 1,144 0a72,72 0,1 1,-144 0">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:centerX="80"
+                android:centerY="80"
+                android:gradientRadius="72"
+                android:type="radial">
+                <item android:color="#4000E5FF" android:offset="0" />
+                <item android:color="#207928CA" android:offset="0.6" />
+                <item android:color="#00000000" android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- 2. Floating Golden Hero Crown -->
+    <group android:translateY="-2">
+        <path
+            android:pathData="M64,28 L72,36 L80,24 L88,36 L96,28 L94,40 L66,40 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endY="40"
+                    android:startY="24"
+                    android:type="linear">
+                    <item android:color="#FFF176" android:offset="0" />
+                    <item android:color="#FFB300" android:offset="1" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path
+            android:pathData="M64,28 L72,36 L80,24 L88,36 L96,28 L94,40 L66,40 Z"
+            android:strokeWidth="1.5"
+            android:strokeColor="#FFFFFF" />
+        <!-- Crown Jewels -->
+        <path
+            android:fillColor="#FF1744"
+            android:pathData="M80,34m-2.2,0a2.2,2.2 0,1 1,4.4 0a2.2,2.2 0,1 1,-4.4 0" />
+        <path
+            android:fillColor="#00E5FF"
+            android:pathData="M72,37m-1.8,0a1.8,1.8 0,1 1,3.6 0a1.8,1.8 0,1 1,-3.6 0" />
+        <path
+            android:fillColor="#00E5FF"
+            android:pathData="M88,37m-1.8,0a1.8,1.8 0,1 1,3.6 0a1.8,1.8 0,1 1,-3.6 0" />
+    </group>
+
+    <!-- 3. Sleek Controller Body Chassis (Dark Titanium Glass) -->
+    <path
+        android:pathData="M32,46 C24,46 18,52 18,62 L18,106 C18,118 28,128 40,128 L120,128 C132,128 142,118 142,106 L142,62 C142,52 136,46 128,46 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endY="128"
+                android:startY="46"
+                android:type="linear">
+                <item android:color="#2A1B4E" android:offset="0" />
+                <item android:color="#140E28" android:offset="0.5" />
+                <item android:color="#0A0618" android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Neon Cyber Trim Outline -->
+    <path
+        android:pathData="M32,46 C24,46 18,52 18,62 L18,106 C18,118 28,128 40,128 L120,128 C132,128 142,118 142,106 L142,62 C142,52 136,46 128,46 Z"
+        android:strokeWidth="2.5">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:endX="142"
+                android:startX="18"
+                android:type="linear">
+                <item android:color="#00E5FF" android:offset="0" />
+                <item android:color="#D500F9" android:offset="0.5" />
+                <item android:color="#FF007F" android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Inner Ergonomic Grip Grooves -->
+    <path
+        android:fillColor="#0D081E"
+        android:pathData="M24,70 C24,65 28,62 34,62 L50,62 C53,62 55,65 55,68 L55,110 C55,116 49,122 43,122 L34,122 C28,122 24,116 24,110 Z" />
+    <path
+        android:fillColor="#0D081E"
+        android:pathData="M136,70 C136,65 132,62 126,62 L110,62 C107,62 105,65 105,68 L105,110 C105,116 111,122 117,122 L126,122 C132,122 136,116 136,110 Z" />
+
+    <!-- 4. Glowing Neon Cyan D-Pad (Left Side) -->
+    <group android:translateX="3" android:translateY="4">
+        <!-- D-Pad Shadow Base -->
+        <path
+            android:fillColor="#001824"
+            android:pathData="M48,67 h16 v10 h10 v16 h-10 v10 h-16 v-10 h-10 v-16 h10 z" />
+
+        <!-- D-Pad Main Cross with Radiant Cyan Gradient -->
+        <path
+            android:pathData="M48,65 h16 v10 h10 v16 h-10 v10 h-16 v-10 h-10 v-16 h10 z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endY="101"
+                    android:startY="65"
+                    android:type="linear">
+                    <item android:color="#E0F7FA" android:offset="0" />
+                    <item android:color="#00E5FF" android:offset="0.4" />
+                    <item android:color="#0091EA" android:offset="1" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path
+            android:pathData="M48,65 h16 v10 h10 v16 h-10 v10 h-16 v-10 h-10 v-16 h10 z"
+            android:strokeWidth="1.5"
+            android:strokeColor="#FFFFFF" />
+
+        <!-- Directional Arrow Accents -->
+        <path android:fillColor="#FFFFFF" android:pathData="M56,68 L53,72 L59,72 Z" />
+        <path android:fillColor="#FFFFFF" android:pathData="M56,98 L53,94 L59,94 Z" />
+        <path android:fillColor="#FFFFFF" android:pathData="M41,83 L45,80 L45,86 Z" />
+        <path android:fillColor="#FFFFFF" android:pathData="M71,83 L67,80 L67,86 Z" />
+
+        <!-- Center Core Glow -->
+        <path
+            android:fillColor="#004D61"
+            android:pathData="M56,83m-3.5,0a3.5,3.5 0,1 1,7 0a3.5,3.5 0,1 1,-7 0" />
+        <path
+            android:fillColor="#00E5FF"
+            android:pathData="M56,83m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
+    </group>
+
+    <!-- 5. Center Neon Logo Gem -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M80,88m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+    <path
+        android:pathData="M80,88m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0"
+        android:strokeWidth="1.2"
+        android:strokeColor="#FFFFFF" />
+
+    <!-- 6. Jewel Action Buttons (Right Side Diamond Cluster) -->
+    <group android:translateX="-4" android:translateY="4">
+        <!-- North: Ruby Button (X) -->
+        <path
+            android:pathData="M112,71m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endY="77"
+                    android:startY="65"
+                    android:type="linear">
+                    <item android:color="#FF5252" android:offset="0" />
+                    <item android:color="#D50000" android:offset="1" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path
+            android:pathData="M112,71m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0"
+            android:strokeWidth="1.2"
+            android:strokeColor="#FF8A80" />
+
+        <!-- West: Emerald Button (Y) -->
+        <path
+            android:pathData="M100,83m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endY="89"
+                    android:startY="77"
+                    android:type="linear">
+                    <item android:color="#69F0AE" android:offset="0" />
+                    <item android:color="#00C853" android:offset="1" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path
+            android:pathData="M100,83m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0"
+            android:strokeWidth="1.2"
+            android:strokeColor="#B9F6CA" />
+
+        <!-- East: Sapphire Button (B) -->
+        <path
+            android:pathData="M124,83m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endY="89"
+                    android:startY="77"
+                    android:type="linear">
+                    <item android:color="#40C4FF" android:offset="0" />
+                    <item android:color="#0091EA" android:offset="1" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path
+            android:pathData="M124,83m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0"
+            android:strokeWidth="1.2"
+            android:strokeColor="#80D8FF" />
+
+        <!-- South: Amber/Gold Button (A) -->
+        <path
+            android:pathData="M112,95m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endY="101"
+                    android:startY="89"
+                    android:type="linear">
+                    <item android:color="#FFD740" android:offset="0" />
+                    <item android:color="#FFAB00" android:offset="1" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path
+            android:pathData="M112,95m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0"
+            android:strokeWidth="1.2"
+            android:strokeColor="#FFE57F" />
+    </group>
+
+    <!-- 7. Perspective Cyber Grid Horizon Base -->
+    <path
+        android:pathData="M30,138 L130,138 L142,154 L18,154 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endY="154"
+                android:startY="138"
+                android:type="linear">
+                <item android:color="#2000E5FF" android:offset="0" />
+                <item android:color="#00000000" android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path
+        android:pathData="M30,138 L130,138 M26,143 L134,143 M22,148 L138,148 M18,154 L142,154 M50,138 L42,154 M80,138 L80,154 M110,138 L118,154"
+        android:strokeWidth="1"
+        android:strokeColor="#4000E5FF" />
+
+</vector>

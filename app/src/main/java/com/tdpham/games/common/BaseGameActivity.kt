@@ -38,6 +38,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     private var activeOverlay: View? = null
     private lateinit var adOverlayHelper: IdleAdOverlayHelper
     private var gameOverCount = 0
+    private var hasRevivedThisRound = false
     private var pauseDialog: InGamePauseDialog? = null
 
     protected open fun shouldShowHelpButton(): Boolean = false

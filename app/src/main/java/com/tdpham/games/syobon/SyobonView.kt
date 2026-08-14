@@ -1079,26 +1079,28 @@ class SyobonView @JvmOverloads constructor(
     }
 
     private fun checkGridCollisionX() {
-        val left = playerX
-        val right = playerX + playerW
-        // Important: check only the vertical body, well clear of floor (0.12f) and ceiling (0.08f)
         val top = playerY + 0.08f
-        val bottom = playerY + playerH - 0.12f
-
-        val cMin = Math.max(0, left.toInt())
-        val cMax = Math.min(TOTAL_MAP_COLS - 1, right.toInt())
+        val bottom = playerY + playerH - 0.10f
         val rMin = Math.max(0, top.toInt())
         val rMax = Math.min(ROWS - 1, bottom.toInt())
 
-        for (r in rMin..rMax) {
-            for (c in cMin..cMax) {
-                if (isSolid(r, c)) {
-                    if (velX > 0) {
-                        playerX = c.toFloat() - playerW
+        if (velX > 0f) {
+            val rightCol = (playerX + playerW).toInt()
+            if (rightCol in 0 until TOTAL_MAP_COLS) {
+                for (r in rMin..rMax) {
+                    if (isSolid(r, rightCol)) {
+                        playerX = rightCol.toFloat() - playerW
                         velX = 0f
                         return
-                    } else if (velX < 0) {
-                        playerX = c.toFloat() + 1f
+                    }
+                }
+            }
+        } else if (velX < 0f) {
+            val leftCol = playerX.toInt()
+            if (leftCol in 0 until TOTAL_MAP_COLS) {
+                for (r in rMin..rMax) {
+                    if (isSolid(r, leftCol)) {
+                        playerX = leftCol.toFloat() + 1.0f
                         velX = 0f
                         return
                     }
@@ -1108,62 +1110,58 @@ class SyobonView @JvmOverloads constructor(
     }
 
     private fun checkGridCollisionY() {
-        // Feet buffer: 0.10f of width from each side
         val buffer = 0.10f * playerW
         val left = playerX + buffer
         val right = playerX + playerW - buffer
-        val top = playerY
-        val bottom = playerY + playerH
-
         val cMin = Math.max(0, left.toInt())
         val cMax = Math.min(TOTAL_MAP_COLS - 1, right.toInt())
         
         isOnGround = false
 
-        // 1. Check for ground collision (Falling or standing)
-        val rBottom = bottom.toInt()
-        if (rBottom in 0 until ROWS) {
-            var onAnySolid = false
-            for (c in cMin..cMax) {
-                if (isSolid(rBottom, c)) {
-                    if (velY >= 0 && (bottom - velY) <= rBottom + 0.35f) {
-                        playerY = rBottom.toFloat() - playerH
-                        velY = 0f
-                        isOnGround = true
-                        lastGroundedTime = System.currentTimeMillis()
-                        onAnySolid = true
-                        
-                        if (map[rBottom][c] == TILE_MYSTERY) {
-                            onBlockHit(rBottom, c)
+        // 1. Falling or standing (Downward velocity or resting on ground)
+        if (velY >= 0f) {
+            val bottom = playerY + playerH
+            val rBottom = bottom.toInt()
+            if (rBottom in 0 until ROWS) {
+                for (c in cMin..cMax) {
+                    if (isSolid(rBottom, c)) {
+                        if ((bottom - velY) <= rBottom + 0.40f) {
+                            playerY = rBottom.toFloat() - playerH
+                            velY = 0f
+                            isOnGround = true
+                            lastGroundedTime = System.currentTimeMillis()
+                            
+                            if (map[rBottom][c] == TILE_MYSTERY) {
+                                onBlockHit(rBottom, c)
+                            }
+                            return
                         }
-                        break
                     }
                 }
             }
-            if (onAnySolid) return
-        }
-
-        // 2. Check for ceiling collision (Jumping up)
-        val rTop = top.toInt()
-        if (rTop in 0 until ROWS && velY < 0) {
-            for (c in cMin..cMax) {
-                val cell = map[rTop][c]
-                if (cell == TILE_INVISIBLE && invisibleBlocks[rTop][c] != true) {
-                    if (top <= rTop + 1f) {
-                        invisibleBlocks[rTop][c] = true
-                        playerY = rTop + 1f
-                        velY = 0f
-                        onBlockHit(rTop, c)
-                        return
+        } else {
+            // 2. Jumping upward (Upward velocity)
+            val top = playerY
+            val rTop = top.toInt()
+            if (rTop in 0 until ROWS) {
+                for (c in cMin..cMax) {
+                    val cell = map[rTop][c]
+                    if (cell == TILE_INVISIBLE && invisibleBlocks[rTop][c] != true) {
+                        if (top <= rTop + 1f) {
+                            invisibleBlocks[rTop][c] = true
+                            playerY = rTop + 1f
+                            velY = 0f
+                            onBlockHit(rTop, c)
+                            return
+                        }
                     }
-                }
-                
-                if (isSolid(rTop, c)) {
-                    if (top <= rTop + 1f) {
-                        playerY = rTop + 1f
-                        velY = 0f
-                        onBlockHit(rTop, c)
-                        return
+                    if (isSolid(rTop, c)) {
+                        if (top <= rTop + 1f) {
+                            playerY = rTop + 1f
+                            velY = 0f
+                            onBlockHit(rTop, c)
+                            return
+                        }
                     }
                 }
             }

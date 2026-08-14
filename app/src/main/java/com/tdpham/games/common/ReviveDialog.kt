@@ -21,7 +21,7 @@ object ReviveDialog {
     ) {
         if (activity.isFinishing || activity.isDestroyed) return
 
-        val dialog = Dialog(activity, R.style.Theme_DpadHero_Dialog)
+        val dialog = Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_revive_continue)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

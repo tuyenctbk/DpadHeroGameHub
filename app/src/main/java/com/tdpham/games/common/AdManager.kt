@@ -287,10 +287,19 @@ object AdManager {
                         onAdDismissed()
                     }
                 }
-    /**
-     * Shows a Rewarded Ad (or falls back to Interstitial if rewarded is unavailable)
-     * for high-value user actions like Continuing/Reviving.
-     */
+                ad.show(activity) { rewardItem ->
+                    onUserEarnedReward(rewardItem)
+                }
+            } else {
+                Log.d(TAG, "Rewarded Ad not ready.")
+                loadRewarded(activity.applicationContext)
+                onAdDismissed()
+            }
+        } catch (e: Throwable) {
+            Log.e(TAG, "Exception in showRewarded: ${e.message}", e)
+            onAdDismissed()
+        }
+    }
     fun showRewardedOrInterstitial(
         activity: Activity,
         onRewardGranted: () -> Unit,
