@@ -279,7 +279,9 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_froggy to FroggyCrossActivity::class.java,
             R.id.btn_monkey to MonkeyActivity::class.java,
             R.id.btn_retrodriver to RetroDriverActivity::class.java,
-            R.id.btn_frenzy to FrenzyActivity::class.java
+            R.id.btn_frenzy to FrenzyActivity::class.java,
+            R.id.btn_road_racer to RoadRacerActivity::class.java,
+            R.id.btn_fruit to FruitActivity::class.java
         )
 
         for ((id, activityClass) in games) {
@@ -322,6 +324,8 @@ class MainActivity : AppCompatActivity() {
             "monkey" -> R.id.btn_monkey
             "retrodriver" -> R.id.btn_retrodriver
             "frenzy" -> R.id.btn_frenzy
+            "road_racer" -> R.id.btn_road_racer
+            "fruit" -> R.id.btn_fruit
             else -> R.id.btn_snake
         }
         findViewById<Button>(viewId)?.requestFocus()
@@ -340,6 +344,7 @@ class MainActivity : AppCompatActivity() {
         
         button.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
+                SoundManager.playClick()
                 view.animate()
                     .scaleX(1.15f)
                     .scaleY(1.15f)

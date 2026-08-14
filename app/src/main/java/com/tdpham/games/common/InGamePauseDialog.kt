@@ -108,6 +108,7 @@ class InGamePauseDialog(
         view.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
                 IdleAdManager.notifyInteraction()
+                SoundManager.playClick()
                 v.animate().scaleX(1.06f).scaleY(1.06f).setDuration(150).start()
             } else {
                 v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(150).start()

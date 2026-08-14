@@ -124,21 +124,16 @@ object GuideManager {
         view.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
                 IdleAdManager.notifyInteraction()
-                v.animate().scaleX(1.08f).scaleY(1.08f).setDuration(200).start()
-                v.setBackgroundColor(Color.parseColor("#33FFFFFF"))
+                com.tdpham.games.common.SoundManager.playClick()
+                v.animate().scaleX(1.08f).scaleY(1.08f).setDuration(180).start()
             } else {
-                v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
-                v.setBackgroundColor(Color.TRANSPARENT)
+                v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(180).start()
             }
         }
         view.setOnHoverListener { v, event ->
             if (event.action == MotionEvent.ACTION_HOVER_ENTER) {
                 IdleAdManager.notifyInteraction()
-                v.animate().scaleX(1.08f).scaleY(1.08f).setDuration(200).start()
-                v.setBackgroundColor(Color.parseColor("#33FFFFFF"))
-            } else if (event.action == MotionEvent.ACTION_HOVER_EXIT) {
-                v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
-                v.setBackgroundColor(Color.TRANSPARENT)
+                v.requestFocus()
             }
             false
         }

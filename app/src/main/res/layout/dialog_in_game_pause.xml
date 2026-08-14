@@ -45,6 +45,8 @@
         android:textStyle="bold"
         android:elevation="4dp"
         android:focusable="true"
+        android:nextFocusUp="@+id/btn_pause_exit"
+        android:nextFocusDown="@+id/btn_pause_options"
         android:layout_marginBottom="12dp" />
 
     <!-- Button 2: Options / Settings -->
@@ -60,6 +62,8 @@
         android:textStyle="bold"
         android:elevation="4dp"
         android:focusable="true"
+        android:nextFocusUp="@+id/btn_pause_resume"
+        android:nextFocusDown="@+id/btn_pause_guide"
         android:layout_marginBottom="12dp" />
 
     <!-- Button 3: How to Play / Guide -->
@@ -75,6 +79,8 @@
         android:textStyle="bold"
         android:elevation="4dp"
         android:focusable="true"
+        android:nextFocusUp="@+id/btn_pause_options"
+        android:nextFocusDown="@+id/btn_pause_restart"
         android:layout_marginBottom="12dp" />
 
     <!-- Button 4: Restart -->
@@ -90,6 +96,8 @@
         android:textStyle="bold"
         android:elevation="4dp"
         android:focusable="true"
+        android:nextFocusUp="@+id/btn_pause_guide"
+        android:nextFocusDown="@+id/btn_pause_exit"
         android:layout_marginBottom="12dp" />
 
     <!-- Button 5: Exit to Hub -->
@@ -104,6 +112,8 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:elevation="4dp"
-        android:focusable="true" />
+        android:focusable="true"
+        android:nextFocusUp="@+id/btn_pause_restart"
+        android:nextFocusDown="@+id/btn_pause_resume" />
 
 </LinearLayout>

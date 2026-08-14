@@ -655,6 +655,42 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/btn_road_racer"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="@color/btn_road_racer_color"
+                android:elevation="12dp"
+                android:focusable="true"
+                android:text="@string/game_road_racer"
+                android:textAllCaps="true"
+                android:drawableTop="@drawable/ic_game_road_racer"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_fruit"
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="@color/btn_fruit_color"
+                android:elevation="12dp"
+                android:focusable="true"
+                android:text="@string/game_fruit"
+                android:textAllCaps="true"
+                android:drawableTop="@drawable/ic_game_fruit"
+                android:paddingTop="32dp"
+                android:drawablePadding="16dp"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
         </LinearLayout>
     </HorizontalScrollView>
 
