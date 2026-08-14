@@ -5,6 +5,7 @@ import android.graphics.*
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
+import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
@@ -31,13 +32,13 @@ class SyobonView @JvmOverloads constructor(
         private const val TOTAL_MAP_COLS = 100
         
         // Physics
-        private const val GRAVITY = 0.018f
-        private const val SPEED_ACCEL = 0.03f
-        private const val FRICTION = 0.90f
-        private const val MAX_SPEED = 0.22f
-        private const val JUMP_IMPULSE = -0.35f
-        private const val JUMP_HOLD_FORCE = -0.015f
-        private const val MAX_JUMP_HOLD_TIME = 330L
+        private const val GRAVITY = 0.016f
+        private const val SPEED_ACCEL = 0.40f
+        private const val FRICTION = 0.78f
+        private const val MAX_SPEED = 0.18f
+        private const val JUMP_IMPULSE = -0.32f
+        private const val JUMP_HOLD_FORCE = -0.012f
+        private const val MAX_JUMP_HOLD_TIME = 320L
         
         // Tile Types
         private const val TILE_EMPTY = 0
@@ -235,7 +236,7 @@ class SyobonView @JvmOverloads constructor(
                 update()
             }
             invalidate()
-            mainHandler.postDelayed(this, 18)
+            mainHandler.postDelayed(this, 16)
         }
     }
 
@@ -693,7 +694,7 @@ class SyobonView @JvmOverloads constructor(
     }
 
     private fun updatePlayerMovement() {
-        // Handle Horizontal Input (Inertia)
+        // 1. Handle Horizontal Input (Smooth responsive momentum)
         var targetVelX = 0f
         if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) {
             targetVelX = -MAX_SPEED
@@ -703,14 +704,18 @@ class SyobonView @JvmOverloads constructor(
             isFacingRight = true
         }
 
-        // Smooth acceleration/deceleration
-        velX += (targetVelX - velX) * SPEED_ACCEL * 10f
-        velX *= FRICTION
+        if (targetVelX != 0f) {
+            velX += (targetVelX - velX) * SPEED_ACCEL
+        } else {
+            velX *= FRICTION
+            if (Math.abs(velX) < 0.005f) velX = 0f
+        }
 
-        // Apply Gravity
+        // 2. Apply Gravity with terminal velocity clamp
         velY += GRAVITY
+        if (velY > 0.40f) velY = 0.40f
 
-        // Handle variable height jumping with Coyote Time & Jump Buffering
+        // 3. Handle variable height jumping with Coyote Time & Jump Buffering
         val now = System.currentTimeMillis()
         if (isOnGround) {
             lastGroundedTime = now
@@ -728,7 +733,7 @@ class SyobonView @JvmOverloads constructor(
                 pressedKeys.contains(KeyEvent.KEYCODE_W)
 
         val canJump = isOnGround || (now - lastGroundedTime < 140L)
-        if (wantsJump && canJump) {
+        if (wantsJump && canJump && velY >= -0.05f) {
             velY = JUMP_IMPULSE
             isOnGround = false
             lastGroundedTime = 0L
@@ -739,11 +744,13 @@ class SyobonView @JvmOverloads constructor(
             velY += JUMP_HOLD_FORCE
         }
 
-        // Apply velocities & resolve grid collisions
-        playerX += velX
-        checkGridCollisionX()
+        // 4. Resolve Vertical Movement & Collisions FIRST (snaps feet to floor)
         playerY += velY
         checkGridCollisionY()
+
+        // 5. Resolve Horizontal Movement & Collisions SECOND (checks true wall obstacles)
+        playerX += velX
+        checkGridCollisionX()
 
         // Pit death check
         if (playerY > ROWS) die()
@@ -1079,10 +1086,12 @@ class SyobonView @JvmOverloads constructor(
     }
 
     private fun checkGridCollisionX() {
-        val top = playerY + 0.08f
-        val bottom = playerY + playerH - 0.10f
+        val top = playerY + 0.05f
+        val bottom = playerY + playerH - 0.25f // Strictly above the ground plane
         val rMin = Math.max(0, top.toInt())
         val rMax = Math.min(ROWS - 1, bottom.toInt())
+
+        if (rMin > rMax) return
 
         if (velX > 0f) {
             val rightCol = (playerX + playerW).toInt()
@@ -1106,6 +1115,11 @@ class SyobonView @JvmOverloads constructor(
                     }
                 }
             }
+        }
+
+        if (playerX < 0f) {
+            playerX = 0f
+            velX = 0f
         }
     }
 
@@ -1325,16 +1339,23 @@ class SyobonView @JvmOverloads constructor(
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A -> {
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_J,
+            KeyEvent.KEYCODE_NUMPAD_4, KeyEvent.KEYCODE_SYSTEM_NAVIGATION_LEFT,
+            KeyEvent.KEYCODE_DPAD_UP_LEFT, KeyEvent.KEYCODE_DPAD_DOWN_LEFT -> {
                 pressedKeys.add(KeyEvent.KEYCODE_DPAD_LEFT)
             }
-            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D -> {
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_L,
+            KeyEvent.KEYCODE_NUMPAD_6, KeyEvent.KEYCODE_SYSTEM_NAVIGATION_RIGHT,
+            KeyEvent.KEYCODE_DPAD_UP_RIGHT, KeyEvent.KEYCODE_DPAD_DOWN_RIGHT -> {
                 pressedKeys.add(KeyEvent.KEYCODE_DPAD_RIGHT)
             }
             KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER,
             KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_BUTTON_Y,
-            KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_W -> {
+            KeyEvent.KEYCODE_BUTTON_L1, KeyEvent.KEYCODE_BUTTON_R1, KeyEvent.KEYCODE_BUTTON_START,
+            KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_K,
+            KeyEvent.KEYCODE_NUMPAD_8, KeyEvent.KEYCODE_NUMPAD_5, KeyEvent.KEYCODE_NUMPAD_ENTER -> {
                 lastJumpPressTime = System.currentTimeMillis()
+                pressedKeys.add(KeyEvent.KEYCODE_DPAD_UP)
                 pressedKeys.add(keyCode)
             }
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_SETTINGS, KeyEvent.KEYCODE_M, KeyEvent.KEYCODE_O -> {
@@ -1348,11 +1369,21 @@ class SyobonView @JvmOverloads constructor(
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_LEFT)
-            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_RIGHT)
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_J,
+            KeyEvent.KEYCODE_NUMPAD_4, KeyEvent.KEYCODE_SYSTEM_NAVIGATION_LEFT,
+            KeyEvent.KEYCODE_DPAD_UP_LEFT, KeyEvent.KEYCODE_DPAD_DOWN_LEFT -> {
+                pressedKeys.remove(KeyEvent.KEYCODE_DPAD_LEFT)
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_L,
+            KeyEvent.KEYCODE_NUMPAD_6, KeyEvent.KEYCODE_SYSTEM_NAVIGATION_RIGHT,
+            KeyEvent.KEYCODE_DPAD_UP_RIGHT, KeyEvent.KEYCODE_DPAD_DOWN_RIGHT -> {
+                pressedKeys.remove(KeyEvent.KEYCODE_DPAD_RIGHT)
+            }
             KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER,
             KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_BUTTON_Y,
-            KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_W -> {
+            KeyEvent.KEYCODE_BUTTON_L1, KeyEvent.KEYCODE_BUTTON_R1, KeyEvent.KEYCODE_BUTTON_START,
+            KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_K,
+            KeyEvent.KEYCODE_NUMPAD_8, KeyEvent.KEYCODE_NUMPAD_5, KeyEvent.KEYCODE_NUMPAD_ENTER -> {
                 pressedKeys.remove(keyCode)
                 pressedKeys.remove(KeyEvent.KEYCODE_DPAD_UP)
                 pressedKeys.remove(KeyEvent.KEYCODE_DPAD_CENTER)
@@ -1361,6 +1392,38 @@ class SyobonView @JvmOverloads constructor(
             else -> pressedKeys.remove(keyCode)
         }
         return super.onKeyUp(keyCode, event)
+    }
+
+    override fun onGenericMotionEvent(event: MotionEvent): Boolean {
+        if (event.isFromSource(InputDevice.SOURCE_JOYSTICK) || event.isFromSource(InputDevice.SOURCE_GAMEPAD)) {
+            val hatX = event.getAxisValue(MotionEvent.AXIS_HAT_X)
+            val hatY = event.getAxisValue(MotionEvent.AXIS_HAT_Y)
+            val joyX = event.getAxisValue(MotionEvent.AXIS_X)
+            val joyY = event.getAxisValue(MotionEvent.AXIS_Y)
+
+            val effectiveX = if (Math.abs(hatX) > 0.2f) hatX else joyX
+            val effectiveY = if (Math.abs(hatY) > 0.2f) hatY else joyY
+
+            if (effectiveX < -0.35f) {
+                pressedKeys.add(KeyEvent.KEYCODE_DPAD_LEFT)
+                pressedKeys.remove(KeyEvent.KEYCODE_DPAD_RIGHT)
+            } else if (effectiveX > 0.35f) {
+                pressedKeys.add(KeyEvent.KEYCODE_DPAD_RIGHT)
+                pressedKeys.remove(KeyEvent.KEYCODE_DPAD_LEFT)
+            } else {
+                pressedKeys.remove(KeyEvent.KEYCODE_DPAD_LEFT)
+                pressedKeys.remove(KeyEvent.KEYCODE_DPAD_RIGHT)
+            }
+
+            if (effectiveY < -0.45f) {
+                lastJumpPressTime = System.currentTimeMillis()
+                pressedKeys.add(KeyEvent.KEYCODE_DPAD_UP)
+            } else {
+                pressedKeys.remove(KeyEvent.KEYCODE_DPAD_UP)
+            }
+            return true
+        }
+        return super.onGenericMotionEvent(event)
     }
 
     private fun showOptions() {

@@ -7,6 +7,7 @@ import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
@@ -140,6 +141,12 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
         handleGuideProgression()
         saveLastPlayed()
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                handleBackPress()
+            }
+        })
     }
 
     private fun handleGuideProgression() {
@@ -268,8 +275,25 @@ abstract class BaseGameActivity : AppCompatActivity() {
         )
     }
 
+    protected open fun handleBackPress() {
+        if (isFinishing || isDestroyed) return
+        if (activeOverlay != null) {
+            removeActiveOverlay()
+            return
+        }
+        if (pauseDialog?.isShowing == true) {
+            pauseDialog?.dismiss()
+            pauseDialog = null
+            (gameView as View).requestFocus()
+            gameView.resume()
+            return
+        }
+        showPauseDialog()
+    }
+
     protected open fun showPauseDialog() {
         if (isGuideShowing || isFinishing || isDestroyed) return
+        removeActiveOverlay()
         IdleAdManager.notifyInteraction()
         gameView.pause()
 
@@ -297,38 +321,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
             onRestart = {
                 pauseDialog = null
                 (gameView as View).requestFocus()
-                when (gameKey) {
-                    "trex" -> (gameView as? com.tdpham.games.trex.TRexView)?.resetGame()
-                    "snake" -> (gameView as? com.tdpham.games.snake.SnakeGameView)?.resetGame()
-                    "minesweeper" -> (gameView as? com.tdpham.games.minesweeper.MinesweeperView)?.resetGame()
-                    "sudoku" -> (gameView as? com.tdpham.games.sudoku.SudokuView)?.resetGame()
-                    "memory" -> (gameView as? com.tdpham.games.memory.MemoryView)?.resetGame()
-                    "slide_puzzle" -> (gameView as? com.tdpham.games.slidepuzzle.SlidePuzzleView)?.resetGame()
-                    "tic_tac_toe" -> (gameView as? com.tdpham.games.tictactoe.TicTacToeView)?.resetGame()
-                    "hangman" -> (gameView as? com.tdpham.games.hangman.HangmanView)?.resetGame()
-                    "solitaire" -> (gameView as? com.tdpham.games.solitaire.SolitaireView)?.resetGame()
-                    "4096" -> (gameView as? com.tdpham.games.twentyfortyeight.TwentyFortyEightView)?.resetGame()
-                    "tetris" -> (gameView as? com.tdpham.games.tetris.TetrisView)?.resetGame()
-                    "mental_math" -> (gameView as? com.tdpham.games.mentalmath.MentalMathView)?.resetGame()
-                    "flappy_hero" -> (gameView as? com.tdpham.games.flappy.FlappyHeroView)?.resetGame()
-                    "brick_break" -> (gameView as? com.tdpham.games.brickbreak.BrickBreakView)?.resetGame()
-                    "lines98" -> (gameView as? com.tdpham.games.lines98.Lines98View)?.resetGame()
-                    "word_quest" -> (gameView as? com.tdpham.games.wordquest.WordQuestView)?.resetGame()
-                    "road_racer" -> (gameView as? com.tdpham.games.roadracer.RoadRacerView)?.resetGame()
-                    "sokoban" -> (gameView as? com.tdpham.games.sokoban.SokobanView)?.resetGame()
-                    "battle_tanks" -> (gameView as? com.tdpham.games.tanks.BattleTanksView)?.resetGame()
-                    "starfighter", "star_fighter" -> (gameView as? com.tdpham.games.starfighter.StarFighterView)?.resetGame()
-                    "dungeon_escape" -> (gameView as? com.tdpham.games.dungeon.DungeonEscapeView)?.resetGame()
-                    "froggy_cross" -> (gameView as? com.tdpham.games.froggy.FroggyCrossView)?.resetGame()
-                    "simon_says" -> (gameView as? com.tdpham.games.simon.SimonSaysView)?.resetGame()
-                    "checkers" -> (gameView as? com.tdpham.games.checkers.CheckersView)?.resetGame()
-                    "spinball" -> (gameView as? com.tdpham.games.spinball.SpinballView)?.resetGame()
-                    "syobon_action" -> (gameView as? com.tdpham.games.syobon.SyobonView)?.resetGame()
-                    "monkey" -> (gameView as? com.tdpham.games.monkey.MonkeyView)?.resetGame()
-                    "frenzy" -> (gameView as? com.tdpham.games.frenzy.FrenzyView)?.resetGame()
-                    "retrodriver" -> (gameView as? com.tdpham.games.retrodriver.RetroDriverView)?.resetGame()
-                    "fruit" -> (gameView as? com.tdpham.games.fruit.FruitView)?.resetGame()
-                }
+                resetCurrentGame()
                 gameView.resume()
             },
             onExit = {
@@ -342,6 +335,41 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 }
             }
         )
+    }
+
+    private fun resetCurrentGame() {
+        when (gameKey) {
+            "trex" -> (gameView as? com.tdpham.games.trex.TRexView)?.resetGame()
+            "snake" -> (gameView as? com.tdpham.games.snake.SnakeGameView)?.resetGame()
+            "minesweeper" -> (gameView as? com.tdpham.games.minesweeper.MinesweeperView)?.resetGame()
+            "sudoku" -> (gameView as? com.tdpham.games.sudoku.SudokuView)?.resetGame()
+            "memory" -> (gameView as? com.tdpham.games.memory.MemoryView)?.resetGame()
+            "slide_puzzle" -> (gameView as? com.tdpham.games.slidepuzzle.SlidePuzzleView)?.resetGame()
+            "tic_tac_toe" -> (gameView as? com.tdpham.games.tictactoe.TicTacToeView)?.resetGame()
+            "hangman" -> (gameView as? com.tdpham.games.hangman.HangmanView)?.resetGame()
+            "solitaire" -> (gameView as? com.tdpham.games.solitaire.SolitaireView)?.resetGame()
+            "4096" -> (gameView as? com.tdpham.games.twentyfortyeight.TwentyFortyEightView)?.resetGame()
+            "tetris" -> (gameView as? com.tdpham.games.tetris.TetrisView)?.resetGame()
+            "mental_math" -> (gameView as? com.tdpham.games.mentalmath.MentalMathView)?.resetGame()
+            "flappy_hero" -> (gameView as? com.tdpham.games.flappy.FlappyHeroView)?.resetGame()
+            "brick_break" -> (gameView as? com.tdpham.games.brickbreak.BrickBreakView)?.resetGame()
+            "lines98" -> (gameView as? com.tdpham.games.lines98.Lines98View)?.resetGame()
+            "word_quest" -> (gameView as? com.tdpham.games.wordquest.WordQuestView)?.resetGame()
+            "road_racer" -> (gameView as? com.tdpham.games.roadracer.RoadRacerView)?.resetGame()
+            "sokoban" -> (gameView as? com.tdpham.games.sokoban.SokobanView)?.resetGame()
+            "battle_tanks" -> (gameView as? com.tdpham.games.tanks.BattleTanksView)?.resetGame()
+            "starfighter", "star_fighter" -> (gameView as? com.tdpham.games.starfighter.StarFighterView)?.resetGame()
+            "dungeon_escape" -> (gameView as? com.tdpham.games.dungeon.DungeonEscapeView)?.resetGame()
+            "froggy_cross" -> (gameView as? com.tdpham.games.froggy.FroggyCrossView)?.resetGame()
+            "simon_says" -> (gameView as? com.tdpham.games.simon.SimonSaysView)?.resetGame()
+            "checkers" -> (gameView as? com.tdpham.games.checkers.CheckersView)?.resetGame()
+            "spinball" -> (gameView as? com.tdpham.games.spinball.SpinballView)?.resetGame()
+            "syobon_action" -> (gameView as? com.tdpham.games.syobon.SyobonView)?.resetGame()
+            "monkey" -> (gameView as? com.tdpham.games.monkey.MonkeyView)?.resetGame()
+            "frenzy" -> (gameView as? com.tdpham.games.frenzy.FrenzyView)?.resetGame()
+            "retrodriver" -> (gameView as? com.tdpham.games.retrodriver.RetroDriverView)?.resetGame()
+            "fruit" -> (gameView as? com.tdpham.games.fruit.FruitView)?.resetGame()
+        }
     }
 
     override fun onResume() {
@@ -397,15 +425,56 @@ abstract class BaseGameActivity : AppCompatActivity() {
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        val keyCode = event.keyCode
+
         if (event.action == KeyEvent.ACTION_DOWN) {
-            val keyCode = event.keyCode
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                handleBackPress()
+                return true
+            }
             if (keyCode == KeyEvent.KEYCODE_M || keyCode == KeyEvent.KEYCODE_O || 
                 keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_SETTINGS) {
                 if (showGameOptions()) {
                     return true
                 }
             }
+            if (keyCode == KeyEvent.KEYCODE_H || keyCode == KeyEvent.KEYCODE_INFO) {
+                removeActiveOverlay()
+                showGameGuide()
+                return true
+            }
+            if (keyCode == KeyEvent.KEYCODE_L || keyCode == KeyEvent.KEYCODE_PROG_BLUE) {
+                showInGameLeaderboard()
+                return true
+            }
+            if (keyCode == KeyEvent.KEYCODE_S || keyCode == KeyEvent.KEYCODE_VOLUME_MUTE) {
+                gameView.toggleSound()
+                return true
+            }
+            // Remove overlay on D-pad input
+            if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+                keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
+                keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                removeActiveOverlay()
+            }
         }
+
+        // Direct D-Pad and Gamepad pass-through to active gameView
+        if (::gameView.isInitialized) {
+            val v = gameView as View
+            if (v.visibility == View.VISIBLE) {
+                if (event.action == KeyEvent.ACTION_DOWN) {
+                    if (v.onKeyDown(keyCode, event)) {
+                        return true
+                    }
+                } else if (event.action == KeyEvent.ACTION_UP) {
+                    if (v.onKeyUp(keyCode, event)) {
+                        return true
+                    }
+                }
+            }
+        }
+
         return super.dispatchKeyEvent(event)
     }
 
@@ -458,7 +527,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            showPauseDialog()
+            handleBackPress()
             return true
         }
         
