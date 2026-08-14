@@ -71,7 +71,13 @@ class FrenzyView @JvmOverloads constructor(
     private var themeProgress = 0f
 
     private val drawPath = Path()
+    private val drawPath2 = Path()
+    private val drawPath3 = Path()
+    private val drawPath4 = Path()
+    private val drawPath5 = Path()
     private val drawRectF = RectF()
+    private val drawRectF2 = RectF()
+    private val drawRectF3 = RectF()
 
     private val celebrationManager = CelebrationManager()
 
@@ -150,6 +156,7 @@ class FrenzyView @JvmOverloads constructor(
         super.onDetachedFromWindow()
         handler.removeCallbacks(gameLoop)
         animHandler.removeCallbacks(animRunnable)
+        celebrationManager.clear()
     }
 
     override fun startGame() {
@@ -174,9 +181,10 @@ class FrenzyView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
+        val prefs = context.getSharedPreferences("frenzy_settings", Context.MODE_PRIVATE)
         score = 0
         lives = 3
-        playerSize = 1
+        playerSize = prefs.getInt("starting_size", 1).coerceIn(1, 2)
         fishEatenCount = 0
         playerX = width / 2f
         playerY = height / 2f
@@ -197,7 +205,7 @@ class FrenzyView @JvmOverloads constructor(
         playerShieldUntil = System.currentTimeMillis() + 4000L
         oceanTheme = 0
         themeProgress = 0f
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
 
         // Spawn initial bubbles
         repeat(20) {
@@ -1301,13 +1309,15 @@ class FrenzyView @JvmOverloads constructor(
                 paint.color = Color.parseColor("#FF1744")
 
                 // Draw warning triangle
-                val tri = Path()
                 val triSize = 25f
                 val triY = 60f
-                tri.moveTo(w.x, triY - triSize)
-                tri.lineTo(w.x - triSize, triY + triSize)
-                tri.lineTo(w.x + triSize, triY + triSize)
-                tri.close()
+                val tri = drawPath.apply {
+                    reset()
+                    moveTo(w.x, triY - triSize)
+                    lineTo(w.x - triSize, triY + triSize)
+                    lineTo(w.x + triSize, triY + triSize)
+                    close()
+                }
                 canvas.drawPath(tri, paint)
 
                 // Exclamation mark
@@ -1498,13 +1508,15 @@ class FrenzyView @JvmOverloads constructor(
 
         // Sand dunes path
         val sandY = height - 80f
-        val sandPath = Path()
-        sandPath.moveTo(0f, height.toFloat())
-        sandPath.lineTo(0f, sandY)
-        sandPath.quadTo(width * 0.25f, sandY - 20f, width * 0.5f, sandY + 15f)
-        sandPath.quadTo(width * 0.75f, sandY + 45f, width.toFloat(), sandY - 10f)
-        sandPath.lineTo(width.toFloat(), height.toFloat())
-        sandPath.close()
+        val sandPath = drawPath.apply {
+            reset()
+            moveTo(0f, height.toFloat())
+            lineTo(0f, sandY)
+            quadTo(width * 0.25f, sandY - 20f, width * 0.5f, sandY + 15f)
+            quadTo(width * 0.75f, sandY + 45f, width.toFloat(), sandY - 10f)
+            lineTo(width.toFloat(), height.toFloat())
+            close()
+        }
 
         val sandColor = when (oceanTheme) {
             0 -> Color.parseColor("#D7CCC8") // Soft gold reef sand
@@ -1525,9 +1537,11 @@ class FrenzyView @JvmOverloads constructor(
             val kelpX = i * (width / 12f)
             val sway = sin(timeSec + i).toFloat() * 22f
             
-            val kelpPath = Path()
-            kelpPath.moveTo(kelpX, height.toFloat())
-            kelpPath.quadTo(kelpX + sway * 0.5f, height - 80f, kelpX + sway, height - 160f)
+            val kelpPath = drawPath2.apply {
+                reset()
+                moveTo(kelpX, height.toFloat())
+                quadTo(kelpX + sway * 0.5f, height - 80f, kelpX + sway, height - 160f)
+            }
             
             paint.style = Paint.Style.STROKE
             paint.color = if (i % 2 == 0) Color.parseColor("#1B5E20") else Color.parseColor("#2E7D32")
@@ -1600,61 +1614,71 @@ class FrenzyView @JvmOverloads constructor(
             val tailYOffset = sin(cycle.toDouble() * 0.7).toFloat() * r * 0.35f
             
             // 1. Sleek Torpedo Body
+            drawRectF.set(cx - r * 1.1f, cy - r * 0.45f, cx + r * 1.1f, cy + r * 0.45f)
             if (mouthOpen) {
                 drawPath.reset()
                 val sweepAngle = 295f
                 val startAngle = if (facingRight) 32f else 212f
-                drawRectF.set(cx - r * 1.1f, cy - r * 0.45f, cx + r * 1.1f, cy + r * 0.45f)
                 drawPath.addArc(drawRectF, startAngle, sweepAngle)
                 drawPath.lineTo(cx, cy)
                 drawPath.close()
                 canvas.drawPath(drawPath, paint)
             } else {
-                canvas.drawOval(RectF(cx - r * 1.1f, cy - r * 0.45f, cx + r * 1.1f, cy + r * 0.45f), paint)
+                canvas.drawOval(drawRectF, paint)
             }
 
             // Rostrum Snout (Beak)
-            val beak = Path()
-            beak.moveTo(cx + r * 1.0f * dir, cy - r * 0.1f)
-            beak.lineTo(cx + r * 1.5f * dir, cy + r * 0.05f)
-            beak.lineTo(cx + r * 0.9f * dir, cy + r * 0.2f)
-            beak.close()
+            val beak = drawPath2.apply {
+                reset()
+                moveTo(cx + r * 1.0f * dir, cy - r * 0.1f)
+                lineTo(cx + r * 1.5f * dir, cy + r * 0.05f)
+                lineTo(cx + r * 0.9f * dir, cy + r * 0.2f)
+                close()
+            }
             canvas.drawPath(beak, paint)
 
             // 2. Tall Curved Dorsal Fin
-            val dorsal = Path()
-            dorsal.moveTo(cx - r * 0.2f * dir, cy - r * 0.4f)
-            dorsal.quadTo(cx - r * 0.6f * dir, cy - r * 0.95f, cx - r * 0.7f * dir, cy - r * 0.85f)
-            dorsal.quadTo(cx - r * 0.4f * dir, cy - r * 0.5f, cx + r * 0.2f * dir, cy - r * 0.4f)
-            dorsal.close()
+            val dorsal = drawPath3.apply {
+                reset()
+                moveTo(cx - r * 0.2f * dir, cy - r * 0.4f)
+                quadTo(cx - r * 0.6f * dir, cy - r * 0.95f, cx - r * 0.7f * dir, cy - r * 0.85f)
+                quadTo(cx - r * 0.4f * dir, cy - r * 0.5f, cx + r * 0.2f * dir, cy - r * 0.4f)
+                close()
+            }
             canvas.drawPath(dorsal, paint)
 
             // 3. Pec Flippers
-            val pec = Path()
-            pec.moveTo(cx + r * 0.15f * dir, cy + r * 0.2f)
-            pec.lineTo(cx - r * 0.25f * dir, cy + r * 0.7f)
-            pec.lineTo(cx - r * 0.35f * dir, cy + r * 0.3f)
-            pec.close()
+            val pec = drawPath4.apply {
+                reset()
+                moveTo(cx + r * 0.15f * dir, cy + r * 0.2f)
+                lineTo(cx - r * 0.25f * dir, cy + r * 0.7f)
+                lineTo(cx - r * 0.35f * dir, cy + r * 0.3f)
+                close()
+            }
             canvas.drawPath(pec, paint)
 
             // 4. Horizontal Flukes (Tail flips UP and DOWN)
-            val fluke = Path()
             val tx = cx - r * 1.1f * dir
             val ty = cy + tailYOffset
-            fluke.moveTo(tx, ty)
-            fluke.lineTo(tx - r * 0.4f * dir, ty - r * 0.5f)
-            fluke.lineTo(tx - r * 0.5f * dir, ty)
-            fluke.lineTo(tx - r * 0.4f * dir, ty + r * 0.5f)
-            fluke.close()
+            val fluke = drawPath5.apply {
+                reset()
+                moveTo(tx, ty)
+                lineTo(tx - r * 0.4f * dir, ty - r * 0.5f)
+                lineTo(tx - r * 0.5f * dir, ty)
+                lineTo(tx - r * 0.4f * dir, ty + r * 0.5f)
+                close()
+            }
             canvas.drawPath(fluke, paint)
 
             // Connect body to flukes
-            val stock = Path()
-            stock.moveTo(cx - r * 0.5f * dir, cy - r * 0.2f)
-            stock.quadTo(cx - r * 0.9f * dir, cy + tailYOffset * 0.5f, tx, ty)
-            stock.lineTo(tx, ty + r * 0.1f)
-            stock.quadTo(cx - r * 0.9f * dir, cy + r * 0.2f + tailYOffset * 0.5f, cx - r * 0.5f * dir, cy + r * 0.2f)
-            stock.close()
+            val stock = drawPath2.apply {
+                reset()
+                moveTo(cx - r * 0.5f * dir, cy - r * 0.2f)
+                quadTo(cx - r * 0.9f * dir, cy + tailYOffset * 0.5f, tx, ty)
+                lineTo(tx, ty + r * 0.1f)
+                quadTo(cx - r * 0.9f * dir, cy + r * 0.2f + tailYOffset * 0.5f, cx - r * 0.5f * dir, cy + r * 0.2f)
+                close()
+            }
             canvas.drawPath(stock, paint)
 
             // 5. Cute Eye with white highlight
@@ -1670,59 +1694,69 @@ class FrenzyView @JvmOverloads constructor(
 
             // 1. White underbelly and patches
             paint.color = Color.WHITE
-            canvas.drawOval(RectF(cx - r, cy, cx + r, cy + r * 0.5f), paint) // white belly
+            drawRectF.set(cx - r, cy, cx + r, cy + r * 0.5f)
+            canvas.drawOval(drawRectF, paint) // white belly
             // Eye patch
-            canvas.drawOval(RectF(cx + r * 0.25f * dir, cy - r * 0.35f, cx + r * 0.6f * dir, cy - r * 0.15f), paint)
+            drawRectF2.set(cx + r * 0.25f * dir, cy - r * 0.35f, cx + r * 0.6f * dir, cy - r * 0.15f)
+            canvas.drawOval(drawRectF2, paint)
 
             // 2. Main Jet-Black/Dark Body
             paint.color = color
+            drawRectF.set(cx - r, cy - r * 0.55f, cx + r, cy + r * 0.15f)
             if (mouthOpen) {
                 drawPath.reset()
                 val sweepAngle = 295f
                 val startAngle = if (facingRight) 32f else 212f
-                drawRectF.set(cx - r, cy - r * 0.55f, cx + r, cy + r * 0.15f)
                 drawPath.addArc(drawRectF, startAngle, sweepAngle)
                 drawPath.lineTo(cx, cy)
                 drawPath.close()
                 canvas.drawPath(drawPath, paint)
             } else {
-                canvas.drawOval(RectF(cx - r, cy - r * 0.55f, cx + r, cy + r * 0.15f), paint)
+                canvas.drawOval(drawRectF, paint)
             }
 
             // Head/Snout (Blunt and rounded)
-            val head = Path()
-            head.moveTo(cx + r * 0.5f * dir, cy - r * 0.45f)
-            head.quadTo(cx + r * 1.2f * dir, cy - r * 0.25f, cx + r * 1.1f * dir, cy + r * 0.1f)
-            head.lineTo(cx + r * 0.5f * dir, cy + r * 0.15f)
-            head.close()
+            val head = drawPath2.apply {
+                reset()
+                moveTo(cx + r * 0.5f * dir, cy - r * 0.45f)
+                quadTo(cx + r * 1.2f * dir, cy - r * 0.25f, cx + r * 1.1f * dir, cy + r * 0.1f)
+                lineTo(cx + r * 0.5f * dir, cy + r * 0.15f)
+                close()
+            }
             canvas.drawPath(head, paint)
 
             // 3. Massive Tall Dorsal Fin
-            val dorsal = Path()
-            dorsal.moveTo(cx - r * 0.2f * dir, cy - r * 0.4f)
-            dorsal.lineTo(cx - r * 0.5f * dir, cy - r * 1.2f) // Very tall!
-            dorsal.lineTo(cx + r * 0.2f * dir, cy - r * 0.4f)
-            dorsal.close()
+            val dorsal = drawPath3.apply {
+                reset()
+                moveTo(cx - r * 0.2f * dir, cy - r * 0.4f)
+                lineTo(cx - r * 0.5f * dir, cy - r * 1.2f) // Very tall!
+                lineTo(cx + r * 0.2f * dir, cy - r * 0.4f)
+                close()
+            }
             canvas.drawPath(dorsal, paint)
 
             // 4. Horizontal Fluke (Tail flips UP and DOWN)
-            val fluke = Path()
             val tx = cx - r * 1.0f * dir
             val ty = cy + tailYOffset
-            fluke.moveTo(tx, ty)
-            fluke.lineTo(tx - r * 0.4f * dir, ty - r * 0.6f)
-            fluke.lineTo(tx - r * 0.5f * dir, ty)
-            fluke.lineTo(tx - r * 0.4f * dir, ty + r * 0.6f)
-            fluke.close()
+            val fluke = drawPath4.apply {
+                reset()
+                moveTo(tx, ty)
+                lineTo(tx - r * 0.4f * dir, ty - r * 0.6f)
+                lineTo(tx - r * 0.5f * dir, ty)
+                lineTo(tx - r * 0.4f * dir, ty + r * 0.6f)
+                close()
+            }
             canvas.drawPath(fluke, paint)
 
             // Connect body to fluke
-            val stock = Path()
-            stock.moveTo(cx - r * 0.5f * dir, cy - r * 0.2f)
-            stock.quadTo(cx - r * 0.8f * dir, cy + tailYOffset * 0.5f, tx, ty)
-            stock.lineTo(tx, ty + r * 0.1f)
-            stock.quadTo(cx - r * 0.8f * dir, cy + r * 0.2f + tailYOffset * 0.5f, cx - r * 0.5f * dir, cy + r * 0.2f)
-            stock.close()
+            val stock = drawPath5.apply {
+                reset()
+                moveTo(cx - r * 0.5f * dir, cy - r * 0.2f)
+                quadTo(cx - r * 0.8f * dir, cy + tailYOffset * 0.5f, tx, ty)
+                lineTo(tx, ty + r * 0.1f)
+                quadTo(cx - r * 0.8f * dir, cy + r * 0.2f + tailYOffset * 0.5f, cx - r * 0.5f * dir, cy + r * 0.2f)
+                close()
+            }
             canvas.drawPath(stock, paint)
 
             // 5. Eye (drawn in black with highlight)
@@ -1733,46 +1767,50 @@ class FrenzyView @JvmOverloads constructor(
         } else {
             // Standard sizes 1, 2, 3
             // Tail Fin with smooth swim wagging!
-            val tailPath = Path()
             val tailWag = sin(cycle.toDouble() * 0.8).toFloat() * r * 0.25f
-            if (size == 1) { // Guppy fan tail
-                tailPath.moveTo(cx - r * 0.8f * dir, cy)
-                tailPath.quadTo(cx - r * 1.4f * dir + tailWag * dir, cy - r * 0.9f, cx - r * 1.6f * dir + tailWag * dir, cy - r * 0.5f)
-                tailPath.lineTo(cx - r * 1.6f * dir + tailWag * dir, cy + r * 0.5f)
-                tailPath.quadTo(cx - r * 1.4f * dir + tailWag * dir, cy + r * 0.9f, cx - r * 0.8f * dir, cy)
-            } else { // Standard tail
-                tailPath.moveTo(cx - r * 0.8f * dir, cy)
-                tailPath.lineTo(cx - r * 1.5f * dir + tailWag * dir, cy - r * 0.6f)
-                tailPath.lineTo(cx - r * 1.3f * dir + tailWag * dir, cy)
-                tailPath.lineTo(cx - r * 1.5f * dir + tailWag * dir, cy + r * 0.6f)
+            val tailPath = drawPath2.apply {
+                reset()
+                if (size == 1) { // Guppy fan tail
+                    moveTo(cx - r * 0.8f * dir, cy)
+                    quadTo(cx - r * 1.4f * dir + tailWag * dir, cy - r * 0.9f, cx - r * 1.6f * dir + tailWag * dir, cy - r * 0.5f)
+                    lineTo(cx - r * 1.6f * dir + tailWag * dir, cy + r * 0.5f)
+                    quadTo(cx - r * 1.4f * dir + tailWag * dir, cy + r * 0.9f, cx - r * 0.8f * dir, cy)
+                } else { // Standard tail
+                    moveTo(cx - r * 0.8f * dir, cy)
+                    lineTo(cx - r * 1.5f * dir + tailWag * dir, cy - r * 0.6f)
+                    lineTo(cx - r * 1.3f * dir + tailWag * dir, cy)
+                    lineTo(cx - r * 1.5f * dir + tailWag * dir, cy + r * 0.6f)
+                }
+                close()
             }
-            tailPath.close()
             canvas.drawPath(tailPath, paint)
 
             // Body Shape
             if (size == 2) { // Angelfish (Tall vertical diamond)
-                val diamond = Path()
-                diamond.moveTo(cx, cy - r * 1.3f)
-                if (mouthOpen) {
-                    if (facingRight) {
-                        diamond.lineTo(cx + r * 0.5f, cy - r * 0.3f)
-                        diamond.lineTo(cx + r * 0.1f, cy)
-                        diamond.lineTo(cx + r * 0.5f, cy + r * 0.3f)
+                val diamond = drawPath3.apply {
+                    reset()
+                    moveTo(cx, cy - r * 1.3f)
+                    if (mouthOpen) {
+                        if (facingRight) {
+                            lineTo(cx + r * 0.5f, cy - r * 0.3f)
+                            lineTo(cx + r * 0.1f, cy)
+                            lineTo(cx + r * 0.5f, cy + r * 0.3f)
+                        } else {
+                            lineTo(cx + r * 0.9f * dir, cy)
+                        }
                     } else {
-                        diamond.lineTo(cx + r * 0.9f * dir, cy)
+                        lineTo(cx + r * 0.9f * dir, cy)
                     }
-                } else {
-                    diamond.lineTo(cx + r * 0.9f * dir, cy)
+                    lineTo(cx, cy + r * 1.3f)
+                    if (mouthOpen && !facingRight) {
+                        lineTo(cx - r * 0.5f, cy + r * 0.3f)
+                        lineTo(cx - r * 0.1f, cy)
+                        lineTo(cx - r * 0.5f, cy - r * 0.3f)
+                    } else {
+                        lineTo(cx - r * 0.9f * dir, cy)
+                    }
+                    close()
                 }
-                diamond.lineTo(cx, cy + r * 1.3f)
-                if (mouthOpen && !facingRight) {
-                    diamond.lineTo(cx - r * 0.5f, cy + r * 0.3f)
-                    diamond.lineTo(cx - r * 0.1f, cy)
-                    diamond.lineTo(cx - r * 0.5f, cy - r * 0.3f)
-                } else {
-                    diamond.lineTo(cx - r * 0.9f * dir, cy)
-                }
-                diamond.close()
                 canvas.drawPath(diamond, paint)
             } else { // Size 1 (Guppy) & 3 (Lionfish) standard oval body
                 drawRectF.set(cx - r, cy - r * 0.62f, cx + r, cy + r * 0.62f)
@@ -1871,10 +1909,12 @@ class FrenzyView @JvmOverloads constructor(
         when (fish.speciesIndex) {
             5 -> { // Shrimp (Tiny pink darting curved shell)
                 canvas.drawCircle(cx, cy, 10f, paint)
-                val tailP = Path()
-                tailP.moveTo(cx, cy)
-                tailP.quadTo(cx - 15f * dir, cy - 8f, cx - 22f * dir, cy + 12f)
-                tailP.lineTo(cx - 14f * dir, cy + 4f)
+                val tailP = drawPath.apply {
+                    reset()
+                    moveTo(cx, cy)
+                    quadTo(cx - 15f * dir, cy - 8f, cx - 22f * dir, cy + 12f)
+                    lineTo(cx - 14f * dir, cy + 4f)
+                }
                 canvas.drawPath(tailP, paint)
                 // Feelers
                 paint.color = Color.WHITE
@@ -1883,18 +1923,20 @@ class FrenzyView @JvmOverloads constructor(
                 canvas.drawLine(cx, cy, cx + 20f * dir, cy + 5f, paint)
             }
             6 -> { // Starfish (Red 5-pointed star)
-                val star = Path()
-                star.moveTo(cx, cy - r * 1.2f)
-                star.lineTo(cx + r * 0.3f, cy - r * 0.3f)
-                star.lineTo(cx + r * 1.2f, cy - r * 0.3f)
-                star.lineTo(cx + r * 0.5f, cy + r * 0.3f)
-                star.lineTo(cx + r * 0.8f, cy + r * 1.2f)
-                star.lineTo(cx, cy + r * 0.6f)
-                star.lineTo(cx - r * 0.8f, cy + r * 1.2f)
-                star.lineTo(cx - r * 0.5f, cy + r * 0.3f)
-                star.lineTo(cx - r * 1.2f, cy - r * 0.3f)
-                star.lineTo(cx - r * 0.3f, cy - r * 0.3f)
-                star.close()
+                val star = drawPath.apply {
+                    reset()
+                    moveTo(cx, cy - r * 1.2f)
+                    lineTo(cx + r * 0.3f, cy - r * 0.3f)
+                    lineTo(cx + r * 1.2f, cy - r * 0.3f)
+                    lineTo(cx + r * 0.5f, cy + r * 0.3f)
+                    lineTo(cx + r * 0.8f, cy + r * 1.2f)
+                    lineTo(cx, cy + r * 0.6f)
+                    lineTo(cx - r * 0.8f, cy + r * 1.2f)
+                    lineTo(cx - r * 0.5f, cy + r * 0.3f)
+                    lineTo(cx - r * 1.2f, cy - r * 0.3f)
+                    lineTo(cx - r * 0.3f, cy - r * 0.3f)
+                    close()
+                }
                 canvas.drawPath(star, paint)
             }
             7 -> { // Hermit Crab (Brown shell + red claws walking on floor)
@@ -1917,56 +1959,62 @@ class FrenzyView @JvmOverloads constructor(
             }
             8 -> { // Clam with Pearl (Static shell opening/closing)
                 paint.color = Color.parseColor("#BCAAA4")
-                val bottomShell = RectF(cx - r * 1.2f, cy - r * 0.3f, cx + r * 1.2f, cy + r * 0.9f)
-                canvas.drawOval(bottomShell, paint)
+                drawRectF.set(cx - r * 1.2f, cy - r * 0.3f, cx + r * 1.2f, cy + r * 0.9f)
+                canvas.drawOval(drawRectF, paint)
 
                 if (fish.clamsOpen) {
                     canvas.save()
                     canvas.rotate(-35f * dir, cx - r * 1.2f * dir, cy)
-                    val topShell = RectF(cx - r * 1.2f, cy - r * 1.2f, cx + r * 1.2f, cy + r * 0.1f)
-                    canvas.drawOval(topShell, paint)
+                    drawRectF2.set(cx - r * 1.2f, cy - r * 1.2f, cx + r * 1.2f, cy + r * 0.1f)
+                    canvas.drawOval(drawRectF2, paint)
                     canvas.restore()
 
                     // Glowing pearl
                     paint.color = Color.parseColor("#FFF9C4")
                     canvas.drawCircle(cx, cy - r * 0.1f, r * 0.4f, paint)
                 } else {
-                    val topShell = RectF(cx - r * 1.2f, cy - r * 0.7f, cx + r * 1.2f, cy + r * 0.3f)
-                    canvas.drawOval(topShell, paint)
+                    drawRectF2.set(cx - r * 1.2f, cy - r * 0.7f, cx + r * 1.2f, cy + r * 0.3f)
+                    canvas.drawOval(drawRectF2, paint)
                 }
             }
             12 -> { // Seahorse (Curled coral body bobbing)
-                val seahorse = Path()
-                // Head
-                seahorse.moveTo(cx, cy - r * 1.2f)
-                seahorse.quadTo(cx + r * 0.8f * dir, cy - r * 1.2f, cx + r * 0.9f * dir, cy - r * 0.7f)
-                seahorse.lineTo(cx + r * 0.3f * dir, cy - r * 0.5f)
-                // Neck & curved belly
-                seahorse.quadTo(cx - r * 0.4f * dir, cy, cx + r * 0.2f * dir, cy + r * 0.7f)
-                // Curled tail
-                seahorse.quadTo(cx - r * 0.6f * dir, cy + r * 1.3f, cx - r * 0.2f * dir, cy + r * 0.9f)
-                seahorse.close()
+                val seahorse = drawPath.apply {
+                    reset()
+                    // Head
+                    moveTo(cx, cy - r * 1.2f)
+                    quadTo(cx + r * 0.8f * dir, cy - r * 1.2f, cx + r * 0.9f * dir, cy - r * 0.7f)
+                    lineTo(cx + r * 0.3f * dir, cy - r * 0.5f)
+                    // Neck & curved belly
+                    quadTo(cx - r * 0.4f * dir, cy, cx + r * 0.2f * dir, cy + r * 0.7f)
+                    // Curled tail
+                    quadTo(cx - r * 0.6f * dir, cy + r * 1.3f, cx - r * 0.2f * dir, cy + r * 0.9f)
+                    close()
+                }
                 canvas.drawPath(seahorse, paint)
 
                 // Back fin
                 paint.color = Color.parseColor("#FFF59D")
-                val backFin = Path()
-                backFin.moveTo(cx - r * 0.2f * dir, cy - r * 0.2f)
-                backFin.lineTo(cx - r * 0.7f * dir, cy)
-                backFin.lineTo(cx - r * 0.2f * dir, cy + r * 0.4f)
-                backFin.close()
+                val backFin = drawPath2.apply {
+                    reset()
+                    moveTo(cx - r * 0.2f * dir, cy - r * 0.2f)
+                    lineTo(cx - r * 0.7f * dir, cy)
+                    lineTo(cx - r * 0.2f * dir, cy + r * 0.4f)
+                    close()
+                }
                 canvas.drawPath(backFin, paint)
             }
             16, 25 -> { // Squid / Giant Squid (pulsing arrow-like head + swaying tentacles)
                 val wave = sin(fish.swimCycle.toDouble()).toFloat()
                 
                 // Draw arrow head (mantle/fins)
-                val mantle = Path()
-                mantle.moveTo(cx + r * dir, cy)
-                mantle.lineTo(cx - r * 0.4f * dir, cy - r * 0.7f)
-                mantle.lineTo(cx - r * 1.3f * dir, cy) // tip pointing backwards
-                mantle.lineTo(cx - r * 0.4f * dir, cy + r * 0.7f)
-                mantle.close()
+                val mantle = drawPath.apply {
+                    reset()
+                    moveTo(cx + r * dir, cy)
+                    lineTo(cx - r * 0.4f * dir, cy - r * 0.7f)
+                    lineTo(cx - r * 1.3f * dir, cy) // tip pointing backwards
+                    lineTo(cx - r * 0.4f * dir, cy + r * 0.7f)
+                    close()
+                }
                 canvas.drawPath(mantle, paint)
                 
                 // Swaying tentacles trailing behind
@@ -1976,9 +2024,11 @@ class FrenzyView @JvmOverloads constructor(
                 val sway = wave * r * 0.25f
                 for (i in -2..2) {
                     val ty = cy + i * (r * 0.25f)
-                    val path = Path()
-                    path.moveTo(cx - r * 0.3f * dir, ty)
-                    path.quadTo(cx - r * dir + sway, ty + wave, cx - r * 1.7f * dir, ty + sway * 0.6f)
+                    val path = drawPath2.apply {
+                        reset()
+                        moveTo(cx - r * 0.3f * dir, ty)
+                        quadTo(cx - r * dir + sway, ty + wave, cx - r * 1.7f * dir, ty + sway * 0.6f)
+                    }
                     canvas.drawPath(path, paint)
                 }
             }
@@ -1997,9 +2047,11 @@ class FrenzyView @JvmOverloads constructor(
                     val jetWave = sin(fish.swimCycle.toDouble() * 1.5).toFloat() * r * 0.15f
                     for (i in -3..3) {
                         val ty = cy + i * (r * 0.12f)
-                        val path = Path()
-                        path.moveTo(cx - r * 0.3f * dir, ty)
-                        path.quadTo(cx - r * 0.9f * dir + jetWave, ty + jetWave, cx - r * 1.6f * dir, ty)
+                        val path = drawPath.apply {
+                            reset()
+                            moveTo(cx - r * 0.3f * dir, ty)
+                            quadTo(cx - r * 0.9f * dir + jetWave, ty + jetWave, cx - r * 1.6f * dir, ty)
+                        }
                         canvas.drawPath(path, paint)
                     }
                 } else {
@@ -2007,9 +2059,11 @@ class FrenzyView @JvmOverloads constructor(
                     val crawlWave = wave * r * 0.2f
                     for (i in -3..3) {
                         val tx = cx + i * (r * 0.22f)
-                        val path = Path()
-                        path.moveTo(tx, cy)
-                        path.quadTo(tx + crawlWave, cy + r * 0.4f, tx + crawlWave * 1.6f, cy + r * 0.8f)
+                        val path = drawPath.apply {
+                            reset()
+                            moveTo(tx, cy)
+                            quadTo(tx + crawlWave, cy + r * 0.4f, tx + crawlWave * 1.6f, cy + r * 0.8f)
+                        }
                         canvas.drawPath(path, paint)
                     }
                 }
@@ -2020,11 +2074,13 @@ class FrenzyView @JvmOverloads constructor(
                 for (i in 0..3) {
                     val tx = cx - i * (r * 0.32f) * dir
                     val tr = r * (1f - i * 0.15f)
-                    canvas.drawOval(RectF(tx - tr * 0.5f, cy - tr * 0.4f, tx + tr * 0.5f, cy + tr * 0.4f), paint)
+                    drawRectF.set(tx - tr * 0.5f, cy - tr * 0.4f, tx + tr * 0.5f, cy + tr * 0.4f)
+                    canvas.drawOval(drawRectF, paint)
                 }
                 
                 // Main carapace body
-                canvas.drawOval(RectF(cx - r * 0.4f, cy - r * 0.5f, cx + r * 0.6f, cy + r * 0.5f), paint)
+                drawRectF.set(cx - r * 0.4f, cy - r * 0.5f, cx + r * 0.6f, cy + r * 0.5f)
+                canvas.drawOval(drawRectF, paint)
                 
                 // Walking legs
                 paint.strokeWidth = 3f
@@ -2039,14 +2095,17 @@ class FrenzyView @JvmOverloads constructor(
                 paint.style = Paint.Style.FILL
                 val clawOffset = r * 0.4f
                 // Top claw
-                canvas.drawOval(RectF(cx + r * 0.7f * dir - r * 0.3f, cy - clawOffset - r * 0.25f, cx + r * 0.7f * dir + r * 0.3f, cy - clawOffset + r * 0.25f), paint)
+                drawRectF.set(cx + r * 0.7f * dir - r * 0.3f, cy - clawOffset - r * 0.25f, cx + r * 0.7f * dir + r * 0.3f, cy - clawOffset + r * 0.25f)
+                canvas.drawOval(drawRectF, paint)
                 // Bottom claw
-                canvas.drawOval(RectF(cx + r * 0.7f * dir - r * 0.3f, cy + clawOffset - r * 0.25f, cx + r * 0.7f * dir + r * 0.3f, cy + clawOffset + r * 0.25f), paint)
+                drawRectF2.set(cx + r * 0.7f * dir - r * 0.3f, cy + clawOffset - r * 0.25f, cx + r * 0.7f * dir + r * 0.3f, cy + clawOffset + r * 0.25f)
+                canvas.drawOval(drawRectF2, paint)
             }
             29 -> { // Sea Snail (Coiled spiral shell + slow foot)
                 // Crawling Foot (flesh)
                 paint.color = Color.parseColor("#FFF9C4") // Light pale yellow
-                canvas.drawOval(RectF(cx - r, cy, cx + r, cy + r * 0.4f), paint)
+                drawRectF.set(cx - r, cy, cx + r, cy + r * 0.4f)
+                canvas.drawOval(drawRectF, paint)
                 // Eye feelers
                 paint.strokeWidth = 2.5f
                 paint.style = Paint.Style.STROKE
@@ -2080,11 +2139,13 @@ class FrenzyView @JvmOverloads constructor(
                 val bodyScaleX = if (fish.isStartled && now - fish.startleTime < 2500L) 0.7f else 1.1f
                 val bodyScaleY = if (fish.isStartled && now - fish.startleTime < 2500L) 0.6f else 0.4f
                 // Elongated body (contracted if startled)
-                canvas.drawOval(RectF(cx - r * bodyScaleX, cy - r * 0.3f, cx + r * bodyScaleX, cy + r * bodyScaleY), paint)
+                drawRectF.set(cx - r * bodyScaleX, cy - r * 0.3f, cx + r * bodyScaleX, cy + r * bodyScaleY)
+                canvas.drawOval(drawRectF, paint)
                 
                 // Rhinophores (bright pink sensory horns)
                 paint.color = Color.parseColor("#FF1744")
-                canvas.drawRect(RectF(cx + r * 0.6f * bodyScaleX * dir - 2f, cy - r * 0.6f, cx + r * 0.6f * bodyScaleX * dir + 2f, cy), paint)
+                drawRectF2.set(cx + r * 0.6f * bodyScaleX * dir - 2f, cy - r * 0.6f, cx + r * 0.6f * bodyScaleX * dir + 2f, cy)
+                canvas.drawRect(drawRectF2, paint)
                 canvas.drawCircle(cx + r * 0.6f * bodyScaleX * dir, cy - r * 0.6f, 4f, paint)
                 
                 // Gill plume (fluffy feather cluster at back)
@@ -2102,11 +2163,14 @@ class FrenzyView @JvmOverloads constructor(
                     paint.style = Paint.Style.STROKE
                     paint.color = Color.parseColor("#546E7A")
                     paint.strokeWidth = 3f
-                    canvas.drawArc(RectF(cx - r * 0.7f, cy - r * 0.7f, cx + r * 0.7f, cy + r * 0.7f), 0f, 360f, false, paint)
-                    canvas.drawArc(RectF(cx - r * 0.4f, cy - r * 0.4f, cx + r * 0.4f, cy + r * 0.4f), 0f, 360f, false, paint)
+                    drawRectF.set(cx - r * 0.7f, cy - r * 0.7f, cx + r * 0.7f, cy + r * 0.7f)
+                    canvas.drawArc(drawRectF, 0f, 360f, false, paint)
+                    drawRectF2.set(cx - r * 0.4f, cy - r * 0.4f, cx + r * 0.4f, cy + r * 0.4f)
+                    canvas.drawArc(drawRectF2, 0f, 360f, false, paint)
                 } else {
                     // Normal crawling segmented shell
-                    canvas.drawRoundRect(RectF(cx - r * 1.1f, cy - r * 0.5f, cx + r * 1.1f, cy + r * 0.5f), r * 0.2f, r * 0.2f, paint)
+                    drawRectF.set(cx - r * 1.1f, cy - r * 0.5f, cx + r * 1.1f, cy + r * 0.5f)
+                    canvas.drawRoundRect(drawRectF, r * 0.2f, r * 0.2f, paint)
                     // Segments
                     paint.color = Color.parseColor("#546E7A")
                     paint.strokeWidth = 3f
@@ -2127,16 +2191,18 @@ class FrenzyView @JvmOverloads constructor(
                 paint.color = Color.HSVToColor(floatArrayOf(hue, 0.9f, 1f))
                 
                 // Flowing body
-                val bodyRect = RectF(cx - r * 1.1f, cy - r * 0.6f, cx + r * 1.1f, cy + r * 0.6f)
-                canvas.drawOval(bodyRect, paint)
+                drawRectF.set(cx - r * 1.1f, cy - r * 0.6f, cx + r * 1.1f, cy + r * 0.6f)
+                canvas.drawOval(drawRectF, paint)
                 
                 // Flowing large tail fin
-                val tail = Path()
-                tail.moveTo(cx - r * dir, cy)
-                tail.quadTo(cx - r * 1.8f * dir, cy - r * 0.9f, cx - r * 2.2f * dir, cy - r * 0.7f)
-                tail.lineTo(cx - r * 2.2f * dir, cy + r * 0.7f)
-                tail.quadTo(cx - r * 1.8f * dir, cy + r * 0.9f, cx - r * dir, cy)
-                tail.close()
+                val tail = drawPath.apply {
+                    reset()
+                    moveTo(cx - r * dir, cy)
+                    quadTo(cx - r * 1.8f * dir, cy - r * 0.9f, cx - r * 2.2f * dir, cy - r * 0.7f)
+                    lineTo(cx - r * 2.2f * dir, cy + r * 0.7f)
+                    quadTo(cx - r * 1.8f * dir, cy + r * 0.9f, cx - r * dir, cy)
+                    close()
+                }
                 canvas.drawPath(tail, paint)
                 
                 // Sparkle particles
@@ -2177,11 +2243,13 @@ class FrenzyView @JvmOverloads constructor(
                     
                     // Small tiny tail
                     paint.color = fish.color
-                    val tailP = Path()
-                    tailP.moveTo(cx - inflatedR * dir, cy)
-                    tailP.lineTo(cx - (inflatedR + 14f) * dir, cy - 8f)
-                    tailP.lineTo(cx - (inflatedR + 14f) * dir, cy + 8f)
-                    tailP.close()
+                    val tailP = drawPath.apply {
+                        reset()
+                        moveTo(cx - inflatedR * dir, cy)
+                        lineTo(cx - (inflatedR + 14f) * dir, cy - 8f)
+                        lineTo(cx - (inflatedR + 14f) * dir, cy + 8f)
+                        close()
+                    }
                     canvas.drawPath(tailP, paint)
                 } else {
                     // DEFLATED / NORMAL STATE
@@ -2207,11 +2275,13 @@ class FrenzyView @JvmOverloads constructor(
                     canvas.drawOval(drawRectF, paint)
                     
                     // Tail
-                    val tailP = Path()
-                    tailP.moveTo(cx - deflatedR * dir, cy)
-                    tailP.lineTo(cx - deflatedR * 1.5f * dir, cy - deflatedR * 0.4f)
-                    tailP.lineTo(cx - deflatedR * 1.5f * dir, cy + deflatedR * 0.4f)
-                    tailP.close()
+                    val tailP = drawPath.apply {
+                        reset()
+                        moveTo(cx - deflatedR * dir, cy)
+                        lineTo(cx - deflatedR * 1.5f * dir, cy - deflatedR * 0.4f)
+                        lineTo(cx - deflatedR * 1.5f * dir, cy + deflatedR * 0.4f)
+                        close()
+                    }
                     canvas.drawPath(tailP, paint)
                     
                     // Normal eye
@@ -2226,60 +2296,73 @@ class FrenzyView @JvmOverloads constructor(
                 
                 // 1. Sleek Torpedo Body
                 paint.color = fish.color
+                drawRectF.set(cx - r * 1.1f, cy - r * 0.45f, cx + r * 1.1f, cy + r * 0.45f)
                 if (mouthOpen) {
-                    val path = Path()
                     val sweepAngle = 295f
                     val startAngle = if (facingRight) 32f else 212f
-                    path.addArc(RectF(cx - r * 1.1f, cy - r * 0.45f, cx + r * 1.1f, cy + r * 0.45f), startAngle, sweepAngle)
-                    path.lineTo(cx, cy)
-                    path.close()
+                    val path = drawPath.apply {
+                        reset()
+                        addArc(drawRectF, startAngle, sweepAngle)
+                        lineTo(cx, cy)
+                        close()
+                    }
                     canvas.drawPath(path, paint)
                 } else {
-                    canvas.drawOval(RectF(cx - r * 1.1f, cy - r * 0.45f, cx + r * 1.1f, cy + r * 0.45f), paint)
+                    canvas.drawOval(drawRectF, paint)
                 }
 
                 // Rostrum Snout (Beak)
-                val beak = Path()
-                beak.moveTo(cx + r * 1.0f * dir, cy - r * 0.1f)
-                beak.lineTo(cx + r * 1.5f * dir, cy + r * 0.05f)
-                beak.lineTo(cx + r * 0.9f * dir, cy + r * 0.2f)
-                beak.close()
+                val beak = drawPath2.apply {
+                    reset()
+                    moveTo(cx + r * 1.0f * dir, cy - r * 0.1f)
+                    lineTo(cx + r * 1.5f * dir, cy + r * 0.05f)
+                    lineTo(cx + r * 0.9f * dir, cy + r * 0.2f)
+                    close()
+                }
                 canvas.drawPath(beak, paint)
 
                 // 2. Tall Curved Dorsal Fin
-                val dorsal = Path()
-                dorsal.moveTo(cx - r * 0.2f * dir, cy - r * 0.4f)
-                dorsal.quadTo(cx - r * 0.6f * dir, cy - r * 0.95f, cx - r * 0.7f * dir, cy - r * 0.85f)
-                dorsal.quadTo(cx - r * 0.4f * dir, cy - r * 0.5f, cx + r * 0.2f * dir, cy - r * 0.4f)
-                dorsal.close()
+                val dorsal = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.2f * dir, cy - r * 0.4f)
+                    quadTo(cx - r * 0.6f * dir, cy - r * 0.95f, cx - r * 0.7f * dir, cy - r * 0.85f)
+                    quadTo(cx - r * 0.4f * dir, cy - r * 0.5f, cx + r * 0.2f * dir, cy - r * 0.4f)
+                    close()
+                }
                 canvas.drawPath(dorsal, paint)
 
                 // 3. Pec Flippers
-                val pec = Path()
-                pec.moveTo(cx + r * 0.15f * dir, cy + r * 0.2f)
-                pec.lineTo(cx - r * 0.25f * dir, cy + r * 0.7f)
-                pec.lineTo(cx - r * 0.35f * dir, cy + r * 0.3f)
-                pec.close()
+                val pec = drawPath4.apply {
+                    reset()
+                    moveTo(cx + r * 0.15f * dir, cy + r * 0.2f)
+                    lineTo(cx - r * 0.25f * dir, cy + r * 0.7f)
+                    lineTo(cx - r * 0.35f * dir, cy + r * 0.3f)
+                    close()
+                }
                 canvas.drawPath(pec, paint)
 
                 // 4. Horizontal Flukes (Tail flips UP and DOWN)
-                val fluke = Path()
                 val tx = cx - r * 1.1f * dir
                 val ty = cy + tailYOffset
-                fluke.moveTo(tx, ty)
-                fluke.lineTo(tx - r * 0.4f * dir, ty - r * 0.5f)
-                fluke.lineTo(tx - r * 0.5f * dir, ty)
-                fluke.lineTo(tx - r * 0.4f * dir, ty + r * 0.5f)
-                fluke.close()
+                val fluke = drawPath5.apply {
+                    reset()
+                    moveTo(tx, ty)
+                    lineTo(tx - r * 0.4f * dir, ty - r * 0.5f)
+                    lineTo(tx - r * 0.5f * dir, ty)
+                    lineTo(tx - r * 0.4f * dir, ty + r * 0.5f)
+                    close()
+                }
                 canvas.drawPath(fluke, paint)
 
                 // Connect body to flukes
-                val stock = Path()
-                stock.moveTo(cx - r * 0.5f * dir, cy - r * 0.2f)
-                stock.quadTo(cx - r * 0.9f * dir, cy + tailYOffset * 0.5f, tx, ty)
-                stock.lineTo(tx, ty + r * 0.1f)
-                stock.quadTo(cx - r * 0.9f * dir, cy + r * 0.2f + tailYOffset * 0.5f, cx - r * 0.5f * dir, cy + r * 0.2f)
-                stock.close()
+                val stock = drawPath2.apply {
+                    reset()
+                    moveTo(cx - r * 0.5f * dir, cy - r * 0.2f)
+                    quadTo(cx - r * 0.9f * dir, cy + tailYOffset * 0.5f, tx, ty)
+                    lineTo(tx, ty + r * 0.1f)
+                    quadTo(cx - r * 0.9f * dir, cy + r * 0.2f + tailYOffset * 0.5f, cx - r * 0.5f * dir, cy + r * 0.2f)
+                    close()
+                }
                 canvas.drawPath(stock, paint)
 
                 // 5. Cute Eye with white highlight
@@ -2297,37 +2380,44 @@ class FrenzyView @JvmOverloads constructor(
                 canvas.save()
                 canvas.translate(cx + r * 0.4f * dir, cy - r * 0.3f)
                 canvas.rotate(flipperAngle * dir)
-                canvas.drawOval(RectF(-r * 0.7f, -r * 0.2f, r * 0.7f, r * 0.2f), paint)
+                drawRectF.set(-r * 0.7f, -r * 0.2f, r * 0.7f, r * 0.2f)
+                canvas.drawOval(drawRectF, paint)
                 canvas.restore()
 
                 // Back Flipper
                 canvas.save()
                 canvas.translate(cx - r * 0.6f * dir, cy + r * 0.3f)
                 canvas.rotate(-flipperAngle * dir)
-                canvas.drawOval(RectF(-r * 0.5f, -r * 0.15f, r * 0.5f, r * 0.15f), paint)
+                drawRectF.set(-r * 0.5f, -r * 0.15f, r * 0.5f, r * 0.15f)
+                canvas.drawOval(drawRectF, paint)
                 canvas.restore()
 
                 // Shell
                 paint.color = fish.color
                 paint.style = Paint.Style.FILL
-                canvas.drawOval(RectF(cx - r, cy - r * 0.6f, cx + r, cy + r * 0.6f), paint)
+                drawRectF.set(cx - r, cy - r * 0.6f, cx + r, cy + r * 0.6f)
+                canvas.drawOval(drawRectF, paint)
 
                 // Shell patterns
                 paint.color = Color.parseColor("#388E3C")
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = r * 0.1f
-                canvas.drawOval(RectF(cx - r * 0.7f, cy - r * 0.4f, cx + r * 0.7f, cy + r * 0.4f), paint)
+                drawRectF.set(cx - r * 0.7f, cy - r * 0.4f, cx + r * 0.7f, cy + r * 0.4f)
+                canvas.drawOval(drawRectF, paint)
 
                 // Head
                 paint.color = Color.parseColor("#4CAF50")
                 paint.style = Paint.Style.FILL
                 if (mouthOpen) {
-                    val path = Path()
                     val sweepAngle = 295f
                     val startAngle = if (facingRight) 32f else 212f
-                    path.addArc(RectF(cx + r * 1.1f * dir - r * 0.3f, cy - r * 0.1f - r * 0.3f, cx + r * 1.1f * dir + r * 0.3f, cy - r * 0.1f + r * 0.3f), startAngle, sweepAngle)
-                    path.lineTo(cx + r * 1.1f * dir, cy - r * 0.1f)
-                    path.close()
+                    drawRectF.set(cx + r * 1.1f * dir - r * 0.3f, cy - r * 0.1f - r * 0.3f, cx + r * 1.1f * dir + r * 0.3f, cy - r * 0.1f + r * 0.3f)
+                    val path = drawPath.apply {
+                        reset()
+                        addArc(drawRectF, startAngle, sweepAngle)
+                        lineTo(cx + r * 1.1f * dir, cy - r * 0.1f)
+                        close()
+                    }
                     canvas.drawPath(path, paint)
                 } else {
                     canvas.drawCircle(cx + r * 1.1f * dir, cy - r * 0.1f, r * 0.3f, paint)
@@ -2340,28 +2430,30 @@ class FrenzyView @JvmOverloads constructor(
                 canvas.drawCircle(cx + r * 1.2f * dir, cy - r * 0.17f, r * 0.02f, paint)
             }
             20 -> { // Stingray (Grey diamond body gliding + thin tail)
-                val rayPath = Path()
-                if (mouthOpen) {
-                    if (facingRight) {
-                        rayPath.moveTo(cx + r * 0.5f, cy - r * 0.2f)
-                        rayPath.lineTo(cx + r * 0.1f, cy)
-                        rayPath.lineTo(cx + r * 0.5f, cy + r * 0.2f)
+                val rayPath = drawPath.apply {
+                    reset()
+                    if (mouthOpen) {
+                        if (facingRight) {
+                            moveTo(cx + r * 0.5f, cy - r * 0.2f)
+                            lineTo(cx + r * 0.1f, cy)
+                            lineTo(cx + r * 0.5f, cy + r * 0.2f)
+                        } else {
+                            moveTo(cx + r * dir, cy)
+                        }
                     } else {
-                        rayPath.moveTo(cx + r * dir, cy)
+                        moveTo(cx + r * dir, cy)
                     }
-                } else {
-                    rayPath.moveTo(cx + r * dir, cy)
+                    lineTo(cx, cy - r * 0.8f)
+                    if (mouthOpen && !facingRight) {
+                        lineTo(cx - r * 0.5f, cy - r * 0.2f)
+                        lineTo(cx - r * 0.1f, cy)
+                        lineTo(cx - r * 0.5f, cy + r * 0.2f)
+                    } else {
+                        lineTo(cx - r * dir, cy)
+                    }
+                    lineTo(cx, cy + r * 0.8f)
+                    close()
                 }
-                rayPath.lineTo(cx, cy - r * 0.8f)
-                if (mouthOpen && !facingRight) {
-                    rayPath.lineTo(cx - r * 0.5f, cy - r * 0.2f)
-                    rayPath.lineTo(cx - r * 0.1f, cy)
-                    rayPath.lineTo(cx - r * 0.5f, cy + r * 0.2f)
-                } else {
-                    rayPath.lineTo(cx - r * dir, cy)
-                }
-                rayPath.lineTo(cx, cy + r * 0.8f)
-                rayPath.close()
                 canvas.drawPath(rayPath, paint)
                 // Whip tail
                 paint.strokeWidth = 3f
@@ -2372,59 +2464,72 @@ class FrenzyView @JvmOverloads constructor(
             21 -> { // Swordfish (Silver sleek + long sword beak)
                 // Sword beak
                 paint.color = Color.parseColor("#78909C")
-                val sword = Path()
-                sword.moveTo(cx + r * 0.8f * dir, cy)
-                sword.lineTo(cx + r * 1.9f * dir, cy)
-                sword.lineTo(cx + r * 0.7f * dir, cy + r * 0.1f)
-                sword.close()
+                val sword = drawPath.apply {
+                    reset()
+                    moveTo(cx + r * 0.8f * dir, cy)
+                    lineTo(cx + r * 1.9f * dir, cy)
+                    lineTo(cx + r * 0.7f * dir, cy + r * 0.1f)
+                    close()
+                }
                 canvas.drawPath(sword, paint)
 
                 // Sleek body
                 paint.color = fish.color
+                drawRectF.set(cx - r, cy - r * 0.4f, cx + r, cy + r * 0.4f)
                 if (mouthOpen) {
-                    val path = Path()
                     val sweepAngle = 295f
                     val startAngle = if (facingRight) 32f else 212f
-                    path.addArc(RectF(cx - r, cy - r * 0.4f, cx + r, cy + r * 0.4f), startAngle, sweepAngle)
-                    path.lineTo(cx, cy)
-                    path.close()
+                    val path = drawPath2.apply {
+                        reset()
+                        addArc(drawRectF, startAngle, sweepAngle)
+                        lineTo(cx, cy)
+                        close()
+                    }
                     canvas.drawPath(path, paint)
                 } else {
-                    canvas.drawOval(RectF(cx - r, cy - r * 0.4f, cx + r, cy + r * 0.4f), paint)
+                    canvas.drawOval(drawRectF, paint)
                 }
                 
                 // Tail
-                val tailP = Path()
-                tailP.moveTo(cx - r * 0.8f * dir, cy)
-                tailP.lineTo(cx - r * 1.35f * dir, cy - r * 0.7f)
-                tailP.lineTo(cx - r * 1.35f * dir, cy + r * 0.7f)
-                tailP.close()
+                val tailP = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.8f * dir, cy)
+                    lineTo(cx - r * 1.35f * dir, cy - r * 0.7f)
+                    lineTo(cx - r * 1.35f * dir, cy + r * 0.7f)
+                    close()
+                }
                 canvas.drawPath(tailP, paint)
             }
             22 -> { // Great White Shark (Pointed snout, white belly, vertical gill slits, sharp fins)
                 // 1. Draw Shark Body (Slate Grey top, White bottom)
                 paint.color = Color.parseColor("#B0BEC5") // White underbelly
-                canvas.drawOval(RectF(cx - r, cy, cx + r, cy + r * 0.45f), paint)
+                drawRectF.set(cx - r, cy, cx + r, cy + r * 0.45f)
+                canvas.drawOval(drawRectF, paint)
                 
                 paint.color = fish.color // Dark Slate Grey top
+                drawRectF2.set(cx - r, cy - r * 0.45f, cx + r, cy + r * 0.2f)
                 if (mouthOpen) {
-                    val path = Path()
                     val sweepAngle = 295f
                     val startAngle = if (facingRight) 32f else 212f
-                    path.addArc(RectF(cx - r, cy - r * 0.45f, cx + r, cy + r * 0.2f), startAngle, sweepAngle)
-                    path.lineTo(cx, cy)
-                    path.close()
+                    val path = drawPath.apply {
+                        reset()
+                        addArc(drawRectF2, startAngle, sweepAngle)
+                        lineTo(cx, cy)
+                        close()
+                    }
                     canvas.drawPath(path, paint)
                 } else {
-                    canvas.drawOval(RectF(cx - r, cy - r * 0.45f, cx + r, cy + r * 0.2f), paint)
+                    canvas.drawOval(drawRectF2, paint)
                 }
 
                 // Pointed predatory head snout
-                val snout = Path()
-                snout.moveTo(cx + r * 0.6f * dir, cy - r * 0.35f)
-                snout.lineTo(cx + r * 1.3f * dir, cy - r * 0.1f)
-                snout.lineTo(cx + r * 0.6f * dir, cy + r * 0.15f)
-                snout.close()
+                val snout = drawPath2.apply {
+                    reset()
+                    moveTo(cx + r * 0.6f * dir, cy - r * 0.35f)
+                    lineTo(cx + r * 1.3f * dir, cy - r * 0.1f)
+                    lineTo(cx + r * 0.6f * dir, cy + r * 0.15f)
+                    close()
+                }
                 canvas.drawPath(snout, paint)
 
                 // 2. Gill Slits (3 vertical dark lines)
@@ -2439,29 +2544,35 @@ class FrenzyView @JvmOverloads constructor(
 
                 // 3. Sharp Triangular Dorsal Fin
                 paint.color = fish.color
-                val dorsal = Path()
-                dorsal.moveTo(cx - r * 0.3f * dir, cy - r * 0.35f)
-                dorsal.lineTo(cx - r * 0.7f * dir, cy - r * 1.0f)
-                dorsal.lineTo(cx + r * 0.1f * dir, cy - r * 0.35f)
-                dorsal.close()
+                val dorsal = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.3f * dir, cy - r * 0.35f)
+                    lineTo(cx - r * 0.7f * dir, cy - r * 1.0f)
+                    lineTo(cx + r * 0.1f * dir, cy - r * 0.35f)
+                    close()
+                }
                 canvas.drawPath(dorsal, paint)
 
                 // 4. Sharp Heterocercal Tail Fin (Upper lobe longer)
-                val tail = Path()
                 val tx = cx - r * 0.9f * dir
-                tail.moveTo(tx, cy)
-                tail.lineTo(cx - r * 1.5f * dir, cy - r * 0.8f) // Long upper lobe
-                tail.lineTo(cx - r * 1.2f * dir, cy)
-                tail.lineTo(cx - r * 1.4f * dir, cy + r * 0.5f) // Shorter lower lobe
-                tail.close()
+                val tail = drawPath4.apply {
+                    reset()
+                    moveTo(tx, cy)
+                    lineTo(cx - r * 1.5f * dir, cy - r * 0.8f) // Long upper lobe
+                    lineTo(cx - r * 1.2f * dir, cy)
+                    lineTo(cx - r * 1.4f * dir, cy + r * 0.5f) // Shorter lower lobe
+                    close()
+                }
                 canvas.drawPath(tail, paint)
 
                 // 5. Pectoral Fin (pointing down and back)
-                val pec = Path()
-                pec.moveTo(cx + r * 0.1f * dir, cy + r * 0.1f)
-                pec.lineTo(cx - r * 0.4f * dir, cy + r * 0.65f)
-                pec.lineTo(cx - r * 0.4f * dir, cy + r * 0.25f)
-                pec.close()
+                val pec = drawPath5.apply {
+                    reset()
+                    moveTo(cx + r * 0.1f * dir, cy + r * 0.1f)
+                    lineTo(cx - r * 0.4f * dir, cy + r * 0.65f)
+                    lineTo(cx - r * 0.4f * dir, cy + r * 0.25f)
+                    close()
+                }
                 canvas.drawPath(pec, paint)
 
                 // 6. Eye
@@ -2473,12 +2584,14 @@ class FrenzyView @JvmOverloads constructor(
                 // 7. Sharp white teeth inside open mouth
                 if (mouthOpen) {
                     paint.color = Color.WHITE
-                    val teeth = Path()
                     val mx = cx + r * 0.8f * dir
-                    teeth.moveTo(mx - 8f * dir, cy + 2f)
-                    teeth.lineTo(mx - 2f * dir, cy + 8f)
-                    teeth.lineTo(mx + 4f * dir, cy + 2f)
-                    teeth.close()
+                    val teeth = drawPath.apply {
+                        reset()
+                        moveTo(mx - 8f * dir, cy + 2f)
+                        lineTo(mx - 2f * dir, cy + 8f)
+                        lineTo(mx + 4f * dir, cy + 2f)
+                        close()
+                    }
                     canvas.drawPath(teeth, paint)
                 }
             }
@@ -2487,58 +2600,71 @@ class FrenzyView @JvmOverloads constructor(
                 
                 // 1. White underbelly and patches
                 paint.color = Color.WHITE
-                canvas.drawOval(RectF(cx - r, cy, cx + r, cy + r * 0.5f), paint) // white belly
+                drawRectF.set(cx - r, cy, cx + r, cy + r * 0.5f)
+                canvas.drawOval(drawRectF, paint) // white belly
                 // Eye patch (above and behind the eye)
-                canvas.drawOval(RectF(cx + r * 0.25f * dir, cy - r * 0.35f, cx + r * 0.6f * dir, cy - r * 0.15f), paint)
+                drawRectF2.set(cx + r * 0.25f * dir, cy - r * 0.35f, cx + r * 0.6f * dir, cy - r * 0.15f)
+                canvas.drawOval(drawRectF2, paint)
 
                 // 2. Main Jet-Black Body
                 paint.color = fish.color // Black
+                drawRectF3.set(cx - r, cy - r * 0.55f, cx + r, cy + r * 0.15f)
                 if (mouthOpen) {
-                    val path = Path()
                     val sweepAngle = 295f
                     val startAngle = if (facingRight) 32f else 212f
-                    path.addArc(RectF(cx - r, cy - r * 0.55f, cx + r, cy + r * 0.15f), startAngle, sweepAngle)
-                    path.lineTo(cx, cy)
-                    path.close()
+                    val path = drawPath.apply {
+                        reset()
+                        addArc(drawRectF3, startAngle, sweepAngle)
+                        lineTo(cx, cy)
+                        close()
+                    }
                     canvas.drawPath(path, paint)
                 } else {
-                    canvas.drawOval(RectF(cx - r, cy - r * 0.55f, cx + r, cy + r * 0.15f), paint)
+                    canvas.drawOval(drawRectF3, paint)
                 }
 
                 // Head/Snout (Blunt and rounded)
-                val head = Path()
-                head.moveTo(cx + r * 0.5f * dir, cy - r * 0.45f)
-                head.quadTo(cx + r * 1.2f * dir, cy - r * 0.25f, cx + r * 1.1f * dir, cy + r * 0.1f)
-                head.lineTo(cx + r * 0.5f * dir, cy + r * 0.15f)
-                head.close()
+                val head = drawPath2.apply {
+                    reset()
+                    moveTo(cx + r * 0.5f * dir, cy - r * 0.45f)
+                    quadTo(cx + r * 1.2f * dir, cy - r * 0.25f, cx + r * 1.1f * dir, cy + r * 0.1f)
+                    lineTo(cx + r * 0.5f * dir, cy + r * 0.15f)
+                    close()
+                }
                 canvas.drawPath(head, paint)
 
                 // 3. Massive Tall Dorsal Fin (Dolphin/Orca style)
-                val dorsal = Path()
-                dorsal.moveTo(cx - r * 0.2f * dir, cy - r * 0.4f)
-                dorsal.lineTo(cx - r * 0.5f * dir, cy - r * 1.2f) // Very tall!
-                dorsal.lineTo(cx + r * 0.2f * dir, cy - r * 0.4f)
-                dorsal.close()
+                val dorsal = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.2f * dir, cy - r * 0.4f)
+                    lineTo(cx - r * 0.5f * dir, cy - r * 1.2f) // Very tall!
+                    lineTo(cx + r * 0.2f * dir, cy - r * 0.4f)
+                    close()
+                }
                 canvas.drawPath(dorsal, paint)
 
                 // 4. Horizontal Fluke (Tail flips UP and DOWN)
-                val fluke = Path()
                 val tx = cx - r * 1.0f * dir
                 val ty = cy + tailYOffset
-                fluke.moveTo(tx, ty)
-                fluke.lineTo(tx - r * 0.4f * dir, ty - r * 0.6f)
-                fluke.lineTo(tx - r * 0.5f * dir, ty)
-                fluke.lineTo(tx - r * 0.4f * dir, ty + r * 0.6f)
-                fluke.close()
+                val fluke = drawPath4.apply {
+                    reset()
+                    moveTo(tx, ty)
+                    lineTo(tx - r * 0.4f * dir, ty - r * 0.6f)
+                    lineTo(tx - r * 0.5f * dir, ty)
+                    lineTo(tx - r * 0.4f * dir, ty + r * 0.6f)
+                    close()
+                }
                 canvas.drawPath(fluke, paint)
 
                 // Connect body to fluke
-                val stock = Path()
-                stock.moveTo(cx - r * 0.5f * dir, cy - r * 0.2f)
-                stock.quadTo(cx - r * 0.8f * dir, cy + tailYOffset * 0.5f, tx, ty)
-                stock.lineTo(tx, ty + r * 0.1f)
-                stock.quadTo(cx - r * 0.8f * dir, cy + r * 0.2f + tailYOffset * 0.5f, cx - r * 0.5f * dir, cy + r * 0.2f)
-                stock.close()
+                val stock = drawPath5.apply {
+                    reset()
+                    moveTo(cx - r * 0.5f * dir, cy - r * 0.2f)
+                    quadTo(cx - r * 0.8f * dir, cy + tailYOffset * 0.5f, tx, ty)
+                    lineTo(tx, ty + r * 0.1f)
+                    quadTo(cx - r * 0.8f * dir, cy + r * 0.2f + tailYOffset * 0.5f, cx - r * 0.5f * dir, cy + r * 0.2f)
+                    close()
+                }
                 canvas.drawPath(stock, paint)
 
                 // 5. Eye (drawn in black)
@@ -2550,32 +2676,39 @@ class FrenzyView @JvmOverloads constructor(
             24 -> { // Giant Blue Whale
                 // Main giant body
                 paint.color = fish.color
+                drawRectF.set(cx - r, cy - r * 0.55f, cx + r, cy + r * 0.55f)
                 if (mouthOpen) {
-                    val path = Path()
                     val sweepAngle = 295f
                     val startAngle = if (facingRight) 32f else 212f
-                    path.addArc(RectF(cx - r, cy - r * 0.55f, cx + r, cy + r * 0.55f), startAngle, sweepAngle)
-                    path.lineTo(cx, cy)
-                    path.close()
+                    val path = drawPath.apply {
+                        reset()
+                        addArc(drawRectF, startAngle, sweepAngle)
+                        lineTo(cx, cy)
+                        close()
+                    }
                     canvas.drawPath(path, paint)
                 } else {
-                    canvas.drawRoundRect(RectF(cx - r, cy - r * 0.55f, cx + r, cy + r * 0.55f), r * 0.25f, r * 0.25f, paint)
+                    canvas.drawRoundRect(drawRectF, r * 0.25f, r * 0.25f, paint)
                 }
 
                 // Giant tail fin
-                val tailP = Path()
-                tailP.moveTo(cx - r * 0.8f * dir, cy)
-                tailP.lineTo(cx - r * 1.4f * dir, cy - r * 0.6f)
-                tailP.lineTo(cx - r * 1.4f * dir, cy + r * 0.6f)
-                tailP.close()
+                val tailP = drawPath2.apply {
+                    reset()
+                    moveTo(cx - r * 0.8f * dir, cy)
+                    lineTo(cx - r * 1.4f * dir, cy - r * 0.6f)
+                    lineTo(cx - r * 1.4f * dir, cy + r * 0.6f)
+                    close()
+                }
                 canvas.drawPath(tailP, paint)
 
                 // Small dorsal fin (top)
-                val finP = Path()
-                finP.moveTo(cx - r * 0.2f * dir, cy - r * 0.45f)
-                finP.lineTo(cx - r * 0.4f * dir, cy - r * 0.7f)
-                finP.lineTo(cx + r * 0.1f * dir, cy - r * 0.45f)
-                finP.close()
+                val finP = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.2f * dir, cy - r * 0.45f)
+                    lineTo(cx - r * 0.4f * dir, cy - r * 0.7f)
+                    lineTo(cx + r * 0.1f * dir, cy - r * 0.45f)
+                    close()
+                }
                 canvas.drawPath(finP, paint)
 
                 // Eye
@@ -2588,13 +2721,16 @@ class FrenzyView @JvmOverloads constructor(
                 // Draw 3 segments of serpentine body
                 val wave = sin(fish.swimCycle.toDouble() * 0.6).toFloat() * r * 0.3f
                 paint.color = fish.color
+                drawRectF.set(cx - r * 0.8f, cy - r * 0.8f, cx + r * 0.8f, cy + r * 0.8f)
                 if (mouthOpen) {
-                    val path = Path()
                     val sweepAngle = 295f
                     val startAngle = if (facingRight) 32f else 212f
-                    path.addArc(RectF(cx - r * 0.8f, cy - r * 0.8f, cx + r * 0.8f, cy + r * 0.8f), startAngle, sweepAngle)
-                    path.lineTo(cx, cy)
-                    path.close()
+                    val path = drawPath.apply {
+                        reset()
+                        addArc(drawRectF, startAngle, sweepAngle)
+                        lineTo(cx, cy)
+                        close()
+                    }
                     canvas.drawPath(path, paint)
                 } else {
                     canvas.drawCircle(cx, cy, r * 0.8f, paint)
@@ -2603,20 +2739,24 @@ class FrenzyView @JvmOverloads constructor(
                 canvas.drawCircle(cx - r * 1.4f * dir, cy - wave, r * 0.5f, paint)
 
                 // Tail fin
-                val tailP = Path()
-                tailP.moveTo(cx - r * 1.6f * dir, cy - wave)
-                tailP.lineTo(cx - r * 2.2f * dir, cy - wave - r * 0.4f)
-                tailP.lineTo(cx - r * 2.2f * dir, cy - wave + r * 0.4f)
-                tailP.close()
+                val tailP = drawPath2.apply {
+                    reset()
+                    moveTo(cx - r * 1.6f * dir, cy - wave)
+                    lineTo(cx - r * 2.2f * dir, cy - wave - r * 0.4f)
+                    lineTo(cx - r * 2.2f * dir, cy - wave + r * 0.4f)
+                    close()
+                }
                 canvas.drawPath(tailP, paint)
 
                 // Back spikes
                 paint.color = Color.parseColor("#E53935") // Red spikes
-                val spike = Path()
-                spike.moveTo(cx - r * 0.2f * dir, cy - r * 0.8f)
-                spike.lineTo(cx - r * 0.4f * dir, cy - r * 1.2f)
-                spike.lineTo(cx - r * 0.6f * dir, cy - r * 0.7f)
-                spike.close()
+                val spike = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.2f * dir, cy - r * 0.8f)
+                    lineTo(cx - r * 0.4f * dir, cy - r * 1.2f)
+                    lineTo(cx - r * 0.6f * dir, cy - r * 0.7f)
+                    close()
+                }
                 canvas.drawPath(spike, paint)
 
                 // Glowing red eye
@@ -2634,11 +2774,13 @@ class FrenzyView @JvmOverloads constructor(
                 canvas.drawCircle(cx - r * 2.1f * dir, cy + wave, r * 0.2f, paint)
                 
                 // Tail fin
-                val tailP = Path()
-                tailP.moveTo(cx - r * 2.2f * dir, cy + wave)
-                tailP.lineTo(cx - r * 2.7f * dir, cy + wave - r * 0.3f)
-                tailP.lineTo(cx - r * 2.7f * dir, cy + wave + r * 0.3f)
-                tailP.close()
+                val tailP = drawPath.apply {
+                    reset()
+                    moveTo(cx - r * 2.2f * dir, cy + wave)
+                    lineTo(cx - r * 2.7f * dir, cy + wave - r * 0.3f)
+                    lineTo(cx - r * 2.7f * dir, cy + wave + r * 0.3f)
+                    close()
+                }
                 canvas.drawPath(tailP, paint)
                 
                 // Electric sparks/arcs
@@ -2663,43 +2805,49 @@ class FrenzyView @JvmOverloads constructor(
             }
             else -> { // Standard swimming fish (Guppy, Clownfish, Butterfly, Tang, Lionfish)
                 // Tail fin
-                val tailPath = Path()
-                if (fish.speciesIndex == 0) { // Guppy (flowing large tail)
-                    tailPath.moveTo(cx - r * 0.8f * dir, cy)
-                    tailPath.quadTo(cx - r * 1.4f * dir, cy - r * 0.9f, cx - r * 1.6f * dir, cy - r * 0.5f)
-                    tailPath.lineTo(cx - r * 1.6f * dir, cy + r * 0.5f)
-                    tailPath.quadTo(cx - r * 1.4f * dir, cy + r * 0.9f, cx - r * 0.8f * dir, cy)
-                } else { // Standard tail
-                    tailPath.moveTo(cx - r * 0.8f * dir, cy)
-                    tailPath.lineTo(cx - r * 1.35f * dir, cy - r * 0.5f)
-                    tailPath.lineTo(cx - r * 1.35f * dir, cy + r * 0.5f)
+                val tailPath = drawPath.apply {
+                    reset()
+                    if (fish.speciesIndex == 0) { // Guppy (flowing large tail)
+                        moveTo(cx - r * 0.8f * dir, cy)
+                        quadTo(cx - r * 1.4f * dir, cy - r * 0.9f, cx - r * 1.6f * dir, cy - r * 0.5f)
+                        lineTo(cx - r * 1.6f * dir, cy + r * 0.5f)
+                        quadTo(cx - r * 1.4f * dir, cy + r * 0.9f, cx - r * 0.8f * dir, cy)
+                    } else { // Standard tail
+                        moveTo(cx - r * 0.8f * dir, cy)
+                        lineTo(cx - r * 1.35f * dir, cy - r * 0.5f)
+                        lineTo(cx - r * 1.35f * dir, cy + r * 0.5f)
+                    }
+                    close()
                 }
-                tailPath.close()
                 canvas.drawPath(tailPath, paint)
 
                 // Main body
                 if (fish.speciesIndex == 10) { // Butterfly (Very flat round disc)
                     canvas.drawCircle(cx, cy, r, paint)
                 } else if (fish.speciesIndex == 13) { // Neon Angelfish (Tall vertical diamond)
-                    val diamond = Path()
-                    diamond.moveTo(cx, cy - r * 1.3f)
-                    diamond.lineTo(cx + r * 0.9f * dir, cy)
-                    diamond.lineTo(cx, cy + r * 1.3f)
-                    diamond.lineTo(cx - r * 0.9f * dir, cy)
-                    diamond.close()
+                    val diamond = drawPath2.apply {
+                        reset()
+                        moveTo(cx, cy - r * 1.3f)
+                        lineTo(cx + r * 0.9f * dir, cy)
+                        lineTo(cx, cy + r * 1.3f)
+                        lineTo(cx - r * 0.9f * dir, cy)
+                        close()
+                    }
                     canvas.drawPath(diamond, paint)
                 } else { // Standard oval body
-                    val bodyRect = RectF(cx - r, cy - r * 0.58f, cx + r, cy + r * 0.58f)
+                    drawRectF.set(cx - r, cy - r * 0.58f, cx + r, cy + r * 0.58f)
                     if (mouthOpen) {
-                        val path = Path()
                         val sweepAngle = 295f
                         val startAngle = if (facingRight) 32f else 212f
-                        path.addArc(bodyRect, startAngle, sweepAngle)
-                        path.lineTo(cx, cy)
-                        path.close()
+                        val path = drawPath2.apply {
+                            reset()
+                            addArc(drawRectF, startAngle, sweepAngle)
+                            lineTo(cx, cy)
+                            close()
+                        }
                         canvas.drawPath(path, paint)
                     } else {
-                        canvas.drawOval(bodyRect, paint)
+                        canvas.drawOval(drawRectF, paint)
                     }
                 }
 

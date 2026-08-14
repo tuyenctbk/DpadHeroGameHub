@@ -286,6 +286,7 @@ class RetroDriverView @JvmOverloads constructor(
         super.onDetachedFromWindow()
         handler.removeCallbacks(gameLoop)
         animHandler.removeCallbacks(animRunnable)
+        celebrationManager.clear()
     }
 
     override fun startGame() {
@@ -334,8 +335,18 @@ class RetroDriverView @JvmOverloads constructor(
         gameWon = false
         gamePaused = true
         
-        // Randomize theme and starting time of day offset for this run
-        selectedThemeIndex = Random.nextInt(0, themes.size)
+        // Load user settings or randomize theme
+        val prefs = context.getSharedPreferences("retrodriver_settings", Context.MODE_PRIVATE)
+        val prefVehicle = prefs.getInt("vehicle", -1)
+        if (prefVehicle in carColors.indices) {
+            selectedCarIndex = prefVehicle
+        }
+        val prefTrack = prefs.getInt("track", -1)
+        if (prefTrack in themes.indices) {
+            selectedThemeIndex = prefTrack
+        } else {
+            selectedThemeIndex = Random.nextInt(0, themes.size)
+        }
         timeOfDayOffset = Random.nextInt(0, 4) * 8000f
         
         buildRoad()
@@ -359,7 +370,7 @@ class RetroDriverView @JvmOverloads constructor(
 
         countdown = 3
         countdownStartTime = System.currentTimeMillis()
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         invalidate()
     }
 

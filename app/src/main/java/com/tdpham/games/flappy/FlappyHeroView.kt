@@ -184,7 +184,7 @@ class FlappyHeroView @JvmOverloads constructor(
         clouds.clear()
         trailParticles.clear()
         bgScrollX = 0f
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         score = 0
         best = ScoreManager.getHighScore(context, gameKey, currentDifficulty.ordinal)
         gameOver = false

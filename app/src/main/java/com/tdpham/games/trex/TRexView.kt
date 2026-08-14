@@ -225,7 +225,7 @@ class TRexView @JvmOverloads constructor(
         isGameOver = false
         isPaused = true
         causeOfDeath = null
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         
         applyMemberProperties()
         memberName = context.getString(when(currentMember) {

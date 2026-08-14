@@ -35,6 +35,7 @@ class MonkeyView @JvmOverloads constructor(
     private var lives = 6
     private var playerDizzyUntil = 0L
     private var selectedCharacter = 0 // 0: Golden Gibbon, 1: Tarzan Climber, 2: Cyber Gorilla, 3: Punk Chimp
+    private var selectedSeason = 0 // 0: Emerald Jungle, 1: Autumn Amber, 2: Winter Frost, 3: Twilight Mist
     private var monkeyGrabbed = false
     private var isFalling = false
     private var fallSpeed = 0f
@@ -53,8 +54,6 @@ class MonkeyView @JvmOverloads constructor(
     private var vineScrollOffset = 0f
     private val leafOffsets = FloatArray(10) { Random.nextFloat() * 100f }
     
-    // Snow particles for Winter season (REMOVED)
-
     // Obstacles and Items
     // type: 0: Banana, 1: Coconut, 2: Spider, 3: Snake (wavy), 4: Bird (horizontal)
     private val obstacles = mutableListOf<FallingItem>()
@@ -65,19 +64,20 @@ class MonkeyView @JvmOverloads constructor(
     private var lastEagleSpawnTime = 0L
     private var blackJaguar: Jaguar? = null
     private var lastJaguarSpawnTime = 0L
+    
+    private val celebrationManager = CelebrationManager()
+    
     private var deathReason: String? = null
     private var deathReasonDisplayUntil = 0L
     
     private val drawPath = Path()
     private val drawRectF = RectF()
-    private val reusablePaint = Paint()
+    private val reusablePaint = Paint(Paint.ANTI_ALIAS_FLAG)
     
     private val mangoGradient by lazy {
         LinearGradient(-15f, -15f, 15f, 15f,
             Color.parseColor("#FF3D00"), Color.parseColor("#FFEA00"), Shader.TileMode.CLAMP)
     }
-
-    private val celebrationManager = CelebrationManager()
     
     private val handler = Handler(Looper.getMainLooper())
     private val gameLoop = object : Runnable {
@@ -149,6 +149,7 @@ class MonkeyView @JvmOverloads constructor(
         super.onDetachedFromWindow()
         handler.removeCallbacks(gameLoop)
         animHandler.removeCallbacks(animRunnable)
+        celebrationManager.clear()
     }
 
     override fun startGame() {
@@ -195,7 +196,10 @@ class MonkeyView @JvmOverloads constructor(
         fiberParticles.clear()
         deathReason = null
         deathReasonDisplayUntil = 0L
-        celebrationManager.start(0f, 0f)
+        val prefs = context.getSharedPreferences("monkey_settings", Context.MODE_PRIVATE)
+        selectedCharacter = prefs.getInt("character", 0).coerceIn(0, 3)
+        selectedSeason = prefs.getInt("season", 0).coerceIn(0, 3)
+        celebrationManager.clear()
         invalidate()
     }
 
@@ -717,8 +721,12 @@ class MonkeyView @JvmOverloads constructor(
     }
 
     private fun drawSeasonalBackground(canvas: Canvas) {
-        val jungleBgTop = Color.parseColor("#0F381B")
-        val jungleBgBot = Color.parseColor("#05160A")
+        val (jungleBgTop, jungleBgBot, leafColor) = when (selectedSeason) {
+            1 -> Triple(Color.parseColor("#4E260A"), Color.parseColor("#1B0B02"), Color.parseColor("#FF9800")) // Autumn Amber
+            2 -> Triple(Color.parseColor("#1A2E3B"), Color.parseColor("#091218"), Color.parseColor("#80DEEA")) // Winter Frost
+            3 -> Triple(Color.parseColor("#261438"), Color.parseColor("#0C0414"), Color.parseColor("#CE93D8")) // Twilight Mist
+            else -> Triple(Color.parseColor("#0F381B"), Color.parseColor("#05160A"), Color.parseColor("#4CAF50")) // Emerald Jungle
+        }
 
         // Draw sky gradient
         val gradient = LinearGradient(0f, 0f, 0f, height.toFloat(), jungleBgTop, jungleBgBot, Shader.TileMode.CLAMP)
@@ -757,7 +765,6 @@ class MonkeyView @JvmOverloads constructor(
             
             // Draw background leaves along these background vines
             paint.style = Paint.Style.FILL
-            val leafColor = Color.parseColor("#4CAF50")
             paint.color = leafColor
             paint.alpha = 90 // Distant translucent leaves
             for (y in 50 until height step 150) {

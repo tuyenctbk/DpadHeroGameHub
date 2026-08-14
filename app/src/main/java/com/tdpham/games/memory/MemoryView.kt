@@ -104,7 +104,7 @@ class MemoryView @JvmOverloads constructor(
         val newCols = difficulty.cols
         
         handler.removeCallbacksAndMessages(null)
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         
         var nextThemeIndex = random.nextInt(symbolThemes.size)
         while (nextThemeIndex == currentThemeIndex && symbolThemes.size > 1) {

@@ -85,7 +85,7 @@ class SlidePuzzleView @JvmOverloads constructor(
         emptyIdx = gridSize * gridSize - 1
         shuffleTiles()
         
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         moves = 0
         gameOver = false
         val highScore = ScoreManager.getHighScore(context, gameKey, currentDifficulty.ordinal)

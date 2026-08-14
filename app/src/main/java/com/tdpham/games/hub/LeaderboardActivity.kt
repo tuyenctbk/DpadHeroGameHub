@@ -43,7 +43,24 @@ class LeaderboardActivity : AppCompatActivity() {
             GameTab("road_racer", getString(R.string.game_road_racer)),
             GameTab("brick_break", getString(R.string.game_brick_break)),
             GameTab("froggy_cross", getString(R.string.game_froggy)),
-            GameTab("tanks", getString(R.string.game_tanks))
+            GameTab("battle_tanks", getString(R.string.game_tanks)),
+            GameTab("solitaire", getString(R.string.game_solitaire)),
+            GameTab("retrodriver", getString(R.string.game_retrodriver)),
+            GameTab("lines98", getString(R.string.game_lines98)),
+            GameTab("spinball", getString(R.string.game_spinball)),
+            GameTab("simon", getString(R.string.game_simon)),
+            GameTab("checkers", getString(R.string.game_checkers)),
+            GameTab("memory", getString(R.string.game_memory)),
+            GameTab("fruit", getString(R.string.game_fruit)),
+            GameTab("sokoban", getString(R.string.game_sokoban)),
+            GameTab("slide_puzzle", getString(R.string.game_slide_puzzle)),
+            GameTab("mental_math", getString(R.string.game_mental_math)),
+            GameTab("tictactoe", getString(R.string.game_tictactoe)),
+            GameTab("word_quest", getString(R.string.game_word_quest)),
+            GameTab("dungeon", getString(R.string.game_dungeon)),
+            GameTab("hangman", getString(R.string.game_hangman)),
+            GameTab("monkey", getString(R.string.game_monkey)),
+            GameTab("frenzy", getString(R.string.game_frenzy))
         )
     }
 

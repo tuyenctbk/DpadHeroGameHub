@@ -149,6 +149,10 @@ class CelebrationManager {
     private var height = 0f
 
     fun start(width: Float, height: Float, type: CelebrationType? = null) {
+        if (width <= 0f || height <= 0f) {
+            clear()
+            return
+        }
         this.width = width
         this.height = height
         this.currentType = type ?: listOf(CelebrationType.FIREWORKS, CelebrationType.RAIN_COINS, CelebrationType.CONFETTI, CelebrationType.BALLOONS, CelebrationType.STARS).random()
@@ -157,6 +161,10 @@ class CelebrationManager {
     }
 
     fun startOutcome(width: Float, height: Float, isWin: Boolean = false, isNewHigh: Boolean = false, score: Int = 0, highScore: Int = 0) {
+        if (width <= 0f || height <= 0f) {
+            clear()
+            return
+        }
         val winEpic = listOf(CelebrationType.FIREWORKS, CelebrationType.RAIN_COINS, CelebrationType.STARS, CelebrationType.DIAMONDS)
         val winNormal = listOf(CelebrationType.CONFETTI, CelebrationType.BALLOONS, CelebrationType.SMILEYS, CelebrationType.MUSIC_NOTES, CelebrationType.FLOWERS, CelebrationType.SPARKLES)
         val lossMild = listOf(CelebrationType.BUBBLES, CelebrationType.CLOUDS, CelebrationType.FALLING_LEAVES, CelebrationType.SNOWFLAKES)
@@ -173,9 +181,14 @@ class CelebrationManager {
 
     fun clear() {
         particles.clear()
+        width = 0f
+        height = 0f
     }
 
+    fun isActive(): Boolean = particles.isNotEmpty()
+
     private fun initParticles() {
+        if (width <= 0f || height <= 0f) return
         when (currentType) {
             CelebrationType.FIREWORKS -> {
                 repeat(5) {
@@ -305,6 +318,8 @@ class CelebrationManager {
     }
 
     fun update() {
+        if (particles.isEmpty()) return
+
         val iterator = particles.iterator()
         while (iterator.hasNext()) {
             val p = iterator.next()
@@ -312,8 +327,8 @@ class CelebrationManager {
             if (p.life <= 0) iterator.remove()
         }
 
-        // Replenish some types for continuous effect
-        if (particles.size < 20) {
+        // Replenish some types for continuous effect only if width > 0 and height > 0
+        if (width > 0f && height > 0f && particles.isNotEmpty() && particles.size < 20) {
             when (currentType) {
                 CelebrationType.FLOWERS, CelebrationType.STARS, CelebrationType.CONFETTI,
                 CelebrationType.DIAMONDS, CelebrationType.SNOWFLAKES, CelebrationType.RAIN_COINS -> {
@@ -335,14 +350,14 @@ class CelebrationManager {
                 }
                 CelebrationType.FIREWORKS -> {
                      if (random.nextFloat() > 0.95f) {
-                         val bx = random.nextFloat() * width
-                         val by = random.nextFloat() * (height / 2)
-                         val color = randomColor()
-                         repeat(30) {
-                             val angle = random.nextFloat() * 2 * PI.toFloat()
-                             val speed = random.nextFloat() * 10 + 3
-                             particles.add(Particle(bx, by, cos(angle.toDouble()).toFloat() * speed, sin(angle.toDouble()).toFloat() * speed, color, random.nextFloat() * 8 + 4, currentType))
-                         }
+                          val bx = random.nextFloat() * width
+                          val by = random.nextFloat() * (height / 2)
+                          val color = randomColor()
+                          repeat(30) {
+                              val angle = random.nextFloat() * 2 * PI.toFloat()
+                              val speed = random.nextFloat() * 10 + 3
+                              particles.add(Particle(bx, by, cos(angle.toDouble()).toFloat() * speed, sin(angle.toDouble()).toFloat() * speed, color, random.nextFloat() * 8 + 4, currentType))
+                          }
                      }
                 }
                 CelebrationType.SPARKLES -> {
@@ -382,6 +397,7 @@ class CelebrationManager {
     }
 
     fun draw(canvas: Canvas) {
+        if (particles.isEmpty()) return
         particles.forEach { p ->
             paint.reset()
             paint.isAntiAlias = true
@@ -486,14 +502,23 @@ class CelebrationManager {
             "word_quest" -> R.array.win_word_quest
             "solitaire" -> R.array.win_solitaire
             "sokoban" -> R.array.win_sokoban
-            "trex" -> R.array.win_highscore
-            "win_highscore" -> R.array.win_highscore
+            "trex", "win_highscore", "starfighter", "star_fighter" -> R.array.win_highscore
             "checkers" -> R.array.win_checkers
-            "battle_tanks" -> R.array.win_tanks
+            "battle_tanks", "tanks" -> R.array.win_tanks
             "dungeon_escape" -> R.array.win_dungeon
             "mental_math" -> R.array.win_mental_math
             "froggy_cross" -> R.array.win_froggy
             "slide_puzzle" -> R.array.win_slide_puzzle
+            "monkey" -> R.array.win_monkey
+            "frenzy" -> R.array.win_frenzy
+            "retrodriver" -> R.array.win_retrodriver
+            "tetris" -> R.array.win_tetris
+            "snake" -> R.array.win_snake
+            "flappy_hero" -> R.array.win_flappy
+            "lines98" -> R.array.win_lines98
+            "spinball" -> R.array.win_spinball
+            "simon_says" -> R.array.win_simon
+            "syobon_action" -> R.array.win_syobon
             else -> R.array.win_generic
         }
         val words = context.resources.getStringArray(resId)

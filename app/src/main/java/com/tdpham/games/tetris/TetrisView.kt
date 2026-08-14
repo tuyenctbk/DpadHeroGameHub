@@ -124,7 +124,7 @@ class TetrisView @JvmOverloads constructor(
             for (c in 0 until cols) board[r][c] = 0
         }
         score = 0
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         best = ScoreManager.getHighScore(context, gameKey, startLevel)
         current = spawnPieceData()
         next = spawnPieceData()

@@ -643,4 +643,84 @@
     <string name="ad_warning_prefix" translatable="true">Full-screen ad starting in %1$d...</string>
     <string name="ad_label" translatable="true">AD</string>
     <string name="advertisement_label" translatable="true">ADVERTISEMENT</string>
+
+    <string name="monkey_settings_title">GIBBON ASCENT SETTINGS</string>
+    <string name="monkey_character_label">Character</string>
+    <string name="monkey_character_desc">Choose your climbing hero.</string>
+    <string name="monkey_season_label">Season</string>
+    <string name="monkey_season_desc">Atmosphere and background flora.</string>
+    <string name="frenzy_settings_title">FRENZY FEEDING SETTINGS</string>
+    <string name="frenzy_difficulty_label">Difficulty</string>
+    <string name="frenzy_difficulty_easy">REEF EXPLORER (Easy)</string>
+    <string name="frenzy_difficulty_normal">OCEAN HUNTER (Normal)</string>
+    <string name="frenzy_difficulty_hard">ABYSS SURVIVAL (Hard)</string>
+    <string name="frenzy_difficulty_desc">Adjust mine frequency and predator speed.</string>
+    <string name="frenzy_starting_size_label">Starting Stage</string>
+    <string name="frenzy_starting_size_guppy">STAGE 1: GUPPY</string>
+    <string name="frenzy_starting_size_angelfish">STAGE 2: ANGELFISH</string>
+    <string name="frenzy_starting_size_desc">Select starting growth stage.</string>
+    <string name="retrodriver_settings_title">RETRO RACER SETTINGS</string>
+    <string name="retrodriver_vehicle_label">Superbike</string>
+    <string name="retrodriver_vehicle_desc">Choose your racing motorcycle.</string>
+    <string name="retrodriver_theme_label">Track Theme</string>
+    <string name="retrodriver_theme_desc">Choose road environment and scenery.</string>
+    <string name="retrodriver_theme_neon">Neon Sunset</string>
+    <string name="retrodriver_theme_desert">Desert Sunset</string>
+    <string name="retrodriver_theme_cyber">Cyber Night</string>
+    <string name="retrodriver_theme_snow">Snowy Peak</string>
+
+    <string-array name="win_monkey">
+        <item>CANOPY MASTER!</item>
+        <item>JUNGLE KING!</item>
+        <item>APEX ASCENT!</item>
+        <item>WILD CLIMBER!</item>
+    </string-array>
+    <string-array name="win_frenzy">
+        <item>APEX PREDATOR!</item>
+        <item>OCEAN KING!</item>
+        <item>FRENZY MASTER!</item>
+        <item>DEEP SEA LEGEND!</item>
+    </string-array>
+    <string-array name="win_retrodriver">
+        <item>GRAND PRIX CHAMPION!</item>
+        <item>SPEED DEMON!</item>
+        <item>FIRST PLACE VICTORY!</item>
+        <item>TRACK RECORD SHATTERED!</item>
+    </string-array>
+    <string-array name="win_tetris">
+        <item>LINE CLEAR MASTER!</item>
+        <item>PERFECT STACK!</item>
+        <item>TETRIS CHAMPION!</item>
+        <item>BLOCK WIZARD!</item>
+    </string-array>
+    <string-array name="win_snake">
+        <item>SNAKE MASTER!</item>
+        <item>MAX LENGTH!</item>
+        <item>COBRA KING!</item>
+        <item>PERFECT SLITHER!</item>
+    </string-array>
+    <string-array name="win_flappy">
+        <item>SKY ACE!</item>
+        <item>FLAPPY HERO!</item>
+        <item>FEATHERED LEGEND!</item>
+        <item>UNTOUCHABLE FLIGHT!</item>
+    </string-array>
+    <string-array name="win_lines98">
+        <item>LINE WIZARD!</item>
+        <item>COLOR HARMONY!</item>
+        <item>BOARD CLEARED!</item>
+        <item>MASTER STRATEGIST!</item>
+    </string-array>
+    <string-array name="win_spinball">
+        <item>SPIN MASTER!</item>
+        <item>REFLEX GOD!</item>
+        <item>ORBIT CHAMPION!</item>
+        <item>LIGHTNING SPEED!</item>
+    </string-array>
+    <string-array name="win_simon">
+        <item>PERFECT MEMORY!</item>
+        <item>SIMON MASTER!</item>
+        <item>FLAWLESS RHYTHM!</item>
+        <item>GENIUS RECALL!</item>
+    </string-array>
 </resources>

@@ -81,7 +81,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
         score = 0
         isGameOver = false
         isWin = false
-        celebrationManager.start(0f, 0f) // Just clear/reset
+        celebrationManager.clear()
         highScore = ScoreManager.getHighScore(context, gameKey, gridSize)
         mergedTiles.clear()
         addRandomTile()

@@ -4,7 +4,7 @@ import com.tdpham.games.R
 import com.tdpham.games.common.BaseGameActivity
 
 class StarFighterActivity : BaseGameActivity() {
-    override val gameKey = "star_fighter"
+    override val gameKey = "starfighter"
     override val gameTitle get() = getString(R.string.how_to_play_guide, getString(R.string.game_starfighter))
     override val gameInstructions get() = getString(R.string.game_starfighter_instructions)
 

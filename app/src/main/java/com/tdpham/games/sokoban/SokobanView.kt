@@ -126,7 +126,7 @@ class SokobanView @JvmOverloads constructor(
 
     private fun loadLevel(index: Int) {
         levelIndex = index.coerceIn(0, levels.lastIndex)
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         val map = levels[levelIndex]
         rows = map.size
         cols = map[0].length

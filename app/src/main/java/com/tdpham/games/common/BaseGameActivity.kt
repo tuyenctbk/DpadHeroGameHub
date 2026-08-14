@@ -272,172 +272,53 @@ abstract class BaseGameActivity : AppCompatActivity() {
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        // Intercept M and O keys globally for T-Rex Run and Snake
         if (event.action == KeyEvent.ACTION_DOWN) {
             val keyCode = event.keyCode
             if (keyCode == KeyEvent.KEYCODE_M || keyCode == KeyEvent.KEYCODE_O || 
                 keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_SETTINGS) {
-                
-                if (gameKey == "trex") {
-                    removeActiveOverlay()
-                    TRexOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.trex.TRexView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "snake") {
-                    removeActiveOverlay()
-                    com.tdpham.games.snake.SnakeOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.snake.SnakeGameView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "minesweeper") {
-                    removeActiveOverlay()
-                    com.tdpham.games.minesweeper.MinesweeperOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.minesweeper.MinesweeperView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "sudoku") {
-                    removeActiveOverlay()
-                    com.tdpham.games.sudoku.SudokuOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.sudoku.SudokuView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "memory") {
-                    removeActiveOverlay()
-                    com.tdpham.games.memory.MemoryOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.memory.MemoryView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "slide_puzzle") {
-                    removeActiveOverlay()
-                    com.tdpham.games.slidepuzzle.SlidePuzzleOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.slidepuzzle.SlidePuzzleView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "tic_tac_toe") {
-                    removeActiveOverlay()
-                    com.tdpham.games.tictactoe.TicTacToeOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.tictactoe.TicTacToeView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "hangman") {
-                    removeActiveOverlay()
-                    com.tdpham.games.hangman.HangmanOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.hangman.HangmanView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "solitaire") {
-                    removeActiveOverlay()
-                    com.tdpham.games.solitaire.SolitaireOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.solitaire.SolitaireView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "4096") {
-                    removeActiveOverlay()
-                    com.tdpham.games.twentyfortyeight.TwentyFortyEightOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.twentyfortyeight.TwentyFortyEightView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "tetris") {
-                    removeActiveOverlay()
-                    com.tdpham.games.tetris.TetrisOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.tetris.TetrisView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "mental_math") {
-                    removeActiveOverlay()
-                    com.tdpham.games.mentalmath.MentalMathOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.mentalmath.MentalMathView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "flappy_hero") {
-                    removeActiveOverlay()
-                    com.tdpham.games.flappy.FlappyHeroOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.flappy.FlappyHeroView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "brick_break") {
-                    removeActiveOverlay()
-                    com.tdpham.games.brickbreak.BrickBreakOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.brickbreak.BrickBreakView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "lines98") {
-                    removeActiveOverlay()
-                    com.tdpham.games.lines98.Lines98OptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.lines98.Lines98View)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "word_quest") {
-                    removeActiveOverlay()
-                    com.tdpham.games.wordquest.WordQuestOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.wordquest.WordQuestView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "road_racer") {
-                    removeActiveOverlay()
-                    com.tdpham.games.roadracer.RoadRacerOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.roadracer.RoadRacerView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "sokoban") {
-                    removeActiveOverlay()
-                    com.tdpham.games.sokoban.SokobanOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.sokoban.SokobanView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "battle_tanks") {
-                    removeActiveOverlay()
-                    com.tdpham.games.tanks.BattleTanksOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.tanks.BattleTanksView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "starfighter") {
-                    removeActiveOverlay()
-                    com.tdpham.games.starfighter.StarFighterOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.starfighter.StarFighterView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "dungeon_escape") {
-                    removeActiveOverlay()
-                    com.tdpham.games.dungeon.DungeonOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.dungeon.DungeonEscapeView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "froggy_cross") {
-                    removeActiveOverlay()
-                    com.tdpham.games.froggy.FroggyOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.froggy.FroggyCrossView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "simon_says") {
-                    removeActiveOverlay()
-                    com.tdpham.games.simon.SimonOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.simon.SimonSaysView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "checkers") {
-                    removeActiveOverlay()
-                    com.tdpham.games.checkers.CheckersOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.checkers.CheckersView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "spinball") {
-                    removeActiveOverlay()
-                    com.tdpham.games.spinball.SpinballOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.spinball.SpinballView)?.resetGame()
-                    }
-                    return true
-                } else if (gameKey == "syobon_action") {
-                    removeActiveOverlay()
-                    com.tdpham.games.syobon.SyobonOptionsDialog.show(this) {
-                        (gameView as? com.tdpham.games.syobon.SyobonView)?.resetGame()
-                    }
+                if (showGameOptions()) {
                     return true
                 }
             }
         }
         return super.dispatchKeyEvent(event)
+    }
+
+    open fun showGameOptions(): Boolean {
+        removeActiveOverlay()
+        when (gameKey) {
+            "trex" -> TRexOptionsDialog.show(this) { (gameView as? com.tdpham.games.trex.TRexView)?.resetGame() }
+            "snake" -> com.tdpham.games.snake.SnakeOptionsDialog.show(this) { (gameView as? com.tdpham.games.snake.SnakeGameView)?.resetGame() }
+            "minesweeper" -> com.tdpham.games.minesweeper.MinesweeperOptionsDialog.show(this) { (gameView as? com.tdpham.games.minesweeper.MinesweeperView)?.resetGame() }
+            "sudoku" -> com.tdpham.games.sudoku.SudokuOptionsDialog.show(this) { (gameView as? com.tdpham.games.sudoku.SudokuView)?.resetGame() }
+            "memory" -> com.tdpham.games.memory.MemoryOptionsDialog.show(this) { (gameView as? com.tdpham.games.memory.MemoryView)?.resetGame() }
+            "slide_puzzle" -> com.tdpham.games.slidepuzzle.SlidePuzzleOptionsDialog.show(this) { (gameView as? com.tdpham.games.slidepuzzle.SlidePuzzleView)?.resetGame() }
+            "tic_tac_toe" -> com.tdpham.games.tictactoe.TicTacToeOptionsDialog.show(this) { (gameView as? com.tdpham.games.tictactoe.TicTacToeView)?.resetGame() }
+            "hangman" -> com.tdpham.games.hangman.HangmanOptionsDialog.show(this) { (gameView as? com.tdpham.games.hangman.HangmanView)?.resetGame() }
+            "solitaire" -> com.tdpham.games.solitaire.SolitaireOptionsDialog.show(this) { (gameView as? com.tdpham.games.solitaire.SolitaireView)?.resetGame() }
+            "4096" -> com.tdpham.games.twentyfortyeight.TwentyFortyEightOptionsDialog.show(this) { (gameView as? com.tdpham.games.twentyfortyeight.TwentyFortyEightView)?.resetGame() }
+            "tetris" -> com.tdpham.games.tetris.TetrisOptionsDialog.show(this) { (gameView as? com.tdpham.games.tetris.TetrisView)?.resetGame() }
+            "mental_math" -> com.tdpham.games.mentalmath.MentalMathOptionsDialog.show(this) { (gameView as? com.tdpham.games.mentalmath.MentalMathView)?.resetGame() }
+            "flappy_hero" -> com.tdpham.games.flappy.FlappyHeroOptionsDialog.show(this) { (gameView as? com.tdpham.games.flappy.FlappyHeroView)?.resetGame() }
+            "brick_break" -> com.tdpham.games.brickbreak.BrickBreakOptionsDialog.show(this) { (gameView as? com.tdpham.games.brickbreak.BrickBreakView)?.resetGame() }
+            "lines98" -> com.tdpham.games.lines98.Lines98OptionsDialog.show(this) { (gameView as? com.tdpham.games.lines98.Lines98View)?.resetGame() }
+            "word_quest" -> com.tdpham.games.wordquest.WordQuestOptionsDialog.show(this) { (gameView as? com.tdpham.games.wordquest.WordQuestView)?.resetGame() }
+            "road_racer" -> com.tdpham.games.roadracer.RoadRacerOptionsDialog.show(this) { (gameView as? com.tdpham.games.roadracer.RoadRacerView)?.resetGame() }
+            "sokoban" -> com.tdpham.games.sokoban.SokobanOptionsDialog.show(this) { (gameView as? com.tdpham.games.sokoban.SokobanView)?.resetGame() }
+            "battle_tanks" -> com.tdpham.games.tanks.BattleTanksOptionsDialog.show(this) { (gameView as? com.tdpham.games.tanks.BattleTanksView)?.resetGame() }
+            "starfighter", "star_fighter" -> com.tdpham.games.starfighter.StarFighterOptionsDialog.show(this) { (gameView as? com.tdpham.games.starfighter.StarFighterView)?.resetGame() }
+            "dungeon_escape" -> com.tdpham.games.dungeon.DungeonOptionsDialog.show(this) { (gameView as? com.tdpham.games.dungeon.DungeonEscapeView)?.resetGame() }
+            "froggy_cross" -> com.tdpham.games.froggy.FroggyOptionsDialog.show(this) { (gameView as? com.tdpham.games.froggy.FroggyCrossView)?.resetGame() }
+            "simon_says" -> com.tdpham.games.simon.SimonOptionsDialog.show(this) { (gameView as? com.tdpham.games.simon.SimonSaysView)?.resetGame() }
+            "checkers" -> com.tdpham.games.checkers.CheckersOptionsDialog.show(this) { (gameView as? com.tdpham.games.checkers.CheckersView)?.resetGame() }
+            "spinball" -> com.tdpham.games.spinball.SpinballOptionsDialog.show(this) { (gameView as? com.tdpham.games.spinball.SpinballView)?.resetGame() }
+            "syobon_action" -> com.tdpham.games.syobon.SyobonOptionsDialog.show(this) { (gameView as? com.tdpham.games.syobon.SyobonView)?.resetGame() }
+            "monkey" -> com.tdpham.games.monkey.MonkeyOptionsDialog.show(this) { (gameView as? com.tdpham.games.monkey.MonkeyView)?.resetGame() }
+            "frenzy" -> com.tdpham.games.frenzy.FrenzyOptionsDialog.show(this) { (gameView as? com.tdpham.games.frenzy.FrenzyView)?.resetGame() }
+            "retrodriver" -> com.tdpham.games.retrodriver.RetroDriverOptionsDialog.show(this) { (gameView as? com.tdpham.games.retrodriver.RetroDriverView)?.resetGame() }
+            else -> return false
+        }
+        return true
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -484,5 +365,11 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         return (gameView as View).onKeyUp(keyCode, event)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        removeActiveOverlay()
+        adOverlayHelper.destroy()
     }
 }

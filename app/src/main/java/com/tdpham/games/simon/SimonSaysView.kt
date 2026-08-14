@@ -75,7 +75,7 @@ class SimonSaysView @JvmOverloads constructor(
     override fun resetGame() {
         handler.removeCallbacksAndMessages(null)
         sequence.clear()
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
 
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         speedIndex = prefs.getInt(KEY_SPEED, 1).coerceIn(0, 2)

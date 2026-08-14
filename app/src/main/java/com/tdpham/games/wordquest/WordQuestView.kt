@@ -123,7 +123,7 @@ class WordQuestView @JvmOverloads constructor(
         usedKeys.clear()
         gameOver = false
         won = false
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         best = ScoreManager.getHighScore(context, gameKey, currentCategoryIndex)
         keyR = 0
         keyC = 0

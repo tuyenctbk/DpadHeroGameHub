@@ -122,7 +122,7 @@ class BrickBreakView @JvmOverloads constructor(
         isPaused = true
         isBallLaunched = false
         ballSpeedMultiplier = 1.0f
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         highScore = ScoreManager.getHighScore(context, gameKey, sizeIndex)
         brickFlashes.clear()
         initializeBoard(sizeIndex)

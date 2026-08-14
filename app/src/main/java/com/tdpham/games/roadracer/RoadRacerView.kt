@@ -133,7 +133,7 @@ class RoadRacerView @JvmOverloads constructor(
         highScore = ScoreManager.getHighScore(context, gameKey, trafficDensity)
         isGameOver = false
         isPaused = true
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         gameSpeed = 10f
         playerLane = 1
         obstacles.clear()

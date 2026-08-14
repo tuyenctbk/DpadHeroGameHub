@@ -194,7 +194,7 @@ class FruitView @JvmOverloads constructor(
         gamePaused = true
         bombProbability = 0.12f
         lastBombHitTime = 0L
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         invalidate()
     }
 

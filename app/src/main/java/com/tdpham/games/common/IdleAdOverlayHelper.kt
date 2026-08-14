@@ -278,4 +278,12 @@ class IdleAdOverlayHelper(private val activity: Activity) {
         adOverlay = null
         isAdShowing = false
     }
+
+    fun destroy() {
+        hideAd()
+        mainHandler.removeCallbacksAndMessages(null)
+        val root = activity.findViewById<ViewGroup>(android.R.id.content)
+        rootContainer?.let { root?.removeView(it) }
+        rootContainer = null
+    }
 }

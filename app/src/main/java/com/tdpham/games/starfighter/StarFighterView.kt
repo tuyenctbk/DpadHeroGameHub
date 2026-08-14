@@ -137,7 +137,7 @@ class StarFighterView @JvmOverloads constructor(
         best = ScoreManager.getHighScore(context, gameKey, currentDifficultyIndex)
         gameOver = false
         isPaused = true
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         gunLevel = 1
 
         // Ship Stats

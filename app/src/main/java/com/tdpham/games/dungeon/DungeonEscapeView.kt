@@ -120,7 +120,7 @@ class DungeonEscapeView @JvmOverloads constructor(
         level = startingLevel
         score = 0
         best = ScoreManager.getHighScore(context, gameKey, startingLevel)
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         setupLevel()
         gamePaused = true
         gameOver = false

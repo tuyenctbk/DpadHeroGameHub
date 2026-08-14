@@ -103,7 +103,7 @@ class HangmanView @JvmOverloads constructor(
         val selectedCat = prefs.getInt(KEY_CATEGORY, -1).coerceIn(-1, words.size - 1)
 
         // Collect all available words that haven't been used yet
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         
         var availableWords = if (selectedCat == -1) {
             words.flatMap { (cat, wList) -> wList.map { cat to it } }

@@ -98,7 +98,7 @@ class SolitaireView @JvmOverloads constructor(
 
     override fun resetGame() {
         deck.clear()
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         
         // Load mode from settings
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

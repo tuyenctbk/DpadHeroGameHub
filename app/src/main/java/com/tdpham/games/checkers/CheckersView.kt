@@ -78,7 +78,7 @@ class CheckersView @JvmOverloads constructor(
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
 
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         currentDifficultyIndex = prefs.getInt(KEY_DIFFICULTY, 1).coerceIn(0, 1)

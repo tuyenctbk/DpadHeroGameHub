@@ -107,7 +107,7 @@ class Lines98View @JvmOverloads constructor(
         board = Array(gridSize) { IntArray(gridSize) { 0 } }
         score = 0
         isGameOver = false
-        celebrationManager.start(0f, 0f)
+        celebrationManager.clear()
         selectedX = -1
         selectedY = -1
         nextBalls.clear()

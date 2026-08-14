@@ -21,7 +21,7 @@ class SyobonView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), GameView {
 
-    override var gameKey: String = "cat_meowio"
+    override var gameKey: String = "syobon_action"
     override var onGameOver: ((Int) -> Unit)? = null
 
     companion object {
@@ -285,6 +285,7 @@ class SyobonView @JvmOverloads constructor(
         best = ScoreManager.getHighScore(context, gameKey, 0)
 
         resetLevelState()
+        celebrationManager.clear()
         gameOver = false
         gamePaused = false
         isLevelCleared = false
