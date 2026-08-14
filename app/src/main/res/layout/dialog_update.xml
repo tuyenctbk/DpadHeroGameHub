@@ -4,7 +4,9 @@
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_background"
     android:orientation="vertical"
-    android:padding="32dp">
+    android:padding="32dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <TextView
         android:id="@+id/update_title"
@@ -41,7 +43,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
         <Button
             android:id="@+id/btn_update_later"
@@ -50,7 +54,7 @@
             android:layout_weight="1"
             android:layout_marginEnd="12dp"
             android:text="@string/rate_later"
-            android:backgroundTint="#444444"
+            android:background="@drawable/bg_btn_neutral_selector"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -63,7 +67,7 @@
             android:layout_weight="1"
             android:layout_marginStart="12dp"
             android:text="@string/update_now"
-            android:backgroundTint="#4CAF50"
+            android:background="@drawable/bg_btn_green_selector"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"

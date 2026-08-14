@@ -199,7 +199,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     abstract fun getLayoutId(): Int
     abstract fun getGameViewId(): Int
 
-    protected fun showGameGuide() {
+    open fun showGameGuide() {
         removeActiveOverlay()
         isGuideShowing = true
         IdleAdManager.isWaitingMode = true
@@ -220,8 +220,12 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 isGuideShowing = false
                 IdleAdManager.isWaitingMode = false
                 showGameOptions {
-                    (gameView as View).requestFocus()
-                    gameView.resume()
+                    if (!hasStarted) {
+                        showGameGuide()
+                    } else {
+                        (gameView as View).requestFocus()
+                        gameView.resume()
+                    }
                 }
             },
             onDismiss = {

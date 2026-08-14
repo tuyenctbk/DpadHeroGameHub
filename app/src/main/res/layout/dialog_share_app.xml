@@ -6,7 +6,9 @@
     android:orientation="vertical"
     android:padding="28dp"
     android:gravity="center_horizontal"
-    android:background="@drawable/dialog_background">
+    android:background="@drawable/dialog_background"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <!-- Share Icon Header -->
     <ImageView
@@ -48,8 +50,7 @@
         android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:background="@drawable/game_item_background"
-        android:backgroundTint="#00E5FF"
+        android:background="@drawable/bg_btn_cyan_selector"
         android:focusable="true"
         android:nextFocusUp="@id/btn_share_later"
         android:nextFocusDown="@id/btn_share_later"
@@ -63,8 +64,7 @@
         android:text="@string/rate_later"
         android:textColor="#FFFFFF"
         android:textSize="14sp"
-        android:background="@drawable/game_item_background"
-        android:backgroundTint="#26FFFFFF"
+        android:background="@drawable/bg_btn_neutral_selector"
         android:focusable="true"
         android:nextFocusUp="@id/btn_share_now"
         android:nextFocusDown="@id/btn_share_now" />

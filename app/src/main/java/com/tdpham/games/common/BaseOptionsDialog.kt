@@ -3,6 +3,7 @@ package com.tdpham.games.common
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -19,7 +20,9 @@ class BaseOptionsDialog(context: Context) : Dialog(context) {
     private val container: LinearLayout
     private val titleView: TextView
     private val btnDone: Button
+    private val btnHelp: Button
     private var onDismissAction: (() -> Unit)? = null
+    private var onHelpAction: (() -> Unit)? = null
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -30,16 +33,29 @@ class BaseOptionsDialog(context: Context) : Dialog(context) {
         container = findViewById(R.id.options_container)
         titleView = findViewById(R.id.dialog_title)
         btnDone = findViewById(R.id.btn_done)
+        btnHelp = findViewById(R.id.btn_help)
 
-        btnDone.setOnClickListener { dismiss() }
+        btnDone.setOnClickListener {
+            dismiss()
+        }
         setupFocusEffect(btnDone)
-        
+
+        btnHelp.setOnClickListener {
+            dismiss()
+            onHelpAction?.invoke() ?: (context as? BaseGameActivity)?.showGameGuide()
+        }
+        setupFocusEffect(btnHelp)
+
         setOnDismissListener { onDismissAction?.invoke() }
     }
 
-    override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
-        if (event.action == android.view.KeyEvent.ACTION_DOWN) {
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.action == KeyEvent.ACTION_DOWN) {
             IdleAdManager.notifyInteraction()
+            if (event.keyCode == KeyEvent.KEYCODE_H || event.keyCode == KeyEvent.KEYCODE_HELP) {
+                btnHelp.performClick()
+                return true
+            }
         }
         return super.dispatchKeyEvent(event)
     }
@@ -69,6 +85,11 @@ class BaseOptionsDialog(context: Context) : Dialog(context) {
         return this
     }
 
+    fun setOnHelp(action: () -> Unit): BaseOptionsDialog {
+        onHelpAction = action
+        return this
+    }
+
     fun addOption(
         label: String,
         valueProvider: () -> String,
@@ -81,12 +102,12 @@ class BaseOptionsDialog(context: Context) : Dialog(context) {
         val descTxt = view.findViewById<TextView>(R.id.option_desc)
 
         lbl.text = label
-        
+
         fun update() {
             valTxt.text = valueProvider()
             descTxt.text = descProvider()
         }
-        
+
         update()
 
         view.setOnClickListener {
@@ -103,11 +124,10 @@ class BaseOptionsDialog(context: Context) : Dialog(context) {
         view.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
                 IdleAdManager.notifyInteraction()
-                v.animate().scaleX(1.08f).scaleY(1.08f).setDuration(200).start()
-                v.setBackgroundColor("#33FFFFFF".toColorInt())
+                SoundManager.playClick()
+                v.animate().scaleX(1.05f).scaleY(1.05f).setDuration(180).start()
             } else {
-                v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
-                v.setBackgroundColor(Color.TRANSPARENT)
+                v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(180).start()
             }
         }
         view.setOnHoverListener { v, event ->
@@ -115,15 +135,6 @@ class BaseOptionsDialog(context: Context) : Dialog(context) {
                 v.requestFocus()
             }
             false
-        }
-    }
-
-    override fun show() {
-        super.show()
-        if (container.childCount > 0) {
-            container.getChildAt(0).requestFocus()
-        } else {
-            btnDone.requestFocus()
         }
     }
 }

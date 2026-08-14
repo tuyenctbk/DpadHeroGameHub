@@ -6,9 +6,9 @@ import com.tdpham.games.R
 import com.tdpham.games.common.BaseOptionsDialog
 
 object RetroDriverOptionsDialog {
-    private const val PREFS_NAME = "retrodriver_settings"
-    private const val KEY_CAR_INDEX = "selected_car_index"
-    private const val KEY_THEME_INDEX = "selected_theme_index"
+    const val PREFS_NAME = "retrodriver_settings"
+    const val KEY_CAR_INDEX = "selected_car_index"
+    const val KEY_MAP_INDEX = "selected_map_index"
 
     private val carNames = arrayOf("Suzuki Red", "Yamaha Yellow", "Cyber Cyan", "Kawasaki Neon")
 
@@ -28,28 +28,26 @@ object RetroDriverOptionsDialog {
                 },
                 onClick = {
                     val index = prefs.getInt(KEY_CAR_INDEX, 0)
-                    val nextIndex = (index + 1) % 4
+                    val nextIndex = (index + 1) % carNames.size
                     prefs.edit { putInt(KEY_CAR_INDEX, nextIndex) }
                 }
             )
             .addOption(
-                label = context.getString(R.string.retrodriver_theme_label),
+                label = "Racing Map (1–20)",
                 valueProvider = {
-                    val index = prefs.getInt(KEY_THEME_INDEX, 0).coerceIn(0, 3)
-                    when (index) {
-                        1 -> context.getString(R.string.retrodriver_theme_desert)
-                        2 -> context.getString(R.string.retrodriver_theme_cyber)
-                        3 -> context.getString(R.string.retrodriver_theme_snow)
-                        else -> context.getString(R.string.retrodriver_theme_neon)
-                    }
+                    val mapIndex = prefs.getInt(KEY_MAP_INDEX, 0).coerceIn(0, RetroDriverMapCatalog.maps.size - 1)
+                    val map = RetroDriverMapCatalog.getMap(mapIndex)
+                    map.name
                 },
                 descProvider = {
-                    context.getString(R.string.retrodriver_theme_desc)
+                    val mapIndex = prefs.getInt(KEY_MAP_INDEX, 0).coerceIn(0, RetroDriverMapCatalog.maps.size - 1)
+                    val map = RetroDriverMapCatalog.getMap(mapIndex)
+                    map.description
                 },
                 onClick = {
-                    val index = prefs.getInt(KEY_THEME_INDEX, 0)
-                    val nextIndex = (index + 1) % 4
-                    prefs.edit { putInt(KEY_THEME_INDEX, nextIndex) }
+                    val mapIndex = prefs.getInt(KEY_MAP_INDEX, 0)
+                    val nextMapIndex = (mapIndex + 1) % RetroDriverMapCatalog.maps.size
+                    prefs.edit { putInt(KEY_MAP_INDEX, nextMapIndex) }
                 }
             )
             .setOnDismiss(onDismiss)

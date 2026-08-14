@@ -40,16 +40,44 @@
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/btn_done"
+    <!-- Bottom Buttons: Help / Guide & Done -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="20dp"
-        android:backgroundTint="#333333"
-        android:text="@string/trex_done"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:textAllCaps="true"
-        android:padding="12dp" />
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_help"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_btn_blue_selector"
+            android:text="@string/how_to_play"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:focusable="true"
+            android:nextFocusRight="@+id/btn_done" />
+
+        <Button
+            android:id="@+id/btn_done"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/bg_btn_green_selector"
+            android:text="@string/trex_done"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:focusable="true"
+            android:nextFocusLeft="@+id/btn_help" />
+
+    </LinearLayout>
 
 </LinearLayout>

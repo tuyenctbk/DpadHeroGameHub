@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
+import androidx.core.content.edit
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
@@ -91,22 +92,22 @@ class RetroDriverView @JvmOverloads constructor(
     private val barriers = mutableListOf<RoadBarrier>()
     private val exhaustParticles = mutableListOf<ExhaustParticle>()
     private val sparkParticles = mutableListOf<SparkParticle>()
-    private var lastHazardSpawnZ = 0f
 
-    // Player Health, Stuns, invincibility
-    private var lives = 4
-    private var isInvincible = false
+    // Player Invincibility & Turbo (No death, only slowdown on impact)
     private var invincibleUntil = 0L
     private var turboUntil = 0L
     private var oilSpinUntil = 0L
     private var lastCrashTime = 0L
 
-    // Motorcycle Selection (keeping selectedCarIndex for key binding compatibility)
+    // Vehicle Selection
     private var selectedCarIndex = 0 // 0: Red, 1: Yellow, 2: Cyan, 3: Green
     private val carColors = arrayOf("#FF1744", "#FFEA00", "#00E5FF", "#39FF14")
     private val carNames = arrayOf("Suzuki Red", "Yamaha Yellow", "Cyber Cyan", "Kawasaki Neon")
 
-    // Motorcycle Tournament State
+    // Map Selection (20 Validated Maps)
+    private var selectedMapIndex = 0
+
+    // Tournament State
     private var countdown = 3
     private var countdownStartTime = 0L
     private var gameWon = false
@@ -188,44 +189,46 @@ class RetroDriverView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         animHandler.post(animRunnable)
+        RetroDriverMapCatalog.validateAllMaps()
         buildRoad()
     }
 
     private fun buildRoad() {
         segments.clear()
+        boostPads.clear()
+        oilSlicks.clear()
+        barriers.clear()
+
+        val currentMap = RetroDriverMapCatalog.getMap(selectedMapIndex)
+        selectedThemeIndex = currentMap.themeIndex.coerceIn(themes.indices)
         val numSegments = 300
         
         val theme = themes[selectedThemeIndex]
         val colors1 = RoadColors(theme.grass1, theme.rumble1, theme.road1)
         val colors2 = RoadColors(theme.grass2, theme.rumble2, theme.road2)
 
-        var accumCurve = 0f
-        
-        // Generate random curves for chunks of road (every 30 to 50 segments)
+        // Build curve points array based on the validated map chunks
         val curvePoints = FloatArray(numSegments)
-        var segmentIdx = 0
-        while (segmentIdx < numSegments) {
-            val chunkLen = Random.nextInt(30, 50)
-            val chunkCurve = when (Random.nextInt(5)) {
-                0 -> 0f      // Straight
-                1 -> -8f     // Gentle Left
-                2 -> 8f      // Gentle Right
-                3 -> -18f    // Sharp Left
-                else -> 18f  // Sharp Right
-            }
-            
-            for (j in 0 until chunkLen) {
-                if (segmentIdx + j < numSegments) {
-                    curvePoints[segmentIdx + j] = chunkCurve
+        var segIdx = 0
+        for (chunk in currentMap.chunks) {
+            for (j in 0 until chunk.length) {
+                if (segIdx + j < numSegments) {
+                    curvePoints[segIdx + j] = chunk.curve
                 }
             }
-            segmentIdx += chunkLen
+            segIdx += chunk.length
+        }
+        // Fill remaining segments if any with straight road
+        while (segIdx < numSegments) {
+            curvePoints[segIdx] = 0f
+            segIdx++
         }
         
         // Checkered flag colors
         val checkColors1 = RoadColors(theme.grass1, Color.BLACK, Color.WHITE)
         val checkColors2 = RoadColors(theme.grass2, Color.WHITE, Color.BLACK)
 
+        var accumCurve = 0f
         for (i in 0 until numSegments) {
             val curveVal = curvePoints[i]
             
@@ -240,12 +243,17 @@ class RetroDriverView @JvmOverloads constructor(
             accumCurve += curveVal
             val p2 = Point3D(accumCurve, 0f, (i + 1) * segmentLength)
 
-            // Spawn roadside assets randomly
+            // Spawn roadside assets
             var decType = 0
             var decSide = 0f
-            if (i % 6 == 0 && !isCheckered) {
-                decType = Random.nextInt(1, 4) // 1: Palm Tree, 2: Bush, 3: Warning Sign
-                decSide = if (Random.nextBoolean()) -1.7f else 1.7f
+            if (i % 5 == 0 && !isCheckered) {
+                decType = when {
+                    curveVal != 0f && i % 10 == 0 -> 3 // Warning Sign on turns
+                    selectedThemeIndex == 3 -> 2 // Snowy bushes
+                    selectedThemeIndex == 1 -> 2 // Desert cactuses / bushes
+                    else -> if (Random.nextBoolean()) 1 else 2 // Palm tree / bush
+                }
+                decSide = if (curveVal > 0) -1.7f else 1.7f
             }
 
             segments.add(
@@ -259,6 +267,16 @@ class RetroDriverView @JvmOverloads constructor(
                     decSide
                 )
             )
+        }
+
+        // Spawn handcrafted obstacles from the map definition
+        for (obs in currentMap.obstacles) {
+            val z = obs.segIndex * segmentLength
+            when (obs.type) {
+                0 -> boostPads.add(BoostPad(obs.offset, z))
+                1 -> oilSlicks.add(OilSlick(obs.offset, z))
+                2 -> barriers.add(RoadBarrier(obs.offset, z))
+            }
         }
     }
 
@@ -322,32 +340,23 @@ class RetroDriverView @JvmOverloads constructor(
         lapMessage = ""
         
         traffic.clear()
-        boostPads.clear()
-        oilSlicks.clear()
-        barriers.clear()
         exhaustParticles.clear()
         sparkParticles.clear()
         
         lastSpawnZ = 0f
-        lastHazardSpawnZ = 0f
-        lives = 4
         gameOver = false
         gameWon = false
         gamePaused = true
         
-        // Load user settings or randomize theme
-        val prefs = context.getSharedPreferences("retrodriver_settings", Context.MODE_PRIVATE)
-        val prefVehicle = prefs.getInt("vehicle", -1)
+        // Load user settings
+        val prefs = context.getSharedPreferences(RetroDriverOptionsDialog.PREFS_NAME, Context.MODE_PRIVATE)
+        val prefVehicle = prefs.getInt(RetroDriverOptionsDialog.KEY_CAR_INDEX, 0)
         if (prefVehicle in carColors.indices) {
             selectedCarIndex = prefVehicle
         }
-        val prefTrack = prefs.getInt("track", -1)
-        if (prefTrack in themes.indices) {
-            selectedThemeIndex = prefTrack
-        } else {
-            selectedThemeIndex = Random.nextInt(0, themes.size)
-        }
-        timeOfDayOffset = Random.nextInt(0, 4) * 8000f
+        val prefMap = prefs.getInt(RetroDriverOptionsDialog.KEY_MAP_INDEX, 0)
+        selectedMapIndex = prefMap.coerceIn(0, RetroDriverMapCatalog.maps.size - 1)
+        timeOfDayOffset = selectedMapIndex * 4000f
         
         buildRoad()
         
@@ -372,10 +381,6 @@ class RetroDriverView @JvmOverloads constructor(
         countdownStartTime = System.currentTimeMillis()
         celebrationManager.clear()
         invalidate()
-    }
-
-    private fun spawnTraffic() {
-        // Tournament mode: Competitor traffic is pre-spawned statically in resetGame
     }
 
     private fun update() {
@@ -410,6 +415,11 @@ class RetroDriverView @JvmOverloads constructor(
             } else {
                 gameWon = true
                 gamePaused = true
+                val isNewHigh = score > best
+                if (isNewHigh) {
+                    ScoreManager.updateHighScore(context, gameKey, score)
+                    best = score
+                }
                 celebrationManager.start(width / 2f, height / 2f)
                 onGameOver?.invoke(score)
                 return
@@ -443,11 +453,11 @@ class RetroDriverView @JvmOverloads constructor(
         // Move camera position
         position += speed
 
-        // Centrifugal force on curves (pulls player outward)
+        // Centrifugal force on curves (pulls player outward smoothly)
         val currentSegIndex = (position / segmentLength).toInt()
         if (currentSegIndex in 0 until segments.size) {
             val currentSeg = segments[currentSegIndex]
-            playerX -= currentSeg.curve * (speed / maxSpeed) * 0.004f
+            playerX -= currentSeg.curve * (speed / maxSpeed) * 0.0035f
             playerX = playerX.coerceIn(-2.5f, 2.5f)
         }
 
@@ -458,10 +468,58 @@ class RetroDriverView @JvmOverloads constructor(
             best = score
         }
 
-        // Spawn hazards
-        spawnTraffic()
+        // 1. Check Boost Pads
+        for (pad in boostPads) {
+            val distZ = Math.abs(pad.z - position)
+            if (distZ < 100f && Math.abs(pad.offset - playerX) < 0.35f) {
+                if (now >= turboUntil) {
+                    turboUntil = now + 2200L
+                    speed = 220f
+                    SoundManager.playSuccess()
+                }
+            }
+        }
 
-        // Update traffic cars
+        // 2. Check Oil Slicks (Slows down and causes spin - NO DEATH)
+        for (oil in oilSlicks) {
+            val distZ = Math.abs(oil.z - position)
+            if (distZ < 90f && Math.abs(oil.offset - playerX) < 0.30f) {
+                if (now >= oilSpinUntil && now >= invincibleUntil) {
+                    oilSpinUntil = now + 1200L
+                    speed = (speed * 0.45f).coerceAtLeast(18f)
+                    SoundManager.playError()
+                }
+            }
+        }
+
+        // 3. Check Road Barriers (Slows down on impact - NO DEATH)
+        for (bar in barriers) {
+            val distZ = Math.abs(bar.z - position)
+            if (distZ < 100f && Math.abs(bar.offset - playerX) < 0.28f) {
+                if (now >= invincibleUntil) {
+                    invincibleUntil = now + 1200L
+                    speed = (speed * 0.35f).coerceAtLeast(15f)
+                    SoundManager.playError()
+                    repeat(15) {
+                        val angle = Random.nextFloat() * 2f * Math.PI.toFloat()
+                        val pSpeed = Random.nextFloat() * 10f + 2f
+                        sparkParticles.add(
+                            SparkParticle(
+                                x = width / 2f + (bar.offset - playerX) * width * 0.25f,
+                                y = height * 0.85f,
+                                vx = cos(angle.toDouble()).toFloat() * pSpeed,
+                                vy = sin(angle.toDouble()).toFloat() * pSpeed - 3f,
+                                size = Random.nextFloat() * 6f + 3f,
+                                color = Color.parseColor("#FF9800"),
+                                alpha = 255
+                            )
+                        )
+                    }
+                }
+            }
+        }
+
+        // 4. Update traffic cars (Slows down on collision, NO DEATH / NO GAME OVER)
         val iterator = traffic.iterator()
         while (iterator.hasNext()) {
             val car = iterator.next()
@@ -482,21 +540,17 @@ class RetroDriverView @JvmOverloads constructor(
                 }
             }
 
-            if (Math.abs(car.z - position) < 140f && Math.abs(car.offset - playerX) < 0.32f) {
+            // Collision with player -> Slow down and push competitor forward, never kills player!
+            if (Math.abs(car.z - position) < 130f && Math.abs(car.offset - playerX) < 0.30f) {
                 if (now >= invincibleUntil) {
-                    lives--
-                    invincibleUntil = now + 2000L
+                    invincibleUntil = now + 1200L
                     lastCrashTime = now
-                    if (speed > 80f) {
-                        oilSpinUntil = now + (1000 + (speed / maxSpeed) * 1500).toLong()
-                        speed = 10f
-                    } else {
-                        speed = 15f
-                    }
+                    speed = (speed * 0.40f).coerceAtLeast(20f)
+                    car.z += 80f // Bump competitor forward
                     SoundManager.playError()
-                    
+
                     // Spawn metallic sparks
-                    repeat(20) {
+                    repeat(18) {
                         val angle = Random.nextFloat() * 2f * Math.PI.toFloat()
                         val pSpeed = Random.nextFloat() * 11f + 3f
                         sparkParticles.add(
@@ -511,24 +565,9 @@ class RetroDriverView @JvmOverloads constructor(
                             )
                         )
                     }
-
-                    if (lives <= 0) {
-                        gameOver = true
-                        celebrationManager.start(width / 2f, height / 2f)
-                        onGameOver?.invoke(score)
-                    }
                 }
-                iterator.remove()
-                continue
-            }
-
-            // Remove if behind player
-            if (car.z < position - 200f) {
-                iterator.remove()
             }
         }
-
-
 
         // Update Exhaust smoke particles
         if (speed > 10f && !gamePaused) {
@@ -538,7 +577,6 @@ class RetroDriverView @JvmOverloads constructor(
                 val carH = carW * 0.55f
                 val carX = width / 2f
                 val carY = height * 0.82f
-                // Spawn smoke from left & right exhausts
                 val offsetSide = if (Random.nextBoolean()) -carW * 0.26f else carW * 0.26f
                 exhaustParticles.add(
                     ExhaustParticle(
@@ -582,19 +620,12 @@ class RetroDriverView @JvmOverloads constructor(
         val cameraDepth = 1f / (cameraHeight / segmentLength)
 
         // 1. Draw Sunset/Night Sky Gradient with dynamic theme cycle
-        val now = System.currentTimeMillis()
-        val themePhase = (((position + timeOfDayOffset) / 8000f) % 4).toInt()
+        val themePhase = selectedThemeIndex
         val skyGrad = when (themePhase) {
             0 -> skyGradSunset
             1 -> skyGradMidnight
             2 -> skyGradDawn
             else -> skyGradDaylight
-        }
-        val skyBaseColor = when (themePhase) {
-            0 -> colorSunsetBase
-            1 -> colorMidnightBase
-            2 -> colorDawnBase
-            else -> colorDaylightBase
         }
         paint.shader = skyGrad
         canvas.drawRect(0f, 0f, width.toFloat(), height * 0.5f, paint)
@@ -610,7 +641,7 @@ class RetroDriverView @JvmOverloads constructor(
             }
         }
 
-        // Draw Pulsing Retro Sunset Sun at horizon (only visible during sunset/midnight/dawn)
+        // Draw Pulsing Retro Sunset Sun at horizon
         if (themePhase != 3) {
             val sunR = width * 0.12f
             val sunX = width / 2f
@@ -623,7 +654,7 @@ class RetroDriverView @JvmOverloads constructor(
             canvas.drawCircle(sunX, sunY, sunR, paint)
             paint.shader = null
             
-            // Draw synthwave horizontal bands sliced out (using skyGrad shader so they blend with background)
+            // Draw synthwave horizontal bands sliced out
             paint.shader = skyGrad
             paint.style = Paint.Style.STROKE
             for (lineY in (sunY - sunR).toInt()..(sunY + sunR).toInt() step 12) {
@@ -642,7 +673,6 @@ class RetroDriverView @JvmOverloads constructor(
         val baseRoadX = baseSeg.p1.x + (baseSeg.p2.x - baseSeg.p1.x) * segmentPercent
         
         val cameraX = baseRoadX + playerX * roadWidth
-        var maxy = height.toFloat()
 
         // Draw Road segments from back to front (farthest to closest)
         for (n in drawDistance - 1 downTo 0) {
@@ -709,8 +739,73 @@ class RetroDriverView @JvmOverloads constructor(
             }
         }
 
+        // Draw Boost Pads
+        for (pad in boostPads) {
+            var padZ = pad.z
+            val roadLength = segments.size * segmentLength
+            if (padZ < position) padZ += roadLength
+            if (padZ > position && padZ < position + drawDistance * segmentLength) {
+                val segIndex = (padZ / segmentLength).toInt()
+                val seg = segments[segIndex % segments.size]
+                val padSegPercent = (padZ % segmentLength) / segmentLength
+                val roadXAtPad = seg.p1.x + (seg.p2.x - seg.p1.x) * padSegPercent
+                val padWorldX = roadXAtPad + pad.offset * roadWidth
+
+                tempPoint3D.x = padWorldX
+                tempPoint3D.y = 0f
+                tempPoint3D.z = padZ
+                tempPoint3D.project(cameraX, cameraHeight, position, cameraDepth, width, height)
+                val padW = tempPoint3D.screenW * 0.35f
+                val padH = padW * 0.4f
+                drawBoostPad(canvas, tempPoint3D.screenX, tempPoint3D.screenY, padW, padH)
+            }
+        }
+
+        // Draw Oil Slicks
+        for (oil in oilSlicks) {
+            var oilZ = oil.z
+            val roadLength = segments.size * segmentLength
+            if (oilZ < position) oilZ += roadLength
+            if (oilZ > position && oilZ < position + drawDistance * segmentLength) {
+                val segIndex = (oilZ / segmentLength).toInt()
+                val seg = segments[segIndex % segments.size]
+                val oilSegPercent = (oilZ % segmentLength) / segmentLength
+                val roadXAtOil = seg.p1.x + (seg.p2.x - seg.p1.x) * oilSegPercent
+                val oilWorldX = roadXAtOil + oil.offset * roadWidth
+
+                tempPoint3D.x = oilWorldX
+                tempPoint3D.y = 0f
+                tempPoint3D.z = oilZ
+                tempPoint3D.project(cameraX, cameraHeight, position, cameraDepth, width, height)
+                val oilW = tempPoint3D.screenW * 0.32f
+                val oilH = oilW * 0.35f
+                drawOilSlick(canvas, tempPoint3D.screenX, tempPoint3D.screenY, oilW, oilH)
+            }
+        }
+
+        // Draw Road Barriers
+        for (bar in barriers) {
+            var barZ = bar.z
+            val roadLength = segments.size * segmentLength
+            if (barZ < position) barZ += roadLength
+            if (barZ > position && barZ < position + drawDistance * segmentLength) {
+                val segIndex = (barZ / segmentLength).toInt()
+                val seg = segments[segIndex % segments.size]
+                val barSegPercent = (barZ % segmentLength) / segmentLength
+                val roadXAtBar = seg.p1.x + (seg.p2.x - seg.p1.x) * barSegPercent
+                val barWorldX = roadXAtBar + bar.offset * roadWidth
+
+                tempPoint3D.x = barWorldX
+                tempPoint3D.y = 0f
+                tempPoint3D.z = barZ
+                tempPoint3D.project(cameraX, cameraHeight, position, cameraDepth, width, height)
+                val barW = tempPoint3D.screenW * 0.28f
+                val barH = barW * 0.6f
+                drawBarrier(canvas, tempPoint3D.screenX, tempPoint3D.screenY, barW, barH)
+            }
+        }
+
         // Calculate ranks for all participants (Player + Traffic cars)
-        // Store pairs of (carIndex, z) where player is -1
         val participants = mutableListOf<Pair<Int, Float>>()
         participants.add(-1 to position)
         for (i in 0 until traffic.size) {
@@ -744,7 +839,7 @@ class RetroDriverView @JvmOverloads constructor(
                 val carSegPercent = (carZ % segmentLength) / segmentLength
                 val roadXAtCar = seg.p1.x + (seg.p2.x - seg.p1.x) * carSegPercent
                 val carWorldX = roadXAtCar + car.offset * roadWidth
- 
+
                 // Project car
                 tempPoint3D.x = carWorldX
                 tempPoint3D.y = 0f
@@ -770,7 +865,7 @@ class RetroDriverView @JvmOverloads constructor(
                 canvas.drawText(rankStr, tempPoint3D.screenX, tempPoint3D.screenY - carH * 0.65f - 8f, paint)
             }
         }
- 
+
         // Draw Player Motorcycle & Leaning Rider
         paint.reset()
         paint.isAntiAlias = true
@@ -852,6 +947,7 @@ class RetroDriverView @JvmOverloads constructor(
         }
         val currentRank = (21 - passedCount).coerceIn(1, 20)
         val distRemainingMeters = ((trackLengthSegments * segmentLength - position).coerceAtLeast(0f) / 10f).toInt()
+        val currentMap = RetroDriverMapCatalog.getMap(selectedMapIndex)
 
         // HUD Text
         paint.reset()
@@ -859,9 +955,9 @@ class RetroDriverView @JvmOverloads constructor(
         paint.color = Color.WHITE
         paint.textSize = 34f
         
-        // Left text: Rank, lap, and remaining distance
+        // Left text: Map name, Rank, lap, and remaining distance
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("POS: $currentRank / 20   LAP: $currentLap / $totalLaps   DIST: ${distRemainingMeters}m   SPEED: ${speed.toInt()} MPH", 40f, height * 0.06f, paint)
+        canvas.drawText("MAP: ${currentMap.name}   POS: $currentRank / 20   LAP: $currentLap / $totalLaps   SPEED: ${speed.toInt()} MPH", 40f, height * 0.06f, paint)
         
         // Right text: Best score
         paint.textAlign = Paint.Align.RIGHT
@@ -909,7 +1005,7 @@ class RetroDriverView @JvmOverloads constructor(
                 else -> "${currentRank}th"
             }
             val title = context.getString(R.string.retro_driver_finish)
-            val subtitle = "You finished in ${currentRank}${suffix} place!\nFinal Score: $score\n\nPress [ENTER] to restart"
+            val subtitle = "You completed ${currentMap.name} in ${currentRank}${suffix} place!\nFinal Score: $score\n\nPress [ENTER] to Restart"
             drawOverlay(canvas, title, subtitle)
         } else if (gameOver) {
             celebrationManager.draw(canvas)
@@ -918,9 +1014,62 @@ class RetroDriverView @JvmOverloads constructor(
             drawOverlay(
                 canvas,
                 context.getString(R.string.game_retrodriver),
-                "${context.getString(R.string.resume_hint)}\n\nVehicle: < ${carNames[selectedCarIndex]} >\n(Press DPAD Left/Right to Switch)"
+                "${context.getString(R.string.resume_hint)}\n\nCircuit: < ${currentMap.name} >\n(${currentMap.description})\nVehicle: < ${carNames[selectedCarIndex]} >\n\n[DPAD ↑ / ↓] Change Map   [DPAD ← / →] Change Vehicle"
             )
         }
+    }
+
+    private fun drawBoostPad(canvas: Canvas, cx: Float, cy: Float, w: Float, h: Float) {
+        paint.reset()
+        paint.isAntiAlias = true
+        // Glow pad base
+        paint.style = Paint.Style.FILL
+        paint.color = Color.parseColor("#00E5FF")
+        paint.alpha = 180
+        drawRectF.set(cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2)
+        canvas.drawRoundRect(drawRectF, 6f, 6f, paint)
+
+        // Chevron arrow
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = (w * 0.12f).coerceAtLeast(3f)
+        paint.color = Color.WHITE
+        paint.alpha = 240
+        drawPath.reset()
+        drawPath.moveTo(cx - w * 0.35f, cy + h * 0.25f)
+        drawPath.lineTo(cx, cy - h * 0.25f)
+        drawPath.lineTo(cx + w * 0.35f, cy + h * 0.25f)
+        canvas.drawPath(drawPath, paint)
+    }
+
+    private fun drawOilSlick(canvas: Canvas, cx: Float, cy: Float, w: Float, h: Float) {
+        paint.reset()
+        paint.isAntiAlias = true
+        paint.style = Paint.Style.FILL
+        paint.color = Color.parseColor("#212121")
+        paint.alpha = 210
+        drawRectF.set(cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2)
+        canvas.drawOval(drawRectF, paint)
+
+        // Rainbow sheen highlight on oil
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = 2.5f
+        paint.color = Color.parseColor("#D500F9")
+        paint.alpha = 140
+        canvas.drawArc(drawRectF, 30f, 120f, false, paint)
+    }
+
+    private fun drawBarrier(canvas: Canvas, cx: Float, cy: Float, w: Float, h: Float) {
+        paint.reset()
+        paint.isAntiAlias = true
+        paint.style = Paint.Style.FILL
+        paint.color = Color.parseColor("#FFD600")
+        drawRectF.set(cx - w / 2, cy - h, cx + w / 2, cy)
+        canvas.drawRoundRect(drawRectF, 4f, 4f, paint)
+
+        // Black hazard stripes
+        paint.color = Color.BLACK
+        canvas.drawRect(cx - w * 0.3f, cy - h, cx - w * 0.1f, cy, paint)
+        canvas.drawRect(cx + w * 0.1f, cy - h, cx + w * 0.3f, cy, paint)
     }
 
     private fun drawSegment(canvas: Canvas, width: Int, p1: Point3D, p2: Point3D, color: RoadColors) {
@@ -1036,7 +1185,7 @@ class RetroDriverView @JvmOverloads constructor(
                 canvas.drawCircle(x + leafR * 0.6f, y - trunkH + leafR * 0.2f, leafR * 0.8f, paint)
                 canvas.drawCircle(x, y - trunkH - leafR * 0.5f, leafR * 0.7f, paint)
             }
-            2 -> { // Bush
+            2 -> { // Bush / Cactus
                 paint.color = colorBush
                 paint.style = Paint.Style.FILL
                 val bushR = size * 0.35f
@@ -1044,7 +1193,7 @@ class RetroDriverView @JvmOverloads constructor(
                 canvas.drawCircle(x - bushR * 0.5f, y - bushR * 0.4f, bushR * 0.8f, paint)
                 canvas.drawCircle(x + bushR * 0.5f, y - bushR * 0.4f, bushR * 0.8f, paint)
             }
-            3 -> { // Retro neon billboards / warning signs
+            3 -> { // Retro warning signs
                 // Post
                 paint.color = colorPost
                 paint.style = Paint.Style.FILL
@@ -1052,7 +1201,7 @@ class RetroDriverView @JvmOverloads constructor(
                 val postH = size * 0.7f
                 canvas.drawRect(x - postW / 2, y - postH, x + postW / 2, y, paint)
 
-                // Sign Board (Yellow chevron warning sign pointing to turn)
+                // Sign Board
                 paint.color = colorSign
                 val signW = size * 0.4f
                 val signH = size * 0.3f
@@ -1080,18 +1229,18 @@ class RetroDriverView @JvmOverloads constructor(
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
 
         paint.color = Color.WHITE
-        paint.textSize = 80f
+        paint.textSize = 72f
         paint.textAlign = Paint.Align.CENTER
         paint.typeface = Typeface.DEFAULT_BOLD
-        canvas.drawText(title, width / 2f, height / 2f - 50f, paint)
+        canvas.drawText(title, width / 2f, height / 2f - 60f, paint)
 
-        paint.textSize = 32f
+        paint.textSize = 30f
         paint.typeface = Typeface.DEFAULT
         val lines = subtitle.split("\n")
-        var yOffset = height / 2f + 40f
+        var yOffset = height / 2f + 20f
         for (line in lines) {
             canvas.drawText(line, width / 2f, yOffset, paint)
-            yOffset += 45f
+            yOffset += 40f
         }
     }
 
@@ -1103,11 +1252,35 @@ class RetroDriverView @JvmOverloads constructor(
             }
             if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 selectedCarIndex = (selectedCarIndex - 1 + carColors.size) % carColors.size
+                context.getSharedPreferences(RetroDriverOptionsDialog.PREFS_NAME, Context.MODE_PRIVATE).edit {
+                    putInt(RetroDriverOptionsDialog.KEY_CAR_INDEX, selectedCarIndex)
+                }
                 invalidate()
                 return true
             }
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 selectedCarIndex = (selectedCarIndex + 1) % carColors.size
+                context.getSharedPreferences(RetroDriverOptionsDialog.PREFS_NAME, Context.MODE_PRIVATE).edit {
+                    putInt(RetroDriverOptionsDialog.KEY_CAR_INDEX, selectedCarIndex)
+                }
+                invalidate()
+                return true
+            }
+            if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                selectedMapIndex = (selectedMapIndex - 1 + RetroDriverMapCatalog.maps.size) % RetroDriverMapCatalog.maps.size
+                context.getSharedPreferences(RetroDriverOptionsDialog.PREFS_NAME, Context.MODE_PRIVATE).edit {
+                    putInt(RetroDriverOptionsDialog.KEY_MAP_INDEX, selectedMapIndex)
+                }
+                buildRoad()
+                invalidate()
+                return true
+            }
+            if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                selectedMapIndex = (selectedMapIndex + 1) % RetroDriverMapCatalog.maps.size
+                context.getSharedPreferences(RetroDriverOptionsDialog.PREFS_NAME, Context.MODE_PRIVATE).edit {
+                    putInt(RetroDriverOptionsDialog.KEY_MAP_INDEX, selectedMapIndex)
+                }
+                buildRoad()
                 invalidate()
                 return true
             }
@@ -1118,16 +1291,7 @@ class RetroDriverView @JvmOverloads constructor(
             return true
         }
 
-        if (gameWon) {
-            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-                resetGame()
-                startGame()
-                return true
-            }
-            return false
-        }
-
-        if (gameOver) {
+        if (gameWon || gameOver) {
             if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
                 resetGame()
                 startGame()
@@ -1166,7 +1330,7 @@ class RetroDriverView @JvmOverloads constructor(
             }
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 val steerSpeed = when (selectedCarIndex) {
-                    2 -> 0.12f // Cyber Cyan (Cyber-Runner) has higher handling!
+                    2 -> 0.12f // Cyber Cyan has higher handling
                     else -> 0.08f
                 }
                 playerX = (playerX - steerSpeed).coerceAtLeast(-2f)
@@ -1176,7 +1340,7 @@ class RetroDriverView @JvmOverloads constructor(
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
                 val steerSpeed = when (selectedCarIndex) {
-                    2 -> 0.12f // Cyber Cyan (Cyber-Runner) has higher handling!
+                    2 -> 0.12f
                     else -> 0.08f
                 }
                 playerX = (playerX + steerSpeed).coerceAtMost(2f)

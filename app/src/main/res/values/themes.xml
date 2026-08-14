@@ -11,6 +11,23 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        
+        <!-- TV Focus Highlight Control: Disable default clipped framework outline -->
+        <item name="android:defaultFocusHighlightEnabled">false</item>
+        
+        <!-- Global Button Theme overrides for pixel-perfect D-Pad & TV focus -->
+        <item name="materialButtonStyle">@style/Widget.App.Button</item>
+        <item name="buttonStyle">@style/Widget.App.Button</item>
+    </style>
+
+    <style name="Widget.App.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:defaultFocusHighlightEnabled">false</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="backgroundTint">@null</item>
     </style>
 </resources>

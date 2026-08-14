@@ -41,7 +41,7 @@ class FrenzyView @JvmOverloads constructor(
     // Player position
     private var playerX = 0f
     private var playerY = 0f
-    private val playerSpeed = 30f // Sped up player controls
+    private val playerSpeed = 39f // Increased by 30% (from 30f to 39f) for agile, responsive player controls
     private var playerFacingRight = true
     private var playerIsEating = false
     private var playerEatStartTime = 0L
@@ -58,6 +58,7 @@ class FrenzyView @JvmOverloads constructor(
     private val mineWarnings = mutableListOf<MineWarning>()
     private val mineExplosions = mutableListOf<MineExplosion>()
     private val mineParticles = mutableListOf<MineParticle>()
+    private val floatingMeats = mutableListOf<FloatingMeat>()
     private var lastMineSpawnTime = 0L
     private var playerStunUntil = 0L
     private var playerShieldUntil = 0L
@@ -137,6 +138,20 @@ class FrenzyView @JvmOverloads constructor(
     data class Mine(var x: Float, var y: Float, val targetY: Float, var radius: Float, val speedY: Float, var isDropping: Boolean, var swimCycle: Float)
     data class MineExplosion(val x: Float, val y: Float, var radius: Float, val maxRadius: Float, var alpha: Int)
     data class MineParticle(var x: Float, var y: Float, var vx: Float, var vy: Float, var size: Float, var color: Int, var alpha: Int)
+    data class FloatingMeat(
+        var x: Float,
+        var y: Float,
+        var vx: Float,
+        var vy: Float,
+        var radius: Float = 14f,
+        val spawnTime: Long = System.currentTimeMillis(),
+        val duration: Long = 14000L,
+        var bobPhase: Float = Random.nextFloat() * 6.28f,
+        var color: Int = Color.parseColor("#FF5252"),
+        var rotation: Float = Random.nextFloat() * 360f,
+        var rotSpeed: Float = (Random.nextFloat() - 0.5f) * 3f,
+        var points: Int = 50
+    )
 
     init {
         isFocusable = true
@@ -201,6 +216,7 @@ class FrenzyView @JvmOverloads constructor(
         mineWarnings.clear()
         mineExplosions.clear()
         mineParticles.clear()
+        floatingMeats.clear()
         playerStunUntil = 0L
         playerShieldUntil = System.currentTimeMillis() + 4000L
         oceanTheme = 0
@@ -680,10 +696,10 @@ class FrenzyView @JvmOverloads constructor(
                 }
             }
 
-            // AI Vision & Reaction (Flee / Chase) - Decreased by 30% for balanced player hunting
+            // AI Vision & Reaction (Flee / Chase) - Decreased by 50% for balanced, enjoyable player hunting
             if (fish.behavior != 4 && fish.behavior != 5 && fish.behavior != 17) {
-                val maxVisionDist = 210f // Reduced from 300f (30% reduction)
-                val maxVisionDepth = 84f // Reduced from 120f (30% reduction)
+                val maxVisionDist = 150f // Reduced by 50% from 300f base
+                val maxVisionDepth = 60f // Reduced by 50% from 120f base
                 
                 var threatOnLeft = false
                 var threatOnRight = false
@@ -1130,6 +1146,94 @@ class FrenzyView @JvmOverloads constructor(
                 pIterator.remove()
             }
         }
+
+        // Update Floating Meat particles from mine explosions
+        val meatIterator = floatingMeats.iterator()
+        while (meatIterator.hasNext()) {
+            val meat = meatIterator.next()
+            meat.vx *= 0.94f
+            meat.vy *= 0.94f
+            meat.bobPhase += 0.05f
+            meat.x += meat.vx + sin(meat.bobPhase.toDouble()).toFloat() * 0.5f
+            meat.y += meat.vy - 0.35f // gentle upward float
+            meat.rotation += meat.rotSpeed
+
+            meat.x = meat.x.coerceIn(20f, width - 20f)
+            if (meat.y < 70f) {
+                meat.y = 70f
+                meat.vy = 0.2f
+            }
+
+            // Expire after duration (14 seconds)
+            if (now - meat.spawnTime > meat.duration) {
+                meatIterator.remove()
+                continue
+            }
+
+            // 1. Check Player Eating Meat
+            if (!gameOver && !gameWon) {
+                val pdx = meat.x - playerX
+                val pdy = meat.y - playerY
+                val pdist = Math.sqrt((pdx * pdx + pdy * pdy).toDouble()).toFloat()
+                if (pdist < getFishRadius(playerSize) + meat.radius) {
+                    fishEatenCount++
+                    playerIsEating = true
+                    playerEatStartTime = now
+                    spawnBiteBubbles(meat.x, meat.y)
+                    score += meat.points
+                    SoundManager.playScore()
+
+                    // Growth logic
+                    if (fishEatenCount >= targetFishToWin) {
+                        gameWon = true
+                        val isNewHigh = score > best
+                        if (isNewHigh) {
+                            ScoreManager.updateHighScore(context, gameKey, score)
+                            best = score
+                        }
+                        celebrationManager.start(width / 2f, height / 2f)
+                    } else if (fishEatenCount == 15) {
+                        playerSize = 2
+                        lastIndicatorTriggerTime = now
+                        SoundManager.playSuccess()
+                    } else if (fishEatenCount == 40) {
+                        playerSize = 3
+                        lastIndicatorTriggerTime = now
+                        SoundManager.playSuccess()
+                    } else if (fishEatenCount == 75) {
+                        playerSize = 4
+                        lastIndicatorTriggerTime = now
+                        SoundManager.playSuccess()
+                    } else if (fishEatenCount == 120) {
+                        playerSize = 5
+                        lastIndicatorTriggerTime = now
+                        SoundManager.playSuccess()
+                    }
+                    meatIterator.remove()
+                    continue
+                }
+            }
+
+            // 2. Check AI Fish Eating Meat
+            var eatenByAI = false
+            for (ai in otherFish) {
+                if (ai.behavior == 4) continue // Clams don't eat meat
+                val adx = meat.x - ai.x
+                val ady = meat.y - ai.y
+                val adist = Math.sqrt((adx * adx + ady * ady).toDouble()).toFloat()
+                if (adist < getFishRadius(ai.size) + meat.radius) {
+                    eatenByAI = true
+                    ai.isEating = true
+                    ai.eatStartTime = now
+                    spawnBiteBubbles(ai.x, ai.y)
+                    break
+                }
+            }
+            if (eatenByAI) {
+                meatIterator.remove()
+                continue
+            }
+        }
     }
 
     private fun triggerMineExplosion(ex: Float, ey: Float) {
@@ -1184,11 +1288,49 @@ class FrenzyView @JvmOverloads constructor(
             }
         }
 
-        // Check AI damage
+        // Check AI damage & spawn fresh floating meat chunks
         val affected = otherFish.filter {
             val adx = it.x - ex
             val ady = it.y - ey
             Math.sqrt((adx * adx + ady * ady).toDouble()).toFloat() < 160f
+        }
+        for (fish in affected) {
+            val isSlowFloorCreature = fish.speciesIndex in listOf(8, 12, 28, 29, 30, 31) // Clam, Hermit Crab, Starfish, Snail, Slug, Isopod
+            val meatCount = when {
+                isSlowFloorCreature -> 1 // Slow and easy floor creatures give very little meat
+                fish.size >= 3 -> 6 + Random.nextInt(3) // 6-8 chunks for huge apex predators
+                fish.size == 2 -> 4 + Random.nextInt(2) // 4-5 chunks for big fish
+                fish.size == 1 -> 2 + Random.nextInt(2) // 2-3 chunks for medium fish
+                else -> 1 // 1 chunk for small fish
+            }
+            repeat(meatCount) {
+                val angle = Random.nextFloat() * 2f * Math.PI.toFloat()
+                val speed = Random.nextFloat() * 4.5f + 2f
+                val meatColor = when (Random.nextInt(4)) {
+                    0 -> Color.parseColor("#FF5252") // Fresh Salmon Red
+                    1 -> Color.parseColor("#FF8A80") // Tender Pink
+                    2 -> Color.parseColor("#FF6E40") // Coral Orange
+                    else -> Color.parseColor("#FFE0B2") // Tender Flesh
+                }
+                val meatRad = when {
+                    isSlowFloorCreature -> Random.nextFloat() * 2f + 5f // 5-7px (very small meat morsel)
+                    fish.size in 3..4 -> Random.nextFloat() * 5f + 14f // 14-19px
+                    fish.size == 2 -> Random.nextFloat() * 4f + 11f // 11-15px
+                    else -> Random.nextFloat() * 3f + 8f // 8-11px
+                }
+                val meatPts = if (isSlowFloorCreature) 10 else (fish.size + 1) * 35
+                floatingMeats.add(
+                    FloatingMeat(
+                        x = fish.x + (Random.nextFloat() - 0.5f) * 24f,
+                        y = fish.y + (Random.nextFloat() - 0.5f) * 24f,
+                        vx = cos(angle.toDouble()).toFloat() * speed,
+                        vy = sin(angle.toDouble()).toFloat() * speed - 2.0f,
+                        radius = meatRad,
+                        color = meatColor,
+                        points = meatPts
+                    )
+                )
+            }
         }
         otherFish.removeAll(affected)
     }
@@ -1429,6 +1571,50 @@ class FrenzyView @JvmOverloads constructor(
             paint.alpha = p.alpha
             paint.style = Paint.Style.FILL
             canvas.drawCircle(p.x, p.y, p.size, paint)
+        }
+
+        // Draw Floating Fresh Meat chunks from mine explosions
+        for (m in floatingMeats) {
+            val elapsed = now - m.spawnTime
+            val remaining = m.duration - elapsed
+            val alpha = if (remaining < 2500L) {
+                if ((remaining / 150) % 2 == 0L) 90 else 255
+            } else 255
+
+            canvas.save()
+            canvas.translate(m.x, m.y)
+            canvas.rotate(m.rotation)
+
+            paint.reset()
+            paint.isAntiAlias = true
+
+            // 1. Soft glowing aura
+            paint.style = Paint.Style.FILL
+            paint.color = Color.parseColor("#40FF8A80")
+            paint.alpha = (alpha * 0.35f).toInt()
+            canvas.drawCircle(0f, 0f, m.radius * 1.35f, paint)
+
+            // 2. Fresh Meat piece body (curved organic steak / fillet shape)
+            paint.color = m.color
+            paint.alpha = alpha
+            drawRectF.set(-m.radius, -m.radius * 0.75f, m.radius, m.radius * 0.75f)
+            canvas.drawRoundRect(drawRectF, m.radius * 0.45f, m.radius * 0.45f, paint)
+
+            // 3. Marbled fat/meat lines for realistic texture
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = 2.5f
+            paint.color = Color.parseColor("#FFFFFF")
+            paint.alpha = (alpha * 0.55f).toInt()
+            canvas.drawLine(-m.radius * 0.6f, -m.radius * 0.4f, -m.radius * 0.2f, m.radius * 0.4f, paint)
+            canvas.drawLine(0f, -m.radius * 0.4f, m.radius * 0.4f, m.radius * 0.4f, paint)
+
+            // 4. Specular highlight
+            paint.style = Paint.Style.FILL
+            paint.color = Color.WHITE
+            paint.alpha = (alpha * 0.6f).toInt()
+            canvas.drawCircle(-m.radius * 0.35f, -m.radius * 0.25f, m.radius * 0.22f, paint)
+
+            canvas.restore()
         }
 
         // 6. Draw HUD Progress Bar & Details
