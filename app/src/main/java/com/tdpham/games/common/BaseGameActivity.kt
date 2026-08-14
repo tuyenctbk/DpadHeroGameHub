@@ -79,10 +79,10 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 
                 RatingGuideManager.recordGameEvent(this, isWin = score > 0, isHighScore = isHighScore)
 
-                // Natural Game-Over Interstitial Ad Trigger
+                // Natural Game-Over Interstitial Ad Trigger (Respects cooldown & frequency)
                 gameOverCount++
                 val freq = ConfigManager.getAdsGameOverFrequency()
-                if (gameOverCount >= freq && AdManager.canShowInterstitial()) {
+                if (gameOverCount >= freq && AdManager.canShowInterstitial(this)) {
                     gameOverCount = 0
                     AdManager.showInterstitial(this)
                 }
@@ -329,7 +329,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (AdManager.canShowInterstitial()) {
+            if (AdManager.canShowInterstitial(this)) {
                 AdManager.showInterstitial(this) {
                     finish()
                 }

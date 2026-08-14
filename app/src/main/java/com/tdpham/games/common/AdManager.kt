@@ -215,11 +215,12 @@ object AdManager {
     /**
      * Checks if an interstitial ad is eligible and ready to be shown.
      */
-    fun canShowInterstitial(): Boolean {
+    fun canShowInterstitial(context: Context? = null): Boolean {
         if (!ConfigManager.isAdsEnabled()) return false
         if (adsShownInSession >= ConfigManager.getAdsMaxPerSession()) return false
         val timeSinceLastAd = System.currentTimeMillis() - lastAdShowTime
         if (lastAdShowTime > 0 && timeSinceLastAd < ConfigManager.getAdsMinIntervalMs()) return false
+        if (context != null && !shouldShowAds(context)) return false
         return mInterstitialAd != null
     }
 
