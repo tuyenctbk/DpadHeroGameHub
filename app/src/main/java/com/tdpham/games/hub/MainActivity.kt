@@ -94,12 +94,43 @@ class MainActivity : AppCompatActivity() {
         title.translationY = -50f
         title.animate().alpha(1f).translationY(0f).setDuration(800).setStartDelay(300).start()
 
-        findViewById<Button>(R.id.btn_leaderboard).apply {
+        findViewById<Button>(R.id.btn_rate)?.apply {
+            setOnClickListener {
+                SoundManager.playClick()
+                com.tdpham.games.common.AppEngagementManager.showRateDialog(this@MainActivity)
+            }
+            setOnFocusChangeListener { view, hasFocus ->
+                if (hasFocus) {
+                    SoundManager.playClick()
+                    view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
+                } else {
+                    view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                }
+            }
+        }
+
+        findViewById<Button>(R.id.btn_share)?.apply {
+            setOnClickListener {
+                SoundManager.playClick()
+                com.tdpham.games.common.AppEngagementManager.showShareDialog(this@MainActivity)
+            }
+            setOnFocusChangeListener { view, hasFocus ->
+                if (hasFocus) {
+                    SoundManager.playClick()
+                    view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
+                } else {
+                    view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                }
+            }
+        }
+
+        findViewById<Button>(R.id.btn_leaderboard)?.apply {
             setOnClickListener {
                 startActivity(Intent(this@MainActivity, LeaderboardActivity::class.java))
             }
             setOnFocusChangeListener { view, hasFocus ->
                 if (hasFocus) {
+                    SoundManager.playClick()
                     view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
                 } else {
                     view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
@@ -114,21 +145,8 @@ class MainActivity : AppCompatActivity() {
             animateProfilePulse()
         }
 
-        RatingGuideManager.incrementPlayCount(this)
-        UpdateManager.checkForUpdates(this) { hasUpdate ->
-            if (isFinishing || isDestroyed) return@checkForUpdates
-            if (!hasUpdate) {
-                if (RatingGuideManager.shouldShowRating(this)) {
-                    RatingGuideManager.showRatingDialog(this) {
-                        if (!isFinishing && !isDestroyed) focusLastPlayed()
-                    }
-                } else {
-                    focusLastPlayed()
-                }
-            } else {
-                focusLastPlayed()
-            }
-        }
+        com.tdpham.games.common.AppEngagementManager.onAppForegrounded(this)
+        focusLastPlayed()
     }
 
     private fun updateProfileDisplay() {
@@ -379,11 +397,7 @@ class MainActivity : AppCompatActivity() {
         updateProfileDisplay()
         if (returnedFromGame) {
             returnedFromGame = false
-            if (RatingGuideManager.shouldShowRating(this)) {
-                RatingGuideManager.showRatingDialog(this) {
-                    if (!isFinishing && !isDestroyed) focusLastPlayed()
-                }
-            }
+            com.tdpham.games.common.AppEngagementManager.maybeShowRatePrompt(this)
         }
     }
 

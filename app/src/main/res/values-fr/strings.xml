@@ -703,4 +703,11 @@
     <string name="restart_game">Recommencer</string>
     <string name="exit_to_hub">Quitter vers le menu</string>
     <string name="how_to_play">Comment jouer</string>
+
+    <string name="share_title">Partager Dpad Arcade</string>
+    <string name="share_content">Vous appréciez les jeux ? Partagez avec vos amis et votre famille pour battre les records !</string>
+    <string name="share_now">PARTAGER</string>
+    <string name="share_message">🎮 Jouez à 30 jeux d\'arcade rétro sur Dpad Hero Game Hub sur Téléphone &amp; Android TV ! Gratuit : https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
+    <string name="btn_share_app">Partager</string>
+    <string name="btn_rate_app">Évaluer</string>
 </resources>

@@ -290,6 +290,12 @@
     <string name="rate_now">RATE 5 STARS</string>
     <string name="rate_later">LATER</string>
     <string name="rate_never">NO, THANKS</string>
+    <string name="share_title">Share Dpad Arcade</string>
+    <string name="share_content">Enjoying the games? Share with your friends and family to compete for the highest score!</string>
+    <string name="share_now">SHARE APP</string>
+    <string name="share_message">🎮 Play 30 retro arcade games in Dpad Hero Game Hub on Phone &amp; Android TV! Download free: https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
+    <string name="btn_share_app">Share</string>
+    <string name="btn_rate_app">Rate</string>
     <string name="update_title">New Update Available!</string>
     <string name="update_content">A new version of Dpad Arcade: Retro Game Hub is available. Update now to get the latest games, features, and stability fixes.</string>
     <string name="update_now">Update Now</string>

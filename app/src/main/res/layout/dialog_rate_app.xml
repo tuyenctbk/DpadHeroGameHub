@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="28dp"
+    android:gravity="center_horizontal"
+    android:background="@drawable/dialog_background">
+
+    <!-- Star Glow Icon Row -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="2dp"
+            android:src="@drawable/ic_star_rate"
+            app:tint="#FFD700" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="2dp"
+            android:src="@drawable/ic_star_rate"
+            app:tint="#FFD700" />
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="2dp"
+            android:src="@drawable/ic_star_rate"
+            app:tint="#FFD700" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="2dp"
+            android:src="@drawable/ic_star_rate"
+            app:tint="#FFD700" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="2dp"
+            android:src="@drawable/ic_star_rate"
+            app:tint="#FFD700" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_rate_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rating_title"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:letterSpacing="0.03"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/tv_rate_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rating_content"
+        android:textColor="#B0BEC5"
+        android:textSize="15sp"
+        android:lineSpacingMultiplier="1.2"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Rate 5 Stars Button (Default Focus) -->
+    <Button
+        android:id="@+id/btn_rate_5_stars"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:text="@string/rate_now"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:background="@drawable/game_item_background"
+        android:backgroundTint="#FFD700"
+        android:focusable="true"
+        android:nextFocusUp="@id/btn_rate_never"
+        android:nextFocusDown="@id/btn_rate_later"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Later Button -->
+    <Button
+        android:id="@+id/btn_rate_later"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/rate_later"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:background="@drawable/game_item_background"
+        android:backgroundTint="#26FFFFFF"
+        android:focusable="true"
+        android:nextFocusUp="@id/btn_rate_5_stars"
+        android:nextFocusDown="@id/btn_rate_never"
+        android:layout_marginBottom="8dp" />
+
+    <!-- No Thanks Button -->
+    <Button
+        android:id="@+id/btn_rate_never"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="@string/rate_never"
+        android:textColor="#78909C"
+        android:textSize="13sp"
+        android:background="@drawable/game_item_background"
+        android:backgroundTint="#10FFFFFF"
+        android:focusable="true"
+        android:nextFocusUp="@id/btn_rate_later"
+        android:nextFocusDown="@id/btn_rate_5_stars" />
+
+</LinearLayout>

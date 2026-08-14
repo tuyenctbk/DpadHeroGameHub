@@ -74,11 +74,11 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 bundle.putInt(FirebaseAnalytics.Param.SCORE, score)
                 firebaseAnalytics?.logEvent("level_end", bundle)
 
-                // Record event for rating algorithm:
+                // Record event for smart rating and sharing engagement:
                 val currentBest = ScoreManager.getHighScore(this, gameKey)
                 val isHighScore = score > 0 && score >= currentBest
                 
-                RatingGuideManager.recordGameEvent(this, isWin = score > 0, isHighScore = isHighScore)
+                AppEngagementManager.onGameCompleted(this, isWin = score > 0, isNewHighScore = isHighScore)
 
                 // Natural Game-Over Interstitial Ad Trigger (Respects cooldown & frequency)
                 gameOverCount++

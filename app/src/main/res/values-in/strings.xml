@@ -703,4 +703,11 @@
     <string name="restart_game">Mulai Ulang</string>
     <string name="exit_to_hub">Keluar ke Menu</string>
     <string name="how_to_play">Cara Bermain</string>
+
+    <string name="share_title">Bagikan Dpad Arcade</string>
+    <string name="share_content">Menikmati permainannya? Bagikan dengan teman dan keluarga untuk bersaing meraih skor tertinggi!</string>
+    <string name="share_now">BAGIKAN</string>
+    <string name="share_message">🎮 Mainkan 30 game arcade retro di Dpad Hero Game Hub di Ponsel &amp; Android TV! Unduh gratis: https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
+    <string name="btn_share_app">Bagikan</string>
+    <string name="btn_rate_app">Beri Nilai</string>
 </resources>

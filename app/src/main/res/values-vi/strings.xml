@@ -703,4 +703,11 @@
     <string name="restart_game">Chơi lại</string>
     <string name="exit_to_hub">Về trang chủ</string>
     <string name="how_to_play">Hướng dẫn chơi</string>
+
+    <string name="share_title">Chia sẻ Dpad Arcade</string>
+    <string name="share_content">Bạn thích trò chơi này? Hãy chia sẻ với bạn bè và gia đình để cùng thi đấu điểm cao nhé!</string>
+    <string name="share_now">CHIA SẺ</string>
+    <string name="share_message">🎮 Trải nghiệm 30 trò chơi arcade retro trên Dpad Hero Game Hub cho Điện thoại &amp; Android TV! Tải miễn phí: https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
+    <string name="btn_share_app">Chia sẻ</string>
+    <string name="btn_rate_app">Đánh giá</string>
 </resources>

@@ -703,4 +703,11 @@
     <string name="restart_game">リスタート</string>
     <string name="exit_to_hub">ハブに戻る</string>
     <string name="how_to_play">遊び方</string>
+
+    <string name="share_title">Dpad Arcade を共有</string>
+    <string name="share_content">ゲームを楽しんでいますか？友達や家族と共有してハイスコアを競い合いましょう！</string>
+    <string name="share_now">今すぐ共有</string>
+    <string name="share_message">🎮 スマホと Android TV で Dpad Hero Game Hub の 30 種類のレトロアーケードゲームをプレイ！無料ダウンロード: https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
+    <string name="btn_share_app">共有</string>
+    <string name="btn_rate_app">評価</string>
 </resources>

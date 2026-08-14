@@ -703,4 +703,11 @@
     <string name="restart_game">पुनः प्रारंभ करें</string>
     <string name="exit_to_hub">हब पर वापस जाएं</string>
     <string name="how_to_play">कैसे खेलें</string>
+
+    <string name="share_title">Dpad Arcade साझा करें</string>
+    <string name="share_content">खेलों का आनंद ले रहे हैं? उच्चतम स्कोर के लिए दोस्तों और परिवार के साथ साझा करें!</string>
+    <string name="share_now">साझा करें</string>
+    <string name="share_message">🎮 फ़ोन और Android TV पर Dpad Hero Game Hub में 30 रेट्रो आर्केड गेम खेलें! मुफ़्त डाउनलोड करें: https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
+    <string name="btn_share_app">साझा करें</string>
+    <string name="btn_rate_app">रेट करें</string>
 </resources>

@@ -703,4 +703,11 @@
     <string name="restart_game">เริ่มใหม่</string>
     <string name="exit_to_hub">กลับสู่หน้าหลัก</string>
     <string name="how_to_play">วิธีเล่น</string>
+
+    <string name="share_title">แชร์ Dpad Arcade</string>
+    <string name="share_content">สนุกกับเกมไหม? แชร์ให้เพื่อนและครอบครัวเพื่อแข่งขันชิงคะแนนสูงสุด!</string>
+    <string name="share_now">แชร์เลย</string>
+    <string name="share_message">🎮 เล่นเกมอาร์เคดย้อนยุค 30 เกมใน Dpad Hero Game Hub บนมือถือและ Android TV! ดาวน์โหลดฟรี: https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
+    <string name="btn_share_app">แชร์</string>
+    <string name="btn_rate_app">ให้คะแนน</string>
 </resources>
