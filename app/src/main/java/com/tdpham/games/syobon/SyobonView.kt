@@ -713,7 +713,7 @@ class SyobonView @JvmOverloads constructor(
                 pressedKeys.contains(KeyEvent.KEYCODE_W)
 
         val canJump = isOnGround || (now - lastGroundedTime < 140L)
-        if (wantsJump && canJump && (now - jumpHoldTimer > 180L)) {
+        if (wantsJump && canJump) {
             velY = JUMP_IMPULSE
             isOnGround = false
             lastGroundedTime = 0L
@@ -1066,8 +1066,9 @@ class SyobonView @JvmOverloads constructor(
     private fun checkGridCollisionX() {
         val left = playerX
         val right = playerX + playerW
-        val top = playerY + 0.01f
-        val bottom = playerY + playerH - 0.01f
+        // Important: check only the vertical body, well clear of floor (0.12f) and ceiling (0.08f)
+        val top = playerY + 0.08f
+        val bottom = playerY + playerH - 0.12f
 
         val cMin = Math.max(0, left.toInt())
         val cMax = Math.min(TOTAL_MAP_COLS - 1, right.toInt())
@@ -1078,11 +1079,11 @@ class SyobonView @JvmOverloads constructor(
             for (c in cMin..cMax) {
                 if (isSolid(r, c)) {
                     if (velX > 0) {
-                        playerX = c - playerW
+                        playerX = c.toFloat() - playerW
                         velX = 0f
                         return
                     } else if (velX < 0) {
-                        playerX = c + 1f
+                        playerX = c.toFloat() + 1f
                         velX = 0f
                         return
                     }
@@ -1092,8 +1093,8 @@ class SyobonView @JvmOverloads constructor(
     }
 
     private fun checkGridCollisionY() {
-        // Generous buffer for feet so cat never slips through tile seams
-        val buffer = 0.08f * playerW
+        // Feet buffer: 0.10f of width from each side
+        val buffer = 0.10f * playerW
         val left = playerX + buffer
         val right = playerX + playerW - buffer
         val top = playerY
@@ -1104,21 +1105,19 @@ class SyobonView @JvmOverloads constructor(
         
         isOnGround = false
 
-        // 1. Check for ground collision (Falling)
+        // 1. Check for ground collision (Falling or standing)
         val rBottom = bottom.toInt()
         if (rBottom in 0 until ROWS) {
             var onAnySolid = false
             for (c in cMin..cMax) {
                 if (isSolid(rBottom, c)) {
-                    // Only snap if we were above the ground or moving into it
                     if (velY >= 0 && (bottom - velY) <= rBottom + 0.35f) {
-                        playerY = rBottom - playerH
+                        playerY = rBottom.toFloat() - playerH
                         velY = 0f
                         isOnGround = true
                         lastGroundedTime = System.currentTimeMillis()
                         onAnySolid = true
                         
-                        // Trigger Mystery Box by jumping on top!
                         if (map[rBottom][c] == TILE_MYSTERY) {
                             onBlockHit(rBottom, c)
                         }
@@ -1129,14 +1128,13 @@ class SyobonView @JvmOverloads constructor(
             if (onAnySolid) return
         }
 
-        // 2. Check for ceiling collision (Jumping)
+        // 2. Check for ceiling collision (Jumping up)
         val rTop = top.toInt()
-        if (rTop in 0 until ROWS) {
+        if (rTop in 0 until ROWS && velY < 0) {
             for (c in cMin..cMax) {
                 val cell = map[rTop][c]
-                // Invisible block check (from below)
                 if (cell == TILE_INVISIBLE && invisibleBlocks[rTop][c] != true) {
-                    if (velY < 0 && top <= rTop + 1) {
+                    if (top <= rTop + 1f) {
                         invisibleBlocks[rTop][c] = true
                         playerY = rTop + 1f
                         velY = 0f
@@ -1146,7 +1144,7 @@ class SyobonView @JvmOverloads constructor(
                 }
                 
                 if (isSolid(rTop, c)) {
-                    if (velY < 0 && top <= rTop + 1) {
+                    if (top <= rTop + 1f) {
                         playerY = rTop + 1f
                         velY = 0f
                         onBlockHit(rTop, c)
@@ -1337,8 +1335,16 @@ class SyobonView @JvmOverloads constructor(
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
-            KeyEvent.KEYCODE_A -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_LEFT)
-            KeyEvent.KEYCODE_D -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_RIGHT)
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_LEFT)
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_RIGHT)
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER,
+            KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_BUTTON_Y,
+            KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_W -> {
+                pressedKeys.remove(keyCode)
+                pressedKeys.remove(KeyEvent.KEYCODE_DPAD_UP)
+                pressedKeys.remove(KeyEvent.KEYCODE_DPAD_CENTER)
+                pressedKeys.remove(KeyEvent.KEYCODE_ENTER)
+            }
             else -> pressedKeys.remove(keyCode)
         }
         return super.onKeyUp(keyCode, event)
@@ -1384,15 +1390,14 @@ class SyobonView @JvmOverloads constructor(
         when (event.action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
                 pressedKeys.clear()
-                if (py < screenH * 0.4f) {
-                    // Tap top portion to JUMP
+                if (py < screenH * 0.55f) {
+                    lastJumpPressTime = System.currentTimeMillis()
                     pressedKeys.add(KeyEvent.KEYCODE_DPAD_UP)
-                } else {
-                    if (px < screenW * 0.45f) {
-                        pressedKeys.add(KeyEvent.KEYCODE_DPAD_LEFT)
-                    } else if (px > screenW * 0.55f) {
-                        pressedKeys.add(KeyEvent.KEYCODE_DPAD_RIGHT)
-                    }
+                }
+                if (px < screenW * 0.45f) {
+                    pressedKeys.add(KeyEvent.KEYCODE_DPAD_LEFT)
+                } else if (px > screenW * 0.55f) {
+                    pressedKeys.add(KeyEvent.KEYCODE_DPAD_RIGHT)
                 }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
