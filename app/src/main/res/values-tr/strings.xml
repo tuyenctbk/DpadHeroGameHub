@@ -697,4 +697,10 @@
         <item>DESEN PROSU!</item>
         <item>PARLAK HAFIZA!</item>
     </string-array>
+    <string name="game_options">Seçenekler</string>
+    <string name="pause_menu_title">Oyun Duraklatıldı</string>
+    <string name="resume_game">Devam Et</string>
+    <string name="restart_game">Yeniden Başlat</string>
+    <string name="exit_to_hub">Menüye Dön</string>
+    <string name="how_to_play">Nasıl Oynanır</string>
 </resources>

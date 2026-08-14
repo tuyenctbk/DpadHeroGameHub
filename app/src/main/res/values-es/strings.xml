@@ -697,4 +697,10 @@
         <item>¡PRO DEL PATRÓN!</item>
         <item>¡MEMORIA BRILLANTE!</item>
     </string-array>
+    <string name="game_options">Opciones</string>
+    <string name="pause_menu_title">Juego en pausa</string>
+    <string name="resume_game">Reanudar</string>
+    <string name="restart_game">Reiniciar</string>
+    <string name="exit_to_hub">Salir al menú</string>
+    <string name="how_to_play">Cómo jugar</string>
 </resources>

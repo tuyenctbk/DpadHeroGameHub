@@ -190,6 +190,8 @@ class FruitView @JvmOverloads constructor(
         explosions.clear()
         slashTrail.clear()
         best = ScoreManager.getHighScore(context, gameKey)
+        val prefs = context.getSharedPreferences("fruit_settings", Context.MODE_PRIVATE)
+        selectedBlade = prefs.getInt("selected_blade", 0) % 4
         gameOver = false
         gamePaused = true
         bombProbability = 0.12f

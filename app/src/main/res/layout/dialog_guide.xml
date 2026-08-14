@@ -58,15 +58,41 @@
             android:buttonTint="#4CAF50" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_close_guide"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:text="@string/start_game"
-        android:backgroundTint="#4CAF50"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:elevation="4dp" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_guide_options"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="12dp"
+            android:text="@string/game_options"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#2196F3"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:focusable="true" />
+
+        <Button
+            android:id="@+id/btn_close_guide"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_weight="1.3"
+            android:layout_marginStart="12dp"
+            android:text="@string/start_game"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#4CAF50"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:focusable="true" />
+    </LinearLayout>
 
 </LinearLayout>

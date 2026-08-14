@@ -697,4 +697,10 @@
         <item>PRO POLA!</item>
         <item>INGATAN CEMERLANG!</item>
     </string-array>
+    <string name="game_options">Opsi</string>
+    <string name="pause_menu_title">Permainan Dijeda</string>
+    <string name="resume_game">Lanjutkan</string>
+    <string name="restart_game">Mulai Ulang</string>
+    <string name="exit_to_hub">Keluar ke Menu</string>
+    <string name="how_to_play">Cara Bermain</string>
 </resources>

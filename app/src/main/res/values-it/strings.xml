@@ -697,4 +697,10 @@
         <item>PRO DEI PATTERN!</item>
         <item>RICORDO GENIALE!</item>
     </string-array>
+    <string name="game_options">Opzioni</string>
+    <string name="pause_menu_title">Gioco in pausa</string>
+    <string name="resume_game">Riprendi</string>
+    <string name="restart_game">Ricomincia</string>
+    <string name="exit_to_hub">Torna all\'hub</string>
+    <string name="how_to_play">Come giocare</string>
 </resources>

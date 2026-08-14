@@ -697,4 +697,10 @@
         <item>PRO DOS PADRÕES!</item>
         <item>RECORDAÇÃO GENIAL!</item>
     </string-array>
+    <string name="game_options">Opções</string>
+    <string name="pause_menu_title">Jogo pausado</string>
+    <string name="resume_game">Continuar</string>
+    <string name="restart_game">Reiniciar</string>
+    <string name="exit_to_hub">Sair para o Hub</string>
+    <string name="how_to_play">Como jogar</string>
 </resources>

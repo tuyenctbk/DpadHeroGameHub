@@ -697,4 +697,10 @@
         <item>PRO DES MOTIFS !</item>
         <item>RÉFLEXES PARFAITS !</item>
     </string-array>
+    <string name="game_options">Options</string>
+    <string name="pause_menu_title">Jeu en pause</string>
+    <string name="resume_game">Reprendre</string>
+    <string name="restart_game">Recommencer</string>
+    <string name="exit_to_hub">Quitter vers le menu</string>
+    <string name="how_to_play">Comment jouer</string>
 </resources>

@@ -42,7 +42,16 @@ object GuideManager {
         return false
     }
 
-    fun showGuide(context: Context, gameKey: String, title: String, content: String, buttonText: String? = null, showCheckbox: Boolean = true, onDismiss: () -> Unit) {
+    fun showGuide(
+        context: Context,
+        gameKey: String,
+        title: String,
+        content: String,
+        buttonText: String? = null,
+        showCheckbox: Boolean = true,
+        onOptionsClick: (() -> Unit)? = null,
+        onDismiss: () -> Unit
+    ) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_guide)
@@ -53,9 +62,22 @@ object GuideManager {
         dialog.findViewById<TextView>(R.id.guide_content).text = content
         val checkBox = dialog.findViewById<CheckBox>(R.id.cb_dont_show_again)
         val btnClose = dialog.findViewById<Button>(R.id.btn_close_guide)
+        val btnOptions = dialog.findViewById<Button>(R.id.btn_guide_options)
 
         checkBox.visibility = if (showCheckbox) View.VISIBLE else View.GONE
         buttonText?.let { btnClose.text = it }
+
+        if (onOptionsClick != null) {
+            btnOptions.visibility = View.VISIBLE
+            btnOptions.setOnClickListener {
+                IdleAdManager.notifyInteraction()
+                dialog.dismiss()
+                onOptionsClick()
+            }
+            setupFocusEffect(btnOptions)
+        } else {
+            btnOptions.visibility = View.GONE
+        }
 
         if (showCheckbox) {
             // Auto-check the box after 3rd session (starting from 4th launch) to guide user towards dismissal
@@ -84,12 +106,9 @@ object GuideManager {
                 IdleAdManager.notifyInteraction()
                 if (keyCode == android.view.KeyEvent.KEYCODE_M || keyCode == android.view.KeyEvent.KEYCODE_O ||
                     keyCode == android.view.KeyEvent.KEYCODE_MENU || keyCode == android.view.KeyEvent.KEYCODE_SETTINGS) {
-                    if (gameKey == "trex") {
+                    if (onOptionsClick != null) {
                         dialog.dismiss()
-                        // Use the context to show the options dialog directly
-                        TRexOptionsDialog.show(context) {
-                            // On dismiss of options, user might have changed settings
-                        }
+                        onOptionsClick()
                         return@setOnKeyListener true
                     }
                 }

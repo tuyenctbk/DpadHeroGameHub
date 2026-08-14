@@ -697,4 +697,10 @@
         <item>MUSTER-PROFI!</item>
         <item>GENIALES GEDÄCHTNIS!</item>
     </string-array>
+    <string name="game_options">Optionen</string>
+    <string name="pause_menu_title">Spiel pausiert</string>
+    <string name="resume_game">Fortsetzen</string>
+    <string name="restart_game">Neu starten</string>
+    <string name="exit_to_hub">Zurück zum Hub</string>
+    <string name="how_to_play">Spielanleitung</string>
 </resources>

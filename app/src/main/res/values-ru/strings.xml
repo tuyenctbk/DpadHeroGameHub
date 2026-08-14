@@ -697,4 +697,10 @@
         <item>ПРОФИ ШАБЛОНОВ!</item>
         <item>БЛЕСТЯЩАЯ ПАМЯТЬ!</item>
     </string-array>
+    <string name="game_options">Параметры</string>
+    <string name="pause_menu_title">Игра на паузе</string>
+    <string name="resume_game">Продолжить</string>
+    <string name="restart_game">Начать заново</string>
+    <string name="exit_to_hub">Выйти в меню</string>
+    <string name="how_to_play">Как играть</string>
 </resources>

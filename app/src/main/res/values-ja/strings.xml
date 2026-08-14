@@ -697,4 +697,10 @@
         <item>パターンプロ！</item>
         <item>驚異の記憶力！</item>
     </string-array>
+    <string name="game_options">オプション</string>
+    <string name="pause_menu_title">一時停止</string>
+    <string name="resume_game">再開</string>
+    <string name="restart_game">リスタート</string>
+    <string name="exit_to_hub">ハブに戻る</string>
+    <string name="how_to_play">遊び方</string>
 </resources>

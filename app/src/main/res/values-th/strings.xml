@@ -697,4 +697,10 @@
         <item>มือโปรจับคู่!</item>
         <item>ความจำอัจฉริยะ!</item>
     </string-array>
+    <string name="game_options">ตัวเลือก</string>
+    <string name="pause_menu_title">หยุดเกมชั่วคราว</string>
+    <string name="resume_game">เล่นต่อ</string>
+    <string name="restart_game">เริ่มใหม่</string>
+    <string name="exit_to_hub">กลับสู่หน้าหลัก</string>
+    <string name="how_to_play">วิธีเล่น</string>
 </resources>

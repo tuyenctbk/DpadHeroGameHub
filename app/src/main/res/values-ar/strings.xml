@@ -697,4 +697,10 @@
         <item>خبير الأنماط!</item>
         <item>استدعاء عبقري!</item>
     </string-array>
+    <string name="game_options">الخيارات</string>
+    <string name="pause_menu_title">اللعبة متوقفة</string>
+    <string name="resume_game">استئناف</string>
+    <string name="restart_game">إعادة البدء</string>
+    <string name="exit_to_hub">الخروج إلى القائمة</string>
+    <string name="how_to_play">كيفية اللعب</string>
 </resources>

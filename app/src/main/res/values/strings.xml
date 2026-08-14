@@ -723,4 +723,10 @@
         <item>FLAWLESS RHYTHM!</item>
         <item>GENIUS RECALL!</item>
     </string-array>
+    <string name="game_options">Options</string>
+    <string name="pause_menu_title">Game Paused</string>
+    <string name="resume_game">Resume</string>
+    <string name="restart_game">Restart</string>
+    <string name="exit_to_hub">Exit to Hub</string>
+    <string name="how_to_play">How to Play</string>
 </resources>

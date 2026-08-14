@@ -697,4 +697,10 @@
         <item>THIÊN TÀI GHI NHỚ!</item>
         <item>PHẢN XẠ TUYỆT ĐỈNH!</item>
     </string-array>
+    <string name="game_options">Tùy chọn</string>
+    <string name="pause_menu_title">Tạm dừng</string>
+    <string name="resume_game">Tiếp tục</string>
+    <string name="restart_game">Chơi lại</string>
+    <string name="exit_to_hub">Về trang chủ</string>
+    <string name="how_to_play">Hướng dẫn chơi</string>
 </resources>

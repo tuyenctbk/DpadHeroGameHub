@@ -697,4 +697,10 @@
         <item>पैटर्न प्रो!</item>
         <item>शानदार याददाश्त!</item>
     </string-array>
+    <string name="game_options">विकल्प</string>
+    <string name="pause_menu_title">खेल रुका हुआ है</string>
+    <string name="resume_game">जारी रखें</string>
+    <string name="restart_game">पुनः प्रारंभ करें</string>
+    <string name="exit_to_hub">हब पर वापस जाएं</string>
+    <string name="how_to_play">कैसे खेलें</string>
 </resources>
