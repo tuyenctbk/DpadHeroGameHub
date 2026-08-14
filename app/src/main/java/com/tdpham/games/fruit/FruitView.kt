@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.ScoreManager
@@ -59,6 +60,10 @@ class FruitView @JvmOverloads constructor(
     private val gravity = 0.35f
     private var lastSpawnTime = 0L
     private var spawnInterval = 1400L // ms
+
+    // Controls & Keys
+    private val pressedKeys = mutableSetOf<Int>()
+    private var gameStartTime = 0L
 
     // Bomb scaling
     private var bombProbability = 0.12f
@@ -161,6 +166,8 @@ class FruitView @JvmOverloads constructor(
     override fun startGame() {
         requestFocus()
         gamePaused = false
+        gameStartTime = System.currentTimeMillis()
+        handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
         invalidate()
     }
@@ -189,6 +196,8 @@ class FruitView @JvmOverloads constructor(
         trailParticles.clear()
         explosions.clear()
         slashTrail.clear()
+        pressedKeys.clear()
+        gameStartTime = System.currentTimeMillis()
         best = ScoreManager.getHighScore(context, gameKey)
         val prefs = context.getSharedPreferences("fruit_settings", Context.MODE_PRIVATE)
         selectedBlade = prefs.getInt("selected_blade", 0) % 4
@@ -201,10 +210,12 @@ class FruitView @JvmOverloads constructor(
     }
 
     private fun spawnItem() {
-        // Increase bomb rate as score climbs
-        bombProbability = (0.12f + score / 600f).coerceAtMost(0.48f)
+        val now = System.currentTimeMillis()
+        // Grace period for first 4.5s: pure fruit slicing fun, no bombs!
+        val isInitialGrace = (now - gameStartTime < 4500L)
+        bombProbability = if (isInitialGrace) 0f else (0.12f + score / 600f).coerceAtMost(0.40f)
 
-        val isBomb = Random.nextFloat() < bombProbability
+        val isBomb = if (isInitialGrace) false else (Random.nextFloat() < bombProbability)
         val radius = Random.nextFloat() * 20f + 48f // Nice large fruits (48f to 68f)
 
         val x = Random.nextFloat() * (width - 200f) + 100f
@@ -224,6 +235,41 @@ class FruitView @JvmOverloads constructor(
     private fun update() {
         val now = System.currentTimeMillis()
 
+        // 0. Continuous D-Pad/Keyboard cursor movement
+        var moveDx = 0f
+        var moveDy = 0f
+        val moveSpeed = 22f
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) moveDx -= moveSpeed
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) moveDx += moveSpeed
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_UP)) moveDy -= moveSpeed
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_DOWN)) moveDy += moveSpeed
+
+        if (moveDx != 0f || moveDy != 0f) {
+            cursorX = (cursorX + moveDx).coerceIn(40f, width - 40f)
+            cursorY = (cursorY + moveDy).coerceIn(40f, height - 40f)
+            slashTrail.add(PointF(cursorX, cursorY))
+            if (slashTrail.size > maxTrailSize) slashTrail.removeAt(0)
+
+            // Spawn blade trail particles
+            val color = when (selectedBlade) {
+                1 -> Color.parseColor("#FF7043") // Fire Orange
+                2 -> Color.parseColor("#00E5FF") // Cyber Cyan
+                3 -> Color.parseColor("#7E57C2") // Shadow Violet
+                else -> Color.WHITE
+            }
+            trailParticles.add(
+                TrailParticle(
+                    x = cursorX + Random.nextFloat() * 10f - 5f,
+                    y = cursorY + Random.nextFloat() * 10f - 5f,
+                    vx = -moveDx * 0.15f + (Random.nextFloat() * 4f - 2f),
+                    vy = -moveDy * 0.15f + (Random.nextFloat() * 4f - 2f),
+                    color = color,
+                    size = Random.nextFloat() * 8f + 4f,
+                    alpha = 220
+                )
+            )
+        }
+
         // 1. Spawning items
         if (now - lastSpawnTime > spawnInterval) {
             val count = if (score > 150) Random.nextInt(2, 5) else Random.nextInt(1, 3)
@@ -232,7 +278,7 @@ class FruitView @JvmOverloads constructor(
         }
 
         // 2. Trail points decay
-        if (slashTrail.size > 0 && !gamePaused) {
+        if (slashTrail.size > 0 && !gamePaused && moveDx == 0f && moveDy == 0f) {
             slashTrail.removeAt(0)
         }
 
@@ -265,7 +311,7 @@ class FruitView @JvmOverloads constructor(
             item.y += item.vy
             item.vy += gravity // apply gravity
 
-            // Slash collision check
+            // Slash collision check (Both proximity reticle AND trail sweep)
             if (checkSlashCollision(item)) {
                 if (item.isBomb) {
                     // Hit bomb!
@@ -380,15 +426,22 @@ class FruitView @JvmOverloads constructor(
     }
 
     private fun checkSlashCollision(item: ActiveItem): Boolean {
-        if (slashTrail.size < 2) return false
         val r = item.radius
-        
-        // Check intersection of last slash segment with item bounding circle
-        for (i in 0 until slashTrail.size - 1) {
-            val p1 = slashTrail[i]
-            val p2 = slashTrail[i+1]
-            if (distToSegment(item.x, item.y, p1.x, p1.y, p2.x, p2.y) < r) {
-                return true
+
+        // 1. Direct blade reticle proximity check
+        val distCursor = Math.hypot((cursorX - item.x).toDouble(), (cursorY - item.y).toDouble()).toFloat()
+        if (distCursor < r + 35f) {
+            return true
+        }
+
+        // 2. Trail intersection check
+        if (slashTrail.size >= 2) {
+            for (i in 0 until slashTrail.size - 1) {
+                val p1 = slashTrail[i]
+                val p2 = slashTrail[i+1]
+                if (distToSegment(item.x, item.y, p1.x, p1.y, p2.x, p2.y) < r + 15f) {
+                    return true
+                }
             }
         }
         return false
@@ -895,9 +948,106 @@ class FruitView @JvmOverloads constructor(
         }
     }
 
+    private fun performWhirlwindSlash() {
+        SoundManager.playSwoosh()
+        val numPoints = 16
+        val slashRadius = 90f
+        val baseAngle = Random.nextDouble(0.0, Math.PI * 2.0)
+        for (i in 0 until numPoints) {
+            val angle = baseAngle + (i.toDouble() / numPoints) * Math.PI * 1.5
+            val px = cursorX + (Math.cos(angle) * slashRadius).toFloat()
+            val py = cursorY + (Math.sin(angle) * slashRadius).toFloat()
+            slashTrail.add(PointF(px, py))
+        }
+        while (slashTrail.size > maxTrailSize * 2) {
+            slashTrail.removeAt(0)
+        }
+
+        // Spawn burst blade particles
+        val color = when (selectedBlade) {
+            1 -> Color.parseColor("#FF5722")
+            2 -> Color.parseColor("#00E5FF")
+            3 -> Color.parseColor("#9C27B0")
+            else -> Color.WHITE
+        }
+        repeat(20) {
+            val angle = Random.nextDouble(0.0, Math.PI * 2.0)
+            val speed = Random.nextFloat() * 9f + 4f
+            trailParticles.add(
+                TrailParticle(
+                    x = cursorX,
+                    y = cursorY,
+                    vx = (Math.cos(angle) * speed).toFloat(),
+                    vy = (Math.sin(angle) * speed).toFloat(),
+                    color = color,
+                    size = Random.nextFloat() * 10f + 4f,
+                    alpha = 255
+                )
+            )
+        }
+        invalidate()
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (gameOver) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                resetGame()
+                startGame()
+            }
+            return true
+        }
+
+        if (gamePaused) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                resume()
+            }
+            return true
+        }
+
+        cursorX = event.x.coerceIn(20f, width - 20f)
+        cursorY = event.y.coerceIn(20f, height - 20f)
+
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                slashTrail.clear()
+                slashTrail.add(PointF(cursorX, cursorY))
+                SoundManager.playSwoosh()
+            }
+            MotionEvent.ACTION_MOVE -> {
+                slashTrail.add(PointF(cursorX, cursorY))
+                if (slashTrail.size > maxTrailSize) {
+                    slashTrail.removeAt(0)
+                }
+                // Blade particles on swipe
+                val color = when (selectedBlade) {
+                    1 -> Color.parseColor("#FF7043")
+                    2 -> Color.parseColor("#00E5FF")
+                    3 -> Color.parseColor("#7E57C2")
+                    else -> Color.WHITE
+                }
+                trailParticles.add(
+                    TrailParticle(
+                        x = cursorX,
+                        y = cursorY,
+                        vx = Random.nextFloat() * 4f - 2f,
+                        vy = Random.nextFloat() * 4f - 2f,
+                        color = color,
+                        size = Random.nextFloat() * 8f + 4f,
+                        alpha = 220
+                    )
+                )
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                // Let trail dissipate naturally
+            }
+        }
+        invalidate()
+        return true
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {
-            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_BUTTON_A || keyCode == KeyEvent.KEYCODE_SPACE) {
                 resetGame()
                 startGame()
                 return true
@@ -907,19 +1057,19 @@ class FruitView @JvmOverloads constructor(
 
         if (gamePaused) {
             when (keyCode) {
-                KeyEvent.KEYCODE_DPAD_UP -> {
+                KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_LEFT -> {
                     selectedBlade = (selectedBlade - 1 + 4) % 4
                     SoundManager.playClick()
                     invalidate()
                     return true
                 }
-                KeyEvent.KEYCODE_DPAD_DOWN -> {
+                KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT -> {
                     selectedBlade = (selectedBlade + 1) % 4
                     SoundManager.playClick()
                     invalidate()
                     return true
                 }
-                KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DPAD_CENTER -> {
+                KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_SPACE -> {
                     resume()
                     return true
                 }
@@ -928,39 +1078,67 @@ class FruitView @JvmOverloads constructor(
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> {
-                cursorY = (cursorY - cursorSpeed).coerceAtLeast(80f)
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W -> {
+                pressedKeys.add(KeyEvent.KEYCODE_DPAD_UP)
                 slashTrail.add(PointF(cursorX, cursorY))
                 if (slashTrail.size > maxTrailSize) slashTrail.removeAt(0)
                 SoundManager.playSwoosh()
                 invalidate()
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_DOWN -> {
-                cursorY = (cursorY + cursorSpeed).coerceAtMost(height - 80f)
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S -> {
+                pressedKeys.add(KeyEvent.KEYCODE_DPAD_DOWN)
                 slashTrail.add(PointF(cursorX, cursorY))
                 if (slashTrail.size > maxTrailSize) slashTrail.removeAt(0)
                 SoundManager.playSwoosh()
                 invalidate()
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_LEFT -> {
-                cursorX = (cursorX - cursorSpeed).coerceAtLeast(80f)
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A -> {
+                pressedKeys.add(KeyEvent.KEYCODE_DPAD_LEFT)
                 slashTrail.add(PointF(cursorX, cursorY))
                 if (slashTrail.size > maxTrailSize) slashTrail.removeAt(0)
                 SoundManager.playSwoosh()
                 invalidate()
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                cursorX = (cursorX + cursorSpeed).coerceAtMost(width - 80f)
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D -> {
+                pressedKeys.add(KeyEvent.KEYCODE_DPAD_RIGHT)
                 slashTrail.add(PointF(cursorX, cursorY))
                 if (slashTrail.size > maxTrailSize) slashTrail.removeAt(0)
                 SoundManager.playSwoosh()
                 invalidate()
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_SPACE -> {
+                performWhirlwindSlash()
+                return true
+            }
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_SETTINGS, KeyEvent.KEYCODE_M, KeyEvent.KEYCODE_O -> {
+                showOptions()
                 return true
             }
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_UP)
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_DOWN)
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_LEFT)
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_RIGHT)
+            else -> pressedKeys.remove(keyCode)
+        }
+        return super.onKeyUp(keyCode, event)
+    }
+
+    private fun showOptions() {
+        pause()
+        FruitOptionsDialog.show(context) {
+            val prefs = context.getSharedPreferences("fruit_settings", Context.MODE_PRIVATE)
+            selectedBlade = prefs.getInt("selected_blade", 0) % 4
+            resume()
+        }
     }
 }

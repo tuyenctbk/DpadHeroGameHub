@@ -149,6 +149,8 @@ class SyobonView @JvmOverloads constructor(
     private var isOnGround = false
     private var isFacingRight = true
     private var jumpHoldTimer = 0L
+    private var lastGroundedTime = 0L
+    private var lastJumpPressTime = 0L
     private var isDying = false
     private var deathTime = 0L
     private var dieSpinAngle = 0f
@@ -693,17 +695,33 @@ class SyobonView @JvmOverloads constructor(
         // Apply Gravity
         velY += GRAVITY
 
-        // Handle variable height jumping
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_UP) || pressedKeys.contains(KeyEvent.KEYCODE_DPAD_CENTER) || pressedKeys.contains(KeyEvent.KEYCODE_ENTER)) {
-            val now = System.currentTimeMillis()
-            if (isOnGround) {
-                velY = JUMP_IMPULSE
-                isOnGround = false
-                jumpHoldTimer = now
-                SoundManager.playClick()
-            } else if (now - jumpHoldTimer < MAX_JUMP_HOLD_TIME) {
-                velY += JUMP_HOLD_FORCE
-            }
+        // Handle variable height jumping with Coyote Time & Jump Buffering
+        val now = System.currentTimeMillis()
+        if (isOnGround) {
+            lastGroundedTime = now
+        }
+
+        val wantsJump = (now - lastJumpPressTime < 180L) ||
+                pressedKeys.contains(KeyEvent.KEYCODE_DPAD_UP) ||
+                pressedKeys.contains(KeyEvent.KEYCODE_DPAD_CENTER) ||
+                pressedKeys.contains(KeyEvent.KEYCODE_ENTER) ||
+                pressedKeys.contains(KeyEvent.KEYCODE_BUTTON_A) ||
+                pressedKeys.contains(KeyEvent.KEYCODE_BUTTON_B) ||
+                pressedKeys.contains(KeyEvent.KEYCODE_BUTTON_X) ||
+                pressedKeys.contains(KeyEvent.KEYCODE_BUTTON_Y) ||
+                pressedKeys.contains(KeyEvent.KEYCODE_SPACE) ||
+                pressedKeys.contains(KeyEvent.KEYCODE_W)
+
+        val canJump = isOnGround || (now - lastGroundedTime < 140L)
+        if (wantsJump && canJump && (now - jumpHoldTimer > 180L)) {
+            velY = JUMP_IMPULSE
+            isOnGround = false
+            lastGroundedTime = 0L
+            lastJumpPressTime = 0L
+            jumpHoldTimer = now
+            SoundManager.playClick()
+        } else if (wantsJump && (now - jumpHoldTimer < MAX_JUMP_HOLD_TIME) && velY < 0) {
+            velY += JUMP_HOLD_FORCE
         }
 
         // Apply velocities & resolve grid collisions
@@ -1074,9 +1092,8 @@ class SyobonView @JvmOverloads constructor(
     }
 
     private fun checkGridCollisionY() {
-        // Precise buffer for feet: 0.25 of player width from each side
-        // playerW is 0.8, so buffer is 0.2. Foot check range is [playerX + 0.2, playerX + 0.6]
-        val buffer = 0.25f * playerW
+        // Generous buffer for feet so cat never slips through tile seams
+        val buffer = 0.08f * playerW
         val left = playerX + buffer
         val right = playerX + playerW - buffer
         val top = playerY
@@ -1094,10 +1111,11 @@ class SyobonView @JvmOverloads constructor(
             for (c in cMin..cMax) {
                 if (isSolid(rBottom, c)) {
                     // Only snap if we were above the ground or moving into it
-                    if (velY >= 0 && (bottom - velY) <= rBottom + 0.15f) {
+                    if (velY >= 0 && (bottom - velY) <= rBottom + 0.35f) {
                         playerY = rBottom - playerH
                         velY = 0f
                         isOnGround = true
+                        lastGroundedTime = System.currentTimeMillis()
                         onAnySolid = true
                         
                         // Trigger Mystery Box by jumping on top!
@@ -1296,7 +1314,16 @@ class SyobonView @JvmOverloads constructor(
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A -> {
+                pressedKeys.add(KeyEvent.KEYCODE_DPAD_LEFT)
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D -> {
+                pressedKeys.add(KeyEvent.KEYCODE_DPAD_RIGHT)
+            }
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER,
+            KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_BUTTON_Y,
+            KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_W -> {
+                lastJumpPressTime = System.currentTimeMillis()
                 pressedKeys.add(keyCode)
             }
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_SETTINGS, KeyEvent.KEYCODE_M, KeyEvent.KEYCODE_O -> {
@@ -1309,7 +1336,11 @@ class SyobonView @JvmOverloads constructor(
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        pressedKeys.remove(keyCode)
+        when (keyCode) {
+            KeyEvent.KEYCODE_A -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_LEFT)
+            KeyEvent.KEYCODE_D -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_RIGHT)
+            else -> pressedKeys.remove(keyCode)
+        }
         return super.onKeyUp(keyCode, event)
     }
 
