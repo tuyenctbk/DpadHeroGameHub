@@ -132,10 +132,8 @@ class IdleAdOverlayHelper(private val activity: Activity) {
 
         ensureFullScreenDialog(adOverlay!!)
 
-        // Proactively request native ad if not pre-fetched yet
-        if (AdManager.getNextNativeAd(activity) == null) {
-            AdManager.loadNativeAd(activity)
-        }
+        // Proactively request native ad if not already cached/loading
+        AdManager.loadNativeAd(activity)
     }
 
     private fun showFullScreenAd() {

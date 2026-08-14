@@ -37,6 +37,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     private var hasStarted = false
     private var activeOverlay: View? = null
     private lateinit var adOverlayHelper: IdleAdOverlayHelper
+    private var gameOverCount = 0
 
     protected open fun shouldShowHelpButton(): Boolean = false
 
@@ -73,13 +74,18 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 firebaseAnalytics?.logEvent("level_end", bundle)
 
                 // Record event for rating algorithm:
-                // Consider it a 'win' if score > 0 (engaged)
-                // We check if score >= currentBest because the High Score is often updated
-                // right before onGameOver is called.
                 val currentBest = ScoreManager.getHighScore(this, gameKey)
                 val isHighScore = score > 0 && score >= currentBest
                 
                 RatingGuideManager.recordGameEvent(this, isWin = score > 0, isHighScore = isHighScore)
+
+                // Natural Game-Over Interstitial Ad Trigger
+                gameOverCount++
+                val freq = ConfigManager.getAdsGameOverFrequency()
+                if (gameOverCount >= freq && AdManager.canShowInterstitial()) {
+                    gameOverCount = 0
+                    AdManager.showInterstitial(this)
+                }
             }
         } else {
             throw IllegalStateException("View must implement GameView interface")
@@ -323,7 +329,11 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            AdManager.showInterstitial(this) {
+            if (AdManager.canShowInterstitial()) {
+                AdManager.showInterstitial(this) {
+                    finish()
+                }
+            } else {
                 finish()
             }
             return true

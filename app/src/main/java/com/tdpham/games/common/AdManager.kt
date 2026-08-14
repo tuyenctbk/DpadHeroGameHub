@@ -7,37 +7,46 @@ import android.os.Looper
 import android.util.Log
 import androidx.core.content.edit
 import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.VideoOptions
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.google.android.gms.ads.nativead.NativeAd
-import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.android.gms.ads.nativead.MediaView
-import com.google.android.gms.ads.VideoOptions
+import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
+import com.google.android.gms.ads.nativead.NativeAdView
+import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import android.widget.TextView
 import android.widget.Button
 import android.widget.ImageView
 import android.view.View
 import com.tdpham.games.R
-import com.tdpham.games.BuildConfig
 import java.util.concurrent.Executors
 
 object AdManager {
     private const val TAG = "AdManager"
     private const val INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-5190563950149825/9226641952"
     private const val NATIVE_AD_UNIT_ID = "ca-app-pub-5190563950149825/5584626448"
+    private const val REWARDED_AD_UNIT_ID = "ca-app-pub-5190563950149825/9226641952"
     
     private var isInitialized = false
     private var isInitializing = false
+    
+    // Single-Slot Interstitial Caching
     private var mInterstitialAd: InterstitialAd? = null
-    private var isLoading = false
+    private var isLoadingInterstitial = false
 
-    // Native Ad Double Buffering
+    // Single-Slot Rewarded Caching
+    private var mRewardedAd: RewardedAd? = null
+    private var isLoadingRewarded = false
+
+    // Native Ad Single Caching
     private var currentNativeAd: NativeAd? = null
     private var prefetchedNativeAd: NativeAd? = null
     private var isNativeLoading = false
@@ -66,6 +75,7 @@ object AdManager {
         if (sessionStartTime == 0L) {
             sessionStartTime = System.currentTimeMillis()
             adsShownInSession = 0
+            idleAdsShownInSession = 0
         }
         if (!isSessionTracked) {
             isSessionTracked = true
@@ -79,7 +89,7 @@ object AdManager {
         Executors.newSingleThreadExecutor().execute {
             try {
                 if (!ConfigManager.isAdsEnabled()) {
-                    Log.d(TAG, "AdMob is disabled by default.")
+                    Log.d(TAG, "AdMob is disabled by configuration.")
                     isInitializing = false
                     return@execute
                 }
@@ -89,8 +99,8 @@ object AdManager {
                     isInitialized = true
                     isInitializing = false
                     mainHandler.post {
+                        // Preload exactly 1 Interstitial ad for immediate match readiness
                         loadInterstitial(appContext)
-                        loadNativeAd(appContext)
                     }
                 }
             } catch (e: Throwable) {
@@ -100,10 +110,16 @@ object AdManager {
         }
     }
 
+    /**
+     * Preloads a single Interstitial Ad.
+     * Guaranteed NO duplicate or redundant network requests if an ad is already loaded or loading.
+     */
     fun loadInterstitial(context: Context) {
         try {
-            if (!ConfigManager.isAdsEnabled() || isLoading || (mInterstitialAd != null)) return
-            isLoading = true
+            if (!ConfigManager.isAdsEnabled() || isLoadingInterstitial || (mInterstitialAd != null)) {
+                return
+            }
+            isLoadingInterstitial = true
 
             val appContext = context.applicationContext
             mainHandler.post {
@@ -111,25 +127,181 @@ object AdManager {
                 InterstitialAd.load(appContext, INTERSTITIAL_AD_UNIT_ID, adRequest,
                     object : InterstitialAdLoadCallback() {
                         override fun onAdFailedToLoad(adError: LoadAdError) {
-                            Log.d(TAG, "Ad failed to load: ${adError.message}")
+                            Log.d(TAG, "Interstitial Ad failed to load: ${adError.message}")
                             mInterstitialAd = null
-                            isLoading = false
+                            isLoadingInterstitial = false
                         }
 
                         override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                            Log.d(TAG, "Ad was loaded.")
+                            Log.d(TAG, "Interstitial Ad loaded and cached.")
                             mInterstitialAd = interstitialAd
-                            isLoading = false
+                            isLoadingInterstitial = false
                         }
                     })
             }
         } catch (e: Throwable) {
             Log.e(TAG, "Failed to load interstitial ad: ${e.message}", e)
             mInterstitialAd = null
-            isLoading = false
+            isLoadingInterstitial = false
         }
     }
 
+    /**
+     * Displays the cached Interstitial ad if ready and cooldown passed.
+     */
+    fun showInterstitial(activity: Activity, force: Boolean = false, onAdDismissed: () -> Unit = {}) {
+        try {
+            if (!ConfigManager.isAdsEnabled()) {
+                onAdDismissed()
+                return
+            }
+
+            // Check 1: Session ad cap
+            val maxAds = ConfigManager.getAdsMaxPerSession()
+            if (adsShownInSession >= maxAds) {
+                Log.d(TAG, "Ad skipped: Max ads per session ($maxAds) reached")
+                onAdDismissed()
+                return
+            }
+
+            // Check 2: Cooldown between ads (e.g. 45s)
+            val minInterval = ConfigManager.getAdsMinIntervalMs()
+            val timeSinceLastAd = System.currentTimeMillis() - lastAdShowTime
+            if (!force && lastAdShowTime > 0 && timeSinceLastAd < minInterval) {
+                Log.d(TAG, "Ad skipped: Cooldown active. Last ad ${timeSinceLastAd / 1000}s ago (min: ${minInterval / 1000}s)")
+                onAdDismissed()
+                return
+            }
+
+            // Check 3: Check eligibility
+            if (!shouldShowAds(activity)) {
+                onAdDismissed()
+                return
+            }
+
+            // Check 4: Display ad if loaded
+            val ad = mInterstitialAd
+            if (ad != null) {
+                ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+                    override fun onAdDismissedFullScreenContent() {
+                        Log.d(TAG, "Interstitial Ad was dismissed.")
+                        mInterstitialAd = null
+                        adsShownInSession++
+                        lastAdShowTime = System.currentTimeMillis()
+                        // Preload the next single slot ad
+                        loadInterstitial(activity.applicationContext)
+                        onAdDismissed()
+                    }
+
+                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                        Log.d(TAG, "Interstitial Ad failed to show: ${adError.message}")
+                        mInterstitialAd = null
+                        loadInterstitial(activity.applicationContext)
+                        onAdDismissed()
+                    }
+                }
+                ad.show(activity)
+            } else {
+                Log.d(TAG, "Interstitial Ad not ready yet - requesting 1 for next time")
+                loadInterstitial(activity.applicationContext)
+                onAdDismissed()
+            }
+        } catch (e: Throwable) {
+            Log.e(TAG, "Exception in showInterstitial: ${e.message}", e)
+            onAdDismissed()
+        }
+    }
+
+    /**
+     * Checks if an interstitial ad is eligible and ready to be shown.
+     */
+    fun canShowInterstitial(): Boolean {
+        if (!ConfigManager.isAdsEnabled()) return false
+        if (adsShownInSession >= ConfigManager.getAdsMaxPerSession()) return false
+        val timeSinceLastAd = System.currentTimeMillis() - lastAdShowTime
+        if (lastAdShowTime > 0 && timeSinceLastAd < ConfigManager.getAdsMinIntervalMs()) return false
+        return mInterstitialAd != null
+    }
+
+    /**
+     * Preloads a single Rewarded Ad.
+     */
+    fun loadRewarded(context: Context) {
+        try {
+            if (!ConfigManager.isAdsEnabled() || isLoadingRewarded || (mRewardedAd != null)) {
+                return
+            }
+            isLoadingRewarded = true
+
+            val appContext = context.applicationContext
+            mainHandler.post {
+                val adRequest = AdRequest.Builder().build()
+                RewardedAd.load(appContext, REWARDED_AD_UNIT_ID, adRequest,
+                    object : RewardedAdLoadCallback() {
+                        override fun onAdFailedToLoad(adError: LoadAdError) {
+                            Log.d(TAG, "Rewarded Ad failed to load: ${adError.message}")
+                            mRewardedAd = null
+                            isLoadingRewarded = false
+                        }
+
+                        override fun onAdLoaded(rewardedAd: RewardedAd) {
+                            Log.d(TAG, "Rewarded Ad loaded and cached.")
+                            mRewardedAd = rewardedAd
+                            isLoadingRewarded = false
+                        }
+                    })
+            }
+        } catch (e: Throwable) {
+            Log.e(TAG, "Failed to load rewarded ad: ${e.message}", e)
+            mRewardedAd = null
+            isLoadingRewarded = false
+        }
+    }
+
+    /**
+     * Shows a Rewarded Ad for high eCPM incentives (Revives, Continues, Bonus Points).
+     */
+    fun showRewarded(
+        activity: Activity,
+        onUserEarnedReward: (RewardItem) -> Unit,
+        onAdDismissed: () -> Unit = {}
+    ) {
+        try {
+            val ad = mRewardedAd
+            if (ad != null) {
+                ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+                    override fun onAdDismissedFullScreenContent() {
+                        Log.d(TAG, "Rewarded Ad dismissed.")
+                        mRewardedAd = null
+                        lastAdShowTime = System.currentTimeMillis()
+                        loadRewarded(activity.applicationContext)
+                        onAdDismissed()
+                    }
+
+                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                        Log.d(TAG, "Rewarded Ad failed to show: ${adError.message}")
+                        mRewardedAd = null
+                        loadRewarded(activity.applicationContext)
+                        onAdDismissed()
+                    }
+                }
+                ad.show(activity) { rewardItem ->
+                    onUserEarnedReward(rewardItem)
+                }
+            } else {
+                Log.d(TAG, "Rewarded Ad not ready.")
+                loadRewarded(activity.applicationContext)
+                onAdDismissed()
+            }
+        } catch (e: Throwable) {
+            Log.e(TAG, "Exception in showRewarded: ${e.message}", e)
+            onAdDismissed()
+        }
+    }
+
+    /**
+     * Loads Native Ad on demand when screensaver/idle is actually activated.
+     */
     fun loadNativeAd(context: Context) {
         try {
             if (!ConfigManager.isAdsEnabled() || isNativeLoading || (prefetchedNativeAd != null)) return
@@ -176,9 +348,6 @@ object AdManager {
         currentNativeAd = nextAd
         prefetchedNativeAd = null
         
-        // Trigger prefetch for next cycle
-        loadNativeAd(context)
-        
         if (nextAd != null) {
             idleAdsShownInSession++
         }
@@ -187,29 +356,21 @@ object AdManager {
 
     fun canShowIdleAd(context: Context): Boolean {
         if (!ConfigManager.isAdsEnabled()) return false
-        
-        // Check session cap for idle ads
         val maxIdleAds = ConfigManager.getAdsMaxPerSessionIdle()
         if (idleAdsShownInSession >= maxIdleAds) {
-            Log.d(TAG, "Idle Ad skipped: Max ads per session ($maxIdleAds) reached")
             return false
         }
-
         return shouldShowAds(context)
     }
 
     fun populateNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
-        // Set the media view.
         adView.mediaView = adView.findViewById<MediaView>(R.id.ad_media)
-
-        // Set other ad assets.
         adView.headlineView = adView.findViewById(R.id.ad_headline)
         adView.bodyView = adView.findViewById(R.id.ad_body)
         adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
         adView.iconView = adView.findViewById(R.id.ad_app_icon)
 
-        // The headline and mediaContent are guaranteed to be in every NativeAd.
-        (adView.headlineView as TextView).text = nativeAd.headline
+        (adView.headlineView as? TextView)?.text = nativeAd.headline
         val mediaContent = nativeAd.mediaContent
         if (mediaContent != null && (mediaContent.hasVideoContent() || mediaContent.aspectRatio > 0f)) {
             adView.mediaView?.setMediaContent(mediaContent)
@@ -218,31 +379,27 @@ object AdManager {
             adView.mediaView?.visibility = View.GONE
         }
 
-        // These assets aren't guaranteed to be in every NativeAd, so it's important to
-        // check before assigning them.
         if (nativeAd.body == null) {
             adView.bodyView?.visibility = View.INVISIBLE
         } else {
             adView.bodyView?.visibility = View.VISIBLE
-            (adView.bodyView as TextView).text = nativeAd.body
+            (adView.bodyView as? TextView)?.text = nativeAd.body
         }
 
         if (nativeAd.callToAction == null) {
             adView.callToActionView?.visibility = View.INVISIBLE
         } else {
             adView.callToActionView?.visibility = View.VISIBLE
-            (adView.callToActionView as Button).text = nativeAd.callToAction
+            (adView.callToActionView as? Button)?.text = nativeAd.callToAction
         }
 
         if (nativeAd.icon == null) {
             adView.iconView?.visibility = View.GONE
         } else {
-            (adView.iconView as ImageView).setImageDrawable(nativeAd.icon?.drawable)
+            (adView.iconView as? ImageView)?.setImageDrawable(nativeAd.icon?.drawable)
             adView.iconView?.visibility = View.VISIBLE
         }
 
-        // This method tells the Google Mobile Ads SDK that you have finished populating your
-        // native ad view with this native ad.
         adView.setNativeAd(nativeAd)
     }
 
@@ -252,7 +409,7 @@ object AdManager {
         val ctaView = adView.findViewById<Button>(R.id.ad_call_to_action)
         val iconView = adView.findViewById<ImageView>(R.id.ad_app_icon)
 
-        headlineView?.text = "D-Pad Game Hub [Test Ad]"
+        headlineView?.text = "D-Pad Arcade Hub"
         bodyView?.apply {
             text = "Enjoy endless classic arcade games with TV D-Pad controls!"
             visibility = View.VISIBLE
@@ -267,74 +424,13 @@ object AdManager {
         }
     }
 
-    fun showInterstitial(activity: Activity, onAdDismissed: () -> Unit = {}) {
-        try {
-            if (!ConfigManager.isAdsEnabled()) {
-                onAdDismissed()
-                return
-            }
-
-            // Check 1: Session ad cap
-            val maxAds = ConfigManager.getAdsMaxPerSession()
-            if (adsShownInSession >= maxAds) {
-                Log.d(TAG, "Ad skipped: Max ads per session ($maxAds) reached")
-                onAdDismissed()
-                return
-            }
-
-            // Check 2: Cooldown between ads
-            val minInterval = ConfigManager.getAdsMinIntervalMs()
-            val timeSinceLastAd = System.currentTimeMillis() - lastAdShowTime
-            if (lastAdShowTime > 0 && timeSinceLastAd < minInterval) {
-                Log.d(TAG, "Ad skipped: Cooldown active. Last ad ${timeSinceLastAd / 1000}s ago")
-                onAdDismissed()
-                return
-            }
-
-            // Check 3: Eligibility criteria
-            if (!shouldShowAds(activity)) {
-                Log.d(TAG, "Ad blocked: Eligibility criteria not met")
-                onAdDismissed()
-                return
-            }
-
-            // Check 4: Ad is ready
-            val ad = mInterstitialAd
-            if (ad != null) {
-                ad.fullScreenContentCallback = object : FullScreenContentCallback() {
-                    override fun onAdDismissedFullScreenContent() {
-                        Log.d(TAG, "Ad was dismissed.")
-                        mInterstitialAd = null
-                        adsShownInSession++
-                        lastAdShowTime = System.currentTimeMillis()
-                        loadInterstitial(activity.applicationContext) // Pre-load next
-                        onAdDismissed()
-                    }
-
-                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                        Log.d(TAG, "Ad failed to show: ${adError.message}")
-                        mInterstitialAd = null
-                        onAdDismissed()
-                    }
-                }
-                ad.show(activity)
-            } else {
-                Log.d(TAG, "Ad not ready - pre-loading for next time")
-                loadInterstitial(activity)
-                onAdDismissed()
-            }
-        } catch (e: Throwable) {
-            Log.e(TAG, "Failed to show interstitial ad: ${e.message}", e)
-            onAdDismissed()
-        }
-    }
-
     fun resetSessionAdCounter() {
         adsShownInSession = 0
-        Log.d(TAG, "Session ad counter reset")
+        idleAdsShownInSession = 0
     }
 
     private fun shouldShowAds(context: Context): Boolean {
+        if (!ConfigManager.isAdsEnabled()) return false
         val minDays = ConfigManager.getAdsMinDays()
         val minOpens = ConfigManager.getAdsMinOpens()
         val minSessionSecs = ConfigManager.getAdsMinSessionSeconds()
@@ -343,13 +439,7 @@ object AdManager {
         val opens = getAppOpens(context)
         val sessionSecs = getSecondsInSession()
         
-        val isInstallTimePassed = days >= minDays
-        val isOpenCountPassed = opens >= minOpens
-        val isSessionDelayPassed = sessionSecs >= minSessionSecs
-        
-        Log.d(TAG, "Eligibility check: Days=$days/$minDays, Opens=$opens/$minOpens, Session=$sessionSecs/$minSessionSecs")
-        
-        return isInstallTimePassed && isOpenCountPassed && isSessionDelayPassed
+        return (days >= minDays) && (opens >= minOpens) && (sessionSecs >= minSessionSecs)
     }
 
     private fun getDaysSinceInstall(context: Context): Int {

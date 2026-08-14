@@ -25,17 +25,18 @@ object ConfigManager {
             rc.setConfigSettingsAsync(configSettings)
             rc.setDefaultsAsync(mapOf(
                 "is_ads_enabled" to true,
-                "ads_min_days" to 7L,
-                "ads_min_opens" to 3L,
-                "ads_min_session_seconds" to 900L,
-                "ads_min_interval_ms" to 120000L,
-                "ads_max_per_session" to 2L,
-                "ads_max_per_session_idle" to 15L,
-                "ads_idle_menu_corner_sec" to 10L,
-                "ads_idle_menu_full_sec" to 30L,
-                "ads_idle_wait_corner_sec" to 15L,
-                "ads_idle_wait_full_sec" to 45L,
-                "ads_idle_play_corner_sec" to 30L,
+                "ads_min_days" to 0L,
+                "ads_min_opens" to 1L,
+                "ads_min_session_seconds" to 0L,
+                "ads_min_interval_ms" to 45000L,
+                "ads_max_per_session" to 8L,
+                "ads_game_over_frequency" to 3L,
+                "ads_max_per_session_idle" to 10L,
+                "ads_idle_menu_corner_sec" to 15L,
+                "ads_idle_menu_full_sec" to 45L,
+                "ads_idle_wait_corner_sec" to 20L,
+                "ads_idle_wait_full_sec" to 60L,
+                "ads_idle_play_corner_sec" to 45L,
                 "ads_idle_play_full_sec" to 120L,
                 "ads_idle_refresh_sec" to 120L,
                 "ads_snooze_dismiss_threshold_sec" to 15L,
@@ -70,55 +71,64 @@ object ConfigManager {
 
 
     fun isAdsEnabled(): Boolean {
-        val rc = remoteConfig ?: return false
+        val rc = remoteConfig ?: return true
         return try {
             rc.getBoolean("is_ads_enabled")
         } catch (e: Exception) {
             Log.e("ConfigManager", "Failed to get is_ads_enabled: ${e.message}")
-            false
+            true
         }
     }
 
     fun getAdsMinDays(): Int {
-        val rc = remoteConfig ?: return 7
+        val rc = remoteConfig ?: return 0
         return try {
             rc.getLong("ads_min_days").toInt()
         } catch (_: Exception) {
-            7
+            0
         }
     }
 
     fun getAdsMinOpens(): Int {
-        val rc = remoteConfig ?: return 3
+        val rc = remoteConfig ?: return 1
         return try {
             rc.getLong("ads_min_opens").toInt()
         } catch (_: Exception) {
-            3
+            1
         }
     }
 
     fun getAdsMinSessionSeconds(): Int {
-        val rc = remoteConfig ?: return 900
+        val rc = remoteConfig ?: return 0
         return try {
             rc.getLong("ads_min_session_seconds").toInt()
         } catch (_: Exception) {
-            900
+            0
         }
     }
 
     fun getAdsMinIntervalMs(): Long {
-        val rc = remoteConfig ?: return 120000L
+        val rc = remoteConfig ?: return 45000L
         return try {
             rc.getLong("ads_min_interval_ms")
         } catch (_: Exception) {
-            120000L
+            45000L
         }
     }
 
     fun getAdsMaxPerSession(): Int {
-        val rc = remoteConfig ?: return 3
+        val rc = remoteConfig ?: return 8
         return try {
             rc.getLong("ads_max_per_session").toInt()
+        } catch (_: Exception) {
+            8
+        }
+    }
+
+    fun getAdsGameOverFrequency(): Int {
+        val rc = remoteConfig ?: return 3
+        return try {
+            rc.getLong("ads_game_over_frequency").toInt()
         } catch (_: Exception) {
             3
         }
