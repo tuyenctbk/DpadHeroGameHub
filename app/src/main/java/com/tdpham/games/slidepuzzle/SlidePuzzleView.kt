@@ -143,13 +143,17 @@ class SlidePuzzleView @JvmOverloads constructor(
     }
 
     private fun shuffleTiles() {
-        repeat(200) {
-            val neighbors = getNeighbors(emptyIdx)
-            val moveIdx = neighbors[Random.nextInt(neighbors.size)]
-            swap(emptyIdx, moveIdx)
-            emptyIdx = moveIdx
-        }
-        cursorIdx = emptyIdx
+        var lastMove = -1
+        do {
+            repeat(200) {
+                val neighbors = getNeighbors(emptyIdx).filter { it != lastMove }
+                val moveIdx = if (neighbors.isNotEmpty()) neighbors[Random.nextInt(neighbors.size)] else getNeighbors(emptyIdx)[0]
+                swap(emptyIdx, moveIdx)
+                lastMove = emptyIdx
+                emptyIdx = moveIdx
+            }
+        } while (tiles.withIndex().all { it.value == it.index })
+        cursorIdx = if (emptyIdx == 0) 1 else 0
     }
 
     private fun getNeighbors(idx: Int): List<Int> {
@@ -183,10 +187,30 @@ class SlidePuzzleView @JvmOverloads constructor(
         val c = cursorIdx % gridSize
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> if (r > 0) cursorIdx -= gridSize
-            KeyEvent.KEYCODE_DPAD_DOWN -> if (r < gridSize - 1) cursorIdx += gridSize
-            KeyEvent.KEYCODE_DPAD_LEFT -> if (c > 0) cursorIdx -= 1
-            KeyEvent.KEYCODE_DPAD_RIGHT -> if (c < gridSize - 1) cursorIdx += 1
+            KeyEvent.KEYCODE_DPAD_UP -> {
+                if (r > 0) {
+                    cursorIdx -= gridSize
+                    SoundManager.playClick()
+                }
+            }
+            KeyEvent.KEYCODE_DPAD_DOWN -> {
+                if (r < gridSize - 1) {
+                    cursorIdx += gridSize
+                    SoundManager.playClick()
+                }
+            }
+            KeyEvent.KEYCODE_DPAD_LEFT -> {
+                if (c > 0) {
+                    cursorIdx -= 1
+                    SoundManager.playClick()
+                }
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                if (c < gridSize - 1) {
+                    cursorIdx += 1
+                    SoundManager.playClick()
+                }
+            }
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> tryMove(cursorIdx)
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()

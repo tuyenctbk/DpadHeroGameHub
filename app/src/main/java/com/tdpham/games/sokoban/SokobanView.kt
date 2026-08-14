@@ -26,15 +26,16 @@ class SokobanView @JvmOverloads constructor(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val levels = listOf(
+        // Level 1: Starter Warehouse (2 boxes)
         arrayOf(
-            "##########",
-            "#   .    #",
-            "#  $$    #",
-            "#   @    #",
-            "#   .    #",
-            "#        #",
-            "##########"
+            "########",
+            "#      #",
+            "# .$$  #",
+            "#  @.  #",
+            "#      #",
+            "########"
         ),
+        // Level 2: Cross Vault (4 boxes)
         arrayOf(
             "########",
             "#   .  #",
@@ -44,32 +45,38 @@ class SokobanView @JvmOverloads constructor(
             "#   .  #",
             "########"
         ),
+        // Level 3: Center Stage (3 boxes)
         arrayOf(
             "#########",
             "#       #",
-            "# .$$$  #",
-            "# $@$   #",
-            "#  $    #",
-            "# . .   #",
+            "# . $ . #",
+            "#  $@$  #",
+            "#   .   #",
             "#       #",
             "#########"
         ),
+        // Level 4: Master Warehouse (4 boxes)
         arrayOf(
-            "############",
-            "#     @    #",
-            "# $ $ $ $  #",
-            "#  .....   #",
-            "#          #",
-            "############"
+            "  ##### ",
+            "###   # ",
+            "# .$. # ",
+            "#  #  # ",
+            "# $#$ # ",
+            "#  @  # ",
+            "# .$. # ",
+            "###   # ",
+            "  ##### "
         ),
+        // Level 5: Grand Chamber (4 boxes)
         arrayOf(
-            "###########",
-            "#  .....  #",
-            "#  $$$$$  #",
-            "# $@    $ #",
-            "#  $$$$$  #",
-            "#  .....  #",
-            "###########"
+            "#########",
+            "#       #",
+            "# . $ . #",
+            "#  $#$  #",
+            "# . @ . #",
+            "#   $   #",
+            "#       #",
+            "#########"
         )
     )
 
