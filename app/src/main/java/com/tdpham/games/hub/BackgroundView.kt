@@ -16,7 +16,7 @@ class BackgroundView @JvmOverloads constructor(
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var bgType = GameEnvironment.BackgroundType.GRADIENT
-    private var weather = GameEnvironment.WeatherType.RAIN
+    private var weather = GameEnvironment.WeatherType.NONE
     private var isNight = true
     
     private val particles = mutableListOf<GameEnvironment.Particle>()
@@ -34,20 +34,17 @@ class BackgroundView @JvmOverloads constructor(
             val safeBgs = listOf(
                 GameEnvironment.BackgroundType.GRADIENT,
                 GameEnvironment.BackgroundType.GRID,
-                GameEnvironment.BackgroundType.DOTS,
-                GameEnvironment.BackgroundType.SOLID
+                GameEnvironment.BackgroundType.DOTS
             )
             val safeWeather = listOf(
                 GameEnvironment.WeatherType.NONE,
-                GameEnvironment.WeatherType.RAIN,
-                GameEnvironment.WeatherType.SNOW,
-                GameEnvironment.WeatherType.FOG
+                GameEnvironment.WeatherType.SNOW
             )
             
             bgType = safeBgs.random()
             weather = safeWeather.random()
-            isNight = Random().nextBoolean()
-            handler.postDelayed(this, 15000) // Change theme every 15 seconds
+            isNight = true
+            handler.postDelayed(this, 20000) // Change theme smoothly
         }
     }
 
