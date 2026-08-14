@@ -710,4 +710,5 @@
     <string name="share_message">🎮 在手机和 Android TV 上畅玩 Dpad Hero Game Hub 中的 30 款复古街机游戏！免费下载：https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
     <string name="btn_share_app">分享</string>
     <string name="btn_rate_app">评分</string>
+    <string name="share_copied">链接已复制到剪贴板！</string>
 </resources>

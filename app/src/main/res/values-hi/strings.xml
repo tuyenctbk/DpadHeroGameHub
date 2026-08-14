@@ -710,4 +710,5 @@
     <string name="share_message">🎮 फ़ोन और Android TV पर Dpad Hero Game Hub में 30 रेट्रो आर्केड गेम खेलें! मुफ़्त डाउनलोड करें: https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
     <string name="btn_share_app">साझा करें</string>
     <string name="btn_rate_app">रेट करें</string>
+    <string name="share_copied">लिंक क्लिपबोर्ड पर कॉपी हो गया!</string>
 </resources>

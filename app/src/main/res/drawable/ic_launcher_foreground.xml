@@ -1,19 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2026 The Android Open Source Project
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~      http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
@@ -21,89 +6,149 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Outer Shield/Console Shape - Shadow -->
+    <!-- 1. Gamepad / Console Outer Shell Drop Shadow -->
     <path
-        android:fillColor="#1A000000"
-        android:pathData="M55,13 C31.8,13 13,31.8 13,55 C13,78.2 31.8,97 55,97 C78.2,97 97,78.2 97,55 C97,31.8 78.2,13 55,13 Z" />
+        android:fillColor="#50000000"
+        android:pathData="M30,36 h48 a16,16 0 0,1 16,16 v16 a16,16 0 0,1 -16,16 h-48 a16,16 0 0,1 -16,-16 v-16 a16,16 0 0,1 16,-16 z" />
 
-    <!-- Outer Shield/Console Shape -->
+    <!-- 2. Gamepad Body (Dark Slate Metallic Console with Cyber Border) -->
     <path
-        android:pathData="M54,12 C30.8,12 12,30.8 12,54 C12,77.2 30.8,96 54,96 C77.2,96 96,77.2 96,54 C96,30.8 77.2,12 54,12 Z M54,88 C35.2,88 20,72.8 20,54 C20,35.2 35.2,20 54,20 C72.8,20 88,35.2 88,54 C88,72.8 72.8,88 54,88 Z">
+        android:pathData="M29,33 h50 a15,15 0 0,1 15,15 v14 a15,15 0 0,1 -15,15 h-50 a15,15 0 0,1 -15,-15 v-14 a15,15 0 0,1 15,-15 z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:centerX="54"
-                android:centerY="12"
-                android:endY="96"
-                android:startY="12"
+                android:endY="77"
+                android:startY="33"
                 android:type="linear">
-                <item android:color="#263238" android:offset="0" />
-                <item android:color="#212121" android:offset="1" />
+                <item android:color="#212738" android:offset="0" />
+                <item android:color="#141824" android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
 
-    <!-- Console Inner Ring Detail -->
+    <!-- Console Outer Neon Border Glow -->
     <path
-        android:strokeColor="#455A64"
-        android:strokeWidth="0.5"
-        android:pathData="M54,22 C36.3,22 22,36.3 22,54 C22,71.7 36.3,86 54,86 C71.7,86 86,71.7 86,54 C86,36.3 71.7,22 54,22 Z" />
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="1.2"
+        android:pathData="M29,33 h50 a15,15 0 0,1 15,15 v14 a15,15 0 0,1 -15,15 h-50 a15,15 0 0,1 -15,-15 v-14 a15,15 0 0,1 15,-15 z" />
 
-    <!-- D-Pad Plus Shape - Shadow -->
+    <!-- Console Inner Grips Accent Line -->
     <path
-        android:fillColor="#1A237E"
-        android:pathData="M55,35 L47,35 L47,47 L35,47 L35,55 L47,55 L47,67 L55,67 L55,55 L67,55 L67,47 L55,47 Z" />
+        android:strokeColor="#FF007F"
+        android:strokeWidth="0.8"
+        android:pathData="M18,52 a11,11 0 0,0 11,11 M90,52 a11,11 0 0,1 -11,11" />
 
+    <!-- 3. Glowing Neon D-PAD (Left Side) -->
+    <!-- D-Pad Base Shadow -->
     <path
-        android:pathData="M54,34 L46,34 L46,46 L34,46 L34,54 L46,54 L46,66 L54,66 L54,54 L66,54 L66,46 L54,46 Z">
+        android:fillColor="#0A0D18"
+        android:pathData="M39,43 h6 v6 h6 v6 h-6 v6 h-6 v-6 h-6 v-6 h6 z" />
+
+    <!-- D-Pad Cross Body (Electric Cyan Gradient) -->
+    <path
+        android:pathData="M38,42 h6 v6 h6 v6 h-6 v6 h-6 v-6 h-6 v-6 h6 z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:centerX="54"
-                android:centerY="50"
-                android:gradientRadius="20"
-                android:type="radial">
-                <item android:color="#5C6BC0" android:offset="0" />
-                <item android:color="#3F51B5" android:offset="1" />
+                android:endY="60"
+                android:startY="42"
+                android:type="linear">
+                <item android:color="#00F5FF" android:offset="0" />
+                <item android:color="#0091EA" android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
 
-    <!-- Red Button - Shadow -->
+    <!-- D-Pad Inner Bevel / Highlight -->
     <path
-        android:fillColor="#C62828"
-        android:pathData="M72,43m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
-    <!-- Red Button -->
-    <path
-        android:fillColor="#F44336"
-        android:pathData="M72,42m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+        android:strokeColor="#E0F7FA"
+        android:strokeWidth="0.6"
+        android:pathData="M38,42 h6 v6 h6 v6 h-6 v6 h-6 v-6 h-6 v-6 h6 z" />
 
-    <!-- Green Button - Shadow -->
-    <path
-        android:fillColor="#E65100"
-        android:pathData="M78,51m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
-    <!-- Green Button -->
-    <path
-        android:fillColor="#FF9800"
-        android:pathData="M78,50m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+    <!-- D-Pad Direction Arrows (White Triangles) -->
+    <!-- Up -->
+    <path android:fillColor="#FFFFFF" android:pathData="M41,43.5 L43,46.5 L39,46.5 Z" />
+    <!-- Down -->
+    <path android:fillColor="#FFFFFF" android:pathData="M41,58.5 L43,55.5 L39,55.5 Z" />
+    <!-- Left -->
+    <path android:fillColor="#FFFFFF" android:pathData="M33.5,51 L36.5,49 L36.5,53 Z" />
+    <!-- Right -->
+    <path android:fillColor="#FFFFFF" android:pathData="M48.5,51 L45.5,49 L45.5,53 Z" />
 
-    <!-- Blue Button - Shadow -->
+    <!-- 4. Arcade Action Buttons (Diamond 4-Button Cluster, Right Side) -->
+    <!-- Top Button - Ruby Red (Y/X) -->
+    <path
+        android:fillColor="#D50000"
+        android:pathData="M69,45 m-3.5,0 a3.5,3.5 0 1,1 7,0 a3.5,3.5 0 1,1 -7,0" />
+    <path
+        android:fillColor="#FF1744"
+        android:pathData="M69,44.5 m-3.2,0 a3.2,3.2 0 1,1 6.4,0 a3.2,3.2 0 1,1 -6.4,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M68,43.2 m-1,0 a1,1 0 1,1 2,0 a1,1 0 1,1 -2,0" />
+
+    <!-- Right Button - Emerald Green (B/A) -->
+    <path
+        android:fillColor="#00C853"
+        android:pathData="M75,51 m-3.5,0 a3.5,3.5 0 1,1 7,0 a3.5,3.5 0 1,1 -7,0" />
+    <path
+        android:fillColor="#00E676"
+        android:pathData="M75,50.5 m-3.2,0 a3.2,3.2 0 1,1 6.4,0 a3.2,3.2 0 1,1 -6.4,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M74,49.2 m-1,0 a1,1 0 1,1 2,0 a1,1 0 1,1 -2,0" />
+
+    <!-- Bottom Button - Neon Gold (A/B) -->
+    <path
+        android:fillColor="#FFAB00"
+        android:pathData="M69,57 m-3.5,0 a3.5,3.5 0 1,1 7,0 a3.5,3.5 0 1,1 -7,0" />
     <path
         android:fillColor="#FFD600"
-        android:pathData="M72,59m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
-    <!-- Blue Button -->
+        android:pathData="M69,56.5 m-3.2,0 a3.2,3.2 0 1,1 6.4,0 a3.2,3.2 0 1,1 -6.4,0" />
     <path
-        android:fillColor="#FFFF00"
-        android:pathData="M72,58m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+        android:fillColor="#FFFFFF"
+        android:pathData="M68,55.2 m-1,0 a1,1 0 1,1 2,0 a1,1 0 1,1 -2,0" />
 
-    <!-- Arcade Joystick Handle / Base Line -->
+    <!-- Left Button - Cobalt Blue (X/Y) -->
     <path
-        android:fillColor="#37474F"
-        android:pathData="M38,74 L70,74 L70,78 L38,78 Z" />
+        android:fillColor="#2962FF"
+        android:pathData="M63,51 m-3.5,0 a3.5,3.5 0 1,1 7,0 a3.5,3.5 0 1,1 -7,0" />
+    <path
+        android:fillColor="#2979FF"
+        android:pathData="M63,50.5 m-3.2,0 a3.2,3.2 0 1,1 6.4,0 a3.2,3.2 0 1,1 -6.4,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M62,49.2 m-1,0 a1,1 0 1,1 2,0 a1,1 0 1,1 -2,0" />
 
-    <!-- Shine Effect -->
+    <!-- 5. Center Arcade Screen / Emblem -->
+    <!-- Small Center LED / Logo screen -->
     <path
-        android:fillColor="#1AFFFFFF"
-        android:pathData="M54,20 C35.2,20 20,35.2 20,54 L54,54 Z" />
+        android:fillColor="#0A0D18"
+        android:pathData="M51.5,47.5 h5 a2,2 0 0,1 2,2 v3 a2,2 0 0,1 -2,2 h-5 a2,2 0 0,1 -2,-2 v-3 a2,2 0 0,1 2,-2 z" />
+    <!-- Arcade Pixel Crown Emblem in Center -->
     <path
-        android:fillColor="#0DFFFFFF"
-        android:pathData="M54,20 L88,54 L54,54 Z" />
+        android:fillColor="#FFD700"
+        android:pathData="M51.5,49 L53,52 L54,49.5 L55,52 L56.5,49 L56.5,53.5 L51.5,53.5 Z" />
+
+    <!-- 6. Hero Arcade Crown / Star at Top of Console -->
+    <path
+        android:pathData="M47,25 L50.5,29 L54,23 L57.5,29 L61,25 L60,31 L48,31 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endY="31"
+                android:startY="23"
+                android:type="linear">
+                <item android:color="#FFF176" android:offset="0" />
+                <item android:color="#FFB300" android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Crown Glow -->
+    <path
+        android:strokeColor="#FFE082"
+        android:strokeWidth="0.6"
+        android:pathData="M47,25 L50.5,29 L54,23 L57.5,29 L61,25 L60,31 L48,31 Z" />
+
+    <!-- 7. Arcade Sparkles / Highlights -->
+    <path android:fillColor="#FFFFFF" android:pathData="M27,35 h1.5 v4 h-1.5 z M25.75,36.25 h4 v1.5 h-4 z" />
+    <path android:fillColor="#00E5FF" android:pathData="M81,35 h1.5 v4 h-1.5 z M79.75,36.25 h4 v1.5 h-4 z" />
+
 </vector>

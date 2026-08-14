@@ -329,16 +329,31 @@ object AppEngagementManager {
     }
 
     /**
-     * Shares the app with friends via standard Android Share Chooser.
+     * Shares the app with friends via standard Android Share Chooser, with safe clipboard fallback for Android TV.
      */
     fun shareApp(context: Context) {
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_message))
-            type = "text/plain"
+        val shareText = context.getString(R.string.share_message)
+        try {
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, shareText)
+                type = "text/plain"
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            val shareIntent = Intent.createChooser(sendIntent, context.getString(R.string.share_title)).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(shareIntent)
+        } catch (e: Throwable) {
+            // Fallback for Android TV or devices without standard share intent handlers: copy to clipboard!
+            try {
+                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                val clip = android.content.ClipData.newPlainText("Share Link", shareText)
+                clipboard.setPrimaryClip(clip)
+                val msg = context.getString(R.string.share_copied)
+                android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_LONG).show()
+            } catch (ignored: Throwable) {}
         }
-        val shareIntent = Intent.createChooser(sendIntent, context.getString(R.string.share_title))
-        context.startActivity(shareIntent)
     }
 
     private fun setupFocusAnimation(view: View) {

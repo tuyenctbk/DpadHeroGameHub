@@ -710,4 +710,5 @@
     <string name="share_message">🎮 العب 30 لعبة أركيد كلاسيكية في Dpad Hero Game Hub على الهاتف و Android TV! تنزيل مجاني: https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
     <string name="btn_share_app">مشاركة</string>
     <string name="btn_rate_app">تقييم</string>
+    <string name="share_copied">تم نسخ الرابط إلى الحافظة!</string>
 </resources>

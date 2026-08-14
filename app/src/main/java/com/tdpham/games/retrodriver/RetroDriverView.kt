@@ -93,10 +93,11 @@ class RetroDriverView @JvmOverloads constructor(
     private val exhaustParticles = mutableListOf<ExhaustParticle>()
     private val sparkParticles = mutableListOf<SparkParticle>()
 
-    // Player Invincibility & Turbo (No death, only slowdown on impact)
+    // Player Invincibility, Turbo & Loss of Control (No death, only slowdown on impact)
     private var invincibleUntil = 0L
     private var turboUntil = 0L
     private var oilSpinUntil = 0L
+    private var lossOfControlUntil = 0L
     private var lastCrashTime = 0L
 
     // Vehicle Selection
@@ -427,7 +428,7 @@ class RetroDriverView @JvmOverloads constructor(
         }
 
         val inTurbo = now < turboUntil
-        val inOilSpin = now < oilSpinUntil
+        val inLostControl = now < lossOfControlUntil || now < oilSpinUntil
         val currentMaxSpeed = if (inTurbo) 220f else maxSpeed
         
         // Decelerate if off-road
@@ -443,9 +444,11 @@ class RetroDriverView @JvmOverloads constructor(
             speed += 0.8f
         }
 
-        // Steer angle decay (tilt return to center), unless oil spinning
-        if (inOilSpin) {
-            steerAngle = (sin(now / 40.0).toFloat() * 15f)
+        // Steer angle decay (tilt return to center), unless in loss-of-control skid / wobble
+        if (inLostControl) {
+            steerAngle = (sin(now / 35.0).toFloat() * 18f)
+            playerX += (sin(now / 45.0).toFloat() * 0.015f)
+            playerX = playerX.coerceIn(-2.2f, 2.2f)
         } else {
             steerAngle *= 0.78f
         }
@@ -480,24 +483,26 @@ class RetroDriverView @JvmOverloads constructor(
             }
         }
 
-        // 2. Check Oil Slicks (Slows down and causes spin - NO DEATH)
+        // 2. Check Oil Slicks (Slows down and causes spin / loss of control - NO DEATH)
         for (oil in oilSlicks) {
             val distZ = Math.abs(oil.z - position)
             if (distZ < 90f && Math.abs(oil.offset - playerX) < 0.30f) {
                 if (now >= oilSpinUntil && now >= invincibleUntil) {
-                    oilSpinUntil = now + 1200L
+                    oilSpinUntil = now + 1400L
+                    lossOfControlUntil = now + 1400L
                     speed = (speed * 0.45f).coerceAtLeast(18f)
                     SoundManager.playError()
                 }
             }
         }
 
-        // 3. Check Road Barriers (Slows down on impact - NO DEATH)
+        // 3. Check Road Barriers (Slows down & loses control on impact - NO DEATH)
         for (bar in barriers) {
             val distZ = Math.abs(bar.z - position)
             if (distZ < 100f && Math.abs(bar.offset - playerX) < 0.28f) {
                 if (now >= invincibleUntil) {
                     invincibleUntil = now + 1200L
+                    lossOfControlUntil = now + 1000L
                     speed = (speed * 0.35f).coerceAtLeast(15f)
                     SoundManager.playError()
                     repeat(15) {
@@ -540,10 +545,11 @@ class RetroDriverView @JvmOverloads constructor(
                 }
             }
 
-            // Collision with player -> Slow down and push competitor forward, never kills player!
+            // Collision with player -> Slow down, push competitor forward & lose control briefly, never kills player!
             if (Math.abs(car.z - position) < 130f && Math.abs(car.offset - playerX) < 0.30f) {
                 if (now >= invincibleUntil) {
                     invincibleUntil = now + 1200L
+                    lossOfControlUntil = now + 900L
                     lastCrashTime = now
                     speed = (speed * 0.40f).coerceAtLeast(20f)
                     car.z += 80f // Bump competitor forward
@@ -1308,9 +1314,9 @@ class RetroDriverView @JvmOverloads constructor(
         }
 
         val now = System.currentTimeMillis()
-        val inOilSpin = now < oilSpinUntil
-        if (inOilSpin) {
-            steerAngle = (sin(now / 40.0).toFloat() * 15f)
+        val inLostControl = now < lossOfControlUntil || now < oilSpinUntil
+        if (inLostControl) {
+            steerAngle = (sin(now / 35.0).toFloat() * 18f)
             return true
         }
 

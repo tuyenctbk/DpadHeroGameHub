@@ -710,4 +710,5 @@
     <string name="share_message">🎮 Играйте в 30 ретро-аркад в Dpad Hero Game Hub на Телефоне и Android TV! Бесплатно: https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
     <string name="btn_share_app">Поделиться</string>
     <string name="btn_rate_app">Оценить</string>
+    <string name="share_copied">Ссылка скопирована в буфер обмена!</string>
 </resources>

@@ -6,7 +6,7 @@
     android:viewportWidth="320"
     android:viewportHeight="180">
 
-    <!-- 1. Deep Space Night Sky Background -->
+    <!-- 1. Deep Space Night Sky Gradient -->
     <path
         android:pathData="M0,0h320v180h-320z">
         <aapt:attr name="android:fillColor">
@@ -14,243 +14,269 @@
                 android:endY="180"
                 android:startY="0"
                 android:type="linear">
-                <item android:color="#03030C" android:offset="0" />
-                <item android:color="#0F0C20" android:offset="0.5" />
-                <item android:color="#1F1A3A" android:offset="1" />
+                <item android:color="#060312" android:offset="0" />
+                <item android:color="#120826" android:offset="0.45" />
+                <item android:color="#260946" android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
 
-    <!-- 2. Neon Horizon Glow & Sunset -->
-    <!-- Horizon Glow -->
+    <!-- 2. Neon Horizon Radial Sunset Glow -->
     <path
-        android:pathData="M0,70h320v110h-320z">
+        android:pathData="M0,60h320v120h-320z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:centerX="160"
-                android:centerY="100"
-                android:gradientRadius="150"
+                android:centerX="80"
+                android:centerY="95"
+                android:gradientRadius="130"
                 android:type="radial">
-                <item android:color="#59FF00CC" android:offset="0" />
-                <item android:color="#00FF00CC" android:offset="1" />
+                <item android:color="#60FF007F" android:offset="0" />
+                <item android:color="#00FF007F" android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
-    <!-- Retro Neon Sun -->
+
+    <!-- 3. Retro Horizon Sunset Sun (Left Side Backdrop) -->
     <path
-        android:pathData="M115,100 a45,45 0 0,1 90,0 z">
+        android:pathData="M35,95 a45,45 0 0,1 90,0 z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:endY="100"
-                android:startY="55"
+                android:endY="95"
+                android:startY="50"
                 android:type="linear">
-                <item android:color="#FFFF00" android:offset="0" />
-                <item android:color="#FF00CC" android:offset="1" />
+                <item android:color="#FFE600" android:offset="0" />
+                <item android:color="#FF007F" android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
-    <!-- Sun Cut lines (stripes) -->
+    <!-- Sun Sliced Lines -->
     <path
-        android:fillColor="#0F0C20"
-        android:pathData="M110,91 h100 v2.5 h-100 z M110,82 h100 v3.5 h-100 z M110,71 h100 v4.5 h-100 z" />
+        android:fillColor="#120826"
+        android:pathData="M30,88 h100 v2.5 h-100 z M30,80 h100 v3.5 h-100 z M35,70 h90 v4.5 h-90 z" />
 
-    <!-- 3. Retro Cyber Grid (Perspective Floor) -->
-    <group android:translateY="10">
-        <!-- Horizontal grid lines with increasing spacing for depth -->
+    <!-- 4. Perspective Cyber Laser Grid Floor -->
+    <group android:translateY="5">
+        <!-- Horizontal Grid Lines with geometric perspective -->
         <path
-            android:strokeColor="#3300F2FF"
+            android:strokeColor="#3500E5FF"
             android:strokeWidth="0.8"
-            android:pathData="M0,90 L320,90 M0,102 L320,102 M0,118 L320,118 M0,140 L320,140 M0,168 L320,168" />
-        <!-- Vanishing vertical lines -->
+            android:pathData="M0,95 L320,95 M0,105 L320,105 M0,118 L320,118 M0,136 L320,136 M0,158 L320,158" />
+        <!-- Vanishing Rays to Sun Center (80, 95) -->
         <path
-            android:strokeColor="#3300F2FF"
-            android:strokeWidth="1.2"
-            android:pathData="M160,85 L-160,180 M160,85 L0,180 M160,85 L80,180 M160,85 L160,180 M160,85 L240,180 M160,85 L320,180 M160,85 L480,180" />
+            android:strokeColor="#3500E5FF"
+            android:strokeWidth="0.9"
+            android:pathData="M80,95 L-120,180 M80,95 L-40,180 M80,95 L40,180 M80,95 L120,180 M80,95 L200,180 M80,95 L280,180 M80,95 L360,180 M80,95 L440,180" />
     </group>
 
-    <!-- 4. Retro Neon Sky Stars -->
-    <!-- Star 1 (Yellow, Left) -->
-    <path android:fillColor="#FFFF00" android:pathData="M90,32 h2 v6 h-2 z M88,34 h6 v2 h-6 z" />
-    <!-- Star 2 (Cyan, Right) -->
-    <path android:fillColor="#00F2FF" android:pathData="M230,28 h2 v6 h-2 z M228,30 h6 v2 h-6 z" />
-    <!-- Star 3 (White, Center-Left) -->
-    <path android:fillColor="#FFFFFF" android:pathData="M148,22 h2 v5 h-2 z M146,24 h6 v1 h-6 z" />
+    <!-- 5. Neon Cosmic Background Stars -->
+    <path android:fillColor="#FFFF80" android:pathData="M30,25 h2 v5 h-2 z M28.5,26.5 h5 v2 h-5 z" />
+    <path android:fillColor="#00E5FF" android:pathData="M140,20 h2 v5 h-2 z M138.5,21.5 h5 v2 h-5 z" />
+    <path android:fillColor="#FF007F" android:pathData="M290,22 h2 v5 h-2 z M288.5,23.5 h5 v2 h-5 z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M220,15 h1.5 v4 h-1.5 z M218.75,16.25 h4 v1.5 h-4 z" />
 
-    <!-- 5. Floating Game Elements (Snake, Tetris, Space Invader, Minesweeper) -->
-    
-    <!-- Neon Space Invader (Top Left) -->
+    <!-- 6. Left Side: 3D Arcade Gamepad Hero Console -->
+    <!-- Console Base Shadow -->
     <path
-        android:fillColor="#FF00CC"
-        android:pathData="M43,36 h14 v3 h-14 z M45,39 h10 v2 h-10 z M47,33 h6 v3 h-6 z M42,30 h2 v3 h-2 z M56,30 h2 v3 h-2 z M41,39 h2 v3 h-2 z M57,39 h2 v3 h-2 z" />
-    <!-- Space Invader Glow -->
-    <path
-        android:strokeColor="#4DFF00CC"
-        android:strokeWidth="3"
-        android:pathData="M43,36 h14 M45,39 h10 M47,33 h6" />
+        android:fillColor="#70000000"
+        android:pathData="M28,68 h64 a16,16 0 0,1 16,16 v18 a16,16 0 0,1 -16,16 h-64 a16,16 0 0,1 -16,-16 v-18 a16,16 0 0,1 16,-16 z" />
 
-    <!-- Snake (Left Side) -->
+    <!-- Console Slate Body -->
     <path
-        android:strokeColor="#00E676"
-        android:strokeWidth="3.5"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round"
-        android:pathData="M26,132 h14 v-22 h-12 v-22 h14 v-10 h6" />
-    <!-- Apple for Snake -->
-    <path
-        android:fillColor="#FF1744"
-        android:pathData="M54,71 m-3.5,0 a3.5,3.5 0 1,1 7,0" />
-    <path
-        android:strokeColor="#00E676"
-        android:strokeWidth="1"
-        android:pathData="M54,67.5 L55.5,65.5" />
-    <!-- Apple Glow -->
-    <path
-        android:strokeColor="#4DFF1744"
-        android:strokeWidth="2"
-        android:pathData="M54,71 m-4.5,0 a4.5,4.5 0 1,1 9,0" />
-
-    <!-- Tetris L-Block (Top Right) -->
-    <path
-        android:fillColor="#00F2FF"
-        android:pathData="M255,42 h18 v6 h-12 v12 h-6 z" />
-    <!-- Tetris L-Block Glow -->
-    <path
-        android:strokeColor="#4D00F2FF"
-        android:strokeWidth="2.5"
-        android:pathData="M255,42 h18 v6 h-12 v12 h-6 z" />
-
-    <!-- Tetris T-Block (Right Side) -->
-    <path
-        android:fillColor="#FF00CC"
-        android:pathData="M276,76 h18 v6 h-6 v6 h-6 v-6 h-6 z" />
-    <!-- Tetris T-Block Glow -->
-    <path
-        android:strokeColor="#4DFF00CC"
-        android:strokeWidth="2.5"
-        android:pathData="M276,76 h18 v6 h-6 v6 h-6 v-6 h-6 z" />
-
-    <!-- Minesweeper Cell (Bottom Right) -->
-    <!-- Base block -->
-    <path
-        android:fillColor="#212121"
-        android:pathData="M255,122 h20 v20 h-20 z" />
-    <path
-        android:strokeColor="#424242"
-        android:strokeWidth="1"
-        android:pathData="M255,122 h20 v20 h-20 z" />
-    <!-- Flag -->
-    <path
-        android:strokeColor="#E0E0E0"
-        android:strokeWidth="1.2"
-        android:pathData="M262,126 v12" />
-    <path
-        android:fillColor="#FF1744"
-        android:pathData="M262,126 h6 v4 h-6 z" />
-
-    <!-- 6. Central Console (Handheld Retro System - Scaled Up) -->
-    <!-- Shadow (3D Offset) -->
-    <path
-        android:fillColor="#0A0A10"
-        android:pathData="M90,60 h144 a12,12 0 0 1 12,12 v60 a12,12 0 0 1 -12,12 h-144 a12,12 0 0 1 -12,-12 v-60 a12,12 0 0 1 12,-12 z" />
-    <!-- Console Body -->
-    <path
-        android:pathData="M88,58 h144 a12,12 0 0 1 12,12 v60 a12,12 0 0 1 -12,12 h-144 a12,12 0 0 1 -12,-12 v-60 a12,12 0 0 1 12,-12 z">
+        android:pathData="M26,64 h68 a16,16 0 0,1 16,16 v16 a16,16 0 0,1 -16,16 h-68 a16,16 0 0,1 -16,-16 v-16 a16,16 0 0,1 16,-16 z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:endY="130"
-                android:startY="58"
+                android:endY="112"
+                android:startY="64"
                 android:type="linear">
-                <item android:color="#2A2E3D" android:offset="0" />
-                <item android:color="#151821" android:offset="1" />
+                <item android:color="#252C3E" android:offset="0" />
+                <item android:color="#131722" android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
-    <!-- Console Cyber Neon Accent Border -->
-    <path
-        android:strokeColor="#00F2FF"
-        android:strokeWidth="2"
-        android:pathData="M88,58 h144 a12,12 0 0 1 12,12 v60 a12,12 0 0 1 -12,12 h-144 a12,12 0 0 1 -12,-12 v-60 a12,12 0 0 1 12,-12 z" />
 
-    <!-- Console Screen -->
+    <!-- Console Outer Neon Cyan Bevel Border -->
     <path
-        android:fillColor="#0D0E15"
-        android:pathData="M118,66 h84 v42 h-84 z" />
-    <path
-        android:strokeColor="#2E3244"
-        android:strokeWidth="1"
-        android:pathData="M118,66 h84 v42 h-84 z" />
-
-    <!-- Running Dino Scene inside Screen -->
-    <!-- Dino body -->
-    <path
-        android:fillColor="#00E676"
-        android:pathData="M136,90 h8 v4 h-8 z M140,86 h8 v4 h-8 z M132,90 h4 v2 h-4 z M138,94 h2 v4 h-2 z M142,94 h2 v4 h-2 z" />
-    <!-- Dino eye -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M146,88 h1 v1 h-1 z" />
-    <!-- Cactus -->
-    <path
-        android:strokeColor="#00E676"
+        android:strokeColor="#00E5FF"
         android:strokeWidth="1.5"
-        android:pathData="M172,88 v10 M169,90 h6 v3" />
-    <!-- Sky Pixel Cloud -->
-    <path
-        android:fillColor="#44FFFFFF"
-        android:pathData="M178,74 h6 v2 h-6 z M181,72 h2 v2 h-2 z" />
+        android:pathData="M26,64 h68 a16,16 0 0,1 16,16 v16 a16,16 0 0,1 -16,16 h-68 a16,16 0 0,1 -16,-16 v-16 a16,16 0 0,1 16,-16 z" />
 
-    <!-- Console Controls -->
-    <!-- D-Pad -->
+    <!-- Console Left/Right Grip Neon Magenta Streaks -->
     <path
-        android:fillColor="#111111"
-        android:pathData="M98,96 h12 v4 h-12 z M102,92 h4 v12 h-4 z" />
-    <!-- D-Pad Cyan Center Dot -->
-    <path
-        android:fillColor="#00F2FF"
-        android:pathData="M103.5,97.5 h1 v1 h-1 z" />
-    <!-- Buttons A & B -->
-    <!-- B Button (Yellow) -->
-    <path
-        android:fillColor="#FFD600"
-        android:pathData="M214,101 m-3.5,0 a3.5,3.5 0 1,1 7,0" />
-    <!-- A Button (Pink) -->
-    <path
-        android:fillColor="#FF00CC"
-        android:pathData="M222,94 m-3.5,0 a3.5,3.5 0 1,1 7,0" />
+        android:strokeColor="#FF007F"
+        android:strokeWidth="1.2"
+        android:pathData="M14,84 a12,12 0 0,0 12,12 M106,84 a12,12 0 0,1 -12,12" />
 
-    <!-- Top Gloss Shine on Console -->
+    <!-- D-Pad (Left side of controller) -->
+    <!-- D-Pad Cross Shadow -->
     <path
-        android:pathData="M88,58 h144 a12,12 0 0 1 12,12 v4 h-168 v-4 a12,12 0 0 1 12,-12 z">
+        android:fillColor="#0B0E16"
+        android:pathData="M38,76 h7 v7 h7 v7 h-7 v7 h-7 v-7 h-7 v-7 h7 z" />
+    <!-- D-Pad Cross Body (Electric Cyan Gradient) -->
+    <path
+        android:pathData="M37,75 h7 v7 h7 v7 h-7 v7 h-7 v-7 h-7 v-7 h7 z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:endY="74"
-                android:startY="58"
+                android:endY="96"
+                android:startY="75"
                 android:type="linear">
-                <item android:color="#33FFFFFF" android:offset="0" />
-                <item android:color="#00FFFFFF" android:offset="1" />
+                <item android:color="#00F5FF" android:offset="0" />
+                <item android:color="#0288D1" android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
-
-
-    <!-- 7. Screen Scanlines overlay (Retro aesthetic) -->
+    <!-- D-Pad Bevel Highlight -->
     <path
-        android:fillColor="#06FFFFFF"
-        android:pathData="M0,2h320v1h-320z M0,6h320v1h-320z M0,10h320v1h-320z M0,14h320v1h-320z M0,18h320v1h-320z M0,22h320v1h-320z M0,26h320v1h-320z M0,30h320v1h-320z M0,34h320v1h-320z M0,38h320v1h-320z M0,42h320v1h-320z M0,46h320v1h-320z M0,50h320v1h-320z M0,54h320v1h-320z M0,58h320v1h-320z M0,62h320v1h-320z M0,66h320v1h-320z M0,70h320v1h-320z M0,74h320v1h-320z M0,78h320v1h-320z M0,82h320v1h-320z M0,86h320v1h-320z M0,90h320v1h-320z M0,94h320v1h-320z M0,98h320v1h-320z M0,102h320v1h-320z M0,106h320v1h-320z M0,110h320v1h-320z M0,114h320v1h-320z M0,118h320v1h-320z M0,122h320v1h-320z M0,126h320v1h-320z M0,130h320v1h-320z M0,134h320v1h-320z M0,138h320v1h-320z M0,142h320v1h-320z M0,146h320v1h-320z M0,150h320v1h-320z M0,154h320v1h-320z M0,158h320v1h-320z M0,162h320v1h-320z M0,166h320v1h-320z M0,170h320v1h-320z M0,174h320v1h-320z M0,178h320v1h-320z" />
+        android:strokeColor="#E0F7FA"
+        android:strokeWidth="0.6"
+        android:pathData="M37,75 h7 v7 h7 v7 h-7 v7 h-7 v-7 h-7 v-7 h7 z" />
 
-    <!-- 8. Corner Vignette -->
+    <!-- Arcade Action Buttons (Right side of controller) -->
+    <!-- Red Button -->
+    <path android:fillColor="#FF1744" android:pathData="M80,78 m-3.8,0 a3.8,3.8 0 1,1 7.6,0 a3.8,3.8 0 1,1 -7.6,0" />
+    <path android:fillColor="#FFFFFF" android:pathData="M79,76.5 m-1.2,0 a1.2,1.2 0 1,1 2.4,0 a1.2,1.2 0 1,1 -2.4,0" />
+
+    <!-- Green Button -->
+    <path android:fillColor="#00E676" android:pathData="M88,85.5 m-3.8,0 a3.8,3.8 0 1,1 7.6,0 a3.8,3.8 0 1,1 -7.6,0" />
+    <path android:fillColor="#FFFFFF" android:pathData="M87,84 m-1.2,0 a1.2,1.2 0 1,1 2.4,0 a1.2,1.2 0 1,1 -2.4,0" />
+
+    <!-- Gold Button -->
+    <path android:fillColor="#FFD600" android:pathData="M80,93 m-3.8,0 a3.8,3.8 0 1,1 7.6,0 a3.8,3.8 0 1,1 -7.6,0" />
+    <path android:fillColor="#FFFFFF" android:pathData="M79,91.5 m-1.2,0 a1.2,1.2 0 1,1 2.4,0 a1.2,1.2 0 1,1 -2.4,0" />
+
+    <!-- Blue Button -->
+    <path android:fillColor="#2979FF" android:pathData="M72,85.5 m-3.8,0 a3.8,3.8 0 1,1 7.6,0 a3.8,3.8 0 1,1 -7.6,0" />
+    <path android:fillColor="#FFFFFF" android:pathData="M71,84 m-1.2,0 a1.2,1.2 0 1,1 2.4,0 a1.2,1.2 0 1,1 -2.4,0" />
+
+    <!-- Arcade Gold Crown on Console Top -->
     <path
-        android:pathData="M0,0h320v180h-320z">
+        android:pathData="M50,54 L54.5,59 L60,51 L65.5,59 L70,54 L68.5,62 L51.5,62 Z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:centerX="160"
-                android:centerY="90"
-                android:gradientRadius="180"
-                android:type="radial">
-                <item android:color="#00000000" android:offset="0" />
-                <item android:color="#66000000" android:offset="1" />
+                android:endY="62"
+                android:startY="51"
+                android:type="linear">
+                <item android:color="#FFF176" android:offset="0" />
+                <item android:color="#FFB300" android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
+
+    <!-- 7. Right Side: Premium Glowing Neon Typography & Badges -->
+
+    <!-- "DPAD" Neon Cyan Block Text Lettering (Path-drawn for 100% vector fidelity) -->
+    <!-- D -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M136,46 h14 c7,0 12,5 12,12 c0,7 -5,12 -12,12 h-14 z M142,52 v12 h8 c3.5,0 6,-2.5 6,-6 c0,-3.5 -2.5,-6 -6,-6 z" />
+    <!-- P -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M166,46 h14 c6.5,0 11,4.5 11,10.5 c0,6 -4.5,10.5 -11,10.5 h-8 v11 h-6 z M172,52 v7 h8 c2.5,0 5,-1.5 5,-3.5 c0,-2 -2.5,-3.5 -5,-3.5 z" />
+    <!-- A -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M195,78 L207,46 h6 L225,78 h-6.5 L215.5,70 h-11 L201.5,78 z M206.5,64.5 h7 L210,54 z" />
+    <!-- D -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M229,46 h14 c7,0 12,5 12,12 c0,7 -5,12 -12,12 h-14 z M235,52 v12 h8 c3.5,0 6,-2.5 6,-6 c0,-3.5 -2.5,-6 -6,-6 z" />
+
+    <!-- "HERO ARCADE" Vibrant Neon Pink Chrome Text -->
+    <!-- A -->
+    <path
+        android:fillColor="#FF007F"
+        android:pathData="M136,112 L146,86 h5 L161,112 h-5.5 L152.5,105 h-9 L140.5,112 z M145,100.5 h6 L148,92.5 z" />
+    <!-- R -->
+    <path
+        android:fillColor="#FF007F"
+        android:pathData="M165,86 h12 c5.5,0 9.5,3.5 9.5,8.5 c0,3.5 -2,6.5 -5.5,7.8 L188,112 h-6 L175.5,103 h-5.5 v9 h-5 z M170,91 v7 h7 c2.5,0 4.5,-1.5 4.5,-3.5 c0,-2 -2,-3.5 -4.5,-3.5 z" />
+    <!-- C -->
+    <path
+        android:fillColor="#FF007F"
+        android:pathData="M206,93 c-2,-2 -5,-3.5 -8.5,-3.5 c-6.5,0 -11.5,5 -11.5,11.5 c0,6.5 5,11.5 11.5,11.5 c3.5,0 6.5,-1.5 8.5,-3.5 v5.5 c-2.5,1.8 -5.5,2.5 -9,2.5 c-9.5,0 -16.5,-7 -16.5,-16 c0,-9 7,-16 16.5,-16 c3.5,0 6.5,0.7 9,2.5 z" />
+    <!-- A -->
+    <path
+        android:fillColor="#FF007F"
+        android:pathData="M211,112 L221,86 h5 L236,112 h-5.5 L227.5,105 h-9 L215.5,112 z M220,100.5 h6 L223,92.5 z" />
+    <!-- D -->
+    <path
+        android:fillColor="#FF007F"
+        android:pathData="M240,86 h11 c6,0 10,4.5 10,10.5 c0,6 -4,10.5 -10,10.5 h-6 v5 h-5 z M245,91 v11 h6 c3,0 5,-2 5,-5.5 c0,-3.5 -2,-5.5 -5,-5.5 z" />
+    <!-- E -->
+    <path
+        android:fillColor="#FF007F"
+        android:pathData="M266,86 h18 v4.5 h-13 v6 h11 v4.5 h-11 v6.5 h13.5 v4.5 h-18.5 z" />
+
+    <!-- 8. "30 RETRO GAMES" Gold Holographic Pill Badge -->
+    <!-- Badge Pill Base -->
+    <path
+        android:pathData="M136,124 h148 a9,9 0 0,1 9,9 v2 a9,9 0 0,1 -9,9 h-148 a9,9 0 0,1 -9,-9 v-2 a9,9 0 0,1 9,-9 z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endX="293"
+                android:startX="127"
+                android:type="linear">
+                <item android:color="#FFD600" android:offset="0" />
+                <item android:color="#FF6D00" android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Badge Border Highlight -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="0.8"
+        android:pathData="M136,124 h148 a9,9 0 0,1 9,9 v2 a9,9 0 0,1 -9,9 h-148 a9,9 0 0,1 -9,-9 v-2 a9,9 0 0,1 9,-9 z" />
+
+    <!-- Badge Icon (Gamepad Mini icon on left of pill) -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M136,131 h8 a2,2 0 0,1 2,2 v3 a2,2 0 0,1 -2,2 h-8 a2,2 0 0,1 -2,-2 v-3 a2,2 0 0,1 2,-2 z M137,133 v3 M141,133 v3 M139,134.5 h-3.5 M139,134.5 h3.5" />
+
+    <!-- Badge Text "30 CLASSIC RETRO GAMES • DPAD TV" -->
+    <!-- 3 -->
+    <path android:fillColor="#000000" android:pathData="M152,129.5 h5.5 v2 h-3.5 v1.2 h3.5 v3.3 h-5.5 v-1.8 h3.5 v-0.8 h-3.5 z" />
+    <!-- 0 -->
+    <path android:fillColor="#000000" android:pathData="M160,129.5 h5.5 v6.5 h-5.5 z M161.8,131.2 v3.1 h1.9 v-3.1 z" />
+    <!-- G -->
+    <path android:fillColor="#000000" android:pathData="M170,129.5 h6 v2 h-4 v2.5 h2.2 v-1 h1.8 v3 h-6 z" />
+    <!-- A -->
+    <path android:fillColor="#000000" android:pathData="M178,136 L181,129.5 h2 L186,136 h-1.8 L183.5,134.5 h-2.5 L180,136 z M181.5,133 h1.8 L182.4,131 z" />
+    <!-- M -->
+    <path android:fillColor="#000000" android:pathData="M188,129.5 h2 L191,133 L192,129.5 h2 v6.5 h-1.8 v-3.5 L191,136 L190,132.5 v3.5 h-2 z" />
+    <!-- E -->
+    <path android:fillColor="#000000" android:pathData="M196,129.5 h5.5 v1.8 h-3.7 v0.8 h3.2 v1.5 h-3.2 v0.9 h3.7 v1.5 h-5.5 z" />
+    <!-- S -->
+    <path android:fillColor="#000000" android:pathData="M203.5,129.5 h5.5 v2.2 h-3.7 v0.5 h3.7 v3.8 h-5.5 v-2.2 h3.7 v-0.6 h-3.7 z" />
+
+    <!-- • Dot -->
+    <path android:fillColor="#000000" android:pathData="M214,133 m-1.2,0 a1.2,1.2 0 1,1 2.4,0 a1.2,1.2 0 1,1 -2.4,0" />
+
+    <!-- D -->
+    <path android:fillColor="#000000" android:pathData="M220,129.5 h4 c2,0 3.5,1.4 3.5,3.2 c0,1.8 -1.5,3.3 -3.5,3.3 h-4 z M221.8,131.2 v3.1 h2.2 c0.9,0 1.7,-0.6 1.7,-1.5 c0,-0.9 -0.8,-1.6 -1.7,-1.6 z" />
+    <!-- P -->
+    <path android:fillColor="#000000" android:pathData="M229.5,129.5 h4 c2,0 3.5,1.2 3.5,2.7 c0,1.5 -1.5,2.7 -3.5,2.7 h-2.2 v1.1 h-1.8 z M231.3,131.2 v1.8 h2.2 c0.9,0 1.7,-0.4 1.7,-0.9 c0,-0.5 -0.8,-0.9 -1.7,-0.9 z" />
+    <!-- A -->
+    <path android:fillColor="#000000" android:pathData="M239,136 L242,129.5 h2 L247,136 h-1.8 L244.5,134.5 h-2.5 L241,136 z M242.5,133 h1.8 L243.4,131 z" />
+    <!-- D -->
+    <path android:fillColor="#000000" android:pathData="M249,129.5 h4 c2,0 3.5,1.4 3.5,3.2 c0,1.8 -1.5,3.3 -3.5,3.3 h-4 z M250.8,131.2 v3.1 h2.2 c0.9,0 1.7,-0.6 1.7,-1.5 c0,-0.9 -0.8,-1.6 -1.7,-1.6 z" />
+
+    <!-- • Dot -->
+    <path android:fillColor="#000000" android:pathData="M260,133 m-1.2,0 a1.2,1.2 0 1,1 2.4,0 a1.2,1.2 0 1,1 -2.4,0" />
+
+    <!-- T -->
+    <path android:fillColor="#000000" android:pathData="M265,129.5 h6 v1.8 h-2.1 v4.7 h-1.8 v-4.7 h-2.1 z" />
+    <!-- V -->
+    <path android:fillColor="#000000" android:pathData="M272.5,129.5 h2 L276,134.5 L277.5,129.5 h2 L277,136 h-2 z" />
+
+    <!-- 9. Retro Floating Pixel Mascots (Space Invader, Pac Dot, Starship) -->
+    <!-- Neon Space Invader (Top Right) -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M292,38 h12 v2.5 h-12 z M294,40.5 h8 v1.8 h-8 z M295.5,35.5 h5 v2.5 h-5 z M291,33 h1.8 v2.5 h-1.8 z M303,33 h1.8 v2.5 h-1.8 z M290,40.5 h1.8 v2.5 h-1.8 z M304,40.5 h1.8 v2.5 h-1.8 z" />
+
+    <!-- Neon Starship (Bottom Right) -->
+    <path
+        android:fillColor="#FFEA00"
+        android:pathData="M298,152 L306,164 L301,162 L298,168 L295,162 L290,164 Z" />
 
 </vector>

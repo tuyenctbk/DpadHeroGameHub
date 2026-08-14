@@ -710,4 +710,5 @@
     <string name="share_message">🎮 Spiele 30 Retro-Arcade-Spiele in Dpad Hero Game Hub auf Smartphone &amp; Android TV! Gratis: https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
     <string name="btn_share_app">Teilen</string>
     <string name="btn_rate_app">Bewerten</string>
+    <string name="share_copied">Link in die Zwischenablage kopiert!</string>
 </resources>

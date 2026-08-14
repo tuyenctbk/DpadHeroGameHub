@@ -710,4 +710,5 @@
     <string name="share_message">🎮 Mainkan 30 game arcade retro di Dpad Hero Game Hub di Ponsel &amp; Android TV! Unduh gratis: https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
     <string name="btn_share_app">Bagikan</string>
     <string name="btn_rate_app">Beri Nilai</string>
+    <string name="share_copied">Tautan disalin ke papan klip!</string>
 </resources>

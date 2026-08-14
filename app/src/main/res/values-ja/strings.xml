@@ -710,4 +710,5 @@
     <string name="share_message">🎮 スマホと Android TV で Dpad Hero Game Hub の 30 種類のレトロアーケードゲームをプレイ！無料ダウンロード: https://play.google.com/store/apps/details?id=com.tdpham.dpadarcade</string>
     <string name="btn_share_app">共有</string>
     <string name="btn_rate_app">評価</string>
+    <string name="share_copied">リンクをクリップボードにコピーしました！</string>
 </resources>
