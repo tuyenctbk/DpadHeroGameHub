@@ -711,4 +711,8 @@
     <string name="btn_share_app">Condividi</string>
     <string name="btn_rate_app">Valuta</string>
     <string name="share_copied">Link copiato negli appunti!</string>
+    <string name="continue_countdown">CONTINUARE? (%d)</string>
+    <string name="revive_prompt_description">Guarda un breve annuncio per rivivere con +1 vita extra e continuare!</string>
+    <string name="btn_revive_continue">❤️ CONTINUA (+1 VITA)</string>
+    <string name="btn_revive_give_up">❌ TERMINA GIOCO</string>
 </resources>

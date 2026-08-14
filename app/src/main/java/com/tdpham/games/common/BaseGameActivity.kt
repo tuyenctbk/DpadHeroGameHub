@@ -74,18 +74,44 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 bundle.putInt(FirebaseAnalytics.Param.SCORE, score)
                 firebaseAnalytics?.logEvent("level_end", bundle)
 
-                // Record event for smart rating and sharing engagement:
-                val currentBest = ScoreManager.getHighScore(this, gameKey)
-                val isHighScore = score > 0 && score >= currentBest
-                
-                AppEngagementManager.onGameCompleted(this, isWin = score > 0, isNewHighScore = isHighScore)
+                val handleFinalGameOver = {
+                    // Record event for smart rating and sharing engagement:
+                    val currentBest = ScoreManager.getHighScore(this, gameKey)
+                    val isHighScore = score > 0 && score >= currentBest
+                    AppEngagementManager.onGameCompleted(this, isWin = score > 0, isNewHighScore = isHighScore)
 
-                // Natural Game-Over Interstitial Ad Trigger (Respects cooldown & frequency)
-                gameOverCount++
-                val freq = ConfigManager.getAdsGameOverFrequency()
-                if (gameOverCount >= freq && AdManager.canShowInterstitial(this)) {
-                    gameOverCount = 0
-                    AdManager.showInterstitial(this)
+                    // Natural Game-Over Interstitial Ad Trigger (Respects cooldown & frequency)
+                    gameOverCount++
+                    val freq = ConfigManager.getAdsGameOverFrequency()
+                    if (gameOverCount >= freq && AdManager.canShowInterstitial(this)) {
+                        gameOverCount = 0
+                        AdManager.showInterstitial(this)
+                    }
+                }
+
+                if (gameView.canRevive() && !hasRevivedThisRound) {
+                    ReviveDialog.show(
+                        this,
+                        onReviveConfirmed = {
+                            hasRevivedThisRound = true
+                            AdManager.showRewardedOrInterstitial(
+                                this,
+                                onRewardGranted = {
+                                    SoundManager.playSuccess()
+                                    gameView.reviveGame()
+                                },
+                                onAdClosed = {
+                                    focusGame()
+                                }
+                            )
+                        },
+                        onGiveUp = {
+                            handleFinalGameOver()
+                        }
+                    )
+                } else {
+                    hasRevivedThisRound = false
+                    handleFinalGameOver()
                 }
             }
         } else {

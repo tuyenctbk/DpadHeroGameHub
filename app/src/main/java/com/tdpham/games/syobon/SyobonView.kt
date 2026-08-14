@@ -296,6 +296,21 @@ class SyobonView @JvmOverloads constructor(
         startGame()
     }
 
+    override fun canRevive(): Boolean = (initialLivesOption != -99)
+
+    override fun reviveGame(): Boolean {
+        if (gameOver) {
+            gameOver = false
+            currentLives = 3
+            isDying = false
+            resetLevelState()
+            feedbackPopups.add(FeedbackPopup(playerX, playerY - 1f, "+3 LIVES REVIVED!", COLOR_FLAG_GOLD, 120))
+            startGame()
+            return true
+        }
+        return false
+    }
+
     private fun resetLevelState() {
         levelResetCount++
         playerX = 2f

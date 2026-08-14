@@ -711,4 +711,8 @@
     <string name="btn_share_app">Partager</string>
     <string name="btn_rate_app">Évaluer</string>
     <string name="share_copied">Lien copié dans le presse-papiers !</string>
+    <string name="continue_countdown">CONTINUER ? (%d)</string>
+    <string name="revive_prompt_description">Regardez une courte pub pour revivre avec +1 vie supplémentaire et continuer !</string>
+    <string name="btn_revive_continue">❤️ CONTINUER (+1 VIE)</string>
+    <string name="btn_revive_give_up">❌ TERMINER LA PARTIE</string>
 </resources>

@@ -711,4 +711,8 @@
     <string name="btn_share_app">Chia sẻ</string>
     <string name="btn_rate_app">Đánh giá</string>
     <string name="share_copied">Đã sao chép liên kết vào khay nhớ tạm!</string>
+    <string name="continue_countdown">TIẾP TỤC? (%d)</string>
+    <string name="revive_prompt_description">Xem một đoạn quảng cáo ngắn để hồi sinh với +1 Mạng và tiếp tục màn chơi!</string>
+    <string name="btn_revive_continue">❤️ TIẾP TỤC (+1 MẠNG)</string>
+    <string name="btn_revive_give_up">❌ KẾT THÚC</string>
 </resources>

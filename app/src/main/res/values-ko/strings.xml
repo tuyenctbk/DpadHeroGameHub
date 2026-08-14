@@ -711,4 +711,8 @@
     <string name="btn_share_app">공유</string>
     <string name="btn_rate_app">평가</string>
     <string name="share_copied">링크가 클립보드에 복사되었습니다!</string>
+    <string name="continue_countdown">이어하기? (%d)</string>
+    <string name="revive_prompt_description">짧은 광고를 시청하고 +1 목숨으로 부활하여 게임을 계속하세요!</string>
+    <string name="btn_revive_continue">❤️ 이어하기 (+1 목숨)</string>
+    <string name="btn_revive_give_up">❌ 게임 종료</string>
 </resources>

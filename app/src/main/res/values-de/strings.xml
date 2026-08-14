@@ -711,4 +711,8 @@
     <string name="btn_share_app">Teilen</string>
     <string name="btn_rate_app">Bewerten</string>
     <string name="share_copied">Link in die Zwischenablage kopiert!</string>
+    <string name="continue_countdown">WEITERMACHEN? (%d)</string>
+    <string name="revive_prompt_description">Schau ein kurzes Video, um mit +1 Extra-Leben wiederbelebt zu werden!</string>
+    <string name="btn_revive_continue">❤️ WEITER (+1 LEBEN)</string>
+    <string name="btn_revive_give_up">❌ BEENDEN</string>
 </resources>

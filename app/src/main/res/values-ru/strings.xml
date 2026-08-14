@@ -711,4 +711,8 @@
     <string name="btn_share_app">Поделиться</string>
     <string name="btn_rate_app">Оценить</string>
     <string name="share_copied">Ссылка скопирована в буфер обмена!</string>
+    <string name="continue_countdown">ПРОДОЛЖИТЬ? (%d)</string>
+    <string name="revive_prompt_description">Посмотрите короткую рекламу, чтобы получить +1 жизнь и продолжить игру!</string>
+    <string name="btn_revive_continue">❤️ ПРОДОЛЖИТЬ (+1 ЖИЗНЬ)</string>
+    <string name="btn_revive_give_up">❌ ЗАВЕРШИТЬ ИГРУ</string>
 </resources>

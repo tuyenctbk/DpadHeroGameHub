@@ -711,4 +711,8 @@
     <string name="btn_share_app">Paylaş</string>
     <string name="btn_rate_app">Değerlendir</string>
     <string name="share_copied">Bağlantı panoya kopyalandı!</string>
+    <string name="continue_countdown">DEVAM ET? (%d)</string>
+    <string name="revive_prompt_description">+1 ekstra canla canlanmak ve oyununa devam etmek için kısa bir reklam izle!</string>
+    <string name="btn_revive_continue">❤️ DEVAM ET (+1 CAN)</string>
+    <string name="btn_revive_give_up">❌ OYUNU BİTİR</string>
 </resources>

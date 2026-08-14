@@ -230,6 +230,22 @@ class FrenzyView @JvmOverloads constructor(
         invalidate()
     }
 
+    override fun canRevive(): Boolean = true
+
+    override fun reviveGame(): Boolean {
+        if (gameOver) {
+            gameOver = false
+            lives = 2
+            playerShieldUntil = System.currentTimeMillis() + 5000L
+            playerStunUntil = 0L
+            playerX = width / 2f
+            playerY = height / 2f
+            resume()
+            return true
+        }
+        return false
+    }
+
     private fun spawnGroup(speciesIndex: Int, size: Int, behavior: Int, color: Int, speed: Float) {
         val count = Random.nextInt(4, 7)
         val facingRight = Random.nextBoolean()

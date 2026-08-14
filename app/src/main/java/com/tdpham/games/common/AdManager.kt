@@ -99,8 +99,9 @@ object AdManager {
                     isInitialized = true
                     isInitializing = false
                     mainHandler.post {
-                        // Preload exactly 1 Interstitial ad for immediate match readiness
+                        // Preload 1 Interstitial ad & 1 Rewarded ad for immediate match readiness
                         loadInterstitial(appContext)
+                        loadRewarded(appContext)
                     }
                 }
             } catch (e: Throwable) {
@@ -286,17 +287,82 @@ object AdManager {
                         onAdDismissed()
                     }
                 }
-                ad.show(activity) { rewardItem ->
-                    onUserEarnedReward(rewardItem)
-                }
-            } else {
-                Log.d(TAG, "Rewarded Ad not ready.")
-                loadRewarded(activity.applicationContext)
-                onAdDismissed()
+    /**
+     * Shows a Rewarded Ad (or falls back to Interstitial if rewarded is unavailable)
+     * for high-value user actions like Continuing/Reviving.
+     */
+    fun showRewardedOrInterstitial(
+        activity: Activity,
+        onRewardGranted: () -> Unit,
+        onAdClosed: () -> Unit = {}
+    ) {
+        try {
+            if (!ConfigManager.isAdsEnabled()) {
+                onRewardGranted()
+                onAdClosed()
+                return
             }
+
+            // 1. Try Rewarded Ad first ($15-$35 eCPM)
+            val rewardedAd = mRewardedAd
+            if (rewardedAd != null) {
+                var rewardEarned = false
+                rewardedAd.fullScreenContentCallback = object : FullScreenContentCallback() {
+                    override fun onAdDismissedFullScreenContent() {
+                        mRewardedAd = null
+                        lastAdShowTime = System.currentTimeMillis()
+                        loadRewarded(activity.applicationContext)
+                        if (rewardEarned) {
+                            onRewardGranted()
+                        }
+                        onAdClosed()
+                    }
+
+                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                        mRewardedAd = null
+                        loadRewarded(activity.applicationContext)
+                        onRewardGranted()
+                        onAdClosed()
+                    }
+                }
+                rewardedAd.show(activity) {
+                    rewardEarned = true
+                }
+                return
+            }
+
+            // 2. Fallback to Interstitial Ad ($3-$8 eCPM)
+            val interstitialAd = mInterstitialAd
+            if (interstitialAd != null) {
+                interstitialAd.fullScreenContentCallback = object : FullScreenContentCallback() {
+                    override fun onAdDismissedFullScreenContent() {
+                        mInterstitialAd = null
+                        lastAdShowTime = System.currentTimeMillis()
+                        loadInterstitial(activity.applicationContext)
+                        onRewardGranted()
+                        onAdClosed()
+                    }
+
+                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                        mInterstitialAd = null
+                        loadInterstitial(activity.applicationContext)
+                        onRewardGranted()
+                        onAdClosed()
+                    }
+                }
+                interstitialAd.show(activity)
+                return
+            }
+
+            // 3. If neither ad is currently cached, grant reward directly for smooth UX
+            loadInterstitial(activity.applicationContext)
+            loadRewarded(activity.applicationContext)
+            onRewardGranted()
+            onAdClosed()
         } catch (e: Throwable) {
-            Log.e(TAG, "Exception in showRewarded: ${e.message}", e)
-            onAdDismissed()
+            Log.e(TAG, "Exception in showRewardedOrInterstitial: ${e.message}", e)
+            onRewardGranted()
+            onAdClosed()
         }
     }
 

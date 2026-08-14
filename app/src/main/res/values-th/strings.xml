@@ -711,4 +711,8 @@
     <string name="btn_share_app">แชร์</string>
     <string name="btn_rate_app">ให้คะแนน</string>
     <string name="share_copied">คัดลอกลิงก์ไปยังคลิปบอร์ดแล้ว!</string>
+    <string name="continue_countdown">เล่นต่อหรือไม่? (%d)</string>
+    <string name="revive_prompt_description">ดูโฆษณาสั้นๆ เพื่อฟื้นคืนชีพพร้อมรับ +1 ชีวิตและเล่นต่อ!</string>
+    <string name="btn_revive_continue">❤️ เล่นต่อ (+1 ชีวิต)</string>
+    <string name="btn_revive_give_up">❌ จบเกม</string>
 </resources>

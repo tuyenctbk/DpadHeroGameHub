@@ -711,4 +711,8 @@
     <string name="btn_share_app">Bagikan</string>
     <string name="btn_rate_app">Beri Nilai</string>
     <string name="share_copied">Tautan disalin ke papan klip!</string>
+    <string name="continue_countdown">LANJUTKAN? (%d)</string>
+    <string name="revive_prompt_description">Tonton iklan singkat untuk bangkit kembali dengan +1 Nyawa tambahan dan lanjutkan permainan!</string>
+    <string name="btn_revive_continue">❤️ LANJUTKAN (+1 NYAWA)</string>
+    <string name="btn_revive_give_up">❌ AKHIRI PERMAINAN</string>
 </resources>

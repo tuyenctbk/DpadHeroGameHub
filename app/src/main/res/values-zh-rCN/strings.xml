@@ -711,4 +711,8 @@
     <string name="btn_share_app">分享</string>
     <string name="btn_rate_app">评分</string>
     <string name="share_copied">链接已复制到剪贴板！</string>
+    <string name="continue_countdown">继续游戏？(%d)</string>
+    <string name="revive_prompt_description">观看简短广告即可获得 +1 额外生命并继续游戏！</string>
+    <string name="btn_revive_continue">❤️ 继续 (+1 生命)</string>
+    <string name="btn_revive_give_up">❌ 结束游戏</string>
 </resources>

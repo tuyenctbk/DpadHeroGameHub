@@ -736,4 +736,8 @@
     <string name="restart_game">Restart</string>
     <string name="exit_to_hub">Exit to Hub</string>
     <string name="how_to_play">How to Play</string>
+    <string name="continue_countdown">CONTINUE? (%d)</string>
+    <string name="revive_prompt_description">Watch a short ad to revive with +1 Extra Life and continue your run!</string>
+    <string name="btn_revive_continue">❤️ CONTINUE (+1 LIFE)</string>
+    <string name="btn_revive_give_up">❌ END GAME</string>
 </resources>
