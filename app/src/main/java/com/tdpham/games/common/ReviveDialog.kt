@@ -9,6 +9,7 @@ import android.os.Looper
 import android.view.KeyEvent
 import android.view.Window
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import com.tdpham.games.R
 
@@ -27,6 +28,7 @@ object ReviveDialog {
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setCancelable(false)
 
+        val ivIcon = dialog.findViewById<ImageView>(R.id.iv_revive_icon)
         val tvTitle = dialog.findViewById<TextView>(R.id.tv_revive_title)
         val btnContinue = dialog.findViewById<Button>(R.id.btn_revive_continue)
         val btnGiveUp = dialog.findViewById<Button>(R.id.btn_revive_give_up)
@@ -35,12 +37,30 @@ object ReviveDialog {
         var remainingSeconds = 6
         var isActionTaken = false
 
+        fun pulseIcon() {
+            ivIcon?.let { icon ->
+                icon.animate()
+                    .scaleX(1.22f)
+                    .scaleY(1.22f)
+                    .setDuration(160)
+                    .withEndAction {
+                        icon.animate()
+                            .scaleX(1.0f)
+                            .scaleY(1.0f)
+                            .setDuration(160)
+                            .start()
+                    }
+                    .start()
+            }
+        }
+
         val countdownRunnable = object : Runnable {
             override fun run() {
                 if (isActionTaken || activity.isFinishing || activity.isDestroyed) return
                 remainingSeconds--
                 if (remainingSeconds > 0) {
-                    tvTitle.text = activity.getString(R.string.continue_countdown, remainingSeconds)
+                    tvTitle?.text = activity.getString(R.string.continue_countdown, remainingSeconds)
+                    pulseIcon()
                     mainHandler.postDelayed(this, 1000)
                 } else {
                     isActionTaken = true
@@ -54,7 +74,8 @@ object ReviveDialog {
             }
         }
 
-        tvTitle.text = activity.getString(R.string.continue_countdown, remainingSeconds)
+        tvTitle?.text = activity.getString(R.string.continue_countdown, remainingSeconds)
+        pulseIcon()
         mainHandler.postDelayed(countdownRunnable, 1000)
 
         btnContinue.setOnClickListener {

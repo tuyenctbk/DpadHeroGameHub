@@ -20,8 +20,8 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.android.gms.ads.rewarded.RewardItem
-import com.google.android.gms.ads.rewarded.RewardedAd
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
 import android.widget.TextView
 import android.widget.Button
 import android.widget.ImageView
@@ -33,7 +33,7 @@ object AdManager {
     private const val TAG = "AdManager"
     private const val INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-5190563950149825/9226641952"
     private const val NATIVE_AD_UNIT_ID = "ca-app-pub-5190563950149825/5584626448"
-    private const val REWARDED_AD_UNIT_ID = "ca-app-pub-5190563950149825/9226641952"
+    private const val REWARDED_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-5190563950149825/6673801665"
     
     private var isInitialized = false
     private var isInitializing = false
@@ -42,8 +42,8 @@ object AdManager {
     private var mInterstitialAd: InterstitialAd? = null
     private var isLoadingInterstitial = false
 
-    // Single-Slot Rewarded Caching
-    private var mRewardedAd: RewardedAd? = null
+    // Single-Slot Rewarded Interstitial Caching
+    private var mRewardedInterstitialAd: RewardedInterstitialAd? = null
     private var isLoadingRewarded = false
 
     // Native Ad Single Caching
@@ -57,11 +57,17 @@ object AdManager {
     
     // Frequency control
     private var lastAdShowTime: Long = 0L
+    private var lastIdleAdDismissTime: Long = 0L
     private var adsShownInSession = 0
     private var idleAdsShownInSession = 0
     private val mainHandler = Handler(Looper.getMainLooper())
     private var onNativeAdLoadedListener: ((NativeAd) -> Unit)? = null
     private var onNativeAdFailedListener: (() -> Unit)? = null
+
+    fun recordIdleAdDismissed() {
+        lastIdleAdDismissTime = System.currentTimeMillis()
+        Log.d(TAG, "Idle screensaver ad dismissed. 45s grace period active.")
+    }
 
     fun setOnNativeAdLoadedListener(listener: ((NativeAd) -> Unit)?) {
         onNativeAdLoadedListener = listener
@@ -174,6 +180,15 @@ object AdManager {
                 return
             }
 
+            // Check 2.1: Post-idle screensaver grace period (45s)
+            val postIdleGraceMs = 45000L
+            val timeSinceIdleAd = System.currentTimeMillis() - lastIdleAdDismissTime
+            if (!force && lastIdleAdDismissTime > 0 && timeSinceIdleAd < postIdleGraceMs) {
+                Log.d(TAG, "Ad skipped: Post-idle screensaver grace active (${timeSinceIdleAd / 1000}s ago)")
+                onAdDismissed()
+                return
+            }
+
             // Check 3: Check eligibility
             if (!shouldShowAds(activity)) {
                 onAdDismissed()
@@ -221,16 +236,19 @@ object AdManager {
         if (adsShownInSession >= ConfigManager.getAdsMaxPerSession()) return false
         val timeSinceLastAd = System.currentTimeMillis() - lastAdShowTime
         if (lastAdShowTime > 0 && timeSinceLastAd < ConfigManager.getAdsMinIntervalMs()) return false
+        val postIdleGraceMs = 45000L
+        val timeSinceIdleAd = System.currentTimeMillis() - lastIdleAdDismissTime
+        if (lastIdleAdDismissTime > 0 && timeSinceIdleAd < postIdleGraceMs) return false
         if (context != null && !shouldShowAds(context)) return false
         return mInterstitialAd != null
     }
 
     /**
-     * Preloads a single Rewarded Ad.
+     * Preloads a single Rewarded Interstitial Ad.
      */
     fun loadRewarded(context: Context) {
         try {
-            if (!ConfigManager.isAdsEnabled() || isLoadingRewarded || (mRewardedAd != null)) {
+            if (!ConfigManager.isAdsEnabled() || isLoadingRewarded || (mRewardedInterstitialAd != null)) {
                 return
             }
             isLoadingRewarded = true
@@ -238,30 +256,30 @@ object AdManager {
             val appContext = context.applicationContext
             mainHandler.post {
                 val adRequest = AdRequest.Builder().build()
-                RewardedAd.load(appContext, REWARDED_AD_UNIT_ID, adRequest,
-                    object : RewardedAdLoadCallback() {
+                RewardedInterstitialAd.load(appContext, REWARDED_INTERSTITIAL_AD_UNIT_ID, adRequest,
+                    object : RewardedInterstitialAdLoadCallback() {
                         override fun onAdFailedToLoad(adError: LoadAdError) {
-                            Log.d(TAG, "Rewarded Ad failed to load: ${adError.message}")
-                            mRewardedAd = null
+                            Log.d(TAG, "Rewarded Interstitial Ad failed to load: ${adError.message}")
+                            mRewardedInterstitialAd = null
                             isLoadingRewarded = false
                         }
 
-                        override fun onAdLoaded(rewardedAd: RewardedAd) {
-                            Log.d(TAG, "Rewarded Ad loaded and cached.")
-                            mRewardedAd = rewardedAd
+                        override fun onAdLoaded(rewardedAd: RewardedInterstitialAd) {
+                            Log.d(TAG, "Rewarded Interstitial Ad loaded and cached.")
+                            mRewardedInterstitialAd = rewardedAd
                             isLoadingRewarded = false
                         }
                     })
             }
         } catch (e: Throwable) {
-            Log.e(TAG, "Failed to load rewarded ad: ${e.message}", e)
-            mRewardedAd = null
+            Log.e(TAG, "Failed to load rewarded interstitial ad: ${e.message}", e)
+            mRewardedInterstitialAd = null
             isLoadingRewarded = false
         }
     }
 
     /**
-     * Shows a Rewarded Ad for high eCPM incentives (Revives, Continues, Bonus Points).
+     * Shows a Rewarded Interstitial Ad for high eCPM incentives (Revives, Continues, Bonus Points).
      */
     fun showRewarded(
         activity: Activity,
@@ -269,20 +287,20 @@ object AdManager {
         onAdDismissed: () -> Unit = {}
     ) {
         try {
-            val ad = mRewardedAd
+            val ad = mRewardedInterstitialAd
             if (ad != null) {
                 ad.fullScreenContentCallback = object : FullScreenContentCallback() {
                     override fun onAdDismissedFullScreenContent() {
-                        Log.d(TAG, "Rewarded Ad dismissed.")
-                        mRewardedAd = null
+                        Log.d(TAG, "Rewarded Interstitial Ad dismissed.")
+                        mRewardedInterstitialAd = null
                         lastAdShowTime = System.currentTimeMillis()
                         loadRewarded(activity.applicationContext)
                         onAdDismissed()
                     }
 
                     override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                        Log.d(TAG, "Rewarded Ad failed to show: ${adError.message}")
-                        mRewardedAd = null
+                        Log.d(TAG, "Rewarded Interstitial Ad failed to show: ${adError.message}")
+                        mRewardedInterstitialAd = null
                         loadRewarded(activity.applicationContext)
                         onAdDismissed()
                     }
@@ -291,7 +309,7 @@ object AdManager {
                     onUserEarnedReward(rewardItem)
                 }
             } else {
-                Log.d(TAG, "Rewarded Ad not ready.")
+                Log.d(TAG, "Rewarded Interstitial Ad not ready.")
                 loadRewarded(activity.applicationContext)
                 onAdDismissed()
             }
@@ -312,13 +330,13 @@ object AdManager {
                 return
             }
 
-            // 1. Try Rewarded Ad first ($15-$35 eCPM)
-            val rewardedAd = mRewardedAd
+            // 1. Try Rewarded Interstitial Ad first ($15-$35 eCPM)
+            val rewardedAd = mRewardedInterstitialAd
             if (rewardedAd != null) {
                 var rewardEarned = false
                 rewardedAd.fullScreenContentCallback = object : FullScreenContentCallback() {
                     override fun onAdDismissedFullScreenContent() {
-                        mRewardedAd = null
+                        mRewardedInterstitialAd = null
                         lastAdShowTime = System.currentTimeMillis()
                         loadRewarded(activity.applicationContext)
                         if (rewardEarned) {
@@ -328,7 +346,7 @@ object AdManager {
                     }
 
                     override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                        mRewardedAd = null
+                        mRewardedInterstitialAd = null
                         loadRewarded(activity.applicationContext)
                         onRewardGranted()
                         onAdClosed()
@@ -381,6 +399,10 @@ object AdManager {
     fun loadNativeAd(context: Context) {
         try {
             if (!ConfigManager.isAdsEnabled() || isNativeLoading || (prefetchedNativeAd != null)) return
+            if (isLoadingRewarded || isLoadingInterstitial) {
+                Log.d(TAG, "Deferring native ad load: High-priority rewarded or interstitial ad is loading")
+                return
+            }
             isNativeLoading = true
 
             val appContext = context.applicationContext

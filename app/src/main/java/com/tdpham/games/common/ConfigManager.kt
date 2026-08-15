@@ -31,14 +31,14 @@ object ConfigManager {
                 "ads_min_interval_ms" to 90000L,
                 "ads_max_per_session" to 4L,
                 "ads_game_over_frequency" to 4L,
-                "ads_max_per_session_idle" to 5L,
-                "ads_idle_menu_corner_sec" to 30L,
-                "ads_idle_menu_full_sec" to 90L,
-                "ads_idle_wait_corner_sec" to 30L,
-                "ads_idle_wait_full_sec" to 90L,
-                "ads_idle_play_corner_sec" to 60L,
-                "ads_idle_play_full_sec" to 180L,
-                "ads_idle_refresh_sec" to 180L,
+                "ads_max_per_session_idle" to 3L,
+                "ads_idle_menu_corner_sec" to 45L,
+                "ads_idle_menu_full_sec" to 120L,
+                "ads_idle_wait_corner_sec" to 45L,
+                "ads_idle_wait_full_sec" to 120L,
+                "ads_idle_play_corner_sec" to 0L,
+                "ads_idle_play_full_sec" to 300L,
+                "ads_idle_refresh_sec" to 300L,
                 "ads_snooze_dismiss_threshold_sec" to 15L,
                 "latest_version_code" to 1L,
                 "min_version_code" to 1L
@@ -135,74 +135,74 @@ object ConfigManager {
     }
 
     fun getAdsMaxPerSessionIdle(): Int {
-        val rc = remoteConfig ?: return 5
+        val rc = remoteConfig ?: return 3
         return try {
             rc.getLong("ads_max_per_session_idle").toInt()
         } catch (_: Exception) {
-            5
+            3
         }
     }
 
     fun getAdsIdleMenuCornerSec(): Int {
-        val rc = remoteConfig ?: return 30
+        val rc = remoteConfig ?: return 45
         return try {
             rc.getLong("ads_idle_menu_corner_sec").toInt()
         } catch (_: Exception) {
-            30
+            45
         }
     }
 
     fun getAdsIdleMenuFullSec(): Int {
-        val rc = remoteConfig ?: return 90
+        val rc = remoteConfig ?: return 120
         return try {
             rc.getLong("ads_idle_menu_full_sec").toInt()
         } catch (_: Exception) {
-            90
+            120
         }
     }
 
     fun getAdsIdleWaitCornerSec(): Int {
-        val rc = remoteConfig ?: return 30
+        val rc = remoteConfig ?: return 45
         return try {
             rc.getLong("ads_idle_wait_corner_sec").toInt()
         } catch (_: Exception) {
-            30
+            45
         }
     }
 
     fun getAdsIdleWaitFullSec(): Int {
-        val rc = remoteConfig ?: return 90
+        val rc = remoteConfig ?: return 120
         return try {
             rc.getLong("ads_idle_wait_full_sec").toInt()
         } catch (_: Exception) {
-            90
+            120
         }
     }
 
     fun getAdsIdlePlayCornerSec(): Int {
-        val rc = remoteConfig ?: return 60
+        val rc = remoteConfig ?: return 0
         return try {
             rc.getLong("ads_idle_play_corner_sec").toInt()
         } catch (_: Exception) {
-            60
+            0
         }
     }
 
     fun getAdsIdlePlayFullSec(): Int {
-        val rc = remoteConfig ?: return 180
+        val rc = remoteConfig ?: return 300
         return try {
             rc.getLong("ads_idle_play_full_sec").toInt()
         } catch (_: Exception) {
-            180
+            300
         }
     }
 
     fun getAdsIdleRefreshSec(): Int {
-        val rc = remoteConfig ?: return 180
+        val rc = remoteConfig ?: return 300
         return try {
             rc.getLong("ads_idle_refresh_sec").toInt()
         } catch (_: Exception) {
-            180
+            300
         }
     }
 

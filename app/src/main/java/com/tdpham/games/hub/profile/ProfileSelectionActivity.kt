@@ -7,11 +7,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.tdpham.games.R
 import com.tdpham.games.common.SoundManager
@@ -128,13 +128,14 @@ class ProfileSelectionActivity : AppCompatActivity() {
     }
 
     private fun showPinDialog(profile: UserProfile) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_pin_entry, null)
-        val editPin = dialogView.findViewById<EditText>(R.id.edit_pin)
-        val errorView = dialogView.findViewById<TextView>(R.id.pin_error)
+        val dialog = android.app.Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_pin_entry)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(true)
 
-        val dialog = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
-            .setView(dialogView)
-            .create()
+        val editPin = dialog.findViewById<EditText>(R.id.edit_pin)
+        val errorView = dialog.findViewById<TextView>(R.id.pin_error)
 
         editPin.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -156,19 +157,21 @@ class ProfileSelectionActivity : AppCompatActivity() {
         })
 
         dialog.show()
+        editPin.requestFocus()
     }
 
     private fun showProfileOptions(profile: UserProfile) {
         if (profile.pin != null) {
-            val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_pin_entry, null)
-            val editPin = dialogView.findViewById<EditText>(R.id.edit_pin)
-            val errorView = dialogView.findViewById<TextView>(R.id.pin_error)
-            val titleView = dialogView.findViewById<TextView>(R.id.pin_title)
-            titleView.text = getString(R.string.edit_profile)
+            val dialog = android.app.Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
+            dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.dialog_pin_entry)
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
+            dialog.setCancelable(true)
 
-            val dialog = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
-                .setView(dialogView)
-                .create()
+            val editPin = dialog.findViewById<EditText>(R.id.edit_pin)
+            val errorView = dialog.findViewById<TextView>(R.id.pin_error)
+            val titleView = dialog.findViewById<TextView>(R.id.pin_title)
+            titleView.text = getString(R.string.edit_profile)
 
             editPin.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -187,46 +190,165 @@ class ProfileSelectionActivity : AppCompatActivity() {
                 }
             })
             dialog.show()
+            editPin.requestFocus()
         } else {
             showOptionsList(profile)
         }
     }
 
     private fun showOptionsList(profile: UserProfile) {
-        val options = arrayOf(getString(R.string.edit_profile), getString(R.string.delete_profile))
-        AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
-            .setTitle(profile.name)
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> { // Edit
-                        val intent = Intent(this, ProfileCreationActivity::class.java)
-                        intent.putExtra("EDIT_PROFILE_ID", profile.id)
-                        startActivity(intent)
-                    }
-                    1 -> { // Delete
-                        confirmDelete(profile)
-                    }
-                }
+        val dialog = android.app.Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
+        val view = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setBackgroundResource(R.drawable.dialog_background)
+            setPadding(28, 28, 28, 28)
+            gravity = android.view.Gravity.CENTER_HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(400, LinearLayout.LayoutParams.WRAP_CONTENT)
+        }
+
+        val title = TextView(this).apply {
+            text = profile.name
+            setTextColor(Color.WHITE)
+            textSize = 22f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            gravity = android.view.Gravity.CENTER
+            setPadding(0, 0, 0, 16)
+        }
+
+        val btnEdit = android.widget.Button(this).apply {
+            text = getString(R.string.edit_profile)
+            setBackgroundResource(R.drawable.bg_btn_green_selector)
+            setTextColor(Color.BLACK)
+            textSize = 16f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            isFocusable = true
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 50).apply {
+                setMargins(0, 0, 0, 10)
             }
-            .show()
+            setOnClickListener {
+                dialog.dismiss()
+                val intent = Intent(this@ProfileSelectionActivity, ProfileCreationActivity::class.java)
+                intent.putExtra("EDIT_PROFILE_ID", profile.id)
+                startActivity(intent)
+            }
+        }
+
+        val btnDelete = android.widget.Button(this).apply {
+            text = getString(R.string.delete_profile)
+            setBackgroundResource(R.drawable.bg_btn_danger_selector)
+            setTextColor(Color.WHITE)
+            textSize = 15f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            isFocusable = true
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 46).apply {
+                setMargins(0, 0, 0, 10)
+            }
+            setOnClickListener {
+                dialog.dismiss()
+                confirmDelete(profile)
+            }
+        }
+
+        val btnCancel = android.widget.Button(this).apply {
+            text = getString(R.string.back)
+            setBackgroundResource(R.drawable.bg_btn_neutral_selector)
+            setTextColor(Color.parseColor("#B0BEC5"))
+            textSize = 14f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            isFocusable = true
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 44)
+            setOnClickListener { dialog.dismiss() }
+        }
+
+        btnEdit.nextFocusDownId = btnDelete.id
+        btnDelete.nextFocusUpId = btnEdit.id
+        btnDelete.nextFocusDownId = btnCancel.id
+        btnCancel.nextFocusUpId = btnDelete.id
+
+        view.addView(title)
+        view.addView(btnEdit)
+        view.addView(btnDelete)
+        view.addView(btnCancel)
+
+        dialog.setContentView(view)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(true)
+        dialog.show()
+        btnEdit.requestFocus()
     }
 
     private fun confirmDelete(profile: UserProfile) {
-        AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
-            .setTitle(R.string.delete_profile)
-            .setMessage(R.string.confirm_delete_profile)
-            .setPositiveButton(R.string.yes) { _, _ ->
-                ProfileManager.deleteProfile(this, profile.id)
-                val remaining = ProfileManager.getProfiles(this)
+        val dialog = android.app.Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
+        val view = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setBackgroundResource(R.drawable.dialog_background)
+            setPadding(28, 28, 28, 28)
+            gravity = android.view.Gravity.CENTER_HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(400, LinearLayout.LayoutParams.WRAP_CONTENT)
+        }
+
+        val title = TextView(this).apply {
+            text = getString(R.string.delete_profile)
+            setTextColor(Color.WHITE)
+            textSize = 22f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            gravity = android.view.Gravity.CENTER
+            setPadding(0, 0, 0, 12)
+        }
+        val msg = TextView(this).apply {
+            text = getString(R.string.confirm_delete_profile)
+            setTextColor(Color.parseColor("#B0BEC5"))
+            textSize = 15f
+            gravity = android.view.Gravity.CENTER
+            setPadding(0, 0, 0, 24)
+        }
+        val btnYes = android.widget.Button(this).apply {
+            text = getString(R.string.yes)
+            setBackgroundResource(R.drawable.bg_btn_danger_selector)
+            setTextColor(Color.WHITE)
+            textSize = 16f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            isFocusable = true
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 48).apply {
+                setMargins(0, 0, 0, 10)
+            }
+            setOnClickListener {
+                dialog.dismiss()
+                ProfileManager.deleteProfile(this@ProfileSelectionActivity, profile.id)
+                val remaining = ProfileManager.getProfiles(this@ProfileSelectionActivity)
                 if (remaining.isEmpty()) {
-                    startActivity(Intent(this, ProfileCreationActivity::class.java))
+                    startActivity(Intent(this@ProfileSelectionActivity, ProfileCreationActivity::class.java))
                     finish()
                 } else {
                     loadProfiles()
                 }
             }
-            .setNegativeButton(R.string.no, null)
-            .show()
+        }
+        val btnNo = android.widget.Button(this).apply {
+            text = getString(R.string.no)
+            setBackgroundResource(R.drawable.bg_btn_neutral_selector)
+            setTextColor(Color.WHITE)
+            textSize = 15f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            isFocusable = true
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 46)
+            setOnClickListener { dialog.dismiss() }
+        }
+        btnYes.nextFocusDownId = btnNo.id
+        btnNo.nextFocusUpId = btnYes.id
+
+        view.addView(title)
+        view.addView(msg)
+        view.addView(btnYes)
+        view.addView(btnNo)
+
+        dialog.setContentView(view)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(true)
+        dialog.show()
+        btnNo.requestFocus()
     }
 
     private fun addCreateProfileCard() {

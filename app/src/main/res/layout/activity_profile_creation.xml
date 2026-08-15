@@ -143,40 +143,44 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp">
+            android:layout_marginBottom="16dp">
 
             <Button
                 android:id="@+id/btn_cancel"
                 android:layout_width="160dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_marginEnd="12dp"
-                android:background="@drawable/game_item_background"
-                android:backgroundTint="#333333"
+                android:background="@drawable/bg_btn_neutral_selector"
                 android:text="@string/back"
                 android:textColor="#FFFFFF"
-                android:textStyle="bold" />
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:focusable="true"
+                android:nextFocusRight="@+id/btn_create_profile" />
 
             <Button
                 android:id="@+id/btn_create_profile"
                 android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/game_item_background"
-                android:backgroundTint="#4CAF50"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_btn_green_selector"
                 android:text="@string/save"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:focusable="true"
+                android:nextFocusLeft="@+id/btn_cancel" />
         </LinearLayout>
 
         <Button
             android:id="@+id/btn_delete_profile"
             android:layout_width="332dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/game_item_background"
-            android:backgroundTint="#B71C1C"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_btn_danger_selector"
             android:text="@string/delete_profile"
             android:textColor="#FFFFFF"
+            android:textSize="15sp"
             android:textStyle="bold"
+            android:focusable="true"
             android:visibility="gone" />
 
     </LinearLayout>

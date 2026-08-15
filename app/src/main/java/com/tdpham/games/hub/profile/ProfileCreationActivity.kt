@@ -41,9 +41,9 @@ class ProfileCreationActivity : AppCompatActivity() {
 
     private val colors = listOf(
         "#F44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5",
-        "#2196F3", "#009688", "#4CAF50", "#8BC34A", "#CDDC39",
-        "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548",
-        "#9E9E9E", "#607D8B", "#000000", "#FFFFFF"
+        "#2196F3", "#00E5FF", "#009688", "#4CAF50", "#8BC34A",
+        "#CDDC39", "#FFEB3B", "#FFD700", "#FF9800", "#FF5722",
+        "#FF4081", "#76FF03", "#FFFFFF"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,18 +110,72 @@ class ProfileCreationActivity : AppCompatActivity() {
     }
 
     private fun confirmDelete(profile: UserProfile) {
-        AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
-            .setTitle(R.string.delete_profile)
-            .setMessage(R.string.confirm_delete_profile)
-            .setPositiveButton(R.string.yes) { _, _ ->
-                ProfileManager.deleteProfile(this, profile.id)
-                val intent = Intent(this, ProfileSelectionActivity::class.java)
+        val dialog = android.app.Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
+        val view = layoutInflater.inflate(R.layout.dialog_rate_app, null) as LinearLayout
+        view.removeAllViews()
+        view.layoutParams = LinearLayout.LayoutParams(400, LinearLayout.LayoutParams.WRAP_CONTENT)
+        view.setBackgroundResource(R.drawable.dialog_background)
+        view.setPadding(28, 28, 28, 28)
+        view.gravity = android.view.Gravity.CENTER_HORIZONTAL
+
+        val title = TextView(this).apply {
+            text = getString(R.string.delete_profile)
+            setTextColor(Color.WHITE)
+            textSize = 22f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            gravity = android.view.Gravity.CENTER
+            setPadding(0, 0, 0, 12)
+        }
+        val msg = TextView(this).apply {
+            text = getString(R.string.confirm_delete_profile)
+            setTextColor(Color.parseColor("#B0BEC5"))
+            textSize = 15f
+            gravity = android.view.Gravity.CENTER
+            setPadding(0, 0, 0, 24)
+        }
+        val btnYes = Button(this).apply {
+            text = getString(R.string.yes)
+            setBackgroundResource(R.drawable.bg_btn_danger_selector)
+            setTextColor(Color.WHITE)
+            textSize = 16f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            isFocusable = true
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 48).apply {
+                setMargins(0, 0, 0, 10)
+            }
+            setOnClickListener {
+                dialog.dismiss()
+                ProfileManager.deleteProfile(this@ProfileCreationActivity, profile.id)
+                val intent = Intent(this@ProfileCreationActivity, ProfileSelectionActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
             }
-            .setNegativeButton(R.string.no, null)
-            .show()
+        }
+        val btnNo = Button(this).apply {
+            text = getString(R.string.no)
+            setBackgroundResource(R.drawable.bg_btn_neutral_selector)
+            setTextColor(Color.WHITE)
+            textSize = 15f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            isFocusable = true
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 46)
+            setOnClickListener { dialog.dismiss() }
+        }
+        btnYes.nextFocusDownId = btnNo.id
+        btnNo.nextFocusUpId = btnYes.id
+
+        view.addView(title)
+        view.addView(msg)
+        view.addView(btnYes)
+        view.addView(btnNo)
+
+        dialog.setContentView(view)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(true)
+        dialog.show()
+        btnNo.requestFocus()
     }
 
     private fun setupAvatarSelection() {
@@ -133,10 +187,8 @@ class ProfileCreationActivity : AppCompatActivity() {
                 scaleType = ImageView.ScaleType.FIT_CENTER
                 setPadding(16, 16, 16, 16)
                 background = getDrawable(R.drawable.game_item_background)
-                // Background is always neutral
-                backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#333333"))
-                // Color applies to the icon
-                imageTintList = android.content.res.ColorStateList.valueOf(if (selectedAvatarId == id) selectedColor else Color.GRAY)
+                backgroundTintList = android.content.res.ColorStateList.valueOf(if (selectedAvatarId == id) Color.parseColor("#33FFFFFF") else Color.parseColor("#1AFFFFFF"))
+                imageTintList = android.content.res.ColorStateList.valueOf(if (selectedAvatarId == id) selectedColor else Color.LTGRAY)
                 isFocusable = true
                 isFocusableInTouchMode = true
                 
@@ -148,9 +200,12 @@ class ProfileCreationActivity : AppCompatActivity() {
                 
                 setOnFocusChangeListener { view, hasFocus ->
                     if (hasFocus) {
-                        view.animate().scaleX(1.15f).scaleY(1.15f).setDuration(200).start()
+                        view.animate().scaleX(1.18f).scaleY(1.18f).setDuration(180).start()
+                        view.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#55FFFFFF"))
                     } else {
-                        view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                        val isSelected = selectedAvatarId == id
+                        view.animate().scaleX(if (isSelected) 1.08f else 1.0f).scaleY(if (isSelected) 1.08f else 1.0f).setDuration(180).start()
+                        view.backgroundTintList = android.content.res.ColorStateList.valueOf(if (isSelected) Color.parseColor("#33FFFFFF") else Color.parseColor("#1AFFFFFF"))
                     }
                 }
             }
@@ -178,9 +233,10 @@ class ProfileCreationActivity : AppCompatActivity() {
                 
                 setOnFocusChangeListener { view, hasFocus ->
                     if (hasFocus) {
-                        view.animate().scaleX(1.3f).scaleY(1.3f).setDuration(200).start()
+                        view.animate().scaleX(1.35f).scaleY(1.35f).setDuration(180).start()
                     } else {
-                        view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                        val isSelected = color == selectedColor
+                        view.animate().scaleX(if (isSelected) 1.2f else 1.0f).scaleY(if (isSelected) 1.2f else 1.0f).setDuration(180).start()
                     }
                 }
             }
@@ -194,7 +250,13 @@ class ProfileCreationActivity : AppCompatActivity() {
         for (i in 0 until container.childCount) {
             val view = container.getChildAt(i) as ImageView
             val id = avatars[i].first
-            view.imageTintList = android.content.res.ColorStateList.valueOf(if (selectedAvatarId == id) selectedColor else Color.GRAY)
+            val isSelected = selectedAvatarId == id
+            view.imageTintList = android.content.res.ColorStateList.valueOf(if (isSelected) selectedColor else Color.LTGRAY)
+            view.backgroundTintList = android.content.res.ColorStateList.valueOf(if (isSelected) Color.parseColor("#33FFFFFF") else Color.parseColor("#1AFFFFFF"))
+            if (!view.hasFocus()) {
+                view.scaleX = if (isSelected) 1.08f else 1.0f
+                view.scaleY = if (isSelected) 1.08f else 1.0f
+            }
         }
     }
 
@@ -203,14 +265,11 @@ class ProfileCreationActivity : AppCompatActivity() {
         for (i in 0 until container.childCount) {
             val view = container.getChildAt(i)
             val color = Color.parseColor(colors[i])
-            if (color == selectedColor) {
-                view.alpha = 1.0f
-                view.scaleX = 1.2f
-                view.scaleY = 1.2f
-            } else {
-                view.alpha = 0.6f
-                view.scaleX = 1.0f
-                view.scaleY = 1.0f
+            val isSelected = color == selectedColor
+            view.alpha = if (isSelected) 1.0f else 0.65f
+            if (!view.hasFocus()) {
+                view.scaleX = if (isSelected) 1.2f else 1.0f
+                view.scaleY = if (isSelected) 1.2f else 1.0f
             }
         }
     }

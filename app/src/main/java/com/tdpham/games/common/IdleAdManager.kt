@@ -66,6 +66,8 @@ object IdleAdManager {
                 snoozeMultiplier = 1.0f
                 Log.d(TAG, "User returned from away. Multiplier reset.")
             }
+            // Record dismissal to apply a grace period for subsequent game-over interstitials
+            AdManager.recordIdleAdDismissed()
         }
 
         lastInteractionTime = now
@@ -97,7 +99,7 @@ object IdleAdManager {
             idleSec >= yieldThreshold -> IdleState.IDLE_YIELD
             idleSec >= fullThreshold -> IdleState.IDLE_FULL
             idleSec >= (fullThreshold - 3) -> IdleState.IDLE_PRE_FULL // 3s warning
-            idleSec >= cornerThreshold -> IdleState.IDLE_CORNER
+            cornerThreshold > 0 && idleSec >= cornerThreshold -> IdleState.IDLE_CORNER
             else -> IdleState.ACTIVE
         }
 

@@ -12,8 +12,8 @@ android {
         applicationId = "com.tdpham.dpadarcade"
         minSdk = 23
         targetSdk = 34
-        versionCode = 19
-        versionName = "2.5.3"
+        versionCode = 20
+        versionName = "2.6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -13,7 +13,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import android.app.Dialog
+import android.graphics.drawable.ColorDrawable
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import com.tdpham.games.R
 import com.tdpham.games.brickbreak.BrickBreakActivity
@@ -206,46 +208,73 @@ class MainActivity : AppCompatActivity() {
 
     private fun showProfileMenu() {
         val activeProfile = ProfileManager.getActiveProfile(this) ?: return
-        val options = arrayOf(
-            getString(R.string.edit_profile),
-            getString(R.string.switch_profile)
-        )
         
-        AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
-            .setTitle(activeProfile.name)
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> { // Edit
-                        if (activeProfile.pin != null) {
-                            showPinDialog(activeProfile) {
-                                val intent = Intent(this, ProfileCreationActivity::class.java)
-                                intent.putExtra("EDIT_PROFILE_ID", activeProfile.id)
-                                startActivity(intent)
-                            }
-                        } else {
-                            val intent = Intent(this, ProfileCreationActivity::class.java)
-                            intent.putExtra("EDIT_PROFILE_ID", activeProfile.id)
-                            startActivity(intent)
-                        }
-                    }
-                    1 -> { // Switch
-                        startActivity(Intent(this, ProfileSelectionActivity::class.java))
-                    }
+        val dialog = Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_hero_profile_menu)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(true)
+
+        val nameView = dialog.findViewById<TextView>(R.id.tv_hero_menu_name)
+        val iconView = dialog.findViewById<ImageView>(R.id.hero_menu_avatar_icon)
+        val btnEdit = dialog.findViewById<Button>(R.id.btn_hero_menu_edit)
+        val btnSwitch = dialog.findViewById<Button>(R.id.btn_hero_menu_switch)
+        val btnCancel = dialog.findViewById<Button>(R.id.btn_hero_menu_cancel)
+
+        nameView.text = activeProfile.name
+
+        val avatars = listOf(
+            R.drawable.ic_hero_knight, R.drawable.ic_hero_wizard,
+            R.drawable.ic_hero_archer, R.drawable.ic_hero_ninja,
+            R.drawable.ic_hero_viking, R.drawable.ic_hero_dragon,
+            R.drawable.ic_hero_phoenix, R.drawable.ic_hero_shield,
+            R.drawable.ic_hero_sword, R.drawable.ic_hero_crown
+        )
+
+        if (activeProfile.avatarId in avatars.indices) {
+            iconView.setImageResource(avatars[activeProfile.avatarId])
+            iconView.imageTintList = android.content.res.ColorStateList.valueOf(activeProfile.avatarColor)
+        }
+
+        btnEdit.setOnClickListener {
+            dialog.dismiss()
+            if (activeProfile.pin != null) {
+                showPinDialog(activeProfile) {
+                    val intent = Intent(this, ProfileCreationActivity::class.java)
+                    intent.putExtra("EDIT_PROFILE_ID", activeProfile.id)
+                    startActivity(intent)
                 }
+            } else {
+                val intent = Intent(this, ProfileCreationActivity::class.java)
+                intent.putExtra("EDIT_PROFILE_ID", activeProfile.id)
+                startActivity(intent)
             }
-            .show()
+        }
+
+        btnSwitch.setOnClickListener {
+            dialog.dismiss()
+            startActivity(Intent(this, ProfileSelectionActivity::class.java))
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        btnEdit.requestFocus()
     }
 
     private fun showPinDialog(profile: UserProfile, onSuccess: () -> Unit) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_pin_entry, null)
-        val editPin = dialogView.findViewById<EditText>(R.id.edit_pin)
-        val errorView = dialogView.findViewById<TextView>(R.id.pin_error)
-        val titleView = dialogView.findViewById<TextView>(R.id.pin_title)
-        titleView.text = getString(R.string.edit_profile)
+        val dialog = Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_pin_entry)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(true)
 
-        val dialog = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
-            .setView(dialogView)
-            .create()
+        val editPin = dialog.findViewById<EditText>(R.id.edit_pin)
+        val errorView = dialog.findViewById<TextView>(R.id.pin_error)
+        val titleView = dialog.findViewById<TextView>(R.id.pin_title)
+        titleView.text = getString(R.string.edit_profile)
 
         editPin.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -266,6 +295,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
         dialog.show()
+        editPin.requestFocus()
     }
 
     private fun setupGameButtons() {
