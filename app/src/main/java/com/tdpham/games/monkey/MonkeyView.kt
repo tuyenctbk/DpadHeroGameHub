@@ -12,8 +12,10 @@ import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
-import kotlin.math.sin
 import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.sin
 import kotlin.random.Random
 
 class MonkeyView @JvmOverloads constructor(
@@ -658,10 +660,15 @@ class MonkeyView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         
         // Lives (Hearts: Max 3 hearts = 6 health units)
+        val hudY = max(55f, height * 0.065f)
+        val heartY = max(45f, height * 0.055f)
+        val leftX = max(45f, width * 0.04f)
+        val rightX = min(width - 45f, width * 0.96f)
+
         var remainingHealth = lives
         for (i in 0 until 3) {
-            val hx = 60f + i * 50f
-            val hy = height * 0.04f
+            val hx = leftX + i * 50f
+            val hy = heartY
             if (remainingHealth >= 2) {
                 drawHeart(canvas, hx, hy, 16f, false)
                 remainingHealth -= 2
@@ -688,11 +695,11 @@ class MonkeyView @JvmOverloads constructor(
         
         paint.color = Color.WHITE
         paint.textAlign = Paint.Align.CENTER
-        
-        canvas.drawText("${context.getString(R.string.score_label)}: $score", width / 2f, height * 0.05f, paint)
+        paint.textSize = 34f
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", width / 2f, hudY, paint)
         
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, height * 0.05f, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", rightX, hudY, paint)
 
         // Draw Death Reason Notification
         if (now < deathReasonDisplayUntil) {

@@ -556,7 +556,7 @@
     <string name="monkey_autumn">AUTUMN</string>
     <string name="monkey_winter">WINTER</string>
     <string name="retro_driver_speed">Speed: %1$d MPH</string>
-    <string name="frenzy_stage">STAGE: %1$s (%2$d / %3$d)</string>
+    <string name="frenzy_stage">STAGE: %1$s</string>
     <string name="frenzy_guppy">GUPPY</string>
     <string name="frenzy_angelfish">ANGELFISH</string>
     <string name="frenzy_lionfish">LIONFISH</string>
@@ -796,13 +796,7 @@
     <string name="placeholder_dash">---</string>
     <string name="zero_pts">0 pts</string>
 
-    <string name="day_1">JOUR 1</string>
-    <string name="reward_day_format">JOUR %1$d</string>
-    <string name="status_locked">VERROUILLÉ</string>
-    <string name="daily_arcade_rewards">RÉCOMPENSES QUOTIDIENNES</string>
-    <string name="daily_rewards_subtitle">Connectez-vous chaque jour pour décrocher le Jackpot de 1 500 pièces !</string>
-    <string name="claim_reward">🎁 RÉCLAMER LA RÉCOMPENSE</string>
-    <string name="btn_close">FERMER</string>
+
 
     <string name="controller_settings_title">🎮 Paramètres manette &amp; haptique</string>
     <string name="hardware_diagnostics">DIAGNOSTIC MATÉRIEL</string>

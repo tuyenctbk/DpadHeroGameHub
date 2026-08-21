@@ -13,6 +13,8 @@ import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sin
 import kotlin.random.Random
 
@@ -907,23 +909,27 @@ class FruitView @JvmOverloads constructor(
     private fun drawHUD(canvas: Canvas) {
         paint.reset()
         paint.isAntiAlias = true
+        val hudY = max(55f, height * 0.065f)
+        val leftX = max(45f, width * 0.04f)
+        val rightX = min(width - 45f, width * 0.96f)
         
         // Lives (Hearts)
         paint.color = Color.parseColor("#E53935")
-        paint.textSize = 38f
-        val lifeStr = "♥".repeat(lives.coerceAtLeast(0))
-        canvas.drawText(lifeStr, 40f, height * 0.05f, paint)
+        paint.textSize = 34f
+        paint.textAlign = Paint.Align.LEFT
+        val lifeStr = "♥ ".repeat(lives.coerceAtLeast(0))
+        canvas.drawText(lifeStr, leftX, hudY, paint)
 
         // Blade selected Tag
         paint.color = Color.WHITE
         paint.textSize = 28f
         paint.textAlign = Paint.Align.CENTER
-        canvas.drawText(bladeNames[selectedBlade], width / 2f, height * 0.05f, paint)
+        canvas.drawText(bladeNames[selectedBlade], width / 2f, hudY, paint)
 
         // Best / Score
         paint.textAlign = Paint.Align.RIGHT
-        paint.textSize = 36f
-        canvas.drawText("BEST: $best  SCORE: $score", width - 40f, height * 0.05f, paint)
+        paint.textSize = 34f
+        canvas.drawText("BEST: $best  SCORE: $score", rightX, hudY, paint)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {

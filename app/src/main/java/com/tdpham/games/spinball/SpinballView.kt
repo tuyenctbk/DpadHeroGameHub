@@ -103,7 +103,7 @@ class SpinballView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        radius = (min(w, h) / 2f - 95f).coerceAtLeast(200f)
+        radius = (min(w, h) / 2f - 110f).coerceAtLeast(180f)
         updateSpikePath()
     }
 
@@ -313,8 +313,8 @@ class SpinballView @JvmOverloads constructor(
 
         super.onDraw(canvas)
         
-        canvas.save()
-        canvas.translate(width / 2f, height / 2f)
+        val centerY = height / 2f + 25f
+        canvas.translate(width / 2f, centerY)
 
         // Draw Boundary with neon glow effect
         paint.style = Paint.Style.STROKE
@@ -431,31 +431,34 @@ class SpinballView @JvmOverloads constructor(
             }
         }
 
-        // Score
+        // Score & Mode HUD
         paint.reset()
         paint.isAntiAlias = true
         paint.color = Color.WHITE
-        paint.textSize = 40f
+        paint.textSize = 34f
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.CENTER
-        val hudY = Math.round(-radius - 80f).toFloat()
-        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.best_label)}: $highScore", 0f, hudY, paint)
         
+        val topScreenY = -centerY
+        val hudScoreY = (topScreenY + 54f).coerceAtMost(-radius - 50f)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.best_label)}: $highScore", 0f, hudScoreY, paint)
+        
+        paint.textSize = 24f
         paint.color = Color.LTGRAY
         val modeStr = context.getString(when(currentDifficultyIndex) {
             0 -> R.string.spinball_difficulty_1
             2 -> R.string.spinball_difficulty_3
             else -> R.string.spinball_difficulty_2
         })
-        canvas.drawText(modeStr, 0f, hudY + 40f, paint)
+        canvas.drawText(modeStr, 0f, hudScoreY + 34f, paint)
 
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT
-            paint.textSize = 28f
+            paint.textSize = 24f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), -width/2 + 30f, -height/2 + 60f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), -width/2f + 40f, topScreenY + 54f, paint)
             paint.alpha = 255
         }
         canvas.restore()

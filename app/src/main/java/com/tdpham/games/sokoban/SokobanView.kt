@@ -15,6 +15,8 @@ import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
+import kotlin.math.max
+import kotlin.math.min
 
 class SokobanView @JvmOverloads constructor(
     context: Context,
@@ -351,12 +353,15 @@ class SokobanView @JvmOverloads constructor(
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
-        paint.textSize = 36f
+        paint.textSize = 34f
         paint.textAlign = Paint.Align.LEFT
-        val hudY = Math.round(52f).toFloat()
-        canvas.drawText("${context.getString(R.string.level_label)} ${levelIndex + 1}/${levels.size}  ${context.getString(R.string.pushes_label)}: $pushes", 30f, hudY, paint)
+        val hudY = max(55f, height * 0.065f)
+        val leftX = max(45f, width * 0.04f)
+        val rightX = min(width - 45f, width * 0.96f)
+
+        canvas.drawText("${context.getString(R.string.level_label)} ${levelIndex + 1}/${levels.size}  ${context.getString(R.string.pushes_label)}: $pushes", leftX, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 30f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", rightX, hudY, paint)
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 30f
         val centerX = Math.round(width / 2f).toFloat()
@@ -365,10 +370,10 @@ class SokobanView @JvmOverloads constructor(
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT
-            paint.textSize = 28f
+            paint.textSize = 26f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 30f, hudY + 45f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY + 40f, paint)
             paint.alpha = 255
             paint.textAlign = Paint.Align.CENTER
         }

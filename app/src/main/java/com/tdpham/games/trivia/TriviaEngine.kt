@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Html
 import android.util.Log
-import com.tdpham.games.common.DailyRewardManager
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import org.json.JSONArray
@@ -257,7 +256,6 @@ class TriviaEngine(private val context: Context) {
             val streakBonus = (streak - 1) * 20
             pointsEarned = 100 + timeBonus + streakBonus
             score += pointsEarned
-            DailyRewardManager.addCoins(context, 5 + (streak * 2))
             SoundManager.playProfileSound(SoundManager.SoundProfile.TRIVIA_QUIZ, SoundManager.GameSoundEvent.SCORE)
         } else {
             streak = 0
@@ -335,7 +333,6 @@ class TriviaEngine(private val context: Context) {
 
         if (correctCount >= (activeQuestions.size / 2)) {
             SoundManager.playTriviaGauntletWin()
-            DailyRewardManager.addCoins(context, 50)
         } else {
             SoundManager.playProfileSound(SoundManager.SoundProfile.TRIVIA_QUIZ, SoundManager.GameSoundEvent.GAME_OVER)
         }

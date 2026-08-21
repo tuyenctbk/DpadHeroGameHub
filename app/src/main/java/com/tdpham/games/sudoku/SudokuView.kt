@@ -17,6 +17,8 @@ import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
+import kotlin.math.max
+import kotlin.math.min
 
 class SudokuView @JvmOverloads constructor(
     context: Context,
@@ -400,11 +402,14 @@ class SudokuView @JvmOverloads constructor(
         paint.color = Color.WHITE
         paint.textAlign = Paint.Align.LEFT
         paint.textSize = 34f
-        val hudY1 = Math.round(52f).toFloat()
-        canvas.drawText("${context.getString(R.string.puzzle_label)} ${puzzleIndex + 1}/${puzzles.size}  ${context.getString(R.string.best_label)}: $best", 30f, hudY1, paint)
+        val hudY1 = max(55f, height * 0.065f)
+        val leftX = max(45f, width * 0.04f)
+        val rightX = min(width - 45f, width * 0.96f)
+
+        canvas.drawText("${context.getString(R.string.puzzle_label)} ${puzzleIndex + 1}/${puzzles.size}  ${context.getString(R.string.best_label)}: $best", leftX, hudY1, paint)
         
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("${context.getString(R.string.level_label)} ${currentDifficulty.ordinal + 1}", width - 30f, hudY1, paint)
+        canvas.drawText("${context.getString(R.string.level_label)} ${currentDifficulty.ordinal + 1}", rightX, hudY1, paint)
 
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 28f
@@ -417,7 +422,7 @@ class SudokuView @JvmOverloads constructor(
             paint.textSize = 24f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), left, hudY1 + 35f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY1 + 35f, paint)
             paint.alpha = 255
             paint.textAlign = Paint.Align.CENTER
         }

@@ -14,6 +14,8 @@ import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.random.Random
 
 class BattleTanksView @JvmOverloads constructor(
@@ -451,12 +453,14 @@ class BattleTanksView @JvmOverloads constructor(
         paint.reset()
         paint.isAntiAlias = true
         paint.color = Color.WHITE
-        paint.textSize = 36f
+        paint.textSize = 34f
         paint.style = Paint.Style.FILL
-        val hudY = height * 0.05f
+        val hudY = max(55f, height * 0.065f)
+        val leftX = max(45f, width * 0.04f)
+        val rightX = min(width - 45f, width * 0.96f)
         
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", leftX, hudY, paint)
         
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.LTGRAY
@@ -464,12 +468,12 @@ class BattleTanksView @JvmOverloads constructor(
         
         paint.textAlign = Paint.Align.RIGHT
         paint.color = Color.WHITE
-        canvas.drawText("${context.getString(R.string.best_label)}: $best", width - 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", rightX, hudY, paint)
 
         // Quick Hint (Top/Left)
         if (!gameOver) {
             paint.textAlign = Paint.Align.LEFT
-            paint.textSize = 28f
+            paint.textSize = 26f
             paint.color = Color.WHITE
             val alpha = if (gamePaused) {
                 255
@@ -481,7 +485,7 @@ class BattleTanksView @JvmOverloads constructor(
                 }
             }
             paint.alpha = alpha
-            canvas.drawText(hints[currentHintIndex], 40f, hudY + 45f, paint)
+            canvas.drawText(hints[currentHintIndex], leftX, hudY + 40f, paint)
             paint.alpha = 255
         }
 

@@ -15,6 +15,8 @@ import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 class SolitaireView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -541,14 +543,17 @@ class SolitaireView @JvmOverloads constructor(
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
-        paint.textSize = 30f
-        val hudY = Math.round(h - 20).toFloat()
-        canvas.drawText("${context.getString(R.string.score_label)}: $score", 20f, hudY, paint)
+        paint.textSize = 28f
+        val hudY = min(h - 30f, h * 0.94f)
+        val leftX = max(40f, width * 0.04f)
+        val rightX = min(width - 40f, width * 0.96f)
+
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", leftX, hudY, paint)
         
         paint.textAlign = Paint.Align.RIGHT
         paint.color = Color.LTGRAY
         val modeStr = context.getString(if (drawCount == 3) R.string.solitaire_draw_3 else R.string.solitaire_draw_1)
-        canvas.drawText("${context.getString(R.string.mode_label)}: $modeStr", width - 20f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.mode_label)}: $modeStr", rightX, hudY, paint)
         paint.textAlign = Paint.Align.LEFT
 
         // Quick Hint (Top/Left)
@@ -557,7 +562,7 @@ class SolitaireView @JvmOverloads constructor(
             paint.textSize = 26f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 20f, 40f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, max(50f, height * 0.06f), paint)
             paint.alpha = 255
         }
 

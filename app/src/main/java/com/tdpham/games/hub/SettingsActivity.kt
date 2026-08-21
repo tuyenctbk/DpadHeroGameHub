@@ -183,7 +183,34 @@ class SettingsActivity : AppCompatActivity() {
         }
         setupFocusEffect(shakeToggleLayout)
 
-        // 7. Profile Management Button
+        // 7. Hall of Fame / Global Leaderboards
+        val layoutHallOfFame = findViewById<LinearLayout>(R.id.layout_hall_of_fame)
+        layoutHallOfFame.setOnClickListener {
+            SoundManager.playClick()
+            HapticManager.vibrateClick(this)
+            startActivity(Intent(this, LeaderboardActivity::class.java))
+        }
+        setupFocusEffect(layoutHallOfFame)
+
+        // 8. Rate App
+        val layoutRate = findViewById<LinearLayout>(R.id.layout_rate_app)
+        layoutRate.setOnClickListener {
+            SoundManager.playClick()
+            HapticManager.vibrateClick(this)
+            com.tdpham.games.common.AppEngagementManager.showRateDialog(this)
+        }
+        setupFocusEffect(layoutRate)
+
+        // 9. Share App
+        val layoutShare = findViewById<LinearLayout>(R.id.layout_share_app)
+        layoutShare.setOnClickListener {
+            SoundManager.playClick()
+            HapticManager.vibrateClick(this)
+            com.tdpham.games.common.AppEngagementManager.showShareDialog(this)
+        }
+        setupFocusEffect(layoutShare)
+
+        // 10. Profile Management Button
         findViewById<Button>(R.id.btn_switch_profile).apply {
             setOnClickListener {
                 SoundManager.playClick()

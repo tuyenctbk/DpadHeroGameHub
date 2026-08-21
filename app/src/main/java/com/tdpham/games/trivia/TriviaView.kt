@@ -18,6 +18,7 @@ import com.tdpham.games.common.HapticManager
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import kotlin.math.max
+import kotlin.math.min
 
 class TriviaView @JvmOverloads constructor(
     context: Context,
@@ -363,40 +364,45 @@ class TriviaView @JvmOverloads constructor(
     }
 
     private fun drawHeader(canvas: Canvas, w: Float, h: Float) {
+        val hudTop = max(50f, h * 0.06f)
+        val hudSub = hudTop + 24f
+        val leftX = max(40f, w * 0.05f)
+        val rightX = min(w - 40f, w * 0.95f)
+
         paint.textAlign = Paint.Align.LEFT
         paint.textSize = 20f
         paint.isFakeBoldText = true
         paint.color = Color.WHITE
 
         val catLabel = engine.currentQuestion?.category ?: "TRIVIA ARENA"
-        canvas.drawText(catLabel.uppercase(), w * 0.05f, 36f, paint)
+        canvas.drawText(catLabel.uppercase(), leftX, hudTop, paint)
 
         paint.textSize = 15f
         paint.color = Color.parseColor("#FFD700")
-        canvas.drawText("STREAK: ${engine.streak} 🔥", w * 0.05f, 60f, paint)
+        canvas.drawText("STREAK: ${engine.streak} 🔥", leftX, hudSub, paint)
 
         // Center Status Banner
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 22f
         paint.color = Color.parseColor("#00E5FF")
-        canvas.drawText(statusMessage, w * 0.5f, 44f, paint)
+        canvas.drawText(statusMessage, w * 0.5f, hudTop + 6f, paint)
 
         // Score Right
         paint.textAlign = Paint.Align.RIGHT
         paint.textSize = 20f
         paint.color = Color.parseColor("#00E676")
-        canvas.drawText("SCORE: ${engine.score}", w * 0.95f, 36f, paint)
+        canvas.drawText("SCORE: ${engine.score}", rightX, hudTop, paint)
 
         val best = ScoreManager.getHighScore(context, gameKey)
         paint.textSize = 15f
         paint.color = Color.WHITE
-        canvas.drawText("BEST: $best", w * 0.95f, 60f, paint)
+        canvas.drawText("BEST: $best", rightX, hudSub, paint)
     }
 
     private fun drawQuestionCard(canvas: Canvas, w: Float, h: Float) {
         val q = engine.currentQuestion ?: return
         val cardL = w * 0.08f
-        val cardT = h * 0.14f
+        val cardT = max(h * 0.16f, 96f)
         val cardW = w * 0.84f
         val cardH = h * 0.28f
         val cardRect = RectF(cardL, cardT, cardL + cardW, cardT + cardH)

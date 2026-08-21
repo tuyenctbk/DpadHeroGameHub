@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0A0E17"
@@ -376,6 +377,141 @@
                 android:layout_height="wrap_content"
                 android:clickable="false"
                 android:focusable="false" />
+        </LinearLayout>
+
+        <!-- Hall of Fame / Global Leaderboards Card -->
+        <LinearLayout
+            android:id="@+id/layout_hall_of_fame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#1F2C47"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_trophy"
+                app:tint="#FFD700"
+                android:layout_marginEnd="14dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hall_of_fame"
+                    android:textColor="#FFD700"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/global_top3_snake"
+                    android:textColor="#90A4AE"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Rate App Card -->
+        <LinearLayout
+            android:id="@+id/layout_rate_app"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_star_rate"
+                app:tint="#FFCA28"
+                android:layout_marginEnd="14dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rate_now"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/rating_content"
+                    android:textColor="#90A4AE"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Share App Card -->
+        <LinearLayout
+            android:id="@+id/layout_share_app"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp"
+            android:layout_marginBottom="24dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_share"
+                app:tint="#00E5FF"
+                android:layout_marginEnd="14dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/share_now"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/share_content"
+                    android:textColor="#90A4AE"
+                    android:textSize="13sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Profile Management Button -->

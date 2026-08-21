@@ -13,7 +13,6 @@ import android.view.MotionEvent
 import android.view.View
 import com.tdpham.games.R
 import com.tdpham.games.common.CelebrationManager
-import com.tdpham.games.common.DailyRewardManager
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.HapticManager
@@ -192,7 +191,6 @@ class ConnectFourView @JvmOverloads constructor(
             score += ptsEarned
             val best = ScoreManager.getHighScore(context, gameKey, aiDifficulty)
             ScoreManager.updateHighScore(context, gameKey, score, aiDifficulty)
-            DailyRewardManager.addCoins(context, 25 + (aiDifficulty * 15))
             SoundManager.playSuccess()
             HapticManager.vibrateSuccess(context)
             isEndCelebration = true
@@ -669,6 +667,11 @@ class ConnectFourView @JvmOverloads constructor(
     }
 
     private fun drawHeader(canvas: Canvas, w: Float, h: Float, p1Color: Int, p2Color: Int) {
+        val hudTop = max(52f, h * 0.06f)
+        val hudSub = hudTop + 26f
+        val leftX = max(40f, w * 0.04f)
+        val rightX = min(w - 40f, w * 0.96f)
+
         paint.textAlign = Paint.Align.LEFT
         paint.textSize = 22f
         paint.color = Color.WHITE
@@ -682,11 +685,11 @@ class ConnectFourView @JvmOverloads constructor(
                 else -> "VS CPU (MASTER)"
             }
         } else "2-PLAYER BATTLE"
-        canvas.drawText(modeTitle, w * 0.04f, 38f, paint)
+        canvas.drawText(modeTitle, leftX, hudTop, paint)
 
         paint.textSize = 16f
         paint.color = Color.parseColor("#FFD700")
-        canvas.drawText("STREAK: $winStreak 🔥", w * 0.04f, 66f, paint)
+        canvas.drawText("STREAK: $winStreak 🔥", leftX, hudSub, paint)
 
         // Center Turn Indicator Banner
         paint.textAlign = Paint.Align.CENTER
@@ -695,11 +698,11 @@ class ConnectFourView @JvmOverloads constructor(
             if (currentPlayer == PLAYER_1) {
                 paint.color = p1Color
                 val label = if (isVsAi) "YOUR TURN (YELLOW)" else "PLAYER 1 TURN"
-                canvas.drawText(label, w * 0.5f, 48f, paint)
+                canvas.drawText(label, w * 0.5f, hudTop + 10f, paint)
             } else {
                 paint.color = p2Color
                 val label = if (isVsAi) "CPU THINKING..." else "PLAYER 2 TURN"
-                canvas.drawText(label, w * 0.5f, 48f, paint)
+                canvas.drawText(label, w * 0.5f, hudTop + 10f, paint)
             }
         }
 
@@ -707,12 +710,12 @@ class ConnectFourView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.RIGHT
         paint.textSize = 20f
         paint.color = Color.WHITE
-        canvas.drawText("SCORE: $score", w * 0.96f, 38f, paint)
+        canvas.drawText("SCORE: $score", rightX, hudTop, paint)
 
         val best = ScoreManager.getHighScore(context, gameKey, aiDifficulty)
         paint.textSize = 15f
         paint.color = Color.parseColor("#00E5FF")
-        canvas.drawText("BEST: $best", w * 0.96f, 64f, paint)
+        canvas.drawText("BEST: $best", rightX, hudSub, paint)
     }
 
     private fun drawGameOverOverlay(canvas: Canvas, w: Float, h: Float, p1Color: Int, p2Color: Int) {

@@ -556,7 +556,7 @@
     <string name="monkey_autumn">AUTUMN</string>
     <string name="monkey_winter">WINTER</string>
     <string name="retro_driver_speed">Speed: %1$d MPH</string>
-    <string name="frenzy_stage">STAGE: %1$s (%2$d / %3$d)</string>
+    <string name="frenzy_stage">STAGE: %1$s</string>
     <string name="frenzy_guppy">GUPPY</string>
     <string name="frenzy_angelfish">ANGELFISH</string>
     <string name="frenzy_lionfish">LIONFISH</string>

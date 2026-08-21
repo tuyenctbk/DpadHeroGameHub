@@ -16,7 +16,6 @@ import androidx.core.graphics.toColorInt
 import androidx.core.graphics.withSave
 import com.tdpham.games.R
 import com.tdpham.games.common.CelebrationManager
-import com.tdpham.games.common.DailyRewardManager
 import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.GamePalette
 import com.tdpham.games.common.GameView
@@ -277,7 +276,6 @@ class SnakeGameView @JvmOverloads constructor(
             score += pts
             headScale = 1.35f
             scorePopScale = 1.3f
-            DailyRewardManager.addCoins(context, 2)
             SoundManager.playSnakeEat()
             HapticManager.vibrateClick(context)
             spawnFood()

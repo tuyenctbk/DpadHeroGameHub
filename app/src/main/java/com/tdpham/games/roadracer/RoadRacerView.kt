@@ -12,6 +12,8 @@ import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 class RoadRacerView @JvmOverloads constructor(
     context: Context,
@@ -416,12 +418,14 @@ class RoadRacerView @JvmOverloads constructor(
         paint.reset()
         paint.isAntiAlias = true
         paint.color = Color.WHITE
-        paint.textSize = 40f
+        paint.textSize = 34f
         paint.style = Paint.Style.FILL
-        val hudY = height * 0.05f
+        val hudY = max(55f, height * 0.065f)
+        val leftX = max(45f, width * 0.04f)
+        val rightX = min(width - 45f, width * 0.96f)
         
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", leftX, hudY, paint)
         
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.LTGRAY
@@ -429,15 +433,15 @@ class RoadRacerView @JvmOverloads constructor(
 
         paint.textAlign = Paint.Align.RIGHT
         paint.color = Color.WHITE
-        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", width - 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", rightX, hudY, paint)
 
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT
-            paint.textSize = 28f
+            paint.textSize = 26f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 80f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY + 45f, paint)
             paint.alpha = 255
         }
 

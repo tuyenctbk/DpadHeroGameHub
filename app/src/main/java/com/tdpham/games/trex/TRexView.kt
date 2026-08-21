@@ -13,6 +13,8 @@ import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 class TRexView @JvmOverloads constructor(
     context: Context,
@@ -1017,11 +1019,8 @@ class TRexView @JvmOverloads constructor(
             paint.color = theme.textColor
         }
 
-        paint.style = Paint.Style.FILL
-        paint.setShadowLayer(2f, 1f, 1f, if (isNightMode) Color.BLACK else Color.argb(100, 255, 255, 255))
-        
-        val scoreX = Math.round(width - 50f).toFloat()
-        val scoreY = Math.round(80f).toFloat()
+        val scoreX = width - max(50f, width * 0.04f)
+        val scoreY = max(60f, height * 0.07f)
         val highScoreStr = String.format(Locale.US, "%05d", highScore)
         val scoreStr = String.format(Locale.US, "%05d", score)
         canvas.drawText("${context.getString(R.string.high_score_prefix)} $highScoreStr  $scoreStr", scoreX, scoreY, paint)
@@ -1030,10 +1029,10 @@ class TRexView @JvmOverloads constructor(
         // Quick Hint (Top/Left)
         if (nameShowFrames > 0 && !isPaused) {
             paint.textAlign = Paint.Align.LEFT
-            paint.textSize = 30f
+            paint.textSize = 28f
             paint.color = theme.textColor
             paint.alpha = (nameShowFrames * 4).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 50f, 80f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), max(50f, width * 0.04f), scoreY, paint)
             paint.alpha = 255
         }
 

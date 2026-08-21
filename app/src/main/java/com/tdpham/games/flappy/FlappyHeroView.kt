@@ -12,6 +12,8 @@ import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.random.Random
 
 class FlappyHeroView @JvmOverloads constructor(
@@ -927,13 +929,16 @@ class FlappyHeroView @JvmOverloads constructor(
         paint.reset()
         paint.isAntiAlias = true
         paint.color = Color.WHITE
-        paint.textSize = 40f
+        paint.textSize = 34f
         paint.style = Paint.Style.FILL
+        val hudY = max(55f, h * 0.065f)
+        val leftX = max(45f, w * 0.04f)
+        val rightX = min(w - 45f, w * 0.96f)
+
         paint.textAlign = Paint.Align.LEFT
-        val hudY = h * 0.05f
-        canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", leftX, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("${context.getString(R.string.best_label)}: $best", w - 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $best", rightX, hudY, paint)
 
         val charName = context.getString(when (currentCharacter) {
             BirdCharacter.SWIFT -> R.string.flappy_char_swift

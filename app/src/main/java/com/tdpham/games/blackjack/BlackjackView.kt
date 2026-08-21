@@ -14,7 +14,6 @@ import android.view.MotionEvent
 import android.view.View
 import com.tdpham.games.R
 import com.tdpham.games.common.CelebrationManager
-import com.tdpham.games.common.DailyRewardManager
 import com.tdpham.games.common.GameView
 import com.tdpham.games.common.HapticManager
 import com.tdpham.games.common.ScoreManager
@@ -107,11 +106,23 @@ class BlackjackView @JvmOverloads constructor(
         tableTheme = prefs.getInt(BlackjackOptionsDialog.KEY_TABLE_THEME, 0)
     }
 
+    private fun getSavedChips(): Int {
+        val prefs = context.getSharedPreferences("blackjack_settings", Context.MODE_PRIVATE)
+        return prefs.getInt("chip_balance", 1000)
+    }
+
+    private fun addChips(amount: Int) {
+        val prefs = context.getSharedPreferences("blackjack_settings", Context.MODE_PRIVATE)
+        val current = prefs.getInt("chip_balance", 1000)
+        val updated = (current + amount).coerceAtLeast(0)
+        prefs.edit().putInt("chip_balance", updated).apply()
+        chipBalance = updated
+    }
+
     private fun syncCoins() {
-        chipBalance = DailyRewardManager.getCoinBalance(context)
+        chipBalance = getSavedChips()
         if (chipBalance < 25) {
-            DailyRewardManager.addCoins(context, 100)
-            chipBalance = DailyRewardManager.getCoinBalance(context)
+            addChips(100)
         }
         highestBalance = max(chipBalance, ScoreManager.getHighScore(context, gameKey))
     }
@@ -209,8 +220,7 @@ class BlackjackView @JvmOverloads constructor(
         }
 
         // Deduct bet from balance
-        DailyRewardManager.addCoins(context, -currentBet)
-        chipBalance = DailyRewardManager.getCoinBalance(context)
+        addChips(-currentBet)
 
         playerHand.clear()
         dealerHand.clear()
@@ -296,8 +306,7 @@ class BlackjackView @JvmOverloads constructor(
         }
 
         // Deduct extra bet
-        DailyRewardManager.addCoins(context, -currentBet)
-        chipBalance = DailyRewardManager.getCoinBalance(context)
+        addChips(-currentBet)
         currentBet *= 2
 
         // Player gets exactly 1 card then auto-stands
@@ -361,8 +370,7 @@ class BlackjackView @JvmOverloads constructor(
         statusMessage = msg
 
         if (payout > 0) {
-            DailyRewardManager.addCoins(context, payout)
-            chipBalance = DailyRewardManager.getCoinBalance(context)
+            addChips(payout)
         }
 
         if (isBlackjack || (payout > currentBet && !isPush)) {
@@ -547,41 +555,46 @@ class BlackjackView @JvmOverloads constructor(
     }
 
     private fun drawCasinoHeader(canvas: Canvas, w: Float, h: Float) {
+        val hudTop = max(50f, h * 0.06f)
+        val hudSub = hudTop + 24f
+        val leftX = max(40f, w * 0.05f)
+        val rightX = min(w - 40f, w * 0.95f)
+
         paint.textAlign = Paint.Align.LEFT
         paint.textSize = 20f
         paint.isFakeBoldText = true
 
         // Balance & Chips
         paint.color = Color.parseColor("#FFD700")
-        canvas.drawText("CHIPS: $$chipBalance 🪙", w * 0.06f, 36f, paint)
+        canvas.drawText("CHIPS: $$chipBalance 🪙", leftX, hudTop, paint)
 
         paint.textSize = 15f
         paint.color = Color.parseColor("#00E5FF")
-        canvas.drawText("STREAK: $winStreak WINS 🔥", w * 0.06f, 60f, paint)
+        canvas.drawText("STREAK: $winStreak WINS 🔥", leftX, hudSub, paint)
 
         // Title Center
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 22f
         paint.color = Color.WHITE
-        canvas.drawText("VEGAS BLACKJACK 21", w * 0.5f, 38f, paint)
+        canvas.drawText("VEGAS BLACKJACK 21", w * 0.5f, hudTop, paint)
 
         paint.textSize = 14f
         paint.color = Color.parseColor("#B0BEC5")
-        canvas.drawText("BLACKJACK PAYS 3 TO 2 • DEALER STANDS ON 17", w * 0.5f, 58f, paint)
+        canvas.drawText("BLACKJACK PAYS 3 TO 2 • DEALER STANDS ON 17", w * 0.5f, hudSub, paint)
 
         // High Score Right
         paint.textAlign = Paint.Align.RIGHT
         paint.textSize = 18f
         paint.color = Color.parseColor("#FFD700")
-        canvas.drawText("BEST: $$highestBalance", w * 0.94f, 36f, paint)
+        canvas.drawText("BEST: $$highestBalance", rightX, hudTop, paint)
 
         paint.textSize = 14f
         paint.color = Color.WHITE
-        canvas.drawText("SHOE: ${deck.size} CARDS", w * 0.94f, 58f, paint)
+        canvas.drawText("SHOE: ${deck.size} CARDS", rightX, hudSub, paint)
     }
 
     private fun drawDealerArea(canvas: Canvas, w: Float, h: Float) {
-        val areaY = h * 0.14f
+        val areaY = max(h * 0.16f, 100f)
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 18f
         paint.color = Color.WHITE

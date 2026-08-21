@@ -14,6 +14,8 @@ import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 class HangmanView @JvmOverloads constructor(
     context: Context,
@@ -311,18 +313,21 @@ class HangmanView @JvmOverloads constructor(
         paint.textSize = 30f
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.LEFT
-        val hudY = Math.round(60f).toFloat()
-        canvas.drawText("${context.getString(R.string.score_label)}: $score", 40f, hudY, paint)
+        val hudY = max(55f, height * 0.065f)
+        val leftX = max(45f, width * 0.04f)
+        val rightX = min(width - 45f, width * 0.96f)
+
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", leftX, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", width - 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", rightX, hudY, paint)
 
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT
-            paint.textSize = 28f
+            paint.textSize = 26f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY + 40f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY + 38f, paint)
             paint.alpha = 255
         }
 

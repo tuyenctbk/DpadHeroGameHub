@@ -12,8 +12,10 @@ import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
-import kotlin.math.sin
 import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.sin
 import kotlin.random.Random
 
 class FrenzyView @JvmOverloads constructor(
@@ -34,9 +36,47 @@ class FrenzyView @JvmOverloads constructor(
     private var score = 0
     private var best = 0
     private var lives = 3
-    private var playerSize = 1 // 1: Guppy, 2: Angelfish, 3: Lionfish, 4: Dolphin, 5: Apex/King
+    private var playerSize = 1 // 1: Guppy, 2: Tang, 3: Angelfish, 4: Lionfish, 5: Barracuda, 6: Shark, 7: Dolphin, 8: Orca Apex
     private var fishEatenCount = 0
-    private val targetFishToWin = 170 // 15 + 25 + 35 + 45 + 50 to win (Total 170)
+    private var stageEatenCount = 0
+
+    private fun getStageRequiredFood(stage: Int): Int = when (stage) {
+        1 -> 16   // Level 1: Guppy -> Blue Tang (Doubled)
+        2 -> 28   // Level 2: Blue Tang -> Angelfish (Doubled)
+        3 -> 40   // Level 3: Angelfish -> Lionfish (Doubled)
+        4 -> 56   // Level 4: Lionfish -> Barracuda (Doubled)
+        5 -> 76   // Level 5: Barracuda -> Dolphin (Doubled)
+        6 -> 100  // Level 6: Dolphin -> Great White Shark (Doubled)
+        7 -> 130  // Level 7: Great White Shark -> Orca Apex (Doubled)
+        else -> 160 // Level 8: Orca Apex -> Total Ocean Domination Victory! (Doubled)
+    }
+
+    private fun addFoodProgress(amount: Int = 1) {
+        fishEatenCount += amount
+        stageEatenCount += amount
+        val req = getStageRequiredFood(playerSize)
+        val now = System.currentTimeMillis()
+
+        if (stageEatenCount >= req) {
+            if (playerSize < 8) {
+                stageEatenCount = 0
+                playerSize++
+                lastIndicatorTriggerTime = now
+                SoundManager.playSuccess()
+                playerShieldUntil = now + 2500L // Brief invulnerability flourish on growth
+            } else {
+                // Completed Stage 8 (Apex Orca) -> Win Game!
+                gameWon = true
+                val isNewHigh = score > best
+                if (isNewHigh) {
+                    ScoreManager.updateHighScore(context, gameKey, score)
+                    best = score
+                }
+                celebrationManager.start(width / 2f, height / 2f)
+                onGameOver?.invoke(score)
+            }
+        }
+    }
 
     // Player position
     private var playerX = 0f
@@ -58,6 +98,7 @@ class FrenzyView @JvmOverloads constructor(
     private val mineWarnings = mutableListOf<MineWarning>()
     private val mineExplosions = mutableListOf<MineExplosion>()
     private val mineParticles = mutableListOf<MineParticle>()
+    private val sandParticles = mutableListOf<SandParticle>()
     private val floatingMeats = mutableListOf<FloatingMeat>()
     private var lastMineSpawnTime = 0L
     private var playerStunUntil = 0L
@@ -85,9 +126,12 @@ class FrenzyView @JvmOverloads constructor(
     private val sizeNames by lazy {
         arrayOf(
             context.getString(R.string.frenzy_guppy),
+            context.getString(R.string.frenzy_tang),
             context.getString(R.string.frenzy_angelfish),
             context.getString(R.string.frenzy_lionfish),
+            context.getString(R.string.frenzy_barracuda),
             context.getString(R.string.frenzy_dolphin),
+            context.getString(R.string.frenzy_shark),
             context.getString(R.string.frenzy_apex)
         )
     }
@@ -122,7 +166,7 @@ class FrenzyView @JvmOverloads constructor(
         var facingRight: Boolean,
         val color: Int,
         val speciesIndex: Int,
-        val behavior: Int, // 0: Straight, 1: Schooling, 2: Bobbing, 3: Floor crawl, 4: Clam static, 5: Jellyfish pulse, 6: Stingray glide, 7: Bursty, 8: Darts shrimp
+        val behavior: Int, // 0: Straight, 1: Schooling, 2: Bobbing, 3: Floor crawl, 4: Clam static, 5: Jellyfish pulse, 6: Stingray glide, 7: Bursty, 8: Darts shrimp, 19: Sand camouflage
         var isStartled: Boolean = false,
         var startleTime: Long = 0L,
         var swimCycle: Float = Random.nextFloat() * 10f,
@@ -130,9 +174,14 @@ class FrenzyView @JvmOverloads constructor(
         var clamsOpen: Boolean = false,
         var pearlEaten: Boolean = false,
         var isEating: Boolean = false,
-        var eatStartTime: Long = 0L
+        var eatStartTime: Long = 0L,
+        var isBuried: Boolean = false,
+        var burrowProgress: Float = 0f, // 0f: above sand, 1f: hidden under sand
+        var burrowStartTime: Long = 0L,
+        var unburrowTime: Long = 0L
     )
 
+    data class SandParticle(var x: Float, var y: Float, var vx: Float, var vy: Float, var size: Float, var color: Int, var alpha: Int)
     data class MineWarning(val x: Float, val startTime: Long, val duration: Long = 2000L)
     data class Bubble(var x: Float, var y: Float, val radius: Float, val speed: Float)
     data class Mine(var x: Float, var y: Float, val targetY: Float, var radius: Float, val speedY: Float, var isDropping: Boolean, var swimCycle: Float)
@@ -201,6 +250,7 @@ class FrenzyView @JvmOverloads constructor(
         lives = 3
         playerSize = prefs.getInt("starting_size", 1).coerceIn(1, 2)
         fishEatenCount = 0
+        stageEatenCount = 0
         playerX = width / 2f
         playerY = height / 2f
         playerFacingRight = true
@@ -216,6 +266,7 @@ class FrenzyView @JvmOverloads constructor(
         mineWarnings.clear()
         mineExplosions.clear()
         mineParticles.clear()
+        sandParticles.clear()
         floatingMeats.clear()
         playerStunUntil = 0L
         playerShieldUntil = System.currentTimeMillis() + 4000L
@@ -227,6 +278,30 @@ class FrenzyView @JvmOverloads constructor(
         repeat(20) {
             bubbles.add(Bubble(Random.nextFloat() * width, Random.nextFloat() * height, Random.nextFloat() * 8f + 4f, Random.nextFloat() * 3f + 1f))
         }
+
+        // Spawn initial Electric Eel
+        otherFish.add(AIFish(
+            x = (width * 0.75f).coerceAtLeast(300f),
+            y = (height * 0.45f).coerceAtLeast(200f),
+            size = 3,
+            speed = 2.2f,
+            facingRight = false,
+            color = Color.parseColor("#FFD54F"),
+            speciesIndex = 27,
+            behavior = 11
+        ))
+
+        // Spawn initial Sand Flounder (Master of sand camouflage)
+        otherFish.add(AIFish(
+            x = (width * 0.35f).coerceAtLeast(150f),
+            y = (height - 58f).coerceAtLeast(100f),
+            size = 1,
+            speed = 1.8f,
+            facingRight = true,
+            color = Color.parseColor("#BCAAA4"),
+            speciesIndex = 35,
+            behavior = 19
+        ))
         invalidate()
     }
 
@@ -277,54 +352,102 @@ class FrenzyView @JvmOverloads constructor(
         val rand = Random.nextFloat()
         
         val eelChance = when (playerSize) {
-            1 -> 0.0f
-            2 -> 0.08f
-            3 -> 0.12f
-            else -> 0.18f
+            1 -> 0.08f
+            2 -> 0.12f
+            3 -> 0.16f
+            else -> 0.20f
         }
         
-        val tinyIndices = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 29, 30, 31)
-        val smallIndices = intArrayOf(9, 10, 11, 12, 28, 33)
+        val swimmingTinyIndices = intArrayOf(0, 1, 2, 3, 4, 5)
+        val bottomIndices = intArrayOf(6, 7, 8, 28, 29, 30, 31, 34, 35) // Starfish, Crab, Clam, Lobster, Snail, Slug, Isopod, Sea Mantis, Sand Flounder
+        val smallIndices = intArrayOf(9, 10, 11, 12, 33)
         val mediumIndices = intArrayOf(13, 14, 15, 16, 17)
         val largeIndices = intArrayOf(18, 19, 20, 21)
         val apexIndices = intArrayOf(22, 23, 24, 25, 26)
 
+        // Limit active floor creatures to max 2 on screen
+        val currentBottomCount = otherFish.count {
+            it.speciesIndex in bottomIndices || it.behavior == 3 || it.behavior == 4 || it.behavior in 12..16 || it.behavior == 18 || it.behavior == 19
+        }
+        val isBottomSpawn = (currentBottomCount < 2) && (Random.nextFloat() < 0.15f)
+
+        // Limit active Electric Eels on screen simultaneously (Max 1 when player is small; Max 2 when player grows larger)
+        val maxEelsAllowed = if (playerSize < 3) 1 else 2
+        val currentEelCount = otherFish.count { it.speciesIndex == 27 }
+        val canSpawnEel = (currentEelCount < maxEelsAllowed) && (Random.nextFloat() < eelChance)
+
         val isGoldenSpawn = Random.nextFloat() < 0.03f // 3% chance
         val speciesIndex = if (isGoldenSpawn) {
             32 // Golden Rainbow Reward Fish
-        } else if (Random.nextFloat() < eelChance) {
-            27 // Electric Eel
+        } else if (canSpawnEel) {
+            27 // Electric Eel (Strictly max 2 on screen at the same time)
+        } else if (isBottomSpawn) {
+            // Select from bottom creatures
+            bottomIndices.random()
         } else {
             val idx = when (playerSize) {
-                1 -> { // Stage 1 (Guppy): 80% tiny prey, 15% small food, 5% medium predators (no big fish)
+                1 -> { // Stage 1 (Guppy): 80% tiny, 15% small, 5% medium
                     when {
-                        rand < 0.80f -> tinyIndices
+                        rand < 0.80f -> swimmingTinyIndices
                         rand < 0.95f -> smallIndices
                         else -> mediumIndices
                     }
                 }
-                2 -> { // Stage 2 (Angelfish): 40% tiny, 30% small, 20% medium, 10% large predators (no apex)
+                2 -> { // Stage 2 (Tang): 60% tiny, 30% small, 10% medium
                     when {
-                        rand < 0.40f -> tinyIndices
+                        rand < 0.60f -> swimmingTinyIndices
+                        rand < 0.90f -> smallIndices
+                        else -> mediumIndices
+                    }
+                }
+                3 -> { // Stage 3 (Angelfish): 40% tiny, 30% small, 20% medium, 10% large
+                    when {
+                        rand < 0.40f -> swimmingTinyIndices
                         rand < 0.70f -> smallIndices
                         rand < 0.90f -> mediumIndices
                         else -> largeIndices
                     }
                 }
-                3 -> { // Stage 3 (Lionfish): 20% tiny, 20% small, 35% medium, 20% large, 5% apex predators
+                4 -> { // Stage 4 (Lionfish): 25% tiny, 25% small, 35% medium, 15% large
                     when {
-                        rand < 0.20f -> tinyIndices
-                        rand < 0.40f -> smallIndices
-                        rand < 0.75f -> mediumIndices
+                        rand < 0.25f -> swimmingTinyIndices
+                        rand < 0.50f -> smallIndices
+                        rand < 0.85f -> mediumIndices
+                        else -> largeIndices
+                    }
+                }
+                5 -> { // Stage 5 (Barracuda): 15% tiny, 20% small, 35% medium, 25% large, 5% apex
+                    when {
+                        rand < 0.15f -> swimmingTinyIndices
+                        rand < 0.35f -> smallIndices
+                        rand < 0.70f -> mediumIndices
                         rand < 0.95f -> largeIndices
                         else -> apexIndices
                     }
                 }
-                else -> { // Stage 4/5 (Dolphin/Apex): 15% tiny, 15% small, 20% medium, 30% large, 20% apex predators
+                6 -> { // Stage 6 (Shark): 10% tiny, 15% small, 30% medium, 30% large, 15% apex
                     when {
-                        rand < 0.15f -> tinyIndices
-                        rand < 0.30f -> smallIndices
+                        rand < 0.10f -> swimmingTinyIndices
+                        rand < 0.25f -> smallIndices
+                        rand < 0.55f -> mediumIndices
+                        rand < 0.85f -> largeIndices
+                        else -> apexIndices
+                    }
+                }
+                7 -> { // Stage 7 (Dolphin): 10% tiny, 15% small, 25% medium, 30% large, 20% apex
+                    when {
+                        rand < 0.10f -> swimmingTinyIndices
+                        rand < 0.25f -> smallIndices
                         rand < 0.50f -> mediumIndices
+                        rand < 0.80f -> largeIndices
+                        else -> apexIndices
+                    }
+                }
+                else -> { // Stage 8 (Orca Apex): Ocean full of huge prey!
+                    when {
+                        rand < 0.05f -> swimmingTinyIndices
+                        rand < 0.20f -> smallIndices
+                        rand < 0.55f -> mediumIndices
                         rand < 0.80f -> largeIndices
                         else -> apexIndices
                     }
@@ -333,8 +456,17 @@ class FrenzyView @JvmOverloads constructor(
             idx.random()
         }
 
-        // Get properties based on species
-        val size = getSpeciesSize(speciesIndex)
+        // Determine size: Lobster (28) and Sea Mantis (34) have multiple sizes!
+        val size = if (speciesIndex == 28 || speciesIndex == 34) {
+            when {
+                playerSize == 1 -> if (Random.nextFloat() < 0.5f) 1 else 2 // Size 1 or 2 (predatory to size 1 player!)
+                playerSize == 2 -> if (Random.nextFloat() < 0.35f) 1 else if (Random.nextFloat() < 0.7f) 2 else 3
+                else -> Random.nextInt(1, 4) // 1 (Small), 2 (Medium), 3 (Giant)
+            }
+        } else {
+            getSpeciesSize(speciesIndex)
+        }
+
         val behavior = getSpeciesBehavior(speciesIndex)
         val color = getSpeciesColor(speciesIndex)
         val baseSpeed = getSpeciesSpeed(speciesIndex)
@@ -349,7 +481,7 @@ class FrenzyView @JvmOverloads constructor(
         var x = if (facingRight) -100f else width + 100f
         var y = Random.nextFloat() * (height - 260f) + 100f
 
-        if (behavior == 3 || behavior == 4 || behavior in 12..16) { // Floor Dwellers
+        if (behavior == 3 || behavior == 4 || behavior in 12..16 || behavior == 18 || behavior == 19) { // Floor Dwellers
             y = height - 60f - Random.nextFloat() * 15f
             x = Random.nextFloat() * (width - 200f) + 100f // spawn directly on bottom
         }
@@ -367,12 +499,40 @@ class FrenzyView @JvmOverloads constructor(
         }
     }
 
+    private fun spawnSandPuff(x: Float, y: Float, count: Int = 10) {
+        val sandColor = when (oceanTheme) {
+            0 -> Color.parseColor("#D7CCC8")
+            1 -> Color.parseColor("#8D6E63")
+            2 -> Color.parseColor("#424242")
+            else -> Color.parseColor("#00897B")
+        }
+        repeat(count) {
+            val angle = Random.nextFloat() * Math.PI.toFloat() + Math.PI.toFloat()
+            val speed = Random.nextFloat() * 2.5f + 0.8f
+            sandParticles.add(
+                SandParticle(
+                    x = x + Random.nextFloat() * 24f - 12f,
+                    y = y + Random.nextFloat() * 10f - 5f,
+                    vx = cos(angle.toDouble()).toFloat() * speed,
+                    vy = sin(angle.toDouble()).toFloat() * speed,
+                    size = Random.nextFloat() * 5f + 3f,
+                    color = sandColor,
+                    alpha = 220
+                )
+            )
+        }
+    }
+
     private fun getSpeciesSize(index: Int): Int {
         return when (index) {
-            in 0..8 -> 0   // Tiny: Guppy, Tetra, Sardine, Anchovy, Cardinal, Shrimp, Starfish, Crab, Clam
-            29, 30, 31 -> 0 // Tiny: Snail, Slug, Isopod
+            in 0..5 -> 0   // Tiny: Guppy, Tetra, Sardine, Anchovy, Cardinal, Shrimp
+            6, 7, 8 -> 0   // Starfish, Crab, Clam
+            29, 30, 31 -> 0 // Snail, Slug, Isopod
             in 9..12 -> 1  // Small: Clownfish, Butterfly, Damselfish, Seahorse
-            28, 32, 33 -> 1 // Small: Lobster, Golden Reward Fish, Pufferfish
+            32, 33 -> 1    // Golden Reward Fish, Pufferfish
+            35 -> 1        // Sand Flounder (Small flatfish)
+            28 -> 1        // Lobster baseline (overridden dynamically in spawnSingleFish)
+            34 -> 1        // Sea Mantis baseline (overridden dynamically in spawnSingleFish)
             in 13..17 -> 2 // Medium: Angelfish, Tang, Lionfish, Squid, Octopus
             in 18..21 -> 3 // Large: Dolphin, Sea Turtle, Stingray, Swordfish
             27 -> 3        // Large: Electric Eel
@@ -399,6 +559,8 @@ class FrenzyView @JvmOverloads constructor(
             30 -> 14            // Sea Slug slow crawl
             31 -> 15            // Giant Isopod crawl + roll ball
             33 -> 17            // Pufferfish defensive inflating behavior
+            34 -> 18            // Sea Mantis floor stalk + raptorial strike
+            35 -> 19            // Sand Flounder bottom glide + sand camouflage
             else -> 0           // Straight swimming
         }
     }
@@ -438,6 +600,8 @@ class FrenzyView @JvmOverloads constructor(
             31 -> Color.parseColor("#90A4AE") // Giant Isopod Slate Grey
             32 -> Color.parseColor("#FFD700") // Golden Reward Fish Gold
             33 -> Color.parseColor("#D4E157") // Pufferfish Coral Yellow-Green
+            34 -> Color.parseColor("#00E676") // Sea Mantis Emerald Green
+            35 -> Color.parseColor("#BCAAA4") // Sand Flounder Speckled Beige
             else -> Color.parseColor("#4CAF50")
         }
     }
@@ -453,12 +617,14 @@ class FrenzyView @JvmOverloads constructor(
             26 -> 1.2f
             21 -> 7f
             27 -> 6.0f
-            28 -> 1.2f // Lobster crawling speed
+            28 -> 1.3f // Lobster crawling speed
             29 -> 0.3f // Snail extremely slow
             30 -> 0.4f // Slug slow
             31 -> 0.8f // Isopod crawl
             32 -> 7.5f // Golden Reward Fish fast swimming
             33 -> 2.0f // Pufferfish slow drift
+            34 -> 1.8f // Sea Mantis crawling speed
+            35 -> 1.6f // Sand Flounder bottom glide
             in 9..11 -> Random.nextFloat() * 2f + 4f
             in 13..17 -> Random.nextFloat() * 1.5f + 3f
             in 18..20 -> Random.nextFloat() * 2f + 4.5f
@@ -480,6 +646,19 @@ class FrenzyView @JvmOverloads constructor(
             val b = bIterator.next()
             b.y -= b.speed
             if (b.y < -20f) bIterator.remove()
+        }
+
+        // Update Sand Dust Particles
+        val sIterator = sandParticles.iterator()
+        while (sIterator.hasNext()) {
+            val sp = sIterator.next()
+            sp.x += sp.vx
+            sp.y += sp.vy
+            sp.vy += 0.04f
+            sp.alpha -= 5
+            if (sp.alpha <= 0) {
+                sIterator.remove()
+            }
         }
 
         // 2. Ocean Floor seasons (60 seconds per theme)
@@ -510,6 +689,7 @@ class FrenzyView @JvmOverloads constructor(
                 if (i == j) continue
                 val f2 = otherFish[j]
                 if (j in deadFishIndices) continue
+                if (f2.isBuried && f2.burrowProgress > 0.4f) continue // Protected under bottom sand!
 
                 if (f1.size > f2.size) {
                     val dx = f2.x - f1.x
@@ -526,6 +706,14 @@ class FrenzyView @JvmOverloads constructor(
                             f1.isEating = true
                             f1.eatStartTime = now
                             spawnBiteBubbles(f2.x, f2.y)
+                            if (f1.speciesIndex == 27) { // Electric Eel shocks & eats prey fish!
+                                repeat(10) {
+                                    val vx = Random.nextFloat() * 10f - 5f
+                                    val vy = Random.nextFloat() * 10f - 5f
+                                    val sparkColor = if (Random.nextBoolean()) Color.parseColor("#00E5FF") else Color.parseColor("#FFEA00")
+                                    mineParticles.add(MineParticle(f2.x, f2.y, vx, vy, Random.nextFloat() * 4f + 2f, sparkColor, 255))
+                                }
+                            }
                             deadFishIndices.add(j)
                         }
                     }
@@ -545,6 +733,44 @@ class FrenzyView @JvmOverloads constructor(
         while (fIterator.hasNext()) {
             val fish = fIterator.next()
             fish.swimCycle += 0.08f
+
+            // Threat detection & sand burrowing state machine for bottom camouflage creatures
+            val canBurrow = (fish.behavior in intArrayOf(3, 12, 13, 15, 18, 19) || fish.speciesIndex in intArrayOf(7, 20, 28, 29, 31, 34, 35)) && fish.y > height - 150f
+            if (canBurrow) {
+                val dxP = playerX - fish.x
+                val dyP = playerY - fish.y
+                val distP = Math.hypot(dxP.toDouble(), dyP.toDouble()).toFloat()
+                val playerThreat = (playerSize > fish.size) && (distP < 240f) && (playerY > height - 200f)
+                
+                // Check if any larger AI predator is hunting nearby
+                val aiThreat = otherFish.any { other ->
+                    other !== fish && other.size > fish.size && Math.hypot((other.x - fish.x).toDouble(), (other.y - fish.y).toDouble()) < 210.0 && other.y > height - 180f
+                }
+
+                if (playerThreat || aiThreat) {
+                    if (!fish.isBuried) {
+                        fish.isBuried = true
+                        fish.burrowStartTime = now
+                        spawnSandPuff(fish.x, fish.y, 10)
+                    }
+                } else {
+                    // Safe! If buried for at least 2.2s and threat is far away, emerge!
+                    if (fish.isBuried && (now - fish.burrowStartTime > 2200L) && (distP > 280f)) {
+                        fish.isBuried = false
+                        fish.unburrowTime = now
+                        spawnSandPuff(fish.x, fish.y, 8)
+                    }
+                }
+
+                // Smoothly update burrowProgress (0f: visible, 1f: hidden under sand)
+                if (fish.isBuried) {
+                    fish.burrowProgress = ((now - fish.burrowStartTime) / 400f).coerceIn(0f, 1f)
+                } else if (fish.unburrowTime > 0L) {
+                    fish.burrowProgress = (1f - (now - fish.unburrowTime) / 400f).coerceIn(0f, 1f)
+                } else {
+                    fish.burrowProgress = 0f
+                }
+            }
 
             // Species Custom Behaviors
             when (fish.behavior) {
@@ -618,8 +844,17 @@ class FrenzyView @JvmOverloads constructor(
                     fish.x += if (fish.facingRight) fish.speed else -fish.speed
                     fish.y += sin(fish.swimCycle.toDouble() * 0.8).toFloat() * 1.5f
                 }
-                12 -> { // Lobster crawling + tail flip flee
-                    if (fish.isStartled && now - fish.startleTime < 1200L) {
+                12 -> { // Lobster crawling + aggression / tail flip flee
+                    val dxP = playerX - fish.x
+                    val dyP = playerY - fish.y
+                    val distP = Math.hypot(dxP.toDouble(), dyP.toDouble()).toFloat()
+
+                    if (fish.size > playerSize && distP < 190f && playerY > height - 150f) {
+                        // Large predatory lobster advances towards small player fish!
+                        fish.facingRight = dxP > 0
+                        fish.x += if (fish.facingRight) fish.speed * 2.2f else -fish.speed * 2.2f
+                        fish.y = height - 60f
+                    } else if (fish.isStartled && now - fish.startleTime < 1200L) {
                         // Dart backwards horizontally and rise slightly
                         fish.x += (if (fish.facingRight) -fish.speed else fish.speed) * 3.2f
                         fish.y = (fish.y - 4f).coerceAtLeast(height - 180f)
@@ -697,25 +932,58 @@ class FrenzyView @JvmOverloads constructor(
                     } else if (dP > 300f) {
                         // Safe: Deflate!
                         fish.isStartled = false
-                        // Swim normally
+                        fish.y += sin(fish.swimCycle.toDouble() * 0.3).toFloat() * 0.4f
                         fish.x += if (fish.facingRight) fish.speed else -fish.speed
-                        fish.y += sin(fish.swimCycle.toDouble() * 0.4).toFloat() * 0.8f
                     } else {
-                        // Maintain current state, drift/swim slowly
-                        if (!fish.isStartled) {
-                            fish.x += if (fish.facingRight) fish.speed * 0.5f else -fish.speed * 0.5f
-                            fish.y += sin(fish.swimCycle.toDouble() * 0.4).toFloat() * 0.8f
-                        } else {
-                            fish.y += sin(fish.swimCycle.toDouble() * 0.5).toFloat() * 0.2f
-                        }
+                        fish.x += if (fish.facingRight) fish.speed else -fish.speed
+                    }
+                }
+                18 -> { // Sea Mantis (Stomatopod): Floor stalking + explosive raptorial strike
+                    val dxP = playerX - fish.x
+                    val dyP = playerY - fish.y
+                    val distP = Math.hypot(dxP.toDouble(), dyP.toDouble()).toFloat()
+
+                    if (distP < 210f && playerY > height - 150f && !fish.isBuried) {
+                        // Target is within strike range! Turn and lunge with speed
+                        fish.facingRight = dxP > 0
+                        val lungeSpeed = if (fish.size > playerSize) 6.8f else 4.2f
+                        fish.x += if (fish.facingRight) lungeSpeed else -lungeSpeed
+                        fish.y = (height - 60f + sin(fish.swimCycle.toDouble() * 3.0).toFloat() * 4f).coerceIn(height - 120f, height - 45f)
+                    } else if (!fish.isBuried) {
+                        // Floor crawl
+                        fish.y = height - 58f
+                        fish.x += if (fish.facingRight) fish.speed else -fish.speed
+                        if (fish.x < 50f) fish.facingRight = true
+                        if (fish.x > width - 50f) fish.facingRight = false
+                    }
+                }
+                19 -> { // Sand Flounder / Flatfish: Undulating floor glide + sand camouflage
+                    if (!fish.isBuried) {
+                        fish.y = height - 58f + sin(fish.swimCycle.toDouble() * 0.6).toFloat() * 1.5f
+                        fish.x += if (fish.facingRight) fish.speed else -fish.speed
+                        if (fish.x < 50f) fish.facingRight = true
+                        if (fish.x > width - 50f) fish.facingRight = false
                     }
                 }
             }
 
-            // AI Vision & Reaction (Flee / Chase) - Decreased by 50% for balanced, enjoyable player hunting
-            if (fish.behavior != 4 && fish.behavior != 5 && fish.behavior != 17) {
-                val maxVisionDist = 150f // Reduced by 50% from 300f base
-                val maxVisionDepth = 60f // Reduced by 50% from 120f base
+            // AI Vision & Reaction (Flee / Chase) - only when not buried in sand
+            if (fish.behavior != 4 && fish.behavior != 5 && fish.behavior != 17 && (!fish.isBuried || fish.burrowProgress < 0.4f)) {
+                // Size-scaled AI Vision: Smaller creatures have reduced vision; larger and apex predators have sharp, far-reaching vision
+                val maxVisionDist = when (fish.size) {
+                    0 -> 75f   // Tiny prey (Guppy, Shrimp, Sardine, Snail, Slug): nearsighted (75px)
+                    1 -> 120f  // Small fish (Clownfish, Flounder, Butterflyfish): 120px
+                    2 -> 180f  // Medium predators (Angelfish, Tang, Lionfish, Squid): 180px
+                    3 -> 260f  // Large hunters (Dolphin, Stingray, Swordfish, Eel): 260px
+                    else -> 360f // Apex giants (Shark, Orca, Whale, Sea Monster): 360px far-reaching hawk vision!
+                }
+                val maxVisionDepth = when (fish.size) {
+                    0 -> 30f
+                    1 -> 50f
+                    2 -> 75f
+                    3 -> 110f
+                    else -> 150f
+                }
                 
                 var threatOnLeft = false
                 var threatOnRight = false
@@ -776,6 +1044,7 @@ class FrenzyView @JvmOverloads constructor(
                 // Check other AI fish
                 for (other in otherFish) {
                     if (other === fish) continue
+                    if (other.isBuried && other.burrowProgress > 0.4f) continue // Ignore buried fish
                     checkVision(other.x, other.y, other.size)
                 }
 
@@ -786,7 +1055,7 @@ class FrenzyView @JvmOverloads constructor(
 
                     if (threatOnLeft && threatOnRight) {
                         // Cornered! Swim up or down depending on average threat vertical position
-                        if (fish.behavior != 3 && fish.behavior !in 12..16) {
+                        if (fish.behavior != 3 && fish.behavior !in 12..16 && fish.behavior !in 18..19) {
                             val avgThreatY = (closestThreatLeftY + closestThreatRightY) / 2f
                             if (avgThreatY > fish.y) {
                                 fish.y = (fish.y - fish.speed * 1.5f).coerceAtLeast(80f)
@@ -802,7 +1071,7 @@ class FrenzyView @JvmOverloads constructor(
                                 16 -> { // Octopus: jet propulsion straight up to escape
                                     fish.y = (fish.y - fish.speed * 3.5f).coerceAtLeast(height - 260f)
                                 }
-                                // Snails (13), Slugs (14), Isopods (15), Hermit Crabs (3) cannot swim, so they shelter in-place
+                                // Snails (13), Slugs (14), Isopods (15), Hermit Crabs (3), Mantis (18), Flounder (19) shelter in-place in sand
                             }
                         }
                     } else if (threatOnLeft) {
@@ -814,7 +1083,7 @@ class FrenzyView @JvmOverloads constructor(
                             fish.facingRight = false
                         }
 
-                        if (fish.behavior != 3 && fish.behavior !in 12..16) {
+                        if (fish.behavior != 3 && fish.behavior !in 12..16 && fish.behavior !in 18..19) {
                             if (closestThreatLeftY < fish.y) {
                                 fish.y = (fish.y + fish.speed * 0.6f).coerceAtMost(height - 80f)
                             } else {
@@ -831,7 +1100,7 @@ class FrenzyView @JvmOverloads constructor(
                             fish.facingRight = false
                         }
 
-                        if (fish.behavior != 3 && fish.behavior !in 12..16) {
+                        if (fish.behavior != 3 && fish.behavior !in 12..16 && fish.behavior !in 18..19) {
                             if (closestThreatRightY < fish.y) {
                                 fish.y = (fish.y + fish.speed * 0.6f).coerceAtMost(height - 80f)
                             } else {
@@ -852,19 +1121,27 @@ class FrenzyView @JvmOverloads constructor(
                         fish.facingRight = false
                     }
 
-                    if (fish.behavior != 3 && fish.behavior !in 12..16) {
+                    val pursuitSpeedMult = when (fish.size) {
+                        0 -> 0.2f
+                        1 -> 0.35f
+                        2 -> 0.5f
+                        3 -> 0.65f
+                        else -> 0.8f // Apex predators close in swiftly
+                    }
+
+                    if (fish.behavior != 3 && fish.behavior !in 12..16 && fish.behavior !in 18..19) {
                         if (closestPreyY > fish.y) {
-                            fish.y = (fish.y + fish.speed * 0.4f).coerceAtMost(height - 80f)
+                            fish.y = (fish.y + fish.speed * pursuitSpeedMult).coerceAtMost(height - 80f)
                         } else {
-                            fish.y = (fish.y - fish.speed * 0.4f).coerceAtLeast(80f)
+                            fish.y = (fish.y - fish.speed * pursuitSpeedMult).coerceAtLeast(80f)
                         }
                     }
-                    fish.x += if (fish.facingRight) fish.speed * 0.4f else -fish.speed * 0.4f
+                    fish.x += if (fish.facingRight) fish.speed * pursuitSpeedMult else -fish.speed * pursuitSpeedMult
                 }
             }
 
             // Boundary cleanups
-            if (fish.behavior != 3 && fish.behavior != 4 && fish.behavior !in 12..16) {
+            if (fish.behavior != 3 && fish.behavior != 4 && fish.behavior !in 12..16 && fish.behavior != 18 && fish.behavior != 19) {
                 if ((fish.facingRight && fish.x > width + 250f) || (!fish.facingRight && fish.x < -250f)) {
                     fIterator.remove()
                     continue
@@ -872,6 +1149,11 @@ class FrenzyView @JvmOverloads constructor(
             }
 
             // Collision check
+            if (fish.isBuried && fish.burrowProgress > 0.4f) {
+                // Creature is safely concealed under bottom sand! Enemies cannot eat or harm it!
+                continue
+            }
+
             val dx = fish.x - playerX
             val dy = fish.y - playerY
             val dist = Math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
@@ -909,16 +1191,54 @@ class FrenzyView @JvmOverloads constructor(
                 }
 
                 if (fish.speciesIndex == 27) { // Electric Eel
-                    if (now >= playerShieldUntil) {
-                        playerStunUntil = now + 3000L
-                        SoundManager.playError()
-                        deathReason = context.getString(R.string.frenzy_death_eel)
-                        deathReasonDisplayUntil = now + 1800L
+                    if (fish.size > playerSize) {
+                        // Electric Eel is larger than player fish! Shocks & eats player!
+                        if (now >= playerShieldUntil) {
+                            lives--
+                            playerStunUntil = now + 2500L
+                            deathReason = context.getString(R.string.frenzy_death_eaten, getSpeciesName(27).uppercase())
+                            deathReasonDisplayUntil = now + 1800L
+                            lastIndicatorTriggerTime = now
+                            playerShieldUntil = now + 4000L
+                            SoundManager.playError()
+                            spawnBiteBubbles(playerX, playerY)
+
+                            // High-voltage electric shock particles
+                            repeat(16) {
+                                val vx = Random.nextFloat() * 14f - 7f
+                                val vy = Random.nextFloat() * 14f - 7f
+                                val sparkColor = if (Random.nextBoolean()) Color.parseColor("#00E5FF") else Color.parseColor("#FFEA00")
+                                mineParticles.add(MineParticle(playerX, playerY, vx, vy, Random.nextFloat() * 6f + 3f, sparkColor, 255))
+                            }
+
+                            if (lives <= 0) {
+                                gameOver = true
+                                val isNewHigh = score > best
+                                if (isNewHigh) {
+                                    ScoreManager.updateHighScore(context, gameKey, score)
+                                    best = score
+                                }
+                                celebrationManager.start(width / 2f, height / 2f)
+                                onGameOver?.invoke(score)
+                            } else {
+                                playerX = width / 2f
+                                playerY = height / 2f
+                            }
+                        }
+                        continue
+                    } else if (fish.size == playerSize) {
+                        // Equal size: Shock & stun player, bounce eel away
+                        if (now >= playerShieldUntil) {
+                            playerStunUntil = now + 2500L
+                            SoundManager.playError()
+                            deathReason = context.getString(R.string.frenzy_death_eel)
+                            deathReasonDisplayUntil = now + 1800L
+                        }
+                        fish.facingRight = !fish.facingRight
+                        fish.x += if (fish.facingRight) 70f else -70f
+                        continue
                     }
-                    // bounce eel away
-                    fish.facingRight = !fish.facingRight
-                    fish.x += if (fish.facingRight) 70f else -70f
-                    continue
+                    // If playerSize > fish.size, fall through to main eating loop below so player can eat the Eel!
                 }
                 
                 if (fish.speciesIndex == 15 && playerSize < 3) { // Lionfish (Poison touch)
@@ -933,6 +1253,45 @@ class FrenzyView @JvmOverloads constructor(
                     fish.x += if (fish.facingRight) 50f else -50f
                     continue
                 }
+
+                // Lobster (28) and Sea Mantis (34) Predation / Attack Check
+                if (fish.speciesIndex == 28 || fish.speciesIndex == 34) {
+                    if (fish.size > playerSize) {
+                        // Monster Lobster or Sea Mantis is larger than player fish! Attacks / eats player!
+                        if (now >= playerShieldUntil) {
+                            lives--
+                            deathReason = context.getString(R.string.frenzy_death_eaten, getSpeciesName(fish.speciesIndex).uppercase())
+                            deathReasonDisplayUntil = now + 1800L
+                            lastIndicatorTriggerTime = now
+                            playerShieldUntil = now + 4000L // 4 seconds invulnerable shield
+                            playerStunUntil = 0L
+                            SoundManager.playError()
+                            spawnBiteBubbles(playerX, playerY)
+
+                            // Blood / impact particles
+                            repeat(14) {
+                                val vx = Random.nextFloat() * 10f - 5f
+                                val vy = Random.nextFloat() * 10f - 5f
+                                mineParticles.add(MineParticle(playerX, playerY, vx, vy, Random.nextFloat() * 5f + 3f, Color.parseColor("#E53935"), 255))
+                            }
+
+                            if (lives <= 0) {
+                                gameOver = true
+                                val isNewHigh = score > best
+                                if (isNewHigh) {
+                                    ScoreManager.updateHighScore(context, gameKey, score)
+                                    best = score
+                                }
+                                celebrationManager.start(width / 2f, height / 2f)
+                                onGameOver?.invoke(score)
+                            } else {
+                                playerX = width / 2f
+                                playerY = height / 2f
+                            }
+                        }
+                        continue
+                    }
+                }
                 
                 // MOUTH EATING DIRECTION CONSTRAINT
                 // Hunter can only eat if target is in front of its mouth direction
@@ -941,6 +1300,24 @@ class FrenzyView @JvmOverloads constructor(
 
                 if (playerSize > fish.size) {
                     if (playerCanEat) {
+                        if (fish.speciesIndex == 27) { // Electric Eel eaten by bigger player!
+                            score += 350
+                            SoundManager.playScore()
+                            playerIsEating = true
+                            playerEatStartTime = now
+                            spawnBiteBubbles(fish.x, fish.y)
+                            // Electric shock sparks burst on eel consumed
+                            repeat(16) {
+                                val vx = Random.nextFloat() * 12f - 6f
+                                val vy = Random.nextFloat() * 12f - 6f
+                                val sparkColor = if (Random.nextBoolean()) Color.parseColor("#00E5FF") else Color.parseColor("#FFEA00")
+                                mineParticles.add(MineParticle(fish.x, fish.y, vx, vy, Random.nextFloat() * 5f + 3f, sparkColor, 255))
+                            }
+                            addFoodProgress(1)
+                            fIterator.remove()
+                            continue
+                        }
+
                         if (fish.speciesIndex == 32) { // Golden Rainbow Fish eaten!
                             score += 200
                             playerShieldUntil = now + 5000L // 5 seconds invulnerable shield
@@ -966,39 +1343,12 @@ class FrenzyView @JvmOverloads constructor(
                             continue
                         }
 
-                        fishEatenCount++
                         playerIsEating = true
                         playerEatStartTime = now
                         spawnBiteBubbles(fish.x, fish.y)
                         score += (fish.size + 1) * 10
                         SoundManager.playScore()
-
-                        // Growth logic
-                        if (fishEatenCount >= targetFishToWin) {
-                            gameWon = true
-                            val isNewHigh = score > best
-                            if (isNewHigh) {
-                                ScoreManager.updateHighScore(context, gameKey, score)
-                                best = score
-                            }
-                            celebrationManager.start(width / 2f, height / 2f)
-                        } else if (fishEatenCount == 15) {
-                            playerSize = 2
-                            lastIndicatorTriggerTime = now
-                            SoundManager.playSuccess()
-                        } else if (fishEatenCount == 40) {
-                            playerSize = 3
-                            lastIndicatorTriggerTime = now
-                            SoundManager.playSuccess()
-                        } else if (fishEatenCount == 75) {
-                            playerSize = 4
-                            lastIndicatorTriggerTime = now
-                            SoundManager.playSuccess()
-                        } else if (fishEatenCount == 120) {
-                            playerSize = 5
-                            lastIndicatorTriggerTime = now
-                            SoundManager.playSuccess()
-                        }
+                        addFoodProgress(1)
                         fIterator.remove()
                         continue
                     }
@@ -1011,7 +1361,7 @@ class FrenzyView @JvmOverloads constructor(
                     if (isApex && isPlayerBehindApex && playerCanEat && playerSize < 4) {
                         // Player bites apex tail!
                         score += 30
-                        fishEatenCount = (fishEatenCount + 1).coerceAtMost(targetFishToWin) // boost progress
+                        addFoodProgress(1)
                         SoundManager.playSuccess()
                         
                         // Startle predator
@@ -1128,7 +1478,7 @@ class FrenzyView @JvmOverloads constructor(
                 val fdy = m.y - f.y
                 val fdist = Math.sqrt((fdx * fdx + fdy * fdy).toDouble()).toFloat()
                 if (fdist < m.radius * 1.3f + getFishRadius(f.size) + 5f) {
-                    triggerMineExplosion(m.x, m.y)
+                    triggerMineExplosion(m.x, m.y, directHitFish = f)
                     mineExploded = true
                     break
                 }
@@ -1192,39 +1542,12 @@ class FrenzyView @JvmOverloads constructor(
                 val pdy = meat.y - playerY
                 val pdist = Math.sqrt((pdx * pdx + pdy * pdy).toDouble()).toFloat()
                 if (pdist < getFishRadius(playerSize) + meat.radius) {
-                    fishEatenCount++
                     playerIsEating = true
                     playerEatStartTime = now
                     spawnBiteBubbles(meat.x, meat.y)
                     score += meat.points
                     SoundManager.playScore()
-
-                    // Growth logic
-                    if (fishEatenCount >= targetFishToWin) {
-                        gameWon = true
-                        val isNewHigh = score > best
-                        if (isNewHigh) {
-                            ScoreManager.updateHighScore(context, gameKey, score)
-                            best = score
-                        }
-                        celebrationManager.start(width / 2f, height / 2f)
-                    } else if (fishEatenCount == 15) {
-                        playerSize = 2
-                        lastIndicatorTriggerTime = now
-                        SoundManager.playSuccess()
-                    } else if (fishEatenCount == 40) {
-                        playerSize = 3
-                        lastIndicatorTriggerTime = now
-                        SoundManager.playSuccess()
-                    } else if (fishEatenCount == 75) {
-                        playerSize = 4
-                        lastIndicatorTriggerTime = now
-                        SoundManager.playSuccess()
-                    } else if (fishEatenCount == 120) {
-                        playerSize = 5
-                        lastIndicatorTriggerTime = now
-                        SoundManager.playSuccess()
-                    }
+                    addFoodProgress(1)
                     meatIterator.remove()
                     continue
                 }
@@ -1252,11 +1575,11 @@ class FrenzyView @JvmOverloads constructor(
         }
     }
 
-    private fun triggerMineExplosion(ex: Float, ey: Float) {
+    private fun triggerMineExplosion(ex: Float, ey: Float, directHitFish: AIFish? = null) {
         SoundManager.playError()
-        mineExplosions.add(MineExplosion(ex, ey, 10f, 160f, 255))
+        mineExplosions.add(MineExplosion(ex, ey, 10f, 170f, 255))
 
-        // Spawn particles
+        // Spawn explosion particles
         repeat(35) {
             val angle = Random.nextFloat() * 2f * Math.PI.toFloat()
             val speed = Random.nextFloat() * 9f + 4f
@@ -1306,18 +1629,20 @@ class FrenzyView @JvmOverloads constructor(
 
         // Check AI damage & spawn fresh floating meat chunks
         val affected = otherFish.filter {
-            val adx = it.x - ex
-            val ady = it.y - ey
-            Math.sqrt((adx * adx + ady * ady).toDouble()).toFloat() < 160f
+            it == directHitFish || Math.sqrt(((it.x - ex) * (it.x - ex) + (it.y - ey) * (it.y - ey)).toDouble()).toFloat() < 170f
+        }.toMutableSet()
+        if (directHitFish != null) {
+            affected.add(directHitFish)
         }
+
         for (fish in affected) {
-            val isSlowFloorCreature = fish.speciesIndex in listOf(8, 12, 28, 29, 30, 31) // Clam, Hermit Crab, Starfish, Snail, Slug, Isopod
+            val isSlowFloorCreature = fish.speciesIndex in listOf(6, 7, 8, 12, 28, 29, 30, 31, 34) // Starfish, Crab, Clam, Lobster, Snail, Slug, Isopod, Sea Mantis
             val meatCount = when {
-                isSlowFloorCreature -> 1 // Slow and easy floor creatures give very little meat
+                isSlowFloorCreature -> 3 + Random.nextInt(2) // 3-4 chunks
                 fish.size >= 3 -> 6 + Random.nextInt(3) // 6-8 chunks for huge apex predators
                 fish.size == 2 -> 4 + Random.nextInt(2) // 4-5 chunks for big fish
-                fish.size == 1 -> 2 + Random.nextInt(2) // 2-3 chunks for medium fish
-                else -> 1 // 1 chunk for small fish
+                fish.size == 1 -> 3 + Random.nextInt(2) // 3-4 chunks for medium fish
+                else -> 2 // 2 chunks for small fish
             }
             repeat(meatCount) {
                 val angle = Random.nextFloat() * 2f * Math.PI.toFloat()
@@ -1329,12 +1654,12 @@ class FrenzyView @JvmOverloads constructor(
                     else -> Color.parseColor("#FFE0B2") // Tender Flesh
                 }
                 val meatRad = when {
-                    isSlowFloorCreature -> Random.nextFloat() * 2f + 5f // 5-7px (very small meat morsel)
+                    isSlowFloorCreature -> Random.nextFloat() * 3f + 8f // 8-11px
                     fish.size in 3..4 -> Random.nextFloat() * 5f + 14f // 14-19px
                     fish.size == 2 -> Random.nextFloat() * 4f + 11f // 11-15px
                     else -> Random.nextFloat() * 3f + 8f // 8-11px
                 }
-                val meatPts = if (isSlowFloorCreature) 10 else (fish.size + 1) * 35
+                val meatPts = (fish.size + 1) * 25
                 floatingMeats.add(
                     FloatingMeat(
                         x = fish.x + (Random.nextFloat() - 0.5f) * 24f,
@@ -1353,11 +1678,15 @@ class FrenzyView @JvmOverloads constructor(
 
     private fun getFishRadius(size: Int): Float {
         return when(size) {
-            0 -> 15f
-            1 -> 26f
-            2 -> 45f
-            3 -> 65f
-            else -> 100f // Apex Shark/Whale/Sea Monster size
+            0 -> 14f  // Tiny prey
+            1 -> 22f  // Level 1: Guppy
+            2 -> 30f  // Level 2: Blue Tang
+            3 -> 40f  // Level 3: Royal Angelfish
+            4 -> 52f  // Level 4: Lionfish
+            5 -> 65f  // Level 5: Barracuda
+            6 -> 78f  // Level 6: Dolphin (78px - smaller than Great White Shark)
+            7 -> 96f  // Level 7: Great White Shark (96px - bigger than Dolphin)
+            else -> 118f // Level 8: Apex Orca (118px - king of ocean predators)
         }
     }
 
@@ -1378,6 +1707,16 @@ class FrenzyView @JvmOverloads constructor(
         // 2. Draw Sea Bottom Background & Kelp
         drawSeaBed(canvas)
 
+        // Draw Sand Dust Puff Particles
+        for (sp in sandParticles) {
+            paint.reset()
+            paint.isAntiAlias = true
+            paint.style = Paint.Style.FILL
+            paint.color = sp.color
+            paint.alpha = sp.alpha
+            canvas.drawCircle(sp.x, sp.y, sp.size, paint)
+        }
+
         // 3. Draw AI Fish
         paint.reset()
         paint.isAntiAlias = true
@@ -1386,15 +1725,24 @@ class FrenzyView @JvmOverloads constructor(
             val isFlashing = fish.isStartled && (System.currentTimeMillis() - fish.startleTime < 800L) && ((System.currentTimeMillis() / 100) % 2 == 0L)
             
             // Draw special indicator aura BEFORE drawing the species itself
-            if (fish.speciesIndex == 27) { // Electric Eel (Yellow crackle lightning aura)
+            if (fish.speciesIndex == 27) { // Electric Eel (Multi-layered plasma energy field & high-voltage surge aura)
+                val now = System.currentTimeMillis()
+                val isSurging = ((now / 100) % 24).toInt() >= 17
+                val r = getFishRadius(fish.size)
                 paint.reset()
                 paint.isAntiAlias = true
                 paint.style = Paint.Style.STROKE
-                paint.strokeWidth = 3f
-                paint.color = Color.parseColor("#FFF176") // Bright neon yellow
-                if ((System.currentTimeMillis() / 150) % 2 == 0L) {
-                    val r = getFishRadius(fish.size)
-                    canvas.drawCircle(fish.x, fish.y, r + 15f, paint)
+                
+                // Pulsing outer ionization aura
+                paint.strokeWidth = if (isSurging) 4.5f else 2.5f
+                paint.color = Color.parseColor(if (isSurging) "#00E5FF" else "#FFF176")
+                paint.alpha = if (isSurging) 220 else (140 + (50 * sin(now / 120.0).toFloat()).toInt()).coerceIn(60, 240)
+                canvas.drawCircle(fish.x, fish.y, r + 18f + 5f * sin(now / 80.0).toFloat(), paint)
+                
+                if (isSurging) {
+                    paint.color = Color.WHITE
+                    paint.strokeWidth = 2f
+                    canvas.drawCircle(fish.x, fish.y, r + 24f, paint)
                 }
             } else if (fish.speciesIndex == 15) { // Lionfish (Purple toxic bubble aura)
                 paint.reset()
@@ -1524,10 +1872,13 @@ class FrenzyView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         val playerColor = when (playerSize) {
             1 -> Color.parseColor("#FF7043") // Orange Guppy
-            2 -> Color.parseColor("#FFD54F") // Yellow Angelfish
-            3 -> Color.parseColor("#FFF3E0") // Silver-Orange Lionfish
-            4 -> Color.parseColor("#90CAF9") // Blue Dolphin
-            else -> Color.parseColor("#00E5FF") // Neon Cyan Apex King
+            2 -> Color.parseColor("#4FC3F7") // Blue Tang
+            3 -> Color.parseColor("#FFD54F") // Yellow Angelfish
+            4 -> Color.parseColor("#FFF3E0") // Lionfish
+            5 -> Color.parseColor("#78909C") // Barracuda
+            6 -> Color.parseColor("#00ACC1") // Dolphin Cyan
+            7 -> Color.parseColor("#37474F") // Great White Shark Slate
+            else -> Color.parseColor("#212121") // Orca Black
         }
         
         // Blink player if stunned
@@ -1759,9 +2110,12 @@ class FrenzyView @JvmOverloads constructor(
         
         // Lives (Draw cute fish silhouettes instead of text hearts)
         val fishColor = Color.parseColor("#FF7043") // Orange fish icons
+        val topMargin = max(45f, height * 0.055f)
+        val leftMargin = max(45f, width * 0.04f)
+        val rightMargin = min(width - 45f, width * 0.96f)
         for (i in 0 until lives.coerceAtLeast(0)) {
-            val fx = 55f + i * 48f
-            val fy = height * 0.042f
+            val fx = leftMargin + i * 48f
+            val fy = topMargin
             drawLifeFishIcon(canvas, fx, fy, 14f, fishColor)
         }
 
@@ -1769,7 +2123,7 @@ class FrenzyView @JvmOverloads constructor(
         val barW = 320f
         val barH = 20f
         val barX = width / 2f - barW / 2f
-        val barY = height * 0.035f
+        val barY = topMargin - 10f
 
         // Draw background bar
         paint.color = Color.parseColor("#55FFFFFF")
@@ -1777,23 +2131,24 @@ class FrenzyView @JvmOverloads constructor(
         drawRectF.set(barX, barY, barX + barW, barY + barH)
         canvas.drawRoundRect(drawRectF, 8f, 8f, paint)
 
-        // Draw progress fill
-        val ratio = fishEatenCount.toFloat() / targetFishToWin
+        // Draw progress fill for current stage
+        val req = getStageRequiredFood(playerSize)
+        val ratio = (stageEatenCount.toFloat() / req).coerceIn(0f, 1f)
         paint.color = Color.parseColor("#4CAF50")
         drawRectF.set(barX, barY, barX + (barW * ratio), barY + barH)
         canvas.drawRoundRect(drawRectF, 8f, 8f, paint)
 
-        // Stage Tag
+        // Stage Tag - Clean text without (* / *) count!
         paint.color = Color.WHITE
-        paint.textSize = 28f
+        paint.textSize = 26f
         paint.textAlign = Paint.Align.CENTER
-        val currentLabel = sizeNames[(playerSize - 1).coerceIn(0, 4)]
-        canvas.drawText(context.getString(R.string.frenzy_stage, currentLabel, fishEatenCount, targetFishToWin), width / 2f, barY + 54f, paint)
+        val currentLabel = sizeNames[(playerSize - 1).coerceIn(0, sizeNames.size - 1)]
+        canvas.drawText(context.getString(R.string.frenzy_stage, currentLabel), width / 2f, barY + 50f, paint)
 
         // Best
         paint.textAlign = Paint.Align.RIGHT
-        paint.textSize = 36f
-        canvas.drawText("${context.getString(R.string.best_label)}: $best  ${context.getString(R.string.score_label)}: $score", width - 40f, height * 0.05f, paint)
+        paint.textSize = 32f
+        canvas.drawText("${context.getString(R.string.best_label)}: $best  ${context.getString(R.string.score_label)}: $score", rightMargin, topMargin + 10f, paint)
     }
 
     // --- DETAILED SIMULATION SPRITES DRAWING ---
@@ -1804,217 +2159,51 @@ class FrenzyView @JvmOverloads constructor(
         paint.reset()
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
-        paint.color = color
 
         // Mouth snap open detection (lasts 200ms)
         val now = System.currentTimeMillis()
         val mouthOpen = playerIsEating && (now - playerEatStartTime < 200L)
         val cycle = (now / 100.0).toFloat()
 
-        if (size == 4) {
-            // Dolphin (Sleek body, rostrum beak, tall curved dorsal, horizontal fluke flipping up/down)
-            val tailYOffset = sin(cycle.toDouble() * 0.7).toFloat() * r * 0.35f
-            
-            // 1. Sleek Torpedo Body
-            drawRectF.set(cx - r * 1.1f, cy - r * 0.45f, cx + r * 1.1f, cy + r * 0.45f)
-            if (mouthOpen) {
-                drawPath.reset()
-                val sweepAngle = 295f
-                val startAngle = if (facingRight) 32f else 212f
-                drawPath.addArc(drawRectF, startAngle, sweepAngle)
-                drawPath.lineTo(cx, cy)
-                drawPath.close()
-                canvas.drawPath(drawPath, paint)
-            } else {
-                canvas.drawOval(drawRectF, paint)
-            }
+        when (size) {
+            1 -> {
+                // STAGE 1: GUPPY / CLOWNFISH (Orange, white bands, fan tail, dorsal wave)
+                val bodyColor = Color.parseColor("#FF7043")
+                paint.color = bodyColor
 
-            // Rostrum Snout (Beak)
-            val beak = drawPath2.apply {
-                reset()
-                moveTo(cx + r * 1.0f * dir, cy - r * 0.1f)
-                lineTo(cx + r * 1.5f * dir, cy + r * 0.05f)
-                lineTo(cx + r * 0.9f * dir, cy + r * 0.2f)
-                close()
-            }
-            canvas.drawPath(beak, paint)
-
-            // 2. Tall Curved Dorsal Fin
-            val dorsal = drawPath3.apply {
-                reset()
-                moveTo(cx - r * 0.2f * dir, cy - r * 0.4f)
-                quadTo(cx - r * 0.6f * dir, cy - r * 0.95f, cx - r * 0.7f * dir, cy - r * 0.85f)
-                quadTo(cx - r * 0.4f * dir, cy - r * 0.5f, cx + r * 0.2f * dir, cy - r * 0.4f)
-                close()
-            }
-            canvas.drawPath(dorsal, paint)
-
-            // 3. Pec Flippers
-            val pec = drawPath4.apply {
-                reset()
-                moveTo(cx + r * 0.15f * dir, cy + r * 0.2f)
-                lineTo(cx - r * 0.25f * dir, cy + r * 0.7f)
-                lineTo(cx - r * 0.35f * dir, cy + r * 0.3f)
-                close()
-            }
-            canvas.drawPath(pec, paint)
-
-            // 4. Horizontal Flukes (Tail flips UP and DOWN)
-            val tx = cx - r * 1.1f * dir
-            val ty = cy + tailYOffset
-            val fluke = drawPath5.apply {
-                reset()
-                moveTo(tx, ty)
-                lineTo(tx - r * 0.4f * dir, ty - r * 0.5f)
-                lineTo(tx - r * 0.5f * dir, ty)
-                lineTo(tx - r * 0.4f * dir, ty + r * 0.5f)
-                close()
-            }
-            canvas.drawPath(fluke, paint)
-
-            // Connect body to flukes
-            val stock = drawPath2.apply {
-                reset()
-                moveTo(cx - r * 0.5f * dir, cy - r * 0.2f)
-                quadTo(cx - r * 0.9f * dir, cy + tailYOffset * 0.5f, tx, ty)
-                lineTo(tx, ty + r * 0.1f)
-                quadTo(cx - r * 0.9f * dir, cy + r * 0.2f + tailYOffset * 0.5f, cx - r * 0.5f * dir, cy + r * 0.2f)
-                close()
-            }
-            canvas.drawPath(stock, paint)
-
-            // 5. Cute Eye with white highlight
-            paint.color = Color.WHITE
-            canvas.drawCircle(cx + r * 0.65f * dir, cy - r * 0.15f, r * 0.16f, paint)
-            paint.color = Color.BLACK
-            canvas.drawCircle(cx + r * 0.65f * dir, cy - r * 0.15f, r * 0.08f, paint)
-            paint.color = Color.WHITE
-            canvas.drawCircle(cx + r * 0.67f * dir, cy - r * 0.17f, r * 0.04f, paint)
-        } else if (size == 5) {
-            // Orca style body with white belly, white eye patch, massive vertical dorsal, and horizontal fluke tail
-            val tailYOffset = sin(cycle.toDouble() * 0.7).toFloat() * r * 0.2f
-
-            // 1. White underbelly and patches
-            paint.color = Color.WHITE
-            drawRectF.set(cx - r, cy, cx + r, cy + r * 0.5f)
-            canvas.drawOval(drawRectF, paint) // white belly
-            // Eye patch
-            drawRectF2.set(cx + r * 0.25f * dir, cy - r * 0.35f, cx + r * 0.6f * dir, cy - r * 0.15f)
-            canvas.drawOval(drawRectF2, paint)
-
-            // 2. Main Jet-Black/Dark Body
-            paint.color = color
-            drawRectF.set(cx - r, cy - r * 0.55f, cx + r, cy + r * 0.15f)
-            if (mouthOpen) {
-                drawPath.reset()
-                val sweepAngle = 295f
-                val startAngle = if (facingRight) 32f else 212f
-                drawPath.addArc(drawRectF, startAngle, sweepAngle)
-                drawPath.lineTo(cx, cy)
-                drawPath.close()
-                canvas.drawPath(drawPath, paint)
-            } else {
-                canvas.drawOval(drawRectF, paint)
-            }
-
-            // Head/Snout (Blunt and rounded)
-            val head = drawPath2.apply {
-                reset()
-                moveTo(cx + r * 0.5f * dir, cy - r * 0.45f)
-                quadTo(cx + r * 1.2f * dir, cy - r * 0.25f, cx + r * 1.1f * dir, cy + r * 0.1f)
-                lineTo(cx + r * 0.5f * dir, cy + r * 0.15f)
-                close()
-            }
-            canvas.drawPath(head, paint)
-
-            // 3. Massive Tall Dorsal Fin
-            val dorsal = drawPath3.apply {
-                reset()
-                moveTo(cx - r * 0.2f * dir, cy - r * 0.4f)
-                lineTo(cx - r * 0.5f * dir, cy - r * 1.2f) // Very tall!
-                lineTo(cx + r * 0.2f * dir, cy - r * 0.4f)
-                close()
-            }
-            canvas.drawPath(dorsal, paint)
-
-            // 4. Horizontal Fluke (Tail flips UP and DOWN)
-            val tx = cx - r * 1.0f * dir
-            val ty = cy + tailYOffset
-            val fluke = drawPath4.apply {
-                reset()
-                moveTo(tx, ty)
-                lineTo(tx - r * 0.4f * dir, ty - r * 0.6f)
-                lineTo(tx - r * 0.5f * dir, ty)
-                lineTo(tx - r * 0.4f * dir, ty + r * 0.6f)
-                close()
-            }
-            canvas.drawPath(fluke, paint)
-
-            // Connect body to fluke
-            val stock = drawPath5.apply {
-                reset()
-                moveTo(cx - r * 0.5f * dir, cy - r * 0.2f)
-                quadTo(cx - r * 0.8f * dir, cy + tailYOffset * 0.5f, tx, ty)
-                lineTo(tx, ty + r * 0.1f)
-                quadTo(cx - r * 0.8f * dir, cy + r * 0.2f + tailYOffset * 0.5f, cx - r * 0.5f * dir, cy + r * 0.2f)
-                close()
-            }
-            canvas.drawPath(stock, paint)
-
-            // 5. Eye (drawn in black with highlight)
-            paint.color = Color.BLACK
-            canvas.drawCircle(cx + r * 0.65f * dir, cy - r * 0.1f, r * 0.08f, paint)
-            paint.color = Color.WHITE
-            canvas.drawCircle(cx + r * 0.67f * dir, cy - r * 0.12f, r * 0.025f, paint)
-        } else {
-            // Standard sizes 1, 2, 3
-            // Tail Fin with smooth swim wagging!
-            val tailWag = sin(cycle.toDouble() * 0.8).toFloat() * r * 0.25f
-            val tailPath = drawPath2.apply {
-                reset()
-                if (size == 1) { // Guppy fan tail
+                // 1. Fan Tail with smooth swimming wag
+                val tailWag = sin(cycle.toDouble() * 0.8).toFloat() * r * 0.25f
+                val tailPath = drawPath2.apply {
+                    reset()
                     moveTo(cx - r * 0.8f * dir, cy)
                     quadTo(cx - r * 1.4f * dir + tailWag * dir, cy - r * 0.9f, cx - r * 1.6f * dir + tailWag * dir, cy - r * 0.5f)
                     lineTo(cx - r * 1.6f * dir + tailWag * dir, cy + r * 0.5f)
                     quadTo(cx - r * 1.4f * dir + tailWag * dir, cy + r * 0.9f, cx - r * 0.8f * dir, cy)
-                } else { // Standard tail
-                    moveTo(cx - r * 0.8f * dir, cy)
-                    lineTo(cx - r * 1.5f * dir + tailWag * dir, cy - r * 0.6f)
-                    lineTo(cx - r * 1.3f * dir + tailWag * dir, cy)
-                    lineTo(cx - r * 1.5f * dir + tailWag * dir, cy + r * 0.6f)
-                }
-                close()
-            }
-            canvas.drawPath(tailPath, paint)
-
-            // Body Shape
-            if (size == 2) { // Angelfish (Tall vertical diamond)
-                val diamond = drawPath3.apply {
-                    reset()
-                    moveTo(cx, cy - r * 1.3f)
-                    if (mouthOpen) {
-                        if (facingRight) {
-                            lineTo(cx + r * 0.5f, cy - r * 0.3f)
-                            lineTo(cx + r * 0.1f, cy)
-                            lineTo(cx + r * 0.5f, cy + r * 0.3f)
-                        } else {
-                            lineTo(cx + r * 0.9f * dir, cy)
-                        }
-                    } else {
-                        lineTo(cx + r * 0.9f * dir, cy)
-                    }
-                    lineTo(cx, cy + r * 1.3f)
-                    if (mouthOpen && !facingRight) {
-                        lineTo(cx - r * 0.5f, cy + r * 0.3f)
-                        lineTo(cx - r * 0.1f, cy)
-                        lineTo(cx - r * 0.5f, cy - r * 0.3f)
-                    } else {
-                        lineTo(cx - r * 0.9f * dir, cy)
-                    }
                     close()
                 }
-                canvas.drawPath(diamond, paint)
-            } else { // Size 1 (Guppy) & 3 (Lionfish) standard oval body
+                canvas.drawPath(tailPath, paint)
+
+                // 2. Animated Dorsal Fin
+                val dorsalWave = sin(cycle.toDouble() * 1.2).toFloat() * (r * 0.15f)
+                val dorsal = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.45f * dir, cy - r * 0.55f)
+                    quadTo(cx - r * 0.1f * dir + dorsalWave * dir, cy - r * 1.05f + dorsalWave, cx + r * 0.25f * dir, cy - r * 0.5f)
+                    close()
+                }
+                canvas.drawPath(dorsal, paint)
+
+                // 3. Pelvic Fin
+                val ventral = drawPath4.apply {
+                    reset()
+                    moveTo(cx - r * 0.15f * dir, cy + r * 0.55f)
+                    lineTo(cx - r * 0.4f * dir + dorsalWave * 0.6f * dir, cy + r * 0.95f)
+                    lineTo(cx + r * 0.05f * dir, cy + r * 0.55f)
+                    close()
+                }
+                canvas.drawPath(ventral, paint)
+
+                // 4. Body Oval
                 drawRectF.set(cx - r, cy - r * 0.62f, cx + r, cy + r * 0.62f)
                 if (mouthOpen) {
                     drawPath.reset()
@@ -2027,41 +2216,623 @@ class FrenzyView @JvmOverloads constructor(
                 } else {
                     canvas.drawOval(drawRectF, paint)
                 }
-            }
 
-            // Details & Stripes
-            if (size == 1) { // Clownfish stripes
+                // 5. White Clownfish Stripes with dark borders
                 paint.color = Color.WHITE
                 canvas.drawRect(cx - r * 0.2f * dir, cy - r * 0.5f, cx + r * 0.05f * dir, cy + r * 0.5f, paint)
                 canvas.drawRect(cx + r * 0.3f * dir, cy - r * 0.45f, cx + r * 0.45f * dir, cy + r * 0.45f, paint)
-            } else if (size == 2) { // Angelfish neon stripes
-                paint.color = Color.parseColor("#00E5FF")
-                canvas.drawRect(cx - r * 0.3f * dir, cy - r * 0.8f, cx - r * 0.15f * dir, cy + r * 0.8f, paint)
-                paint.color = Color.parseColor("#D500F9")
-                canvas.drawRect(cx + r * 0.1f * dir, cy - r * 0.8f, cx + r * 0.25f * dir, cy + r * 0.8f, paint)
-            } else if (size == 3) { // Lionfish spikes
-                paint.color = Color.parseColor("#FF5722")
-                paint.strokeWidth = 3f
-                paint.style = Paint.Style.STROKE
-                for (angle in 30..330 step 30) {
-                    val rad = Math.toRadians(angle.toDouble())
-                    val sx = (cx + r * Math.cos(rad)).toFloat()
-                    val sy = (cy + r * Math.sin(rad)).toFloat()
-                    canvas.drawLine(cx, cy, sx + (r * 0.6f * Math.cos(rad)).toFloat(), sy + (r * 0.6f * Math.sin(rad)).toFloat(), paint)
+
+                // 6. Pectoral Fin Flap
+                val pecAngle = sin(cycle.toDouble() * 1.5).toFloat() * 22f
+                canvas.save()
+                canvas.translate(cx + r * 0.05f * dir, cy + r * 0.1f)
+                canvas.rotate(pecAngle * dir)
+                paint.color = bodyColor
+                val pec = drawPath.apply {
+                    reset()
+                    moveTo(0f, 0f)
+                    quadTo(-r * 0.45f * dir, r * 0.05f, -r * 0.5f * dir, r * 0.42f)
+                    lineTo(-r * 0.15f * dir, r * 0.32f)
+                    close()
                 }
-                paint.style = Paint.Style.FILL
+                canvas.drawPath(pec, paint)
+                canvas.restore()
+
+                // 7. Cartoon Eye
+                val eyeX = cx + r * 0.55f * dir
+                val eyeY = cy - r * 0.18f
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX, eyeY, r * 0.18f, paint)
+                paint.color = Color.BLACK
+                canvas.drawCircle(eyeX, eyeY, r * 0.09f, paint)
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX - r * 0.04f * dir, eyeY - r * 0.04f, r * 0.045f, paint)
             }
 
-            // Smiling eye
-            val eyeX = cx + r * 0.55f * dir
-            val eyeY = cy - r * 0.18f
-            paint.color = Color.WHITE
-            paint.style = Paint.Style.FILL
-            canvas.drawCircle(eyeX, eyeY, r * 0.16f, paint)
-            paint.color = Color.BLACK
-            canvas.drawCircle(eyeX, eyeY, r * 0.08f, paint)
-            paint.color = Color.WHITE
-            canvas.drawCircle(eyeX - r * 0.04f * dir, eyeY - r * 0.04f, r * 0.04f, paint)
+            2 -> {
+                // STAGE 2: BLUE TANG / SURGEONFISH (Cobalt blue body, yellow tail, black crescent)
+                val blueColor = Color.parseColor("#1E88E5")
+                val yellowColor = Color.parseColor("#FFD600")
+                paint.color = blueColor
+
+                // 1. Canary Yellow Caudal Tail
+                val tailWag = sin(cycle.toDouble() * 0.8).toFloat() * r * 0.25f
+                paint.color = yellowColor
+                val tailPath = drawPath2.apply {
+                    reset()
+                    moveTo(cx - r * 0.8f * dir, cy)
+                    lineTo(cx - r * 1.55f * dir + tailWag * dir, cy - r * 0.65f)
+                    lineTo(cx - r * 1.35f * dir + tailWag * dir, cy)
+                    lineTo(cx - r * 1.55f * dir + tailWag * dir, cy + r * 0.65f)
+                    close()
+                }
+                canvas.drawPath(tailPath, paint)
+
+                // 2. Cobalt Dorsal Fin with yellow tip
+                paint.color = blueColor
+                val dorsalWave = sin(cycle.toDouble() * 1.2).toFloat() * (r * 0.15f)
+                val dorsal = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.55f * dir, cy - r * 0.55f)
+                    quadTo(cx - r * 0.15f * dir + dorsalWave * dir, cy - r * 1.15f + dorsalWave, cx + r * 0.35f * dir, cy - r * 0.45f)
+                    close()
+                }
+                canvas.drawPath(dorsal, paint)
+
+                // 3. Pelvic Fin
+                val ventral = drawPath4.apply {
+                    reset()
+                    moveTo(cx - r * 0.2f * dir, cy + r * 0.55f)
+                    lineTo(cx - r * 0.45f * dir + dorsalWave * 0.6f * dir, cy + r * 0.9f)
+                    lineTo(cx + r * 0.1f * dir, cy + r * 0.55f)
+                    close()
+                }
+                canvas.drawPath(ventral, paint)
+
+                // 4. Cobalt Blue Body
+                drawRectF.set(cx - r * 0.95f, cy - r * 0.65f, cx + r * 0.95f, cy + r * 0.65f)
+                if (mouthOpen) {
+                    drawPath.reset()
+                    val sweepAngle = 295f
+                    val startAngle = if (facingRight) 32f else 212f
+                    drawPath.addArc(drawRectF, startAngle, sweepAngle)
+                    drawPath.lineTo(cx, cy)
+                    drawPath.close()
+                    canvas.drawPath(drawPath, paint)
+                } else {
+                    canvas.drawOval(drawRectF, paint)
+                }
+
+                // 5. Black Palette Crescent Mark
+                paint.color = Color.parseColor("#212121")
+                drawRectF2.set(cx - r * 0.45f * dir - r * 0.25f, cy - r * 0.35f, cx - r * 0.45f * dir + r * 0.25f, cy + r * 0.35f)
+                canvas.drawOval(drawRectF2, paint)
+
+                // 6. Yellow Pectoral Fin
+                val pecAngle = sin(cycle.toDouble() * 1.5).toFloat() * 22f
+                canvas.save()
+                canvas.translate(cx + r * 0.05f * dir, cy + r * 0.1f)
+                canvas.rotate(pecAngle * dir)
+                paint.color = yellowColor
+                val pec = drawPath.apply {
+                    reset()
+                    moveTo(0f, 0f)
+                    quadTo(-r * 0.45f * dir, r * 0.05f, -r * 0.5f * dir, r * 0.42f)
+                    lineTo(-r * 0.15f * dir, r * 0.32f)
+                    close()
+                }
+                canvas.drawPath(pec, paint)
+                canvas.restore()
+
+                // 7. Eye
+                val eyeX = cx + r * 0.55f * dir
+                val eyeY = cy - r * 0.18f
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX, eyeY, r * 0.18f, paint)
+                paint.color = Color.BLACK
+                canvas.drawCircle(eyeX, eyeY, r * 0.09f, paint)
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX - r * 0.04f * dir, eyeY - r * 0.04f, r * 0.045f, paint)
+            }
+
+            3 -> {
+                // STAGE 3: ROYAL ANGELFISH (Diamond disc, crown dorsal, neon cyan stripes, pelvic streamers)
+                val angelGold = Color.parseColor("#FFC107")
+                paint.color = angelGold
+
+                // 1. Tall Crown Dorsal Fin
+                val dorsalWave = sin(cycle.toDouble() * 1.2).toFloat() * (r * 0.18f)
+                val dorsal = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.4f * dir, cy - r * 0.85f)
+                    quadTo(cx - r * 0.2f * dir + dorsalWave * dir, cy - r * 1.75f + dorsalWave, cx + r * 0.2f * dir, cy - r * 0.85f)
+                    close()
+                }
+                canvas.drawPath(dorsal, paint)
+
+                // 2. Trailing Pelvic Streamers (Long thin feelers)
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = 3.5f
+                paint.color = Color.parseColor("#00E5FF")
+                val streamer = drawPath4.apply {
+                    reset()
+                    moveTo(cx - r * 0.1f * dir, cy + r * 0.7f)
+                    quadTo(cx - r * 0.6f * dir + dorsalWave * dir, cy + r * 1.5f, cx - r * 1.2f * dir, cy + r * 1.8f)
+                }
+                canvas.drawPath(streamer, paint)
+                paint.style = Paint.Style.FILL
+                paint.color = angelGold
+
+                // 3. Tail Fin
+                val tailWag = sin(cycle.toDouble() * 0.8).toFloat() * r * 0.2f
+                val tailPath = drawPath2.apply {
+                    reset()
+                    moveTo(cx - r * 0.8f * dir, cy)
+                    lineTo(cx - r * 1.45f * dir + tailWag * dir, cy - r * 0.55f)
+                    lineTo(cx - r * 1.3f * dir + tailWag * dir, cy)
+                    lineTo(cx - r * 1.45f * dir + tailWag * dir, cy + r * 0.55f)
+                    close()
+                }
+                canvas.drawPath(tailPath, paint)
+
+                // 4. Tall Diamond Body
+                val diamond = drawPath5.apply {
+                    reset()
+                    moveTo(cx, cy - r * 1.2f)
+                    if (mouthOpen) {
+                        if (facingRight) {
+                            lineTo(cx + r * 0.5f, cy - r * 0.3f)
+                            lineTo(cx + r * 0.1f, cy)
+                            lineTo(cx + r * 0.5f, cy + r * 0.3f)
+                        } else {
+                            lineTo(cx + r * 0.9f * dir, cy)
+                        }
+                    } else {
+                        lineTo(cx + r * 0.9f * dir, cy)
+                    }
+                    lineTo(cx, cy + r * 1.2f)
+                    if (mouthOpen && !facingRight) {
+                        lineTo(cx - r * 0.5f, cy + r * 0.3f)
+                        lineTo(cx - r * 0.1f, cy)
+                        lineTo(cx - r * 0.5f, cy - r * 0.3f)
+                    } else {
+                        lineTo(cx - r * 0.9f * dir, cy)
+                    }
+                    close()
+                }
+                canvas.drawPath(diamond, paint)
+
+                // 5. Electric Neon Regal Stripes
+                paint.color = Color.parseColor("#00E5FF")
+                canvas.drawRect(cx - r * 0.3f * dir, cy - r * 0.8f, cx - r * 0.15f * dir, cy + r * 0.8f, paint)
+                paint.color = Color.parseColor("#E040FB")
+                canvas.drawRect(cx + r * 0.1f * dir, cy - r * 0.8f, cx + r * 0.25f * dir, cy + r * 0.8f, paint)
+
+                // 6. Eye
+                val eyeX = cx + r * 0.55f * dir
+                val eyeY = cy - r * 0.2f
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX, eyeY, r * 0.16f, paint)
+                paint.color = Color.BLACK
+                canvas.drawCircle(eyeX, eyeY, r * 0.08f, paint)
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX - r * 0.04f * dir, eyeY - r * 0.04f, r * 0.04f, paint)
+            }
+
+            4 -> {
+                // STAGE 4: LIONFISH (Crimson zebra stripes, radiating venomous spine rays)
+                val lionColor = Color.parseColor("#FF3D00")
+                paint.color = lionColor
+
+                // 1. Radiating Spines with undulating tips
+                paint.color = Color.parseColor("#FF6E40")
+                paint.strokeWidth = 3.5f
+                paint.style = Paint.Style.STROKE
+                for (angle in 25..335 step 28) {
+                    val rad = Math.toRadians(angle.toDouble())
+                    val sway = sin(cycle.toDouble() * 1.5 + angle * 0.1).toFloat() * 6f
+                    val sx = (cx + r * Math.cos(rad)).toFloat()
+                    val sy = (cy + r * Math.sin(rad)).toFloat()
+                    canvas.drawLine(cx, cy, sx + (r * 0.65f * Math.cos(rad)).toFloat() + sway, sy + (r * 0.65f * Math.sin(rad)).toFloat(), paint)
+                }
+                paint.style = Paint.Style.FILL
+                paint.color = lionColor
+
+                // 2. Tail Fin
+                val tailWag = sin(cycle.toDouble() * 0.8).toFloat() * r * 0.25f
+                val tailPath = drawPath2.apply {
+                    reset()
+                    moveTo(cx - r * 0.8f * dir, cy)
+                    lineTo(cx - r * 1.5f * dir + tailWag * dir, cy - r * 0.6f)
+                    lineTo(cx - r * 1.3f * dir + tailWag * dir, cy)
+                    lineTo(cx - r * 1.5f * dir + tailWag * dir, cy + r * 0.6f)
+                    close()
+                }
+                canvas.drawPath(tailPath, paint)
+
+                // 3. Body Oval
+                drawRectF.set(cx - r, cy - r * 0.62f, cx + r, cy + r * 0.62f)
+                if (mouthOpen) {
+                    drawPath.reset()
+                    val sweepAngle = 295f
+                    val startAngle = if (facingRight) 32f else 212f
+                    drawPath.addArc(drawRectF, startAngle, sweepAngle)
+                    drawPath.lineTo(cx, cy)
+                    drawPath.close()
+                    canvas.drawPath(drawPath, paint)
+                } else {
+                    canvas.drawOval(drawRectF, paint)
+                }
+
+                // 4. White Zebra Banding
+                paint.color = Color.WHITE
+                for (i in -2..2) {
+                    val bx = cx + i * (r * 0.3f) * dir
+                    canvas.drawRect(bx - 3f, cy - r * 0.5f, bx + 3f, cy + r * 0.5f, paint)
+                }
+
+                // 5. Lacy Pectoral Fan
+                val pecAngle = sin(cycle.toDouble() * 1.5).toFloat() * 25f
+                canvas.save()
+                canvas.translate(cx + r * 0.05f * dir, cy + r * 0.1f)
+                canvas.rotate(pecAngle * dir)
+                paint.color = Color.parseColor("#FF8A80")
+                val pec = drawPath.apply {
+                    reset()
+                    moveTo(0f, 0f)
+                    quadTo(-r * 0.6f * dir, r * 0.05f, -r * 0.7f * dir, r * 0.55f)
+                    lineTo(-r * 0.2f * dir, r * 0.45f)
+                    close()
+                }
+                canvas.drawPath(pec, paint)
+                canvas.restore()
+
+                // 6. Eye
+                val eyeX = cx + r * 0.55f * dir
+                val eyeY = cy - r * 0.18f
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX, eyeY, r * 0.16f, paint)
+                paint.color = Color.BLACK
+                canvas.drawCircle(eyeX, eyeY, r * 0.08f, paint)
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX - r * 0.04f * dir, eyeY - r * 0.04f, r * 0.04f, paint)
+            }
+
+            5 -> {
+                // STAGE 5: BARRACUDA (Silver-teal hydrodynamic torpedo, tiger bars, underslung jaw with razor teeth)
+                val silverColor = Color.parseColor("#607D8B")
+                paint.color = silverColor
+
+                // 1. Forked Speed Tail
+                val tailWag = sin(cycle.toDouble() * 0.9).toFloat() * r * 0.25f
+                val tailPath = drawPath2.apply {
+                    reset()
+                    moveTo(cx - r * 1.1f * dir, cy)
+                    lineTo(cx - r * 1.7f * dir + tailWag * dir, cy - r * 0.55f)
+                    lineTo(cx - r * 1.35f * dir + tailWag * dir, cy)
+                    lineTo(cx - r * 1.7f * dir + tailWag * dir, cy + r * 0.55f)
+                    close()
+                }
+                canvas.drawPath(tailPath, paint)
+
+                // 2. Streamlined Rear Dorsal & Anal Fins
+                val finWave = sin(cycle.toDouble() * 1.2).toFloat() * (r * 0.1f)
+                val dorsal = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.6f * dir, cy - r * 0.35f)
+                    lineTo(cx - r * 0.85f * dir + finWave * dir, cy - r * 0.7f)
+                    lineTo(cx - r * 0.35f * dir, cy - r * 0.35f)
+                    close()
+                }
+                canvas.drawPath(dorsal, paint)
+
+                // 3. Long Torpedo Body
+                drawRectF.set(cx - r * 1.1f, cy - r * 0.38f, cx + r * 1.0f, cy + r * 0.38f)
+                if (mouthOpen) {
+                    drawPath.reset()
+                    val sweepAngle = 295f
+                    val startAngle = if (facingRight) 32f else 212f
+                    drawPath.addArc(drawRectF, startAngle, sweepAngle)
+                    drawPath.lineTo(cx, cy)
+                    drawPath.close()
+                    canvas.drawPath(drawPath, paint)
+                } else {
+                    canvas.drawOval(drawRectF, paint)
+                }
+
+                // 4. Underslung Protruding Jaw
+                val jaw = drawPath4.apply {
+                    reset()
+                    moveTo(cx + r * 0.7f * dir, cy - r * 0.1f)
+                    lineTo(cx + r * 1.35f * dir, cy + r * 0.12f) // Lower jaw sticks out!
+                    lineTo(cx + r * 0.7f * dir, cy + r * 0.28f)
+                    close()
+                }
+                canvas.drawPath(jaw, paint)
+
+                // Razor Teeth in Jaw
+                paint.color = Color.WHITE
+                for (t in 0..3) {
+                    val tx = cx + (r * 0.8f + t * (r * 0.12f)) * dir
+                    val ty = cy + r * 0.05f
+                    canvas.drawLine(tx, ty, tx + 2f * dir, ty - r * 0.1f, paint)
+                }
+
+                // 5. Dark Tiger Camouflage Bars
+                paint.color = Color.parseColor("#263238")
+                for (b in -2..2) {
+                    val bx = cx + b * (r * 0.28f) * dir
+                    canvas.drawRect(bx - 3f, cy - r * 0.32f, bx + 3f, cy + r * 0.15f, paint)
+                }
+
+                // 6. Fierce Amber Eye
+                val eyeX = cx + r * 0.7f * dir
+                val eyeY = cy - r * 0.12f
+                paint.color = Color.parseColor("#FFD600")
+                canvas.drawCircle(eyeX, eyeY, r * 0.14f, paint)
+                paint.color = Color.BLACK
+                canvas.drawCircle(eyeX, eyeY, r * 0.07f, paint)
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX - r * 0.03f * dir, eyeY - r * 0.03f, r * 0.035f, paint)
+            }
+
+            6 -> {
+                // STAGE 6: DOLPHIN (Cyan-gray hydrodynamic mammal, beak snout, curved sickle dorsal, horizontal tail fluke)
+                val dolphinCyan = Color.parseColor("#00ACC1")
+                val tailYOffset = sin(cycle.toDouble() * 0.7).toFloat() * r * 0.35f
+                paint.color = dolphinCyan
+
+                // 1. Sleek Torpedo Body
+                drawRectF.set(cx - r * 1.1f, cy - r * 0.45f, cx + r * 1.1f, cy + r * 0.45f)
+                if (mouthOpen) {
+                    drawPath.reset()
+                    val sweepAngle = 295f
+                    val startAngle = if (facingRight) 32f else 212f
+                    drawPath.addArc(drawRectF, startAngle, sweepAngle)
+                    drawPath.lineTo(cx, cy)
+                    drawPath.close()
+                    canvas.drawPath(drawPath, paint)
+                } else {
+                    canvas.drawOval(drawRectF, paint)
+                }
+
+                // Rostrum Snout (Beak)
+                val beak = drawPath2.apply {
+                    reset()
+                    moveTo(cx + r * 1.0f * dir, cy - r * 0.1f)
+                    lineTo(cx + r * 1.5f * dir, cy + r * 0.05f)
+                    lineTo(cx + r * 0.9f * dir, cy + r * 0.2f)
+                    close()
+                }
+                canvas.drawPath(beak, paint)
+
+                // 2. Tall Curved Sickle Dorsal Fin
+                val dorsal = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.2f * dir, cy - r * 0.4f)
+                    quadTo(cx - r * 0.6f * dir, cy - r * 0.95f, cx - r * 0.7f * dir, cy - r * 0.85f)
+                    quadTo(cx - r * 0.4f * dir, cy - r * 0.5f, cx + r * 0.2f * dir, cy - r * 0.4f)
+                    close()
+                }
+                canvas.drawPath(dorsal, paint)
+
+                // 3. Pec Flippers
+                val pec = drawPath4.apply {
+                    reset()
+                    moveTo(cx + r * 0.15f * dir, cy + r * 0.2f)
+                    lineTo(cx - r * 0.25f * dir, cy + r * 0.7f)
+                    lineTo(cx - r * 0.35f * dir, cy + r * 0.3f)
+                    close()
+                }
+                canvas.drawPath(pec, paint)
+
+                // 4. Horizontal Flukes (Tail flips UP and DOWN)
+                val tx = cx - r * 1.1f * dir
+                val ty = cy + tailYOffset
+                val fluke = drawPath5.apply {
+                    reset()
+                    moveTo(tx, ty)
+                    lineTo(tx - r * 0.4f * dir, ty - r * 0.5f)
+                    lineTo(tx - r * 0.5f * dir, ty)
+                    lineTo(tx - r * 0.4f * dir, ty + r * 0.5f)
+                    close()
+                }
+                canvas.drawPath(fluke, paint)
+
+                // Connect body to flukes
+                val stock = drawPath2.apply {
+                    reset()
+                    moveTo(cx - r * 0.5f * dir, cy - r * 0.2f)
+                    quadTo(cx - r * 0.9f * dir, cy + tailYOffset * 0.5f, tx, ty)
+                    lineTo(tx, ty + r * 0.1f)
+                    quadTo(cx - r * 0.9f * dir, cy + r * 0.2f + tailYOffset * 0.5f, cx - r * 0.5f * dir, cy + r * 0.2f)
+                    close()
+                }
+                canvas.drawPath(stock, paint)
+
+                // 5. Cute Smiling Eye
+                val eyeX = cx + r * 0.65f * dir
+                val eyeY = cy - r * 0.15f
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX, eyeY, r * 0.16f, paint)
+                paint.color = Color.BLACK
+                canvas.drawCircle(eyeX, eyeY, r * 0.08f, paint)
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX + r * 0.02f * dir, eyeY - r * 0.02f, r * 0.04f, paint)
+            }
+
+            7 -> {
+                // STAGE 7: GREAT WHITE SHARK (Counter-shaded slate back, white belly, triangular dorsal, serrated teeth, 5 gill slits)
+                val sharkSlate = Color.parseColor("#37474F")
+                
+                // 1. Heterocercal Shark Caudal Tail
+                val tailWag = sin(cycle.toDouble() * 0.75).toFloat() * r * 0.25f
+                paint.color = sharkSlate
+                val tailPath = drawPath2.apply {
+                    reset()
+                    moveTo(cx - r * 1.0f * dir, cy)
+                    lineTo(cx - r * 1.65f * dir + tailWag * dir, cy - r * 0.85f) // Tall top lobe
+                    lineTo(cx - r * 1.35f * dir + tailWag * dir, cy - r * 0.1f)
+                    lineTo(cx - r * 1.55f * dir + tailWag * dir, cy + r * 0.5f) // Shorter bottom lobe
+                    close()
+                }
+                canvas.drawPath(tailPath, paint)
+
+                // 2. Iconic Sharp Triangular Dorsal Fin
+                val dorsal = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.3f * dir, cy - r * 0.4f)
+                    lineTo(cx - r * 0.5f * dir, cy - r * 1.15f) // Tall slicing fin!
+                    lineTo(cx + r * 0.2f * dir, cy - r * 0.4f)
+                    close()
+                }
+                canvas.drawPath(dorsal, paint)
+
+                // 3. White Underbelly
+                paint.color = Color.WHITE
+                drawRectF.set(cx - r, cy, cx + r, cy + r * 0.5f)
+                canvas.drawOval(drawRectF, paint)
+
+                // 4. Slate Upper Body
+                paint.color = sharkSlate
+                drawRectF2.set(cx - r, cy - r * 0.55f, cx + r, cy + r * 0.15f)
+                if (mouthOpen) {
+                    drawPath.reset()
+                    val sweepAngle = 295f
+                    val startAngle = if (facingRight) 32f else 212f
+                    drawPath.addArc(drawRectF2, startAngle, sweepAngle)
+                    drawPath.lineTo(cx, cy)
+                    drawPath.close()
+                    canvas.drawPath(drawPath, paint)
+                } else {
+                    canvas.drawOval(drawRectF2, paint)
+                }
+
+                // Sharp Snout
+                val snout = drawPath4.apply {
+                    reset()
+                    moveTo(cx + r * 0.6f * dir, cy - r * 0.45f)
+                    lineTo(cx + r * 1.35f * dir, cy - r * 0.05f)
+                    lineTo(cx + r * 0.6f * dir, cy + r * 0.25f)
+                    close()
+                }
+                canvas.drawPath(snout, paint)
+
+                // 5. Serrated White Triangular Teeth
+                paint.color = Color.WHITE
+                for (t in 0..4) {
+                    val tx = cx + (r * 0.75f + t * (r * 0.1f)) * dir
+                    val ty = cy + r * 0.08f
+                    val tooth = drawPath5.apply {
+                        reset()
+                        moveTo(tx, ty)
+                        lineTo(tx + 4f * dir, ty + r * 0.12f)
+                        lineTo(tx - 4f * dir, ty + r * 0.12f)
+                        close()
+                    }
+                    canvas.drawPath(tooth, paint)
+                }
+
+                // 6. 5 Gill Slits
+                paint.color = Color.BLACK
+                paint.strokeWidth = 2.5f
+                paint.style = Paint.Style.STROKE
+                for (g in 0..4) {
+                    val gx = cx + (r * 0.1f - g * (r * 0.08f)) * dir
+                    canvas.drawLine(gx, cy - r * 0.2f, gx, cy + r * 0.2f, paint)
+                }
+                paint.style = Paint.Style.FILL
+
+                // 7. Dark Focused Shark Eye
+                val eyeX = cx + r * 0.85f * dir
+                val eyeY = cy - r * 0.15f
+                paint.color = Color.BLACK
+                canvas.drawCircle(eyeX, eyeY, r * 0.09f, paint)
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX - r * 0.02f * dir, eyeY - r * 0.02f, r * 0.03f, paint)
+            }
+
+            else -> {
+                // STAGE 8: ORCA APEX KING (Glossy jet-black, white belly, white eye patch, massive vertical dorsal, horizontal flukes, gold aura)
+                val tailYOffset = sin(cycle.toDouble() * 0.7).toFloat() * r * 0.2f
+
+                // 1. Shimmering Golden Monarch Aura
+                paint.color = Color.parseColor("#35FFD700")
+                canvas.drawCircle(cx, cy, r * 1.25f, paint)
+
+                // 2. Pure White Underbelly
+                paint.color = Color.WHITE
+                drawRectF.set(cx - r, cy, cx + r, cy + r * 0.5f)
+                canvas.drawOval(drawRectF, paint)
+
+                // White Eye Patch
+                drawRectF2.set(cx + r * 0.25f * dir, cy - r * 0.35f, cx + r * 0.6f * dir, cy - r * 0.15f)
+                canvas.drawOval(drawRectF2, paint)
+
+                // 3. Main Jet-Black Body
+                paint.color = Color.parseColor("#121212")
+                drawRectF.set(cx - r, cy - r * 0.55f, cx + r, cy + r * 0.15f)
+                if (mouthOpen) {
+                    drawPath.reset()
+                    val sweepAngle = 295f
+                    val startAngle = if (facingRight) 32f else 212f
+                    drawPath.addArc(drawRectF, startAngle, sweepAngle)
+                    drawPath.lineTo(cx, cy)
+                    drawPath.close()
+                    canvas.drawPath(drawPath, paint)
+                } else {
+                    canvas.drawOval(drawRectF, paint)
+                }
+
+                // Head/Snout (Blunt and rounded)
+                val head = drawPath2.apply {
+                    reset()
+                    moveTo(cx + r * 0.5f * dir, cy - r * 0.45f)
+                    quadTo(cx + r * 1.2f * dir, cy - r * 0.25f, cx + r * 1.1f * dir, cy + r * 0.1f)
+                    lineTo(cx + r * 0.5f * dir, cy + r * 0.15f)
+                    close()
+                }
+                canvas.drawPath(head, paint)
+
+                // 4. Massive Tall Vertical Dorsal Fin
+                val dorsal = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.2f * dir, cy - r * 0.4f)
+                    lineTo(cx - r * 0.5f * dir, cy - r * 1.25f) // Giant towering dorsal fin!
+                    lineTo(cx + r * 0.2f * dir, cy - r * 0.4f)
+                    close()
+                }
+                canvas.drawPath(dorsal, paint)
+
+                // 5. Horizontal Flukes (Tail flips UP and DOWN)
+                val tx = cx - r * 1.0f * dir
+                val ty = cy + tailYOffset
+                val fluke = drawPath4.apply {
+                    reset()
+                    moveTo(tx, ty)
+                    lineTo(tx - r * 0.4f * dir, ty - r * 0.6f)
+                    lineTo(tx - r * 0.5f * dir, ty)
+                    lineTo(tx - r * 0.4f * dir, ty + r * 0.6f)
+                    close()
+                }
+                canvas.drawPath(fluke, paint)
+
+                // Connect body to fluke
+                val stock = drawPath5.apply {
+                    reset()
+                    moveTo(cx - r * 0.5f * dir, cy - r * 0.2f)
+                    quadTo(cx - r * 0.8f * dir, cy + tailYOffset * 0.5f, tx, ty)
+                    lineTo(tx, ty + r * 0.1f)
+                    quadTo(cx - r * 0.8f * dir, cy + r * 0.2f + tailYOffset * 0.5f, cx - r * 0.5f * dir, cy + r * 0.2f)
+                    close()
+                }
+                canvas.drawPath(stock, paint)
+
+                // 6. Eye (Black with glint)
+                paint.color = Color.BLACK
+                canvas.drawCircle(cx + r * 0.65f * dir, cy - r * 0.1f, r * 0.08f, paint)
+                paint.color = Color.WHITE
+            }
         }
     }
 
@@ -2091,12 +2862,53 @@ class FrenzyView @JvmOverloads constructor(
     private fun drawSpecies(canvas: Canvas, fish: AIFish, isFlashing: Boolean) {
         val r = getFishRadius(fish.size)
         val cx = fish.x
-        val cy = fish.y
+        val cy = fish.y + fish.burrowProgress * 15f
         val facingRight = fish.facingRight
         val dir = if (facingRight) 1f else -1f
         
         val now = System.currentTimeMillis()
         val mouthOpen = fish.isEating && (now - fish.eatStartTime < 200L)
+
+        // Check if buried under the bottom sand
+        if (fish.burrowProgress >= 0.65f) {
+            val moundR = r * 1.35f
+            val sandColor = when (oceanTheme) {
+                0 -> Color.parseColor("#D7CCC8") // Soft gold reef sand
+                1 -> Color.parseColor("#5D4037") // Rusty wreck soil
+                2 -> Color.parseColor("#212121") // Dark volcanic basalt
+                else -> Color.parseColor("#00695C") // Atlantis green silt
+            }
+            paint.reset()
+            paint.isAntiAlias = true
+            paint.style = Paint.Style.FILL
+            paint.color = sandColor
+            drawRectF.set(cx - moundR, cy - r * 0.4f, cx + moundR, cy + r * 0.45f)
+            canvas.drawOval(drawRectF, paint)
+
+            // Contour shading
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = 2.5f
+            paint.color = Color.parseColor("#25000000")
+            canvas.drawOval(drawRectF, paint)
+
+            // Two cute camouflaged animated periscope eyes looking left/right
+            val eyeSway = sin(fish.swimCycle.toDouble() * 1.2).toFloat() * 2.5f
+            val eyeY = cy - r * 0.42f
+            paint.style = Paint.Style.FILL
+            paint.color = Color.parseColor("#8D6E63")
+            canvas.drawCircle(cx - r * 0.22f * dir + eyeSway, eyeY, r * 0.16f, paint)
+            canvas.drawCircle(cx + r * 0.22f * dir + eyeSway, eyeY, r * 0.16f, paint)
+            
+            paint.color = Color.WHITE
+            canvas.drawCircle(cx - r * 0.22f * dir + eyeSway, eyeY, r * 0.12f, paint)
+            canvas.drawCircle(cx + r * 0.22f * dir + eyeSway, eyeY, r * 0.12f, paint)
+            
+            paint.color = Color.BLACK
+            val lookOffset = sin(fish.swimCycle.toDouble() * 0.8).toFloat() * (r * 0.04f)
+            canvas.drawCircle(cx - r * 0.22f * dir + eyeSway + lookOffset, eyeY, r * 0.06f, paint)
+            canvas.drawCircle(cx + r * 0.22f * dir + eyeSway + lookOffset, eyeY, r * 0.06f, paint)
+            return
+        }
 
         paint.reset()
         paint.isAntiAlias = true
@@ -2270,38 +3082,124 @@ class FrenzyView @JvmOverloads constructor(
                     }
                 }
             }
-            28 -> { // Lobster (Red segmented shell, big claws, legs)
-                // Segmented tail
+            28 -> { // Lobster (Multi-size crimson carapace, jointed legs, animated chelae claws, whip antennae)
+                val isLarge = fish.size >= 2
+                val legCycle = fish.swimCycle * 3.2f
+                val clawPinch = sin(fish.swimCycle.toDouble() * 1.6).toFloat() * (r * 0.12f)
+                
+                // 1. Walking legs (6 jointed pereiopods underneath)
+                paint.strokeWidth = if (isLarge) 4.5f else 3f
+                paint.style = Paint.Style.STROKE
+                paint.color = Color.parseColor("#8E0000") // Deep shell joint color
+                for (i in -1..2) {
+                    val lx = cx + i * (r * 0.25f) * dir
+                    val legWag = sin(legCycle + i * 1.1).toFloat() * (r * 0.2f)
+                    val footX = lx - (r * 0.2f * dir) + legWag
+                    val footY = cy + r * 0.75f
+                    canvas.drawLine(lx, cy + r * 0.2f, (lx + footX) / 2f, cy + r * 0.5f, paint)
+                    canvas.drawLine((lx + footX) / 2f, cy + r * 0.5f, footX, footY, paint)
+                }
+
+                // 2. Segmented fan tail
+                paint.style = Paint.Style.FILL
                 paint.color = fish.color
                 for (i in 0..3) {
                     val tx = cx - i * (r * 0.32f) * dir
-                    val tr = r * (1f - i * 0.15f)
-                    drawRectF.set(tx - tr * 0.5f, cy - tr * 0.4f, tx + tr * 0.5f, cy + tr * 0.4f)
+                    val tr = r * (0.95f - i * 0.14f)
+                    drawRectF.set(tx - tr * 0.55f, cy - tr * 0.38f, tx + tr * 0.55f, cy + tr * 0.38f)
                     canvas.drawOval(drawRectF, paint)
+                    // Shell seam line
+                    paint.style = Paint.Style.STROKE
+                    paint.color = Color.parseColor("#8E0000")
+                    paint.strokeWidth = 2f
+                    canvas.drawOval(drawRectF, paint)
+                    paint.style = Paint.Style.FILL
+                    paint.color = fish.color
                 }
-                
-                // Main carapace body
-                drawRectF.set(cx - r * 0.4f, cy - r * 0.5f, cx + r * 0.6f, cy + r * 0.5f)
+
+                // Tail fan (uropods)
+                val tailEnd = cx - 3.8f * (r * 0.32f) * dir
+                val fan = drawPath.apply {
+                    reset()
+                    moveTo(tailEnd, cy)
+                    lineTo(tailEnd - r * 0.45f * dir, cy - r * 0.45f)
+                    lineTo(tailEnd - r * 0.55f * dir, cy)
+                    lineTo(tailEnd - r * 0.45f * dir, cy + r * 0.45f)
+                    close()
+                }
+                canvas.drawPath(fan, paint)
+
+                // 3. Main Cephalothorax (Body Carapace)
+                drawRectF.set(cx - r * 0.45f, cy - r * 0.52f, cx + r * 0.65f, cy + r * 0.52f)
                 canvas.drawOval(drawRectF, paint)
-                
-                // Walking legs
-                paint.strokeWidth = 3f
                 paint.style = Paint.Style.STROKE
-                for (i in -1..1) {
-                    val lx = cx + i * (r * 0.3f)
-                    canvas.drawLine(lx, cy, lx - 8f * dir, cy + r * 0.8f, paint)
-                    canvas.drawLine(lx, cy, lx + 8f * dir, cy + r * 0.8f, paint)
-                }
-                
-                // Large claws extending forward
-                paint.style = Paint.Style.FILL
-                val clawOffset = r * 0.4f
-                // Top claw
-                drawRectF.set(cx + r * 0.7f * dir - r * 0.3f, cy - clawOffset - r * 0.25f, cx + r * 0.7f * dir + r * 0.3f, cy - clawOffset + r * 0.25f)
+                paint.color = Color.parseColor("#8E0000")
+                paint.strokeWidth = if (isLarge) 3f else 2f
                 canvas.drawOval(drawRectF, paint)
-                // Bottom claw
-                drawRectF2.set(cx + r * 0.7f * dir - r * 0.3f, cy + clawOffset - r * 0.25f, cx + r * 0.7f * dir + r * 0.3f, cy + clawOffset + r * 0.25f)
+
+                // 4. Large Crushing Chelae (Claws extending forward)
+                paint.style = Paint.Style.FILL
+                paint.color = fish.color
+                val clawDist = r * 0.8f
+                val clawW = r * 0.42f
+                val clawH = r * 0.28f
+
+                // Upper claw + pincer
+                val upperClawX = cx + clawDist * dir
+                val upperClawY = cy - r * 0.35f
+                drawRectF.set(upperClawX - clawW * 0.5f, upperClawY - clawH * 0.5f, upperClawX + clawW * 0.5f, upperClawY + clawH * 0.5f)
+                canvas.drawOval(drawRectF, paint)
+                // Upper movable pincer tip
+                val pincer1 = drawPath2.apply {
+                    reset()
+                    moveTo(upperClawX + clawW * 0.3f * dir, upperClawY)
+                    lineTo(upperClawX + clawW * 0.9f * dir, upperClawY - clawPinch - r * 0.15f)
+                    lineTo(upperClawX + clawW * 0.5f * dir, upperClawY + r * 0.08f)
+                    close()
+                }
+                canvas.drawPath(pincer1, paint)
+
+                // Lower claw + pincer
+                val lowerClawX = cx + clawDist * dir
+                val lowerClawY = cy + r * 0.35f
+                drawRectF2.set(lowerClawX - clawW * 0.5f, lowerClawY - clawH * 0.5f, lowerClawX + clawW * 0.5f, lowerClawY + clawH * 0.5f)
                 canvas.drawOval(drawRectF2, paint)
+                // Lower movable pincer tip
+                val pincer2 = drawPath3.apply {
+                    reset()
+                    moveTo(lowerClawX + clawW * 0.3f * dir, lowerClawY)
+                    lineTo(lowerClawX + clawW * 0.9f * dir, lowerClawY + clawPinch + r * 0.15f)
+                    lineTo(lowerClawX + clawW * 0.5f * dir, lowerClawY - r * 0.08f)
+                    close()
+                }
+                canvas.drawPath(pincer2, paint)
+
+                // 5. Long whip antennae
+                paint.style = Paint.Style.STROKE
+                paint.color = Color.parseColor("#FF8A80")
+                paint.strokeWidth = if (isLarge) 3f else 2f
+                val antWave = sin(fish.swimCycle.toDouble() * 0.8).toFloat() * (r * 0.25f)
+                val ant1 = drawPath4.apply {
+                    reset()
+                    moveTo(cx + r * 0.6f * dir, cy - r * 0.2f)
+                    quadTo(cx + r * 1.3f * dir, cy - r * 0.9f + antWave, cx + r * 1.8f * dir, cy - r * 0.7f + antWave)
+                }
+                canvas.drawPath(ant1, paint)
+                val ant2 = drawPath5.apply {
+                    reset()
+                    moveTo(cx + r * 0.6f * dir, cy + r * 0.2f)
+                    quadTo(cx + r * 1.3f * dir, cy + r * 0.9f + antWave, cx + r * 1.8f * dir, cy + r * 0.7f + antWave)
+                }
+                canvas.drawPath(ant2, paint)
+
+                // 6. Stalked glowing eyes
+                paint.style = Paint.Style.FILL
+                paint.color = Color.BLACK
+                canvas.drawCircle(cx + r * 0.45f * dir, cy - r * 0.25f, r * 0.10f, paint)
+                canvas.drawCircle(cx + r * 0.45f * dir, cy + r * 0.25f, r * 0.10f, paint)
+                paint.color = Color.parseColor("#FFD600")
+                canvas.drawCircle(cx + r * 0.47f * dir, cy - r * 0.25f, r * 0.05f, paint)
+                canvas.drawCircle(cx + r * 0.47f * dir, cy + r * 0.25f, r * 0.05f, paint)
             }
             29 -> { // Sea Snail (Coiled spiral shell + slow foot)
                 // Crawling Foot (flesh)
@@ -2492,6 +3390,120 @@ class FrenzyView @JvmOverloads constructor(
                     paint.color = Color.BLACK
                     canvas.drawCircle(cx + deflatedR * 0.5f * dir, cy - deflatedR * 0.2f, deflatedR * 0.1f, paint)
                 }
+            }
+            34 -> { // Sea Mantis (Peacock Mantis Shrimp: Iridescent Emerald/Turquoise carapace, mobile stalked eyes, dactyl clubs, swimmerets, spiny telson)
+                val isLarge = fish.size >= 2
+                val strikeCycle = fish.swimCycle * 3.5f
+                val isLunging = (fish.behavior == 18) && Math.hypot((playerX - fish.x).toDouble(), (playerY - fish.y).toDouble()) < 210.0
+                val clubSnap = if (isLunging) sin(strikeCycle * 2.0).toFloat() * (r * 0.45f) else 0f
+                
+                // 1. Underside Swimmerets (Fluttering pleopods)
+                paint.style = Paint.Style.STROKE
+                paint.color = Color.parseColor("#00E5FF") // Turquoise swimmerets
+                paint.strokeWidth = if (isLarge) 3f else 2f
+                for (i in -3..1) {
+                    val sx = cx + i * (r * 0.28f) * dir
+                    val flutter = sin(strikeCycle + i * 0.9).toFloat() * (r * 0.22f)
+                    canvas.drawLine(sx, cy + r * 0.25f, sx - r * 0.15f * dir + flutter, cy + r * 0.65f, paint)
+                }
+
+                // 2. Abdomen Segments (Multi-layered iridescent armored plates)
+                paint.style = Paint.Style.FILL
+                for (i in 0..4) {
+                    val segX = cx - i * (r * 0.30f) * dir
+                    val segW = r * (0.90f - i * 0.10f)
+                    val segH = r * 0.44f
+                    paint.color = if (i % 2 == 0) Color.parseColor("#00E676") else Color.parseColor("#00B0FF")
+                    drawRectF.set(segX - segW * 0.5f, cy - segH * 0.5f, segX + segW * 0.5f, cy + segH * 0.5f)
+                    canvas.drawRoundRect(drawRectF, r * 0.15f, r * 0.15f, paint)
+                    
+                    // Golden segment rim
+                    paint.style = Paint.Style.STROKE
+                    paint.color = Color.parseColor("#FFD600")
+                    paint.strokeWidth = 2f
+                    canvas.drawRoundRect(drawRectF, r * 0.15f, r * 0.15f, paint)
+                    paint.style = Paint.Style.FILL
+                }
+
+                // 3. Spiny Telson & Uropod Tail Fan (Broad tail fan with cyan eye-spots)
+                val telsonX = cx - 4.5f * (r * 0.30f) * dir
+                paint.color = Color.parseColor("#00E676")
+                val telson = drawPath.apply {
+                    reset()
+                    moveTo(telsonX, cy)
+                    lineTo(telsonX - r * 0.55f * dir, cy - r * 0.55f)
+                    lineTo(telsonX - r * 0.70f * dir, cy)
+                    lineTo(telsonX - r * 0.55f * dir, cy + r * 0.55f)
+                    close()
+                }
+                canvas.drawPath(telson, paint)
+                // Glowing cyan eye spots on tail fan
+                paint.color = Color.parseColor("#00E5FF")
+                canvas.drawCircle(telsonX - r * 0.4f * dir, cy - r * 0.25f, r * 0.12f, paint)
+                canvas.drawCircle(telsonX - r * 0.4f * dir, cy + r * 0.25f, r * 0.12f, paint)
+                paint.color = Color.WHITE
+                canvas.drawCircle(telsonX - r * 0.4f * dir, cy - r * 0.25f, r * 0.05f, paint)
+                canvas.drawCircle(telsonX - r * 0.4f * dir, cy + r * 0.25f, r * 0.05f, paint)
+
+                // 4. Cephalothorax (Front carapace & Head shield)
+                paint.color = Color.parseColor("#00E676") // Vivid green shield
+                drawRectF.set(cx - r * 0.35f, cy - r * 0.48f, cx + r * 0.65f, cy + r * 0.48f)
+                canvas.drawRoundRect(drawRectF, r * 0.2f, r * 0.2f, paint)
+                paint.style = Paint.Style.STROKE
+                paint.color = Color.parseColor("#FFD600")
+                paint.strokeWidth = 2.5f
+                canvas.drawRoundRect(drawRectF, r * 0.2f, r * 0.2f, paint)
+
+                // 5. Massive Folded Raptorial Dactyl Clubs (Smashers)
+                // Folded under head, snapping outward when striking
+                paint.style = Paint.Style.FILL
+                val clubBaseX = cx + r * 0.35f * dir
+                val clubBaseY = cy + r * 0.18f
+                val clubEndX = clubBaseX + (r * 0.55f + clubSnap) * dir
+                val clubEndY = clubBaseY - r * 0.12f
+                
+                // Arm segment
+                paint.color = Color.parseColor("#FF6D00") // Blaze Orange
+                paint.strokeWidth = if (isLarge) 5.5f else 4f
+                paint.style = Paint.Style.STROKE
+                canvas.drawLine(clubBaseX, clubBaseY, clubBaseX + r * 0.2f * dir, clubBaseY + r * 0.2f, paint)
+                canvas.drawLine(clubBaseX + r * 0.2f * dir, clubBaseY + r * 0.2f, clubEndX, clubEndY, paint)
+
+                // Heavy Hammer Dactyl Bulb (Club head)
+                paint.style = Paint.Style.FILL
+                paint.color = Color.parseColor("#FF1744") // Ruby Red Smasher Bulb
+                canvas.drawCircle(clubEndX, clubEndY, if (isLarge) r * 0.24f else r * 0.18f, paint)
+                paint.color = Color.parseColor("#00E5FF") // Cyan impact tip
+                canvas.drawCircle(clubEndX + r * 0.06f * dir, clubEndY - r * 0.04f, if (isLarge) r * 0.12f else r * 0.09f, paint)
+
+                // Antennal scales (Iridescent turquoise fan petals near head)
+                val antScale = drawPath2.apply {
+                    reset()
+                    moveTo(cx + r * 0.5f * dir, cy - r * 0.1f)
+                    quadTo(cx + r * 0.95f * dir, cy - r * 0.45f, cx + r * 1.15f * dir, cy - r * 0.25f)
+                    lineTo(cx + r * 0.7f * dir, cy)
+                    close()
+                }
+                paint.color = Color.parseColor("#00E5FF")
+                canvas.drawPath(antScale, paint)
+
+                // 6. Stalked 3D Mobile Eyes (Compound ruby eyes on movable stalks)
+                val eyeStalkX = cx + r * 0.60f * dir
+                val eyeStalkY = cy - r * 0.35f
+                paint.style = Paint.Style.STROKE
+                paint.color = Color.parseColor("#00E676")
+                paint.strokeWidth = 3f
+                canvas.drawLine(cx + r * 0.45f * dir, cy - r * 0.2f, eyeStalkX, eyeStalkY, paint)
+
+                paint.style = Paint.Style.FILL
+                paint.color = Color.parseColor("#FF1744") // Glowing ruby eye
+                canvas.drawCircle(eyeStalkX, eyeStalkY, r * 0.18f, paint)
+                // Mid-band stripe and pupil
+                paint.color = Color.BLACK
+                canvas.drawRect(eyeStalkX - r * 0.18f, eyeStalkY - 2f, eyeStalkX + r * 0.18f, eyeStalkY + 2f, paint)
+                canvas.drawCircle(eyeStalkX + r * 0.05f * dir, eyeStalkY, r * 0.07f, paint)
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeStalkX + r * 0.07f * dir, eyeStalkY - r * 0.05f, r * 0.04f, paint)
             }
             18 -> { // Dolphin (Sleek body, rostrum beak, tall curved dorsal, horizontal fluke flipping up/down)
                 val tailYOffset = sin(fish.swimCycle.toDouble() * 0.7).toFloat() * r * 0.35f
@@ -2965,69 +3977,354 @@ class FrenzyView @JvmOverloads constructor(
                 paint.color = Color.RED
                 canvas.drawCircle(cx + r * 0.4f * dir, cy - r * 0.2f, r * 0.12f, paint)
             }
-            27 -> { // Electric Eel (Long serpentine yellow eel with electric bolts)
-                val wave = sin(fish.swimCycle.toDouble() * 0.9).toFloat() * r * 0.25f
+            27 -> { // Electric Eel (Serpentine skeletal physics, continuous undulating fin ribbon, bioluminescent electro-receptors, predatory head, dynamic branched lightning arcs & supercharge discharge)
+                val numNodes = 14
+                val nodeX = FloatArray(numNodes)
+                val nodeY = FloatArray(numNodes)
+                val nodeR = FloatArray(numNodes)
+
+                val cycle = fish.swimCycle.toDouble()
+                val now = System.currentTimeMillis()
                 
-                // Body segments
-                paint.color = fish.color
-                canvas.drawCircle(cx, cy, r * 0.4f, paint)
-                canvas.drawCircle(cx - r * 0.7f * dir, cy + wave, r * 0.35f, paint)
-                canvas.drawCircle(cx - r * 1.4f * dir, cy - wave, r * 0.3f, paint)
-                canvas.drawCircle(cx - r * 2.1f * dir, cy + wave, r * 0.2f, paint)
-                
-                // Tail fin
-                val tailP = drawPath.apply {
+                // Supercharge surge cycle: every 2.4s, surge for 0.7s
+                val surgePhase = ((now / 100) % 24).toInt()
+                val isSurging = surgePhase >= 17 // Surging high voltage!
+
+                // Compute spine node positions and radii
+                for (i in 0 until numNodes) {
+                    val t = i.toFloat() / (numNodes - 1)
+                    nodeX[i] = cx - i * (r * 0.22f) * dir
+                    // Undulation wave travels backward with amplitude increasing toward tail
+                    val waveAmp = r * (0.08f + 0.38f * t)
+                    nodeY[i] = cy + sin(cycle * 1.15 - i * 0.48).toFloat() * waveAmp
+                    
+                    // Body taper profile
+                    nodeR[i] = when (i) {
+                        0 -> r * 0.38f // Head
+                        1 -> r * 0.42f // Broad skull / neck
+                        in 2..5 -> r * (0.40f - (i - 2) * 0.015f) // Torso
+                        in 6..10 -> r * (0.35f - (i - 6) * 0.035f) // Tapering tail trunk
+                        11 -> r * 0.18f
+                        12 -> r * 0.11f
+                        else -> r * 0.05f // Tail tip
+                    }
+                }
+
+                // 1. Continuous Undulating Ventral/Anal Ribbon Fin (Underneath the body)
+                paint.reset()
+                paint.isAntiAlias = true
+                paint.style = Paint.Style.FILL
+                paint.color = Color.parseColor(if (isSurging) "#9900E5FF" else "#7000B0FF")
+                val ribbonFin = drawPath.apply {
                     reset()
-                    moveTo(cx - r * 2.2f * dir, cy + wave)
-                    lineTo(cx - r * 2.7f * dir, cy + wave - r * 0.3f)
-                    lineTo(cx - r * 2.7f * dir, cy + wave + r * 0.3f)
+                    moveTo(nodeX[1], nodeY[1] + nodeR[1] * 0.8f)
+                    for (i in 2 until numNodes) {
+                        val finWave = sin(cycle * 2.6 - i * 0.65).toFloat() * (r * 0.15f)
+                        val finDepth = nodeR[i] * 1.35f + finWave
+                        lineTo(nodeX[i], nodeY[i] + finDepth)
+                    }
+                    for (i in (numNodes - 1) downTo 1) {
+                        lineTo(nodeX[i], nodeY[i] + nodeR[i] * 0.7f)
+                    }
                     close()
                 }
-                canvas.drawPath(tailP, paint)
-                
-                // Electric sparks/arcs
-                if ((System.currentTimeMillis() / 150) % 2 == 0L) {
-                    paint.color = Color.parseColor("#00E5FF") // Electric Cyan
-                    paint.strokeWidth = 3f
-                    paint.style = Paint.Style.STROKE
-                    
-                    // Head shock bolt
-                    canvas.drawLine(cx - 10f, cy - 20f, cx + 15f, cy - 15f, paint)
-                    canvas.drawLine(cx + 15f, cy - 15f, cx, cy - 5f, paint)
-                    
-                    // Body shock bolt
-                    canvas.drawLine(cx - r * 0.7f * dir - 10f, cy + wave + 15f, cx - r * 0.7f * dir + 15f, cy + wave + 20f, paint)
-                    canvas.drawLine(cx - r * 0.7f * dir + 15f, cy + wave + 20f, cx - r * 0.7f * dir, cy + wave + 8f, paint)
-                    paint.style = Paint.Style.FILL
+                canvas.drawPath(ribbonFin, paint)
+
+                // Fin ribbon edge glow
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = 2.5f
+                paint.color = Color.parseColor(if (isSurging) "#FFFFFF" else "#00E5FF")
+                val ribbonEdge = drawPath2.apply {
+                    reset()
+                    moveTo(nodeX[1], nodeY[1] + nodeR[1] * 0.8f)
+                    for (i in 2 until numNodes) {
+                        val finWave = sin(cycle * 2.6 - i * 0.65).toFloat() * (r * 0.15f)
+                        val finDepth = nodeR[i] * 1.35f + finWave
+                        lineTo(nodeX[i], nodeY[i] + finDepth)
+                    }
                 }
+                canvas.drawPath(ribbonEdge, paint)
+
+                // 2. Smooth Continuous Serpentine Body Envelope (Main Flesh)
+                paint.style = Paint.Style.FILL
+                val bodyDark = Color.parseColor("#0B1B2B") // Midnight Oceanic Navy
+                val bodyGold = Color.parseColor("#FFD54F") // Electric Gold Belly
                 
-                // Angry red eye
-                paint.color = Color.RED
-                canvas.drawCircle(cx + r * 0.2f * dir, cy - r * 0.1f, r * 0.08f, paint)
+                // Draw overlapping smooth body circles to form solid muscle
+                for (i in (numNodes - 1) downTo 0) {
+                    paint.color = bodyDark
+                    canvas.drawCircle(nodeX[i], nodeY[i], nodeR[i], paint)
+                    
+                    // Ventral electric gold underbelly patch
+                    paint.color = if (isSurging) Color.parseColor("#FFEA00") else bodyGold
+                    canvas.drawCircle(nodeX[i], nodeY[i] + nodeR[i] * 0.35f, nodeR[i] * 0.65f, paint)
+                }
+
+                // Connect segments with smooth interpolated hull
+                val bodyHull = drawPath3.apply {
+                    reset()
+                    // Top edge
+                    moveTo(nodeX[0], nodeY[0] - nodeR[0])
+                    for (i in 1 until numNodes) {
+                        val prevX = nodeX[i - 1]
+                        val prevY = nodeY[i - 1] - nodeR[i - 1]
+                        val curX = nodeX[i]
+                        val curY = nodeY[i] - nodeR[i]
+                        quadTo((prevX + curX) / 2f, (prevY + curY) / 2f, curX, curY)
+                    }
+                    // Round around tail tip
+                    lineTo(nodeX[numNodes - 1], nodeY[numNodes - 1] + nodeR[numNodes - 1])
+                    // Bottom edge
+                    for (i in (numNodes - 2) downTo 0) {
+                        val prevX = nodeX[i + 1]
+                        val prevY = nodeY[i + 1] + nodeR[i + 1]
+                        val curX = nodeX[i]
+                        val curY = nodeY[i] + nodeR[i]
+                        quadTo((prevX + curX) / 2f, (prevY + curY) / 2f, curX, curY)
+                    }
+                    close()
+                }
+                paint.color = bodyDark
+                canvas.drawPath(bodyHull, paint)
+
+                // 3. Lateral-Line Bioluminescent Electro-Receptor Organ Nodes
+                paint.style = Paint.Style.FILL
+                for (i in 1 until (numNodes - 1)) {
+                    val pulse = (sin(cycle * 3.0 - i * 0.8) * 0.5 + 0.5).toFloat()
+                    val dotAlpha = if (isSurging) 255 else (140 + (115 * pulse).toInt())
+                    paint.color = Color.parseColor(if (isSurging) "#00E5FF" else "#FFEA00")
+                    paint.alpha = dotAlpha
+                    
+                    val lx = nodeX[i]
+                    val ly = nodeY[i] - nodeR[i] * 0.05f
+                    val dotSize = (nodeR[i] * 0.28f * (0.7f + 0.5f * pulse)).coerceAtLeast(2.5f)
+                    canvas.drawCircle(lx, ly, dotSize, paint)
+                    
+                    // Transverse electric chevron band
+                    if (i % 2 == 0) {
+                        paint.strokeWidth = 2f
+                        paint.style = Paint.Style.STROKE
+                        paint.color = Color.parseColor(if (isSurging) "#80FFFFFF" else "#4000E5FF")
+                        canvas.drawLine(lx, ly - nodeR[i] * 0.6f, lx - r * 0.06f * dir, ly + nodeR[i] * 0.6f, paint)
+                        paint.style = Paint.Style.FILL
+                    }
+                }
+
+                // 4. Predatory Sinuous Eel Head
+                val hx = nodeX[0]
+                val hy = nodeY[0]
+                val hr = nodeR[0]
+                
+                // Snout and open predatory jaw
+                paint.color = bodyDark
+                paint.style = Paint.Style.FILL
+                val snout = drawPath4.apply {
+                    reset()
+                    moveTo(hx, hy - hr * 0.9f)
+                    lineTo(hx + hr * 1.5f * dir, hy - hr * 0.2f) // Upper jaw snout
+                    lineTo(hx + hr * 0.9f * dir, hy + hr * 0.1f) // Inside mouth
+                    lineTo(hx + hr * 1.35f * dir, hy + hr * 0.45f) // Lower jaw
+                    lineTo(hx, hy + hr * 0.9f)
+                    close()
+                }
+                canvas.drawPath(snout, paint)
+
+                // Sharp white needle teeth in open jaw
+                paint.color = Color.WHITE
+                paint.strokeWidth = 2f
+                canvas.drawLine(hx + hr * 1.2f * dir, hy - hr * 0.15f, hx + hr * 1.15f * dir, hy + hr * 0.05f, paint)
+                canvas.drawLine(hx + hr * 1.35f * dir, hy - hr * 0.18f, hx + hr * 1.3f * dir, hy, paint)
+                canvas.drawLine(hx + hr * 1.1f * dir, hy + hr * 0.35f, hx + hr * 1.15f * dir, hy + hr * 0.15f, paint)
+
+                // Glowing Electric Predator Eye
+                val eyeX = hx + hr * 0.55f * dir
+                val eyeY = hy - hr * 0.32f
+                // Eye socket
+                paint.color = Color.BLACK
+                paint.style = Paint.Style.FILL
+                canvas.drawCircle(eyeX, eyeY, hr * 0.30f, paint)
+                // Glowing sclera
+                paint.color = Color.parseColor(if (isSurging) "#00E5FF" else "#FFD600")
+                canvas.drawCircle(eyeX, eyeY, hr * 0.24f, paint)
+                // Slit pupil
+                paint.color = Color.BLACK
+                paint.strokeWidth = 2.2f
+                canvas.drawLine(eyeX, eyeY - hr * 0.2f, eyeX, eyeY + hr * 0.2f, paint)
+                // Glint
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX - hr * 0.06f * dir, eyeY - hr * 0.08f, hr * 0.08f, paint)
+
+                // Nasal Barbels (Sensory receptors on snout)
+                paint.color = Color.parseColor("#FFD54F")
+                paint.strokeWidth = 2f
+                paint.style = Paint.Style.STROKE
+                canvas.drawLine(hx + hr * 1.4f * dir, hy - hr * 0.22f, hx + hr * 1.75f * dir, hy - hr * 0.35f, paint)
+                canvas.drawLine(hx + hr * 1.3f * dir, hy + hr * 0.42f, hx + hr * 1.65f * dir, hy + hr * 0.55f, paint)
+
+                // 5. Dynamic Branched Lightning Arcs & Electric Plasma Discharge
+                paint.isAntiAlias = true
+                paint.style = Paint.Style.STROKE
+
+                // Generate branching lightning bolts across nodes
+                val boltCount = if (isSurging) 5 else 2
+                for (b in 0 until boltCount) {
+                    val startNodeIdx = ((now / 80 + b * 4) % (numNodes - 2)).toInt()
+                    val sx = nodeX[startNodeIdx]
+                    val sy = nodeY[startNodeIdx]
+                    
+                    val arcPath = drawPath5.apply {
+                        reset()
+                        moveTo(sx, sy)
+                        var curX = sx
+                        var curY = sy
+                        val arcLength = (r * (if (isSurging) 0.9f else 0.55f))
+                        val segments = 4
+                        val angle = ((now * 0.01 + b * 1.3).toFloat() % (Math.PI * 2)).toFloat()
+                        val dx = cos(angle) * (arcLength / segments)
+                        val dy = sin(angle) * (arcLength / segments)
+                        
+                        for (s in 1..segments) {
+                            val jitterX = ((sin((now + s * 37 + b * 91) * 0.05) * r * 0.18f)).toFloat()
+                            val jitterY = ((cos((now + s * 53 + b * 67) * 0.05) * r * 0.18f)).toFloat()
+                            curX += dx + jitterX
+                            curY += dy + jitterY
+                            lineTo(curX, curY)
+                        }
+                    }
+                    
+                    // Outer cyan glow
+                    paint.strokeWidth = if (isSurging) 4.5f else 3f
+                    paint.color = Color.parseColor(if (b % 2 == 0) "#00E5FF" else "#FFEA00")
+                    canvas.drawPath(arcPath, paint)
+                    
+                    // Inner intense white core
+                    paint.strokeWidth = 1.8f
+                    paint.color = Color.WHITE
+                    canvas.drawPath(arcPath, paint)
+                }
+
+                // High-voltage surge radial shockwave field
+                if (isSurging) {
+                    val surgeRadius = r * 1.35f + 8f * sin(now / 50.0).toFloat()
+                    paint.strokeWidth = 3f
+                    paint.color = Color.parseColor("#8000E5FF")
+                    canvas.drawCircle(hx - r * 1.2f * dir, hy, surgeRadius, paint)
+                    paint.strokeWidth = 1.5f
+                    paint.color = Color.parseColor("#D0FFFFFF")
+                    canvas.drawCircle(hx - r * 1.2f * dir, hy, surgeRadius * 0.85f, paint)
+                }
+            }
+            35 -> { // Sand Flounder / Flatfish (Camouflaged flat disc, undulating edge frills, speckles, dual dorsal eyes)
+                val flounderColor = if (isFlashing) Color.RED else Color.parseColor("#BCAAA4")
+                val edgeWave = sin(fish.swimCycle.toDouble() * 1.5).toFloat() * (r * 0.12f)
+                
+                // 1. Undulating perimeter frill fin (Top & Bottom edge)
+                paint.color = Color.parseColor("#A1887F")
+                val frill = drawPath.apply {
+                    reset()
+                    moveTo(cx - r * 1.1f * dir, cy)
+                    quadTo(cx, cy - r * 0.75f + edgeWave, cx + r * 1.0f * dir, cy)
+                    quadTo(cx, cy + r * 0.75f - edgeWave, cx - r * 1.1f * dir, cy)
+                    close()
+                }
+                canvas.drawPath(frill, paint)
+
+                // 2. Main Flat Diamond-Oval Disc Body
+                paint.color = flounderColor
+                drawRectF.set(cx - r * 1.05f, cy - r * 0.55f, cx + r * 1.05f, cy + r * 0.55f)
+                canvas.drawOval(drawRectF, paint)
+
+                // 3. Sand Camouflage Speckles
+                paint.color = Color.parseColor("#795548")
+                for (s in -2..2) {
+                    val sx = cx + s * (r * 0.35f) * dir
+                    val sy = cy + sin(s * 1.3).toFloat() * (r * 0.22f)
+                    canvas.drawCircle(sx, sy, r * 0.08f, paint)
+                    paint.color = Color.parseColor("#D7CCC8")
+                    canvas.drawCircle(sx + 2f, sy - 2f, r * 0.04f, paint)
+                    paint.color = Color.parseColor("#795548")
+                }
+
+                // 4. Tail fin
+                val tailWag = sin(fish.swimCycle.toDouble() * 0.9).toFloat() * (r * 0.2f)
+                val tail = drawPath2.apply {
+                    reset()
+                    moveTo(cx - r * 0.9f * dir, cy)
+                    lineTo(cx - r * 1.45f * dir + tailWag * dir, cy - r * 0.45f)
+                    lineTo(cx - r * 1.3f * dir + tailWag * dir, cy)
+                    lineTo(cx - r * 1.45f * dir + tailWag * dir, cy + r * 0.45f)
+                    close()
+                }
+                canvas.drawPath(tail, paint)
+
+                // 5. Dual Periscope Eyes on top of body (Flounder anatomy)
+                val eyeY1 = cy - r * 0.24f
+                val eyeY2 = cy - r * 0.08f
+                val eyeX = cx + r * 0.45f * dir
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX, eyeY1, r * 0.14f, paint)
+                canvas.drawCircle(eyeX - r * 0.12f * dir, eyeY2, r * 0.14f, paint)
+                paint.color = Color.BLACK
+                canvas.drawCircle(eyeX + 1f * dir, eyeY1, r * 0.07f, paint)
+                canvas.drawCircle(eyeX - r * 0.12f * dir + 1f * dir, eyeY2, r * 0.07f, paint)
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX - 2f * dir, eyeY1 - 2f, r * 0.035f, paint)
+                canvas.drawCircle(eyeX - r * 0.12f * dir - 2f * dir, eyeY2 - 2f, r * 0.035f, paint)
             }
             else -> { // Standard swimming fish (Guppy, Clownfish, Butterfly, Tang, Lionfish)
-                // Tail fin
+                val tailWag = sin(fish.swimCycle.toDouble() * 0.8).toFloat() * r * 0.22f
+                val dorsalWave = sin(fish.swimCycle.toDouble() * 1.2).toFloat() * (r * 0.14f)
+                val pecAngle = sin(fish.swimCycle.toDouble() * 1.6).toFloat() * 20f
+
+                // 1. Tail fin with smooth wagging
+                paint.style = Paint.Style.FILL
+                paint.color = fish.color
                 val tailPath = drawPath.apply {
                     reset()
-                    if (fish.speciesIndex == 0) { // Guppy (flowing large tail)
+                    if (fish.speciesIndex == 0) { // Guppy (flowing large fan tail)
                         moveTo(cx - r * 0.8f * dir, cy)
-                        quadTo(cx - r * 1.4f * dir, cy - r * 0.9f, cx - r * 1.6f * dir, cy - r * 0.5f)
-                        lineTo(cx - r * 1.6f * dir, cy + r * 0.5f)
-                        quadTo(cx - r * 1.4f * dir, cy + r * 0.9f, cx - r * 0.8f * dir, cy)
+                        quadTo(cx - r * 1.4f * dir + tailWag * dir, cy - r * 0.9f, cx - r * 1.6f * dir + tailWag * dir, cy - r * 0.5f)
+                        lineTo(cx - r * 1.6f * dir + tailWag * dir, cy + r * 0.5f)
+                        quadTo(cx - r * 1.4f * dir + tailWag * dir, cy + r * 0.9f, cx - r * 0.8f * dir, cy)
                     } else { // Standard tail
                         moveTo(cx - r * 0.8f * dir, cy)
-                        lineTo(cx - r * 1.35f * dir, cy - r * 0.5f)
-                        lineTo(cx - r * 1.35f * dir, cy + r * 0.5f)
+                        lineTo(cx - r * 1.35f * dir + tailWag * dir, cy - r * 0.5f)
+                        lineTo(cx - r * 1.20f * dir + tailWag * dir, cy)
+                        lineTo(cx - r * 1.35f * dir + tailWag * dir, cy + r * 0.5f)
                     }
                     close()
                 }
                 canvas.drawPath(tailPath, paint)
 
-                // Main body
+                // 2. Animated Dorsal Fin (Top)
+                val dorsal = drawPath2.apply {
+                    reset()
+                    if (fish.speciesIndex == 13) { // Angelfish tall dorsal
+                        moveTo(cx - r * 0.35f * dir, cy - r * 0.85f)
+                        quadTo(cx - r * 0.15f * dir + dorsalWave * dir, cy - r * 1.6f + dorsalWave, cx + r * 0.15f * dir, cy - r * 0.85f)
+                    } else {
+                        moveTo(cx - r * 0.4f * dir, cy - r * 0.52f)
+                        quadTo(cx - r * 0.1f * dir + dorsalWave * dir, cy - r * 0.95f + dorsalWave, cx + r * 0.25f * dir, cy - r * 0.48f)
+                    }
+                    close()
+                }
+                canvas.drawPath(dorsal, paint)
+
+                // 3. Animated Ventral / Pelvic Fin (Bottom)
+                val ventral = drawPath3.apply {
+                    reset()
+                    moveTo(cx - r * 0.15f * dir, cy + r * 0.52f)
+                    lineTo(cx - r * 0.38f * dir + dorsalWave * 0.5f * dir, cy + r * 0.90f)
+                    lineTo(cx + r * 0.05f * dir, cy + r * 0.52f)
+                    close()
+                }
+                canvas.drawPath(ventral, paint)
+
+                // 4. Main body
                 if (fish.speciesIndex == 10) { // Butterfly (Very flat round disc)
                     canvas.drawCircle(cx, cy, r, paint)
                 } else if (fish.speciesIndex == 13) { // Neon Angelfish (Tall vertical diamond)
-                    val diamond = drawPath2.apply {
+                    val diamond = drawPath4.apply {
                         reset()
                         moveTo(cx, cy - r * 1.3f)
                         lineTo(cx + r * 0.9f * dir, cy)
@@ -3041,7 +4338,7 @@ class FrenzyView @JvmOverloads constructor(
                     if (mouthOpen) {
                         val sweepAngle = 295f
                         val startAngle = if (facingRight) 32f else 212f
-                        val path = drawPath2.apply {
+                        val path = drawPath4.apply {
                             reset()
                             addArc(drawRectF, startAngle, sweepAngle)
                             lineTo(cx, cy)
@@ -3053,7 +4350,7 @@ class FrenzyView @JvmOverloads constructor(
                     }
                 }
 
-                // Clownfish Stripes
+                // 5. Clownfish / Angelfish / Lionfish Patterns
                 if (fish.speciesIndex == 9) { // Clownfish Orange vertical white stripes
                     paint.color = Color.WHITE
                     canvas.drawRect(cx - r * 0.2f * dir, cy - r * 0.5f, cx + r * 0.05f * dir, cy + r * 0.5f, paint)
@@ -3076,13 +4373,32 @@ class FrenzyView @JvmOverloads constructor(
                     paint.style = Paint.Style.FILL
                 }
 
-                // Eye
+                // 6. Animated Flapping Pectoral Fin (Side)
+                canvas.save()
+                canvas.translate(cx + r * 0.05f * dir, cy + r * 0.08f)
+                canvas.rotate(pecAngle * dir)
+                paint.color = fish.color
+                val pec = drawPath5.apply {
+                    reset()
+                    moveTo(0f, 0f)
+                    quadTo(-r * 0.42f * dir, r * 0.04f, -r * 0.48f * dir, r * 0.38f)
+                    lineTo(-r * 0.12f * dir, r * 0.28f)
+                    close()
+                }
+                canvas.drawPath(pec, paint)
+                paint.color = Color.parseColor("#35FFFFFF")
+                canvas.drawPath(pec, paint) // highlight
+                canvas.restore()
+
+                // 7. Eye
                 paint.color = Color.WHITE
                 val eyeX = cx + r * 0.6f * dir
                 val eyeY = cy - r * 0.16f
                 canvas.drawCircle(eyeX, eyeY, r * 0.15f, paint)
                 paint.color = Color.BLACK
                 canvas.drawCircle(eyeX, eyeY, r * 0.08f, paint)
+                paint.color = Color.WHITE
+                canvas.drawCircle(eyeX - r * 0.03f * dir, eyeY - r * 0.03f, r * 0.035f, paint)
             }
         }
     }
@@ -3145,6 +4461,8 @@ class FrenzyView @JvmOverloads constructor(
             31 -> "Giant Isopod"
             32 -> "Golden Rainbow Fish"
             33 -> "Pufferfish"
+            34 -> "Sea Mantis"
+            35 -> "Sand Flounder"
             else -> "Sea Creature"
         }
     }

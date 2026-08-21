@@ -556,7 +556,7 @@
     <string name="monkey_autumn">THU</string>
     <string name="monkey_winter">ĐÔNG</string>
     <string name="retro_driver_speed">Tốc độ: %1$d MPH</string>
-    <string name="frenzy_stage">CẤP ĐỘ: %1$s (%2$d / %3$d)</string>
+    <string name="frenzy_stage">CẤP ĐỘ: %1$s</string>
     <string name="frenzy_guppy">CÁ BẢY MÀU</string>
     <string name="frenzy_angelfish">CÁ THẦN TIÊN</string>
     <string name="frenzy_lionfish">CÁ SƯ TỬ</string>
@@ -796,13 +796,7 @@
     <string name="placeholder_dash">---</string>
     <string name="zero_pts">0 điểm</string>
 
-    <string name="day_1">NGÀY 1</string>
-    <string name="reward_day_format">NGÀY %1$d</string>
-    <string name="status_locked">ĐÃ KHÓA</string>
-    <string name="daily_arcade_rewards">THƯỞNG ĐIỂM DANH HÀNG NGÀY</string>
-    <string name="daily_rewards_subtitle">Điểm danh hàng ngày để nhận chuỗi thưởng và mở khóa Jackpot 1.500 xu!</string>
-    <string name="claim_reward">🎁 NHẬN THƯỞNG</string>
-    <string name="btn_close">ĐÓNG</string>
+
 
     <string name="controller_settings_title">🎮 Cài đặt Tay cầm &amp; Rung</string>
     <string name="hardware_diagnostics">CHẨN ĐOÁN PHẦN CỨNG</string>

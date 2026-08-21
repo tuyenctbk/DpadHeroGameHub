@@ -316,9 +316,6 @@
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             tools:ignore="LockedOrientationActivity" />
 
-        <receiver
-            android:name="com.tdpham.games.common.DailyRewardAlarmReceiver"
-            android:exported="false" />
 
         <activity
             android:name="com.tdpham.games.monkey.MonkeyActivity"
@@ -336,7 +333,7 @@
 
         <activity
             android:name="com.tdpham.games.frenzy.FrenzyActivity"
-            android:exported="false"
+            android:exported="true"
             android:screenOrientation="landscape"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             tools:ignore="LockedOrientationActivity" />

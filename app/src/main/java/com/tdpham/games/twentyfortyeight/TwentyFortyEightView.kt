@@ -10,6 +10,8 @@ import com.tdpham.games.R
 import com.tdpham.games.common.*
 import java.util.*
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * 2048 / 4096 Game View extending BaseGameView SurfaceView engine.
@@ -272,7 +274,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
 
         paint.textSize = cellSize * 0.28f
         paint.color = GamePalette.TEXT_SECONDARY
-        val scoreLabelY = (offsetY - cellSize * 0.75f).coerceAtLeast(40f)
+        val scoreLabelY = (offsetY - cellSize * 0.75f).coerceAtLeast(max(55f, h * 0.065f))
         val scoreNumY = scoreLabelY + cellSize * 0.45f
         val labelX = offsetX
         canvas.drawText(context.getString(R.string.score_label), labelX, scoreLabelY, paint)

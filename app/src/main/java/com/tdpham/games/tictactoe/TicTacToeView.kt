@@ -16,6 +16,8 @@ import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.random.Random
 
 class TicTacToeView @JvmOverloads constructor(
@@ -407,20 +409,23 @@ class TicTacToeView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
         paint.textAlign = Paint.Align.LEFT
-        paint.textSize = 38f
-        val hudY1 = Math.round(60f).toFloat()
-        canvas.drawText("${context.getString(R.string.wins_label)}: $wins", 40f, hudY1, paint)
+        paint.textSize = 34f
+        val hudY1 = max(55f, height * 0.065f)
+        val leftX = max(45f, width * 0.04f)
+        val rightX = min(width - 45f, width * 0.96f)
+
+        canvas.drawText("${context.getString(R.string.wins_label)}: $wins", leftX, hudY1, paint)
         
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("${context.getString(R.string.mode_label)}: ${gridSize}x$gridSize", width - 40f, hudY1, paint)
+        canvas.drawText("${context.getString(R.string.mode_label)}: ${gridSize}x$gridSize", rightX, hudY1, paint)
 
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT
-            paint.textSize = 28f
+            paint.textSize = 26f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, hudY1 + 40f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY1 + 40f, paint)
             paint.alpha = 255
         }
 

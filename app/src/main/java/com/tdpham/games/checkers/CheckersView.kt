@@ -13,6 +13,8 @@ import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.random.Random
 
 /**
@@ -661,24 +663,27 @@ class CheckersView @JvmOverloads constructor(
         }
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
-        paint.textSize = 38f
+        paint.textSize = 34f
         paint.textAlign = Paint.Align.LEFT
-        val hudY = 52f
-        canvas.drawText("${context.getString(R.string.wins_label)}: $wins", 30f, hudY, paint)
+        val hudY = max(55f, height * 0.065f)
+        val leftX = max(45f, width * 0.04f)
+        val rightX = min(width - 45f, width * 0.96f)
+
+        canvas.drawText("${context.getString(R.string.wins_label)}: $wins", leftX, hudY, paint)
 
         paint.textAlign = Paint.Align.RIGHT
         paint.color = Color.LTGRAY
         val modeStr = context.getString(if (currentDifficultyIndex == 0) R.string.checkers_difficulty_1 else R.string.checkers_difficulty_2)
-        canvas.drawText("${context.getString(R.string.mode_label)}: $modeStr", width - 30f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.mode_label)}: $modeStr", rightX, hudY, paint)
         paint.textAlign = Paint.Align.LEFT
 
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT
-            paint.textSize = 28f
+            paint.textSize = 26f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 30f, hudY + 45f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY + 40f, paint)
             paint.alpha = 255
         }
         

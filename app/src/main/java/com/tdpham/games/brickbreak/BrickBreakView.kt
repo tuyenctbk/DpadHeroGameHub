@@ -17,6 +17,8 @@ import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
+import kotlin.math.max
+import kotlin.math.min
 
 class BrickBreakView @JvmOverloads constructor(
     context: Context,
@@ -552,17 +554,22 @@ class BrickBreakView @JvmOverloads constructor(
         drawHud(canvas)
 
         // Quick Hint (Top/Left)
+        val hudY = max(55f, height * 0.065f)
+        val leftX = max(45f, width * 0.04f)
+        val rightX = min(width - 45f, width * 0.96f)
+
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT
-            paint.textSize = width / 45f
+            paint.textSize = 26f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, height * 0.15f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY + 40f, paint)
             paint.alpha = 255
         }
 
         paint.color = Color.LTGRAY
         paint.textAlign = Paint.Align.CENTER
+        paint.textSize = 28f
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val sizeIndex = prefs.getInt(KEY_PADDLE_SIZE, 1)
         val sizeStr = context.getString(when(sizeIndex) {
@@ -570,7 +577,7 @@ class BrickBreakView @JvmOverloads constructor(
             2 -> R.string.brick_break_paddle_small
             else -> R.string.brick_break_paddle_medium
         })
-        canvas.drawText(sizeStr, width / 2f, height * 0.05f, paint)
+        canvas.drawText(sizeStr, width / 2f, hudY, paint)
 
         if (isPaused && !isGameOver && !isWin) {
             val title = if (!isBallLaunched) context.getString(R.string.game_brick_break) else context.getString(R.string.paused)
@@ -618,15 +625,17 @@ class BrickBreakView @JvmOverloads constructor(
     }
 
     private fun drawHud(canvas: Canvas) {
-        paint.textSize = width / 35f
-        val hudY = height * 0.05f
+        val hudY = max(55f, height * 0.065f)
+        val leftX = max(45f, width * 0.04f)
+        val rightX = min(width - 45f, width * 0.96f)
+        paint.textSize = 34f
         paint.textAlign = Paint.Align.LEFT
         paint.color = GamePalette.TEXT_PRIMARY
-        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.lives_label)}: $lives", 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.lives_label)}: $lives", leftX, hudY, paint)
 
         paint.textAlign = Paint.Align.RIGHT
         paint.color = GamePalette.SCORE
-        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", width - 40f, hudY, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", rightX, hudY, paint)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {

@@ -15,6 +15,8 @@ import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
 import com.tdpham.games.R
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 class Lines98View @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -497,11 +499,13 @@ class Lines98View @JvmOverloads constructor(
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
-        paint.textSize = 40f
-        val hudY1 = height * 0.05f
+        paint.textSize = 34f
+        val hudY1 = max(55f, height * 0.065f)
+        val leftX = max(45f, width * 0.04f)
+        val rightX = min(width - 45f, width * 0.96f)
         
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("${context.getString(R.string.score_label)}: $score", 50f, hudY1, paint)
+        canvas.drawText("${context.getString(R.string.score_label)}: $score", leftX, hudY1, paint)
         
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.LTGRAY
@@ -509,25 +513,26 @@ class Lines98View @JvmOverloads constructor(
         
         paint.textAlign = Paint.Align.RIGHT
         paint.color = Color.WHITE
-        canvas.drawText("${context.getString(R.string.best_label)}: ${ScoreManager.getHighScore(context, gameKey, colorCount)}", width - 50f, hudY1, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: ${ScoreManager.getHighScore(context, gameKey, colorCount)}", rightX, hudY1, paint)
         
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
             paint.textAlign = Paint.Align.LEFT
-            paint.textSize = 28f
+            paint.textSize = 26f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 50f, hudY1 + 50f, paint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY1 + 45f, paint)
             paint.alpha = 255
         }
 
         // Next Balls
         paint.textAlign = Paint.Align.RIGHT
+        paint.textSize = 26f
         val nextLabel = context.getString(R.string.next_label)
-        canvas.drawText("$nextLabel:", width - 250f, hudY1 + 60f, paint)
+        canvas.drawText("$nextLabel:", rightX - 160f, hudY1 + 45f, paint)
         for (i in nextBalls.indices) {
             paint.color = ballColors[(nextBalls[i] - 1) % ballColors.size]
-            canvas.drawCircle(width - 200f + i * 50f, hudY1 + 50f, 15f, paint)
+            canvas.drawCircle(rightX - 120f + i * 45f, hudY1 + 38f, 14f, paint)
         }
 
         if (isGameOver) {

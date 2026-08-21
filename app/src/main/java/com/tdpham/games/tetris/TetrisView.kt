@@ -14,6 +14,8 @@ import com.tdpham.games.common.GameEnvironment
 import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.CelebrationManager
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.random.Random
 
 class TetrisView @JvmOverloads constructor(
@@ -538,7 +540,7 @@ class TetrisView @JvmOverloads constructor(
             textPaint.textSize = size * 0.5f
             textPaint.color = Color.WHITE
             textPaint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), 40f, 60f, textPaint)
+            canvas.drawText(context.getString(R.string.trex_press_menu_options), max(45f, width * 0.04f), max(55f, height * 0.065f), textPaint)
             textPaint.alpha = 255
         }
 
