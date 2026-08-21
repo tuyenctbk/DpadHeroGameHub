@@ -70,6 +70,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
             }
 
             gameView.onGameOver = { score ->
+                HapticManager.vibrateExplosion(this)
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
                 bundle.putInt(FirebaseAnalytics.Param.SCORE, score)
@@ -95,13 +96,19 @@ abstract class BaseGameActivity : AppCompatActivity() {
                         this,
                         onReviveConfirmed = {
                             hasRevivedThisRound = true
+                            var rewardGranted = false
                             AdManager.showRewardedOrInterstitial(
                                 this,
                                 onRewardGranted = {
+                                    rewardGranted = true
                                     SoundManager.playSuccess()
+                                    HapticManager.vibrateSuccess(this)
                                     gameView.reviveGame()
                                 },
                                 onAdClosed = {
+                                    if (!rewardGranted) {
+                                        handleFinalGameOver()
+                                    }
                                     focusGame()
                                 }
                             )
@@ -328,6 +335,9 @@ abstract class BaseGameActivity : AppCompatActivity() {
                     "frenzy" -> (gameView as? com.tdpham.games.frenzy.FrenzyView)?.resetGame()
                     "retrodriver" -> (gameView as? com.tdpham.games.retrodriver.RetroDriverView)?.resetGame()
                     "fruit" -> (gameView as? com.tdpham.games.fruit.FruitView)?.resetGame()
+                    "connect_four" -> (gameView as? com.tdpham.games.connectfour.ConnectFourView)?.resetGame()
+                    "blackjack" -> (gameView as? com.tdpham.games.blackjack.BlackjackView)?.resetGame()
+                    "trivia" -> (gameView as? com.tdpham.games.trivia.TriviaView)?.resetGame()
                 }
                 gameView.resume()
             },
@@ -346,6 +356,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        ScreenShake.syncSettings(this)
         IdleAdManager.isGameMode = true
         IdleAdManager.isWaitingMode = !hasStarted || isGuideShowing
         IdleAdManager.startTracking()
@@ -448,6 +459,9 @@ abstract class BaseGameActivity : AppCompatActivity() {
             "frenzy" -> com.tdpham.games.frenzy.FrenzyOptionsDialog.show(this) { (gameView as? com.tdpham.games.frenzy.FrenzyView)?.resetGame(); callback() }
             "retrodriver" -> com.tdpham.games.retrodriver.RetroDriverOptionsDialog.show(this) { (gameView as? com.tdpham.games.retrodriver.RetroDriverView)?.resetGame(); callback() }
             "fruit" -> com.tdpham.games.fruit.FruitOptionsDialog.show(this) { (gameView as? com.tdpham.games.fruit.FruitView)?.resetGame(); callback() }
+            "connect_four" -> com.tdpham.games.connectfour.ConnectFourOptionsDialog.show(this) { (gameView as? com.tdpham.games.connectfour.ConnectFourView)?.resetGame(); callback() }
+            "blackjack" -> com.tdpham.games.blackjack.BlackjackOptionsDialog.show(this) { (gameView as? com.tdpham.games.blackjack.BlackjackView)?.resetGame(); callback() }
+            "trivia" -> com.tdpham.games.trivia.TriviaOptionsDialog.show(this) { (gameView as? com.tdpham.games.trivia.TriviaView)?.resetGame(); callback() }
             else -> {
                 callback()
                 return false

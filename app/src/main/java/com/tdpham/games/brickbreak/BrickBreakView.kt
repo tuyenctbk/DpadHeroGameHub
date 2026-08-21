@@ -136,6 +136,21 @@ class BrickBreakView @JvmOverloads constructor(
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
+    override fun canRevive(): Boolean = true
+
+    override fun reviveGame(): Boolean {
+        if (isGameOver) {
+            isGameOver = false
+            isPaused = false
+            lives = 2
+            resetBall()
+            celebrationManager.clear()
+            resume()
+            return true
+        }
+        return false
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         requestFocus()

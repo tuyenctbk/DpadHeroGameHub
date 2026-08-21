@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0A0E17"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="28dp"
+        android:clipChildren="false">
+
+        <!-- Top Header Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="🎮 Controller &amp; Haptic Settings"
+                android:textColor="#FFFFFF"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.03" />
+
+            <Button
+                android:id="@+id/btn_back_header"
+                android:layout_width="100dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_btn_neutral_selector"
+                android:text="BACK"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- 1. Hardware Diagnostic & Gamepad Detection Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:orientation="vertical"
+            android:padding="18dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HARDWARE DIAGNOSTICS"
+                android:textColor="#00E5FF"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
+
+            <TextView
+                android:id="@+id/tv_gamepad_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="🎮 Controller: Checking devices..."
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_vibrator_hardware_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="⚡ Vibrator: Checking VibratorManager..."
+                android:textColor="#90A4AE"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- 2. Master Haptic Switch Card -->
+        <LinearLayout
+            android:id="@+id/layout_haptic_master_toggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Haptic &amp; Rumble Vibration"
+                    android:textColor="#FFFFFF"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Enable motor rumble for impacts, coins, and buttons"
+                    android:textColor="#90A4AE"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_haptic_master"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <!-- 3. Visual Haptic Intensity Slider Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:orientation="vertical"
+            android:padding="18dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Haptic Intensity (Vibrator Amplitude)"
+                    android:textColor="#FFFFFF"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_haptic_intensity_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/game_item_background"
+                    android:backgroundTint="#00E5FF"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="100%"
+                    android:textColor="#0A0E17"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/seekbar_haptic_intensity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:max="100"
+                android:progress="100"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- 4. Interactive Test Vibration Suite Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:orientation="vertical"
+            android:padding="18dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VIBRATION MOTOR HARDWARE TEST"
+                android:textColor="#FFD700"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Select a vibration profile and tap test to verify motor response:"
+                android:textColor="#90A4AE"
+                android:textSize="13sp" />
+
+            <!-- Pattern Selection Chips -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_profile_click"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/game_item_background"
+                        android:backgroundTint="#1B263B"
+                        android:text="🕹️ Click (15ms)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:focusable="true" />
+
+                    <Button
+                        android:id="@+id/btn_profile_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/game_item_background"
+                        android:backgroundTint="#1B263B"
+                        android:text="⚡ Score (35ms)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:focusable="true" />
+
+                    <Button
+                        android:id="@+id/btn_profile_damage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/game_item_background"
+                        android:backgroundTint="#1B263B"
+                        android:text="💥 Hazard (70ms)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:focusable="true" />
+
+                    <Button
+                        android:id="@+id/btn_profile_explosion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/game_item_background"
+                        android:backgroundTint="#1B263B"
+                        android:text="💣 Boss Explosion"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:focusable="true" />
+
+                    <Button
+                        android:id="@+id/btn_profile_success"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:background="@drawable/game_item_background"
+                        android:backgroundTint="#1B263B"
+                        android:text="🏆 Victory Waveform"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:focusable="true" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- Test Vibration Action Button -->
+            <Button
+                android:id="@+id/btn_test_vibration"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="#00E5FF"
+                android:text="⚡ TEST VIBRATION NOW"
+                android:textColor="#0A0E17"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- 5. Controller Sensitivity Preset Card -->
+        <LinearLayout
+            android:id="@+id/layout_controller_sensitivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gamepad Input Speed"
+                    android:textColor="#FFFFFF"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Digital input repeat rate &amp; sensitivity curve"
+                    android:textColor="#90A4AE"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_controller_sensitivity_badge"
+                android:layout_width="140dp"
+                android:layout_height="38dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="#FFD700"
+                android:text="1.0x (Standard)"
+                android:textColor="#0A0E17"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- 6. Analog Stick Deadzone Slider Card (Third-Party Gamepads) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:orientation="vertical"
+            android:padding="18dp"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Analog Stick Deadzone Threshold"
+                        android:textColor="#FFFFFF"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Prevents stick drift &amp; enhances D-pad precision on Bluetooth gamepads"
+                        android:textColor="#90A4AE"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_deadzone_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/game_item_background"
+                    android:backgroundTint="#FFD700"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="25%"
+                    android:textColor="#0A0E17"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/seekbar_controller_deadzone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:max="55"
+                android:progress="20"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/tv_deadzone_live_feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="🕹️ Live Stick Test: Neutral (0.00, 0.00)"
+                android:textColor="#00E5FF"
+                android:textSize="12sp"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+
+        <!-- Bottom Done Button -->
+        <Button
+            android:id="@+id/btn_done"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_menu_item_selector"
+            android:text="DONE"
+            android:textColor="@color/btn_menu_text_selector"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:focusable="true" />
+
+    </LinearLayout>
+</ScrollView>

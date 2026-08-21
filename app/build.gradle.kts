@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.config)
+    implementation(libs.firebase.firestore)
     implementation(libs.play.services.ads)
     implementation(libs.androidx.work.runtime)
 

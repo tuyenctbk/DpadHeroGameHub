@@ -36,7 +36,7 @@ object ScoreManager {
                 prefs.edit().putInt(globalKey, newScore).apply()
             }
 
-            // Log high score to Firebase
+            // Log high score to Firebase Analytics
             try {
                 val bundle = Bundle()
                 val firebaseKey = if (level >= 0) "${gameKey}_l$level" else gameKey
@@ -45,6 +45,13 @@ object ScoreManager {
                 Firebase.analytics.logEvent(FirebaseAnalytics.Event.POST_SCORE, bundle)
             } catch (e: Exception) {
                 android.util.Log.e("ScoreManager", "Failed to log high score to Firebase: ${e.message}", e)
+            }
+
+            // Submit to Global Worldwide Leaderboard (Firestore)
+            try {
+                LeaderboardManager.submitGlobalScore(context, gameKey, level, newScore)
+            } catch (e: Exception) {
+                android.util.Log.e("ScoreManager", "Failed to submit global score: ${e.message}", e)
             }
 
             return true
@@ -67,4 +74,19 @@ object ScoreManager {
         }
         editor.apply()
     }
+
+    fun clearHighScoresForActiveProfile(context: Context) {
+        val activeId = ProfileManager.getActiveProfileId(context) ?: "global"
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val allEntries = prefs.all
+        val editor = prefs.edit()
+
+        for (key in allEntries.keys) {
+            if (key.startsWith("${activeId}_high_score_")) {
+                editor.remove(key)
+            }
+        }
+        editor.apply()
+    }
 }
+

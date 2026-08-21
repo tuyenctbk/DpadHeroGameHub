@@ -1,77 +1,419 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
-    android:orientation="vertical"
-    android:padding="32dp">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="@string/settings"
-        android:textColor="#FFFFFF"
-        android:textSize="36sp"
-        android:textStyle="bold" />
+    android:background="#0A0E17"
+    android:fillViewport="true">
 
     <LinearLayout
-        android:id="@+id/layout_sound_toggle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:orientation="vertical"
+        android:padding="28dp"
+        android:clipChildren="false">
 
+        <!-- Title -->
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/sound_effects"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_sound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="false"
-            android:focusable="false" />
+            android:layout_marginBottom="24dp"
+            android:text="@string/settings"
+            android:textColor="#FFFFFF"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05" />
+
+        <!-- Sound Effects Toggle & Volume Card -->
+        <LinearLayout
+            android:id="@+id/layout_sound_toggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sound_effects"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_sound_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Volume: 100% • Tap volume badge to adjust"
+                    android:textColor="#90A4AE"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_sound_volume"
+                android:layout_width="80dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="#1B263B"
+                android:text="100%"
+                android:textColor="#00E5FF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:focusable="true" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_sound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <!-- Sound Profile Preset Card (Arcade, Retro, Modern) -->
+        <LinearLayout
+            android:id="@+id/layout_sound_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sound Profile Theme"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_sound_profile_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Arcade 8-Bit • Tap to switch audio preset"
+                    android:textColor="#90A4AE"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_sound_profile"
+                android:layout_width="140dp"
+                android:layout_height="38dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="#1B263B"
+                android:text="Arcade 8-Bit"
+                android:textColor="#FFD700"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- Retro Music Toggle & Volume Card -->
+        <LinearLayout
+            android:id="@+id/layout_music_toggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Retro Music &amp; Ambience"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_music_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Synthesizer background arcade melodies"
+                    android:textColor="#90A4AE"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_music"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <!-- Controller Sensitivity Card -->
+        <LinearLayout
+            android:id="@+id/layout_sensitivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Controller &amp; Gamepad Sensitivity"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Adjust D-Pad, joystick, and touch responsiveness"
+                    android:textColor="#90A4AE"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_sensitivity"
+                android:layout_width="140dp"
+                android:layout_height="38dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="#FFD700"
+                android:text="1.0x (Standard)"
+                android:textColor="#0A0E17"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- Haptic Feedback Vibration Card -->
+        <LinearLayout
+            android:id="@+id/layout_haptic_toggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Haptic &amp; Controller Vibration"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Tactile pulses on hits, scores, and explosions"
+                    android:textColor="#90A4AE"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_open_controller_settings"
+                android:layout_width="110dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="#00E5FF"
+                android:text="CALIBRATE"
+                android:textColor="#0A0E17"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:focusable="true" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_haptic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <!-- Scanline CRT Toggle Card -->
+        <LinearLayout
+            android:id="@+id/layout_scanline_toggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/scanline_crt_effect"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/scanline_crt_desc"
+                    android:textColor="#90A4AE"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_scanline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <!-- Screen Shake Toggle Card -->
+        <LinearLayout
+            android:id="@+id/layout_shake_toggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/game_item_background"
+            android:backgroundTint="#141C2E"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/screen_shake_effect"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/screen_shake_desc"
+                    android:textColor="#90A4AE"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_shake"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <!-- Profile Management Button -->
+        <Button
+            android:id="@+id/btn_switch_profile"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_menu_item_selector"
+            android:textColor="@color/btn_menu_text_selector"
+            android:text="@string/switch_profile"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:focusable="true" />
+
+        <!-- Reset High Scores Button -->
+        <Button
+            android:id="@+id/btn_reset_scores"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/bg_btn_danger_selector"
+            android:textColor="#FFFFFF"
+            android:text="@string/reset_high_scores"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:focusable="true" />
+
+        <!-- Back Button -->
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_btn_neutral_selector"
+            android:textColor="#FFFFFF"
+            android:text="@string/back"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:focusable="true" />
 
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
-        android:text="@string/sound_effects_description"
-        android:textColor="#888888"
-        android:textSize="14sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <Button
-        android:id="@+id/btn_switch_profile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="#444444"
-        android:text="@string/switch_profile"
-        android:textColor="#FFFFFF" />
-
-    <Button
-        android:id="@+id/btn_back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#333333"
-        android:text="@string/back"
-        android:textColor="#FFFFFF" />
-
-</LinearLayout>
+</ScrollView>

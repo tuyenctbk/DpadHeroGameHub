@@ -172,6 +172,27 @@ class MonkeyView @JvmOverloads constructor(
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
+    override fun canRevive(): Boolean = true
+
+    override fun reviveGame(): Boolean {
+        if (gameOver) {
+            gameOver = false
+            gamePaused = false
+            lives = 3
+            isFalling = false
+            monkeyGrabbed = false
+            playerY = height * 0.72f
+            playerDizzyUntil = 0L
+            obstacles.clear()
+            harpyEagle = null
+            blackJaguar = null
+            celebrationManager.clear()
+            resume()
+            return true
+        }
+        return false
+    }
+
     override fun resetGame() {
         score = 0
         lives = 6
@@ -1532,6 +1553,36 @@ class MonkeyView @JvmOverloads constructor(
             }
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            if (gameOver) {
+                resetGame()
+                startGame()
+                return true
+            }
+            if (gamePaused) {
+                resume()
+                return true
+            }
+
+            val touchX = event.x
+            val ropeWidth = width / 3f
+            val targetRope = when {
+                touchX < ropeWidth -> 0
+                touchX < ropeWidth * 2 -> 1
+                else -> 2
+            }
+
+            if (targetRope != currentRope) {
+                currentRope = targetRope
+                SoundManager.playClick()
+                invalidate()
+            }
+            return true
+        }
+        return super.onTouchEvent(event)
     }
 
     private fun spawnFiberParticles(x: Float, y: Float) {

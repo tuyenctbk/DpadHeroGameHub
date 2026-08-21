@@ -2,6 +2,7 @@ package com.tdpham.games.hub
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -11,10 +12,12 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.tdpham.games.common.FocusHighlightDrawable
 import com.tdpham.games.R
 import com.tdpham.games.brickbreak.BrickBreakActivity
 import com.tdpham.games.snake.SnakeActivity
@@ -46,6 +49,15 @@ import com.tdpham.games.monkey.MonkeyActivity
 import com.tdpham.games.retrodriver.RetroDriverActivity
 import com.tdpham.games.frenzy.FrenzyActivity
 import com.tdpham.games.fruit.FruitActivity
+import com.tdpham.games.connectfour.ConnectFourActivity
+import com.tdpham.games.blackjack.BlackjackActivity
+import com.tdpham.games.trivia.TriviaActivity
+import com.tdpham.games.common.DailyRewardDialog
+import com.tdpham.games.common.DailyRewardManager
+import com.tdpham.games.common.DailyRewardNotificationScheduler
+import com.tdpham.games.common.HapticManager
+import com.tdpham.games.common.LeaderboardManager
+import com.tdpham.games.common.SettingsManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.profile.ProfileManager
 import com.tdpham.games.common.profile.UserProfile
@@ -56,6 +68,7 @@ import com.tdpham.games.common.IdleAdOverlayHelper
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.ListenerRegistration
 
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -67,10 +80,54 @@ class MainActivity : AppCompatActivity() {
     private var firebaseAnalytics: FirebaseAnalytics? = null
     private var returnedFromGame = false
     private lateinit var adOverlayHelper: IdleAdOverlayHelper
+    private var hasAutoPromptedReward = false
+
+    private var activeLeaderboardListener: ListenerRegistration? = null
+    private var currentFocusedGameKey: String = "snake"
+    private var currentFocusedGameTitle: String = "SNAKE"
+
+    private val gameMetadata = mapOf(
+        R.id.btn_snake to Pair("snake", "SNAKE"),
+        R.id.btn_tetris to Pair("tetris", "TETRIS"),
+        R.id.btn_minesweeper to Pair("minesweeper", "MINESWEEPER"),
+        R.id.btn_trex to Pair("trex", "T-REX RUNNER"),
+        R.id.btn_4096 to Pair("twentyfortyeight", "2048"),
+        R.id.btn_memory to Pair("memory", "MEMORY MATCH"),
+        R.id.btn_brick_break to Pair("brickbreak", "BRICK BREAK"),
+        R.id.btn_syobon to Pair("syobon", "CAT MARIO"),
+        R.id.btn_solitaire to Pair("solitaire", "SOLITAIRE"),
+        R.id.btn_lines98 to Pair("lines98", "LINES 98"),
+        R.id.btn_mental_math to Pair("mentalmath", "MENTAL MATH"),
+        R.id.btn_sudoku to Pair("sudoku", "SUDOKU"),
+        R.id.btn_tictactoe to Pair("tictactoe", "TIC TAC TOE"),
+        R.id.btn_word_quest to Pair("wordquest", "WORD QUEST"),
+        R.id.btn_sokoban to Pair("sokoban", "SOKOBAN"),
+        R.id.btn_tanks to Pair("tanks", "BATTLE TANKS"),
+        R.id.btn_starfighter to Pair("starfighter", "STAR FIGHTER"),
+        R.id.btn_dungeon to Pair("dungeon", "DUNGEON ESCAPE"),
+        R.id.btn_slide_puzzle to Pair("slidepuzzle", "SLIDE PUZZLE"),
+        R.id.btn_hangman to Pair("hangman", "HANGMAN"),
+        R.id.btn_simon to Pair("simon", "SIMON SAYS"),
+        R.id.btn_flappy to Pair("flappy", "FLAPPY HERO"),
+        R.id.btn_checkers to Pair("checkers", "CHECKERS"),
+        R.id.btn_spinball to Pair("spinball", "SPINBALL"),
+        R.id.btn_froggy to Pair("froggy", "FROGGY CROSS"),
+        R.id.btn_monkey to Pair("monkey", "MONKEY ADVENTURE"),
+        R.id.btn_retrodriver to Pair("retrodriver", "RETRO DRIVER"),
+        R.id.btn_frenzy to Pair("frenzy", "FEEDING FRENZY"),
+        R.id.btn_road_racer to Pair("roadracer", "ROAD RACER"),
+        R.id.btn_fruit to Pair("fruit", "FRUIT NINJA"),
+        R.id.btn_connect_four to Pair("connect_four", "CONNECT FOUR"),
+        R.id.btn_blackjack to Pair("blackjack", "BLACKJACK 21"),
+        R.id.btn_trivia to Pair("trivia", "TRIVIA QUIZ")
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Initialize notification scheduler for daily retention reminders
+        DailyRewardNotificationScheduler.init(this)
 
         adOverlayHelper = IdleAdOverlayHelper(this).apply { init() }
         IdleAdManager.isGameMode = false
@@ -94,14 +151,33 @@ class MainActivity : AppCompatActivity() {
         title.translationY = -50f
         title.animate().alpha(1f).translationY(0f).setDuration(800).setStartDelay(300).start()
 
+        findViewById<View>(R.id.btn_daily_reward)?.apply {
+            setOnClickListener {
+                SoundManager.playClick()
+                HapticManager.vibrateClick(this@MainActivity)
+                showDailyRewardDialog()
+            }
+            setOnFocusChangeListener { view, hasFocus ->
+                if (hasFocus) {
+                    SoundManager.playClick()
+                    HapticManager.vibrateClick(this@MainActivity)
+                    view.animate().scaleX(1.08f).scaleY(1.08f).setDuration(200).start()
+                } else {
+                    view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                }
+            }
+        }
+
         findViewById<Button>(R.id.btn_rate)?.apply {
             setOnClickListener {
                 SoundManager.playClick()
+                HapticManager.vibrateClick(this@MainActivity)
                 com.tdpham.games.common.AppEngagementManager.showRateDialog(this@MainActivity)
             }
             setOnFocusChangeListener { view, hasFocus ->
                 if (hasFocus) {
                     SoundManager.playClick()
+                    HapticManager.vibrateClick(this@MainActivity)
                     view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
                 } else {
                     view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
@@ -112,11 +188,13 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_share)?.apply {
             setOnClickListener {
                 SoundManager.playClick()
+                HapticManager.vibrateClick(this@MainActivity)
                 com.tdpham.games.common.AppEngagementManager.showShareDialog(this@MainActivity)
             }
             setOnFocusChangeListener { view, hasFocus ->
                 if (hasFocus) {
                     SoundManager.playClick()
+                    HapticManager.vibrateClick(this@MainActivity)
                     view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
                 } else {
                     view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
@@ -126,11 +204,17 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_leaderboard)?.apply {
             setOnClickListener {
-                startActivity(Intent(this@MainActivity, LeaderboardActivity::class.java))
+                SoundManager.playClick()
+                HapticManager.vibrateClick(this@MainActivity)
+                val intent = Intent(this@MainActivity, LeaderboardActivity::class.java).apply {
+                    putExtra("EXTRA_GAME_KEY", currentFocusedGameKey)
+                }
+                startActivity(intent)
             }
             setOnFocusChangeListener { view, hasFocus ->
                 if (hasFocus) {
                     SoundManager.playClick()
+                    HapticManager.vibrateClick(this@MainActivity)
                     view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
                 } else {
                     view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
@@ -138,15 +222,165 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        findViewById<Button>(R.id.btn_settings)?.apply {
+            setOnClickListener {
+                SoundManager.playClick()
+                HapticManager.vibrateClick(this@MainActivity)
+                startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
+            }
+            setOnFocusChangeListener { view, hasFocus ->
+                if (hasFocus) {
+                    SoundManager.playClick()
+                    HapticManager.vibrateClick(this@MainActivity)
+                    view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
+                } else {
+                    view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                }
+            }
+        }
+
+        setupLeaderboardWidget()
         setupGameButtons()
         updateProfileDisplay()
+        updateCoinsDisplay()
 
         if (intent.getBooleanExtra("AUTO_LOGGED_IN", false)) {
             animateProfilePulse()
         }
 
+        if (intent.getBooleanExtra("OPEN_DAILY_REWARDS", false)) {
+            showDailyRewardDialog()
+        }
+
         com.tdpham.games.common.AppEngagementManager.onAppForegrounded(this)
         focusLastPlayed()
+    }
+
+    private fun setupLeaderboardWidget() {
+        val widget = findViewById<View>(R.id.live_leaderboard_widget) ?: return
+        widget.setOnClickListener {
+            SoundManager.playClick()
+            HapticManager.vibrateClick(this)
+            val intent = Intent(this, LeaderboardActivity::class.java).apply {
+                putExtra("EXTRA_GAME_KEY", currentFocusedGameKey)
+            }
+            startActivity(intent)
+        }
+        widget.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                SoundManager.playClick()
+                HapticManager.vibrateClick(this)
+                view.animate().scaleX(1.02f).scaleY(1.02f).translationZ(12f).setDuration(200).start()
+            } else {
+                view.animate().scaleX(1.0f).scaleY(1.0f).translationZ(0f).setDuration(200).start()
+            }
+        }
+
+        // Initialize with default game (snake)
+        bindLeaderboardToGame("snake", "SNAKE")
+    }
+
+    private fun bindLeaderboardToGame(gameKey: String, gameTitle: String) {
+        currentFocusedGameKey = gameKey
+        currentFocusedGameTitle = gameTitle
+
+        findViewById<TextView>(R.id.tv_widget_game_title)?.text = "GLOBAL TOP 3 • $gameTitle"
+
+        // Cancel previous listener to save bandwidth and keep listeners clean
+        activeLeaderboardListener?.remove()
+
+        activeLeaderboardListener = LeaderboardManager.listenGlobalTopScores(
+            context = this,
+            gameKey = gameKey,
+            level = -1,
+            limit = 3
+        ) { entries ->
+            runOnUiThread {
+                renderLeaderboardPodium(entries)
+            }
+        }
+    }
+
+    private fun renderLeaderboardPodium(entries: List<LeaderboardManager.ScoreEntry>) {
+        val avatars = listOf(
+            R.drawable.ic_hero_knight, R.drawable.ic_hero_wizard,
+            R.drawable.ic_hero_archer, R.drawable.ic_hero_ninja,
+            R.drawable.ic_hero_viking, R.drawable.ic_hero_dragon,
+            R.drawable.ic_hero_phoenix, R.drawable.ic_hero_shield,
+            R.drawable.ic_hero_sword, R.drawable.ic_hero_crown
+        )
+
+        // Slot 1
+        val e1 = entries.getOrNull(0)
+        val name1 = findViewById<TextView>(R.id.widget_name_1)
+        val score1 = findViewById<TextView>(R.id.widget_score_1)
+        val avatar1 = findViewById<ImageView>(R.id.widget_avatar_1)
+        if (e1 != null) {
+            name1?.text = e1.profileName
+            score1?.text = "${e1.score} pts"
+            if (e1.avatarId in avatars.indices) {
+                avatar1?.setImageResource(avatars[e1.avatarId])
+                avatar1?.imageTintList = ColorStateList.valueOf(e1.avatarColor)
+            }
+        } else {
+            name1?.text = "No Record"
+            score1?.text = "0 pts"
+        }
+
+        // Slot 2
+        val e2 = entries.getOrNull(1)
+        val name2 = findViewById<TextView>(R.id.widget_name_2)
+        val score2 = findViewById<TextView>(R.id.widget_score_2)
+        val avatar2 = findViewById<ImageView>(R.id.widget_avatar_2)
+        if (e2 != null) {
+            name2?.text = e2.profileName
+            score2?.text = "${e2.score} pts"
+            if (e2.avatarId in avatars.indices) {
+                avatar2?.setImageResource(avatars[e2.avatarId])
+                avatar2?.imageTintList = ColorStateList.valueOf(e2.avatarColor)
+            }
+        } else {
+            name2?.text = "---"
+            score2?.text = "0 pts"
+        }
+
+        // Slot 3
+        val e3 = entries.getOrNull(2)
+        val name3 = findViewById<TextView>(R.id.widget_name_3)
+        val score3 = findViewById<TextView>(R.id.widget_score_3)
+        val avatar3 = findViewById<ImageView>(R.id.widget_avatar_3)
+        if (e3 != null) {
+            name3?.text = e3.profileName
+            score3?.text = "${e3.score} pts"
+            if (e3.avatarId in avatars.indices) {
+                avatar3?.setImageResource(avatars[e3.avatarId])
+                avatar3?.imageTintList = ColorStateList.valueOf(e3.avatarColor)
+            }
+        } else {
+            name3?.text = "---"
+            score3?.text = "0 pts"
+        }
+    }
+
+    private fun updateCoinsDisplay() {
+        val balance = DailyRewardManager.getCoinBalance(this)
+        findViewById<TextView>(R.id.tv_main_coins)?.text = balance.toString()
+
+        val canClaim = DailyRewardManager.canClaimReward(this)
+        val rewardBtn = findViewById<View>(R.id.btn_daily_reward)
+        if (canClaim) {
+            rewardBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#FFD700"))
+            rewardBtn?.findViewById<TextView>(R.id.tv_main_coins)?.setTextColor(Color.parseColor("#0A0E17"))
+        } else {
+            rewardBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#1E293B"))
+            rewardBtn?.findViewById<TextView>(R.id.tv_main_coins)?.setTextColor(Color.WHITE)
+        }
+    }
+
+    private fun showDailyRewardDialog() {
+        DailyRewardDialog(this) {
+            updateCoinsDisplay()
+        }.show()
     }
 
     private fun updateProfileDisplay() {
@@ -299,7 +533,10 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_retrodriver to RetroDriverActivity::class.java,
             R.id.btn_frenzy to FrenzyActivity::class.java,
             R.id.btn_road_racer to RoadRacerActivity::class.java,
-            R.id.btn_fruit to FruitActivity::class.java
+            R.id.btn_fruit to FruitActivity::class.java,
+            R.id.btn_connect_four to ConnectFourActivity::class.java,
+            R.id.btn_blackjack to BlackjackActivity::class.java,
+            R.id.btn_trivia to TriviaActivity::class.java
         )
 
         for ((id, activityClass) in games) {
@@ -344,6 +581,9 @@ class MainActivity : AppCompatActivity() {
             "frenzy" -> R.id.btn_frenzy
             "road_racer" -> R.id.btn_road_racer
             "fruit" -> R.id.btn_fruit
+            "connect_four" -> R.id.btn_connect_four
+            "blackjack" -> R.id.btn_blackjack
+            "trivia" -> R.id.btn_trivia
             else -> R.id.btn_snake
         }
         findViewById<Button>(viewId)?.requestFocus()
@@ -360,33 +600,19 @@ class MainActivity : AppCompatActivity() {
             action() 
         }
         
-        button.setOnFocusChangeListener { view, hasFocus ->
+        FocusHighlightDrawable.attach(button, scaleFactor = 1.18f, elevationZ = 36f) { hasFocus ->
             if (hasFocus) {
-                SoundManager.playClick()
-                view.animate()
-                    .scaleX(1.15f)
-                    .scaleY(1.15f)
-                    .translationZ(24f)
-                    .setInterpolator(android.view.animation.OvershootInterpolator())
-                    .setDuration(350)
-                    .start()
-            } else {
-                view.animate()
-                    .scaleX(1.0f)
-                    .scaleY(1.0f)
-                    .translationZ(0f)
-                    .setDuration(250)
-                    .start()
-            }
-        }
+                gameMetadata[button.id]?.let { (key, title) ->
+                    bindLeaderboardToGame(key, title)
+                }
 
-        button.setOnHoverListener { view, event ->
-            when (event.action) {
-                MotionEvent.ACTION_HOVER_ENTER -> {
-                    view.requestFocus()
+                // Smoothly center the focused button in the HorizontalScrollView
+                val hsv = findViewById<HorizontalScrollView>(R.id.hsv_games)
+                hsv?.post {
+                    val targetScrollX = button.left - (hsv.width - button.width) / 2
+                    hsv.smoothScrollTo(targetScrollX.coerceAtLeast(0), 0)
                 }
             }
-            false
         }
     }
 
@@ -395,6 +621,19 @@ class MainActivity : AppCompatActivity() {
         IdleAdManager.isGameMode = false
         IdleAdManager.startTracking()
         updateProfileDisplay()
+        updateCoinsDisplay()
+
+        val isScanlineOn = SettingsManager.isScanlineEnabled(this)
+        findViewById<View>(R.id.main_scanline_overlay)?.visibility = if (isScanlineOn) View.VISIBLE else View.GONE
+
+        // Refresh active leaderboard listener
+        bindLeaderboardToGame(currentFocusedGameKey, currentFocusedGameTitle)
+
+        if (!hasAutoPromptedReward && DailyRewardManager.canClaimReward(this)) {
+            hasAutoPromptedReward = true
+            showDailyRewardDialog()
+        }
+
         if (returnedFromGame) {
             returnedFromGame = false
             com.tdpham.games.common.AppEngagementManager.maybeShowRatePrompt(this)
@@ -404,6 +643,8 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         IdleAdManager.stopTracking()
+        activeLeaderboardListener?.remove()
+        activeLeaderboardListener = null
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -418,6 +659,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        activeLeaderboardListener?.remove()
+        activeLeaderboardListener = null
         adOverlayHelper.destroy()
         SoundManager.release()
     }

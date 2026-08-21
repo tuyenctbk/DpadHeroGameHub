@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Focused state: Light up with white glow and bold unbroken border -->
+    <!-- Focused state: Gold & White high-contrast glow with 4dp border for TV remotes -->
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="#40FFFFFF" />
-            <corners android:radius="16dp" />
+            <solid android:color="#4DFFFFFF" />
+            <corners android:radius="18dp" />
             <stroke
-                android:width="3dp"
+                android:width="4dp"
+                android:color="#FFD700" />
+        </shape>
+    </item>
+
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#80FFD700" />
+            <corners android:radius="18dp" />
+            <stroke
+                android:width="4dp"
                 android:color="#FFFFFF" />
         </shape>
     </item>
 
     <item android:state_hovered="true">
         <shape android:shape="rectangle">
-            <solid android:color="#20FFFFFF" />
-            <corners android:radius="16dp" />
+            <solid android:color="#33FFFFFF" />
+            <corners android:radius="18dp" />
             <stroke
-                android:width="2dp"
-                android:color="#FFFFFF" />
+                android:width="3dp"
+                android:color="#00E5FF" />
         </shape>
     </item>
 
@@ -25,9 +35,9 @@
     <item>
         <shape android:shape="rectangle">
             <solid android:color="#14FFFFFF" />
-            <corners android:radius="16dp" />
+            <corners android:radius="18dp" />
             <stroke
-                android:width="1.5dp"
+                android:width="2dp"
                 android:color="#33FFFFFF" />
         </shape>
     </item>

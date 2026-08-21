@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Blue Vertical Board Stand -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M15,20 H105 C110,20 114,24 114,30 V95 C114,100 110,104 105,104 H15 C10,104 6,100 6,95 V30 C6,24 10,20 15,20 Z" />
+
+    <!-- Stand base feet -->
+    <path
+        android:fillColor="#0D47A1"
+        android:pathData="M10,100 L2,112 H26 L20,100 Z M110,100 L100,100 L104,112 H128 Z" />
+
+    <!-- Grid Holes and Chips -->
+    <!-- Row 1 Holes -->
+    <path android:fillColor="#0A192F" android:pathData="M24,36 A8,8 0 1,1 24,35.9 Z" />
+    <path android:fillColor="#FFD600" android:pathData="M48,36 A8,8 0 1,1 48,35.9 Z" />
+    <path android:fillColor="#0A192F" android:pathData="M72,36 A8,8 0 1,1 72,35.9 Z" />
+    <path android:fillColor="#FF1744" android:pathData="M96,36 A8,8 0 1,1 96,35.9 Z" />
+
+    <!-- Row 2 Holes -->
+    <path android:fillColor="#FF1744" android:pathData="M24,56 A8,8 0 1,1 24,55.9 Z" />
+    <path android:fillColor="#FFD600" android:pathData="M48,56 A8,8 0 1,1 48,55.9 Z" />
+    <path android:fillColor="#FF1744" android:pathData="M72,56 A8,8 0 1,1 72,55.9 Z" />
+    <path android:fillColor="#0A192F" android:pathData="M96,56 A8,8 0 1,1 96,55.9 Z" />
+
+    <!-- Row 3 Holes -->
+    <path android:fillColor="#FFD600" android:pathData="M24,76 A8,8 0 1,1 24,75.9 Z" />
+    <path android:fillColor="#FFD600" android:pathData="M48,76 A8,8 0 1,1 48,75.9 Z" />
+    <path android:fillColor="#FFD600" android:pathData="M72,76 A8,8 0 1,1 72,75.9 Z" />
+    <path android:fillColor="#FFD600" android:pathData="M96,76 A8,8 0 1,1 96,75.9 Z" />
+
+    <!-- Drop Pointer Arrow -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M48,4 L56,16 H40 Z" />
+
+</vector>

@@ -250,6 +250,7 @@ class ProfileCreationActivity : AppCompatActivity() {
         views.forEach { view ->
             view.setOnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) {
+                    SoundManager.playClick()
                     v.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
                 } else {
                     v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()

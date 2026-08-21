@@ -212,6 +212,23 @@ class TRexView @JvmOverloads constructor(
         android.view.Choreographer.getInstance().postFrameCallback(frameCallback)
     }
 
+    override fun canRevive(): Boolean = true
+
+    override fun reviveGame(): Boolean {
+        if (isGameOver) {
+            isGameOver = false
+            isPaused = false
+            obstacles.clear()
+            pendingObstacles.clear()
+            explosions.clear()
+            craters.clear()
+            celebrationManager.clear()
+            resume()
+            return true
+        }
+        return false
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         android.view.Choreographer.getInstance().removeFrameCallback(frameCallback)

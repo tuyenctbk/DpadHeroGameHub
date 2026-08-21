@@ -19,5 +19,12 @@ class GameApplication : Application(), Configuration.Provider {
         } catch (e: Exception) {
             Log.e("GameApplication", "Failed to initialize Firebase: ${e.message}", e)
         }
+
+        try {
+            com.tdpham.games.common.SoundManager.init(this)
+            com.tdpham.games.common.DailyRetentionWorker.schedule(this)
+        } catch (e: Exception) {
+            Log.e("GameApplication", "Failed to init SoundManager/WorkManager: ${e.message}", e)
+        }
     }
 }

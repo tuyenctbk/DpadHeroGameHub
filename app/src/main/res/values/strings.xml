@@ -548,6 +548,15 @@
     <string name="quit_game_confirm">Are you sure you want to quit the game?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="scanline_crt_effect">CRT Scanline Filter</string>
+    <string name="scanline_crt_desc">Simulate classic arcade CRT monitor scanlines.</string>
+    <string name="screen_shake_effect">Screen Shake FX</string>
+    <string name="screen_shake_desc">Dynamic screen impact feedback during collisions and explosions.</string>
+    <string name="reset_high_scores">Reset High Scores</string>
+    <string name="reset_high_scores_desc">Clear all recorded best scores for the active hero.</string>
+    <string name="reset_scores_confirm">Are you sure you want to clear all high scores for this hero? This action cannot be undone.</string>
+    <string name="scores_cleared">High scores have been reset.</string>
+
     <string name="choose_hero" translatable="true">CHOOSE YOUR HERO</string>
     <string name="create_hero" translatable="true">CREATE NEW HERO</string>
     <string name="enter_hero_name" translatable="true">ENTER HERO NAME</string>
@@ -730,6 +739,37 @@
         <item>FLAWLESS RHYTHM!</item>
         <item>GENIUS RECALL!</item>
     </string-array>
+    <string-array name="win_connect_four">
+        <item>FOUR IN A ROW!</item>
+        <item>GRID MASTER!</item>
+        <item>TACTICAL GENIUS!</item>
+        <item>CONNECT CHAMPION!</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>NATURAL BLACKJACK!</item>
+        <item>HIGH ROLLER!</item>
+        <item>HOUSE BEATEN!</item>
+        <item>CASINO ROYAL!</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>GENIUS SCHOLAR!</item>
+        <item>PERFECT SCORE!</item>
+        <item>TRIVIA MASTER!</item>
+        <item>QUIZ CHAMPION!</item>
+    </string-array>
+
+    <string name="game_connect_four">CONNECT FOUR</string>
+    <string name="game_connect_four_instructions">Classic 4-in-a-row tactical grid battle!\n• D-PAD LEFT / RIGHT: Move disc cursor across columns\n• D-PAD CENTER / ENTER: Drop disc into column\n• Connect 4 of your discs horizontally, vertically, or diagonally\n• Choose 1-Player vs Smart AI or 2-Player Couch Battle!</string>
+    <string name="connect_four_settings_title">CONNECT FOUR SETTINGS</string>
+
+    <string name="game_blackjack">BLACKJACK 21</string>
+    <string name="game_blackjack_instructions">Authentic Vegas Casino Blackjack table!\n• Goal: Get your hand value closest to 21 without exceeding 21\n• D-PAD UP / DOWN / LEFT / RIGHT: Navigate Chips and Table Actions\n• D-PAD CENTER / ENTER: Place Bet / Deal / Hit / Stand / Double Down\n• Blackjack pays 3:2! Win chips and build your casino fortune!</string>
+    <string name="blackjack_settings_title">BLACKJACK SETTINGS</string>
+
+    <string name="game_trivia">TRIVIA QUIZ</string>
+    <string name="game_trivia_instructions">High-stakes Arcade Quiz Show!\n• D-PAD UP / DOWN / LEFT / RIGHT: Select Answer A, B, C, or D\n• D-PAD CENTER / ENTER: Confirm Answer\n• Answer faster for huge time multiplier bonuses\n• Use Lifelines: 50:50, Freeze Timer, and Skip Question\n• Complete the 10-question gauntlet for grand coin rewards!</string>
+    <string name="trivia_settings_title">TRIVIA QUIZ SETTINGS</string>
+
     <string name="game_options">Options</string>
     <string name="pause_menu_title">Game Paused</string>
     <string name="resume_game">Resume</string>

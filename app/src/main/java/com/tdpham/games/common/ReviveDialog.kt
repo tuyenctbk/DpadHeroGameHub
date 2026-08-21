@@ -59,6 +59,7 @@ object ReviveDialog {
 
         btnContinue.setOnClickListener {
             if (isActionTaken) return@setOnClickListener
+            SoundManager.playClick()
             isActionTaken = true
             mainHandler.removeCallbacks(countdownRunnable)
             try {
@@ -69,6 +70,7 @@ object ReviveDialog {
 
         btnGiveUp.setOnClickListener {
             if (isActionTaken) return@setOnClickListener
+            SoundManager.playClick()
             isActionTaken = true
             mainHandler.removeCallbacks(countdownRunnable)
             try {

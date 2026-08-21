@@ -243,6 +243,23 @@ class FlappyHeroView @JvmOverloads constructor(
         }
     }
 
+    override fun canRevive(): Boolean = true
+
+    override fun reviveGame(): Boolean {
+        if (gameOver) {
+            gameOver = false
+            gamePaused = false
+            birdY = if (height > 0) height / 2f else 300f
+            birdV = 0f
+            val bx = if (width > 0) width / 3f else 300f
+            pipes.removeAll { it.x in (bx - 250f)..(bx + 250f) }
+            celebrationManager.clear()
+            resume()
+            return true
+        }
+        return false
+    }
+
     override fun performClick(): Boolean {
         super.performClick()
         return true
