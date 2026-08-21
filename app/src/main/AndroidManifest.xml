@@ -369,6 +369,14 @@
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             tools:ignore="LockedOrientationActivity" />
 
+        <activity
+            android:name="com.tdpham.games.common.PauseActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication.TranslucentPause"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            tools:ignore="LockedOrientationActivity" />
+
     </application>
 
 </manifest>

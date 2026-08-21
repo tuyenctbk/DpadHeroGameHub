@@ -16,7 +16,7 @@
         android:id="@+id/reward_day_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="DAY 1"
+        android:text="@string/day_1"
         android:textColor="#90A4AE"
         android:textSize="12sp"
         android:textStyle="bold" />
@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="LOCKED"
+        android:text="@string/status_locked"
         android:textColor="#78909C"
         android:textSize="10sp"
         android:textStyle="bold" />

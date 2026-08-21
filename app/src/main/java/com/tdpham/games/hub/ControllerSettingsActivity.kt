@@ -43,8 +43,16 @@ class ControllerSettingsActivity : AppCompatActivity() {
             vibrator?.hasAmplitudeControl() ?: false
         } else false
 
-        val apiLevel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) "VibratorManager (API 31+)" else "Vibrator (Legacy)"
-        tvVibratorInfo.text = "⚡ Motor: $apiLevel • Hardware Ready: ${if (hasVibrator) "YES" else "NO"} • Amplitude Control: ${if (hasAmplitude) "YES" else "FALLBACK"}"
+        val apiLevel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) getString(R.string.vibrator_manager_api) else getString(R.string.vibrator_legacy)
+        val statusYes = getString(R.string.status_yes)
+        val statusNo = getString(R.string.status_no)
+        val statusFallback = getString(R.string.status_fallback)
+        tvVibratorInfo.text = getString(
+            R.string.motor_hardware_info,
+            apiLevel,
+            if (hasVibrator) statusYes else statusNo,
+            if (hasAmplitude) statusYes else statusFallback
+        )
 
         // 2. Master Haptic Switch
         val layoutMasterToggle = findViewById<LinearLayout>(R.id.layout_haptic_master_toggle)
@@ -130,7 +138,8 @@ class ControllerSettingsActivity : AppCompatActivity() {
         btnTestNow.setOnClickListener {
             SoundManager.playClick()
             HapticManager.testVibration(this, selectedTestProfile)
-            Toast.makeText(this, "Fired Haptic Test: $selectedTestProfile (${SettingsManager.getHapticIntensity(this)}% intensity)", Toast.LENGTH_SHORT).show()
+            val msg = getString(R.string.haptic_test_fired, selectedTestProfile, SettingsManager.getHapticIntensity(this))
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         }
         setupFocusEffect(btnTestNow)
 
@@ -149,7 +158,8 @@ class ControllerSettingsActivity : AppCompatActivity() {
             updateSensitivityDisplay()
             SoundManager.playClick()
             HapticManager.vibrateClick(this)
-            Toast.makeText(this, "Sensitivity set to: ${next.label}", Toast.LENGTH_SHORT).show()
+            val msg = getString(R.string.sensitivity_toast, next.label)
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         }
         layoutSensitivity.setOnClickListener(onSensitivityCycle)
         btnSensitivityBadge.setOnClickListener(onSensitivityCycle)

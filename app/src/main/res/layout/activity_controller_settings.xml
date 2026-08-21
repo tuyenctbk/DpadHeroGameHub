@@ -24,7 +24,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="🎮 Controller &amp; Haptic Settings"
+                android:text="@string/controller_settings_title"
                 android:textColor="#FFFFFF"
                 android:textSize="28sp"
                 android:textStyle="bold"
@@ -35,7 +35,7 @@
                 android:layout_width="100dp"
                 android:layout_height="44dp"
                 android:background="@drawable/bg_btn_neutral_selector"
-                android:text="BACK"
+                android:text="@string/back"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -55,7 +55,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="HARDWARE DIAGNOSTICS"
+                android:text="@string/hardware_diagnostics"
                 android:textColor="#00E5FF"
                 android:textSize="13sp"
                 android:textStyle="bold"
@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="🎮 Controller: Checking devices..."
+                android:text="@string/controller_checking"
                 android:textColor="#FFFFFF"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="⚡ Vibrator: Checking VibratorManager..."
+                android:text="@string/vibrator_checking"
                 android:textColor="#90A4AE"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -104,7 +104,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Haptic &amp; Rumble Vibration"
+                    android:text="@string/haptic_rumble_title"
                     android:textColor="#FFFFFF"
                     android:textSize="17sp"
                     android:textStyle="bold" />
@@ -113,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Enable motor rumble for impacts, coins, and buttons"
+                    android:text="@string/haptic_rumble_desc"
                     android:textColor="#90A4AE"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -146,7 +146,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Haptic Intensity (Vibrator Amplitude)"
+                    android:text="@string/haptic_intensity_title"
                     android:textColor="#FFFFFF"
                     android:textSize="17sp"
                     android:textStyle="bold" />
@@ -190,7 +190,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="VIBRATION MOTOR HARDWARE TEST"
+                android:text="@string/vibration_motor_test_title"
                 android:textColor="#FFD700"
                 android:textSize="13sp"
                 android:textStyle="bold"
@@ -200,7 +200,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Select a vibration profile and tap test to verify motor response:"
+                android:text="@string/vibration_test_instructions"
                 android:textColor="#90A4AE"
                 android:textSize="13sp" />
 
@@ -223,7 +223,7 @@
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/game_item_background"
                         android:backgroundTint="#1B263B"
-                        android:text="🕹️ Click (15ms)"
+                        android:text="@string/vibe_profile_click"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -236,7 +236,7 @@
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/game_item_background"
                         android:backgroundTint="#1B263B"
-                        android:text="⚡ Score (35ms)"
+                        android:text="@string/vibe_profile_score"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -249,7 +249,7 @@
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/game_item_background"
                         android:backgroundTint="#1B263B"
-                        android:text="💥 Hazard (70ms)"
+                        android:text="@string/vibe_profile_hazard"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -262,7 +262,7 @@
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/game_item_background"
                         android:backgroundTint="#1B263B"
-                        android:text="💣 Boss Explosion"
+                        android:text="@string/vibe_profile_explosion"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -274,7 +274,7 @@
                         android:layout_height="40dp"
                         android:background="@drawable/game_item_background"
                         android:backgroundTint="#1B263B"
-                        android:text="🏆 Victory Waveform"
+                        android:text="@string/vibe_profile_victory"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -290,7 +290,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="#00E5FF"
-                android:text="⚡ TEST VIBRATION NOW"
+                android:text="@string/test_vibration_now"
                 android:textColor="#0A0E17"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -320,7 +320,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Gamepad Input Speed"
+                    android:text="@string/gamepad_speed_title"
                     android:textColor="#FFFFFF"
                     android:textSize="17sp"
                     android:textStyle="bold" />
@@ -329,7 +329,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Digital input repeat rate &amp; sensitivity curve"
+                    android:text="@string/gamepad_speed_desc"
                     android:textColor="#90A4AE"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -372,7 +372,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Analog Stick Deadzone Threshold"
+                        android:text="@string/analog_deadzone_title"
                         android:textColor="#FFFFFF"
                         android:textSize="17sp"
                         android:textStyle="bold" />
@@ -381,7 +381,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Prevents stick drift &amp; enhances D-pad precision on Bluetooth gamepads"
+                        android:text="@string/analog_deadzone_desc"
                         android:textColor="#90A4AE"
                         android:textSize="13sp" />
                 </LinearLayout>
@@ -416,7 +416,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="🕹️ Live Stick Test: Neutral (0.00, 0.00)"
+                android:text="@string/live_stick_neutral"
                 android:textColor="#00E5FF"
                 android:textSize="12sp"
                 android:fontFamily="monospace" />
@@ -428,7 +428,7 @@
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:background="@drawable/bg_menu_item_selector"
-            android:text="DONE"
+            android:text="@string/finish_hint"
             android:textColor="@color/btn_menu_text_selector"
             android:textSize="16sp"
             android:textStyle="bold"

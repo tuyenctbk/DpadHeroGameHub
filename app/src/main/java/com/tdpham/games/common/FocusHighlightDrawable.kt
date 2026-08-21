@@ -87,7 +87,7 @@ class FocusHighlightDrawable(
 
     companion object {
         /**
-         * Attaches high-polish TV D-pad focus scaling, glowing elevation, and breathing pulse
+         * Attaches high-polish TV D-pad focus scaling, glowing elevation, and responsive bounce
          * using ViewPropertyAnimator to any interactive View.
          */
         fun attach(
@@ -97,44 +97,60 @@ class FocusHighlightDrawable(
             onFocusChanged: ((Boolean) -> Unit)? = null
         ) {
             view.setOnFocusChangeListener { v, hasFocus ->
-                val runningAnim = v.getTag(com.tdpham.games.R.id.btn_snake) as? ValueAnimator
+                val runningAnim = v.getTag(com.tdpham.games.R.id.tag_pulse_anim) as? ValueAnimator
                 runningAnim?.cancel()
+
+                v.animate().cancel()
 
                 if (hasFocus) {
                     SoundManager.playDpadMove()
                     HapticManager.vibrateClick(v.context)
 
+                    // Stage 1: Fast initial pop/bounce outward using ViewPropertyAnimator
+                    val peakScale = scaleFactor * 1.06f
                     v.animate()
-                        .scaleX(scaleFactor)
-                        .scaleY(scaleFactor)
-                        .translationZ(elevationZ)
-                        .setInterpolator(OvershootInterpolator(2.2f))
-                        .setDuration(280)
+                        .scaleX(peakScale)
+                        .scaleY(peakScale)
+                        .translationZ(elevationZ * 1.2f)
+                        .setInterpolator(OvershootInterpolator(3.0f))
+                        .setDuration(180)
                         .withEndAction {
                             if (v.hasFocus()) {
-                                val pulseAnim = ValueAnimator.ofFloat(scaleFactor, scaleFactor + 0.04f, scaleFactor).apply {
-                                    duration = 1600
-                                    repeatCount = ValueAnimator.INFINITE
-                                    repeatMode = ValueAnimator.RESTART
-                                    addUpdateListener { animator ->
-                                        val s = animator.animatedValue as Float
-                                        v.scaleX = s
-                                        v.scaleY = s
+                                // Stage 2: Smooth settling bounce back to steady focused size
+                                v.animate()
+                                    .scaleX(scaleFactor)
+                                    .scaleY(scaleFactor)
+                                    .translationZ(elevationZ)
+                                    .setInterpolator(DecelerateInterpolator(1.8f))
+                                    .setDuration(120)
+                                    .withEndAction {
+                                        if (v.hasFocus()) {
+                                            val pulseAnim = ValueAnimator.ofFloat(scaleFactor, scaleFactor + 0.04f, scaleFactor).apply {
+                                                duration = 1600
+                                                repeatCount = ValueAnimator.INFINITE
+                                                repeatMode = ValueAnimator.RESTART
+                                                addUpdateListener { animator ->
+                                                    val s = animator.animatedValue as Float
+                                                    v.scaleX = s
+                                                    v.scaleY = s
+                                                }
+                                                start()
+                                            }
+                                            v.setTag(com.tdpham.games.R.id.tag_pulse_anim, pulseAnim)
+                                        }
                                     }
-                                    start()
-                                }
-                                v.setTag(com.tdpham.games.R.id.btn_snake, pulseAnim)
+                                    .start()
                             }
                         }
                         .start()
                 } else {
-                    v.setTag(com.tdpham.games.R.id.btn_snake, null)
+                    v.setTag(com.tdpham.games.R.id.tag_pulse_anim, null)
                     v.animate()
                         .scaleX(1.0f)
                         .scaleY(1.0f)
                         .translationZ(0f)
-                        .setInterpolator(DecelerateInterpolator())
-                        .setDuration(200)
+                        .setInterpolator(DecelerateInterpolator(2.0f))
+                        .setDuration(180)
                         .start()
                 }
                 onFocusChanged?.invoke(hasFocus)

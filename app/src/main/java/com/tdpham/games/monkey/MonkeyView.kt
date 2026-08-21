@@ -333,8 +333,7 @@ class MonkeyView @JvmOverloads constructor(
             SoundManager.playError()
         }
 
-        if (harpyEagle != null) {
-            val eagle = harpyEagle!!
+        harpyEagle?.let { eagle ->
             val elapsedEagle = now - eagle.spawnTime
             if (eagle.state == 0) {
                 // Warning state: hover above target
@@ -401,8 +400,7 @@ class MonkeyView @JvmOverloads constructor(
             SoundManager.playError()
         }
 
-        if (blackJaguar != null) {
-            val jaguar = blackJaguar!!
+        blackJaguar?.let { jaguar ->
             val elapsedJaguar = now - jaguar.spawnTime
             if (jaguar.state == 0) {
                 // Warning state
@@ -639,8 +637,7 @@ class MonkeyView @JvmOverloads constructor(
 
         // Draw Harpy Eagle
         val now = System.currentTimeMillis()
-        if (harpyEagle != null) {
-            val eagle = harpyEagle!!
+        harpyEagle?.let { eagle ->
             // If monkey grabbed, Eagle carries monkey
             val ex = if (monkeyGrabbed) playerRenderX else eagle.x
             val ey = if (monkeyGrabbed) playerY else eagle.y

@@ -7,6 +7,7 @@ import android.media.ToneGenerator
 import android.os.Handler
 import android.os.Looper
 import android.view.InputDevice
+import com.tdpham.games.R
 import java.util.concurrent.Executors
 
 object SoundManager {
@@ -74,10 +75,10 @@ object SoundManager {
     fun getGamepadStatusSummary(context: Context): String {
         val gamepads = getConnectedGamepads()
         return if (gamepads.isEmpty()) {
-            "No External Gamepad (Virtual D-Pad Active)"
+            context.getString(R.string.no_external_gamepad)
         } else {
             val names = gamepads.joinToString(", ") { it.name }
-            "🎮 Connected: $names"
+            context.getString(R.string.gamepad_connected_format, names)
         }
     }
 
@@ -172,6 +173,25 @@ object SoundManager {
     fun playSuccess() = playTone(ToneGenerator.TONE_PROP_PROMPT, 150)
     fun playFlag() = playTone(ToneGenerator.TONE_PROP_ACK, 80)
     fun playGameOver() = playTone(ToneGenerator.TONE_SUP_ERROR, 350)
+
+    fun playArcadeIntroSequence() {
+        if (!isSoundEnabled || soundEffectsVolume <= 0) return
+        soundExecutor.execute {
+            try {
+                val tones = intArrayOf(
+                    ToneGenerator.TONE_DTMF_0,
+                    ToneGenerator.TONE_DTMF_3,
+                    ToneGenerator.TONE_DTMF_7,
+                    ToneGenerator.TONE_DTMF_A,
+                    ToneGenerator.TONE_PROP_PROMPT
+                )
+                for (tone in tones) {
+                    playTone(tone, 70)
+                    Thread.sleep(90)
+                }
+            } catch (_: InterruptedException) {}
+        }
+    }
 
     // --- SOUND PROFILES & PRESETS (Arcade, Retro, Modern) ---
     private var activePreset: SettingsManager.SoundProfilePreset = SettingsManager.SoundProfilePreset.ARCADE

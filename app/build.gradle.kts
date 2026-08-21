@@ -47,6 +47,18 @@ android {
             )
         }
     }
+
+    bundle {
+        density {
+            enableSplit = true
+        }
+        abi {
+            enableSplit = true
+        }
+        language {
+            enableSplit = true
+        }
+    }
     buildFeatures {
         buildConfig = true
     }
@@ -70,6 +82,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.play.services.ads)
     implementation(libs.androidx.work.runtime)
+    implementation(libs.glide)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)

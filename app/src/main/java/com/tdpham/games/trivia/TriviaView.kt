@@ -580,21 +580,22 @@ class TriviaView @JvmOverloads constructor(
 
         paint.textSize = 34f
         paint.color = Color.parseColor("#FFD700")
-        canvas.drawText("GAUNTLET COMPLETED! 🏆", w * 0.5f, cardT + 65f, paint)
+        canvas.drawText(context.getString(R.string.trivia_gauntlet_completed), w * 0.5f, cardT + 65f, paint)
 
         paint.textSize = 22f
         paint.color = Color.WHITE
-        canvas.drawText("Final Score: ${engine.score} Points", w * 0.5f, cardT + 120f, paint)
+        canvas.drawText(context.getString(R.string.trivia_final_score, engine.score), w * 0.5f, cardT + 120f, paint)
 
         paint.textSize = 18f
         paint.color = Color.parseColor("#00E5FF")
         val totalQ = max(1, engine.activeQuestions.size)
-        canvas.drawText("Accuracy: ${engine.correctCount} / $totalQ Correct (${(engine.correctCount * 100) / totalQ}%)", w * 0.5f, cardT + 160f, paint)
+        val accuracyPct = (engine.correctCount * 100) / totalQ
+        canvas.drawText(context.getString(R.string.trivia_accuracy, engine.correctCount, totalQ, accuracyPct), w * 0.5f, cardT + 160f, paint)
 
         val totalCoins = engine.correctCount * 10 + if (engine.correctCount == totalQ) 100 else engine.correctCount * 5
         paint.textSize = 18f
         paint.color = Color.parseColor("#FFD700")
-        canvas.drawText("+$totalCoins Coins Earned 🪙", w * 0.5f, cardT + 200f, paint)
+        canvas.drawText(context.getString(R.string.trivia_coins_earned, totalCoins), w * 0.5f, cardT + 200f, paint)
 
         // Play Again Button
         val btnW = 280f
@@ -608,7 +609,7 @@ class TriviaView @JvmOverloads constructor(
 
         paint.color = Color.BLACK
         paint.textSize = 20f
-        canvas.drawText("PLAY AGAIN [ENTER]", w * 0.5f, btnT + 32f, paint)
+        canvas.drawText(context.getString(R.string.trivia_play_again), w * 0.5f, btnT + 32f, paint)
     }
 
     private fun wrapText(text: String, maxWidth: Float, paint: Paint): List<String> {

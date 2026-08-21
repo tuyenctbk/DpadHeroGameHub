@@ -73,8 +73,12 @@ class LeaderboardActivity : AppCompatActivity() {
     data class GameTab(val key: String, val title: String, val levels: List<String>? = null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.requestFeature(android.view.Window.FEATURE_ACTIVITY_TRANSITIONS)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_leaderboard)
+
+        val headerTitle = findViewById<View>(R.id.leaderboard_title) ?: findViewById<View>(R.id.game_tabs_container)
+        headerTitle?.let { androidx.core.view.ViewCompat.setTransitionName(it, "hub_leaderboard_transition") }
 
         tabsContainer = findViewById(R.id.game_tabs_container)
         scoresContainer = findViewById(R.id.scores_container)

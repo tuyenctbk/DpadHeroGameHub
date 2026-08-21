@@ -36,10 +36,30 @@ object SettingsManager {
     }
 
     // --- SOUND PROFILES (Arcade, Retro, Modern) ---
-    enum class SoundProfilePreset(val label: String, val description: String) {
-        ARCADE("Arcade 8-Bit", "Punchy 8-bit pulse waves"),
-        RETRO("Retro Synth", "Warm analog synth tones"),
-        MODERN("Modern Digital", "Crisp polyphonic chimes");
+    enum class SoundProfilePreset(
+        val labelResId: Int,
+        val descResId: Int,
+        val label: String,
+        val description: String
+    ) {
+        ARCADE(
+            com.tdpham.games.R.string.sound_profile_arcade,
+            com.tdpham.games.R.string.sound_profile_arcade_desc,
+            "Arcade 8-Bit",
+            "Punchy 8-bit pulse waves"
+        ),
+        RETRO(
+            com.tdpham.games.R.string.sound_profile_retro,
+            com.tdpham.games.R.string.sound_profile_retro_desc,
+            "Retro Synth",
+            "Warm analog synth tones"
+        ),
+        MODERN(
+            com.tdpham.games.R.string.sound_profile_modern,
+            com.tdpham.games.R.string.sound_profile_modern_desc,
+            "Modern Digital",
+            "Crisp polyphonic chimes"
+        );
 
         companion object {
             fun fromName(name: String?): SoundProfilePreset {

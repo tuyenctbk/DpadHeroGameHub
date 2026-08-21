@@ -14,6 +14,7 @@
 
         <!-- Title -->
         <TextView
+            android:id="@+id/settings_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
@@ -56,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Volume: 100% • Tap volume badge to adjust"
+                    android:text="@string/sound_effects_description"
                     android:textColor="#90A4AE"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -105,7 +106,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sound Profile Theme"
+                    android:text="@string/setting_sound_profile_theme"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -115,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Arcade 8-Bit • Tap to switch audio preset"
+                    android:text="@string/setting_sound_profile_desc"
                     android:textColor="#90A4AE"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -126,7 +127,7 @@
                 android:layout_height="38dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="#1B263B"
-                android:text="Arcade 8-Bit"
+                android:text="@string/sound_profile_arcade"
                 android:textColor="#FFD700"
                 android:textSize="12sp"
                 android:textStyle="bold"
@@ -156,7 +157,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Retro Music &amp; Ambience"
+                    android:text="@string/setting_retro_music"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -166,7 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Synthesizer background arcade melodies"
+                    android:text="@string/setting_retro_music_desc"
                     android:textColor="#90A4AE"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -202,7 +203,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Controller &amp; Gamepad Sensitivity"
+                    android:text="@string/setting_controller_sensitivity"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -211,7 +212,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Adjust D-Pad, joystick, and touch responsiveness"
+                    android:text="@string/setting_controller_sensitivity_desc"
                     android:textColor="#90A4AE"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -252,7 +253,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Haptic &amp; Controller Vibration"
+                    android:text="@string/setting_haptic_vibration"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -261,7 +262,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Tactile pulses on hits, scores, and explosions"
+                    android:text="@string/setting_haptic_vibration_desc"
                     android:textColor="#90A4AE"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -273,7 +274,7 @@
                 android:layout_marginEnd="12dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="#00E5FF"
-                android:text="CALIBRATE"
+                android:text="@string/calibrate"
                 android:textColor="#0A0E17"
                 android:textSize="12sp"
                 android:textStyle="bold"

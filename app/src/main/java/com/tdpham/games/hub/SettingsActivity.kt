@@ -21,8 +21,13 @@ import com.tdpham.games.hub.profile.ProfileSelectionActivity
 class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.requestFeature(android.view.Window.FEATURE_ACTIVITY_TRANSITIONS)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        findViewById<View>(R.id.settings_title)?.let {
+            androidx.core.view.ViewCompat.setTransitionName(it, "hub_settings_transition")
+        }
 
         // 1. Sound Effects Toggle & Volume
         val soundToggleLayout = findViewById<LinearLayout>(R.id.layout_sound_toggle)
@@ -35,7 +40,7 @@ class SettingsActivity : AppCompatActivity() {
             val volume = SettingsManager.getSoundVolume(this)
             soundSwitch.isChecked = isEnabled
             btnSoundVolume.text = "$volume%"
-            tvSoundDesc.text = "Volume: $volume% • Tap to cycle volume level"
+            tvSoundDesc.text = getString(R.string.volume_desc_format, volume)
         }
         updateSoundUI()
 
@@ -70,8 +75,8 @@ class SettingsActivity : AppCompatActivity() {
 
         fun updateSoundProfileUI() {
             val preset = SettingsManager.getSoundProfilePreset(this)
-            btnSoundProfile.text = preset.label
-            tvSoundProfileDesc.text = "${preset.description} • Tap to cycle"
+            btnSoundProfile.text = getString(preset.labelResId)
+            tvSoundProfileDesc.text = getString(R.string.sound_profile_desc_format, getString(preset.descResId))
         }
         updateSoundProfileUI()
 
@@ -83,7 +88,7 @@ class SettingsActivity : AppCompatActivity() {
                 SoundManager.GameSoundEvent.SCORE
             )
             HapticManager.vibrateClick(this)
-            Toast.makeText(this, "Sound Profile: ${nextPreset.label}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.sound_profile_toast, getString(nextPreset.labelResId)), Toast.LENGTH_SHORT).show()
         }
         soundProfileLayout.setOnClickListener(onSoundProfileCycle)
         btnSoundProfile.setOnClickListener(onSoundProfileCycle)
@@ -119,7 +124,8 @@ class SettingsActivity : AppCompatActivity() {
             updateSensitivityUI()
             SoundManager.playClick()
             HapticManager.vibrateClick(this)
-            Toast.makeText(this, "Controller Sensitivity: ${next.label}", Toast.LENGTH_SHORT).show()
+            val msg = getString(R.string.sensitivity_toast, next.label)
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         }
         layoutSensitivity.setOnClickListener(onSensitivityCycle)
         btnSensitivity.setOnClickListener(onSensitivityCycle)

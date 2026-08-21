@@ -77,7 +77,7 @@ class IdleAdOverlayHelper(private val activity: Activity) {
         }
         isAdShowing = true
         
-        ensureCornerDialog(adOverlay!!)
+        adOverlay?.let { ensureCornerDialog(it) }
         
         // Soft slide-in animation
         adOverlay?.translationX = 400f
@@ -130,7 +130,7 @@ class IdleAdOverlayHelper(private val activity: Activity) {
         adOverlay?.findViewById<View>(R.id.native_ad_view)?.visibility = View.GONE
         isAdShowing = true
 
-        ensureFullScreenDialog(adOverlay!!)
+        adOverlay?.let { ensureFullScreenDialog(it) }
 
         // Proactively request native ad if not already cached/loading
         AdManager.loadNativeAd(activity)
@@ -192,7 +192,7 @@ class IdleAdOverlayHelper(private val activity: Activity) {
         adOverlay?.findViewById<View>(R.id.warning_container)?.visibility = View.GONE
         isAdShowing = true
         
-        ensureFullScreenDialog(adOverlay!!)
+        adOverlay?.let { ensureFullScreenDialog(it) }
 
         // OLED Drift Animation
         startDriftAnimation()

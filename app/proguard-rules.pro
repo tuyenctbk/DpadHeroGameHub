@@ -26,6 +26,7 @@
 
 # Firebase
 -keep class com.google.firebase.** { *; }
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
 
 # Keeping some standard Android things
 -keep class androidx.appcompat.widget.SearchView { *; }
@@ -38,3 +39,25 @@
 
 # WorkManager
 -keep class androidx.work.** { *; }
+
+# Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule {
+    <init>(...);
+}
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+    **[] $VALUES;
+    public *;
+}
+
+# Kotlin Coroutines
+-dontwarn kotlinx.coroutines.**
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+
+# R8 Optimization & Code Shrinking
+-repackageclasses ''
+-allowaccessmodification
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-verbose

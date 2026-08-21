@@ -1,15 +1,18 @@
 package com.tdpham.games.common
 
+import android.app.ActivityManager
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.os.Build
 import android.util.AttributeSet
 import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 /**
  * High-performance abstract SurfaceView game engine providing:
@@ -17,6 +20,7 @@ import android.view.SurfaceView
  * - Smooth sub-frame render interpolation (alpha 0.0 .. 1.0)
  * - Multi-threaded rendering with thread lifecycle safety
  * - Standardized D-Pad, Gamepad, Keyboard, and Analog Stick input with Deadzone filtering
+ * - Global GameUncaughtExceptionHandler reporting game state, controller input, and device metadata to Crashlytics
  */
 abstract class BaseGameView @JvmOverloads constructor(
     context: Context,
@@ -50,19 +54,139 @@ abstract class BaseGameView @JvmOverloads constructor(
         private set
     private var frameCount = 0
     private var lastFpsTimestamp = 0L
+    private var gameStartTime = System.currentTimeMillis()
 
     // Surface bounds
     protected var viewWidth: Int = 0
     protected var viewHeight: Int = 0
 
-    // Analog stick last state tracking
+    // Analog stick and controller input tracking for telemetry and crash reports
     private var lastAnalogDirection = DpadDirection.NONE
+    var lastKeyCodeName: String = "NONE"
+        private set
+    var lastDpadDirectionName: String = "NONE"
+        private set
+    var lastAnalogX: Float = 0f
+        private set
+    var lastAnalogY: Float = 0f
+        private set
+    var lastInputDeviceName: String = "None"
+        private set
+    var lastInputDeviceId: Int = -1
+        private set
+    var lastInputTimestamp: Long = 0L
+        private set
+
+    private var originalThreadHandler: Thread.UncaughtExceptionHandler? = null
+    private val gameExceptionHandler by lazy { GameUncaughtExceptionHandler(this) }
 
     init {
         surfaceHolder.addCallback(this)
         isFocusable = true
         isFocusableInTouchMode = true
         requestFocus()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        originalThreadHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler(GameUncaughtExceptionHandler(this, originalThreadHandler))
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        if (originalThreadHandler != null) {
+            Thread.setDefaultUncaughtExceptionHandler(originalThreadHandler)
+        }
+    }
+
+    /**
+     * Subclasses can override to provide real-time domain specific game metrics (e.g. score, level, lives, combo).
+     */
+    open fun getGameStateMetadata(): Map<String, String> = emptyMap()
+
+    /**
+     * Global Uncaught Exception Handler that captures:
+     * 1. Device hardware and memory diagnostics
+     * 2. Live game loop metrics and thread state
+     * 3. Controller / D-Pad / Analog stick input history
+     * 4. Custom game-specific state
+     * and exports all telemetry to Firebase Crashlytics.
+     */
+    class GameUncaughtExceptionHandler(
+        private val gameView: BaseGameView,
+        private val defaultHandler: Thread.UncaughtExceptionHandler? = Thread.getDefaultUncaughtExceptionHandler()
+    ) : Thread.UncaughtExceptionHandler {
+
+        override fun uncaughtException(thread: Thread, throwable: Throwable) {
+            try {
+                val crashlytics = FirebaseCrashlytics.getInstance()
+                val context = gameView.context
+
+                // 1. Device Hardware & RAM Metadata
+                val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+                val memoryInfo = ActivityManager.MemoryInfo()
+                activityManager?.getMemoryInfo(memoryInfo)
+                val displayMetrics = context.resources.displayMetrics
+
+                crashlytics.setCustomKey("device_manufacturer", Build.MANUFACTURER)
+                crashlytics.setCustomKey("device_model", Build.MODEL)
+                crashlytics.setCustomKey("device_brand", Build.BRAND)
+                crashlytics.setCustomKey("device_sdk", Build.VERSION.SDK_INT)
+                crashlytics.setCustomKey("device_low_ram", memoryInfo.lowMemory)
+                crashlytics.setCustomKey("device_avail_mem_mb", memoryInfo.availMem / (1024 * 1024))
+                crashlytics.setCustomKey("device_total_mem_mb", memoryInfo.totalMem / (1024 * 1024))
+                crashlytics.setCustomKey("device_screen_res", "${displayMetrics.widthPixels}x${displayMetrics.heightPixels}")
+                crashlytics.setCustomKey("device_density_dpi", displayMetrics.densityDpi)
+
+                // 2. Controller & Input State
+                crashlytics.setCustomKey("input_last_key_code", gameView.lastKeyCodeName)
+                crashlytics.setCustomKey("input_last_direction", gameView.lastDpadDirectionName)
+                crashlytics.setCustomKey("input_last_analog", "X=${gameView.lastAnalogX}, Y=${gameView.lastAnalogY}")
+                crashlytics.setCustomKey("input_device_name", gameView.lastInputDeviceName)
+                crashlytics.setCustomKey("input_device_id", gameView.lastInputDeviceId)
+                crashlytics.setCustomKey("input_last_action_timestamp", gameView.lastInputTimestamp)
+
+                // 3. Game Engine State
+                crashlytics.setCustomKey("game_active_key", gameView.gameKey)
+                crashlytics.setCustomKey("game_is_running", gameView.isRunning)
+                crashlytics.setCustomKey("game_is_paused", gameView.isPaused)
+                crashlytics.setCustomKey("game_fps", gameView.currentFps)
+                crashlytics.setCustomKey("game_target_ups", gameView.targetUps)
+                crashlytics.setCustomKey("game_view_width", gameView.viewWidth)
+                crashlytics.setCustomKey("game_view_height", gameView.viewHeight)
+                crashlytics.setCustomKey("game_thread_name", thread.name)
+                crashlytics.setCustomKey("game_thread_state", thread.state.name)
+
+                // 4. Custom Game-Specific State
+                val customMeta = gameView.getGameStateMetadata()
+                for ((key, value) in customMeta) {
+                    crashlytics.setCustomKey("game_custom_$key", value)
+                }
+
+                val logHeader = buildString {
+                    appendLine("================ GAME CRASH REPORT ================")
+                    appendLine("Game: ${gameView.gameKey.uppercase()} | Thread: ${thread.name} (state=${thread.state})")
+                    appendLine("Device: ${Build.MANUFACTURER} ${Build.MODEL} (SDK ${Build.VERSION.SDK_INT})")
+                    appendLine("Memory: Avail=${memoryInfo.availMem / (1024 * 1024)}MB / Total=${memoryInfo.totalMem / (1024 * 1024)}MB | LowRAM=${memoryInfo.lowMemory}")
+                    appendLine("Display: ${displayMetrics.widthPixels}x${displayMetrics.heightPixels} @ ${displayMetrics.densityDpi}dpi")
+                    appendLine("Engine: running=${gameView.isRunning}, paused=${gameView.isPaused}, fps=${gameView.currentFps}, targetUps=${gameView.targetUps}, bounds=${gameView.viewWidth}x${gameView.viewHeight}")
+                    appendLine("Controller Input: device='${gameView.lastInputDeviceName}' (id=${gameView.lastInputDeviceId}), lastKey=${gameView.lastKeyCodeName}, lastDir=${gameView.lastDpadDirectionName}, analog=(X:${gameView.lastAnalogX}, Y:${gameView.lastAnalogY})")
+                    if (customMeta.isNotEmpty()) {
+                        appendLine("Custom Game Data: $customMeta")
+                    }
+                    appendLine("==================================================")
+                }
+
+                crashlytics.log(logHeader)
+                android.util.Log.e("GameCrashHandler", logHeader, throwable)
+                crashlytics.recordException(throwable)
+            } catch (e: Throwable) {
+                android.util.Log.e("GameCrashHandler", "Error capturing crash telemetry: ${e.message}", e)
+            } finally {
+                defaultHandler?.uncaughtException(thread, throwable)
+            }
+        }
     }
 
     /**
@@ -121,12 +245,29 @@ abstract class BaseGameView @JvmOverloads constructor(
         gameThread = null
     }
 
+    private fun logCrashToFirebase(throwable: Throwable, contextTag: String) {
+        try {
+            val crashlytics = com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance()
+            crashlytics.setCustomKey("active_game", gameKey)
+            crashlytics.setCustomKey("fps", currentFps)
+            crashlytics.setCustomKey("view_width", viewWidth)
+            crashlytics.setCustomKey("view_height", viewHeight)
+            crashlytics.setCustomKey("is_paused", isPaused)
+            crashlytics.setCustomKey("target_ups", targetUps)
+            crashlytics.log("BaseGameView exception in [$contextTag] for active game: $gameKey")
+            crashlytics.recordException(throwable)
+        } catch (e: Exception) {
+            android.util.Log.e("BaseGameView", "Failed to log exception to Crashlytics: ${e.message}", e)
+        }
+    }
+
     override fun resume() {
         if (gameThread == null || !gameThread!!.isAlive) {
             isRunning = true
             isPaused = false
             gameThread = Thread(this, "BaseGameEngineThread_${gameKey}").apply {
                 priority = Thread.MAX_PRIORITY
+                uncaughtExceptionHandler = gameExceptionHandler
                 start()
             }
         }
@@ -177,7 +318,11 @@ abstract class BaseGameView @JvmOverloads constructor(
 
                 var updateCount = 0
                 while (accumulator >= fixedDeltaTimeNs && updateCount < maxFrameSkips) {
-                    onGameUpdate(fixedDeltaSec)
+                    try {
+                        onGameUpdate(fixedDeltaSec)
+                    } catch (e: Throwable) {
+                        gameExceptionHandler.uncaughtException(Thread.currentThread(), e)
+                    }
                     accumulator -= fixedDeltaTimeNs
                     updateCount++
                 }
@@ -196,10 +341,15 @@ abstract class BaseGameView @JvmOverloads constructor(
                     canvas = surfaceHolder.lockCanvas()
                     if (canvas != null) {
                         synchronized(surfaceHolder) {
-                            onRender(canvas, interpolation)
+                            try {
+                                onRender(canvas, interpolation)
+                            } catch (e: Throwable) {
+                                gameExceptionHandler.uncaughtException(Thread.currentThread(), e)
+                            }
                         }
                     }
                 } catch (e: Exception) {
+                    gameExceptionHandler.uncaughtException(Thread.currentThread(), e)
                     e.printStackTrace()
                 } finally {
                     if (canvas != null) {
@@ -231,6 +381,13 @@ abstract class BaseGameView @JvmOverloads constructor(
 
     // --- UNIVERSAL INPUT HANDLING (D-PAD / GAMEPAD / KEYBOARD / JOYSTICK) ---
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        lastKeyCodeName = KeyEvent.keyCodeToString(keyCode)
+        lastInputTimestamp = System.currentTimeMillis()
+        if (event != null) {
+            lastInputDeviceName = event.device?.name ?: "Keyboard/Gamepad"
+            lastInputDeviceId = event.deviceId
+        }
+
         val dir = when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W -> DpadDirection.UP
             KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S -> DpadDirection.DOWN
@@ -240,6 +397,7 @@ abstract class BaseGameView @JvmOverloads constructor(
         }
 
         if (dir != DpadDirection.NONE) {
+            lastDpadDirectionName = dir.name
             if (onDpadInput(dir, true)) return true
         }
 
@@ -257,6 +415,13 @@ abstract class BaseGameView @JvmOverloads constructor(
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        lastKeyCodeName = KeyEvent.keyCodeToString(keyCode)
+        lastInputTimestamp = System.currentTimeMillis()
+        if (event != null) {
+            lastInputDeviceName = event.device?.name ?: "Keyboard/Gamepad"
+            lastInputDeviceId = event.deviceId
+        }
+
         val dir = when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W -> DpadDirection.UP
             KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S -> DpadDirection.DOWN
@@ -266,6 +431,7 @@ abstract class BaseGameView @JvmOverloads constructor(
         }
 
         if (dir != DpadDirection.NONE) {
+            lastDpadDirectionName = dir.name
             if (onDpadInput(dir, false)) return true
         }
 
@@ -286,11 +452,17 @@ abstract class BaseGameView @JvmOverloads constructor(
         if ((event.source and InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK ||
             (event.source and InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) {
 
+            lastInputDeviceName = event.device?.name ?: "Joystick"
+            lastInputDeviceId = event.deviceId
+            lastInputTimestamp = System.currentTimeMillis()
+
             // Check primary analog stick axes with deadzone
             val rawX = event.getAxisValue(MotionEvent.AXIS_X).let { if (it != 0f) it else event.getAxisValue(MotionEvent.AXIS_HAT_X) }
             val rawY = event.getAxisValue(MotionEvent.AXIS_Y).let { if (it != 0f) it else event.getAxisValue(MotionEvent.AXIS_HAT_Y) }
 
             val (filteredX, filteredY) = SettingsManager.applyDeadzone(context, rawX, rawY)
+            lastAnalogX = filteredX
+            lastAnalogY = filteredY
             onAnalogStickMove(filteredX, filteredY)
 
             // Convert analog deflection to discrete DpadDirection pulses
@@ -303,6 +475,7 @@ abstract class BaseGameView @JvmOverloads constructor(
             }
 
             if (currentDir != lastAnalogDirection) {
+                lastDpadDirectionName = currentDir.name
                 if (lastAnalogDirection != DpadDirection.NONE) {
                     onDpadInput(lastAnalogDirection, false)
                 }
@@ -314,5 +487,12 @@ abstract class BaseGameView @JvmOverloads constructor(
             }
         }
         return super.onGenericMotionEvent(event)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        lastInputDeviceName = "Touchscreen"
+        lastInputDeviceId = event.deviceId
+        lastInputTimestamp = System.currentTimeMillis()
+        return super.onTouchEvent(event)
     }
 }

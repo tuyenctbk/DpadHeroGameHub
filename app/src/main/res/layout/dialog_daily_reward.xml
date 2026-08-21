@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DAILY ARCADE REWARDS"
+                android:text="@string/daily_arcade_rewards"
                 android:textColor="#FFD700"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="Check in daily to build your streak &amp; unlock the 1,500 coin Jackpot!"
+                android:text="@string/daily_rewards_subtitle"
                 android:textColor="#90A4AE"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -106,7 +106,7 @@
             android:layout_width="260dp"
             android:layout_height="52dp"
             android:background="@drawable/bg_menu_item_selector"
-            android:text="🎁 CLAIM REWARD"
+            android:text="@string/claim_reward"
             android:textColor="@color/btn_menu_text_selector"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -118,7 +118,7 @@
             android:layout_height="52dp"
             android:layout_marginStart="16dp"
             android:background="@drawable/bg_btn_neutral_selector"
-            android:text="CLOSE"
+            android:text="@string/btn_close"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"

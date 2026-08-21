@@ -389,7 +389,7 @@ class BlackjackView @JvmOverloads constructor(
             ScoreManager.updateHighScore(context, gameKey, highestBalance)
         }
 
-        subStatus = "Press [ENTER] to start next round"
+        subStatus = context.getString(R.string.press_enter_next_round)
         onGameOver?.invoke(chipBalance)
         invalidate()
     }

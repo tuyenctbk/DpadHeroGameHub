@@ -229,7 +229,7 @@ class TriviaEngine(private val context: Context) {
                 mainHandler.postDelayed(this, 100)
             }
         }
-        mainHandler.post(timerRunnable!!)
+        timerRunnable?.let { mainHandler.post(it) }
     }
 
     private fun stopTimer() {

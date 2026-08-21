@@ -715,4 +715,140 @@
     <string name="revive_prompt_description">Regardez une courte pub pour revivre avec +1 vie supplémentaire et continuer !</string>
     <string name="btn_revive_continue">❤️ CONTINUER (+1 VIE)</string>
     <string name="btn_revive_give_up">❌ TERMINER LA PARTIE</string>
+
+    <string name="sound_profile_label">Profil Sonore</string>
+    <string name="sound_profile_arcade">Arcade 8-Bit</string>
+    <string name="sound_profile_retro">Retro Synthé</string>
+    <string name="sound_profile_modern">Digital Moderne</string>
+    <string name="sound_profile_arcade_desc">Ondes d\'impulsion 8-bit percutantes</string>
+    <string name="sound_profile_retro_desc">Tonalités synthétiseur analogiques chaudes</string>
+    <string name="sound_profile_modern_desc">Carillons polyphoniques nets</string>
+    <string name="sound_profile_toast">Profil Sonore : %1$s</string>
+    <string name="sound_profile_desc_format">%1$s • Appuyez pour changer</string>
+    <string name="volume_desc_format">Volume : %1$d%% • Appuyez pour régler le niveau</string>
+    <string name="sensitivity_toast">Sensibilité de la manette : %1$s</string>
+
+    <string name="trivia_gauntlet_completed">DÉFI COMPLÉTÉ ! 🏆</string>
+    <string name="trivia_final_score">Score Final : %1$d Points</string>
+    <string name="trivia_accuracy">Précision : %1$d / %2$d Correctes (%3$d%%)</string>
+    <string name="trivia_coins_earned">+%1$d Pièces Gagnées 🪙</string>
+    <string name="trivia_play_again">REJOUER [ENTER]</string>
+    <string name="press_enter_next_round">Appuyez sur [ENTER] pour le prochain tour</string>
+    <string name="twentyfortyeight_hint">🎮 D-Pad/Glisser : Déplacer • [U] Annuler • [MENU] Mode Taille</string>
+
+    <string name="scanline_crt_effect">Filtre balayage CRT</string>
+    <string name="scanline_crt_desc">Simule les lignes de balayage des écrans cathodiques d\'arcade classiques.</string>
+    <string name="screen_shake_effect">Effet de secousse d\'écran</string>
+    <string name="screen_shake_desc">Retour d\'impact dynamique de l\'écran lors des collisions et explosions.</string>
+    <string name="reset_high_scores">Réinitialiser les meilleurs scores</string>
+    <string name="reset_high_scores_desc">Effacer tous les meilleurs scores enregistrés pour le héros actif.</string>
+    <string name="reset_scores_confirm">Voulez-vous vraiment effacer tous les meilleurs scores de ce héros ? Cette action est irréversible.</string>
+    <string name="scores_cleared">Les meilleurs scores ont été réinitialisés.</string>
+
+    <string-array name="win_connect_four">
+        <item>QUATRE EN LIGNE !</item>
+        <item>MAÎTRE DE LA GRILLE !</item>
+        <item>GÉNIE TACTIQUE !</item>
+        <item>CHAMPION DU CONNECT !</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>BLACKJACK NATUREL !</item>
+        <item>GRAND JOUEUR !</item>
+        <item>BANQUE BATTUE !</item>
+        <item>CASINO ROYAL !</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>ÉLÈVE BRILLANT !</item>
+        <item>SCORE PARFAIT !</item>
+        <item>MAÎTRE DU QUIZ !</item>
+        <item>CHAMPION DES QUESTIONS !</item>
+    </string-array>
+
+    <string name="game_connect_four">PUISSANCE 4</string>
+    <string name="game_connect_four_instructions">Bataille tactique classique de 4 en ligne !\n• D-PAD GAUCHE / DROITE : Déplacer le curseur du jeton\n• D-PAD CENTRE / ENTER : Déposer le jeton dans la colonne\n• Alignez 4 jetons horizontalement, verticalement ou en diagonale\n• Jouez en solo contre l\'IA ou à 2 joueurs en local !</string>
+    <string name="connect_four_settings_title">PARAMÈTRES DE PUISSANCE 4</string>
+
+    <string name="game_blackjack">BLACKJACK 21</string>
+    <string name="game_blackjack_instructions">Table de Blackjack authentique de casino !\n• Objectif : Obtenir une main la plus proche de 21 sans dépasser\n• D-PAD HAUT / BAS / GAUCHE / DROITE : Naviguer parmi les jetons et actions\n• D-PAD CENTRE / ENTER : Miser / Distribuer / Tirer / Rester / Doubler\n• Le Blackjack paie 3:2 ! Gagnez des jetons et bâtissez votre fortune !</string>
+    <string name="blackjack_settings_title">PARAMÈTRES DE BLACKJACK</string>
+
+    <string name="game_trivia">QUIZ TRIVIA</string>
+    <string name="game_trivia_instructions">Grand jeu télévisé de quiz arcade !\n• D-PAD HAUT / BAS / GAUCHE / DROITE : Sélectionner la réponse A, B, C ou D\n• D-PAD CENTRE / ENTER : Confirmer la réponse\n• Répondez plus vite pour obtenir de gros bonus de temps\n• Utilisez les jokers : 50:50, Gel du temps et Passer la question\n• Terminez le défi de 10 questions pour gagner des récompenses !</string>
+    <string name="trivia_settings_title">PARAMÈTRES DU QUIZ TRIVIA</string>
+
+    <string name="tab_local">🏠 LOCAL</string>
+    <string name="tab_worldwide">🌐 MONDIAL</string>
+
+    <string name="setting_volume_desc_format">Volume : %1$d%% • Appuyez pour ajuster</string>
+    <string name="setting_sound_profile_theme">Thème de profil sonore</string>
+    <string name="setting_sound_profile_desc">Arcade 8-Bit • Appuyez pour changer</string>
+    <string name="setting_retro_music">Musique rétro &amp; Ambiance</string>
+    <string name="setting_retro_music_desc">Mélodies d\'arcade au synthétiseur</string>
+    <string name="setting_controller_sensitivity">Sensibilité de la manette</string>
+    <string name="setting_controller_sensitivity_desc">Ajuster la réactivité de la croix, du joystick et du tactile</string>
+    <string name="setting_haptic_vibration">Vibration haptique &amp; Manette</string>
+    <string name="setting_haptic_vibration_desc">Pulsions tactiles lors des chocs, scores et explosions</string>
+    <string name="calibrate">CALIBRER</string>
+
+    <string name="badge_live">● EN DIRECT</string>
+    <string name="global_top3_snake">TOP 3 MONDIAL • SNAKE</string>
+    <string name="hall_of_fame_widget">PANTHÉON 🏆</string>
+    <string name="placeholder_dash">---</string>
+    <string name="zero_pts">0 pts</string>
+
+    <string name="day_1">JOUR 1</string>
+    <string name="reward_day_format">JOUR %1$d</string>
+    <string name="status_locked">VERROUILLÉ</string>
+    <string name="daily_arcade_rewards">RÉCOMPENSES QUOTIDIENNES</string>
+    <string name="daily_rewards_subtitle">Connectez-vous chaque jour pour décrocher le Jackpot de 1 500 pièces !</string>
+    <string name="claim_reward">🎁 RÉCLAMER LA RÉCOMPENSE</string>
+    <string name="btn_close">FERMER</string>
+
+    <string name="controller_settings_title">🎮 Paramètres manette &amp; haptique</string>
+    <string name="hardware_diagnostics">DIAGNOSTIC MATÉRIEL</string>
+    <string name="controller_checking">🎮 Manette : Vérification des appareils...</string>
+    <string name="vibrator_checking">⚡ Vibreur : Vérification du vibreur...</string>
+    <string name="haptic_rumble_title">Vibration haptique &amp; retour</string>
+    <string name="haptic_rumble_desc">Activer les vibrations pour les impacts, pièces et boutons</string>
+    <string name="haptic_intensity_title">Intensité haptique (Amplitude)</string>
+    <string name="vibration_motor_test_title">TEST DU MOTEUR DE VIBRATION</string>
+    <string name="vibration_test_instructions">Sélectionnez un profil de vibration et testez la réponse :</string>
+    <string name="vibe_profile_click">🕹️ Clic (15ms)</string>
+    <string name="vibe_profile_score">⚡ Score (35ms)</string>
+    <string name="vibe_profile_hazard">💥 Danger (70ms)</string>
+    <string name="vibe_profile_explosion">💣 Explosion de Boss</string>
+    <string name="vibe_profile_victory">🏆 Onde de victoire</string>
+    <string name="test_vibration_now">⚡ TESTER LA VIBRATION</string>
+    <string name="gamepad_speed_title">Vitesse d\'entrée manette</string>
+    <string name="gamepad_speed_desc">Taux de répétition et courbe de sensibilité numérique</string>
+    <string name="analog_deadzone_title">Seuil de zone morte analogique</string>
+    <string name="analog_deadzone_desc">Évite la dérive du joystick et améliore la précision</string>
+    <string name="live_stick_neutral">🕹️ Test en direct : Neutre (0.00, 0.00)</string>
+
+    <string name="sound_sfx_on">EFFETS : ACTIVÉS</string>
+    <string name="sound_sfx_off">EFFETS : DÉSACTIVÉS</string>
+    <string name="music_on">MUSIQUE : ACTIVÉE</string>
+    <string name="music_off">MUSIQUE : DÉSACTIVÉE</string>
+
+    <string name="gamepad_connected">Manette Connectée</string>
+    <string name="remote_mode">Mode Télécommande</string>
+    <string name="desc_controller_status">État de connexion de la manette</string>
+    <string name="gamepad_connected_format">🎮 Connecté : %1$s</string>
+    <string name="no_external_gamepad">Aucune manette externe (D-Pad virtuel actif)</string>
+    <string name="haptic_test_fired">Test haptique déclenché : %1$s (intensité %2$d%%)</string>
+    <string name="motor_hardware_info">⚡ Moteur : %1$s • Prêt : %2$s • Contrôle d\'amplitude : %3$s</string>
+    <string name="status_yes">OUI</string>
+    <string name="status_no">NON</string>
+    <string name="status_fallback">SECOURS</string>
+    <string name="vibrator_manager_api">VibratorManager (API 31+)</string>
+    <string name="vibrator_legacy">Vibrator (Ancien)</string>
+
+    <string name="global_top3_format">TOP 3 MONDIAL • %1$s</string>
+    <string name="no_record">Aucun record</string>
+    <string name="score_pts_format">%1$d pts</string>
+    <string name="status_claimed">✓ RÉCLAMÉ</string>
+    <string name="status_ready">PRÊT !</string>
+    <string name="claimed_today">✓ RÉCLAMÉ AUJOURD\'HUI</string>
+    <string name="claim_day_format">🎁 RÉCLAMER JOUR %1$d (+%2$d)</string>
+    <string name="desc_game_icon">Icône du jeu</string>
 </resources>

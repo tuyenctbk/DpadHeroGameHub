@@ -44,8 +44,22 @@ abstract class BaseGameActivity : AppCompatActivity() {
     protected open fun shouldShowHelpButton(): Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.requestFeature(android.view.Window.FEATURE_ACTIVITY_TRANSITIONS)
+        val moveTransition = android.transition.TransitionInflater.from(this)
+            .inflateTransition(android.R.transition.move).apply {
+                duration = 350
+                interpolator = android.view.animation.DecelerateInterpolator(1.5f)
+            }
+        window.sharedElementEnterTransition = moveTransition
+        window.sharedElementReturnTransition = moveTransition
+
         super.onCreate(savedInstanceState)
         setContentView(getLayoutId())
+
+        val view = findViewById<View>(getGameViewId())
+        if (view != null) {
+            androidx.core.view.ViewCompat.setTransitionName(view, "game_card_transition")
+        }
 
         lifecycleScope.launch(Dispatchers.Default) {
             val analytics = try {
@@ -59,7 +73,6 @@ abstract class BaseGameActivity : AppCompatActivity() {
             }
         }
         
-        val view = findViewById<View>(getGameViewId())
         if (view is GameView) {
             gameView = view
             gameView.gameKey = gameKey
@@ -165,9 +178,8 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     private fun focusGame() {
         val view = findViewById<View>(getGameViewId())
-        view.alpha = 0f
-        view.animate().alpha(1f).setDuration(400).start()
-        view.requestFocus()
+        view?.alpha = 1f
+        view?.requestFocus()
     }
 
     private fun showMasteryHint() {
@@ -280,78 +292,78 @@ abstract class BaseGameActivity : AppCompatActivity() {
         IdleAdManager.notifyInteraction()
         gameView.pause()
 
-        pauseDialog?.dismiss()
-        pauseDialog = InGamePauseDialog.show(
-            context = this,
-            title = "$gameTitle - ${getString(R.string.pause_menu_title)}",
-            hasOptions = true,
-            onResume = {
-                pauseDialog = null
-                (gameView as View).requestFocus()
-                gameView.resume()
-            },
-            onOptions = {
-                pauseDialog = null
-                showGameOptions {
+        val intent = PauseActivity.createIntent(this, gameKey, gameTitle)
+        startActivityForResult(intent, PauseActivity.REQUEST_CODE_PAUSE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PauseActivity.REQUEST_CODE_PAUSE) {
+            when (resultCode) {
+                PauseActivity.RESULT_RESUME -> {
                     (gameView as View).requestFocus()
                     gameView.resume()
                 }
-            },
-            onGuide = {
-                pauseDialog = null
-                showGameGuide()
-            },
-            onRestart = {
-                pauseDialog = null
-                (gameView as View).requestFocus()
-                when (gameKey) {
-                    "trex" -> (gameView as? com.tdpham.games.trex.TRexView)?.resetGame()
-                    "snake" -> (gameView as? com.tdpham.games.snake.SnakeGameView)?.resetGame()
-                    "minesweeper" -> (gameView as? com.tdpham.games.minesweeper.MinesweeperView)?.resetGame()
-                    "sudoku" -> (gameView as? com.tdpham.games.sudoku.SudokuView)?.resetGame()
-                    "memory" -> (gameView as? com.tdpham.games.memory.MemoryView)?.resetGame()
-                    "slide_puzzle" -> (gameView as? com.tdpham.games.slidepuzzle.SlidePuzzleView)?.resetGame()
-                    "tic_tac_toe" -> (gameView as? com.tdpham.games.tictactoe.TicTacToeView)?.resetGame()
-                    "hangman" -> (gameView as? com.tdpham.games.hangman.HangmanView)?.resetGame()
-                    "solitaire" -> (gameView as? com.tdpham.games.solitaire.SolitaireView)?.resetGame()
-                    "4096" -> (gameView as? com.tdpham.games.twentyfortyeight.TwentyFortyEightView)?.resetGame()
-                    "tetris" -> (gameView as? com.tdpham.games.tetris.TetrisView)?.resetGame()
-                    "mental_math" -> (gameView as? com.tdpham.games.mentalmath.MentalMathView)?.resetGame()
-                    "flappy_hero" -> (gameView as? com.tdpham.games.flappy.FlappyHeroView)?.resetGame()
-                    "brick_break" -> (gameView as? com.tdpham.games.brickbreak.BrickBreakView)?.resetGame()
-                    "lines98" -> (gameView as? com.tdpham.games.lines98.Lines98View)?.resetGame()
-                    "word_quest" -> (gameView as? com.tdpham.games.wordquest.WordQuestView)?.resetGame()
-                    "road_racer" -> (gameView as? com.tdpham.games.roadracer.RoadRacerView)?.resetGame()
-                    "sokoban" -> (gameView as? com.tdpham.games.sokoban.SokobanView)?.resetGame()
-                    "battle_tanks" -> (gameView as? com.tdpham.games.tanks.BattleTanksView)?.resetGame()
-                    "starfighter", "star_fighter" -> (gameView as? com.tdpham.games.starfighter.StarFighterView)?.resetGame()
-                    "dungeon_escape" -> (gameView as? com.tdpham.games.dungeon.DungeonEscapeView)?.resetGame()
-                    "froggy_cross" -> (gameView as? com.tdpham.games.froggy.FroggyCrossView)?.resetGame()
-                    "simon_says" -> (gameView as? com.tdpham.games.simon.SimonSaysView)?.resetGame()
-                    "checkers" -> (gameView as? com.tdpham.games.checkers.CheckersView)?.resetGame()
-                    "spinball" -> (gameView as? com.tdpham.games.spinball.SpinballView)?.resetGame()
-                    "syobon_action" -> (gameView as? com.tdpham.games.syobon.SyobonView)?.resetGame()
-                    "monkey" -> (gameView as? com.tdpham.games.monkey.MonkeyView)?.resetGame()
-                    "frenzy" -> (gameView as? com.tdpham.games.frenzy.FrenzyView)?.resetGame()
-                    "retrodriver" -> (gameView as? com.tdpham.games.retrodriver.RetroDriverView)?.resetGame()
-                    "fruit" -> (gameView as? com.tdpham.games.fruit.FruitView)?.resetGame()
-                    "connect_four" -> (gameView as? com.tdpham.games.connectfour.ConnectFourView)?.resetGame()
-                    "blackjack" -> (gameView as? com.tdpham.games.blackjack.BlackjackView)?.resetGame()
-                    "trivia" -> (gameView as? com.tdpham.games.trivia.TriviaView)?.resetGame()
+                PauseActivity.RESULT_OPTIONS -> {
+                    showGameOptions {
+                        (gameView as View).requestFocus()
+                        gameView.resume()
+                    }
                 }
-                gameView.resume()
-            },
-            onExit = {
-                pauseDialog = null
-                if (AdManager.canShowInterstitial(this)) {
-                    AdManager.showInterstitial(this) {
+                PauseActivity.RESULT_RESTART -> {
+                    restartCurrentGame()
+                    gameView.resume()
+                }
+                PauseActivity.RESULT_EXIT -> {
+                    if (AdManager.canShowInterstitial(this)) {
+                        AdManager.showInterstitial(this) {
+                            finish()
+                        }
+                    } else {
                         finish()
                     }
-                } else {
-                    finish()
                 }
             }
-        )
+        }
+    }
+
+    private fun restartCurrentGame() {
+        (gameView as View).requestFocus()
+        when (gameKey) {
+            "trex" -> (gameView as? com.tdpham.games.trex.TRexView)?.resetGame()
+            "snake" -> (gameView as? com.tdpham.games.snake.SnakeGameView)?.resetGame()
+            "minesweeper" -> (gameView as? com.tdpham.games.minesweeper.MinesweeperView)?.resetGame()
+            "sudoku" -> (gameView as? com.tdpham.games.sudoku.SudokuView)?.resetGame()
+            "memory" -> (gameView as? com.tdpham.games.memory.MemoryView)?.resetGame()
+            "slide_puzzle" -> (gameView as? com.tdpham.games.slidepuzzle.SlidePuzzleView)?.resetGame()
+            "tic_tac_toe" -> (gameView as? com.tdpham.games.tictactoe.TicTacToeView)?.resetGame()
+            "hangman" -> (gameView as? com.tdpham.games.hangman.HangmanView)?.resetGame()
+            "solitaire" -> (gameView as? com.tdpham.games.solitaire.SolitaireView)?.resetGame()
+            "4096" -> (gameView as? com.tdpham.games.twentyfortyeight.TwentyFortyEightView)?.resetGame()
+            "tetris" -> (gameView as? com.tdpham.games.tetris.TetrisView)?.resetGame()
+            "mental_math" -> (gameView as? com.tdpham.games.mentalmath.MentalMathView)?.resetGame()
+            "flappy_hero" -> (gameView as? com.tdpham.games.flappy.FlappyHeroView)?.resetGame()
+            "brick_break" -> (gameView as? com.tdpham.games.brickbreak.BrickBreakView)?.resetGame()
+            "lines98" -> (gameView as? com.tdpham.games.lines98.Lines98View)?.resetGame()
+            "word_quest" -> (gameView as? com.tdpham.games.wordquest.WordQuestView)?.resetGame()
+            "road_racer" -> (gameView as? com.tdpham.games.roadracer.RoadRacerView)?.resetGame()
+            "sokoban" -> (gameView as? com.tdpham.games.sokoban.SokobanView)?.resetGame()
+            "battle_tanks" -> (gameView as? com.tdpham.games.tanks.BattleTanksView)?.resetGame()
+            "starfighter", "star_fighter" -> (gameView as? com.tdpham.games.starfighter.StarFighterView)?.resetGame()
+            "dungeon_escape" -> (gameView as? com.tdpham.games.dungeon.DungeonEscapeView)?.resetGame()
+            "froggy_cross" -> (gameView as? com.tdpham.games.froggy.FroggyCrossView)?.resetGame()
+            "simon_says" -> (gameView as? com.tdpham.games.simon.SimonSaysView)?.resetGame()
+            "checkers" -> (gameView as? com.tdpham.games.checkers.CheckersView)?.resetGame()
+            "spinball" -> (gameView as? com.tdpham.games.spinball.SpinballView)?.resetGame()
+            "syobon_action" -> (gameView as? com.tdpham.games.syobon.SyobonView)?.resetGame()
+            "monkey" -> (gameView as? com.tdpham.games.monkey.MonkeyView)?.resetGame()
+            "frenzy" -> (gameView as? com.tdpham.games.frenzy.FrenzyView)?.resetGame()
+            "retrodriver" -> (gameView as? com.tdpham.games.retrodriver.RetroDriverView)?.resetGame()
+            "fruit" -> (gameView as? com.tdpham.games.fruit.FruitView)?.resetGame()
+            "connect_four" -> (gameView as? com.tdpham.games.connectfour.ConnectFourView)?.resetGame()
+            "blackjack" -> (gameView as? com.tdpham.games.blackjack.BlackjackView)?.resetGame()
+            "trivia" -> (gameView as? com.tdpham.games.trivia.TriviaView)?.resetGame()
+        }
     }
 
     override fun onResume() {

@@ -155,9 +155,10 @@ class TwentyFortyEightView @JvmOverloads constructor(
             SoundManager.playError()
             return false
         }
+        val prev = previousBoard ?: return false
         for (r in 0 until gridSize) {
             for (c in 0 until gridSize) {
-                board[r][c] = previousBoard!![r][c]
+                board[r][c] = prev[r][c]
             }
         }
         score = previousScore
@@ -343,7 +344,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
         paint.textSize = cellSize * 0.22f
         paint.color = Color.parseColor("#78909C")
         val hintY = offsetY + gridSize * cellSize + cellSize * 0.5f
-        canvas.drawText("🎮 D-Pad/Swipe: Move  •  [U] Undo  •  [MENU] Size Mode", w / 2f, hintY, paint)
+        canvas.drawText(context.getString(R.string.twentyfortyeight_hint), w / 2f, hintY, paint)
 
         if (isGameOver || isWin) {
             celebrationManager.draw(canvas)
@@ -605,7 +606,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
 
         paint.textSize = w / 38f
         paint.color = Color.parseColor("#00E5FF")
-        val restartHint = "Press [ENTER / DPAD-CENTER] to Restart"
+        val restartHint = context.getString(R.string.restart_hint)
         canvas.drawText(restartHint, w / 2f, h / 2f + 70f, paint)
     }
 
