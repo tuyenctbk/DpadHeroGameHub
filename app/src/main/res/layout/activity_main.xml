@@ -734,7 +734,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="56dp"
         android:text="@string/select_game_hint"
         android:textColor="#99FFFFFF"
         android:textSize="16sp"

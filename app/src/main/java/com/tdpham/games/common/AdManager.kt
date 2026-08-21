@@ -30,6 +30,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.view.View
 import com.tdpham.games.R
+import com.google.android.gms.ads.RequestConfiguration
 import java.util.concurrent.Executors
 
 object AdManager {
@@ -108,6 +109,14 @@ object AdManager {
                     isInitializing = false
                     return@execute
                 }
+
+                // Register emulator and debug builds as test devices so Google fills test ad slots
+                val testDeviceIds = mutableListOf(AdRequest.DEVICE_ID_EMULATOR)
+                MobileAds.setRequestConfiguration(
+                    RequestConfiguration.Builder()
+                        .setTestDeviceIds(testDeviceIds)
+                        .build()
+                )
 
                 MobileAds.initialize(appContext) {
                     Log.d(TAG, "MobileAds initialized successfully.")
@@ -383,7 +392,27 @@ object AdManager {
         onRewardGranted: () -> Unit,
         onAdClosed: () -> Unit = {}
     ) {
+        showRewardedOrInterstitialWithRetry(activity, onRewardGranted, onAdClosed, retriesLeft = 2)
+    }
+
+    /**
+     * Internal implementation with retry support.
+     * When no ad is cached, it triggers a background load and retries up to [retriesLeft] times
+     * with a 5-second interval between each attempt — giving the SDK time to fill.
+     * Only calls [onAdClosed] (without reward) after all retries are exhausted.
+     */
+    private fun showRewardedOrInterstitialWithRetry(
+        activity: Activity,
+        onRewardGranted: () -> Unit,
+        onAdClosed: () -> Unit,
+        retriesLeft: Int
+    ) {
         try {
+            if (activity.isFinishing || activity.isDestroyed) {
+                onAdClosed()
+                return
+            }
+
             if (!ConfigManager.isAdsEnabled()) {
                 onRewardGranted()
                 onAdClosed()
@@ -480,11 +509,26 @@ object AdManager {
                 return
             }
 
-            // 4. No ad cached at all — trigger background preloads, no reward granted
-            Log.d(TAG, "No ad available for reward — triggering background preload, no reward granted")
+            // 4. No ad cached yet — trigger background load and retry if attempts remain
             loadInterstitial(activity.applicationContext)
             loadRewarded(activity.applicationContext)
-            onAdClosed()
+
+            if (retriesLeft > 0) {
+                Log.d(TAG, "No ad ready — waiting 5 seconds and retrying ($retriesLeft retries left)...")
+                mainHandler.postDelayed({
+                    if (!activity.isFinishing && !activity.isDestroyed) {
+                        showRewardedOrInterstitialWithRetry(
+                            activity, onRewardGranted, onAdClosed, retriesLeft - 1
+                        )
+                    } else {
+                        onAdClosed()
+                    }
+                }, 5000L)
+            } else {
+                // All retries exhausted — no ad available, notify caller
+                Log.d(TAG, "No ad available after all retries — no reward granted")
+                onAdClosed()
+            }
         } catch (e: Throwable) {
             Log.e(TAG, "Exception in showRewardedOrInterstitial: ${e.message}", e)
             onAdClosed()

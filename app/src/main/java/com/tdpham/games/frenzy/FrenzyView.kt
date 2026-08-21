@@ -161,7 +161,7 @@ class FrenzyView @JvmOverloads constructor(
     data class AIFish(
         var x: Float,
         var y: Float,
-        val size: Int,
+        var size: Int,       // mutable: grows as the fish eats
         var speed: Float,
         var facingRight: Boolean,
         val color: Int,
@@ -178,7 +178,9 @@ class FrenzyView @JvmOverloads constructor(
         var isBuried: Boolean = false,
         var burrowProgress: Float = 0f, // 0f: above sand, 1f: hidden under sand
         var burrowStartTime: Long = 0L,
-        var unburrowTime: Long = 0L
+        var unburrowTime: Long = 0L,
+        // Growth tracking: fish grows larger as it eats other fish / floating meat
+        var foodConsumed: Int = 0
     )
 
     data class SandParticle(var x: Float, var y: Float, var vx: Float, var vy: Float, var size: Float, var color: Int, var alpha: Int)
@@ -721,6 +723,20 @@ class FrenzyView @JvmOverloads constructor(
                                     val sparkColor = if (Random.nextBoolean()) Color.parseColor("#00E5FF") else Color.parseColor("#FFEA00")
                                     mineParticles.add(MineParticle(f2.x, f2.y, vx, vy, Random.nextFloat() * 4f + 2f, sparkColor, 255))
                                 }
+                            }
+                            // AI growth: fish grows when it eats another fish.
+                            // Meals needed to grow one size tier increases with size (harder to grow bigger).
+                            f1.foodConsumed += (f2.size + 1) // eating a bigger fish counts more
+                            val growthThreshold = when (f1.size) {
+                                0 -> 6   // tiny fish grow fast: eat 6 meals
+                                1 -> 10  // small fish: eat 10 meals
+                                2 -> 16  // medium fish: eat 16 meals
+                                else -> Int.MAX_VALUE // size 3+ AI fish do not grow further
+                            }
+                            if (f1.foodConsumed >= growthThreshold && f1.size < 3) {
+                                f1.size++
+                                f1.foodConsumed = 0
+                                f1.speed *= 0.92f // bigger = slightly slower
                             }
                             deadFishIndices.add(j)
                         }
@@ -1581,6 +1597,19 @@ class FrenzyView @JvmOverloads constructor(
                     ai.isEating = true
                     ai.eatStartTime = now
                     spawnBiteBubbles(ai.x, ai.y)
+                    // AI growth: eating floating meat contributes to growth
+                    ai.foodConsumed += 1
+                    val growthThreshold = when (ai.size) {
+                        0 -> 6
+                        1 -> 10
+                        2 -> 16
+                        else -> Int.MAX_VALUE
+                    }
+                    if (ai.foodConsumed >= growthThreshold && ai.size < 3) {
+                        ai.size++
+                        ai.foodConsumed = 0
+                        ai.speed *= 0.92f
+                    }
                     break
                 }
             }
