@@ -199,7 +199,10 @@ class FrenzyView @JvmOverloads constructor(
         var color: Int = Color.parseColor("#FF5252"),
         var rotation: Float = Random.nextFloat() * 360f,
         var rotSpeed: Float = (Random.nextFloat() - 0.5f) * 3f,
-        var points: Int = 50
+        var points: Int = 50,
+        // Food progress this chunk grants when eaten. Mine-killed fish chunks may have 0
+        // so the total across all chunks equals ~30% of eating the fish directly.
+        var foodProgress: Int = 1
     )
 
     init {
@@ -351,8 +354,9 @@ class FrenzyView @JvmOverloads constructor(
     private fun spawnSingleFish() {
         val rand = Random.nextFloat()
         
+        // Electric Eel is FORBIDDEN at Level 1 (playerSize == 1) per game design rules.
         val eelChance = when (playerSize) {
-            1 -> 0.08f
+            1 -> 0.00f // No eels at Level 1
             2 -> 0.12f
             3 -> 0.16f
             else -> 0.20f
@@ -525,18 +529,22 @@ class FrenzyView @JvmOverloads constructor(
 
     private fun getSpeciesSize(index: Int): Int {
         return when (index) {
-            in 0..5 -> 0   // Tiny: Guppy, Tetra, Sardine, Anchovy, Cardinal, Shrimp
-            6, 7, 8 -> 0   // Starfish, Crab, Clam
-            29, 30, 31 -> 0 // Snail, Slug, Isopod
-            in 9..12 -> 1  // Small: Clownfish, Butterfly, Damselfish, Seahorse
-            32, 33 -> 1    // Golden Reward Fish, Pufferfish
-            35 -> 1        // Sand Flounder (Small flatfish)
-            28 -> 1        // Lobster baseline (overridden dynamically in spawnSingleFish)
-            34 -> 1        // Sea Mantis baseline (overridden dynamically in spawnSingleFish)
-            in 13..17 -> 2 // Medium: Angelfish, Tang, Lionfish, Squid, Octopus
-            in 18..21 -> 3 // Large: Dolphin, Sea Turtle, Stingray, Swordfish
-            27 -> 3        // Large: Electric Eel
-            else -> 4      // Apex: Shark, Orca, Blue Whale, Giant Squid, Sea Monster
+            in 0..5 -> 0    // Tiny: Guppy, Tetra, Sardine, Anchovy, Cardinal, Shrimp (14px)
+            6, 7, 8 -> 0    // Starfish, Crab, Clam (14px)
+            29, 30, 31 -> 0  // Snail, Slug, Isopod (14px)
+            in 9..12 -> 1   // Small: Clownfish, Butterfly, Damselfish, Seahorse (22px)
+            32, 33 -> 1     // Golden Reward Fish, Pufferfish (22px)
+            35 -> 1         // Sand Flounder (22px)
+            28, 34 -> 2     // Medium: Lobster, Sea Mantis (30px)
+            in 13..17 -> 2  // Medium: Angelfish, Tang, Lionfish, Squid, Octopus (30px)
+            18 -> 5         // Super Predator: Dolphin (65px)
+            19, 20 -> 3     // Large: Sea Turtle, Stingray (40px)
+            21 -> 4         // Apex: Swordfish (52px)
+            27 -> 3         // Large: Electric Eel (40px)
+            22 -> 6         // Mega Predator: Great White Shark (78px)
+            23 -> 7         // Titan Predator: Orca (96px)
+            24, 25, 26 -> 8 // Colossal Apex: Blue Whale, Giant Squid, Sea Monster (118px)
+            else -> 4       // Default Apex (52px)
         }
     }
 
@@ -1004,11 +1012,18 @@ class FrenzyView @JvmOverloads constructor(
                     val dx = tx - fish.x
                     val dy = ty - fish.y
                     val dist = Math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
-                    if (dist > maxVisionDist) return
                     
+                    // Directional Vision: Fish vision is directed toward front, up, and down.
+                    // A target is in primary visual field if it is in front or vertically aligned (up/down).
+                    val isAhead = if (fish.facingRight) dx >= -10f else dx <= 10f
                     val isInDepth = Math.abs(dy) < maxVisionDepth
-                    
-                    if (isInDepth && tSize > fish.size) {
+
+                    // Ability to detect/feel creatures behind is worse: strictly limited to less than 1/3 of vision range!
+                    val effectiveMaxDist = if (isAhead || isInDepth) maxVisionDist else (maxVisionDist / 3.0f)
+
+                    if (dist > effectiveMaxDist) return
+
+                    if (tSize > fish.size) { // Threat detection (can sense large threats behind if within 1/3 distance)
                         if (dx < 0f) {
                             threatOnLeft = true
                             if (dist < minThreatLeftDist) {
@@ -1024,10 +1039,7 @@ class FrenzyView @JvmOverloads constructor(
                                 closestThreatRightY = ty
                             }
                         }
-                    }
-
-                    val isAhead = if (fish.facingRight) dx > 0f else dx < 0f
-                    if (isAhead && isInDepth && tSize < fish.size) {
+                    } else if (isAhead && isInDepth && tSize < fish.size) { // Prey chase detection (chases prey ahead in field of view)
                         if (dist < minPreyDist) {
                             minPreyDist = dist
                             closestPreyX = tx
@@ -1168,6 +1180,7 @@ class FrenzyView @JvmOverloads constructor(
                         // Inflated pufferfish hurts player's mouth!
                         if (now >= playerShieldUntil) {
                             lives--
+                            stageEatenCount = 0 // Reset level food progress — player was eaten!
                             deathReason = context.getString(R.string.frenzy_death_pufferfish)
                             deathReasonDisplayUntil = now + 1800L
                             playerShieldUntil = now + 4000L // 4 seconds invulnerable shield
@@ -1195,6 +1208,7 @@ class FrenzyView @JvmOverloads constructor(
                         // Electric Eel is larger than player fish! Shocks & eats player!
                         if (now >= playerShieldUntil) {
                             lives--
+                            stageEatenCount = 0 // Reset level food progress — player was eaten by eel!
                             playerStunUntil = now + 2500L
                             deathReason = context.getString(R.string.frenzy_death_eaten, getSpeciesName(27).uppercase())
                             deathReasonDisplayUntil = now + 1800L
@@ -1260,6 +1274,7 @@ class FrenzyView @JvmOverloads constructor(
                         // Monster Lobster or Sea Mantis is larger than player fish! Attacks / eats player!
                         if (now >= playerShieldUntil) {
                             lives--
+                            stageEatenCount = 0 // Reset level food progress — player was eaten!
                             deathReason = context.getString(R.string.frenzy_death_eaten, getSpeciesName(fish.speciesIndex).uppercase())
                             deathReasonDisplayUntil = now + 1800L
                             lastIndicatorTriggerTime = now
@@ -1388,6 +1403,7 @@ class FrenzyView @JvmOverloads constructor(
                         }
                         // AI eats Player
                         lives--
+                        stageEatenCount = 0 // Reset level food progress — player was eaten!
                         deathReason = context.getString(R.string.frenzy_death_eaten, getSpeciesName(fish.speciesIndex).uppercase())
                         deathReasonDisplayUntil = now + 1800L
                         lastIndicatorTriggerTime = now
@@ -1547,7 +1563,7 @@ class FrenzyView @JvmOverloads constructor(
                     spawnBiteBubbles(meat.x, meat.y)
                     score += meat.points
                     SoundManager.playScore()
-                    addFoodProgress(1)
+                    addFoodProgress(meat.foodProgress)
                     meatIterator.remove()
                     continue
                 }
@@ -1644,6 +1660,13 @@ class FrenzyView @JvmOverloads constructor(
                 fish.size == 1 -> 3 + Random.nextInt(2) // 3-4 chunks for medium fish
                 else -> 2 // 2 chunks for small fish
             }
+
+            // Rule: Mine-killed fish produce food = 30% of eating the fish directly.
+            // Direct eat = 1 food progress. 30% of fish's scaled value = round((fish.size+1) * 0.30).
+            // Only the first `mineFoodTotal` chunks grant food progress; the rest grant 0.
+            val mineFoodTotal = Math.round((fish.size + 1) * 0.30f).coerceAtLeast(0)
+            var foodProgressAssigned = 0
+
             repeat(meatCount) {
                 val angle = Random.nextFloat() * 2f * Math.PI.toFloat()
                 val speed = Random.nextFloat() * 4.5f + 2f
@@ -1660,6 +1683,11 @@ class FrenzyView @JvmOverloads constructor(
                     else -> Random.nextFloat() * 3f + 8f // 8-11px
                 }
                 val meatPts = (fish.size + 1) * 25
+                // Assign food progress budget: first N chunks grant 1, rest grant 0
+                val chunkFoodProgress = if (foodProgressAssigned < mineFoodTotal) {
+                    foodProgressAssigned++
+                    1
+                } else 0
                 floatingMeats.add(
                     FloatingMeat(
                         x = fish.x + (Random.nextFloat() - 0.5f) * 24f,
@@ -1668,7 +1696,8 @@ class FrenzyView @JvmOverloads constructor(
                         vy = sin(angle.toDouble()).toFloat() * speed - 2.0f,
                         radius = meatRad,
                         color = meatColor,
-                        points = meatPts
+                        points = meatPts,
+                        foodProgress = chunkFoodProgress
                     )
                 )
             }
@@ -2574,6 +2603,22 @@ class FrenzyView @JvmOverloads constructor(
                 canvas.drawCircle(eyeX, eyeY, r * 0.07f, paint)
                 paint.color = Color.WHITE
                 canvas.drawCircle(eyeX - r * 0.03f * dir, eyeY - r * 0.03f, r * 0.035f, paint)
+
+                // 7. Waving Pectoral Fin
+                val pecAngle = sin(cycle.toDouble() * 1.5).toFloat() * 20f
+                canvas.save()
+                canvas.translate(cx + r * 0.1f * dir, cy + r * 0.12f)
+                canvas.rotate(pecAngle * dir)
+                paint.color = silverColor
+                val pec = drawPath.apply {
+                    reset()
+                    moveTo(0f, 0f)
+                    quadTo(-r * 0.45f * dir, r * 0.05f, -r * 0.5f * dir, r * 0.35f)
+                    lineTo(-r * 0.15f * dir, r * 0.25f)
+                    close()
+                }
+                canvas.drawPath(pec, paint)
+                canvas.restore()
             }
 
             6 -> {
@@ -2596,25 +2641,15 @@ class FrenzyView @JvmOverloads constructor(
                     canvas.drawOval(drawRectF, paint)
                 }
 
-                // Rostrum Snout (Beak)
-                val beak = drawPath2.apply {
+                // 2. Beak Snout & Melon Head
+                val beak = drawPath.apply {
                     reset()
-                    moveTo(cx + r * 1.0f * dir, cy - r * 0.1f)
-                    lineTo(cx + r * 1.5f * dir, cy + r * 0.05f)
-                    lineTo(cx + r * 0.9f * dir, cy + r * 0.2f)
+                    moveTo(cx + r * 0.6f * dir, cy - r * 0.35f)
+                    quadTo(cx + r * 1.25f * dir, cy - r * 0.1f, cx + r * 1.35f * dir, cy + r * 0.08f)
+                    lineTo(cx + r * 0.6f * dir, cy + r * 0.25f)
                     close()
                 }
                 canvas.drawPath(beak, paint)
-
-                // 2. Tall Curved Sickle Dorsal Fin
-                val dorsal = drawPath3.apply {
-                    reset()
-                    moveTo(cx - r * 0.2f * dir, cy - r * 0.4f)
-                    quadTo(cx - r * 0.6f * dir, cy - r * 0.95f, cx - r * 0.7f * dir, cy - r * 0.85f)
-                    quadTo(cx - r * 0.4f * dir, cy - r * 0.5f, cx + r * 0.2f * dir, cy - r * 0.4f)
-                    close()
-                }
-                canvas.drawPath(dorsal, paint)
 
                 // 3. Pec Flippers
                 val pec = drawPath4.apply {
@@ -2750,6 +2785,22 @@ class FrenzyView @JvmOverloads constructor(
                 canvas.drawCircle(eyeX, eyeY, r * 0.09f, paint)
                 paint.color = Color.WHITE
                 canvas.drawCircle(eyeX - r * 0.02f * dir, eyeY - r * 0.02f, r * 0.03f, paint)
+
+                // 8. Waving Pectoral Fin
+                val pecAngle = sin(cycle.toDouble() * 1.3).toFloat() * 18f
+                canvas.save()
+                canvas.translate(cx + r * 0.1f * dir, cy + r * 0.12f)
+                canvas.rotate(pecAngle * dir)
+                paint.color = sharkSlate
+                val pec = drawPath.apply {
+                    reset()
+                    moveTo(0f, 0f)
+                    quadTo(-r * 0.55f * dir, r * 0.1f, -r * 0.65f * dir, r * 0.5f)
+                    lineTo(-r * 0.2f * dir, r * 0.35f)
+                    close()
+                }
+                canvas.drawPath(pec, paint)
+                canvas.restore()
             }
 
             else -> {
@@ -2828,7 +2879,23 @@ class FrenzyView @JvmOverloads constructor(
                 }
                 canvas.drawPath(stock, paint)
 
-                // 6. Eye (Black with glint)
+                // 6. Waving Paddle Pectoral Flipper
+                val flipperWave = sin(cycle.toDouble() * 1.4).toFloat() * 20f
+                canvas.save()
+                canvas.translate(cx + r * 0.15f * dir, cy + r * 0.12f)
+                canvas.rotate(flipperWave * dir)
+                paint.color = Color.parseColor("#121212")
+                val flipper = drawPath.apply {
+                    reset()
+                    moveTo(0f, 0f)
+                    quadTo(-r * 0.5f * dir, r * 0.1f, -r * 0.55f * dir, r * 0.55f)
+                    lineTo(-r * 0.15f * dir, r * 0.4f)
+                    close()
+                }
+                canvas.drawPath(flipper, paint)
+                canvas.restore()
+
+                // 7. Eye (Black with glint)
                 paint.color = Color.BLACK
                 canvas.drawCircle(cx + r * 0.65f * dir, cy - r * 0.1f, r * 0.08f, paint)
                 paint.color = Color.WHITE

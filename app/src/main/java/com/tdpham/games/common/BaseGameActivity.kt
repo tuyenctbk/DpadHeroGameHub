@@ -115,9 +115,9 @@ abstract class BaseGameActivity : AppCompatActivity() {
                                 this,
                                 onRewardGranted = {
                                     rewardGranted = true
-                                    SoundManager.playSuccess()
-                                    HapticManager.vibrateSuccess(this)
-                                    gameView.reviveGame()
+                                    RewardAnimationOverlay.show(this) {
+                                        gameView.reviveGame()
+                                    }
                                 },
                                 onAdClosed = {
                                     if (!rewardGranted) {

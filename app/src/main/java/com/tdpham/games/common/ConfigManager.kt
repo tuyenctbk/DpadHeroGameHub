@@ -71,13 +71,7 @@ object ConfigManager {
 
 
     fun isAdsEnabled(): Boolean {
-        val rc = remoteConfig ?: return true
-        return try {
-            rc.getBoolean("is_ads_enabled")
-        } catch (e: Exception) {
-            Log.e("ConfigManager", "Failed to get is_ads_enabled: ${e.message}")
-            true
-        }
+        return true
     }
 
     fun getAdsMinDays(): Int {
