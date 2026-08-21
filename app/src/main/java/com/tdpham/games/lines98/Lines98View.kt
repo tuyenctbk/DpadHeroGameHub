@@ -251,7 +251,8 @@ class Lines98View @JvmOverloads constructor(
         val dc = intArrayOf(1, -1, 0, 0)
         
         while (queue.isNotEmpty()) {
-            val (r, c) = queue.poll()!!
+            val item = queue.poll() ?: break
+            val (r, c) = item
             if (r == toY && c == toX) return true
             
             for (i in 0 until 4) {

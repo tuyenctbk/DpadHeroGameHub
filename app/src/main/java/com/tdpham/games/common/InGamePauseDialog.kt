@@ -50,6 +50,7 @@ class InGamePauseDialog(
         } else {
             btnOptions.visibility = View.VISIBLE
             btnOptions.setOnClickListener {
+                SoundManager.playClick()
                 IdleAdManager.notifyInteraction()
                 dismiss()
                 onOptionsAction()
@@ -58,24 +59,28 @@ class InGamePauseDialog(
         }
 
         btnResume.setOnClickListener {
+            SoundManager.playClick()
             IdleAdManager.notifyInteraction()
             dismiss()
             onResumeAction()
         }
 
         btnGuide.setOnClickListener {
+            SoundManager.playClick()
             IdleAdManager.notifyInteraction()
             dismiss()
             onGuideAction()
         }
 
         btnRestart.setOnClickListener {
+            SoundManager.playClick()
             IdleAdManager.notifyInteraction()
             dismiss()
             onRestartAction()
         }
 
         btnExit.setOnClickListener {
+            SoundManager.playClick()
             IdleAdManager.notifyInteraction()
             dismiss()
             onExitAction()

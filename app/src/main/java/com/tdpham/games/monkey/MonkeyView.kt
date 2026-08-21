@@ -172,6 +172,27 @@ class MonkeyView @JvmOverloads constructor(
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
+    override fun canRevive(): Boolean = true
+
+    override fun reviveGame(): Boolean {
+        if (gameOver) {
+            gameOver = false
+            gamePaused = false
+            lives = 3
+            isFalling = false
+            monkeyGrabbed = false
+            playerY = height * 0.72f
+            playerDizzyUntil = 0L
+            obstacles.clear()
+            harpyEagle = null
+            blackJaguar = null
+            celebrationManager.clear()
+            resume()
+            return true
+        }
+        return false
+    }
+
     override fun resetGame() {
         score = 0
         lives = 6
@@ -312,8 +333,7 @@ class MonkeyView @JvmOverloads constructor(
             SoundManager.playError()
         }
 
-        if (harpyEagle != null) {
-            val eagle = harpyEagle!!
+        harpyEagle?.let { eagle ->
             val elapsedEagle = now - eagle.spawnTime
             if (eagle.state == 0) {
                 // Warning state: hover above target
@@ -380,8 +400,7 @@ class MonkeyView @JvmOverloads constructor(
             SoundManager.playError()
         }
 
-        if (blackJaguar != null) {
-            val jaguar = blackJaguar!!
+        blackJaguar?.let { jaguar ->
             val elapsedJaguar = now - jaguar.spawnTime
             if (jaguar.state == 0) {
                 // Warning state
@@ -618,8 +637,7 @@ class MonkeyView @JvmOverloads constructor(
 
         // Draw Harpy Eagle
         val now = System.currentTimeMillis()
-        if (harpyEagle != null) {
-            val eagle = harpyEagle!!
+        harpyEagle?.let { eagle ->
             // If monkey grabbed, Eagle carries monkey
             val ex = if (monkeyGrabbed) playerRenderX else eagle.x
             val ey = if (monkeyGrabbed) playerY else eagle.y
@@ -1532,6 +1550,36 @@ class MonkeyView @JvmOverloads constructor(
             }
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            if (gameOver) {
+                resetGame()
+                startGame()
+                return true
+            }
+            if (gamePaused) {
+                resume()
+                return true
+            }
+
+            val touchX = event.x
+            val ropeWidth = width / 3f
+            val targetRope = when {
+                touchX < ropeWidth -> 0
+                touchX < ropeWidth * 2 -> 1
+                else -> 2
+            }
+
+            if (targetRope != currentRope) {
+                currentRope = targetRope
+                SoundManager.playClick()
+                invalidate()
+            }
+            return true
+        }
+        return super.onTouchEvent(event)
     }
 
     private fun spawnFiberParticles(x: Float, y: Float) {

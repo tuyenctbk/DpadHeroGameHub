@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Card 1 (Back Left: King of Hearts) -->
+    <path
+        android:fillColor="#ECEFF1"
+        android:pathData="M20,25 C20,20 24,16 29,16 H61 C66,16 70,20 70,25 V81 C70,86 66,90 61,90 H29 C24,90 20,86 20,81 Z" />
+    <path
+        android:fillColor="#D50000"
+        android:pathData="M38,45 C38,40 45,35 45,45 C45,35 52,40 52,45 C52,53 45,58 45,61 C45,58 38,53 38,45 Z" />
+
+    <!-- Card 2 (Front Right: Ace of Spades) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,32 C48,27 52,23 57,23 H89 C94,23 98,27 98,32 V88 C98,93 94,97 89,97 H57 C52,97 48,93 48,88 Z" />
+    <path
+        android:fillColor="#212121"
+        android:pathData="M73,46 C73,42 66,48 66,54 C66,58 70,61 73,61 C76,61 80,58 80,54 C80,48 73,42 73,46 Z M71,61 H75 V67 H71 Z" />
+
+    <!-- Gold Casino Chip (Bottom Left) -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M16,88 A16,16 0 1,1 16,87.9 Z" />
+    <path
+        android:fillColor="#FF6F00"
+        android:pathData="M16,88 A12,12 0 1,1 16,87.9 Z" />
+    <path
+        android:fillColor="#FFF8E1"
+        android:pathData="M16,88 A7,7 0 1,1 16,87.9 Z" />
+
+    <!-- Text 21 Badge -->
+    <path
+        android:fillColor="#00E676"
+        android:pathData="M80,82 H112 C116,82 118,85 118,88 V106 C118,109 116,112 112,112 H80 C76,112 74,109 74,106 V88 C74,85 76,82 80,82 Z" />
+
+</vector>

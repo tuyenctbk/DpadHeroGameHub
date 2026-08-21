@@ -1,0 +1,79 @@
+[
+  {
+    "category": "Gaming & Arcade",
+    "question": "What is the highest possible score in a single game of classic Pac-Man?",
+    "options": ["999,990", "3,333,360", "1,000,000", "2,560,000"],
+    "correctIndex": 1,
+    "explanation": "A perfect Pac-Man score is exactly 3,333,360 points achieved at level 256."
+  },
+  {
+    "category": "Gaming & Arcade",
+    "question": "Which game is credited with popularizing the modern Battle Royale genre in 2017?",
+    "options": ["Fortnite", "PUBG", "Apex Legends", "H1Z1"],
+    "correctIndex": 1,
+    "explanation": "PlayerUnknown's Battlegrounds (PUBG) launched in 2017 and triggered the Battle Royale boom."
+  },
+  {
+    "category": "Gaming & Arcade",
+    "question": "In what year was the original Nintendo Game Boy released in North America?",
+    "options": ["1987", "1989", "1991", "1993"],
+    "correctIndex": 1,
+    "explanation": "The original 8-bit Game Boy was released by Nintendo in North America in July 1989."
+  },
+  {
+    "category": "Gaming & Arcade",
+    "question": "What is the name of the protagonist in the Legend of Zelda video game series?",
+    "options": ["Zelda", "Ganon", "Link", "Sheik"],
+    "correctIndex": 2,
+    "explanation": "Link is the courageous hero clad in green; Princess Zelda is the royal bearer of Wisdom."
+  },
+  {
+    "category": "Science & Tech",
+    "question": "What is the speed of light in a vacuum (approximate)?",
+    "options": ["150,000 km/s", "300,000 km/s", "500,000 km/s", "1,000,000 km/s"],
+    "correctIndex": 1,
+    "explanation": "Light travels at roughly 299,792 kilometers per second in a vacuum."
+  },
+  {
+    "category": "Science & Tech",
+    "question": "Which chemical element has the symbol 'Fe' on the periodic table?",
+    "options": ["Fluorine", "Francium", "Iron", "Lead"],
+    "correctIndex": 2,
+    "explanation": "Fe originates from 'Ferrum', the Latin word for Iron."
+  },
+  {
+    "category": "Science & Tech",
+    "question": "What was the name of the first artificial satellite launched into space in 1957?",
+    "options": ["Explorer 1", "Sputnik 1", "Vostok 1", "Apollo 11"],
+    "correctIndex": 1,
+    "explanation": "Sputnik 1 was launched by the Soviet Union on October 4, 1957."
+  },
+  {
+    "category": "Pop Culture & Cinema",
+    "question": "Which film won the first Academy Award for Best Animated Feature in 2002?",
+    "options": ["Monsters, Inc.", "Shrek", "Toy Story 2", "Ice Age"],
+    "correctIndex": 1,
+    "explanation": "DreamWorks' 'Shrek' won the inaugural Best Animated Feature Oscar at the 74th Academy Awards."
+  },
+  {
+    "category": "Pop Culture & Cinema",
+    "question": "In the Matrix trilogy, what color pill does Neo take to wake up to reality?",
+    "options": ["Blue", "Red", "Green", "Yellow"],
+    "correctIndex": 1,
+    "explanation": "Morpheus offers the red pill to stay in Wonderland and see how deep the rabbit hole goes."
+  },
+  {
+    "category": "History & World",
+    "question": "Which ancient wonder was located in the city of Alexandria, Egypt?",
+    "options": ["Hanging Gardens", "Colossus", "Pharos Lighthouse", "Mausoleum"],
+    "correctIndex": 2,
+    "explanation": "The Lighthouse of Alexandria (Pharos) was built during the Ptolemaic Kingdom."
+  },
+  {
+    "category": "History & World",
+    "question": "What year did the Berlin Wall fall, leading to German reunification?",
+    "options": ["1987", "1989", "1991", "1993"],
+    "correctIndex": 1,
+    "explanation": "The Berlin Wall fell on November 9, 1989."
+  }
+]

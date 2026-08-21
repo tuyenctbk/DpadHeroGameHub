@@ -3209,4 +3209,46 @@ class FrenzyView @JvmOverloads constructor(
         }
         return super.onKeyDown(keyCode, event)
     }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        when (event.action) {
+            android.view.MotionEvent.ACTION_DOWN, android.view.MotionEvent.ACTION_MOVE -> {
+                if (gameOver || gameWon) {
+                    resetGame()
+                    startGame()
+                    return true
+                }
+                if (gamePaused) {
+                    resume()
+                    return true
+                }
+
+                val now = System.currentTimeMillis()
+                val isStunned = now < playerStunUntil
+                val speedMult = if (isStunned) 0.35f else 1.0f
+                val currentSpeed = playerSpeed * speedMult
+
+                val dx = event.x - playerX
+                val dy = event.y - playerY
+                val dist = Math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
+
+                if (dist > 10f) {
+                    val moveX = (dx / dist) * currentSpeed
+                    val moveY = (dy / dist) * currentSpeed
+
+                    playerX = (playerX + moveX).coerceIn(50f, width - 50f)
+                    playerY = (playerY + moveY).coerceIn(50f, height - 50f)
+
+                    if (!isStunned) {
+                        if (dx > 5f) playerFacingRight = true
+                        else if (dx < -5f) playerFacingRight = false
+                    }
+                    invalidate()
+                }
+                return true
+            }
+        }
+        return super.onTouchEvent(event)
+    }
 }
+

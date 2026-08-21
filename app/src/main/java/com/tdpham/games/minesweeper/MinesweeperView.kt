@@ -98,7 +98,8 @@ class MinesweeperView @JvmOverloads constructor(
                 return
             }
             
-            val (r, c) = revealQueue.poll()!!
+            val item = revealQueue.poll() ?: return
+            val (r, c) = item
             if (!grid[r][c].isRevealed && !grid[r][c].isFlagged) {
                 grid[r][c].isRevealed = true
                 SoundManager.playClick()

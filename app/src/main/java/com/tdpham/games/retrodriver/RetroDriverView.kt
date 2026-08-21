@@ -1357,4 +1357,42 @@ class RetroDriverView @JvmOverloads constructor(
         }
         return super.onKeyDown(keyCode, event)
     }
+
+    override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
+        when (event.action) {
+            android.view.MotionEvent.ACTION_DOWN, android.view.MotionEvent.ACTION_MOVE -> {
+                if (gamePaused) {
+                    resume()
+                    return true
+                }
+                if (gameWon || gameOver) {
+                    resetGame()
+                    startGame()
+                    return true
+                }
+
+                val now = System.currentTimeMillis()
+                val inTurbo = now < turboUntil
+                val currentMaxSpeed = if (inTurbo) 220f else maxSpeed
+                val targetMax = if (Math.abs(playerX) > 1.0f) 45f else currentMaxSpeed
+
+                // Touch steering: Map X position across screen to playerX (-1.2 to 1.2)
+                val normalizedX = (event.x / width) * 2.4f - 1.2f
+                playerX = normalizedX.coerceIn(-1.8f, 1.8f)
+                steerAngle = if (event.x < width * 0.45f) -8f else if (event.x > width * 0.55f) 8f else 0f
+
+                // Accelerate on touch
+                speed = (speed + 8f).coerceAtMost(targetMax)
+                invalidate()
+                return true
+            }
+            android.view.MotionEvent.ACTION_UP -> {
+                steerAngle = 0f
+                invalidate()
+                return true
+            }
+        }
+        return super.onTouchEvent(event)
+    }
 }
+

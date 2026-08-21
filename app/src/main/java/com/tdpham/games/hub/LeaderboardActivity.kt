@@ -8,16 +8,22 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.tdpham.games.R
+import com.tdpham.games.common.HapticManager
 import com.tdpham.games.common.LeaderboardManager
+import com.tdpham.games.common.SoundManager
 
 class LeaderboardActivity : AppCompatActivity() {
 
     private lateinit var tabsContainer: LinearLayout
     private lateinit var scoresContainer: LinearLayout
     private lateinit var levelTabsContainer: LinearLayout
+    private lateinit var btnModeLocal: Button
+    private lateinit var btnModeGlobal: Button
+    private var isGlobalMode = false
     private var currentSelectedGame = "snake"
     private var currentSelectedLevel = -1
     
@@ -67,11 +73,17 @@ class LeaderboardActivity : AppCompatActivity() {
     data class GameTab(val key: String, val title: String, val levels: List<String>? = null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.requestFeature(android.view.Window.FEATURE_ACTIVITY_TRANSITIONS)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_leaderboard)
 
+        val headerTitle = findViewById<View>(R.id.leaderboard_title) ?: findViewById<View>(R.id.game_tabs_container)
+        headerTitle?.let { androidx.core.view.ViewCompat.setTransitionName(it, "hub_leaderboard_transition") }
+
         tabsContainer = findViewById(R.id.game_tabs_container)
         scoresContainer = findViewById(R.id.scores_container)
+        btnModeLocal = findViewById(R.id.btn_mode_local)
+        btnModeGlobal = findViewById(R.id.btn_mode_global)
         
         val rootLayout = tabsContainer.parent.parent as LinearLayout
         levelTabsContainer = LinearLayout(this).apply {
@@ -84,7 +96,13 @@ class LeaderboardActivity : AppCompatActivity() {
         }
         rootLayout.addView(levelTabsContainer, rootLayout.indexOfChild(tabsContainer.parent as View) + 1)
 
-        findViewById<Button>(R.id.btn_back).setOnClickListener { finish() }
+        setupModeSwitcher()
+
+        findViewById<Button>(R.id.btn_back).setOnClickListener {
+            SoundManager.playClick()
+            HapticManager.vibrateClick(this)
+            finish()
+        }
 
         setupGameTabs()
         
@@ -95,6 +113,44 @@ class LeaderboardActivity : AppCompatActivity() {
             tabsContainer.getChildAt(startIndex).requestFocus()
         } else {
             selectGame(games[0])
+        }
+    }
+
+    private fun setupModeSwitcher() {
+        btnModeLocal.setOnClickListener {
+            if (isGlobalMode) {
+                isGlobalMode = false
+                SoundManager.playClick()
+                HapticManager.vibrateClick(this)
+                updateModeButtons()
+                refreshCurrentScores()
+            }
+        }
+
+        btnModeGlobal.setOnClickListener {
+            if (!isGlobalMode) {
+                isGlobalMode = true
+                SoundManager.playClick()
+                HapticManager.vibrateClick(this)
+                updateModeButtons()
+                refreshCurrentScores()
+            }
+        }
+
+        updateModeButtons()
+    }
+
+    private fun updateModeButtons() {
+        if (isGlobalMode) {
+            btnModeGlobal.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFD700"))
+            btnModeGlobal.setTextColor(Color.parseColor("#0A0E17"))
+            btnModeLocal.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#22FFFFFF"))
+            btnModeLocal.setTextColor(Color.WHITE)
+        } else {
+            btnModeLocal.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#00E5FF"))
+            btnModeLocal.setTextColor(Color.parseColor("#0A0E17"))
+            btnModeGlobal.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#22FFFFFF"))
+            btnModeGlobal.setTextColor(Color.WHITE)
         }
     }
 
@@ -115,11 +171,15 @@ class LeaderboardActivity : AppCompatActivity() {
                 isFocusableInTouchMode = true
                 
                 setOnClickListener {
+                    SoundManager.playClick()
+                    HapticManager.vibrateClick(this@LeaderboardActivity)
                     selectGame(game)
                 }
                 
                 setOnFocusChangeListener { view, hasFocus ->
                     if (hasFocus) {
+                        SoundManager.playClick()
+                        HapticManager.vibrateClick(this@LeaderboardActivity)
                         selectGame(game)
                         view.animate().scaleX(1.15f).scaleY(1.15f).setDuration(200).start()
                     } else {
@@ -143,7 +203,7 @@ class LeaderboardActivity : AppCompatActivity() {
         }
 
         setupLevelTabs(game)
-        showScores(game.key, -1)
+        refreshCurrentScores()
     }
 
     private fun setupLevelTabs(game: GameTab) {
@@ -169,6 +229,8 @@ class LeaderboardActivity : AppCompatActivity() {
                 isFocusable = true
                 
                 setOnClickListener {
+                    SoundManager.playClick()
+                    HapticManager.vibrateClick(this@LeaderboardActivity)
                     selectLevel(index, game.key)
                 }
                 
@@ -190,18 +252,40 @@ class LeaderboardActivity : AppCompatActivity() {
             child.backgroundTintList = ColorStateList.valueOf(Color.parseColor(if (isSelected) "#00E5FF" else "#222222"))
             child.setTextColor(if (isSelected) Color.BLACK else Color.LTGRAY)
         }
-        showScores(gameKey, level)
+        refreshCurrentScores()
     }
 
-    private fun showScores(gameKey: String, level: Int) {
+    private fun refreshCurrentScores() {
         scoresContainer.removeAllViews()
-        val topScores = LeaderboardManager.getLocalTopScores(this, gameKey, level)
+        if (isGlobalMode) {
+            // Show loading placeholder
+            val loadingView = TextView(this).apply {
+                text = "⚡ Fetching Worldwide Firestore Scores..."
+                setTextColor(Color.parseColor("#00E5FF"))
+                setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 16f)
+                gravity = android.view.Gravity.CENTER
+                setPadding(0, 60, 0, 0)
+            }
+            scoresContainer.addView(loadingView)
 
-        updatePodium(topScores)
+            LeaderboardManager.getGlobalTopScores(this, currentSelectedGame, currentSelectedLevel) { globalScores ->
+                if (!isFinishing && !isDestroyed) {
+                    renderScores(globalScores)
+                }
+            }
+        } else {
+            val topScores = LeaderboardManager.getLocalTopScores(this, currentSelectedGame, currentSelectedLevel)
+            renderScores(topScores)
+        }
+    }
 
-        if (topScores.isEmpty()) {
+    private fun renderScores(scores: List<LeaderboardManager.ScoreEntry>) {
+        scoresContainer.removeAllViews()
+        updatePodium(scores)
+
+        if (scores.isEmpty()) {
             val emptyView = TextView(this).apply {
-                text = getString(R.string.no_records)
+                text = if (isGlobalMode) "🌐 No online records found yet. Set a high score!" else getString(R.string.no_records)
                 setTextColor(Color.GRAY)
                 setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 20f)
                 gravity = android.view.Gravity.CENTER
@@ -211,7 +295,7 @@ class LeaderboardActivity : AppCompatActivity() {
             return
         }
 
-        topScores.forEachIndexed { index, entry ->
+        scores.forEachIndexed { index, entry ->
             val row = LayoutInflater.from(this).inflate(R.layout.item_leaderboard_row, scoresContainer, false)
             val medalView = row.findViewById<ImageView>(R.id.score_medal)
             val rankView = row.findViewById<TextView>(R.id.score_rank)
@@ -228,7 +312,8 @@ class LeaderboardActivity : AppCompatActivity() {
                 }
             }
 
-            row.findViewById<TextView>(R.id.score_name).text = entry.profileName
+            val prefix = if (entry.isGlobal) "🌐 " else ""
+            row.findViewById<TextView>(R.id.score_name).text = "$prefix${entry.profileName}"
             row.findViewById<TextView>(R.id.score_value).text = entry.score.toString()
             row.findViewById<View>(R.id.score_avatar).backgroundTintList = ColorStateList.valueOf(entry.avatarColor)
             
@@ -270,7 +355,8 @@ class LeaderboardActivity : AppCompatActivity() {
     }
 
     private fun bindPodium(entry: LeaderboardManager.ScoreEntry, nameId: Int, bgId: Int, iconId: Int, scoreId: Int) {
-        findViewById<TextView>(nameId).text = entry.profileName
+        val prefix = if (entry.isGlobal) "🌐 " else ""
+        findViewById<TextView>(nameId).text = "$prefix${entry.profileName}"
         findViewById<TextView>(scoreId).text = entry.score.toString()
         findViewById<View>(bgId).backgroundTintList = ColorStateList.valueOf(entry.avatarColor)
         val iconView = findViewById<ImageView>(iconId)

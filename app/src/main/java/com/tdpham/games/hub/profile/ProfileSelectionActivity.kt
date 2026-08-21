@@ -378,6 +378,7 @@ class ProfileSelectionActivity : AppCompatActivity() {
     private fun setupFocusAnimation(view: View) {
         view.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
+                SoundManager.playClick()
                 v.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
                 v.elevation = 20f
             } else {

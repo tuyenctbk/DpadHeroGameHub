@@ -231,7 +231,8 @@ class DungeonEscapeView @JvmOverloads constructor(
         val dc = intArrayOf(1, -1, 0, 0)
         
         while (q.isNotEmpty()) {
-            val (r, c) = q.poll()!!
+            val item = q.poll() ?: break
+            val (r, c) = item
             if (r == ey && c == ex) return true
             
             for (i in 0 until 4) {

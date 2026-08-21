@@ -1,0 +1,8 @@
+{
+  "name": "Dpad Arcade",
+  "description": "A retro arcade game hub with 30 classic games optimized for D-pad and controller gameplay.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

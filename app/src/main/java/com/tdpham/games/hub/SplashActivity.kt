@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SplashActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
@@ -42,6 +43,16 @@ class SplashActivity : AppCompatActivity() {
     }
     private var pulseRunnable: Runnable? = null
 
+    private var isSkipped = false
+
+    private fun skipSplash() {
+        if (!isSkipped) {
+            isSkipped = true
+            handler.removeCallbacks(startMainRunnable)
+            startMainRunnable.run()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -50,6 +61,9 @@ class SplashActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             // Warm up SharedPreferences and SoundManager immediately
             SoundManager.init(this@SplashActivity)
+            withContext(Dispatchers.Main) {
+                SoundManager.playArcadeIntroSequence()
+            }
             
             // Parallel init for Firebase and Ads to save time
             launch { ConfigManager.init() }
@@ -64,6 +78,11 @@ class SplashActivity : AppCompatActivity() {
         val title = findViewById<android.view.View>(R.id.splash_title)
         val loader = findViewById<android.view.View>(R.id.splash_loader)
         val hint = findViewById<android.view.View>(R.id.splash_hint)
+
+        // Set skippable click listener on root view
+        findViewById<android.view.View>(android.R.id.content)?.setOnClickListener {
+            skipSplash()
+        }
 
         // Initial state
         listOf(logo, title, loader, hint).forEach {
@@ -101,8 +120,18 @@ class SplashActivity : AppCompatActivity() {
         // Hide system UI with modern approach for API 30+, fallback for older versions
         hideSystemUI()
 
-        // Increased slightly to 1500ms to let the staggered animation breathe
+        // Increased slightly to 1800ms to let the staggered animation breathe
         handler.postDelayed(startMainRunnable, 1800)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: android.view.KeyEvent?): Boolean {
+        skipSplash()
+        return true
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent?): Boolean {
+        skipSplash()
+        return super.onTouchEvent(event)
     }
 
     override fun onDestroy() {

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Glowing Buzzer / Shield Base -->
+    <path
+        android:fillColor="#6200EA"
+        android:pathData="M60,10 L104,26 V62 C104,88 85,108 60,114 C35,108 16,88 16,62 V26 Z" />
+
+    <!-- Inner Shield Gradient Layer -->
+    <path
+        android:fillColor="#7C4DFF"
+        android:pathData="M60,18 L96,32 V62 C96,83 80,100 60,105 C40,100 24,83 24,62 V32 Z" />
+
+    <!-- Bright Question Mark -->
+    <path
+        android:fillColor="#FFD600"
+        android:pathData="M52,36 C52,31 56,28 61,28 C66,28 70,31 70,36 C70,41 66,44 63,47 C59,51 57,55 57,61 H67 C67,58 68,56 71,53 C76,48 80,44 80,36 C80,26 71,20 61,20 C50,20 42,27 42,36 Z M57,69 H67 V79 H57 Z" />
+
+    <!-- Star Sparkles Top Left & Right -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M16,16 L19,10 L22,16 L28,19 L22,22 L19,28 L16,22 L10,19 Z" />
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M102,16 L105,10 L108,16 L114,19 L108,22 L105,28 L102,22 L96,19 Z" />
+
+</vector>

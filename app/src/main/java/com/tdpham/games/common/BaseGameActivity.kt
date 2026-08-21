@@ -45,8 +45,22 @@ abstract class BaseGameActivity : AppCompatActivity() {
     protected open fun shouldShowHelpButton(): Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.requestFeature(android.view.Window.FEATURE_ACTIVITY_TRANSITIONS)
+        val moveTransition = android.transition.TransitionInflater.from(this)
+            .inflateTransition(android.R.transition.move).apply {
+                duration = 350
+                interpolator = android.view.animation.DecelerateInterpolator(1.5f)
+            }
+        window.sharedElementEnterTransition = moveTransition
+        window.sharedElementReturnTransition = moveTransition
+
         super.onCreate(savedInstanceState)
         setContentView(getLayoutId())
+
+        val view = findViewById<View>(getGameViewId())
+        if (view != null) {
+            androidx.core.view.ViewCompat.setTransitionName(view, "game_card_transition")
+        }
 
         lifecycleScope.launch(Dispatchers.Default) {
             val analytics = try {
@@ -60,7 +74,6 @@ abstract class BaseGameActivity : AppCompatActivity() {
             }
         }
         
-        val view = findViewById<View>(getGameViewId())
         if (view is GameView) {
             gameView = view
             gameView.gameKey = gameKey
@@ -71,6 +84,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
             }
 
             gameView.onGameOver = { score ->
+                HapticManager.vibrateExplosion(this)
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
                 bundle.putInt(FirebaseAnalytics.Param.SCORE, score)
@@ -96,13 +110,19 @@ abstract class BaseGameActivity : AppCompatActivity() {
                         this,
                         onReviveConfirmed = {
                             hasRevivedThisRound = true
+                            var rewardGranted = false
                             AdManager.showRewardedOrInterstitial(
                                 this,
                                 onRewardGranted = {
+                                    rewardGranted = true
                                     SoundManager.playSuccess()
+                                    HapticManager.vibrateSuccess(this)
                                     gameView.reviveGame()
                                 },
                                 onAdClosed = {
+                                    if (!rewardGranted) {
+                                        handleFinalGameOver()
+                                    }
                                     focusGame()
                                 }
                             )
@@ -165,9 +185,8 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     private fun focusGame() {
         val view = findViewById<View>(getGameViewId())
-        view.alpha = 0f
-        view.animate().alpha(1f).setDuration(400).start()
-        view.requestFocus()
+        view?.alpha = 1f
+        view?.requestFocus()
     }
 
     private fun showMasteryHint() {
@@ -297,47 +316,43 @@ abstract class BaseGameActivity : AppCompatActivity() {
         IdleAdManager.notifyInteraction()
         gameView.pause()
 
-        pauseDialog?.dismiss()
-        pauseDialog = InGamePauseDialog.show(
-            context = this,
-            title = "$gameTitle - ${getString(R.string.pause_menu_title)}",
-            hasOptions = true,
-            onResume = {
-                pauseDialog = null
-                (gameView as View).requestFocus()
-                gameView.resume()
-            },
-            onOptions = {
-                pauseDialog = null
-                showGameOptions {
+        val intent = PauseActivity.createIntent(this, gameKey, gameTitle)
+        startActivityForResult(intent, PauseActivity.REQUEST_CODE_PAUSE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PauseActivity.REQUEST_CODE_PAUSE) {
+            when (resultCode) {
+                PauseActivity.RESULT_RESUME -> {
                     (gameView as View).requestFocus()
                     gameView.resume()
                 }
-            },
-            onGuide = {
-                pauseDialog = null
-                showGameGuide()
-            },
-            onRestart = {
-                pauseDialog = null
-                (gameView as View).requestFocus()
-                resetCurrentGame()
-                gameView.resume()
-            },
-            onExit = {
-                pauseDialog = null
-                if (AdManager.canShowInterstitial(this)) {
-                    AdManager.showInterstitial(this) {
+                PauseActivity.RESULT_OPTIONS -> {
+                    showGameOptions {
+                        (gameView as View).requestFocus()
+                        gameView.resume()
+                    }
+                }
+                PauseActivity.RESULT_RESTART -> {
+                    restartCurrentGame()
+                    gameView.resume()
+                }
+                PauseActivity.RESULT_EXIT -> {
+                    if (AdManager.canShowInterstitial(this)) {
+                        AdManager.showInterstitial(this) {
+                            finish()
+                        }
+                    } else {
                         finish()
                     }
-                } else {
-                    finish()
                 }
             }
-        )
+        }
     }
 
-    private fun resetCurrentGame() {
+    private fun restartCurrentGame() {
+        (gameView as View).requestFocus()
         when (gameKey) {
             "trex" -> (gameView as? com.tdpham.games.trex.TRexView)?.resetGame()
             "snake" -> (gameView as? com.tdpham.games.snake.SnakeGameView)?.resetGame()
@@ -369,11 +384,15 @@ abstract class BaseGameActivity : AppCompatActivity() {
             "frenzy" -> (gameView as? com.tdpham.games.frenzy.FrenzyView)?.resetGame()
             "retrodriver" -> (gameView as? com.tdpham.games.retrodriver.RetroDriverView)?.resetGame()
             "fruit" -> (gameView as? com.tdpham.games.fruit.FruitView)?.resetGame()
+            "connect_four" -> (gameView as? com.tdpham.games.connectfour.ConnectFourView)?.resetGame()
+            "blackjack" -> (gameView as? com.tdpham.games.blackjack.BlackjackView)?.resetGame()
+            "trivia" -> (gameView as? com.tdpham.games.trivia.TriviaView)?.resetGame()
         }
     }
 
     override fun onResume() {
         super.onResume()
+        ScreenShake.syncSettings(this)
         IdleAdManager.isGameMode = true
         IdleAdManager.isWaitingMode = !hasStarted || isGuideShowing
         IdleAdManager.startTracking()
@@ -517,6 +536,9 @@ abstract class BaseGameActivity : AppCompatActivity() {
             "frenzy" -> com.tdpham.games.frenzy.FrenzyOptionsDialog.show(this) { (gameView as? com.tdpham.games.frenzy.FrenzyView)?.resetGame(); callback() }
             "retrodriver" -> com.tdpham.games.retrodriver.RetroDriverOptionsDialog.show(this) { (gameView as? com.tdpham.games.retrodriver.RetroDriverView)?.resetGame(); callback() }
             "fruit" -> com.tdpham.games.fruit.FruitOptionsDialog.show(this) { (gameView as? com.tdpham.games.fruit.FruitView)?.resetGame(); callback() }
+            "connect_four" -> com.tdpham.games.connectfour.ConnectFourOptionsDialog.show(this) { (gameView as? com.tdpham.games.connectfour.ConnectFourView)?.resetGame(); callback() }
+            "blackjack" -> com.tdpham.games.blackjack.BlackjackOptionsDialog.show(this) { (gameView as? com.tdpham.games.blackjack.BlackjackView)?.resetGame(); callback() }
+            "trivia" -> com.tdpham.games.trivia.TriviaOptionsDialog.show(this) { (gameView as? com.tdpham.games.trivia.TriviaView)?.resetGame(); callback() }
             else -> {
                 callback()
                 return false

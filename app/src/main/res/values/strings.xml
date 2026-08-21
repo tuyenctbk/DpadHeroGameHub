@@ -548,6 +548,15 @@
     <string name="quit_game_confirm">Are you sure you want to quit the game?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="scanline_crt_effect">CRT Scanline Filter</string>
+    <string name="scanline_crt_desc">Simulate classic arcade CRT monitor scanlines.</string>
+    <string name="screen_shake_effect">Screen Shake FX</string>
+    <string name="screen_shake_desc">Dynamic screen impact feedback during collisions and explosions.</string>
+    <string name="reset_high_scores">Reset High Scores</string>
+    <string name="reset_high_scores_desc">Clear all recorded best scores for the active hero.</string>
+    <string name="reset_scores_confirm">Are you sure you want to clear all high scores for this hero? This action cannot be undone.</string>
+    <string name="scores_cleared">High scores have been reset.</string>
+
     <string name="choose_hero" translatable="true">CHOOSE YOUR HERO</string>
     <string name="create_hero" translatable="true">CREATE NEW HERO</string>
     <string name="enter_hero_name" translatable="true">ENTER HERO NAME</string>
@@ -730,6 +739,37 @@
         <item>FLAWLESS RHYTHM!</item>
         <item>GENIUS RECALL!</item>
     </string-array>
+    <string-array name="win_connect_four">
+        <item>FOUR IN A ROW!</item>
+        <item>GRID MASTER!</item>
+        <item>TACTICAL GENIUS!</item>
+        <item>CONNECT CHAMPION!</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>NATURAL BLACKJACK!</item>
+        <item>HIGH ROLLER!</item>
+        <item>HOUSE BEATEN!</item>
+        <item>CASINO ROYAL!</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>GENIUS SCHOLAR!</item>
+        <item>PERFECT SCORE!</item>
+        <item>TRIVIA MASTER!</item>
+        <item>QUIZ CHAMPION!</item>
+    </string-array>
+
+    <string name="game_connect_four">CONNECT FOUR</string>
+    <string name="game_connect_four_instructions">Classic 4-in-a-row tactical grid battle!\n• D-PAD LEFT / RIGHT: Move disc cursor across columns\n• D-PAD CENTER / ENTER: Drop disc into column\n• Connect 4 of your discs horizontally, vertically, or diagonally\n• Choose 1-Player vs Smart AI or 2-Player Couch Battle!</string>
+    <string name="connect_four_settings_title">CONNECT FOUR SETTINGS</string>
+
+    <string name="game_blackjack">BLACKJACK 21</string>
+    <string name="game_blackjack_instructions">Authentic Vegas Casino Blackjack table!\n• Goal: Get your hand value closest to 21 without exceeding 21\n• D-PAD UP / DOWN / LEFT / RIGHT: Navigate Chips and Table Actions\n• D-PAD CENTER / ENTER: Place Bet / Deal / Hit / Stand / Double Down\n• Blackjack pays 3:2! Win chips and build your casino fortune!</string>
+    <string name="blackjack_settings_title">BLACKJACK SETTINGS</string>
+
+    <string name="game_trivia">TRIVIA QUIZ</string>
+    <string name="game_trivia_instructions">High-stakes Arcade Quiz Show!\n• D-PAD UP / DOWN / LEFT / RIGHT: Select Answer A, B, C, or D\n• D-PAD CENTER / ENTER: Confirm Answer\n• Answer faster for huge time multiplier bonuses\n• Use Lifelines: 50:50, Freeze Timer, and Skip Question\n• Complete the 10-question gauntlet for grand coin rewards!</string>
+    <string name="trivia_settings_title">TRIVIA QUIZ SETTINGS</string>
+
     <string name="game_options">Options</string>
     <string name="pause_menu_title">Game Paused</string>
     <string name="resume_game">Resume</string>
@@ -740,4 +780,108 @@
     <string name="revive_prompt_description">Watch a short ad to revive with +1 Extra Life and continue your run!</string>
     <string name="btn_revive_continue">❤️ CONTINUE (+1 LIFE)</string>
     <string name="btn_revive_give_up">❌ END GAME</string>
+
+    <string name="sound_profile_label">Sound Profile</string>
+    <string name="sound_profile_arcade">Arcade 8-Bit</string>
+    <string name="sound_profile_retro">Retro Synth</string>
+    <string name="sound_profile_modern">Modern Digital</string>
+    <string name="sound_profile_arcade_desc">Punchy 8-bit pulse waves</string>
+    <string name="sound_profile_retro_desc">Warm analog synth tones</string>
+    <string name="sound_profile_modern_desc">Crisp polyphonic chimes</string>
+    <string name="sound_profile_toast">Sound Profile: %1$s</string>
+    <string name="sound_profile_desc_format">%1$s • Tap to cycle</string>
+    <string name="volume_desc_format">Volume: %1$d%% • Tap to cycle volume level</string>
+    <string name="sensitivity_toast">Controller Sensitivity: %1$s</string>
+
+    <string name="trivia_gauntlet_completed">GAUNTLET COMPLETED! 🏆</string>
+    <string name="trivia_final_score">Final Score: %1$d Points</string>
+    <string name="trivia_accuracy">Accuracy: %1$d / %2$d Correct (%3$d%%)</string>
+    <string name="trivia_coins_earned">+%1$d Coins Earned 🪙</string>
+    <string name="trivia_play_again">PLAY AGAIN [ENTER]</string>
+    <string name="press_enter_next_round">Press [ENTER] to start next round</string>
+    <string name="twentyfortyeight_hint">🎮 D-Pad/Swipe: Move • [U] Undo • [MENU] Size Mode</string>
+
+    <!-- Leaderboard Tabs -->
+    <string name="tab_local">🏠 LOCAL</string>
+    <string name="tab_worldwide">🌐 WORLDWIDE</string>
+
+    <!-- Settings & Audio -->
+    <string name="setting_volume_desc_format">Volume: %1$d%% • Tap volume badge to adjust</string>
+    <string name="setting_sound_profile_theme">Sound Profile Theme</string>
+    <string name="setting_sound_profile_desc">Arcade 8-Bit • Tap to switch audio preset</string>
+    <string name="setting_retro_music">Retro Music &amp; Ambience</string>
+    <string name="setting_retro_music_desc">Synthesizer background arcade melodies</string>
+    <string name="setting_controller_sensitivity">Controller &amp; Gamepad Sensitivity</string>
+    <string name="setting_controller_sensitivity_desc">Adjust D-Pad, joystick, and touch responsiveness</string>
+    <string name="setting_haptic_vibration">Haptic &amp; Controller Vibration</string>
+    <string name="setting_haptic_vibration_desc">Tactile pulses on hits, scores, and explosions</string>
+    <string name="calibrate">CALIBRATE</string>
+
+    <!-- Main Activity Live Widget -->
+    <string name="badge_live">● LIVE</string>
+    <string name="global_top3_snake">GLOBAL TOP 3 • SNAKE</string>
+    <string name="hall_of_fame_widget">HALL OF FAME 🏆</string>
+    <string name="placeholder_dash">---</string>
+    <string name="zero_pts">0 pts</string>
+
+    <!-- Daily Rewards -->
+    <string name="day_1">DAY 1</string>
+    <string name="reward_day_format">DAY %1$d</string>
+    <string name="status_locked">LOCKED</string>
+    <string name="daily_arcade_rewards">DAILY ARCADE REWARDS</string>
+    <string name="daily_rewards_subtitle">Check in daily to build your streak &amp; unlock the 1,500 coin Jackpot!</string>
+    <string name="claim_reward">🎁 CLAIM REWARD</string>
+    <string name="btn_close">CLOSE</string>
+
+    <!-- Controller & Haptic Settings -->
+    <string name="controller_settings_title">🎮 Controller &amp; Haptic Settings</string>
+    <string name="hardware_diagnostics">HARDWARE DIAGNOSTICS</string>
+    <string name="controller_checking">🎮 Controller: Checking devices...</string>
+    <string name="vibrator_checking">⚡ Vibrator: Checking VibratorManager...</string>
+    <string name="haptic_rumble_title">Haptic &amp; Rumble Vibration</string>
+    <string name="haptic_rumble_desc">Enable motor rumble for impacts, coins, and buttons</string>
+    <string name="haptic_intensity_title">Haptic Intensity (Vibrator Amplitude)</string>
+    <string name="vibration_motor_test_title">VIBRATION MOTOR HARDWARE TEST</string>
+    <string name="vibration_test_instructions">Select a vibration profile and tap test to verify motor response:</string>
+    <string name="vibe_profile_click">🕹️ Click (15ms)</string>
+    <string name="vibe_profile_score">⚡ Score (35ms)</string>
+    <string name="vibe_profile_hazard">💥 Hazard (70ms)</string>
+    <string name="vibe_profile_explosion">💣 Boss Explosion</string>
+    <string name="vibe_profile_victory">🏆 Victory Waveform</string>
+    <string name="test_vibration_now">⚡ TEST VIBRATION NOW</string>
+    <string name="gamepad_speed_title">Gamepad Input Speed</string>
+    <string name="gamepad_speed_desc">Digital input repeat rate &amp; sensitivity curve</string>
+    <string name="analog_deadzone_title">Analog Stick Deadzone Threshold</string>
+    <string name="analog_deadzone_desc">Prevents stick drift &amp; enhances D-pad precision on Bluetooth gamepads</string>
+    <string name="live_stick_neutral">🕹️ Live Stick Test: Neutral (0.00, 0.00)</string>
+
+    <!-- Pause & Audio Toggles -->
+    <string name="sound_sfx_on">SOUND SFX: ON</string>
+    <string name="sound_sfx_off">SOUND SFX: OFF</string>
+    <string name="music_on">MUSIC: ON</string>
+    <string name="music_off">MUSIC: OFF</string>
+
+    <!-- Controller Status & Indicators -->
+    <string name="gamepad_connected">Gamepad Connected</string>
+    <string name="remote_mode">Remote Mode</string>
+    <string name="desc_controller_status">Controller connection status</string>
+    <string name="gamepad_connected_format">🎮 Connected: %1$s</string>
+    <string name="no_external_gamepad">No External Gamepad (Virtual D-Pad Active)</string>
+    <string name="haptic_test_fired">Fired Haptic Test: %1$s (%2$d%% intensity)</string>
+    <string name="motor_hardware_info">⚡ Motor: %1$s • Hardware Ready: %2$s • Amplitude Control: %3$s</string>
+    <string name="status_yes">YES</string>
+    <string name="status_no">NO</string>
+    <string name="status_fallback">FALLBACK</string>
+    <string name="vibrator_manager_api">VibratorManager (API 31+)</string>
+    <string name="vibrator_legacy">Vibrator (Legacy)</string>
+
+    <!-- Hub Widgets & Formatting -->
+    <string name="global_top3_format">GLOBAL TOP 3 • %1$s</string>
+    <string name="no_record">No Record</string>
+    <string name="score_pts_format">%1$d pts</string>
+    <string name="status_claimed">✓ CLAIMED</string>
+    <string name="status_ready">READY!</string>
+    <string name="claimed_today">✓ CLAIMED TODAY</string>
+    <string name="claim_day_format">🎁 CLAIM DAY %1$d (+%2$d)</string>
+    <string name="desc_game_icon">Game Icon</string>
 </resources>

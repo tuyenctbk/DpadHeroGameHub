@@ -153,6 +153,20 @@ class RoadRacerView @JvmOverloads constructor(
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
+    override fun canRevive(): Boolean = true
+
+    override fun reviveGame(): Boolean {
+        if (isGameOver) {
+            isGameOver = false
+            isPaused = false
+            obstacles.clear()
+            celebrationManager.clear()
+            resume()
+            return true
+        }
+        return false
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (isGameOver) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {

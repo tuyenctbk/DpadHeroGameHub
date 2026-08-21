@@ -715,4 +715,140 @@
     <string name="revive_prompt_description">Xem một đoạn quảng cáo ngắn để hồi sinh với +1 Mạng và tiếp tục màn chơi!</string>
     <string name="btn_revive_continue">❤️ TIẾP TỤC (+1 MẠNG)</string>
     <string name="btn_revive_give_up">❌ KẾT THÚC</string>
+
+    <string name="sound_profile_label">Chế Độ Âm Thanh</string>
+    <string name="sound_profile_arcade">Arcade 8-Bit</string>
+    <string name="sound_profile_retro">Retro Synth</string>
+    <string name="sound_profile_modern">Kỹ Thuật Số Modern</string>
+    <string name="sound_profile_arcade_desc">Sóng âm 8-bit sống động</string>
+    <string name="sound_profile_retro_desc">Giai điệu Synth analog ấm áp</string>
+    <string name="sound_profile_modern_desc">Âm thanh đa âm hiện đại sắc nét</string>
+    <string name="sound_profile_toast">Chế độ âm thanh: %1$s</string>
+    <string name="sound_profile_desc_format">%1$s • Nhấn để thay đổi</string>
+    <string name="volume_desc_format">Âm lượng: %1$d%% • Nhấn để thay đổi</string>
+    <string name="sensitivity_toast">Độ nhạy tay cầm: %1$s</string>
+
+    <string name="trivia_gauntlet_completed">HOÀN THÀNH THỬ THÁCH! 🏆</string>
+    <string name="trivia_final_score">Điểm Số Cuối Cùng: %1$d Điểm</string>
+    <string name="trivia_accuracy">Độ Chính Xác: %1$d / %2$d Đúng (%3$d%%)</string>
+    <string name="trivia_coins_earned">+%1$d Xu Nhận Được 🪙</string>
+    <string name="trivia_play_again">CHƠI LẠI [ENTER]</string>
+    <string name="press_enter_next_round">Nhấn [ENTER] để bắt đầu vòng tiếp theo</string>
+    <string name="twentyfortyeight_hint">🎮 D-Pad/Vuốt: Di chuyển • [U] Hoàn tác • [MENU] Kích thước</string>
+
+    <string name="scanline_crt_effect">Bộ lọc dòng quét CRT</string>
+    <string name="scanline_crt_desc">Mô phỏng các dòng quét màn hình CRT arcade cổ điển.</string>
+    <string name="screen_shake_effect">Hiệu ứng rung màn hình</string>
+    <string name="screen_shake_desc">Phản hồi rung màn hình sống động khi va chạm và cháy nổ.</string>
+    <string name="reset_high_scores">Đặt lại điểm số cao</string>
+    <string name="reset_high_scores_desc">Xóa tất cả điểm số cao đã ghi cho anh hùng hiện tại.</string>
+    <string name="reset_scores_confirm">Bạn có chắc chắn muốn xóa tất cả điểm cao của anh hùng này không? Hành động này không thể hoàn tác.</string>
+    <string name="scores_cleared">Điểm số cao đã được đặt lại.</string>
+
+    <string-array name="win_connect_four">
+        <item>BỐN HÀNG THẲNG!</item>
+        <item>BẬC THẦY LƯỚI!</item>
+        <item>THIÊN TÀI CHIẾN THUẬT!</item>
+        <item>QUÁN QUÂN KẾT NỐI!</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>BLACKJACK TỰ NHIÊN!</item>
+        <item>TAY CHƠI LỚN!</item>
+        <item>ĐÁNH BẠI NHÀ CÁI!</item>
+        <item>HOÀNG GIA CASINO!</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>HỌC GIẢ THIÊN TÀI!</item>
+        <item>ĐIỂM SỐ TUYỆT ĐỐI!</item>
+        <item>BẬC THẦY TRIVIA!</item>
+        <item>QUÁN QUÂN QUIZ!</item>
+    </string-array>
+
+    <string name="game_connect_four">NỐI BỐN DÒNG</string>
+    <string name="game_connect_four_instructions">Trận chiến chiến thuật nối 4 dòng cổ điển!\n• D-PAD TRÁI / PHẢI: Di chuyển con trỏ thả đĩa\n• D-PAD GIỮA / ENTER: Thả đĩa vào cột\n• Nối 4 đĩa theo hàng ngang, hàng dọc hoặc đường chéo\n• Chọn 1 Người chơi vs AI thông minh hoặc Đấu đôi 2 người!</string>
+    <string name="connect_four_settings_title">CÀI ĐẶT NỐI BỐN DÒNG</string>
+
+    <string name="game_blackjack">XÌ DÁCH 21 (BLACKJACK)</string>
+    <string name="game_blackjack_instructions">Bàn chơi Xì dách Blackjack chuẩn Casino!\n• Mục tiêu: Đạt tổng điểm gần 21 nhất mà không vượt quá 21\n• D-PAD LÊN / XUỐNG / TRÁI / PHẢI: Chọn chip cược và hành động\n• D-PAD GIỮA / ENTER: Đặt cược / Chia bài / Rút / Dừng / Gấp đôi\n• Blackjack thưởng 3:2! Thắng chip và xây dựng gia tài casino!</string>
+    <string name="blackjack_settings_title">CÀI ĐẶT XÌ DÁCH</string>
+
+    <string name="game_trivia">ĐỐ VUI TRIVIA</string>
+    <string name="game_trivia_instructions">Show truyền hình đố vui Arcade kịch tính!\n• D-PAD LÊN / XUỐNG / TRÁI / PHẢI: Chọn câu trả lời A, B, C hoặc D\n• D-PAD GIỮA / ENTER: Xác nhận câu trả lời\n• Trả lời nhanh hơn để nhận điểm thưởng thời gian hấp dẫn\n• Sử dụng quyền trợ giúp: 50:50, Băng hà thời gian, và Bỏ qua\n• Hoàn thành thử thách 10 câu hỏi để nhận phần thưởng xu lớn!</string>
+    <string name="trivia_settings_title">CÀI ĐẶT ĐỐ VUI TRIVIA</string>
+
+    <string name="tab_local">🏠 NỘI BỘ</string>
+    <string name="tab_worldwide">🌐 TOÀN CẦU</string>
+
+    <string name="setting_volume_desc_format">Âm lượng: %1$d%% • Nhấn để chỉnh âm lượng</string>
+    <string name="setting_sound_profile_theme">Chủ đề âm thanh</string>
+    <string name="setting_sound_profile_desc">Arcade 8-Bit • Nhấn để chuyển hiệu ứng âm thanh</string>
+    <string name="setting_retro_music">Nhạc nền Retro &amp; Không gian</string>
+    <string name="setting_retro_music_desc">Giai điệu synth arcade cổ điển</string>
+    <string name="setting_controller_sensitivity">Độ nhạy tay cầm &amp; Gamepad</string>
+    <string name="setting_controller_sensitivity_desc">Điều chỉnh độ nhạy D-Pad, cần analog và cảm ứng</string>
+    <string name="setting_haptic_vibration">Rung phản hồi &amp; Tay cầm</string>
+    <string name="setting_haptic_vibration_desc">Rung xúc giác khi va chạm, ăn điểm và cháy nổ</string>
+    <string name="calibrate">HIỆU CHỈNH</string>
+
+    <string name="badge_live">● TRỰC TIẾP</string>
+    <string name="global_top3_snake">TOP 3 TOÀN CẦU • RẮN SĂN MỒI</string>
+    <string name="hall_of_fame_widget">BẢNG VÀNG 🏆</string>
+    <string name="placeholder_dash">---</string>
+    <string name="zero_pts">0 điểm</string>
+
+    <string name="day_1">NGÀY 1</string>
+    <string name="reward_day_format">NGÀY %1$d</string>
+    <string name="status_locked">ĐÃ KHÓA</string>
+    <string name="daily_arcade_rewards">THƯỞNG ĐIỂM DANH HÀNG NGÀY</string>
+    <string name="daily_rewards_subtitle">Điểm danh hàng ngày để nhận chuỗi thưởng và mở khóa Jackpot 1.500 xu!</string>
+    <string name="claim_reward">🎁 NHẬN THƯỞNG</string>
+    <string name="btn_close">ĐÓNG</string>
+
+    <string name="controller_settings_title">🎮 Cài đặt Tay cầm &amp; Rung</string>
+    <string name="hardware_diagnostics">CHẨN ĐOÁN PHẦN CỨNG</string>
+    <string name="controller_checking">🎮 Tay cầm: Đang kiểm tra thiết bị...</string>
+    <string name="vibrator_checking">⚡ Bộ rung: Đang kiểm tra motor rung...</string>
+    <string name="haptic_rumble_title">Rung phản hồi xúc giác</string>
+    <string name="haptic_rumble_desc">Bật rung motor khi va chạm, ăn xu và bấm nút</string>
+    <string name="haptic_intensity_title">Cường độ rung (Biên độ rung)</string>
+    <string name="vibration_motor_test_title">KIỂM TRA MOTOR RUNG PHẦN CỨNG</string>
+    <string name="vibration_test_instructions">Chọn cấu hình rung và bấm thử nghiệm để kiểm tra phản hồi:</string>
+    <string name="vibe_profile_click">🕹️ Bấm nút (15ms)</string>
+    <string name="vibe_profile_score">⚡ Ăn điểm (35ms)</string>
+    <string name="vibe_profile_hazard">💥 Nguy hiểm (70ms)</string>
+    <string name="vibe_profile_explosion">💣 Nổ Boss cực mạnh</string>
+    <string name="vibe_profile_victory">🏆 Sóng chiến thắng</string>
+    <string name="test_vibration_now">⚡ THỬ RUNG NGAY</string>
+    <string name="gamepad_speed_title">Tốc độ nhập phím tay cầm</string>
+    <string name="gamepad_speed_desc">Tốc độ lặp phím và đường cong độ nhạy kỹ thuật số</string>
+    <string name="analog_deadzone_title">Ngưỡng vùng chết cần gạt Analog</string>
+    <string name="analog_deadzone_desc">Ngăn trôi cần analog và tăng độ chuẩn xác phím D-pad Bluetooth</string>
+    <string name="live_stick_neutral">🕹️ Kiểm tra cần trực tiếp: Trung tính (0.00, 0.00)</string>
+
+    <string name="sound_sfx_on">HIỆU ỨNG ÂM THANH: BẬT</string>
+    <string name="sound_sfx_off">HIỆU ỨNG ÂM THANH: TẮT</string>
+    <string name="music_on">NHẠC NỀN: BẬT</string>
+    <string name="music_off">NHẠC NỀN: TẮT</string>
+
+    <string name="gamepad_connected">Đã Kết Nối Tay Cầm</string>
+    <string name="remote_mode">Chế Độ Điều Khiển TV</string>
+    <string name="desc_controller_status">Trạng thái kết nối tay cầm</string>
+    <string name="gamepad_connected_format">🎮 Đã kết nối: %1$s</string>
+    <string name="no_external_gamepad">Không có tay cầm ngoài (D-Pad ảo đang bật)</string>
+    <string name="haptic_test_fired">Đã kích hoạt rung thử: %1$s (cường độ %2$d%%)</string>
+    <string name="motor_hardware_info">⚡ Motor: %1$s • Phần cứng: %2$s • Điều khiển biên độ: %3$s</string>
+    <string name="status_yes">CÓ</string>
+    <string name="status_no">KHÔNG</string>
+    <string name="status_fallback">DỰ PHÒNG</string>
+    <string name="vibrator_manager_api">VibratorManager (API 31+)</string>
+    <string name="vibrator_legacy">Vibrator (Cũ)</string>
+
+    <string name="global_top3_format">TOP 3 TOÀN CẦU • %1$s</string>
+    <string name="no_record">Chưa có kỷ lục</string>
+    <string name="score_pts_format">%1$d điểm</string>
+    <string name="status_claimed">✓ ĐÃ NHẬN</string>
+    <string name="status_ready">SẴN SÀNG!</string>
+    <string name="claimed_today">✓ ĐÃ NHẬN HÔM NAY</string>
+    <string name="claim_day_format">🎁 NHẬN NGÀY %1$d (+%2$d)</string>
+    <string name="desc_game_icon">Biểu tượng trò chơi</string>
 </resources>

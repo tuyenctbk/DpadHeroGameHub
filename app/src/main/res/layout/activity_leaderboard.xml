@@ -15,10 +15,12 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <!-- Top Header & Global/Local Mode Switcher -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:layout_marginBottom="16dp">
 
             <ImageView
@@ -29,13 +31,53 @@
 
             <TextView
                 android:id="@+id/leaderboard_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/hall_of_fame"
                 android:textColor="#FFFFFF"
-                android:textSize="36sp"
+                android:textSize="32sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.1" />
+                android:letterSpacing="0.08" />
+
+            <!-- Local vs Global Toggle Buttons -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/game_item_background"
+                android:backgroundTint="#141C2E"
+                android:padding="4dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_mode_local"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="@drawable/game_item_background"
+                    android:backgroundTint="#00E5FF"
+                    android:text="@string/tab_local"
+                    android:textColor="#0A0E17"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:focusable="true"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp" />
+
+                <Button
+                    android:id="@+id/btn_mode_global"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="@drawable/game_item_background"
+                    android:backgroundTint="#22FFFFFF"
+                    android:text="@string/tab_worldwide"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:focusable="true"
+                    android:layout_marginStart="6dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp" />
+            </LinearLayout>
         </LinearLayout>
 
         <HorizontalScrollView
