@@ -284,18 +284,6 @@ class FrenzyView @JvmOverloads constructor(
             bubbles.add(Bubble(Random.nextFloat() * width, Random.nextFloat() * height, Random.nextFloat() * 8f + 4f, Random.nextFloat() * 3f + 1f))
         }
 
-        // Spawn initial Electric Eel
-        otherFish.add(AIFish(
-            x = (width * 0.75f).coerceAtLeast(300f),
-            y = (height * 0.45f).coerceAtLeast(200f),
-            size = 3,
-            speed = 2.2f,
-            facingRight = false,
-            color = Color.parseColor("#FFD54F"),
-            speciesIndex = 27,
-            behavior = 11
-        ))
-
         // Spawn initial Sand Flounder (Master of sand camouflage)
         otherFish.add(AIFish(
             x = (width * 0.35f).coerceAtLeast(150f),
@@ -709,6 +697,14 @@ class FrenzyView @JvmOverloads constructor(
                     val r2 = getFishRadius(f2.size)
 
                     if (dist < r1 + r2 - 12f) {
+                        // Check if prey is an inflated defending pufferfish
+                        if (f2.speciesIndex == 33 && f2.isStartled) {
+                            // Bigger hunter gets deflected / pricked by defensive spikes!
+                            f1.facingRight = !f1.facingRight
+                            f1.x += if (f1.facingRight) 40f else -40f
+                            continue
+                        }
+
                         // Check mouth direction of hunter (f1)
                         val f1FacingRight = f1.facingRight
                         val f1CanEat = if (f1FacingRight) dx > -12f else dx < 12f
@@ -940,13 +936,26 @@ class FrenzyView @JvmOverloads constructor(
                         if (fish.x > width - 50f) fish.facingRight = false
                     }
                 }
-                17 -> { // Pufferfish / Blowfish defensive inflating behavior
+                17 -> { // Pufferfish / Blowfish: only defends (inflates) against BIGGER creatures
                     val dxP = playerX - fish.x
                     val dyP = playerY - fish.y
                     val dP = Math.sqrt((dxP * dxP + dyP * dyP).toDouble()).toFloat()
+                    val isPlayerBiggerThreat = (playerSize > fish.size) && (dP < 220f)
+
+                    // Check if any nearby AI fish is larger than this pufferfish
+                    var isAIBiggerThreat = false
+                    for (other in otherFish) {
+                        if (other !== fish && other.size > fish.size) {
+                            val dAI = Math.hypot((other.x - fish.x).toDouble(), (other.y - fish.y).toDouble()).toFloat()
+                            if (dAI < 180f) {
+                                isAIBiggerThreat = true
+                                break
+                            }
+                        }
+                    }
                     
-                    if (dP < 220f) {
-                        // Threat is close: Inflate!
+                    if (isPlayerBiggerThreat || isAIBiggerThreat) {
+                        // Threat from bigger creature: Inflate defensively!
                         if (!fish.isStartled) {
                             fish.isStartled = true
                             fish.startleTime = now
@@ -1192,31 +1201,36 @@ class FrenzyView @JvmOverloads constructor(
 
             if (dist < playerRadius + aiRadius - 12f) {
                 if (fish.speciesIndex == 33) { // Pufferfish / Blowfish
-                    if (fish.isStartled) {
-                        // Inflated pufferfish hurts player's mouth!
-                        if (now >= playerShieldUntil) {
-                            lives--
-                            stageEatenCount = 0 // Reset level food progress — player was eaten!
-                            deathReason = context.getString(R.string.frenzy_death_pufferfish)
-                            deathReasonDisplayUntil = now + 1800L
-                            playerShieldUntil = now + 4000L // 4 seconds invulnerable shield
-                            SoundManager.playError()
-                            
-                            if (lives <= 0) {
-                                gameOver = true
-                                val isNewHigh = score > best
-                                if (isNewHigh) {
-                                    ScoreManager.updateHighScore(context, gameKey, score)
-                                    best = score
+                    if (playerSize > fish.size) {
+                        if (fish.isStartled) {
+                            // Inflated pufferfish defends against bigger player: hurts player's mouth!
+                            if (now >= playerShieldUntil) {
+                                lives--
+                                stageEatenCount = 0 // Reset level food progress — player was hurt by puffer spikes!
+                                deathReason = context.getString(R.string.frenzy_death_pufferfish)
+                                deathReasonDisplayUntil = now + 1800L
+                                playerShieldUntil = now + 4000L // 4 seconds invulnerable shield
+                                SoundManager.playError()
+                                
+                                if (lives <= 0) {
+                                    gameOver = true
+                                    val isNewHigh = score > best
+                                    if (isNewHigh) {
+                                        ScoreManager.updateHighScore(context, gameKey, score)
+                                        best = score
+                                    }
+                                    celebrationManager.start(width / 2f, height / 2f)
+                                    onGameOver?.invoke(score)
                                 }
-                                celebrationManager.start(width / 2f, height / 2f)
-                                onGameOver?.invoke(score)
                             }
+                            // bounce player away
+                            playerX += if (playerFacingRight) -65f else 65f
+                            continue
                         }
-                        // bounce player away
-                        playerX += if (playerFacingRight) -65f else 65f
-                        continue
+                        // If not startled, player can eat pufferfish (falls through to eating loop below)!
                     }
+                    // If player is smaller than pufferfish, pufferfish does not defend against player;
+                    // instead falls through to predator loop where bigger pufferfish eats smaller player!
                 }
 
                 if (fish.speciesIndex == 27) { // Electric Eel

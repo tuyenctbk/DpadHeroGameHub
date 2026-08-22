@@ -509,26 +509,74 @@ object AdManager {
                 return
             }
 
-            // 4. No ad cached yet — trigger background load and retry if attempts remain
-            loadInterstitial(activity.applicationContext)
-            loadRewarded(activity.applicationContext)
-
-            if (retriesLeft > 0) {
-                Log.d(TAG, "No ad ready — waiting 5 seconds and retrying ($retriesLeft retries left)...")
-                mainHandler.postDelayed({
-                    if (!activity.isFinishing && !activity.isDestroyed) {
-                        showRewardedOrInterstitialWithRetry(
-                            activity, onRewardGranted, onAdClosed, retriesLeft - 1
-                        )
-                    } else {
-                        onAdClosed()
-                    }
-                }, 5000L)
-            } else {
-                // All retries exhausted — no ad available, notify caller
-                Log.d(TAG, "No ad available after all retries — no reward granted")
-                onAdClosed()
+            // 4. If no ad is cached yet, attempt on-demand AdMob Rewarded load first
+            Log.d(TAG, "No cached ad — attempting on-demand AdMob load...")
+            val adRequest = AdRequest.Builder().build()
+            val rewardedUnitId = if (BuildConfig.DEBUG) TEST_REWARDED_AD_UNIT_ID else TEST_REWARDED_AD_UNIT_ID
+            
+            var onDemandHandled = false
+            val onDemandTimeoutRunnable = Runnable {
+                if (!onDemandHandled && !activity.isFinishing && !activity.isDestroyed) {
+                    onDemandHandled = true
+                    Log.d(TAG, "On-demand AdMob load timed out — falling back to interactive video ad")
+                    RewardedAdVideoDialog.show(
+                        activity = activity,
+                        onRewardEarned = {
+                            Log.d(TAG, "Interactive Video Ad completed — reward granted!")
+                            onRewardGranted()
+                        },
+                        onAdDismissed = {
+                            onAdClosed()
+                        }
+                    )
+                }
             }
+            mainHandler.postDelayed(onDemandTimeoutRunnable, 3500L)
+
+            RewardedAd.load(activity.applicationContext, rewardedUnitId, adRequest, object : RewardedAdLoadCallback() {
+                override fun onAdLoaded(rewardedAd: RewardedAd) {
+                    mainHandler.removeCallbacks(onDemandTimeoutRunnable)
+                    if (onDemandHandled || activity.isFinishing || activity.isDestroyed) return
+                    onDemandHandled = true
+                    Log.d(TAG, "On-demand AdMob Rewarded Ad loaded successfully — showing now!")
+                    var rewardEarned = false
+                    rewardedAd.fullScreenContentCallback = object : FullScreenContentCallback() {
+                        override fun onAdDismissedFullScreenContent() {
+                            lastAdShowTime = System.currentTimeMillis()
+                            loadRewarded(activity.applicationContext)
+                            if (rewardEarned) {
+                                onRewardGranted()
+                            }
+                            onAdClosed()
+                        }
+                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                            Log.d(TAG, "On-demand Rewarded Ad failed to show: ${adError.message}")
+                            loadRewarded(activity.applicationContext)
+                            onAdClosed()
+                        }
+                    }
+                    rewardedAd.show(activity) {
+                        rewardEarned = true
+                    }
+                }
+
+                override fun onAdFailedToLoad(loadError: LoadAdError) {
+                    mainHandler.removeCallbacks(onDemandTimeoutRunnable)
+                    if (onDemandHandled || activity.isFinishing || activity.isDestroyed) return
+                    onDemandHandled = true
+                    Log.d(TAG, "On-demand AdMob Rewarded Ad failed to load (${loadError.message}) — showing interactive video ad")
+                    RewardedAdVideoDialog.show(
+                        activity = activity,
+                        onRewardEarned = {
+                            Log.d(TAG, "Interactive Video Ad completed — reward granted!")
+                            onRewardGranted()
+                        },
+                        onAdDismissed = {
+                            onAdClosed()
+                        }
+                    )
+                }
+            })
         } catch (e: Throwable) {
             Log.e(TAG, "Exception in showRewardedOrInterstitial: ${e.message}", e)
             onAdClosed()

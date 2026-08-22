@@ -91,6 +91,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 firebaseAnalytics?.logEvent("level_end", bundle)
 
                 val handleFinalGameOver = {
+                    hasRevivedThisRound = false
                     // Record event for smart rating and sharing engagement:
                     val currentBest = ScoreManager.getHighScore(this, gameKey)
                     val isHighScore = score > 0 && score >= currentBest
@@ -352,6 +353,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     }
 
     private fun restartCurrentGame() {
+        hasRevivedThisRound = false
         (gameView as View).requestFocus()
         when (gameKey) {
             "trex" -> (gameView as? com.tdpham.games.trex.TRexView)?.resetGame()
