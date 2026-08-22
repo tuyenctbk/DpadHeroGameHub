@@ -92,6 +92,8 @@ class FlappyHeroView @JvmOverloads constructor(
     }
     private var lastUpdate = 0L
     private val beakPath = Path()
+    private val guidePath = Path()
+    private val guideDashEffect = android.graphics.DashPathEffect(floatArrayOf(15f, 10f), 0f)
     private val pipeRect = RectF()
     private val pipeCapRect = RectF()
     private val sunsetPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -1270,9 +1272,9 @@ class FlappyHeroView @JvmOverloads constructor(
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = 5f
         paint.color = Color.parseColor("#00E676") // Neon green
-        paint.pathEffect = android.graphics.DashPathEffect(floatArrayOf(15f, 10f), 0f)
+        paint.pathEffect = guideDashEffect
         
-        val guidePath = Path()
+        guidePath.reset()
         val textHint: String
         val textY: Float
         

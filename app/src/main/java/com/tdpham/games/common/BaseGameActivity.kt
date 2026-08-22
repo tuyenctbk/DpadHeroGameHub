@@ -15,8 +15,6 @@ import com.google.firebase.Firebase
 import com.tdpham.games.R
 import com.tdpham.games.hub.GuideManager
 import com.tdpham.games.hub.RatingGuideManager
-import com.tdpham.games.trex.TRexOptionsDialog
-import com.tdpham.games.trex.TRexView
 import com.tdpham.games.common.IdleAdManager
 import com.tdpham.games.common.IdleAdOverlayHelper
 
@@ -319,41 +317,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     private fun restartCurrentGame() {
         (gameView as View).requestFocus()
-        when (gameKey) {
-            "trex" -> (gameView as? com.tdpham.games.trex.TRexView)?.resetGame()
-            "snake" -> (gameView as? com.tdpham.games.snake.SnakeGameView)?.resetGame()
-            "minesweeper" -> (gameView as? com.tdpham.games.minesweeper.MinesweeperView)?.resetGame()
-            "sudoku" -> (gameView as? com.tdpham.games.sudoku.SudokuView)?.resetGame()
-            "memory" -> (gameView as? com.tdpham.games.memory.MemoryView)?.resetGame()
-            "slide_puzzle" -> (gameView as? com.tdpham.games.slidepuzzle.SlidePuzzleView)?.resetGame()
-            "tic_tac_toe" -> (gameView as? com.tdpham.games.tictactoe.TicTacToeView)?.resetGame()
-            "hangman" -> (gameView as? com.tdpham.games.hangman.HangmanView)?.resetGame()
-            "solitaire" -> (gameView as? com.tdpham.games.solitaire.SolitaireView)?.resetGame()
-            "4096" -> (gameView as? com.tdpham.games.twentyfortyeight.TwentyFortyEightView)?.resetGame()
-            "tetris" -> (gameView as? com.tdpham.games.tetris.TetrisView)?.resetGame()
-            "mental_math" -> (gameView as? com.tdpham.games.mentalmath.MentalMathView)?.resetGame()
-            "flappy_hero" -> (gameView as? com.tdpham.games.flappy.FlappyHeroView)?.resetGame()
-            "brick_break" -> (gameView as? com.tdpham.games.brickbreak.BrickBreakView)?.resetGame()
-            "lines98" -> (gameView as? com.tdpham.games.lines98.Lines98View)?.resetGame()
-            "word_quest" -> (gameView as? com.tdpham.games.wordquest.WordQuestView)?.resetGame()
-            "road_racer" -> (gameView as? com.tdpham.games.roadracer.RoadRacerView)?.resetGame()
-            "sokoban" -> (gameView as? com.tdpham.games.sokoban.SokobanView)?.resetGame()
-            "battle_tanks" -> (gameView as? com.tdpham.games.tanks.BattleTanksView)?.resetGame()
-            "starfighter", "star_fighter" -> (gameView as? com.tdpham.games.starfighter.StarFighterView)?.resetGame()
-            "dungeon_escape" -> (gameView as? com.tdpham.games.dungeon.DungeonEscapeView)?.resetGame()
-            "froggy_cross" -> (gameView as? com.tdpham.games.froggy.FroggyCrossView)?.resetGame()
-            "simon_says" -> (gameView as? com.tdpham.games.simon.SimonSaysView)?.resetGame()
-            "checkers" -> (gameView as? com.tdpham.games.checkers.CheckersView)?.resetGame()
-            "spinball" -> (gameView as? com.tdpham.games.spinball.SpinballView)?.resetGame()
-            "syobon_action" -> (gameView as? com.tdpham.games.syobon.SyobonView)?.resetGame()
-            "monkey" -> (gameView as? com.tdpham.games.monkey.MonkeyView)?.resetGame()
-            "frenzy" -> (gameView as? com.tdpham.games.frenzy.FrenzyView)?.resetGame()
-            "retrodriver" -> (gameView as? com.tdpham.games.retrodriver.RetroDriverView)?.resetGame()
-            "fruit" -> (gameView as? com.tdpham.games.fruit.FruitView)?.resetGame()
-            "connect_four" -> (gameView as? com.tdpham.games.connectfour.ConnectFourView)?.resetGame()
-            "blackjack" -> (gameView as? com.tdpham.games.blackjack.BlackjackView)?.resetGame()
-            "trivia" -> (gameView as? com.tdpham.games.trivia.TriviaView)?.resetGame()
-        }
+        gameView.resetGame()
     }
 
     override fun onResume() {
@@ -471,8 +435,15 @@ abstract class BaseGameActivity : AppCompatActivity() {
             gameView.resume()
             onComplete()
         }
+        if (gameView.showOptionsDialog(this, callback)) {
+            return true
+        }
+        return showFallbackGameOptions(callback)
+    }
+
+    private fun showFallbackGameOptions(callback: () -> Unit): Boolean {
         when (gameKey) {
-            "trex" -> TRexOptionsDialog.show(this) { (gameView as? com.tdpham.games.trex.TRexView)?.resetGame(); callback() }
+            "trex" -> com.tdpham.games.trex.TRexOptionsDialog.show(this) { (gameView as? com.tdpham.games.trex.TRexView)?.resetGame(); callback() }
             "snake" -> com.tdpham.games.snake.SnakeOptionsDialog.show(this) { (gameView as? com.tdpham.games.snake.SnakeGameView)?.resetGame(); callback() }
             "minesweeper" -> com.tdpham.games.minesweeper.MinesweeperOptionsDialog.show(this) { (gameView as? com.tdpham.games.minesweeper.MinesweeperView)?.resetGame(); callback() }
             "sudoku" -> com.tdpham.games.sudoku.SudokuOptionsDialog.show(this) { (gameView as? com.tdpham.games.sudoku.SudokuView)?.resetGame(); callback() }
@@ -501,10 +472,6 @@ abstract class BaseGameActivity : AppCompatActivity() {
             "monkey" -> com.tdpham.games.monkey.MonkeyOptionsDialog.show(this) { (gameView as? com.tdpham.games.monkey.MonkeyView)?.resetGame(); callback() }
             "frenzy" -> com.tdpham.games.frenzy.FrenzyOptionsDialog.show(this) { (gameView as? com.tdpham.games.frenzy.FrenzyView)?.resetGame(); callback() }
             "retrodriver" -> com.tdpham.games.retrodriver.RetroDriverOptionsDialog.show(this) { (gameView as? com.tdpham.games.retrodriver.RetroDriverView)?.resetGame(); callback() }
-            "fruit" -> com.tdpham.games.fruit.FruitOptionsDialog.show(this) { (gameView as? com.tdpham.games.fruit.FruitView)?.resetGame(); callback() }
-            "connect_four" -> com.tdpham.games.connectfour.ConnectFourOptionsDialog.show(this) { (gameView as? com.tdpham.games.connectfour.ConnectFourView)?.resetGame(); callback() }
-            "blackjack" -> com.tdpham.games.blackjack.BlackjackOptionsDialog.show(this) { (gameView as? com.tdpham.games.blackjack.BlackjackView)?.resetGame(); callback() }
-            "trivia" -> com.tdpham.games.trivia.TriviaOptionsDialog.show(this) { (gameView as? com.tdpham.games.trivia.TriviaView)?.resetGame(); callback() }
             else -> {
                 callback()
                 return false

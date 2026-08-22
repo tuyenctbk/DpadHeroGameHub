@@ -46,6 +46,7 @@ class RoadRacerView @JvmOverloads constructor(
     private var nextObstacleTimer = 0f
     
     private var roadOffset = 0f
+    private val dashIntervals = floatArrayOf(40f, 40f)
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
@@ -381,7 +382,7 @@ class RoadRacerView @JvmOverloads constructor(
         
         // Lane markers
         paint.color = theme.dashColor
-        paint.pathEffect = DashPathEffect(floatArrayOf(40f, 40f), roadOffset)
+        paint.pathEffect = DashPathEffect(dashIntervals, roadOffset)
         paint.strokeWidth = 8f
         paint.style = Paint.Style.STROKE
         canvas.drawLine(laneWidth, 0f, laneWidth, height.toFloat(), paint)

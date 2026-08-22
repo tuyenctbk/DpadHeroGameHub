@@ -97,6 +97,7 @@ class FroggyCrossView @JvmOverloads constructor(
     private val entityRect = RectF()
     private val tempRect = RectF()
     private val tempPath = Path()
+    private val roadDashEffect = DashPathEffect(floatArrayOf(30f, 30f), 0f)
 
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
     private val gameLoop = object : Runnable {
@@ -449,7 +450,7 @@ class FroggyCrossView @JvmOverloads constructor(
                     canvas.drawRect(0f, r * cellH, width.toFloat(), (r + 1) * cellH, paint)
                     paint.color = Color.parseColor("#FFD54F")
                     paint.strokeWidth = 3f
-                    paint.pathEffect = DashPathEffect(floatArrayOf(30f, 30f), 0f)
+                    paint.pathEffect = roadDashEffect
                     canvas.drawLine(0f, r * cellH + cellH / 2, width.toFloat(), r * cellH + cellH / 2, paint)
                     paint.pathEffect = null
                 }

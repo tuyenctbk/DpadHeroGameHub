@@ -1,5 +1,7 @@
 package com.tdpham.games.common
 
+import android.content.Context
+
 interface GameView {
     var gameKey: String
     var onGameOver: ((Int) -> Unit)?
@@ -8,4 +10,5 @@ interface GameView {
     fun resume()
     fun resetGame()
     fun toggleSound(): Boolean
+    fun showOptionsDialog(context: Context, onComplete: () -> Unit): Boolean = false
 }

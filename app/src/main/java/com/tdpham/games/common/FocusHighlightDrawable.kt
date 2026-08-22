@@ -156,6 +156,15 @@ class FocusHighlightDrawable(
                 onFocusChanged?.invoke(hasFocus)
             }
 
+            view.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+                override fun onViewAttachedToWindow(v: View) {}
+                override fun onViewDetachedFromWindow(v: View) {
+                    (v.getTag(com.tdpham.games.R.id.tag_pulse_anim) as? ValueAnimator)?.cancel()
+                    v.setTag(com.tdpham.games.R.id.tag_pulse_anim, null)
+                    v.animate().cancel()
+                }
+            })
+
             view.setOnHoverListener { v, event ->
                 if (event.action == MotionEvent.ACTION_HOVER_ENTER) {
                     v.requestFocus()

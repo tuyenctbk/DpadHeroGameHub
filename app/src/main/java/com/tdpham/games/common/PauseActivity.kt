@@ -103,6 +103,24 @@ class PauseActivity : AppCompatActivity() {
             finish()
         }
 
+        btnResume.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                btnExit.requestFocus()
+                true
+            } else {
+                false
+            }
+        }
+
+        btnExit.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                btnResume.requestFocus()
+                true
+            } else {
+                false
+            }
+        }
+
         btnResume.requestFocus()
     }
 

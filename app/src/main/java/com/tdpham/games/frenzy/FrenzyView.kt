@@ -120,6 +120,7 @@ class FrenzyView @JvmOverloads constructor(
     private val drawRectF = RectF()
     private val drawRectF2 = RectF()
     private val drawRectF3 = RectF()
+    private val warningDashEffect = android.graphics.DashPathEffect(floatArrayOf(15f, 15f), 0f)
 
     private val celebrationManager = CelebrationManager()
 
@@ -1861,7 +1862,7 @@ class FrenzyView @JvmOverloads constructor(
             paint.color = if (flash) Color.parseColor("#80FF1744") else Color.parseColor("#15FF1744")
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = 3f
-            paint.pathEffect = android.graphics.DashPathEffect(floatArrayOf(15f, 15f), 0f)
+            paint.pathEffect = warningDashEffect
             canvas.drawLine(w.x, 0f, w.x, height.toFloat(), paint)
             paint.pathEffect = null
 

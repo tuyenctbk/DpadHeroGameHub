@@ -338,33 +338,6 @@
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             tools:ignore="LockedOrientationActivity" />
 
-        <activity
-            android:name="com.tdpham.games.fruit.FruitActivity"
-            android:exported="false"
-            android:screenOrientation="landscape"
-            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
-            tools:ignore="LockedOrientationActivity" />
-
-        <activity
-            android:name="com.tdpham.games.connectfour.ConnectFourActivity"
-            android:exported="false"
-            android:screenOrientation="landscape"
-            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
-            tools:ignore="LockedOrientationActivity" />
-
-        <activity
-            android:name="com.tdpham.games.blackjack.BlackjackActivity"
-            android:exported="false"
-            android:screenOrientation="landscape"
-            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
-            tools:ignore="LockedOrientationActivity" />
-
-        <activity
-            android:name="com.tdpham.games.trivia.TriviaActivity"
-            android:exported="false"
-            android:screenOrientation="landscape"
-            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
-            tools:ignore="LockedOrientationActivity" />
 
         <activity
             android:name="com.tdpham.games.common.PauseActivity"

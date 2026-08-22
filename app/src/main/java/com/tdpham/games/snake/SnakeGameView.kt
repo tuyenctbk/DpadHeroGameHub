@@ -117,6 +117,7 @@ class SnakeGameView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
+        resetGame()
     }
 
     override fun onAttachedToWindow() {
@@ -140,6 +141,9 @@ class SnakeGameView @JvmOverloads constructor(
 
     override fun startGame() {
         requestFocus()
+        if (snake.isEmpty()) {
+            resetGame()
+        }
         if (!isGameOver && isPaused) {
             resume()
         }
@@ -393,11 +397,17 @@ class SnakeGameView @JvmOverloads constructor(
         invalidate()
     }
 
-    private fun showOptions() {
+    override fun showOptionsDialog(context: Context, onComplete: () -> Unit): Boolean {
         pause()
         SnakeOptionsDialog.show(context) {
             resetGame()
+            onComplete()
         }
+        return true
+    }
+
+    private fun showOptions() {
+        showOptionsDialog(context) {}
     }
 
     override fun performClick(): Boolean {

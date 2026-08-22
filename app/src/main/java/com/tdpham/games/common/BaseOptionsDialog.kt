@@ -49,6 +49,16 @@ class BaseOptionsDialog(context: Context) : Dialog(context) {
         setOnDismissListener { onDismissAction?.invoke() }
     }
 
+    override fun show() {
+        super.show()
+        val firstChild = container.getChildAt(0)
+        if (firstChild != null) {
+            firstChild.requestFocus()
+        } else {
+            btnDone.requestFocus()
+        }
+    }
+
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (event.action == KeyEvent.ACTION_DOWN) {
             IdleAdManager.notifyInteraction()
