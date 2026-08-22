@@ -174,27 +174,6 @@ class MonkeyView @JvmOverloads constructor(
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
-    override fun canRevive(): Boolean = true
-
-    override fun reviveGame(): Boolean {
-        if (gameOver) {
-            gameOver = false
-            gamePaused = false
-            lives = 3
-            isFalling = false
-            monkeyGrabbed = false
-            playerY = height * 0.72f
-            playerDizzyUntil = 0L
-            obstacles.clear()
-            harpyEagle = null
-            blackJaguar = null
-            celebrationManager.clear()
-            resume()
-            return true
-        }
-        return false
-    }
-
     override fun resetGame() {
         score = 0
         lives = 6

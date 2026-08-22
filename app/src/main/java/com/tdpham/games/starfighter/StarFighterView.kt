@@ -233,22 +233,6 @@ class StarFighterView @JvmOverloads constructor(
         }
     }
 
-    override fun canRevive(): Boolean = true
-
-    override fun reviveGame(): Boolean {
-        if (gameOver) {
-            gameOver = false
-            lives = 2
-            invulnerableUntil = System.currentTimeMillis() + 4000L
-            bullets.clear()
-            enemies.removeAll { it.y > height * 0.5f }
-            celebrationManager.clear()
-            startGame()
-            return true
-        }
-        return false
-    }
-
     override fun performClick(): Boolean {
         super.performClick()
         return true

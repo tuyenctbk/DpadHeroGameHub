@@ -210,28 +210,19 @@ class RetroDriverView @JvmOverloads constructor(
     // Data Structures
     data class RoadSegment(
         val index: Int,
-        val p1: Point3D,
-        val p2: Point3D,
         var curve: Float,
+        var hill: Float,
         var color: RoadColors,
         val decorationType: Int = 0, // 0: None, 1: Palm Tree, 2: Bush/Cactus, 3: Warning Sign, 4: Cyber Streetlamp
         val decorationSide: Float = 0f
-    )
-
-    data class Point3D(var x: Float, var y: Float, var z: Float) {
-        var screenX = 0f
-        var screenY = 0f
-        var screenW = 0f
-
-        fun project(cx: Float, cy: Float, cz: Float, cameraDepth: Float, width: Int, height: Int) {
-            val zDiff = z - cz
-            val scale = cameraDepth / (if (zDiff <= 0) 1f else zDiff)
-            screenX = (width / 2f) + (x - cx) * scale * (width / 2f)
-            screenY = (height / 2f) - (y - cy) * scale * (height / 2f)
-            screenW = scale * 1000f * (width / 2f)
-        }
+    ) {
+        var screenX: Float = 0f
+        var screenY: Float = 0f
+        var screenW: Float = 0f
+        var scale: Float = 0f
     }
 
+    data class Point3D(var x: Float, var y: Float, var z: Float)
     data class RoadColors(val grass: Int, val rumble: Int, val road: Int)
     data class TrafficCar(var offset: Float, var z: Float, val speed: Float, val color: Int, var targetOffset: Float = offset, var lastLaneChangeTime: Long = 0L, val type: Int = Random.nextInt(0, 2))
     data class BoostPad(var offset: Float, var z: Float)
@@ -281,26 +272,29 @@ class RetroDriverView @JvmOverloads constructor(
         val colors2 = RoadColors(theme.grass2, theme.rumble2, theme.road2)
 
         val curvePoints = FloatArray(numSegments)
+        val hillPoints = FloatArray(numSegments)
         var segIdx = 0
         for (chunk in currentMap.chunks) {
             for (j in 0 until chunk.length) {
                 if (segIdx + j < numSegments) {
                     curvePoints[segIdx + j] = chunk.curve
+                    hillPoints[segIdx + j] = chunk.hill
                 }
             }
             segIdx += chunk.length
         }
         while (segIdx < numSegments) {
             curvePoints[segIdx] = 0f
+            hillPoints[segIdx] = 0f
             segIdx++
         }
 
         val checkColors1 = RoadColors(theme.grass1, Color.BLACK, Color.WHITE)
         val checkColors2 = RoadColors(theme.grass2, Color.WHITE, Color.BLACK)
 
-        var accumCurve = 0f
         for (i in 0 until numSegments) {
             val curveVal = curvePoints[i]
+            val hillVal = hillPoints[i]
             val isCheckered = i in 235..240
             val color = if (isCheckered) {
                 if (i % 2 == 0) checkColors1 else checkColors2
@@ -308,16 +302,12 @@ class RetroDriverView @JvmOverloads constructor(
                 if ((i / 3) % 2 == 0) colors1 else colors2
             }
 
-            val p1 = Point3D(accumCurve, 0f, i * segmentLength)
-            accumCurve += curveVal
-            val p2 = Point3D(accumCurve, 0f, (i + 1) * segmentLength)
-
             var decType = 0
             var decSide = 0f
-            if (i % 4 == 0 && !isCheckered) {
+            if (i % 3 == 0 && !isCheckered) {
                 decType = when {
-                    curveVal != 0f && i % 8 == 0 -> 3 // Warning Sign
-                    selectedThemeIndex == 2 && i % 6 == 0 -> 4 // Cyber Streetlamp
+                    abs(curveVal) > 5f && i % 6 == 0 -> 3 // Warning Chevron Sign on sharp curves
+                    selectedThemeIndex == 2 && i % 4 == 0 -> 4 // Cyber Streetlamp
                     selectedThemeIndex == 3 -> 2 // Snowy Pine
                     selectedThemeIndex == 1 -> 2 // Desert Cactus
                     else -> if (Random.nextBoolean()) 1 else 2 // Palm tree / bush
@@ -325,7 +315,7 @@ class RetroDriverView @JvmOverloads constructor(
                 decSide = if (curveVal > 0) -1.8f else 1.8f
             }
 
-            segments.add(RoadSegment(i, p1, p2, curveVal, color, decType, decSide))
+            segments.add(RoadSegment(i, curveVal, hillVal, color, decType, decSide))
         }
 
         // Spawn Handcrafted Map Obstacles
@@ -339,12 +329,12 @@ class RetroDriverView @JvmOverloads constructor(
         }
 
         // Procedurally spawn collectible arcade gold coins in clusters along curves and apexes
-        for (i in 20 until 230 step 18) {
+        for (i in 20 until 230 step 16) {
             val curveAtI = curvePoints[i]
             val coinOffset = when {
                 curveAtI > 3f -> 0.45f
                 curveAtI < -3f -> -0.45f
-                else -> if (i % 36 == 0) -0.3f else 0.3f
+                else -> if (i % 32 == 0) -0.3f else 0.3f
             }
             repeat(3) { cIdx ->
                 trackCoins.add(TrackCoin(coinOffset, (i + cIdx * 1.5f) * segmentLength))
@@ -390,21 +380,6 @@ class RetroDriverView @JvmOverloads constructor(
     }
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
-
-    override fun canRevive(): Boolean = !gameWon && (currentLap > 1 || position > trackLengthSegments * segmentLength * 0.3f)
-
-    override fun reviveGame(): Boolean {
-        invincibleUntil = System.currentTimeMillis() + 3500L
-        turboUntil = System.currentTimeMillis() + 3000L
-        nitroCharge = 1.0f
-        speed = 170f
-        gamePaused = false
-        gameOver = false
-        floatingPopups.add(FloatingPopup("REVIVED! TURBO READY!", width / 2f, height * 0.45f, Color.parseColor("#00E5FF")))
-        SoundManager.playPowerUp()
-        HapticManager.vibrateSuccess(context)
-        return true
-    }
 
     override fun resetGame() {
         score = 0
@@ -489,23 +464,24 @@ class RetroDriverView @JvmOverloads constructor(
     private fun updatePhysics(dt: Float) {
         val now = System.currentTimeMillis()
 
-        // 1. Starting Countdown
+        // 1. Fast, Punchy Starting Countdown (650ms intervals with bounce)
         if (countdown >= 0) {
             val elapsed = now - countdownStartTime
-            if (elapsed > 1000L) {
+            if (elapsed > 650L) {
                 countdown--
                 countdownStartTime = now
-                if (countdown >= 0) {
+                if (countdown > 0) {
                     SoundManager.playClick()
                     HapticManager.vibrateClick(context)
-                }
-                if (countdown == 0) {
+                } else if (countdown == 0) {
                     SoundManager.playSuccess()
+                    HapticManager.vibrateSuccess(context)
                     lapStartTime = System.currentTimeMillis()
                 }
             }
+            // Engine rev idling vibration during countdown
+            steerAngle = (sin(now / 40.0).toFloat() * 1.5f)
             speed = 0f
-            steerAngle = 0f
             return
         }
 
@@ -567,29 +543,29 @@ class RetroDriverView @JvmOverloads constructor(
 
         // Off-road penalty
         val isOffRoad = abs(playerX) > 1.05f
-        val effectiveMax = if (isOffRoad) 40f else currentMaxSpeed
+        val effectiveMax = if (isOffRoad) 45f else currentMaxSpeed
 
         // Continuous Gas / Brake handling
         val isAccelerating = (keyUpPressed || analogStickY < -0.3f) && !inLostControl
         val isBraking = (keyDownPressed || analogStickY > 0.3f) && !inLostControl
 
         if (isAccelerating) {
-            val accelPower = spec.accelRate * (if (inTurbo) 1.5f else 1.0f)
-            speed = (speed + accelPower * dt * 4f).coerceAtMost(effectiveMax)
+            val accelPower = spec.accelRate * (if (inTurbo) 1.6f else 1.0f)
+            speed = (speed + accelPower * dt * 4.5f).coerceAtMost(effectiveMax)
         } else if (isBraking) {
-            speed = (speed - 45f * dt * 4f).coerceAtLeast(0f)
+            speed = (speed - 50f * dt * 4.5f).coerceAtLeast(0f)
         } else {
             // Natural drag / coasting deceleration
             if (speed > 35f && !inTurbo) {
-                speed -= 8f * dt * 4f
+                speed -= 8f * dt * 4.5f
             } else if (speed < 30f && !inLostControl && !isOffRoad) {
-                speed += 6f * dt * 4f
+                speed += 6f * dt * 4.5f
             }
         }
 
         // Rapid deceleration if speed exceeds off-road max
         if (speed > effectiveMax) {
-            speed -= 25f * dt * 4f
+            speed -= 28f * dt * 4.5f
         }
 
         // 4. Steering & Leaning Physics
@@ -601,38 +577,54 @@ class RetroDriverView @JvmOverloads constructor(
         }
 
         if (inLostControl) {
-            steerAngle = (sin(now / 35.0).toFloat() * 20f)
-            playerX += (sin(now / 45.0).toFloat() * 0.025f)
+            steerAngle = (sin(now / 35.0).toFloat() * 22f)
+            playerX += (sin(now / 45.0).toFloat() * 0.035f)
             playerX = playerX.coerceIn(-2.2f, 2.2f)
         } else {
-            val targetSteerAngle = steerInput * 22f
-            steerAngle += (targetSteerAngle - steerAngle) * (12f * dt)
+            val targetSteerAngle = steerInput * 24f
+            steerAngle += (targetSteerAngle - steerAngle) * (14f * dt)
 
-            val turnStrength = spec.handlingRate * (speed / baseMaxSpeed).coerceIn(0.2f, 1.2f)
+            val turnStrength = spec.handlingRate * (speed / baseMaxSpeed).coerceIn(0.25f, 1.3f)
             playerVx = steerInput * turnStrength * 60f * dt
             playerX = (playerX + playerVx).coerceIn(-2.2f, 2.2f)
 
-            // Spawn tire skid marks when turning hard at high velocity
-            if (abs(steerAngle) > 14f && speed > 110f && !isOffRoad) {
+            // Spawn tire skid marks and knee sparks when turning hard at high velocity
+            if (abs(steerAngle) > 12f && speed > 90f && !isOffRoad) {
                 val carX = width / 2f
                 val carY = height * 0.84f
                 skidMarks.add(SkidMark(carX - 25f, carY, 12f, 160))
                 skidMarks.add(SkidMark(carX + 25f, carY, 12f, 160))
+
+                if (Random.nextFloat() < 0.35f) {
+                    val kneeSide = if (steerAngle > 0) 1f else -1f
+                    sparkParticles.add(
+                        SparkParticle(
+                            x = carX + kneeSide * 35f,
+                            y = carY + 8f,
+                            vx = -kneeSide * (Random.nextFloat() * 4f + 2f),
+                            vy = -(Random.nextFloat() * 3f + 1f),
+                            size = Random.nextFloat() * 4f + 2f,
+                            color = Color.parseColor("#FFD54F"),
+                            alpha = 240
+                        )
+                    )
+                }
             }
         }
 
-        // 5. Centrifugal Curve Force
+        // 5. Centrifugal Curve Force (Pushes rider towards outside of bend at high speed)
         val currentSegIndex = (position / segmentLength).toInt()
         if (currentSegIndex in 0 until segments.size) {
             val currentSeg = segments[currentSegIndex]
-            playerX -= currentSeg.curve * (speed / baseMaxSpeed) * 0.0032f * (60f * dt)
+            val curveCentrifugal = (currentSeg.curve / 10f) * (speed / baseMaxSpeed) * 0.035f * (60f * dt)
+            playerX -= curveCentrifugal
             playerX = playerX.coerceIn(-2.2f, 2.2f)
-            cameraCurvatureOffset += (currentSeg.curve * (speed / baseMaxSpeed) * 0.5f - cameraCurvatureOffset) * 0.1f
+            cameraCurvatureOffset += ((currentSeg.curve / 10f) * (speed / baseMaxSpeed) * 1.5f - cameraCurvatureOffset) * 0.15f
         }
 
-        // Advance Camera Position along Track
-        position += speed * (60f * dt * 0.016f * 1.0f)
-        distance += speed * (60f * dt) / 50f
+        // Advance Camera Position along Track (Exhilarating 60 FPS velocity)
+        position += speed * (60f * dt * 0.16f)
+        distance += speed * (60f * dt * 0.05f)
         score = distance.toInt()
         if (score > best) {
             ScoreManager.updateHighScore(context, gameKey, score)
@@ -745,7 +737,7 @@ class RetroDriverView @JvmOverloads constructor(
         val trafficIterator = traffic.iterator()
         while (trafficIterator.hasNext()) {
             val car = trafficIterator.next()
-            car.z += car.speed * (60f * dt * 0.0075f)
+            car.z += car.speed * (60f * dt * 0.14f)
 
             // AI Lane Change
             if (car.offset < car.targetOffset) {
@@ -895,70 +887,61 @@ class RetroDriverView @JvmOverloads constructor(
         // 1. Synthwave Horizon & Layered Parallax Background
         drawSynthwaveParallaxHorizon(canvas, width, height)
 
-        // 2. Headlight Glow & Road Setup
+        // 2. Project Visible Segments with Dynamic Cumulative Curves & Topography
         val startSegIndex = (position / segmentLength).toInt()
         val baseSeg = segments[startSegIndex % segments.size]
         val segmentPercent = (position % segmentLength) / segmentLength
-        val baseRoadX = baseSeg.p1.x + (baseSeg.p2.x - baseSeg.p1.x) * segmentPercent
-        val cameraX = baseRoadX + playerX * roadWidth
+        val cameraX = playerX * roadWidth
+
+        var dx = -(baseSeg.curve * segmentPercent)
+        var dy = -(baseSeg.hill * segmentPercent)
+        var accumulatedX = 0f
+        var accumulatedY = 0f
+
+        for (n in 0 until drawDistance) {
+            val seg = segments[(startSegIndex + n) % segments.size]
+            val zDiff = (n * segmentLength - (position % segmentLength)).coerceAtLeast(1f)
+            val scale = cameraDepth / zDiff
+
+            accumulatedX += dx
+            accumulatedY += dy
+            dx += seg.curve * 1.8f
+            dy += seg.hill * 0.8f
+
+            seg.scale = scale
+            seg.screenX = (width / 2f) + (accumulatedX - cameraX) * scale * (width / 2f)
+            seg.screenY = (height / 2f) - (cameraHeight + accumulatedY) * scale * (height / 2f)
+            seg.screenW = scale * roadWidth * (width / 2f)
+        }
 
         // 3. Draw Road Segments (Farthest to Closest)
-        for (n in drawDistance - 1 downTo 0) {
-            val seg = segments[(startSegIndex + n) % segments.size]
-            val cz = position
+        for (n in drawDistance - 1 downTo 1) {
+            val seg1 = segments[(startSegIndex + n - 1) % segments.size]
+            val seg2 = segments[(startSegIndex + n) % segments.size]
+            if (seg2.screenY >= seg1.screenY) continue
 
-            var segZ1 = seg.p1.z
-            var segZ2 = seg.p2.z
-            val roadLength = segments.size * segmentLength
-
-            val loopIndex = (cz / roadLength).toInt()
-            segZ1 += loopIndex * roadLength
-            segZ2 += loopIndex * roadLength
-
-            if (segZ1 < cz - roadLength * 0.5f) {
-                segZ1 += roadLength
-                segZ2 += roadLength
-            } else if (segZ1 > cz + roadLength * 0.5f) {
-                segZ1 -= roadLength
-                segZ2 -= roadLength
-            }
-
-            if (segZ2 <= cz) continue
-
-            val zClip = cz + 1f
-            val p1Z = if (segZ1 < zClip) zClip else segZ1
-            val p2Z = segZ2
-
-            val p1Proj = Point3D(seg.p1.x, 0f, p1Z)
-            val p2Proj = Point3D(seg.p2.x, 0f, p2Z)
-
-            p1Proj.project(cameraX, cameraHeight, cz, cameraDepth, width, height)
-            p2Proj.project(cameraX, cameraHeight, cz, cameraDepth, width, height)
-
-            drawSegment(canvas, width, p1Proj, p2Proj, seg.color)
+            drawSegment(canvas, width, seg1.screenX, seg1.screenY, seg1.screenW, seg2.screenX, seg2.screenY, seg2.screenW, seg2.color)
 
             // Dashed Centerline
-            if (seg.index % 2 == 0) {
+            if (seg2.index % 2 == 0) {
                 paint.color = Color.WHITE
                 paint.style = Paint.Style.FILL
                 val stripePath = Path()
-                val w1 = p1Proj.screenW * 0.04f
-                val w2 = p2Proj.screenW * 0.04f
-                stripePath.moveTo(p1Proj.screenX - w1 / 2, p1Proj.screenY)
-                stripePath.lineTo(p2Proj.screenX - w2 / 2, p2Proj.screenY)
-                stripePath.lineTo(p2Proj.screenX + w2 / 2, p2Proj.screenY)
-                stripePath.lineTo(p1Proj.screenX + w1 / 2, p1Proj.screenY)
+                val w1 = seg1.screenW * 0.04f
+                val w2 = seg2.screenW * 0.04f
+                stripePath.moveTo(seg1.screenX - w1 / 2, seg1.screenY)
+                stripePath.lineTo(seg2.screenX - w2 / 2, seg2.screenY)
+                stripePath.lineTo(seg2.screenX + w2 / 2, seg2.screenY)
+                stripePath.lineTo(seg1.screenX + w1 / 2, seg1.screenY)
                 stripePath.close()
                 canvas.drawPath(stripePath, paint)
             }
 
             // Roadside Assets
-            if (seg.decorationType > 0) {
-                val decWorldX = seg.p1.x + seg.decorationSide * roadWidth
-                val decProj = Point3D(decWorldX, 0f, segZ1)
-                decProj.project(cameraX, cameraHeight, cz, cameraDepth, width, height)
-                val decSize = decProj.screenW * 0.7f
-                drawDecoration(canvas, decProj.screenX, decProj.screenY, decSize, seg.decorationType)
+            if (seg2.decorationType > 0) {
+                val decX = seg2.screenX + seg2.decorationSide * seg2.screenW
+                val decSize = seg2.screenW * 0.75f
+                drawDecoration(canvas, decX, seg2.screenY, decSize, seg2.decorationType)
             }
         }
 
@@ -970,10 +953,10 @@ class RetroDriverView @JvmOverloads constructor(
         }
 
         // 5. Draw Boost Pads, Oil Slicks, Barriers & Gold Coins
-        drawTrackObjects(canvas, cameraX, cameraDepth, width, height)
+        drawTrackObjects(canvas, width, height)
 
         // 6. Draw Traffic & Competitor Vehicles
-        drawCompetitorVehicles(canvas, cameraX, cameraDepth, width, height)
+        drawCompetitorVehicles(canvas, width, height)
 
         // 7. Draw Headlight Projection Beam (On Cyber Night or Dark themes)
         if (selectedThemeIndex == 2 || selectedThemeIndex == 0) {
@@ -1175,30 +1158,38 @@ class RetroDriverView @JvmOverloads constructor(
     }
 
     // --- ROAD & DECORATION RENDERING ---
-    private fun drawSegment(canvas: Canvas, width: Int, p1: Point3D, p2: Point3D, color: RoadColors) {
+    private fun drawSegment(
+        canvas: Canvas,
+        width: Int,
+        x1: Float,
+        y1: Float,
+        w1: Float,
+        x2: Float,
+        y2: Float,
+        w2: Float,
+        color: RoadColors
+    ) {
         paint.color = color.grass
         paint.style = Paint.Style.FILL
-        canvas.drawRect(0f, p2.screenY, width.toFloat(), p1.screenY, paint)
+        canvas.drawRect(0f, y2, width.toFloat(), y1, paint)
 
         paint.color = color.rumble
-        val r1w = p1.screenW * 1.12f
-        val r2w = p2.screenW * 1.12f
+        val r1w = w1 * 1.14f
+        val r2w = w2 * 1.14f
         drawPath.reset()
-        drawPath.moveTo(p1.screenX - r1w, p1.screenY)
-        drawPath.lineTo(p2.screenX - r2w, p2.screenY)
-        drawPath.lineTo(p2.screenX + r2w, p2.screenY)
-        drawPath.lineTo(p1.screenX + r1w, p1.screenY)
+        drawPath.moveTo(x1 - r1w, y1)
+        drawPath.lineTo(x2 - r2w, y2)
+        drawPath.lineTo(x2 + r2w, y2)
+        drawPath.lineTo(x1 + r1w, y1)
         drawPath.close()
         canvas.drawPath(drawPath, paint)
 
         paint.color = color.road
-        val w1 = p1.screenW
-        val w2 = p2.screenW
         drawPath.reset()
-        drawPath.moveTo(p1.screenX - w1, p1.screenY)
-        drawPath.lineTo(p2.screenX - w2, p2.screenY)
-        drawPath.lineTo(p2.screenX + w2, p2.screenY)
-        drawPath.lineTo(p1.screenX + w1, p1.screenY)
+        drawPath.moveTo(x1 - w1, y1)
+        drawPath.lineTo(x2 - w2, y2)
+        drawPath.lineTo(x2 + w2, y2)
+        drawPath.lineTo(x1 + w1, y1)
         drawPath.close()
         canvas.drawPath(drawPath, paint)
     }
@@ -1249,36 +1240,35 @@ class RetroDriverView @JvmOverloads constructor(
         }
     }
 
-    private fun drawTrackObjects(canvas: Canvas, cameraX: Float, cameraDepth: Float, width: Int, height: Int) {
+    private fun drawTrackObjects(canvas: Canvas, width: Int, height: Int) {
         val roadLength = segments.size * segmentLength
+        val startSegIndex = (position / segmentLength).toInt()
 
         // Boost Pads
         for (pad in boostPads) {
             var padZ = pad.z
-            if (padZ < position) padZ += roadLength
-            if (padZ > position && padZ < position + drawDistance * segmentLength) {
-                val segIndex = (padZ / segmentLength).toInt()
-                val seg = segments[segIndex % segments.size]
-                val roadX = seg.p1.x + (seg.p2.x - seg.p1.x) * ((padZ % segmentLength) / segmentLength)
-                tempPoint3D.x = roadX + pad.offset * roadWidth
-                tempPoint3D.y = 0f
-                tempPoint3D.z = padZ
-                tempPoint3D.project(cameraX, cameraHeight, position, cameraDepth, width, height)
-                val padW = tempPoint3D.screenW * 0.35f
+            while (padZ < position) padZ += roadLength
+            val relZ = padZ - position
+            if (relZ > 1f && relZ < (drawDistance - 1) * segmentLength) {
+                val segN = (relZ / segmentLength).toInt().coerceIn(0, drawDistance - 2)
+                val seg = segments[(startSegIndex + segN) % segments.size]
+                val padX = seg.screenX + pad.offset * seg.screenW
+                val padY = seg.screenY
+                val padW = seg.screenW * 0.35f
                 val padH = padW * 0.4f
 
                 paint.color = Color.parseColor("#00E5FF")
                 paint.alpha = 190
-                drawRectF.set(tempPoint3D.screenX - padW / 2, tempPoint3D.screenY - padH / 2, tempPoint3D.screenX + padW / 2, tempPoint3D.screenY + padH / 2)
+                drawRectF.set(padX - padW / 2, padY - padH / 2, padX + padW / 2, padY + padH / 2)
                 canvas.drawRoundRect(drawRectF, 6f, 6f, paint)
 
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = (padW * 0.12f).coerceAtLeast(3f)
                 paint.color = Color.WHITE
                 drawPath.reset()
-                drawPath.moveTo(tempPoint3D.screenX - padW * 0.35f, tempPoint3D.screenY + padH * 0.25f)
-                drawPath.lineTo(tempPoint3D.screenX, tempPoint3D.screenY - padH * 0.25f)
-                drawPath.lineTo(tempPoint3D.screenX + padW * 0.35f, tempPoint3D.screenY + padH * 0.25f)
+                drawPath.moveTo(padX - padW * 0.35f, padY + padH * 0.25f)
+                drawPath.lineTo(padX, padY - padH * 0.25f)
+                drawPath.lineTo(padX + padW * 0.35f, padY + padH * 0.25f)
                 canvas.drawPath(drawPath, paint)
                 paint.style = Paint.Style.FILL
             }
@@ -1287,20 +1277,18 @@ class RetroDriverView @JvmOverloads constructor(
         // Oil Slicks
         for (oil in oilSlicks) {
             var oilZ = oil.z
-            if (oilZ < position) oilZ += roadLength
-            if (oilZ > position && oilZ < position + drawDistance * segmentLength) {
-                val segIndex = (oilZ / segmentLength).toInt()
-                val seg = segments[segIndex % segments.size]
-                val roadX = seg.p1.x + (seg.p2.x - seg.p1.x) * ((oilZ % segmentLength) / segmentLength)
-                tempPoint3D.x = roadX + oil.offset * roadWidth
-                tempPoint3D.y = 0f
-                tempPoint3D.z = oilZ
-                tempPoint3D.project(cameraX, cameraHeight, position, cameraDepth, width, height)
-                val oilW = tempPoint3D.screenW * 0.32f
+            while (oilZ < position) oilZ += roadLength
+            val relZ = oilZ - position
+            if (relZ > 1f && relZ < (drawDistance - 1) * segmentLength) {
+                val segN = (relZ / segmentLength).toInt().coerceIn(0, drawDistance - 2)
+                val seg = segments[(startSegIndex + segN) % segments.size]
+                val oilX = seg.screenX + oil.offset * seg.screenW
+                val oilY = seg.screenY
+                val oilW = seg.screenW * 0.32f
                 val oilH = oilW * 0.35f
                 paint.color = Color.parseColor("#212121")
                 paint.alpha = 210
-                drawRectF.set(tempPoint3D.screenX - oilW / 2, tempPoint3D.screenY - oilH / 2, tempPoint3D.screenX + oilW / 2, tempPoint3D.screenY + oilH / 2)
+                drawRectF.set(oilX - oilW / 2, oilY - oilH / 2, oilX + oilW / 2, oilY + oilH / 2)
                 canvas.drawOval(drawRectF, paint)
             }
         }
@@ -1308,23 +1296,21 @@ class RetroDriverView @JvmOverloads constructor(
         // Barriers
         for (bar in barriers) {
             var barZ = bar.z
-            if (barZ < position) barZ += roadLength
-            if (barZ > position && barZ < position + drawDistance * segmentLength) {
-                val segIndex = (barZ / segmentLength).toInt()
-                val seg = segments[segIndex % segments.size]
-                val roadX = seg.p1.x + (seg.p2.x - seg.p1.x) * ((barZ % segmentLength) / segmentLength)
-                tempPoint3D.x = roadX + bar.offset * roadWidth
-                tempPoint3D.y = 0f
-                tempPoint3D.z = barZ
-                tempPoint3D.project(cameraX, cameraHeight, position, cameraDepth, width, height)
-                val barW = tempPoint3D.screenW * 0.28f
+            while (barZ < position) barZ += roadLength
+            val relZ = barZ - position
+            if (relZ > 1f && relZ < (drawDistance - 1) * segmentLength) {
+                val segN = (relZ / segmentLength).toInt().coerceIn(0, drawDistance - 2)
+                val seg = segments[(startSegIndex + segN) % segments.size]
+                val barX = seg.screenX + bar.offset * seg.screenW
+                val barY = seg.screenY
+                val barW = seg.screenW * 0.28f
                 val barH = barW * 0.6f
                 paint.color = Color.parseColor("#FFD600")
-                drawRectF.set(tempPoint3D.screenX - barW / 2, tempPoint3D.screenY - barH, tempPoint3D.screenX + barW / 2, tempPoint3D.screenY)
+                drawRectF.set(barX - barW / 2, barY - barH, barX + barW / 2, barY)
                 canvas.drawRoundRect(drawRectF, 4f, 4f, paint)
                 paint.color = Color.BLACK
-                canvas.drawRect(tempPoint3D.screenX - barW * 0.3f, tempPoint3D.screenY - barH, tempPoint3D.screenX - barW * 0.1f, tempPoint3D.screenY, paint)
-                canvas.drawRect(tempPoint3D.screenX + barW * 0.1f, tempPoint3D.screenY - barH, tempPoint3D.screenX + barW * 0.3f, tempPoint3D.screenY, paint)
+                canvas.drawRect(barX - barW * 0.3f, barY - barH, barX - barW * 0.1f, barY, paint)
+                canvas.drawRect(barX + barW * 0.1f, barY - barH, barX + barW * 0.3f, barY, paint)
             }
         }
 
@@ -1332,22 +1318,19 @@ class RetroDriverView @JvmOverloads constructor(
         for (coin in trackCoins) {
             if (!coin.collected) {
                 var coinZ = coin.z
-                if (coinZ < position) coinZ += roadLength
-                if (coinZ > position && coinZ < position + drawDistance * segmentLength) {
-                    val segIndex = (coinZ / segmentLength).toInt()
-                    val seg = segments[segIndex % segments.size]
-                    val roadX = seg.p1.x + (seg.p2.x - seg.p1.x) * ((coinZ % segmentLength) / segmentLength)
-                    tempPoint3D.x = roadX + coin.offset * roadWidth
-                    tempPoint3D.y = 0f
-                    tempPoint3D.z = coinZ
-                    tempPoint3D.project(cameraX, cameraHeight, position, cameraDepth, width, height)
-                    val coinRadius = tempPoint3D.screenW * 0.11f
+                while (coinZ < position) coinZ += roadLength
+                val relZ = coinZ - position
+                if (relZ > 1f && relZ < (drawDistance - 1) * segmentLength) {
+                    val segN = (relZ / segmentLength).toInt().coerceIn(0, drawDistance - 2)
+                    val seg = segments[(startSegIndex + segN) % segments.size]
+                    val coinX = seg.screenX + coin.offset * seg.screenW
+                    val coinY = seg.screenY
+                    val coinRadius = seg.screenW * 0.11f
 
-                    // 3D rotation wobble
                     val spinScale = abs(cos((animationTick + coin.z) * 0.08f))
                     paint.color = colorCoinGold
                     paint.setShadowLayer(8f, 0f, 0f, colorCoinGold)
-                    drawRectF.set(tempPoint3D.screenX - coinRadius * spinScale, tempPoint3D.screenY - coinRadius * 2, tempPoint3D.screenX + coinRadius * spinScale, tempPoint3D.screenY)
+                    drawRectF.set(coinX - coinRadius * spinScale, coinY - coinRadius * 2, coinX + coinRadius * spinScale, coinY)
                     canvas.drawOval(drawRectF, paint)
                     paint.clearShadowLayer()
                 }
@@ -1355,10 +1338,22 @@ class RetroDriverView @JvmOverloads constructor(
         }
     }
 
-    private fun drawCompetitorVehicles(canvas: Canvas, cameraX: Float, cameraDepth: Float, width: Int, height: Int) {
+    private fun drawCompetitorVehicles(canvas: Canvas, width: Int, height: Int) {
         val roadLength = segments.size * segmentLength
+        val startSegIndex = (position / segmentLength).toInt()
 
-        // Calculate live positions for rank badges
+        // Sort visible competitor vehicles by distance from farthest to closest
+        val visibleCars = mutableListOf<Pair<TrafficCar, Float>>()
+        for (car in traffic) {
+            var carZ = car.z
+            while (carZ < position) carZ += roadLength
+            val relZ = carZ - position
+            if (relZ > 1f && relZ < (drawDistance - 1) * segmentLength) {
+                visibleCars.add(car to relZ)
+            }
+        }
+        visibleCars.sortByDescending { it.second }
+
         val participants = mutableListOf<Pair<Int, Float>>()
         participants.add(-1 to position)
         for (i in 0 until traffic.size) {
@@ -1378,37 +1373,29 @@ class RetroDriverView @JvmOverloads constructor(
             rankMap[participants[rankIndex].first] = "$rankNum$suffix"
         }
 
-        for (car in traffic) {
-            var carZ = car.z
-            if (carZ < position) carZ += roadLength
-            if (carZ > position && carZ < position + drawDistance * segmentLength) {
-                val segIndex = (carZ / segmentLength).toInt()
-                val seg = segments[segIndex % segments.size]
-                val roadX = seg.p1.x + (seg.p2.x - seg.p1.x) * ((carZ % segmentLength) / segmentLength)
-                tempPoint3D.x = roadX + car.offset * roadWidth
-                tempPoint3D.y = 0f
-                tempPoint3D.z = carZ
-                tempPoint3D.project(cameraX, cameraHeight, position, cameraDepth, width, height)
+        for ((car, relZ) in visibleCars) {
+            val segN = (relZ / segmentLength).toInt().coerceIn(0, drawDistance - 2)
+            val seg = segments[(startSegIndex + segN) % segments.size]
+            val carX = seg.screenX + car.offset * seg.screenW
+            val carY = seg.screenY
+            val carW = seg.screenW * 0.44f
+            val carH = carW * 0.65f
 
-                val carW = tempPoint3D.screenW * 0.44f
-                val carH = carW * 0.65f
-
-                if (car.type == 1) {
-                    drawDetailedTrafficBike(canvas, tempPoint3D.screenX, tempPoint3D.screenY, carW, carH, car.color)
-                } else {
-                    drawDetailedTrafficCar(canvas, tempPoint3D.screenX, tempPoint3D.screenY, carW, carH, car.color)
-                }
-
-                // Rank Badge above car
-                val rankStr = rankMap[traffic.indexOf(car)] ?: ""
-                paint.reset()
-                paint.isAntiAlias = true
-                paint.color = Color.YELLOW
-                paint.textSize = (tempPoint3D.screenW * 0.08f).coerceIn(12f, 24f)
-                paint.textAlign = Paint.Align.CENTER
-                paint.typeface = Typeface.DEFAULT_BOLD
-                canvas.drawText(rankStr, tempPoint3D.screenX, tempPoint3D.screenY - carH * 0.7f - 6f, paint)
+            if (car.type == 1) {
+                drawDetailedTrafficBike(canvas, carX, carY, carW, carH, car.color)
+            } else {
+                drawDetailedTrafficCar(canvas, carX, carY, carW, carH, car.color)
             }
+
+            // Rank Badge above car
+            val rankStr = rankMap[traffic.indexOf(car)] ?: ""
+            paint.reset()
+            paint.isAntiAlias = true
+            paint.color = Color.YELLOW
+            paint.textSize = (seg.screenW * 0.08f).coerceIn(12f, 24f)
+            paint.textAlign = Paint.Align.CENTER
+            paint.typeface = Typeface.DEFAULT_BOLD
+            canvas.drawText(rankStr, carX, carY - carH * 0.7f - 6f, paint)
         }
     }
 
@@ -1728,10 +1715,12 @@ class RetroDriverView @JvmOverloads constructor(
             paint.textAlign = Paint.Align.CENTER
             paint.typeface = Typeface.DEFAULT_BOLD
             val elapsed = nowTime - countdownStartTime
-            val scale = 1.0f + (1.0f - (elapsed.toFloat() / 1000f).coerceIn(0f, 1f)) * 0.45f
-            paint.textSize = 110f * scale
-            paint.color = Color.parseColor("#00E5FF")
-            paint.setShadowLayer(25f * scale, 0f, 0f, Color.parseColor("#00E5FF"))
+            val progress = (elapsed.toFloat() / 650f).coerceIn(0f, 1f)
+            val scale = 1.35f - 0.35f * progress
+            paint.textSize = 120f * scale
+            val glowColor = if (countdown == 0) Color.parseColor("#39FF14") else Color.parseColor("#00E5FF")
+            paint.color = glowColor
+            paint.setShadowLayer(30f * scale, 0f, 0f, glowColor)
             val countStr = if (countdown == 0) context.getString(R.string.retro_driver_go) else countdown.toString()
             canvas.drawText(countStr, width / 2f, height / 2f - 30f, paint)
             paint.clearShadowLayer()

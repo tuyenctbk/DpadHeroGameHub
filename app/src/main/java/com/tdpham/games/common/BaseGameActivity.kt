@@ -39,7 +39,6 @@ abstract class BaseGameActivity : AppCompatActivity() {
     private var activeOverlay: View? = null
     private lateinit var adOverlayHelper: IdleAdOverlayHelper
     private var gameOverCount = 0
-    private var hasRevivedThisRound = false
     private var pauseDialog: InGamePauseDialog? = null
 
     protected open fun shouldShowHelpButton(): Boolean = false
@@ -90,51 +89,17 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 bundle.putInt(FirebaseAnalytics.Param.SCORE, score)
                 firebaseAnalytics?.logEvent("level_end", bundle)
 
-                val handleFinalGameOver = {
-                    hasRevivedThisRound = false
-                    // Record event for smart rating and sharing engagement:
-                    val currentBest = ScoreManager.getHighScore(this, gameKey)
-                    val isHighScore = score > 0 && score >= currentBest
-                    AppEngagementManager.onGameCompleted(this, isWin = score > 0, isNewHighScore = isHighScore)
+                // Record event for smart rating and sharing engagement:
+                val currentBest = ScoreManager.getHighScore(this, gameKey)
+                val isHighScore = score > 0 && score >= currentBest
+                AppEngagementManager.onGameCompleted(this, isWin = score > 0, isNewHighScore = isHighScore)
 
-                    // Natural Game-Over Interstitial Ad Trigger (Respects cooldown & frequency)
-                    gameOverCount++
-                    val freq = ConfigManager.getAdsGameOverFrequency()
-                    if (gameOverCount >= freq && AdManager.canShowInterstitial(this)) {
-                        gameOverCount = 0
-                        AdManager.showInterstitial(this)
-                    }
-                }
-
-                if (gameView.canRevive() && !hasRevivedThisRound) {
-                    ReviveDialog.show(
-                        this,
-                        onReviveConfirmed = {
-                            hasRevivedThisRound = true
-                            var rewardGranted = false
-                            AdManager.showRewardedOrInterstitial(
-                                this,
-                                onRewardGranted = {
-                                    rewardGranted = true
-                                    RewardAnimationOverlay.show(this) {
-                                        gameView.reviveGame()
-                                    }
-                                },
-                                onAdClosed = {
-                                    if (!rewardGranted) {
-                                        handleFinalGameOver()
-                                    }
-                                    focusGame()
-                                }
-                            )
-                        },
-                        onGiveUp = {
-                            handleFinalGameOver()
-                        }
-                    )
-                } else {
-                    hasRevivedThisRound = false
-                    handleFinalGameOver()
+                // Natural Game-Over Interstitial Ad Trigger (Respects cooldown & frequency)
+                gameOverCount++
+                val freq = ConfigManager.getAdsGameOverFrequency()
+                if (gameOverCount >= freq && AdManager.canShowInterstitial(this)) {
+                    gameOverCount = 0
+                    AdManager.showInterstitial(this)
                 }
             }
         } else {
@@ -353,7 +318,6 @@ abstract class BaseGameActivity : AppCompatActivity() {
     }
 
     private fun restartCurrentGame() {
-        hasRevivedThisRound = false
         (gameView as View).requestFocus()
         when (gameKey) {
             "trex" -> (gameView as? com.tdpham.games.trex.TRexView)?.resetGame()

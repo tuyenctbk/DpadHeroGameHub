@@ -149,6 +149,7 @@ class FroggyCrossView @JvmOverloads constructor(
         handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
     }
+
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {

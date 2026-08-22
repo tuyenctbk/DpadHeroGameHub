@@ -125,30 +125,6 @@ class TwentyFortyEightView @JvmOverloads constructor(
         hintShowFrames = 120
     }
 
-    override fun canRevive(): Boolean = isGameOver && score > 200
-
-    override fun reviveGame(): Boolean {
-        if (!canRevive()) return false
-        isGameOver = false
-        celebrationManager.clear()
-
-        var cleared = 0
-        for (v in listOf(2, 4, 8)) {
-            for (r in 0 until gridSize) {
-                for (c in 0 until gridSize) {
-                    if (board[r][c] == v && cleared < 3) {
-                        board[r][c] = 0
-                        cleared++
-                    }
-                }
-            }
-            if (cleared >= 3) break
-        }
-        HapticManager.vibrateSuccess(context)
-        SoundManager.playSuccess()
-        return true
-    }
-
     /**
      * Undo last move if available.
      */

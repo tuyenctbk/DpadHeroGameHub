@@ -8,6 +8,4 @@ interface GameView {
     fun resume()
     fun resetGame()
     fun toggleSound(): Boolean
-    fun canRevive(): Boolean = false
-    fun reviveGame(): Boolean = false
 }

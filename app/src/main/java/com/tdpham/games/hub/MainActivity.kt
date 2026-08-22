@@ -52,10 +52,6 @@ import com.tdpham.games.syobon.SyobonActivity
 import com.tdpham.games.monkey.MonkeyActivity
 import com.tdpham.games.retrodriver.RetroDriverActivity
 import com.tdpham.games.frenzy.FrenzyActivity
-import com.tdpham.games.fruit.FruitActivity
-import com.tdpham.games.connectfour.ConnectFourActivity
-import com.tdpham.games.blackjack.BlackjackActivity
-import com.tdpham.games.trivia.TriviaActivity
 import com.tdpham.games.common.HapticManager
 import com.tdpham.games.common.LeaderboardManager
 import com.tdpham.games.common.SettingsManager
@@ -115,11 +111,7 @@ class MainActivity : AppCompatActivity() {
         R.id.btn_monkey to Pair("monkey", "MONKEY ADVENTURE"),
         R.id.btn_retrodriver to Pair("retrodriver", "RETRO DRIVER"),
         R.id.btn_frenzy to Pair("frenzy", "FEEDING FRENZY"),
-        R.id.btn_road_racer to Pair("roadracer", "ROAD RACER"),
-        R.id.btn_fruit to Pair("fruit", "FRUIT NINJA"),
-        R.id.btn_connect_four to Pair("connect_four", "CONNECT FOUR"),
-        R.id.btn_blackjack to Pair("blackjack", "BLACKJACK 21"),
-        R.id.btn_trivia to Pair("trivia", "TRIVIA QUIZ")
+        R.id.btn_road_racer to Pair("roadracer", "ROAD RACER")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -373,11 +365,7 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_monkey to MonkeyActivity::class.java,
             R.id.btn_retrodriver to RetroDriverActivity::class.java,
             R.id.btn_frenzy to FrenzyActivity::class.java,
-            R.id.btn_road_racer to RoadRacerActivity::class.java,
-            R.id.btn_fruit to FruitActivity::class.java,
-            R.id.btn_connect_four to ConnectFourActivity::class.java,
-            R.id.btn_blackjack to BlackjackActivity::class.java,
-            R.id.btn_trivia to TriviaActivity::class.java
+            R.id.btn_road_racer to RoadRacerActivity::class.java
         )
 
         val iconMap = mapOf(
@@ -409,11 +397,7 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_monkey to R.drawable.ic_game_monkey,
             R.id.btn_retrodriver to R.drawable.ic_game_retrodriver,
             R.id.btn_frenzy to R.drawable.ic_game_frenzy,
-            R.id.btn_road_racer to R.drawable.ic_game_road_racer,
-            R.id.btn_fruit to R.drawable.ic_game_fruit,
-            R.id.btn_connect_four to R.drawable.ic_game_connect_four,
-            R.id.btn_blackjack to R.drawable.ic_game_blackjack,
-            R.id.btn_trivia to R.drawable.ic_game_trivia
+            R.id.btn_road_racer to R.drawable.ic_game_road_racer
         )
 
         fun bindSingleGameCard(id: Int, activityClass: Class<*>) {
@@ -469,10 +453,6 @@ class MainActivity : AppCompatActivity() {
             "retrodriver" -> R.id.btn_retrodriver
             "frenzy" -> R.id.btn_frenzy
             "road_racer" -> R.id.btn_road_racer
-            "fruit" -> R.id.btn_fruit
-            "connect_four" -> R.id.btn_connect_four
-            "blackjack" -> R.id.btn_blackjack
-            "trivia" -> R.id.btn_trivia
             else -> R.id.btn_snake
         }
 
@@ -536,10 +516,6 @@ class MainActivity : AppCompatActivity() {
             "retrodriver" -> R.id.btn_retrodriver
             "frenzy" -> R.id.btn_frenzy
             "road_racer" -> R.id.btn_road_racer
-            "fruit" -> R.id.btn_fruit
-            "connect_four" -> R.id.btn_connect_four
-            "blackjack" -> R.id.btn_blackjack
-            "trivia" -> R.id.btn_trivia
             else -> R.id.btn_snake
         }
         findViewById<Button>(viewId)?.requestFocus()

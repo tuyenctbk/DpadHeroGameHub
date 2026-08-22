@@ -1,6 +1,6 @@
 package com.tdpham.games.retrodriver
 
-data class TrackChunk(val length: Int, val curve: Float)
+data class TrackChunk(val length: Int, val curve: Float, val hill: Float = 0f)
 data class ObstacleSpawn(val segIndex: Int, val offset: Float, val type: Int) // 0: Boost Pad, 1: Oil Slick, 2: Road Barrier
 
 data class RacingMap(
