@@ -663,17 +663,5 @@
         android:shadowRadius="2"
         android:visibility="gone" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:text="@string/select_game_hint"
-        android:textColor="#99FFFFFF"
-        android:textSize="16sp"
-        android:shadowColor="#80000000"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="2" />
-
     </LinearLayout>
 </RelativeLayout>

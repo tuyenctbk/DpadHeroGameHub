@@ -37,10 +37,10 @@ class SyobonView @JvmOverloads constructor(
         private const val GRAVITY = 0.016f
         private const val SPEED_ACCEL = 0.40f
         private const val FRICTION = 0.78f
-        private const val MAX_SPEED = 0.18f
-        private const val JUMP_IMPULSE = -0.32f
-        private const val JUMP_HOLD_FORCE = -0.012f
-        private const val MAX_JUMP_HOLD_TIME = 320L
+        private const val MAX_SPEED = 0.19f
+        private const val JUMP_IMPULSE = -0.38f
+        private const val JUMP_HOLD_FORCE = -0.010f
+        private const val MAX_JUMP_HOLD_TIME = 340L
         
         // Tile Types
         private const val TILE_EMPTY = 0
@@ -1126,7 +1126,7 @@ class SyobonView @JvmOverloads constructor(
             if (rBottom in 0 until ROWS) {
                 for (c in cMin..cMax) {
                     if (isSolid(rBottom, c)) {
-                        if ((bottom - velY) <= rBottom + 0.40f) {
+                        if ((bottom - velY) <= rBottom + 0.48f) {
                             playerY = rBottom.toFloat() - playerH
                             velY = 0f
                             isOnGround = true

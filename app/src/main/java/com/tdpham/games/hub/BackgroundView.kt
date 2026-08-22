@@ -33,32 +33,29 @@ class BackgroundView @JvmOverloads constructor(
             // Pick from a curated list of subtle backgrounds for the hub
             val safeBgs = listOf(
                 GameEnvironment.BackgroundType.GRADIENT,
-                GameEnvironment.BackgroundType.GRID,
-                GameEnvironment.BackgroundType.DOTS
-            )
-            val safeWeather = listOf(
-                GameEnvironment.WeatherType.NONE,
-                GameEnvironment.WeatherType.SNOW
+                GameEnvironment.BackgroundType.GRID
             )
             
             bgType = safeBgs.random()
-            weather = safeWeather.random()
+            weather = GameEnvironment.WeatherType.NONE
             isNight = true
-            handler.postDelayed(this, 20000) // Change theme smoothly
+            handler.postDelayed(this, 30000) // Change theme smoothly
         }
     }
 
     init {
-        repeat(50) {
+        repeat(30) {
             particles.add(GameEnvironment.Particle(
                 Random().nextFloat() * 2000, 
                 Random().nextFloat() * 2000, 
-                Random().nextFloat() * 5 + 5,
-                Random().nextFloat() * 2 - 1
+                Random().nextFloat() * 0.8f + 0.4f,
+                Random().nextFloat() * 0.5f - 0.25f,
+                size = Random().nextFloat() * 1.5f + 1.0f,
+                color = 0x2000E5FF.toInt()
             ))
         }
         handler.post(ticker)
-        handler.postDelayed(themeRotator, 10000)
+        handler.postDelayed(themeRotator, 15000)
     }
 
     override fun onDraw(canvas: Canvas) {
