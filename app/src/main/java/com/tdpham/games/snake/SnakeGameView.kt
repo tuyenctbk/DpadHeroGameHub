@@ -156,6 +156,27 @@ class SnakeGameView @JvmOverloads constructor(
         isPaused = true
     }
 
+    override fun reviveGame(): Boolean {
+        if (!isGameOver) return false
+        isGameOver = false
+        gameOverReason = ""
+        val head = if (snake.isNotEmpty()) snake.first() else Point(10, 10)
+        val safeX = head.x.coerceIn(2, gridSize - 3)
+        val safeY = head.y.coerceIn(2, gridSize - 3)
+        snake.clear()
+        snake.add(Point(safeX, safeY))
+        snake.add(Point((safeX - 1).coerceAtLeast(0), safeY))
+        snake.add(Point((safeX - 2).coerceAtLeast(0), safeY))
+        currentDirection = Direction.RIGHT
+        inputQueue.clear()
+        isPaused = false
+        lastLogicTickTime = System.currentTimeMillis()
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        invalidate()
+        return true
+    }
+
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {

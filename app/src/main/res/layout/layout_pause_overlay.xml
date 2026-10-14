@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pause_overlay_scrim"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CC0A0E17"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:elevation="100dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <!-- Scanline Texture Effect -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/scanline_pattern"
+        android:alpha="0.08" />
+
+    <!-- Centered Card Container -->
+    <LinearLayout
+        android:id="@+id/pause_card_container"
+        android:layout_width="480dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/dialog_background"
+        android:orientation="vertical"
+        android:padding="28dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:elevation="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/pause_overlay_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pause_menu_title"
+            android:textColor="#FFFFFF"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:gravity="center"
+            android:letterSpacing="0.08"
+            android:shadowColor="#00E5FF"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="8"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Subtitle / Game Name -->
+        <TextView
+            android:id="@+id/pause_overlay_game_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#94A3B8"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:letterSpacing="0.05"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#3338BDF8"
+            android:layout_marginBottom="18dp" />
+
+        <!-- Button 1: Resume Game -->
+        <Button
+            android:id="@+id/btn_pause_resume"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/resume_game"
+            android:background="@drawable/bg_menu_item_selector"
+            android:textColor="@color/btn_menu_text_selector"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/btn_pause_exit"
+            android:nextFocusDown="@+id/btn_pause_options"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Button 2: Game Options / Settings -->
+        <Button
+            android:id="@+id/btn_pause_options"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/game_options"
+            android:background="@drawable/bg_menu_item_selector"
+            android:textColor="@color/btn_menu_text_selector"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/btn_pause_resume"
+            android:nextFocusDown="@+id/btn_pause_guide"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Button 3: How to Play / Guide -->
+        <Button
+            android:id="@+id/btn_pause_guide"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/how_to_play"
+            android:background="@drawable/bg_menu_item_selector"
+            android:textColor="@color/btn_menu_text_selector"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/btn_pause_options"
+            android:nextFocusDown="@+id/btn_pause_restart"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Button 4: Restart Level -->
+        <Button
+            android:id="@+id/btn_pause_restart"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/restart_game"
+            android:background="@drawable/bg_menu_item_selector"
+            android:textColor="@color/btn_menu_text_selector"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/btn_pause_guide"
+            android:nextFocusDown="@+id/btn_pause_exit"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Button 5: Exit to Hub -->
+        <Button
+            android:id="@+id/btn_pause_exit"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/exit_to_hub"
+            android:background="@drawable/bg_menu_item_selector"
+            android:textColor="@color/btn_menu_text_selector"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/btn_pause_restart"
+            android:nextFocusDown="@+id/btn_pause_resume" />
+
+    </LinearLayout>
+
+</FrameLayout>

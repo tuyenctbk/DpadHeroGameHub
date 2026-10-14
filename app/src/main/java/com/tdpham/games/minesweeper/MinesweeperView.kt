@@ -428,36 +428,79 @@ class MinesweeperView @JvmOverloads constructor(
         }
     }
 
+    override fun reviveGame(): Boolean {
+        if (!isGameOver) return false
+        isGameOver = false
+        // Disarm the mine at cursor or wherever clicked
+        if (cursorY in 0 until rows && cursorX in 0 until cols) {
+            val cell = grid[cursorY][cursorX]
+            if (cell.isMine) {
+                cell.isMine = false
+                cell.isRevealed = true
+                // Recompute neighbor mines for adjacent cells
+                for (r in 0 until rows) {
+                    for (c in 0 until cols) {
+                        if (!grid[r][c].isMine) {
+                            var count = 0
+                            for (dr in -1..1) {
+                                for (dc in -1..1) {
+                                    val nr = r + dr
+                                    val nc = c + dc
+                                    if (nr in 0 until rows && nc in 0 until cols && grid[nr][nc].isMine) {
+                                        count++
+                                    }
+                                }
+                            }
+                            grid[r][c].neighborMines = count
+                        }
+                    }
+                }
+            }
+        }
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        invalidate()
+        return true
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (isGameOver || isWin) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 setupGame()
                 return true
             }
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN,
-            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                if (pressedKeys.isEmpty()) {
-                    when (keyCode) {
-                        KeyEvent.KEYCODE_DPAD_UP -> if (cursorY > 0) cursorY--
-                        KeyEvent.KEYCODE_DPAD_DOWN -> if (cursorY < rows - 1) cursorY++
-                        KeyEvent.KEYCODE_DPAD_LEFT -> if (cursorX > 0) cursorX--
-                        KeyEvent.KEYCODE_DPAD_RIGHT -> if (cursorX < cols - 1) cursorX++
-                    }
-                    invalidate()
-                    moveHandler.removeCallbacks(moveRunnable)
-                    moveHandler.postDelayed(moveRunnable, 400)
-                }
-                pressedKeys.add(keyCode)
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I -> {
+                if (cursorY > 0) cursorY--
+                invalidate()
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_K -> {
+                if (cursorY < rows - 1) cursorY++
+                invalidate()
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_J -> {
+                if (cursorX > 0) cursorX--
+                invalidate()
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_L -> {
+                if (cursorX < cols - 1) cursorX++
+                invalidate()
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> {
                 revealCell(cursorY, cursorX)
                 return true
             }
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_DPAD_DOWN_LEFT -> {
+            KeyEvent.KEYCODE_F, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BUTTON_Y -> {
                 toggleFlag(cursorY, cursorX)
                 return true
             }

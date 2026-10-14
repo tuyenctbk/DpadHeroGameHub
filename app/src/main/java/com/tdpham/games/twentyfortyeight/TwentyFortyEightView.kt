@@ -41,17 +41,9 @@ class TwentyFortyEightView @JvmOverloads constructor(
 
     private val celebrationManager = CelebrationManager()
 
-    // Tile Animation State tracking
-    private class AnimatedTile(
-        var r: Int,
-        var c: Int,
-        var value: Int,
-        var scale: Float = 1.0f,
-        var isNew: Boolean = false,
-        var isMerged: Boolean = false
-    )
-
-    private val animatedTiles = mutableListOf<AnimatedTile>()
+    // Tile Animation State tracking with thread-safe array
+    private val tileAnimLock = Any()
+    private val tileScales = Array(8) { FloatArray(8) { 1.0f } }
     private val mergedTiles = mutableSetOf<Pair<Int, Int>>()
 
     private val paint = Paint().apply {
@@ -115,7 +107,13 @@ class TwentyFortyEightView @JvmOverloads constructor(
         celebrationManager.clear()
         highScore = ScoreManager.getHighScore(context, gameKey, gridSize)
         mergedTiles.clear()
-        animatedTiles.clear()
+        synchronized(tileAnimLock) {
+            for (r in 0 until 8) {
+                for (c in 0 until 8) {
+                    tileScales[r][c] = 1.0f
+                }
+            }
+        }
 
         addRandomTile(isFirst = true)
         addRandomTile(isFirst = true)
@@ -186,44 +184,35 @@ class TwentyFortyEightView @JvmOverloads constructor(
             val (r, c) = emptyCells[Random().nextInt(emptyCells.size)]
             val value = if (Random().nextFloat() < 0.9) 2 else 4
             board[r][c] = value
-            animatedTiles.add(AnimatedTile(r, c, value, scale = if (isFirst) 1.0f else 0.1f, isNew = true))
+            synchronized(tileAnimLock) {
+                tileScales[r][c] = if (isFirst) 1.0f else 0.1f
+            }
         }
     }
 
     private fun updateTileAnimations() {
-        val iterator = animatedTiles.iterator()
-        while (iterator.hasNext()) {
-            val tile = iterator.next()
-            if (tile.isNew) {
-                tile.scale += 0.15f
-                if (tile.scale >= 1.0f) {
-                    tile.scale = 1.0f
-                    tile.isNew = false
-                }
-            } else if (tile.isMerged) {
-                tile.scale -= 0.08f
-                if (tile.scale <= 1.0f) {
-                    tile.scale = 1.0f
-                    tile.isMerged = false
+        synchronized(tileAnimLock) {
+            for (r in 0 until gridSize) {
+                for (c in 0 until gridSize) {
+                    val s = tileScales[r][c]
+                    if (s < 1.0f) {
+                        tileScales[r][c] = (s + 0.15f).coerceAtMost(1.0f)
+                    } else if (s > 1.0f) {
+                        tileScales[r][c] = (s - 0.08f).coerceAtLeast(1.0f)
+                    }
                 }
             }
         }
     }
 
     private fun syncAnimatedTiles() {
-        animatedTiles.clear()
-        for (r in 0 until gridSize) {
-            for (c in 0 until gridSize) {
-                val v = board[r][c]
-                if (v > 0) {
+        synchronized(tileAnimLock) {
+            for (r in 0 until gridSize) {
+                for (c in 0 until gridSize) {
                     val isMerged = mergedTiles.contains(Pair(r, c))
-                    animatedTiles.add(
-                        AnimatedTile(
-                            r, c, v,
-                            scale = if (isMerged) 1.25f else 1.0f,
-                            isMerged = isMerged
-                        )
-                    )
+                    if (isMerged) {
+                        tileScales[r][c] = 1.25f
+                    }
                 }
             }
         }
@@ -332,8 +321,9 @@ class TwentyFortyEightView @JvmOverloads constructor(
             for (c in 0 until gridSize) {
                 val value = board[r][c]
                 if (value > 0) {
-                    val animTile = animatedTiles.firstOrNull { it.r == r && it.c == c }
-                    val scale = animTile?.scale ?: 1.0f
+                    val scale = synchronized(tileAnimLock) {
+                        if (r in 0 until 8 && c in 0 until 8) tileScales[r][c] else 1.0f
+                    }
                     drawTile(canvas, r, c, value, offsetX, offsetY, scale)
                 }
             }

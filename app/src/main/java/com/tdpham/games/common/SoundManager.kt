@@ -193,6 +193,21 @@ object SoundManager {
         }
     }
 
+    fun playRetroSplashChime() {
+        if (!isSoundEnabled || soundEffectsVolume <= 0) return
+        soundExecutor.execute {
+            try {
+                playTone(ToneGenerator.TONE_DTMF_1, 60)
+                Thread.sleep(80)
+                playTone(ToneGenerator.TONE_DTMF_5, 60)
+                Thread.sleep(80)
+                playTone(ToneGenerator.TONE_DTMF_9, 80)
+                Thread.sleep(100)
+                playTone(ToneGenerator.TONE_PROP_PROMPT, 180)
+            } catch (_: InterruptedException) {}
+        }
+    }
+
     // --- SOUND PROFILES & PRESETS (Arcade, Retro, Modern) ---
     private var activePreset: SettingsManager.SoundProfilePreset = SettingsManager.SoundProfilePreset.ARCADE
 

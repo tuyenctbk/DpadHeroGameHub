@@ -167,24 +167,37 @@ class SokobanView @JvmOverloads constructor(
         handler.removeCallbacks(animRunnable)
     }
 
+    override fun reviveGame(): Boolean {
+        restartCurrentLevel()
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        invalidate()
+        return true
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (solved || allLevelsDone) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 if (allLevelsDone) resetGame() else advanceOrRestart()
                 return true
             }
+            return super.onKeyDown(keyCode, event)
         }
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> move(-1, 0)
-            KeyEvent.KEYCODE_DPAD_DOWN -> move(1, 0)
-            KeyEvent.KEYCODE_DPAD_LEFT -> move(0, -1)
-            KeyEvent.KEYCODE_DPAD_RIGHT -> move(0, 1)
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> restartCurrentLevel()
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I -> move(-1, 0)
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_K -> move(1, 0)
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_J -> move(0, -1)
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_L -> move(0, 1)
+            KeyEvent.KEYCODE_R, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_BUTTON_Y -> restartCurrentLevel()
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
                 return true
             }
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
+            KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()

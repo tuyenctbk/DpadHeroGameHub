@@ -239,22 +239,48 @@ class BattleTanksView @JvmOverloads constructor(
             }
             return true
         }
-        if (gamePaused && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
+        if (gamePaused && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            )) {
             resume(); return true
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> moveTank(player, 0)
-            KeyEvent.KEYCODE_DPAD_RIGHT -> moveTank(player, 1)
-            KeyEvent.KEYCODE_DPAD_DOWN -> moveTank(player, 2)
-            KeyEvent.KEYCODE_DPAD_LEFT -> moveTank(player, 3)
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I -> moveTank(player, 0)
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_L -> moveTank(player, 1)
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_K -> moveTank(player, 2)
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_J -> moveTank(player, 3)
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_BUTTON_X -> {
+                fire(player)
+                return true
+            }
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
                 return true
             }
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
+            KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
+        invalidate()
+        return true
+    }
+
+    override fun reviveGame(): Boolean {
+        if (!gameOver) return false
+        gameOver = false
+        playerLives = 2
+        player.x = 6
+        player.y = 12
+        player.dir = 0
+        player.blinkUntil = System.currentTimeMillis() + 3500L
+        bullets.removeAll { !it.isPlayer }
+        celebrationManager.clear()
+        gamePaused = false
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+        SoundManager.playSuccess()
         invalidate()
         return true
     }

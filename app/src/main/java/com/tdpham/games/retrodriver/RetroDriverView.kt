@@ -1321,20 +1321,20 @@ class RetroDriverView @JvmOverloads constructor(
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> {
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_BUTTON_R1 -> {
                 val inTurbo = now < turboUntil
                 val currentMaxSpeed = if (inTurbo) 220f else maxSpeed
                 val targetMax = if (Math.abs(playerX) > 1.0f) 45f else currentMaxSpeed
-                speed = (speed + 6f).coerceAtMost(targetMax)
+                speed = (speed + 8f).coerceAtMost(targetMax)
                 invalidate()
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_DOWN -> {
-                speed = (speed - 9f).coerceAtLeast(0f)
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BUTTON_L1 -> {
+                speed = (speed - 12f).coerceAtLeast(0f)
                 invalidate()
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_LEFT -> {
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A -> {
                 val steerSpeed = when (selectedCarIndex) {
                     2 -> 0.12f // Cyber Cyan has higher handling
                     else -> 0.08f
@@ -1344,7 +1344,7 @@ class RetroDriverView @JvmOverloads constructor(
                 invalidate()
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D -> {
                 val steerSpeed = when (selectedCarIndex) {
                     2 -> 0.12f
                     else -> 0.08f
@@ -1356,6 +1356,21 @@ class RetroDriverView @JvmOverloads constructor(
             }
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun reviveGame(): Boolean {
+        if (!gameOver) return false
+        gameOver = false
+        gameWon = false
+        gamePaused = false
+        invincibleUntil = System.currentTimeMillis() + 3500L
+        speed = 80f
+        celebrationManager.clear()
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+        SoundManager.playSuccess()
+        invalidate()
+        return true
     }
 
     override fun onTouchEvent(event: android.view.MotionEvent): Boolean {

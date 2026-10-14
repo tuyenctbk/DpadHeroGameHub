@@ -313,8 +313,9 @@ class SpinballView @JvmOverloads constructor(
 
         super.onDraw(canvas)
         
-        canvas.save()
-        canvas.translate(width / 2f, height / 2f)
+        val baseSaveCount = canvas.save()
+        try {
+            canvas.translate(width / 2f, height / 2f)
 
         // Draw Boundary with neon glow effect
         paint.style = Paint.Style.STROKE
@@ -326,73 +327,90 @@ class SpinballView @JvmOverloads constructor(
         canvas.drawCircle(0f, 0f, radius, paint)
 
         // Draw Spikes (Rotating with currentRotation)
-        canvas.save()
-        canvas.rotate(currentRotation)
-        for (spike in spikes) {
-            canvas.save()
-            canvas.rotate(spike.angle)
-            when (spike.style) {
-                SpikeStyle.SAWBLADE -> {
-                    paint.style = Paint.Style.FILL
-                    paint.color = Color.parseColor("#FF5722")
-                    canvas.drawCircle(radius - 12f, 0f, 22f, paint)
-                    paint.color = Color.parseColor("#E64A19")
-                    val teethCount = 8
-                    val timeAngle = (System.currentTimeMillis() / 4L) % 360f
-                    canvas.save()
-                    canvas.translate(radius - 12f, 0f)
-                    canvas.rotate(timeAngle)
-                    for (t in 0 until teethCount) {
-                        canvas.save()
-                        canvas.rotate(t * (360f / teethCount))
-                        tempPath.reset()
-                        tempPath.moveTo(0f, -22f)
-                        tempPath.lineTo(10f, -30f)
-                        tempPath.lineTo(0f, -26f)
-                        tempPath.close()
-                        canvas.drawPath(tempPath, paint)
-                        canvas.restore()
+        val spikesSave = canvas.save()
+        try {
+            canvas.rotate(currentRotation)
+            val spikesCopy = synchronized(spikes) { ArrayList(spikes) }
+            for (spike in spikesCopy) {
+                val spikeSave = canvas.save()
+                try {
+                    canvas.rotate(spike.angle)
+                    when (spike.style) {
+                        SpikeStyle.SAWBLADE -> {
+                            paint.style = Paint.Style.FILL
+                            paint.color = Color.parseColor("#FF5722")
+                            canvas.drawCircle(radius - 12f, 0f, 22f, paint)
+                            paint.color = Color.parseColor("#E64A19")
+                            val teethCount = 8
+                            val timeAngle = (System.currentTimeMillis() / 4L) % 360f
+                            val bladeSave = canvas.save()
+                            try {
+                                canvas.translate(radius - 12f, 0f)
+                                canvas.rotate(timeAngle)
+                                for (t in 0 until teethCount) {
+                                    val toothSave = canvas.save()
+                                    try {
+                                        canvas.rotate(t * (360f / teethCount))
+                                        tempPath.reset()
+                                        tempPath.moveTo(0f, -22f)
+                                        tempPath.lineTo(10f, -30f)
+                                        tempPath.lineTo(0f, -26f)
+                                        tempPath.close()
+                                        canvas.drawPath(tempPath, paint)
+                                    } finally {
+                                        canvas.restoreToCount(toothSave)
+                                    }
+                                }
+                            } finally {
+                                canvas.restoreToCount(bladeSave)
+                            }
+                        }
+                        SpikeStyle.LASER -> {
+                            paint.style = Paint.Style.FILL
+                            paint.color = Color.parseColor("#78909C")
+                            tempPath.reset()
+                            tempPath.moveTo(radius - 22f, -14f)
+                            tempPath.lineTo(radius, -14f)
+                            tempPath.lineTo(radius, 14f)
+                            tempPath.lineTo(radius - 22f, 14f)
+                            tempPath.close()
+                            canvas.drawPath(tempPath, paint)
+                            paint.color = Color.RED
+                            canvas.drawCircle(radius - 16f, 0f, 6f, paint)
+                            paint.strokeCap = Paint.Cap.ROUND
+                            paint.color = Color.parseColor("#AAFF0000")
+                            paint.strokeWidth = 14f
+                            canvas.drawLine(radius - 16f, 0f, radius - 65f, 0f, paint)
+                            paint.color = Color.WHITE
+                            paint.strokeWidth = 6f
+                            canvas.drawLine(radius - 16f, 0f, radius - 65f, 0f, paint)
+                            paint.strokeCap = Paint.Cap.BUTT
+                        }
+                        else -> {
+                            paint.style = Paint.Style.FILL
+                            paint.color = Color.RED
+                            canvas.drawPath(spikePath, paint)
+                        }
                     }
-                    canvas.restore()
-                }
-                SpikeStyle.LASER -> {
-                    paint.style = Paint.Style.FILL
-                    paint.color = Color.parseColor("#78909C")
-                    tempPath.reset()
-                    tempPath.moveTo(radius - 22f, -14f)
-                    tempPath.lineTo(radius, -14f)
-                    tempPath.lineTo(radius, 14f)
-                    tempPath.lineTo(radius - 22f, 14f)
-                    tempPath.close()
-                    canvas.drawPath(tempPath, paint)
-                    paint.color = Color.RED
-                    canvas.drawCircle(radius - 16f, 0f, 6f, paint)
-                    paint.strokeCap = Paint.Cap.ROUND
-                    paint.color = Color.parseColor("#AAFF0000")
-                    paint.strokeWidth = 14f
-                    canvas.drawLine(radius - 16f, 0f, radius - 65f, 0f, paint)
-                    paint.color = Color.WHITE
-                    paint.strokeWidth = 6f
-                    canvas.drawLine(radius - 16f, 0f, radius - 65f, 0f, paint)
-                    paint.strokeCap = Paint.Cap.BUTT
-                }
-                else -> {
-                    paint.style = Paint.Style.FILL
-                    paint.color = Color.RED
-                    canvas.drawPath(spikePath, paint)
+                } finally {
+                    canvas.restoreToCount(spikeSave)
                 }
             }
-            canvas.restore()
+        } finally {
+            canvas.restoreToCount(spikesSave)
         }
-        canvas.restore()
 
         // Draw Stars (Rotating with currentRotation so they move along when player rotates circle!)
-        canvas.save()
-        canvas.rotate(currentRotation)
-        for (star in stars) {
-            drawStarItem(canvas, star)
+        val starsSave = canvas.save()
+        try {
+            canvas.rotate(currentRotation)
+            val starsCopy = synchronized(stars) { ArrayList(stars) }
+            for (star in starsCopy) {
+                drawStarItem(canvas, star)
+            }
+        } finally {
+            canvas.restoreToCount(starsSave)
         }
-        canvas.restore()
 
         // Draw Ball
         when (selectedBallType) {
@@ -458,7 +476,9 @@ class SpinballView @JvmOverloads constructor(
             canvas.drawText(context.getString(R.string.trex_press_menu_options), -width/2 + 30f, -height/2 + 60f, paint)
             paint.alpha = 255
         }
-        canvas.restore()
+    } finally {
+        canvas.restoreToCount(baseSaveCount)
+    }
 
         if (isGameOver || isPaused) {
             val title = if (isGameOver) (if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.game_over)) else context.getString(R.string.paused)
@@ -514,9 +534,27 @@ class SpinballView @JvmOverloads constructor(
         }
     }
 
+    override fun reviveGame(): Boolean {
+        if (!isGameOver) return false
+        isGameOver = false
+        isPaused = false
+        resetBall()
+        spikes.clear()
+        celebrationManager.clear()
+        mainHandler.removeCallbacks(updateRunnable)
+        mainHandler.post(updateRunnable)
+        SoundManager.playSuccess()
+        invalidate()
+        return true
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (isGameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resetGame()
                 startGame()
                 return true
@@ -524,7 +562,11 @@ class SpinballView @JvmOverloads constructor(
             return super.onKeyDown(keyCode, event)
         }
         if (isPaused) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resume()
                 return true
             }
@@ -532,12 +574,20 @@ class SpinballView @JvmOverloads constructor(
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                pressedKeys.add(keyCode)
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_BUTTON_L1 -> {
+                pressedKeys.add(KeyEvent.KEYCODE_DPAD_LEFT)
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_BUTTON_R1 -> {
+                pressedKeys.add(KeyEvent.KEYCODE_DPAD_RIGHT)
                 return true
             }
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
+                return true
+            }
+            KeyEvent.KEYCODE_VOLUME_MUTE -> {
+                toggleSound()
                 return true
             }
         }
@@ -545,7 +595,11 @@ class SpinballView @JvmOverloads constructor(
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        pressedKeys.remove(keyCode)
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_BUTTON_L1 -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_LEFT)
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_BUTTON_R1 -> pressedKeys.remove(KeyEvent.KEYCODE_DPAD_RIGHT)
+            else -> pressedKeys.remove(keyCode)
+        }
         return super.onKeyUp(keyCode, event)
     }
 

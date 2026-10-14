@@ -157,13 +157,13 @@ class MainActivity : AppCompatActivity() {
         title.translationY = -50f
         title.animate().alpha(1f).translationY(0f).setDuration(800).setStartDelay(300).start()
 
-        // Setup Unified Controller / GamePad Indicator in Header
+        // Setup GamePadMonitor Indicator in Header
         val layoutController = findViewById<View>(R.id.layout_controller_indicator)
         val ivControllerIcon = findViewById<ImageView>(R.id.iv_controller_status_icon)
         val tvControllerText = findViewById<TextView>(R.id.tv_controller_status_text)
         val dotController = findViewById<View>(R.id.view_controller_status_dot)
         if (layoutController != null && ivControllerIcon != null && tvControllerText != null) {
-            ControllerIndicatorManager.setupHeaderIndicator(
+            com.tdpham.games.common.GamePadMonitor.bindHeaderIndicator(
                 activity = this,
                 container = layoutController,
                 iconView = ivControllerIcon,

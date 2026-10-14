@@ -156,31 +156,64 @@ class HangmanView @JvmOverloads constructor(
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
+    override fun reviveGame(): Boolean {
+        if (!isGameOver) return false
+        isGameOver = false
+        remainingAttempts = 3 // Give 3 extra attempts
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        invalidate()
+        return true
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (isGameOver || isWin) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resetGame(); startGame(); return true
             }
             return super.onKeyDown(keyCode, event)
         }
         if (isPaused) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 startGame(); return true
             }
             return super.onKeyDown(keyCode, event)
         }
 
+        // Direct letter typing A-Z
+        if (keyCode in KeyEvent.KEYCODE_A..KeyEvent.KEYCODE_Z) {
+            val typedChar = ('A' + (keyCode - KeyEvent.KEYCODE_A))
+            if (typedChar !in guessedLetters) {
+                val idx = alphabet.indexOf(typedChar)
+                if (idx != -1) {
+                    cursorRow = idx / 9
+                    cursorCol = idx % 9
+                    makeGuess()
+                    invalidate()
+                    return true
+                }
+            }
+        }
+
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> { cursorRow = (cursorRow - 1 + 3) % 3; SoundManager.playClick() }
-            KeyEvent.KEYCODE_DPAD_DOWN -> { cursorRow = (cursorRow + 1) % 3; SoundManager.playClick() }
-            KeyEvent.KEYCODE_DPAD_LEFT -> { cursorCol = (cursorCol - 1 + 9) % 9; SoundManager.playClick() }
-            KeyEvent.KEYCODE_DPAD_RIGHT -> { cursorCol = (cursorCol + 1) % 9; SoundManager.playClick() }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> makeGuess()
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I -> { cursorRow = (cursorRow - 1 + 3) % 3; SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_K -> { cursorRow = (cursorRow + 1) % 3; SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_J -> { cursorCol = (cursorCol - 1 + 9) % 9; SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_L -> { cursorCol = (cursorCol + 1) % 9; SoundManager.playClick() }
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> makeGuess()
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
                 return true
             }
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
+            KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
         }
         invalidate()
         return true

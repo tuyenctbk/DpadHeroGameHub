@@ -148,9 +148,35 @@ class TetrisView @JvmOverloads constructor(
         animHandler.removeCallbacks(animRunnable)
     }
 
+    override fun reviveGame(): Boolean {
+        if (!gameOver) return false
+        gameOver = false
+        // Clear top 8 rows to give plenty of room to recover
+        for (r in 0 until 8) {
+            for (c in 0 until cols) {
+                board[r][c] = 0
+            }
+        }
+        current = spawnPieceData()
+        next = spawnPieceData()
+        linesClearing.clear()
+        lineClearAnimationTimer = 0
+        celebrationManager.clear()
+        paused = false
+        handler.removeCallbacks(tick)
+        handler.post(tick)
+        SoundManager.playSuccess()
+        invalidate()
+        return true
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resetGame()
                 startGame()
                 return true
@@ -158,7 +184,11 @@ class TetrisView @JvmOverloads constructor(
             return super.onKeyDown(keyCode, event)
         }
         if (paused) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 startGame()
                 return true
             }
@@ -166,16 +196,16 @@ class TetrisView @JvmOverloads constructor(
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_LEFT -> tryMove(current.r, current.c - 1, current.rot, playSound = true)
-            KeyEvent.KEYCODE_DPAD_RIGHT -> tryMove(current.r, current.c + 1, current.rot, playSound = true)
-            KeyEvent.KEYCODE_DPAD_DOWN -> fastMoveDown()
-            KeyEvent.KEYCODE_DPAD_UP -> rotate()
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> hardDrop()
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_J -> tryMove(current.r, current.c - 1, current.rot, playSound = true)
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_L -> tryMove(current.r, current.c + 1, current.rot, playSound = true)
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_K -> fastMoveDown()
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_BUTTON_B -> rotate()
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> hardDrop()
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
                 return true
             }
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
+            KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
