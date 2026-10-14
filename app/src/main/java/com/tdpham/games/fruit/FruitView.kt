@@ -185,6 +185,20 @@ class FruitView @JvmOverloads constructor(
         handler.post(gameLoop)
     }
 
+    override fun reviveGame(): Boolean {
+        if (!gameOver) return false
+        gameOver = false
+        lives = 2
+        items.removeAll { it.isBomb }
+        celebrationManager.clear()
+        gamePaused = false
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+        SoundManager.playSuccess()
+        invalidate()
+        return true
+    }
+
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {

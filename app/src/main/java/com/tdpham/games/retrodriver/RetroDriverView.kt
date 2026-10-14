@@ -1874,11 +1874,11 @@ class RetroDriverView @JvmOverloads constructor(
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W -> {
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_BUTTON_R1 -> {
                 keyUpPressed = true
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S -> {
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BUTTON_L1 -> {
                 keyDownPressed = true
                 return true
             }
@@ -1896,11 +1896,11 @@ class RetroDriverView @JvmOverloads constructor(
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W -> {
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_BUTTON_R1 -> {
                 keyUpPressed = false
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S -> {
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BUTTON_L1 -> {
                 keyDownPressed = false
                 return true
             }
@@ -1914,6 +1914,21 @@ class RetroDriverView @JvmOverloads constructor(
             }
         }
         return super.onKeyUp(keyCode, event)
+    }
+
+    override fun reviveGame(): Boolean {
+        if (!gameOver) return false
+        gameOver = false
+        gameWon = false
+        gamePaused = false
+        invincibleUntil = System.currentTimeMillis() + 3500L
+        speed = 80f
+        celebrationManager.clear()
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+        SoundManager.playSuccess()
+        invalidate()
+        return true
     }
 
     override fun onGenericMotionEvent(event: MotionEvent): Boolean {

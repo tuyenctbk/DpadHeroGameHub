@@ -269,9 +269,39 @@ class Lines98View @JvmOverloads constructor(
         return false
     }
 
+    override fun reviveGame(): Boolean {
+        if (!isGameOver) return false
+        isGameOver = false
+        // Clear non-selected random balls to free up space (clear ~15 balls)
+        var cleared = 0
+        val filledCells = mutableListOf<Pair<Int, Int>>()
+        for (r in 0 until gridSize) {
+            for (c in 0 until gridSize) {
+                if (board[r][c] != 0) filledCells.add(r to c)
+            }
+        }
+        filledCells.shuffle()
+        for (cell in filledCells) {
+            board[cell.first][cell.second] = 0
+            cleared++
+            if (cleared >= 15) break
+        }
+        selectedX = -1
+        selectedY = -1
+        celebrationManager.clear()
+        generateNextBalls()
+        SoundManager.playSuccess()
+        invalidate()
+        return true
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (isGameOver) {
-            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resetGame()
                 return true
             }
@@ -279,15 +309,36 @@ class Lines98View @JvmOverloads constructor(
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> { cursorY = (cursorY - 1 + gridSize) % gridSize; SoundManager.playClick() }
-            KeyEvent.KEYCODE_DPAD_DOWN -> { cursorY = (cursorY + 1) % gridSize; SoundManager.playClick() }
-            KeyEvent.KEYCODE_DPAD_LEFT -> { cursorX = (cursorX - 1 + gridSize) % gridSize; SoundManager.playClick() }
-            KeyEvent.KEYCODE_DPAD_RIGHT -> { cursorX = (cursorX + 1) % gridSize; SoundManager.playClick() }
-            KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DPAD_CENTER -> {
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I -> {
+                cursorY = (cursorY - 1 + gridSize) % gridSize
+                SoundManager.playClick()
+            }
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_K -> {
+                cursorY = (cursorY + 1) % gridSize
+                SoundManager.playClick()
+            }
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_J -> {
+                cursorX = (cursorX - 1 + gridSize) % gridSize
+                SoundManager.playClick()
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_L -> {
+                cursorX = (cursorX + 1) % gridSize
+                SoundManager.playClick()
+            }
+            KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> {
                 handleSelection()
+            }
+            KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_ESCAPE -> {
+                selectedX = -1
+                selectedY = -1
+                SoundManager.playClick()
             }
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
+                return true
+            }
+            KeyEvent.KEYCODE_VOLUME_MUTE -> {
+                toggleSound()
                 return true
             }
             else -> return super.onKeyDown(keyCode, event)

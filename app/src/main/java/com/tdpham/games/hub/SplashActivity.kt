@@ -22,7 +22,10 @@ import kotlinx.coroutines.withContext
 
 class SplashActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
+    private var isSkipped = false
+
     private val startMainRunnable = Runnable {
+        if (isFinishing || isDestroyed) return@Runnable
         ProfileManager.ensureDefaultProfileExists(this)
         val lastPlayerId = ProfileManager.getLastPlayerId(this)
         val profiles = ProfileManager.getProfiles(this)
@@ -33,7 +36,6 @@ class SplashActivity : AppCompatActivity() {
                 putExtra("AUTO_LOGGED_IN", true)
             }
         } else {
-            // Since we ensured default exists, profiles is never empty here
             val activeId = ProfileManager.getActiveProfileId(this) ?: profiles.first().id
             ProfileManager.setActiveProfileId(this, activeId)
             Intent(this, MainActivity::class.java)
@@ -41,9 +43,6 @@ class SplashActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-    private var pulseRunnable: Runnable? = null
-
-    private var isSkipped = false
 
     private fun skipSplash() {
         if (!isSkipped) {
@@ -57,71 +56,37 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        // Run heavy initializations in background
+        // Initialize audio and play custom 1-second retro chime sequence
         lifecycleScope.launch(Dispatchers.IO) {
-            // Warm up SharedPreferences and SoundManager immediately
             SoundManager.init(this@SplashActivity)
             withContext(Dispatchers.Main) {
-                SoundManager.playArcadeIntroSequence()
+                SoundManager.playRetroSplashChime()
             }
             
-            // Parallel init for Firebase and Ads to save time
+            // Asynchronous background pre-warming
             launch { ConfigManager.init() }
             launch { 
-                delay(200) // Minimal gap for Binder stabilization
+                delay(150)
                 AdManager.init(this@SplashActivity) 
             }
         }
 
-        // Animation for splash content with staggered entry
-        val logo = findViewById<android.view.View>(R.id.splash_logo)
-        val title = findViewById<android.view.View>(R.id.splash_title)
-        val loader = findViewById<android.view.View>(R.id.splash_loader)
-        val hint = findViewById<android.view.View>(R.id.splash_hint)
+        // Configure 1-second Canvas animation
+        val canvasView = findViewById<RetroSplashCanvasView>(R.id.retro_splash_canvas)
+        canvasView?.onSplashFinished = {
+            skipSplash()
+        }
+        canvasView?.startAnimation(1000L)
 
         // Set skippable click listener on root view
         findViewById<android.view.View>(android.R.id.content)?.setOnClickListener {
             skipSplash()
         }
 
-        // Initial state
-        listOf(logo, title, loader, hint).forEach {
-            it.alpha = 0f
-            it.translationY = 20f
-        }
-
-        // Staggered Entrance
-        logo.animate().alpha(1f).translationY(0f).setDuration(500).setStartDelay(100).start()
-        title.animate().alpha(1f).translationY(0f).setDuration(500).setStartDelay(250).start()
-        loader.animate().alpha(1f).translationY(0f).setDuration(500).setStartDelay(400).start()
-        hint.animate().alpha(1f).translationY(0f).setDuration(500).setStartDelay(550).start()
-
-        // Subtle continuous pulse for logo
-        val runnable = object : Runnable {
-            override fun run() {
-                logo.animate()
-                    .scaleX(1.05f)
-                    .scaleY(1.05f)
-                    .setDuration(1000)
-                    .withEndAction {
-                        logo.animate()
-                            .scaleX(1f)
-                            .scaleY(1f)
-                            .setDuration(1000)
-                            .withEndAction(this)
-                            .start()
-                    }
-                    .start()
-            }
-        }
-        pulseRunnable = runnable
-        logo.postDelayed(runnable, 600)
-
-        // Hide system UI with modern approach for API 30+, fallback for older versions
         hideSystemUI()
 
-        // Increased slightly to 1800ms to let the staggered animation breathe
-        handler.postDelayed(startMainRunnable, 1800)
+        // 1-second fallback navigation timer
+        handler.postDelayed(startMainRunnable, 1000L)
     }
 
     override fun onKeyDown(keyCode: Int, event: android.view.KeyEvent?): Boolean {
@@ -137,22 +102,15 @@ class SplashActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(startMainRunnable)
-        pulseRunnable?.let {
-            findViewById<android.view.View>(R.id.splash_logo)?.removeCallbacks(it)
-        }
-        findViewById<android.view.View>(R.id.splash_logo)?.animate()?.cancel()
     }
 
     private fun hideSystemUI() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            // Use modern WindowInsets API for Android 11+ (API 30+)
             WindowCompat.setDecorFitsSystemWindows(window, false)
             val controller = WindowInsetsControllerCompat(window, window.decorView)
             controller.hide(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.navigationBars())
-            // Keep immersive by not showing transient bars - they'd interrupt gameplay
             controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         } else {
-            // Fallback for Android 10 and below using deprecated but functional API
             @Suppress("DEPRECATION")
             window.decorView.systemUiVisibility = (android.view.View.SYSTEM_UI_FLAG_LOW_PROFILE
                     or android.view.View.SYSTEM_UI_FLAG_FULLSCREEN

@@ -122,16 +122,41 @@ class SimonSaysView @JvmOverloads constructor(
         }, delay)
     }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        handler.removeCallbacksAndMessages(null)
+    }
+
+    override fun reviveGame(): Boolean {
+        if (!gameOver) return false
+        gameOver = false
+        gamePaused = false
+        celebrationManager.clear()
+        playerIdx = 0
+        showSequence()
+        SoundManager.playSuccess()
+        invalidate()
+        return true
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resetGame()
                 startGame()
                 return true
             }
             return super.onKeyDown(keyCode, event)
         }
-        if (gamePaused && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
+        if (gamePaused && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            )) {
             startGame()
             return true
         }
@@ -139,15 +164,15 @@ class SimonSaysView @JvmOverloads constructor(
         if (isShowingSequence || gamePaused) return true
 
         val input = when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> 0
-            KeyEvent.KEYCODE_DPAD_RIGHT -> 1
-            KeyEvent.KEYCODE_DPAD_DOWN -> 2
-            KeyEvent.KEYCODE_DPAD_LEFT -> 3
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_BUTTON_Y -> 0
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_L, KeyEvent.KEYCODE_BUTTON_B -> 1
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_K, KeyEvent.KEYCODE_BUTTON_A -> 2
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_J, KeyEvent.KEYCODE_BUTTON_X -> 3
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
                 return true
             }
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> {
+            KeyEvent.KEYCODE_VOLUME_MUTE -> {
                 toggleSound()
                 return true
             }
@@ -402,10 +427,5 @@ class SimonSaysView @JvmOverloads constructor(
         lines.forEachIndexed { i, s ->
             canvas.drawText(s, width / 2f, height / 2f + 40f + i * 40f, paint)
         }
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        handler.removeCallbacksAndMessages(null)
     }
 }

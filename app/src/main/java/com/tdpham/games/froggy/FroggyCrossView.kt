@@ -298,7 +298,11 @@ class FroggyCrossView @JvmOverloads constructor(
             return super.onKeyDown(keyCode, event)
         }
         if (isLevelCleared) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 isLevelCleared = false
                 resetFrog()
                 resume()
@@ -306,23 +310,46 @@ class FroggyCrossView @JvmOverloads constructor(
             }
             return true
         }
-        if (gamePaused && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
+        if (gamePaused && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            )) {
             resume()
             return true
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> moveFrog(-1, 0)
-            KeyEvent.KEYCODE_DPAD_DOWN -> moveFrog(1, 0)
-            KeyEvent.KEYCODE_DPAD_LEFT -> moveFrog(0, -1)
-            KeyEvent.KEYCODE_DPAD_RIGHT -> moveFrog(0, 1)
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I -> moveFrog(-1, 0)
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_K -> moveFrog(1, 0)
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_J -> moveFrog(0, -1)
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_L -> moveFrog(0, 1)
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
                 return true
             }
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
+            KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
+        invalidate()
+        return true
+    }
+
+    override fun reviveGame(): Boolean {
+        if (!gameOver) return false
+        gameOver = false
+        lives = 2
+        frogR = when {
+            frogR >= 10 -> 15
+            frogR >= 5 -> 10
+            else -> 5
+        }
+        frogX = (cols / 2).toFloat()
+        celebrationManager.clear()
+        gamePaused = false
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+        SoundManager.playSuccess()
         invalidate()
         return true
     }

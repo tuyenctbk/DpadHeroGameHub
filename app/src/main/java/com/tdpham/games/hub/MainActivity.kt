@@ -151,6 +151,24 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.active_profile_layout)?.setOnKeyListener(onDownToGameList)
 
+        // Setup GamePadMonitor Indicator in Header if present
+        val layoutController = findViewById<View>(R.id.layout_controller_indicator)
+        val ivControllerIcon = findViewById<ImageView>(R.id.iv_controller_status_icon)
+        val tvControllerText = findViewById<TextView>(R.id.tv_controller_status_text)
+        val dotController = findViewById<View>(R.id.view_controller_status_dot)
+        if (layoutController != null && ivControllerIcon != null && tvControllerText != null) {
+            com.tdpham.games.common.GamePadMonitor.bindHeaderIndicator(
+                activity = this,
+                container = layoutController,
+                iconView = ivControllerIcon,
+                textView = tvControllerText,
+                statusDot = dotController
+            )
+        }
+            }
+        }
+        findViewById<View>(R.id.active_profile_layout)?.setOnKeyListener(onDownToGameList)
+
         findViewById<Button>(R.id.btn_settings)?.apply {
             androidx.core.view.ViewCompat.setTransitionName(this, "hub_settings_transition")
             setOnClickListener {

@@ -236,9 +236,26 @@ class MentalMathView @JvmOverloads constructor(
         options.shuffle()
     }
 
+    override fun reviveGame(): Boolean {
+        if (!gameOver) return false
+        gameOver = false
+        isReviewing = false
+        isCorrect = false
+        isPaused = false
+        celebrationManager.clear()
+        generateQuestion()
+        SoundManager.playSuccess()
+        invalidate()
+        return true
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resetGame()
                 return true
             }
@@ -249,24 +266,64 @@ class MentalMathView @JvmOverloads constructor(
 
         if (isReviewing) {
             if (isCorrect) return true
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 endGame()
                 return true
             }
             return true
         }
 
+        // Direct option selection with number keys 1, 2, 3, 4
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_LEFT -> if (selectedOptionIdx % 2 != 0) selectedOptionIdx--
-            KeyEvent.KEYCODE_DPAD_RIGHT -> if (selectedOptionIdx % 2 == 0) selectedOptionIdx++
-            KeyEvent.KEYCODE_DPAD_UP -> if (selectedOptionIdx >= 2) selectedOptionIdx -= 2
-            KeyEvent.KEYCODE_DPAD_DOWN -> if (selectedOptionIdx < 2) selectedOptionIdx += 2
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> checkAnswer()
+            KeyEvent.KEYCODE_1, KeyEvent.KEYCODE_NUMPAD_1 -> {
+                if (options.size > 0) {
+                    selectedOptionIdx = 0
+                    checkAnswer()
+                    invalidate()
+                    return true
+                }
+            }
+            KeyEvent.KEYCODE_2, KeyEvent.KEYCODE_NUMPAD_2 -> {
+                if (options.size > 1) {
+                    selectedOptionIdx = 1
+                    checkAnswer()
+                    invalidate()
+                    return true
+                }
+            }
+            KeyEvent.KEYCODE_3, KeyEvent.KEYCODE_NUMPAD_3 -> {
+                if (options.size > 2) {
+                    selectedOptionIdx = 2
+                    checkAnswer()
+                    invalidate()
+                    return true
+                }
+            }
+            KeyEvent.KEYCODE_4, KeyEvent.KEYCODE_NUMPAD_4 -> {
+                if (options.size > 3) {
+                    selectedOptionIdx = 3
+                    checkAnswer()
+                    invalidate()
+                    return true
+                }
+            }
+        }
+
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_J -> if (selectedOptionIdx % 2 != 0) selectedOptionIdx--
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_L -> if (selectedOptionIdx % 2 == 0) selectedOptionIdx++
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I -> if (selectedOptionIdx >= 2) selectedOptionIdx -= 2
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_K -> if (selectedOptionIdx < 2) selectedOptionIdx += 2
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> checkAnswer()
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
                 return true
             }
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
+            KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()

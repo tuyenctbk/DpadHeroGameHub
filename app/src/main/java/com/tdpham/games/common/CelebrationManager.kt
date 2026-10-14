@@ -153,11 +153,13 @@ class CelebrationManager {
             clear()
             return
         }
-        this.width = width
-        this.height = height
-        this.currentType = type ?: listOf(CelebrationType.FIREWORKS, CelebrationType.RAIN_COINS, CelebrationType.CONFETTI, CelebrationType.BALLOONS, CelebrationType.STARS).random()
-        particles.clear()
-        initParticles()
+        synchronized(particles) {
+            this.width = width
+            this.height = height
+            this.currentType = type ?: listOf(CelebrationType.FIREWORKS, CelebrationType.RAIN_COINS, CelebrationType.CONFETTI, CelebrationType.BALLOONS, CelebrationType.STARS).random()
+            particles.clear()
+            initParticles()
+        }
     }
 
     fun startOutcome(width: Float, height: Float, isWin: Boolean = false, isNewHigh: Boolean = false, score: Int = 0, highScore: Int = 0) {
@@ -180,12 +182,14 @@ class CelebrationManager {
     }
 
     fun clear() {
-        particles.clear()
-        width = 0f
-        height = 0f
+        synchronized(particles) {
+            particles.clear()
+            width = 0f
+            height = 0f
+        }
     }
 
-    fun isActive(): Boolean = particles.isNotEmpty()
+    fun isActive(): Boolean = synchronized(particles) { particles.isNotEmpty() }
 
     private fun initParticles() {
         if (width <= 0f || height <= 0f) return
@@ -318,78 +322,80 @@ class CelebrationManager {
     }
 
     fun update() {
-        if (particles.isEmpty()) return
+        synchronized(particles) {
+            if (particles.isEmpty()) return
 
-        val iterator = particles.iterator()
-        while (iterator.hasNext()) {
-            val p = iterator.next()
-            p.update()
-            if (p.life <= 0) iterator.remove()
-        }
+            val iterator = particles.iterator()
+            while (iterator.hasNext()) {
+                val p = iterator.next()
+                p.update()
+                if (p.life <= 0) iterator.remove()
+            }
 
-        // Replenish some types for continuous effect only if width > 0 and height > 0
-        if (width > 0f && height > 0f && particles.isNotEmpty() && particles.size < 20) {
-            when (currentType) {
-                CelebrationType.FLOWERS, CelebrationType.STARS, CelebrationType.CONFETTI,
-                CelebrationType.DIAMONDS, CelebrationType.SNOWFLAKES, CelebrationType.RAIN_COINS -> {
-                    particles.add(createFallingParticle(currentType).apply { y = -50f })
-                }
-                CelebrationType.HEARTS, CelebrationType.BALLOONS, CelebrationType.MUSIC_NOTES, CelebrationType.SMILEYS -> {
-                    if (random.nextFloat() > 0.8f) {
-                        val p = if (currentType == CelebrationType.HEARTS) {
-                            Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 3 - 2, Color.RED, random.nextFloat() * 20 + 15, currentType)
-                        } else if (currentType == CelebrationType.BALLOONS) {
-                            Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 3 - 2, randomColor(), random.nextFloat() * 30 + 30, currentType)
-                        } else if (currentType == CelebrationType.MUSIC_NOTES) {
-                            Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 4 - 2, randomColor(), random.nextFloat() * 25 + 20, currentType)
-                        } else {
-                            Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 3 - 2, Color.YELLOW, random.nextFloat() * 30 + 25, currentType)
+            // Replenish some types for continuous effect only if width > 0 and height > 0
+            if (width > 0f && height > 0f && particles.isNotEmpty() && particles.size < 20) {
+                when (currentType) {
+                    CelebrationType.FLOWERS, CelebrationType.STARS, CelebrationType.CONFETTI,
+                    CelebrationType.DIAMONDS, CelebrationType.SNOWFLAKES, CelebrationType.RAIN_COINS -> {
+                        particles.add(createFallingParticle(currentType).apply { y = -50f })
+                    }
+                    CelebrationType.HEARTS, CelebrationType.BALLOONS, CelebrationType.MUSIC_NOTES, CelebrationType.SMILEYS -> {
+                        if (random.nextFloat() > 0.8f) {
+                            val p = if (currentType == CelebrationType.HEARTS) {
+                                Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 3 - 2, Color.RED, random.nextFloat() * 20 + 15, currentType)
+                            } else if (currentType == CelebrationType.BALLOONS) {
+                                Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 3 - 2, randomColor(), random.nextFloat() * 30 + 30, currentType)
+                            } else if (currentType == CelebrationType.MUSIC_NOTES) {
+                                Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 4 - 2, randomColor(), random.nextFloat() * 25 + 20, currentType)
+                            } else {
+                                Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 3 - 2, Color.YELLOW, random.nextFloat() * 30 + 25, currentType)
+                            }
+                            particles.add(p)
                         }
-                        particles.add(p)
                     }
-                }
-                CelebrationType.FIREWORKS -> {
-                     if (random.nextFloat() > 0.95f) {
-                          val bx = random.nextFloat() * width
-                          val by = random.nextFloat() * (height / 2)
-                          val color = randomColor()
-                          repeat(30) {
-                              val angle = random.nextFloat() * 2 * PI.toFloat()
-                              val speed = random.nextFloat() * 10 + 3
-                              particles.add(Particle(bx, by, cos(angle.toDouble()).toFloat() * speed, sin(angle.toDouble()).toFloat() * speed, color, random.nextFloat() * 8 + 4, currentType))
-                          }
-                     }
-                }
-                CelebrationType.SPARKLES -> {
-                    repeat(5) {
-                        particles.add(Particle(random.nextFloat() * width, random.nextFloat() * height, 0f, 0f, Color.WHITE, random.nextFloat() * 10 + 5, currentType))
+                    CelebrationType.FIREWORKS -> {
+                         if (random.nextFloat() > 0.95f) {
+                              val bx = random.nextFloat() * width
+                              val by = random.nextFloat() * (height / 2)
+                              val color = randomColor()
+                              repeat(30) {
+                                  val angle = random.nextFloat() * 2 * PI.toFloat()
+                                  val speed = random.nextFloat() * 10 + 3
+                                  particles.add(Particle(bx, by, cos(angle.toDouble()).toFloat() * speed, sin(angle.toDouble()).toFloat() * speed, color, random.nextFloat() * 8 + 4, currentType))
+                              }
+                         }
                     }
-                }
-                CelebrationType.FALLING_LEAVES -> {
-                    particles.add(createFallingParticle(currentType).apply { y = -50f })
-                }
-                CelebrationType.RAIN_CLOUDS -> {
-                    particles.add(Particle(random.nextFloat() * width, -50f, 0f, random.nextFloat() * 5 + 5, Color.parseColor("#90CAF9"), random.nextFloat() * 5 + 5, currentType))
-                }
-                CelebrationType.FIRE_FLAMES -> {
-                    particles.add(Particle(random.nextFloat() * width, height, (random.nextFloat() - 0.5f) * 4f, -random.nextFloat() * 5 - 2, Color.parseColor("#FF5722"), random.nextFloat() * 20 + 10, currentType))
-                }
-                CelebrationType.LIGHTNING_BOLTS -> {
-                    if (random.nextFloat() > 0.9f) {
-                        particles.add(Particle(random.nextFloat() * width, random.nextFloat() * height * 0.5f, 0f, 0f, Color.YELLOW, random.nextFloat() * 40 + 40, currentType))
-                    }
-                }
-                CelebrationType.BUBBLES -> {
-                    particles.add(Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 2 - 1, Color.argb(100, 174, 234, 255), random.nextFloat() * 15 + 5, currentType))
-                }
-                CelebrationType.GHOSTS, CelebrationType.BROKEN_HEARTS, CelebrationType.CLOUDS -> {
-                    if (random.nextFloat() > 0.85f) {
-                        val p = when (currentType) {
-                            CelebrationType.GHOSTS -> Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 2 - 1, Color.argb(180, 255, 255, 255), random.nextFloat() * 30 + 30, currentType)
-                            CelebrationType.BROKEN_HEARTS -> Particle(random.nextFloat() * width, -50f, random.nextFloat() * 2 - 1, random.nextFloat() * 2 + 2, Color.RED, random.nextFloat() * 20 + 20, currentType)
-                            else -> Particle(width + 50f, random.nextFloat() * height * 0.4f, -random.nextFloat() * 1 - 0.5f, 0f, Color.argb(200, 189, 189, 189), random.nextFloat() * 60 + 60, currentType)
+                    CelebrationType.SPARKLES -> {
+                        repeat(5) {
+                            particles.add(Particle(random.nextFloat() * width, random.nextFloat() * height, 0f, 0f, Color.WHITE, random.nextFloat() * 10 + 5, currentType))
                         }
-                        particles.add(p)
+                    }
+                    CelebrationType.FALLING_LEAVES -> {
+                        particles.add(createFallingParticle(currentType).apply { y = -50f })
+                    }
+                    CelebrationType.RAIN_CLOUDS -> {
+                        particles.add(Particle(random.nextFloat() * width, -50f, 0f, random.nextFloat() * 5 + 5, Color.parseColor("#90CAF9"), random.nextFloat() * 5 + 5, currentType))
+                    }
+                    CelebrationType.FIRE_FLAMES -> {
+                        particles.add(Particle(random.nextFloat() * width, height, (random.nextFloat() - 0.5f) * 4f, -random.nextFloat() * 5 - 2, Color.parseColor("#FF5722"), random.nextFloat() * 20 + 10, currentType))
+                    }
+                    CelebrationType.LIGHTNING_BOLTS -> {
+                        if (random.nextFloat() > 0.9f) {
+                            particles.add(Particle(random.nextFloat() * width, random.nextFloat() * height * 0.5f, 0f, 0f, Color.YELLOW, random.nextFloat() * 40 + 40, currentType))
+                        }
+                    }
+                    CelebrationType.BUBBLES -> {
+                        particles.add(Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 2 - 1, Color.argb(100, 174, 234, 255), random.nextFloat() * 15 + 5, currentType))
+                    }
+                    CelebrationType.GHOSTS, CelebrationType.BROKEN_HEARTS, CelebrationType.CLOUDS -> {
+                        if (random.nextFloat() > 0.85f) {
+                            val p = when (currentType) {
+                                CelebrationType.GHOSTS -> Particle(random.nextFloat() * width, height + 50f, random.nextFloat() * 2 - 1, -random.nextFloat() * 2 - 1, Color.argb(180, 255, 255, 255), random.nextFloat() * 30 + 30, currentType)
+                                CelebrationType.BROKEN_HEARTS -> Particle(random.nextFloat() * width, -50f, random.nextFloat() * 2 - 1, random.nextFloat() * 2 + 2, Color.RED, random.nextFloat() * 20 + 20, currentType)
+                                else -> Particle(width + 50f, random.nextFloat() * height * 0.4f, -random.nextFloat() * 1 - 0.5f, 0f, Color.argb(200, 189, 189, 189), random.nextFloat() * 60 + 60, currentType)
+                            }
+                            particles.add(p)
+                        }
                     }
                 }
             }
@@ -397,34 +403,43 @@ class CelebrationManager {
     }
 
     fun draw(canvas: Canvas) {
-        if (particles.isEmpty()) return
-        particles.forEach { p ->
-            paint.reset()
-            paint.isAntiAlias = true
-            paint.color = p.color
-            paint.alpha = p.alpha
-            paint.style = Paint.Style.FILL
+        synchronized(particles) {
+            if (particles.isEmpty()) return
+            val count = particles.size
+            for (i in 0 until count) {
+                val p = particles.getOrNull(i) ?: continue
+                paint.reset()
+                paint.isAntiAlias = true
+                paint.color = p.color
+                paint.alpha = p.alpha
+                paint.style = Paint.Style.FILL
 
-            when (p.type) {
-                CelebrationType.CONFETTI -> {
-                    canvas.save()
-                    canvas.translate(p.x, p.y)
-                    canvas.rotate(p.rotation)
-                    canvas.drawRect(-p.size / 2, -p.size / 4, p.size / 2, p.size / 4, paint)
-                    canvas.restore()
-                }
-                CelebrationType.FLOWERS -> {
-                    canvas.save()
-                    canvas.translate(p.x, p.y)
-                    canvas.rotate(p.rotation)
-                    repeat(5) {
-                        canvas.rotate(72f)
-                        canvas.drawOval(-p.size / 2, -p.size, p.size / 2, 0f, paint)
+                when (p.type) {
+                    CelebrationType.CONFETTI -> {
+                        val sc = canvas.save()
+                        try {
+                            canvas.translate(p.x, p.y)
+                            canvas.rotate(p.rotation)
+                            canvas.drawRect(-p.size / 2, -p.size / 4, p.size / 2, p.size / 4, paint)
+                        } finally {
+                            canvas.restoreToCount(sc)
+                        }
                     }
-                    paint.color = Color.YELLOW
-                    canvas.drawCircle(0f, 0f, p.size / 3, paint)
-                    canvas.restore()
-                }
+                    CelebrationType.FLOWERS -> {
+                        val sc = canvas.save()
+                        try {
+                            canvas.translate(p.x, p.y)
+                            canvas.rotate(p.rotation)
+                            repeat(5) {
+                                canvas.rotate(72f)
+                                canvas.drawOval(-p.size / 2, -p.size, p.size / 2, 0f, paint)
+                            }
+                            paint.color = Color.YELLOW
+                            canvas.drawCircle(0f, 0f, p.size / 3, paint)
+                        } finally {
+                            canvas.restoreToCount(sc)
+                        }
+                    }
                 CelebrationType.BALLOONS -> {
                     canvas.drawOval(p.x - p.size * 0.7f, p.y - p.size, p.x + p.size * 0.7f, p.y + p.size, paint)
                     paint.color = Color.WHITE
@@ -489,6 +504,7 @@ class CelebrationManager {
             }
         }
     }
+}
 
     fun getRandomVictoryWord(context: Context, gameKey: String? = null): String {
         val resId = when (gameKey) {
@@ -544,46 +560,51 @@ class CelebrationManager {
     }
 
     private fun drawBrokenHeart(canvas: Canvas, x: Float, y: Float, size: Float, rotation: Float) {
-        canvas.save()
-        canvas.translate(x, y)
-        canvas.rotate(rotation)
-        
-        // Left half
-        path.reset()
-        path.moveTo(0f, size / 4)
-        path.cubicTo(0f, -size / 2, -size, -size / 2, -size, size / 4)
-        path.cubicTo(-size, size, 0f, size * 1.5f, 0f, size * 2)
-        path.lineTo(-5f, size) // Zigzag break
-        path.lineTo(5f, size * 0.5f)
-        path.close()
-        canvas.drawPath(path, paint)
-        
-        // Right half
-        canvas.translate(5f, 5f) // Separate a bit
-        path.reset()
-        path.moveTo(0f, size / 4)
-        path.cubicTo(0f, -size / 2, size, -size / 2, size, size / 4)
-        path.cubicTo(size, size, 0f, size * 1.5f, 0f, size * 2)
-        path.lineTo(-5f, size)
-        path.lineTo(5f, size * 0.5f)
-        path.close()
-        canvas.drawPath(path, paint)
-        
-        canvas.restore()
+        val sc = canvas.save()
+        try {
+            canvas.translate(x, y)
+            canvas.rotate(rotation)
+            
+            // Left half
+            path.reset()
+            path.moveTo(0f, size / 4)
+            path.cubicTo(0f, -size / 2, -size, -size / 2, -size, size / 4)
+            path.cubicTo(-size, size, 0f, size * 1.5f, 0f, size * 2)
+            path.lineTo(-5f, size) // Zigzag break
+            path.lineTo(5f, size * 0.5f)
+            path.close()
+            canvas.drawPath(path, paint)
+            
+            // Right half
+            canvas.translate(5f, 5f) // Separate a bit
+            path.reset()
+            path.moveTo(0f, size / 4)
+            path.cubicTo(0f, -size / 2, size, -size / 2, size, size / 4)
+            path.cubicTo(size, size, 0f, size * 1.5f, 0f, size * 2)
+            path.lineTo(-5f, size)
+            path.lineTo(5f, size * 0.5f)
+            path.close()
+            canvas.drawPath(path, paint)
+        } finally {
+            canvas.restoreToCount(sc)
+        }
     }
 
     private fun drawLeaf(canvas: Canvas, x: Float, y: Float, size: Float, rotation: Float) {
-        canvas.save()
-        canvas.translate(x, y)
-        canvas.rotate(rotation)
-        path.reset()
-        path.moveTo(0f, -size)
-        path.quadTo(size, 0f, 0f, size)
-        path.quadTo(-size, 0f, 0f, -size)
-        canvas.drawPath(path, paint)
-        paint.style = Paint.Style.STROKE
-        canvas.drawLine(0f, -size, 0f, size * 1.2f, paint)
-        canvas.restore()
+        val sc = canvas.save()
+        try {
+            canvas.translate(x, y)
+            canvas.rotate(rotation)
+            path.reset()
+            path.moveTo(0f, -size)
+            path.quadTo(size, 0f, 0f, size)
+            path.quadTo(-size, 0f, 0f, -size)
+            canvas.drawPath(path, paint)
+            paint.style = Paint.Style.STROKE
+            canvas.drawLine(0f, -size, 0f, size * 1.2f, paint)
+        } finally {
+            canvas.restoreToCount(sc)
+        }
     }
 
     private fun drawLightning(canvas: Canvas, x: Float, y: Float, size: Float) {
@@ -596,21 +617,24 @@ class CelebrationManager {
     }
 
     private fun drawStar(canvas: Canvas, x: Float, y: Float, size: Float, rotation: Float) {
-        canvas.save()
-        canvas.translate(x, y)
-        canvas.rotate(rotation)
-        path.reset()
-        val outerRadius = size
-        val innerRadius = size / 2
-        for (i in 0 until 5) {
-            val angle = PI * 2 * i / 5 - PI / 2
-            path.lineTo((cos(angle) * outerRadius).toFloat(), (sin(angle) * outerRadius).toFloat())
-            val nextAngle = PI * 2 * (i + 0.5) / 5 - PI / 2
-            path.lineTo((cos(nextAngle) * innerRadius).toFloat(), (sin(nextAngle) * innerRadius).toFloat())
+        val sc = canvas.save()
+        try {
+            canvas.translate(x, y)
+            canvas.rotate(rotation)
+            path.reset()
+            val outerRadius = size
+            val innerRadius = size / 2
+            for (i in 0 until 5) {
+                val angle = PI * 2 * i / 5 - PI / 2
+                path.lineTo((cos(angle) * outerRadius).toFloat(), (sin(angle) * outerRadius).toFloat())
+                val nextAngle = PI * 2 * (i + 0.5) / 5 - PI / 2
+                path.lineTo((cos(nextAngle) * innerRadius).toFloat(), (sin(nextAngle) * innerRadius).toFloat())
+            }
+            path.close()
+            canvas.drawPath(path, paint)
+        } finally {
+            canvas.restoreToCount(sc)
         }
-        path.close()
-        canvas.drawPath(path, paint)
-        canvas.restore()
     }
 
     private fun drawHeart(canvas: Canvas, x: Float, y: Float, size: Float) {
@@ -625,32 +649,38 @@ class CelebrationManager {
     }
 
     private fun drawDiamond(canvas: Canvas, x: Float, y: Float, size: Float, rotation: Float) {
-        canvas.save()
-        canvas.translate(x, y)
-        canvas.rotate(rotation)
-        path.reset()
-        path.moveTo(0f, -size)
-        path.lineTo(size * 0.7f, 0f)
-        path.lineTo(0f, size)
-        path.lineTo(-size * 0.7f, 0f)
-        path.close()
-        canvas.drawPath(path, paint)
-        canvas.restore()
+        val sc = canvas.save()
+        try {
+            canvas.translate(x, y)
+            canvas.rotate(rotation)
+            path.reset()
+            path.moveTo(0f, -size)
+            path.lineTo(size * 0.7f, 0f)
+            path.lineTo(0f, size)
+            path.lineTo(-size * 0.7f, 0f)
+            path.close()
+            canvas.drawPath(path, paint)
+        } finally {
+            canvas.restoreToCount(sc)
+        }
     }
 
     private fun drawSnowflake(canvas: Canvas, x: Float, y: Float, size: Float, rotation: Float) {
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = size / 5
-        canvas.save()
-        canvas.translate(x, y)
-        canvas.rotate(rotation)
-        repeat(6) {
-            canvas.rotate(60f)
-            canvas.drawLine(0f, 0f, 0f, -size, paint)
-            canvas.drawLine(0f, -size * 0.5f, -size * 0.3f, -size * 0.8f, paint)
-            canvas.drawLine(0f, -size * 0.5f, size * 0.3f, -size * 0.8f, paint)
+        val sc = canvas.save()
+        try {
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = size / 5
+            canvas.translate(x, y)
+            canvas.rotate(rotation)
+            repeat(6) {
+                canvas.rotate(60f)
+                canvas.drawLine(0f, 0f, 0f, -size, paint)
+                canvas.drawLine(0f, -size * 0.5f, -size * 0.3f, -size * 0.8f, paint)
+                canvas.drawLine(0f, -size * 0.5f, size * 0.3f, -size * 0.8f, paint)
+            }
+        } finally {
+            canvas.restoreToCount(sc)
         }
-        canvas.restore()
     }
 
     private fun drawMusicNote(canvas: Canvas, x: Float, y: Float, size: Float) {
@@ -662,18 +692,21 @@ class CelebrationManager {
     }
 
     private fun drawSparkle(canvas: Canvas, x: Float, y: Float, size: Float, rotation: Float) {
-        canvas.save()
-        canvas.translate(x, y)
-        canvas.rotate(rotation)
-        path.reset()
-        repeat(4) {
-            canvas.rotate(90f)
-            path.moveTo(0f, 0f)
-            path.quadTo(size * 0.2f, -size * 0.2f, 0f, -size)
-            path.quadTo(-size * 0.2f, -size * 0.2f, 0f, 0f)
+        val sc = canvas.save()
+        try {
+            canvas.translate(x, y)
+            canvas.rotate(rotation)
+            path.reset()
+            repeat(4) {
+                canvas.rotate(90f)
+                path.moveTo(0f, 0f)
+                path.quadTo(size * 0.2f, -size * 0.2f, 0f, -size)
+                path.quadTo(-size * 0.2f, -size * 0.2f, 0f, 0f)
+            }
+            canvas.drawPath(path, paint)
+        } finally {
+            canvas.restoreToCount(sc)
         }
-        canvas.drawPath(path, paint)
-        canvas.restore()
     }
 
     private fun drawSmiley(canvas: Canvas, x: Float, y: Float, size: Float) {
@@ -688,16 +721,19 @@ class CelebrationManager {
     }
 
     private fun drawCoin(canvas: Canvas, x: Float, y: Float, size: Float, rotation: Float) {
-        canvas.save()
-        canvas.translate(x, y)
-        val scaleX = abs(cos(rotation * PI / 180)).toFloat()
-        canvas.scale(scaleX, 1.0f)
-        paint.color = Color.parseColor("#FFD700")
-        canvas.drawCircle(0f, 0f, size, paint)
-        paint.style = Paint.Style.STROKE
-        paint.color = Color.parseColor("#DAA520")
-        paint.strokeWidth = size * 0.1f
-        canvas.drawCircle(0f, 0f, size * 0.8f, paint)
-        canvas.restore()
+        val sc = canvas.save()
+        try {
+            canvas.translate(x, y)
+            val scaleX = abs(cos(rotation * PI / 180)).toFloat()
+            canvas.scale(scaleX, 1.0f)
+            paint.color = Color.parseColor("#FFD700")
+            canvas.drawCircle(0f, 0f, size, paint)
+            paint.style = Paint.Style.STROKE
+            paint.color = Color.parseColor("#DAA520")
+            paint.strokeWidth = size * 0.1f
+            canvas.drawCircle(0f, 0f, size * 0.8f, paint)
+        } finally {
+            canvas.restoreToCount(sc)
+        }
     }
 }

@@ -120,4 +120,19 @@ class NewGamesUnitTest {
         val bustHand = listOf(Card(0, 10), Card(1, 6), Card(2, 7))
         assertEquals(23, calculateScore(bustHand))
     }
+
+    @Test
+    fun testGamePadMonitor_InputModeEnums() {
+        assertEquals("GAMEPAD", com.tdpham.games.common.GamePadMonitor.InputMode.GAMEPAD.name)
+        assertEquals("REMOTE", com.tdpham.games.common.GamePadMonitor.InputMode.REMOTE.name)
+
+        val controllerInfo = com.tdpham.games.common.GamePadMonitor.ControllerInfo(
+            mode = com.tdpham.games.common.GamePadMonitor.InputMode.GAMEPAD,
+            deviceNames = listOf("Xbox Wireless Controller"),
+            primaryDeviceName = "Xbox Wireless Controller"
+        )
+        assertEquals(com.tdpham.games.common.GamePadMonitor.InputMode.GAMEPAD, controllerInfo.mode)
+        assertEquals("Xbox Wireless Controller", controllerInfo.primaryDeviceName)
+        assertEquals(1, controllerInfo.deviceNames.size)
+    }
 }

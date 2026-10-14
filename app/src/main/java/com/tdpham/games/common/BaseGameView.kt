@@ -223,7 +223,47 @@ abstract class BaseGameView @JvmOverloads constructor(
      */
     open fun onAnalogStickMove(axisX: Float, axisY: Float) {}
 
-    // --- GAME LIFECYCLE ---
+    // --- GAME LIFECYCLE & PAUSE OVERLAY ---
+    var pauseOverlay: PauseOverlay? = null
+
+    fun attachPauseOverlay(
+        container: android.view.ViewGroup,
+        gameTitle: String? = null,
+        hasOptions: Boolean = true,
+        hasGuide: Boolean = true,
+        onOptions: (() -> Unit)? = null,
+        onGuide: (() -> Unit)? = null,
+        onRestart: (() -> Unit)? = null,
+        onExit: (() -> Unit)? = null
+    ): PauseOverlay {
+        val defaultExit: () -> Unit = {
+            val act = context as? android.app.Activity
+            act?.finish()
+        }
+        val overlay = PauseOverlay.attach(
+            container = container,
+            gameTitle = gameTitle,
+            hasOptions = hasOptions,
+            hasGuide = hasGuide,
+            onResume = { resume() },
+            onOptions = onOptions,
+            onGuide = onGuide,
+            onRestart = onRestart,
+            onExit = onExit ?: defaultExit
+        )
+        pauseOverlay = overlay
+        return overlay
+    }
+
+    fun showPauseOverlay() {
+        pause()
+        pauseOverlay?.show()
+    }
+
+    fun hidePauseOverlay() {
+        pauseOverlay?.hide { resume() }
+    }
+
     override fun startGame() {
         isPaused = false
         resume()
@@ -233,14 +273,11 @@ abstract class BaseGameView @JvmOverloads constructor(
     override fun pause() {
         isPaused = true
         isRunning = false
-        var retry = true
-        while (retry) {
-            try {
-                gameThread?.join(500)
-                retry = false
-            } catch (e: InterruptedException) {
-                // Keep trying until thread cleanly shuts down
-            }
+        gameThread?.interrupt()
+        try {
+            gameThread?.join(250)
+        } catch (_: InterruptedException) {
+            Thread.currentThread().interrupt()
         }
         gameThread = null
     }
@@ -303,7 +340,7 @@ abstract class BaseGameView @JvmOverloads constructor(
         fixedDeltaTimeNs = 1_000_000_000L / targetUps.coerceIn(15, 120)
         val fixedDeltaSec = fixedDeltaTimeNs / 1_000_000_000f
 
-        while (isRunning) {
+        while (isRunning && !Thread.currentThread().isInterrupted) {
             val now = System.nanoTime()
             var elapsed = now - lastTime
             lastTime = now
@@ -321,7 +358,7 @@ abstract class BaseGameView @JvmOverloads constructor(
                     try {
                         onGameUpdate(fixedDeltaSec)
                     } catch (e: Throwable) {
-                        gameExceptionHandler.uncaughtException(Thread.currentThread(), e)
+                        logCrashToFirebase(e, "onGameUpdate")
                     }
                     accumulator -= fixedDeltaTimeNs
                     updateCount++
@@ -335,29 +372,36 @@ abstract class BaseGameView @JvmOverloads constructor(
                 // Sub-frame interpolation factor [0.0 .. 1.0]
                 val interpolation = (accumulator.toFloat() / fixedDeltaTimeNs.toFloat()).coerceIn(0f, 1f)
 
-                // Render frame
-                var canvas: Canvas? = null
-                try {
-                    canvas = surfaceHolder.lockCanvas()
-                    if (canvas != null) {
-                        synchronized(surfaceHolder) {
+                // Render frame if surface is valid
+                if (surfaceHolder.surface.isValid && isRunning) {
+                    var canvas: Canvas? = null
+                    try {
+                        canvas = surfaceHolder.lockCanvas()
+                        if (canvas != null) {
+                            synchronized(surfaceHolder) {
+                                try {
+                                    onRender(canvas, interpolation)
+                                } catch (e: Throwable) {
+                                    logCrashToFirebase(e, "onRender")
+                                }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        logCrashToFirebase(e, "lockCanvas")
+                    } finally {
+                        if (canvas != null) {
                             try {
-                                onRender(canvas, interpolation)
-                            } catch (e: Throwable) {
-                                gameExceptionHandler.uncaughtException(Thread.currentThread(), e)
+                                surfaceHolder.unlockCanvasAndPost(canvas)
+                            } catch (e: Exception) {
+                                logCrashToFirebase(e, "unlockCanvasAndPost")
                             }
                         }
                     }
-                } catch (e: Exception) {
-                    gameExceptionHandler.uncaughtException(Thread.currentThread(), e)
-                    e.printStackTrace()
-                } finally {
-                    if (canvas != null) {
-                        try {
-                            surfaceHolder.unlockCanvasAndPost(canvas)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
+                } else {
+                    try {
+                        Thread.sleep(16)
+                    } catch (_: InterruptedException) {
+                        break
                     }
                 }
 

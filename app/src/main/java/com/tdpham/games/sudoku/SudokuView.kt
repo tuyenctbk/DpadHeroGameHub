@@ -175,31 +175,91 @@ class SudokuView @JvmOverloads constructor(
         invalidate()
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (solved && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
-            loadPuzzle(puzzleIndex + 1)
-            return true
-        }
-        
-        when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN, 
-            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                if (pressedKeys.isEmpty()) {
-                    // First press: move immediately
-                    when (keyCode) {
-                        KeyEvent.KEYCODE_DPAD_UP -> cursorR = (cursorR + 8) % 9
-                        KeyEvent.KEYCODE_DPAD_DOWN -> cursorR = (cursorR + 1) % 9
-                        KeyEvent.KEYCODE_DPAD_LEFT -> cursorC = (cursorC + 8) % 9
-                        KeyEvent.KEYCODE_DPAD_RIGHT -> cursorC = (cursorC + 1) % 9
-                    }
-                    invalidate()
-                    handler.removeCallbacks(moveRunnable)
-                    handler.postDelayed(moveRunnable, 400) // Delay before auto-repeat
+    override fun reviveGame(): Boolean {
+        if (solved) return false
+        for (r in 0..8) {
+            for (c in 0..8) {
+                if (!given[r][c]) {
+                    board[r][c] = 0
                 }
-                pressedKeys.add(keyCode)
+            }
+        }
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        invalidate()
+        return true
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (solved) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
+                loadPuzzle(puzzleIndex + 1)
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+            return super.onKeyDown(keyCode, event)
+        }
+
+        // Direct digit inputs 1-9
+        if (keyCode in KeyEvent.KEYCODE_1..KeyEvent.KEYCODE_9) {
+            val num = keyCode - KeyEvent.KEYCODE_0
+            if (!given[cursorR][cursorC]) {
+                board[cursorR][cursorC] = num
+                SoundManager.playClick()
+                checkSolution()
+                invalidate()
+                return true
+            }
+        }
+        if (keyCode in KeyEvent.KEYCODE_NUMPAD_1..KeyEvent.KEYCODE_NUMPAD_9) {
+            val num = keyCode - KeyEvent.KEYCODE_NUMPAD_0
+            if (!given[cursorR][cursorC]) {
+                board[cursorR][cursorC] = num
+                SoundManager.playClick()
+                checkSolution()
+                invalidate()
+                return true
+            }
+        }
+
+        // Clear cell with 0, DEL, BACKSPACE, Button X, Button Y
+        if (keyCode == KeyEvent.KEYCODE_0 || keyCode == KeyEvent.KEYCODE_NUMPAD_0 ||
+            keyCode == KeyEvent.KEYCODE_DEL || keyCode == KeyEvent.KEYCODE_FORWARD_DEL ||
+            keyCode == KeyEvent.KEYCODE_BUTTON_X || keyCode == KeyEvent.KEYCODE_BUTTON_Y
+        ) {
+            if (!given[cursorR][cursorC]) {
+                board[cursorR][cursorC] = 0
+                SoundManager.playClick()
+                invalidate()
+                return true
+            }
+        }
+
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I -> {
+                cursorR = (cursorR + 8) % 9
+                invalidate()
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_K -> {
+                cursorR = (cursorR + 1) % 9
+                invalidate()
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_J -> {
+                cursorC = (cursorC + 8) % 9
+                invalidate()
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_L -> {
+                cursorC = (cursorC + 1) % 9
+                invalidate()
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> {
                 cycleCell()
                 invalidate()
                 return true
@@ -208,7 +268,7 @@ class SudokuView @JvmOverloads constructor(
                 showOptions()
                 return true
             }
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> {
+            KeyEvent.KEYCODE_VOLUME_MUTE -> {
                 toggleSound()
                 return true
             }
@@ -278,6 +338,11 @@ class SudokuView @JvmOverloads constructor(
         if (given[cursorR][cursorC] || solved) return
         board[cursorR][cursorC] = (board[cursorR][cursorC] + 1) % 10
         SoundManager.playClick()
+        checkSolution()
+    }
+
+    private fun checkSolution() {
+        if (solved) return
         if (isCompleteAndValid()) {
             solved = true
             currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)

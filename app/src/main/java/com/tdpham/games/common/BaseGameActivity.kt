@@ -38,6 +38,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     private lateinit var adOverlayHelper: IdleAdOverlayHelper
     private var gameOverCount = 0
     private var pauseDialog: InGamePauseDialog? = null
+    private var inGamePauseOverlay: PauseOverlay? = null
 
     protected open fun shouldShowHelpButton(): Boolean = false
 
@@ -280,8 +281,47 @@ abstract class BaseGameActivity : AppCompatActivity() {
         IdleAdManager.notifyInteraction()
         gameView.pause()
 
-        val intent = PauseActivity.createIntent(this, gameKey, gameTitle)
-        startActivityForResult(intent, PauseActivity.REQUEST_CODE_PAUSE)
+        val root = findViewById<android.view.ViewGroup>(android.R.id.content)
+        if (root != null) {
+            if (inGamePauseOverlay == null) {
+                inGamePauseOverlay = PauseOverlay.attach(
+                    container = root,
+                    gameTitle = gameTitle,
+                    hasOptions = true,
+                    hasGuide = true,
+                    onResume = {
+                        (gameView as View).requestFocus()
+                        gameView.resume()
+                    },
+                    onOptions = {
+                        showGameOptions {
+                            (gameView as View).requestFocus()
+                            gameView.resume()
+                        }
+                    },
+                    onGuide = {
+                        showGameGuide()
+                    },
+                    onRestart = {
+                        restartCurrentGame()
+                        gameView.resume()
+                    },
+                    onExit = {
+                        if (AdManager.canShowInterstitial(this)) {
+                            AdManager.showInterstitial(this) {
+                                finish()
+                            }
+                        } else {
+                            finish()
+                        }
+                    }
+                )
+            }
+            inGamePauseOverlay?.show()
+        } else {
+            val intent = PauseActivity.createIntent(this, gameKey, gameTitle)
+            startActivityForResult(intent, PauseActivity.REQUEST_CODE_PAUSE)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -526,6 +566,8 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        inGamePauseOverlay?.hide()
+        inGamePauseOverlay = null
         pauseDialog?.dismiss()
         pauseDialog = null
         removeActiveOverlay()

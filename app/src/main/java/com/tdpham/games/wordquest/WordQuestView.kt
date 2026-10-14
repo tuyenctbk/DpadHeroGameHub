@@ -136,11 +136,38 @@ class WordQuestView @JvmOverloads constructor(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resetGame()
                 return true
             }
             return super.onKeyDown(keyCode, event)
+        }
+
+        // Direct letter input from physical keyboard
+        if (keyCode in KeyEvent.KEYCODE_A..KeyEvent.KEYCODE_Z) {
+            val char = ('A' + (keyCode - KeyEvent.KEYCODE_A))
+            if (currentGuess.length < 5) {
+                currentGuess += char
+                SoundManager.playClick()
+                if (currentGuess.length == 5) {
+                    submitGuess()
+                }
+                invalidate()
+                return true
+            }
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_DEL || keyCode == KeyEvent.KEYCODE_FORWARD_DEL) {
+            if (currentGuess.isNotEmpty()) {
+                currentGuess = currentGuess.dropLast(1)
+                SoundManager.playClick()
+                invalidate()
+                return true
+            }
         }
 
         when (keyCode) {
@@ -162,12 +189,12 @@ class WordQuestView @JvmOverloads constructor(
                 keyC = (keyC + 1).coerceAtMost(keyboard[keyR].length - 1)
                 SoundManager.playClick()
             }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> selectKey()
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_BUTTON_A -> selectKey()
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
                 return true
             }
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
+            KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
             else -> return super.onKeyDown(keyCode, event)
         }
         
