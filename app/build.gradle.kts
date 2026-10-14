@@ -10,10 +10,10 @@ android {
 
     defaultConfig {
         applicationId = "com.tdpham.dpadarcade"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 34
-        versionCode = 22
-        versionName = "2.8.0"
+        versionCode = 23
+        versionName = "2.8.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
