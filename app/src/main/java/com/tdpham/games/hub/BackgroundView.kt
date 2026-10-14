@@ -68,6 +68,22 @@ class BackgroundView @JvmOverloads constructor(
             paint = paint,
             particles = if (weather != GameEnvironment.WeatherType.NONE) particles else null
         )
+        // Subtle floating ambient neon cyber particles
+        val w = width.toFloat()
+        val h = height.toFloat()
+        if (w > 0f && h > 0f) {
+            paint.style = Paint.Style.FILL
+            for (p in particles) {
+                paint.color = p.color
+                canvas.drawCircle(p.x % w, p.y % h, p.size, paint)
+                p.y -= p.speed
+                p.x += p.vx
+                if (p.y < 0f) {
+                    p.y = h
+                    p.x = Random().nextFloat() * w
+                }
+            }
+        }
     }
 
     override fun onDetachedFromWindow() {

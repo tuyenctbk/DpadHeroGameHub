@@ -11,4 +11,5 @@ interface GameView {
     fun resetGame()
     fun toggleSound(): Boolean
     fun showOptionsDialog(context: Context, onComplete: () -> Unit): Boolean = false
+    fun reviveGame(): Boolean = false
 }

@@ -1924,8 +1924,6 @@ class RetroDriverView @JvmOverloads constructor(
         invincibleUntil = System.currentTimeMillis() + 3500L
         speed = 80f
         celebrationManager.clear()
-        handler.removeCallbacks(gameLoop)
-        handler.post(gameLoop)
         SoundManager.playSuccess()
         invalidate()
         return true

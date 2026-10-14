@@ -151,23 +151,23 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.active_profile_layout)?.setOnKeyListener(onDownToGameList)
 
-        // Setup GamePadMonitor Indicator in Header if present
-        val layoutController = findViewById<View>(R.id.layout_controller_indicator)
-        val ivControllerIcon = findViewById<ImageView>(R.id.iv_controller_status_icon)
-        val tvControllerText = findViewById<TextView>(R.id.tv_controller_status_text)
-        val dotController = findViewById<View>(R.id.view_controller_status_dot)
-        if (layoutController != null && ivControllerIcon != null && tvControllerText != null) {
-            com.tdpham.games.common.GamePadMonitor.bindHeaderIndicator(
-                activity = this,
-                container = layoutController,
-                iconView = ivControllerIcon,
-                textView = tvControllerText,
-                statusDot = dotController
-            )
-        }
+        // Setup GamePadMonitor Indicator in Header if present in layout
+        val layoutControllerId = resources.getIdentifier("layout_controller_indicator", "id", packageName)
+        if (layoutControllerId != 0) {
+            val layoutController = findViewById<View?>(layoutControllerId)
+            val ivControllerIcon = findViewById<ImageView?>(resources.getIdentifier("iv_controller_status_icon", "id", packageName))
+            val tvControllerText = findViewById<TextView?>(resources.getIdentifier("tv_controller_status_text", "id", packageName))
+            val dotController = findViewById<View?>(resources.getIdentifier("view_controller_status_dot", "id", packageName))
+            if (layoutController != null && ivControllerIcon != null && tvControllerText != null) {
+                com.tdpham.games.common.GamePadMonitor.bindHeaderIndicator(
+                    activity = this,
+                    container = layoutController,
+                    iconView = ivControllerIcon,
+                    textView = tvControllerText,
+                    statusDot = dotController
+                )
             }
         }
-        findViewById<View>(R.id.active_profile_layout)?.setOnKeyListener(onDownToGameList)
 
         findViewById<Button>(R.id.btn_settings)?.apply {
             androidx.core.view.ViewCompat.setTransitionName(this, "hub_settings_transition")
