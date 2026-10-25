@@ -61,8 +61,18 @@ class SpinballView @JvmOverloads constructor(
     private val random = Random()
     private val spikePath = Path()
     private val tempPath = Path()
-
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val strScore by lazy { context.getString(R.string.score_label) }
+    private val strBest by lazy { context.getString(R.string.best_label) }
+    private val strMenuOptions by lazy { context.getString(R.string.trex_press_menu_options) }
+    private val strDiff1 by lazy { context.getString(R.string.spinball_difficulty_1) }
+    private val strDiff2 by lazy { context.getString(R.string.spinball_difficulty_2) }
+    private val strDiff3 by lazy { context.getString(R.string.spinball_difficulty_3) }
+    private val strGameOver by lazy { context.getString(R.string.game_over) }
+    private val strPaused by lazy { context.getString(R.string.paused) }
+    private val strRestartHint by lazy { context.getString(R.string.restart_hint) }
+    private val strResumeHint by lazy { context.getString(R.string.resume_hint) }
+
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private val animRunnable = object : Runnable {
         override fun run() {
@@ -460,15 +470,15 @@ class SpinballView @JvmOverloads constructor(
         
         val topScreenY = -centerY
         val hudScoreY = (topScreenY + 54f).coerceAtMost(-radius - 50f)
-        canvas.drawText("${context.getString(R.string.score_label)}: $score  ${context.getString(R.string.best_label)}: $highScore", 0f, hudScoreY, paint)
+        canvas.drawText("$strScore: $score  $strBest: $highScore", 0f, hudScoreY, paint)
         
         paint.textSize = 24f
         paint.color = Color.LTGRAY
-        val modeStr = context.getString(when(currentDifficultyIndex) {
-            0 -> R.string.spinball_difficulty_1
-            2 -> R.string.spinball_difficulty_3
-            else -> R.string.spinball_difficulty_2
-        })
+        val modeStr = when(currentDifficultyIndex) {
+            0 -> strDiff1
+            2 -> strDiff3
+            else -> strDiff2
+        }
         canvas.drawText(modeStr, 0f, hudScoreY + 34f, paint)
 
         // Quick Hint (Top/Left)
@@ -477,7 +487,7 @@ class SpinballView @JvmOverloads constructor(
             paint.textSize = 24f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), -width/2f + 40f, topScreenY + 54f, paint)
+            canvas.drawText(strMenuOptions, -width/2f + 40f, topScreenY + 54f, paint)
             paint.alpha = 255
         }
     } finally {
@@ -485,8 +495,8 @@ class SpinballView @JvmOverloads constructor(
     }
 
         if (isGameOver || isPaused) {
-            val title = if (isGameOver) (if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.game_over)) else context.getString(R.string.paused)
-            val sub = if (isGameOver) "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}" else context.getString(R.string.resume_hint)
+            val title = if (isGameOver) (if (currentVictoryWord.isNotEmpty()) currentVictoryWord else strGameOver) else strPaused
+            val sub = if (isGameOver) "$strScore: $score\n$strRestartHint" else strResumeHint
             
             if (isGameOver) {
                 celebrationManager.draw(canvas)

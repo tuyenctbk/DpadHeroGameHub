@@ -80,12 +80,16 @@ object AppEngagementManager {
             .apply()
 
         if (isWin || isNewHighScore) {
-            // High positive sentiment: attempt Rate dialog, or milestone Share dialog
-            if (!hasUserRated(activity) && shouldPromptRate(activity)) {
-                showRateDialog(activity)
-            } else if (wins > 0 && wins % 5 == 0 && shouldPromptShare(activity)) {
-                showShareDialog(activity)
-            }
+            // High positive sentiment: attempt Rate dialog, or milestone Share dialog.
+            // Post with a delay to ensure input dispatch and win animations complete without blocking the UI thread.
+            activity.window?.decorView?.postDelayed({
+                if (activity.isFinishing || activity.isDestroyed) return@postDelayed
+                if (!hasUserRated(activity) && shouldPromptRate(activity)) {
+                    showRateDialog(activity)
+                } else if (wins > 0 && wins % 5 == 0 && shouldPromptShare(activity)) {
+                    showShareDialog(activity)
+                }
+            }, 1200L)
         }
     }
 
@@ -171,8 +175,14 @@ object AppEngagementManager {
             onDismiss?.invoke()
         }
 
-        dialog.show()
-        btnRate.requestFocus()
+        try {
+            if (!activity.isFinishing && !activity.isDestroyed) {
+                dialog.show()
+                btnRate.requestFocus()
+            }
+        } catch (_: Exception) {
+            isDialogOpen = false
+        }
     }
 
     /**
@@ -213,8 +223,14 @@ object AppEngagementManager {
             onDismiss?.invoke()
         }
 
-        dialog.show()
-        btnShare.requestFocus()
+        try {
+            if (!activity.isFinishing && !activity.isDestroyed) {
+                dialog.show()
+                btnShare.requestFocus()
+            }
+        } catch (_: Exception) {
+            isDialogOpen = false
+        }
     }
 
     /**

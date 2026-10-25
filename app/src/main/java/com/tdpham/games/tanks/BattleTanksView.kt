@@ -62,6 +62,16 @@ class BattleTanksView @JvmOverloads constructor(
     private var currentHintIndex = 0
     private var hintFrameCounter = 0
     private var isInitialized = false
+
+    private val strScore by lazy { context.getString(R.string.score_label) }
+    private val strLevel by lazy { context.getString(R.string.level_label) }
+    private val strBest by lazy { context.getString(R.string.best_label) }
+    private val strMissionFailed by lazy { context.getString(R.string.mission_failed_label) }
+    private val strRestartHint by lazy { context.getString(R.string.restart_hint) }
+    private val strVictory by lazy { context.getString(R.string.victory_label) }
+    private val strContinueHint by lazy { context.getString(R.string.continue_hint) }
+    private val strGameTanks by lazy { context.getString(R.string.game_tanks) }
+    private val strStartGame by lazy { context.getString(R.string.start_game) }
     
     private var bgType = GameEnvironment.BackgroundType.SOLID
     private var isNight = false
@@ -486,15 +496,15 @@ class BattleTanksView @JvmOverloads constructor(
         val rightX = min(width - 45f, width * 0.96f)
         
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("${context.getString(R.string.score_label)}: $score", leftX, hudY, paint)
+        canvas.drawText("$strScore: $score", leftX, hudY, paint)
         
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.LTGRAY
-        canvas.drawText("${context.getString(R.string.level_label)}: $level", width / 2f, hudY, paint)
+        canvas.drawText("$strLevel: $level", width / 2f, hudY, paint)
         
         paint.textAlign = Paint.Align.RIGHT
         paint.color = Color.WHITE
-        canvas.drawText("${context.getString(R.string.best_label)}: $best", rightX, hudY, paint)
+        canvas.drawText("$strBest: $best", rightX, hudY, paint)
 
         // Quick Hint (Top/Left)
         if (!gameOver) {
@@ -516,12 +526,12 @@ class BattleTanksView @JvmOverloads constructor(
         }
 
         if (gameOver) {
-            drawOverlay(canvas, context.getString(R.string.mission_failed_label), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+            drawOverlay(canvas, strMissionFailed, "$strScore: $score\n$strRestartHint")
         } else if (isLevelCleared) {
-            val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.victory_label)
-            drawOverlay(canvas, title, "${context.getString(R.string.level_label)} $level\n${context.getString(R.string.continue_hint)}")
+            val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else strVictory
+            drawOverlay(canvas, title, "$strLevel $level\n$strContinueHint")
         } else if (gamePaused) {
-            drawOverlay(canvas, context.getString(R.string.game_tanks), "${context.getString(R.string.level_label)} $level\n${context.getString(R.string.start_game)}")
+            drawOverlay(canvas, strGameTanks, "$strLevel $level\n$strStartGame")
         }
 
         if (gameOver || isLevelCleared) {

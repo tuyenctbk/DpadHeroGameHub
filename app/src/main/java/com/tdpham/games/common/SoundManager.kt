@@ -148,22 +148,29 @@ object SoundManager {
     }
 
     private fun recreateToneGenerator() {
-        try {
-            toneGenerator?.release()
-            toneGenerator = null
-            if (soundEffectsVolume > 0) {
-                toneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, soundEffectsVolume)
+        soundExecutor.execute {
+            try {
+                toneGenerator?.release()
+                toneGenerator = null
+                if (soundEffectsVolume > 0) {
+                    toneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, soundEffectsVolume)
+                }
+            } catch (e: Throwable) {
+                android.util.Log.e("SoundManager", "Failed to recreate ToneGenerator: ${e.message}", e)
             }
-        } catch (e: Throwable) {
-            android.util.Log.e("SoundManager", "Failed to recreate ToneGenerator: ${e.message}", e)
         }
     }
 
+    private fun playToneDirect(toneType: Int, durationMs: Int) {
+        try {
+            ensureToneGenerator()?.startTone(toneType, durationMs)
+        } catch (_: Throwable) {}
+    }
+
     fun playTone(toneType: Int, durationMs: Int = 100) {
-        if (isSoundEnabled && soundEffectsVolume > 0) {
-            try {
-                ensureToneGenerator()?.startTone(toneType, durationMs)
-            } catch (_: Throwable) {}
+        if (!isSoundEnabled || soundEffectsVolume <= 0) return
+        soundExecutor.execute {
+            playToneDirect(toneType, durationMs)
         }
     }
 
@@ -186,7 +193,7 @@ object SoundManager {
                     ToneGenerator.TONE_PROP_PROMPT
                 )
                 for (tone in tones) {
-                    playTone(tone, 70)
+                    playToneDirect(tone, 70)
                     Thread.sleep(90)
                 }
             } catch (_: InterruptedException) {}
@@ -197,13 +204,13 @@ object SoundManager {
         if (!isSoundEnabled || soundEffectsVolume <= 0) return
         soundExecutor.execute {
             try {
-                playTone(ToneGenerator.TONE_DTMF_1, 60)
+                playToneDirect(ToneGenerator.TONE_DTMF_1, 60)
                 Thread.sleep(80)
-                playTone(ToneGenerator.TONE_DTMF_5, 60)
+                playToneDirect(ToneGenerator.TONE_DTMF_5, 60)
                 Thread.sleep(80)
-                playTone(ToneGenerator.TONE_DTMF_9, 80)
+                playToneDirect(ToneGenerator.TONE_DTMF_9, 80)
                 Thread.sleep(100)
-                playTone(ToneGenerator.TONE_PROP_PROMPT, 180)
+                playToneDirect(ToneGenerator.TONE_PROP_PROMPT, 180)
             } catch (_: InterruptedException) {}
         }
     }

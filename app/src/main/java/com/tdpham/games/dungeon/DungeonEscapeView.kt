@@ -61,6 +61,16 @@ class DungeonEscapeView @JvmOverloads constructor(
     }
     private val spikePath = Path()
     private var lastUpdate = 0L
+
+    private val strLevel by lazy { context.getString(R.string.level_label) }
+    private val strScore by lazy { context.getString(R.string.score_label) }
+    private val strBest by lazy { context.getString(R.string.best_label) }
+    private val strMenuOptions by lazy { context.getString(R.string.trex_press_menu_options) }
+    private val strTrapped by lazy { context.getString(R.string.trapped_label) }
+    private val strFinalScore by lazy { context.getString(R.string.final_score_label) }
+    private val strRestartHint by lazy { context.getString(R.string.restart_hint) }
+    private val strGameDungeon by lazy { context.getString(R.string.game_dungeon) }
+    private val strStartGame by lazy { context.getString(R.string.start_game) }
     
     private val handler = Handler(Looper.getMainLooper())
     private val gameLoop = object : Runnable {
@@ -577,10 +587,10 @@ class DungeonEscapeView @JvmOverloads constructor(
         val rightX = min(width - 45f, width * 0.96f)
         
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("${context.getString(R.string.level_label)}: $level  ${context.getString(R.string.score_label)}: $score", leftX, hudY, paint)
+        canvas.drawText("$strLevel: $level  $strScore: $score", leftX, hudY, paint)
         
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("${context.getString(R.string.best_label)}: $best", rightX, hudY, paint)
+        canvas.drawText("$strBest: $best", rightX, hudY, paint)
 
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
@@ -588,14 +598,14 @@ class DungeonEscapeView @JvmOverloads constructor(
             paint.textSize = 26f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY + 40f, paint)
+            canvas.drawText(strMenuOptions, leftX, hudY + 40f, paint)
             paint.alpha = 255
         }
 
         if (gameOver) {
-            drawOverlay(canvas, context.getString(R.string.trapped_label), "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+            drawOverlay(canvas, strTrapped, "$strFinalScore: $score\n$strRestartHint")
         } else if (gamePaused) {
-            drawOverlay(canvas, context.getString(R.string.game_dungeon), context.getString(R.string.start_game))
+            drawOverlay(canvas, strGameDungeon, strStartGame)
         }
 
         celebrationManager.draw(canvas)

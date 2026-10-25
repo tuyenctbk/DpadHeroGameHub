@@ -98,6 +98,17 @@ class SokobanView @JvmOverloads constructor(
     private val PREFS_NAME = "sokoban_settings"
     private val KEY_START_LEVEL = "start_level"
     private var hintShowFrames = 0
+
+    // Cached string resources to avoid JNI AssetManager locks during onDraw
+    private val strLevel by lazy { context.getString(R.string.level_label) }
+    private val strPushes by lazy { context.getString(R.string.pushes_label) }
+    private val strBest by lazy { context.getString(R.string.best_label) }
+    private val strMenuOptions by lazy { context.getString(R.string.trex_press_menu_options) }
+    private val strGridMastered by lazy { context.getString(R.string.grid_mastered_label) }
+    private val strRestartHint by lazy { context.getString(R.string.sokoban_restart_hint) }
+    private val strRestartHintShort by lazy { context.getString(R.string.restart_hint) }
+    private val strPlayAgainHint by lazy { context.getString(R.string.play_again_hint) }
+
     private val handler = Handler(Looper.getMainLooper())
     private val animRunnable = object : Runnable {
         override fun run() {
@@ -372,9 +383,9 @@ class SokobanView @JvmOverloads constructor(
         val leftX = max(45f, width * 0.04f)
         val rightX = min(width - 45f, width * 0.96f)
 
-        canvas.drawText("${context.getString(R.string.level_label)} ${levelIndex + 1}/${levels.size}  ${context.getString(R.string.pushes_label)}: $pushes", leftX, hudY, paint)
+        canvas.drawText("$strLevel ${levelIndex + 1}/${levels.size}  $strPushes: $pushes", leftX, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("${context.getString(R.string.best_label)}: $best", rightX, hudY, paint)
+        canvas.drawText("$strBest: $best", rightX, hudY, paint)
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 30f
         val centerX = Math.round(width / 2f).toFloat()
@@ -386,7 +397,7 @@ class SokobanView @JvmOverloads constructor(
             paint.textSize = 26f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY + 40f, paint)
+            canvas.drawText(strMenuOptions, leftX, hudY + 40f, paint)
             paint.alpha = 255
             paint.textAlign = Paint.Align.CENTER
         }
@@ -397,14 +408,14 @@ class SokobanView @JvmOverloads constructor(
             }
             solved -> {
                 canvas.drawText(
-                    if (levelIndex >= levels.lastIndex) currentVictoryWord else context.getString(R.string.grid_mastered_label),
+                    if (levelIndex >= levels.lastIndex) currentVictoryWord else strGridMastered,
                     centerX,
                     textY,
                     paint
                 )
             }
             else -> {
-                canvas.drawText(context.getString(R.string.sokoban_restart_hint), centerX, textY, paint)
+                canvas.drawText(strRestartHint, centerX, textY, paint)
             }
         }
 
@@ -412,9 +423,9 @@ class SokobanView @JvmOverloads constructor(
             celebrationManager.draw(canvas)
             
             if (allLevelsDone) {
-                drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.pushes_label)}: $totalPushesAllLevels\n${context.getString(R.string.restart_hint)}")
+                drawOverlay(canvas, currentVictoryWord, "$strPushes: $totalPushesAllLevels\n$strRestartHintShort")
             } else if (solved) {
-                drawOverlay(canvas, context.getString(R.string.grid_mastered_label), context.getString(R.string.play_again_hint))
+                drawOverlay(canvas, strGridMastered, strPlayAgainHint)
             }
         }
     }

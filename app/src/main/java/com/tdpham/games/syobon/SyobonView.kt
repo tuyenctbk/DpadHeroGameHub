@@ -114,6 +114,12 @@ class SyobonView @JvmOverloads constructor(
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val celebrationManager = CelebrationManager()
+
+    private val strMenuOptions by lazy { context.getString(R.string.trex_press_menu_options) }
+    private val strVictoryTitle by lazy { context.getString(R.string.syobon_victory_title) }
+    private val strVictoryDesc by lazy { context.getString(R.string.syobon_victory_desc) }
+    private val strGameOver by lazy { context.getString(R.string.game_over) }
+    private val strRetryHint by lazy { context.getString(R.string.syobon_retry_hint) }
     
     // Reusable objects to minimize allocations in draw/update
     private val tempRectF = RectF()
@@ -1605,7 +1611,7 @@ class SyobonView @JvmOverloads constructor(
             paint.textAlign = Paint.Align.LEFT
             paint.textSize = 26f
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY + 120f, paint)
+            canvas.drawText(strMenuOptions, leftX, hudY + 120f, paint)
             paint.alpha = 255
         }
     }
@@ -1616,10 +1622,10 @@ class SyobonView @JvmOverloads constructor(
             if (currentLevel < 3) {
                 drawOverlayScreen(canvas, context.getString(R.string.syobon_level_clear, currentLevel), context.getString(R.string.syobon_next_level, currentLevel + 1))
             } else {
-                drawOverlayScreen(canvas, context.getString(R.string.syobon_victory_title), context.getString(R.string.syobon_victory_desc))
+                drawOverlayScreen(canvas, strVictoryTitle, strVictoryDesc)
             }
         } else if (gameOver) {
-            drawOverlayScreen(canvas, context.getString(R.string.game_over), context.getString(R.string.syobon_retry_hint))
+            drawOverlayScreen(canvas, strGameOver, strRetryHint)
         }
     }
 

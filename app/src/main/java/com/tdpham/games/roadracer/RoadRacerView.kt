@@ -49,6 +49,18 @@ class RoadRacerView @JvmOverloads constructor(
     private val dashIntervals = floatArrayOf(40f, 40f)
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    private val strScore by lazy { context.getString(R.string.score_label) }
+    private val strLevel by lazy { context.getString(R.string.level_label) }
+    private val strBest by lazy { context.getString(R.string.best_label) }
+    private val strMenuOptions by lazy { context.getString(R.string.trex_press_menu_options) }
+    private val strCrashed by lazy { context.getString(R.string.crashed_label) }
+    private val strFinalScore by lazy { context.getString(R.string.final_score_label) }
+    private val strRestartHint by lazy { context.getString(R.string.restart_hint) }
+    private val strGameRoadRacer by lazy { context.getString(R.string.game_road_racer) }
+    private val strPaused by lazy { context.getString(R.string.paused) }
+    private val strStartGame by lazy { context.getString(R.string.start_game) }
+    private val strResumeHint by lazy { context.getString(R.string.resume_hint) }
+
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
     private val animRunnable = object : Runnable {
         override fun run() {
@@ -412,15 +424,15 @@ class RoadRacerView @JvmOverloads constructor(
         val rightX = min(width - 45f, width * 0.96f)
         
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("${context.getString(R.string.score_label)}: $score", leftX, hudY, paint)
+        canvas.drawText("$strScore: $score", leftX, hudY, paint)
         
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.LTGRAY
-        canvas.drawText("${context.getString(R.string.level_label)}: ${trafficDensity + 1}", width / 2f, hudY, paint)
+        canvas.drawText("$strLevel: ${trafficDensity + 1}", width / 2f, hudY, paint)
 
         paint.textAlign = Paint.Align.RIGHT
         paint.color = Color.WHITE
-        canvas.drawText("${context.getString(R.string.best_label)}: $highScore", rightX, hudY, paint)
+        canvas.drawText("$strBest: $highScore", rightX, hudY, paint)
 
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
@@ -428,18 +440,18 @@ class RoadRacerView @JvmOverloads constructor(
             paint.textSize = 26f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY + 45f, paint)
+            canvas.drawText(strMenuOptions, leftX, hudY + 45f, paint)
             paint.alpha = 255
         }
 
         if (isGameOver) {
             celebrationManager.draw(canvas)
-            val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else context.getString(R.string.crashed_label)
-            drawOverlay(canvas, title, "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+            val title = if (currentVictoryWord.isNotEmpty()) currentVictoryWord else strCrashed
+            drawOverlay(canvas, title, "$strFinalScore: $score\n$strRestartHint")
         }
         else if (isPaused) {
-            val title = if (score == 0) context.getString(R.string.game_road_racer) else context.getString(R.string.paused)
-            val hint = if (score == 0) context.getString(R.string.start_game) else context.getString(R.string.resume_hint)
+            val title = if (score == 0) strGameRoadRacer else strPaused
+            val hint = if (score == 0) strStartGame else strResumeHint
             drawOverlay(canvas, title, hint)
         }
     }

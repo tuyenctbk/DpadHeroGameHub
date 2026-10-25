@@ -274,11 +274,6 @@ abstract class BaseGameView @JvmOverloads constructor(
         isPaused = true
         isRunning = false
         gameThread?.interrupt()
-        try {
-            gameThread?.join(250)
-        } catch (_: InterruptedException) {
-            Thread.currentThread().interrupt()
-        }
         gameThread = null
     }
 
@@ -303,7 +298,7 @@ abstract class BaseGameView @JvmOverloads constructor(
             isRunning = true
             isPaused = false
             gameThread = Thread(this, "BaseGameEngineThread_${gameKey}").apply {
-                priority = Thread.MAX_PRIORITY
+                priority = Thread.NORM_PRIORITY + 1
                 uncaughtExceptionHandler = gameExceptionHandler
                 start()
             }
@@ -317,7 +312,12 @@ abstract class BaseGameView @JvmOverloads constructor(
         viewWidth = width
         viewHeight = height
         onSurfaceDimensionsChanged(width, height)
-        resume()
+        // Post resume to ensure SurfaceView completes updateSurface and releases internal mSurfaceLock
+        post {
+            if (surfaceHolder.surface.isValid) {
+                resume()
+            }
+        }
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
@@ -337,11 +337,14 @@ abstract class BaseGameView @JvmOverloads constructor(
         lastFpsTimestamp = System.currentTimeMillis()
         frameCount = 0
 
-        fixedDeltaTimeNs = 1_000_000_000L / targetUps.coerceIn(15, 120)
+        val targetFpsClamped = targetUps.coerceIn(15, 60)
+        fixedDeltaTimeNs = 1_000_000_000L / targetFpsClamped
         val fixedDeltaSec = fixedDeltaTimeNs / 1_000_000_000f
+        val targetFrameMs = 1000L / targetFpsClamped
 
         while (isRunning && !Thread.currentThread().isInterrupted) {
-            val now = System.nanoTime()
+            val frameStartTime = System.nanoTime()
+            val now = frameStartTime
             var elapsed = now - lastTime
             lastTime = now
 
@@ -350,7 +353,7 @@ abstract class BaseGameView @JvmOverloads constructor(
                 elapsed = 250_000_000L
             }
 
-            if (!isPaused) {
+            if (!isPaused && isRunning) {
                 accumulator += elapsed
 
                 var updateCount = 0
@@ -372,18 +375,17 @@ abstract class BaseGameView @JvmOverloads constructor(
                 // Sub-frame interpolation factor [0.0 .. 1.0]
                 val interpolation = (accumulator.toFloat() / fixedDeltaTimeNs.toFloat()).coerceIn(0f, 1f)
 
-                // Render frame if surface is valid
-                if (surfaceHolder.surface.isValid && isRunning) {
+                // Render frame if surface is valid and loop is active
+                if (isRunning && !isPaused && surfaceHolder.surface.isValid) {
                     var canvas: Canvas? = null
                     try {
+                        if (!isRunning || !surfaceHolder.surface.isValid) break
                         canvas = surfaceHolder.lockCanvas()
-                        if (canvas != null) {
-                            synchronized(surfaceHolder) {
-                                try {
-                                    onRender(canvas, interpolation)
-                                } catch (e: Throwable) {
-                                    logCrashToFirebase(e, "onRender")
-                                }
+                        if (canvas != null && isRunning && surfaceHolder.surface.isValid) {
+                            try {
+                                onRender(canvas, interpolation)
+                            } catch (e: Throwable) {
+                                logCrashToFirebase(e, "onRender")
                             }
                         }
                     } catch (e: Exception) {
@@ -397,12 +399,6 @@ abstract class BaseGameView @JvmOverloads constructor(
                             }
                         }
                     }
-                } else {
-                    try {
-                        Thread.sleep(16)
-                    } catch (_: InterruptedException) {
-                        break
-                    }
                 }
 
                 // Update FPS calculation every second
@@ -413,11 +409,28 @@ abstract class BaseGameView @JvmOverloads constructor(
                     frameCount = 0
                     lastFpsTimestamp = currentMillis
                 }
+
+                // Frame pacing sleep: guarantees CPU yield and releases Surface lock to prevent main thread ANRs
+                val frameElapsedMs = (System.nanoTime() - frameStartTime) / 1_000_000L
+                val sleepMs = targetFrameMs - frameElapsedMs
+                if (sleepMs > 1) {
+                    try {
+                        Thread.sleep(sleepMs)
+                    } catch (_: InterruptedException) {
+                        break
+                    }
+                } else {
+                    try {
+                        Thread.sleep(1)
+                    } catch (_: InterruptedException) {
+                        break
+                    }
+                }
             } else {
                 try {
-                    Thread.sleep(16)
-                } catch (e: InterruptedException) {
-                    // Ignore
+                    Thread.sleep(20)
+                } catch (_: InterruptedException) {
+                    break
                 }
             }
         }

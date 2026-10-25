@@ -51,6 +51,20 @@ class SimonSaysView @JvmOverloads constructor(
         Color.BLUE    // Left
     )
 
+    private val strSimon by lazy { context.getString(R.string.game_simon) }
+    private val strScore by lazy { context.getString(R.string.score_label) }
+    private val strBest by lazy { context.getString(R.string.best_label) }
+    private val strSpeed1 by lazy { context.getString(R.string.simon_says_speed_1) }
+    private val strSpeed2 by lazy { context.getString(R.string.simon_says_speed_2) }
+    private val strSpeed3 by lazy { context.getString(R.string.simon_says_speed_3) }
+    private val strMode by lazy { context.getString(R.string.mode_label) }
+    private val strMenuOptions by lazy { context.getString(R.string.trex_press_menu_options) }
+    private val strWatch by lazy { context.getString(R.string.watch_hint) }
+    private val strYourTurn by lazy { context.getString(R.string.your_turn_hint) }
+    private val strGameOver by lazy { context.getString(R.string.game_over) }
+    private val strRestartHint by lazy { context.getString(R.string.restart_hint) }
+    private val strStartGame by lazy { context.getString(R.string.start_game) }
+
     init {
         isFocusable = true
         isFocusableInTouchMode = true
@@ -321,7 +335,7 @@ class SimonSaysView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = size * 0.05f
         paint.typeface = Typeface.MONOSPACE
-        canvas.drawText(context.getString(R.string.game_simon), cx, cy + size * 0.02f, paint)
+        canvas.drawText(strSimon, cx, cy + size * 0.02f, paint)
 
         // HUD
         paint.reset()
@@ -334,18 +348,18 @@ class SimonSaysView @JvmOverloads constructor(
         val rightX = min(width - 45f, width * 0.96f)
 
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("${context.getString(R.string.score_label)}: $score", leftX, hudY, paint)
+        canvas.drawText("$strScore: $score", leftX, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("${context.getString(R.string.best_label)}: $best", rightX, hudY, paint)
+        canvas.drawText("$strBest: $best", rightX, hudY, paint)
 
         paint.textAlign = Paint.Align.CENTER
         paint.color = Color.LTGRAY
-        val modeStr = context.getString(when(speedIndex) {
-            0 -> R.string.simon_says_speed_1
-            2 -> R.string.simon_says_speed_3
-            else -> R.string.simon_says_speed_2
-        })
-        canvas.drawText("${context.getString(R.string.mode_label)}: $modeStr", width / 2f, hudY, paint)
+        val modeStr = when(speedIndex) {
+            0 -> strSpeed1
+            2 -> strSpeed3
+            else -> strSpeed2
+        }
+        canvas.drawText("$strMode: $modeStr", width / 2f, hudY, paint)
         paint.textAlign = Paint.Align.LEFT
 
         // Quick Hint (Top/Left)
@@ -354,7 +368,7 @@ class SimonSaysView @JvmOverloads constructor(
             paint.textSize = 26f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY + 45f, paint)
+            canvas.drawText(strMenuOptions, leftX, hudY + 45f, paint)
             paint.alpha = 255
         }
 
@@ -362,16 +376,16 @@ class SimonSaysView @JvmOverloads constructor(
         val centerX = Math.round(width / 2f).toFloat()
         if (isShowingSequence) {
             paint.color = Color.YELLOW
-            canvas.drawText(context.getString(R.string.watch_hint), centerX, hudY + 50f, paint)
+            canvas.drawText(strWatch, centerX, hudY + 50f, paint)
         } else if (!gamePaused && !gameOver) {
             paint.color = Color.GREEN
-            canvas.drawText(context.getString(R.string.your_turn_hint), centerX, hudY + 50f, paint)
+            canvas.drawText(strYourTurn, centerX, hudY + 50f, paint)
         }
 
         if (gameOver) {
-            drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+            drawOverlay(canvas, strGameOver, "$strScore: $score\n$strRestartHint")
         } else if (gamePaused) {
-            drawOverlay(canvas, context.getString(R.string.game_simon), context.getString(R.string.start_game))
+            drawOverlay(canvas, strSimon, strStartGame)
         }
 
         if (gameOver || (score > 0 && celebrationTimer > 0)) {

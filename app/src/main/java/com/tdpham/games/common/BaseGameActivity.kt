@@ -94,11 +94,16 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 AppEngagementManager.onGameCompleted(this, isWin = score > 0, isNewHighScore = isHighScore)
 
                 // Natural Game-Over Interstitial Ad Trigger (Respects cooldown & frequency)
+                // Post with a delay to ensure the player sees victory/game-over and input dispatch is not halted
                 gameOverCount++
                 val freq = ConfigManager.getAdsGameOverFrequency()
                 if (gameOverCount >= freq && AdManager.canShowInterstitial(this)) {
                     gameOverCount = 0
-                    AdManager.showInterstitial(this)
+                    window?.decorView?.postDelayed({
+                        if (!isFinishing && !isDestroyed) {
+                            AdManager.showInterstitial(this)
+                        }
+                    }, 1500L)
                 }
             }
         } else {

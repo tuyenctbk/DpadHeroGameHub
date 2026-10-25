@@ -54,6 +54,13 @@ class MemoryView @JvmOverloads constructor(
     private var isProcessing = false
     private val celebrationManager = CelebrationManager()
     private var currentVictoryWord = ""
+
+    private val strMoves by lazy { context.getString(R.string.moves_label) }
+    private val strBest by lazy { context.getString(R.string.best_label) }
+    private val strLevel by lazy { context.getString(R.string.level_label) }
+    private val strMenuOptions by lazy { context.getString(R.string.trex_press_menu_options) }
+    private val strRestartHint by lazy { context.getString(R.string.restart_hint) }
+
     private val handler = Handler(Looper.getMainLooper())
     private val animRunnable = object : Runnable {
         override fun run() {
@@ -318,12 +325,12 @@ class MemoryView @JvmOverloads constructor(
         val leftX = max(45f, width * 0.04f)
         val rightX = min(width - 45f, width * 0.96f)
 
-        canvas.drawText("${context.getString(R.string.moves_label)}: $moves", leftX, hudY, paint)
+        canvas.drawText("$strMoves: $moves", leftX, hudY, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("${context.getString(R.string.best_label)}: ${if (bestMoves == Int.MAX_VALUE) "-" else bestMoves}", rightX, hudY, paint)
+        canvas.drawText("$strBest: ${if (bestMoves == Int.MAX_VALUE) "-" else bestMoves}", rightX, hudY, paint)
 
         paint.textAlign = Paint.Align.CENTER
-        canvas.drawText("${context.getString(R.string.level_label)} ${currentDifficulty.ordinal + 1}", width / 2f, hudY, paint)
+        canvas.drawText("$strLevel ${currentDifficulty.ordinal + 1}", width / 2f, hudY, paint)
 
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {
@@ -331,7 +338,7 @@ class MemoryView @JvmOverloads constructor(
             paint.textSize = 26f
             paint.color = Color.WHITE
             paint.alpha = (hintShowFrames * 3).coerceAtMost(255)
-            canvas.drawText(context.getString(R.string.trex_press_menu_options), leftX, hudY + 38f, paint)
+            canvas.drawText(strMenuOptions, leftX, hudY + 38f, paint)
             paint.alpha = 255
             paint.textAlign = Paint.Align.CENTER
         }
@@ -356,7 +363,7 @@ class MemoryView @JvmOverloads constructor(
 
         if (gameOver) {
             celebrationManager.draw(canvas)
-            drawOverlay(canvas, currentVictoryWord, "${context.getString(R.string.moves_label)}: $moves\n${context.getString(R.string.restart_hint)}")
+            drawOverlay(canvas, currentVictoryWord, "$strMoves: $moves\n$strRestartHint")
         }
     }
 
