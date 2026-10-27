@@ -128,6 +128,8 @@ class DungeonEscapeView @JvmOverloads constructor(
     }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
+    override val canRevive: Boolean get() = true
+
     override fun reviveGame(): Boolean {
         if (!gameOver) return false
         gameOver = false

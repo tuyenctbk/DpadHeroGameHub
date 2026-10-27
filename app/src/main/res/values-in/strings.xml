@@ -715,4 +715,8 @@
     <string name="revive_prompt_description">Tonton iklan singkat untuk bangkit kembali dengan +1 Nyawa tambahan dan lanjutkan permainan!</string>
     <string name="btn_revive_continue">❤️ LANJUTKAN (+1 NYAWA)</string>
     <string name="btn_revive_give_up">❌ AKHIRI PERMAINAN</string>
+    <string name="revive_title">Lanjut bermain?</string>
+    <string name="revive_message">Tonton video singkat untuk melanjutkan dari posisi terakhir.</string>
+    <string name="revive_watch_ad">Tonton iklan</string>
+    <string name="revive_no_thanks">Tidak, terima kasih</string>
 </resources>

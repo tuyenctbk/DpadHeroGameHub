@@ -715,4 +715,8 @@
     <string name="revive_prompt_description">ดูโฆษณาสั้นๆ เพื่อฟื้นคืนชีพพร้อมรับ +1 ชีวิตและเล่นต่อ!</string>
     <string name="btn_revive_continue">❤️ เล่นต่อ (+1 ชีวิต)</string>
     <string name="btn_revive_give_up">❌ จบเกม</string>
+    <string name="revive_title">เล่นต่อไหม?</string>
+    <string name="revive_message">ดูวิดีโอสั้นๆ เพื่อเล่นต่อจากจุดเดิม</string>
+    <string name="revive_watch_ad">ดูโฆษณา</string>
+    <string name="revive_no_thanks">ไม่ล่ะ ขอบคุณ</string>
 </resources>

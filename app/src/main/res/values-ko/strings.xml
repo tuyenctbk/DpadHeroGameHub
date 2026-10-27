@@ -715,4 +715,8 @@
     <string name="revive_prompt_description">짧은 광고를 시청하고 +1 목숨으로 부활하여 게임을 계속하세요!</string>
     <string name="btn_revive_continue">❤️ 이어하기 (+1 목숨)</string>
     <string name="btn_revive_give_up">❌ 게임 종료</string>
+    <string name="revive_title">계속 플레이할까요?</string>
+    <string name="revive_message">짧은 영상을 시청하면 이어서 플레이할 수 있어요.</string>
+    <string name="revive_watch_ad">광고 보기</string>
+    <string name="revive_no_thanks">아니요</string>
 </resources>

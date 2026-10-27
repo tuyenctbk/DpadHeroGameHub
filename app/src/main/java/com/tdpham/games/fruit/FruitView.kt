@@ -185,6 +185,8 @@ class FruitView @JvmOverloads constructor(
         handler.post(gameLoop)
     }
 
+    override val canRevive: Boolean get() = true
+
     override fun reviveGame(): Boolean {
         if (!gameOver) return false
         gameOver = false

@@ -61,6 +61,35 @@ object AdManager {
     private var prefetchedNativeAd: NativeAd? = null
     private var isNativeLoading = false
 
+    // Ad freshness (Google expires cached full-screen ads after ~1 hour) & retry backoff
+    private const val AD_EXPIRY_MS = 55 * 60 * 1000L
+    private val RETRY_DELAYS_MS = longArrayOf(5_000L, 15_000L, 45_000L, 120_000L)
+    private var interstitialLoadedAt = 0L
+    private var rewardedLoadedAt = 0L
+    private var nativeLoadedAt = 0L
+    private var interstitialRetries = 0
+    private var rewardedRetries = 0
+    private var nativeRetries = 0
+
+    private fun retryDelay(attempt: Int): Long = RETRY_DELAYS_MS[attempt.coerceAtMost(RETRY_DELAYS_MS.size - 1)]
+    private fun isFresh(loadedAt: Long) = System.currentTimeMillis() - loadedAt < AD_EXPIRY_MS
+
+    private fun isInterstitialReady(): Boolean {
+        if (mInterstitialAd != null && !isFresh(interstitialLoadedAt)) {
+            Log.d(TAG, "Cached interstitial expired; discarding.")
+            mInterstitialAd = null
+        }
+        return mInterstitialAd != null
+    }
+
+    fun isRewardedReady(): Boolean {
+        if (!isFresh(rewardedLoadedAt)) {
+            mStandardRewardedAd = null
+            mRewardedInterstitialAd = null
+        }
+        return mStandardRewardedAd != null || mRewardedInterstitialAd != null
+    }
+
     // Session tracking
     private var sessionStartTime: Long = 0L
     private var isSessionTracked = false
@@ -73,6 +102,20 @@ object AdManager {
     private val mainHandler = Handler(Looper.getMainLooper())
     private var onNativeAdLoadedListener: ((NativeAd) -> Unit)? = null
     private var onNativeAdFailedListener: (() -> Unit)? = null
+    private var gameOversSinceAd = 0
+
+    /**
+     * Counts a game over across all games in this session (not per-activity) and returns true when an
+     * interstitial is due: sooner for the first ad of the session, then at the regular frequency.
+     */
+    fun registerGameOver(): Boolean {
+        gameOversSinceAd++
+        val needed = if (adsShownInSession == 0) ConfigManager.getAdsFirstGameOverFrequency()
+        else ConfigManager.getAdsGameOverFrequency()
+        return gameOversSinceAd >= needed
+    }
+
+    fun resetGameOverCounter() { gameOversSinceAd = 0 }
 
     fun recordIdleAdDismissed() {
         lastIdleAdDismissTime = System.currentTimeMillis()
@@ -123,9 +166,11 @@ object AdManager {
                     isInitialized = true
                     isInitializing = false
                     mainHandler.post {
-                        // Preload 1 Interstitial ad & 1 Rewarded ad for immediate match readiness
+                        // Preload interstitial now; keep the native ad warm shortly after so the
+                        // idle screensaver never falls back to the house ad.
+                        // Rewarded is preloaded by games via preloadRewarded() only when needed.
                         loadInterstitial(appContext)
-                        loadRewarded(appContext)
+                        mainHandler.postDelayed({ loadNativeAd(appContext) }, 3000L)
                     }
                 }
             } catch (e: Throwable) {
@@ -141,7 +186,7 @@ object AdManager {
      */
     fun loadInterstitial(context: Context) {
         try {
-            if (!ConfigManager.isAdsEnabled() || isLoadingInterstitial || (mInterstitialAd != null)) {
+            if (!ConfigManager.isAdsEnabled() || isLoadingInterstitial || isInterstitialReady()) {
                 return
             }
             isLoadingInterstitial = true
@@ -155,11 +200,16 @@ object AdManager {
                             Log.d(TAG, "Interstitial Ad failed to load: ${adError.message}")
                             mInterstitialAd = null
                             isLoadingInterstitial = false
+                            // No-fill backoff retry so an ad is ready by the next game over
+                            val delay = retryDelay(interstitialRetries++)
+                            mainHandler.postDelayed({ loadInterstitial(appContext) }, delay)
                         }
 
                         override fun onAdLoaded(interstitialAd: InterstitialAd) {
                             Log.d(TAG, "Interstitial Ad loaded and cached.")
                             mInterstitialAd = interstitialAd
+                            interstitialLoadedAt = System.currentTimeMillis()
+                            interstitialRetries = 0
                             isLoadingInterstitial = false
                         }
                     })
@@ -213,8 +263,8 @@ object AdManager {
                 return
             }
 
-            // Check 4: Display ad if loaded
-            val ad = mInterstitialAd
+            // Check 4: Display ad if loaded and not expired
+            val ad = if (isInterstitialReady()) mInterstitialAd else null
             if (ad != null) {
                 ad.fullScreenContentCallback = object : FullScreenContentCallback() {
                     override fun onAdDismissedFullScreenContent() {
@@ -258,15 +308,18 @@ object AdManager {
         val timeSinceIdleAd = System.currentTimeMillis() - lastIdleAdDismissTime
         if (lastIdleAdDismissTime > 0 && timeSinceIdleAd < postIdleGraceMs) return false
         if (context != null && !shouldShowAds(context)) return false
-        return mInterstitialAd != null
+        return isInterstitialReady()
     }
 
     /**
-     * Preloads a Rewarded Ad (Standard Rewarded Video or Rewarded Interstitial).
+     * Preloads a Rewarded Interstitial ad using the real unit (test unit in debug builds only).
+     * Call only when a feature will actually show it, to avoid wasted requests lowering match rate.
      */
+    fun preloadRewarded(context: Context) = loadRewarded(context)
+
     fun loadRewarded(context: Context) {
         try {
-            if (!ConfigManager.isAdsEnabled() || isLoadingRewarded || (mStandardRewardedAd != null || mRewardedInterstitialAd != null)) {
+            if (!ConfigManager.isAdsEnabled() || isLoadingRewarded || isRewardedReady()) {
                 return
             }
             isLoadingRewarded = true
@@ -274,42 +327,23 @@ object AdManager {
             val appContext = context.applicationContext
             mainHandler.post {
                 val adRequest = AdRequest.Builder().build()
-                val rewardedUnitId = if (BuildConfig.DEBUG) TEST_REWARDED_AD_UNIT_ID else "ca-app-pub-5190563950149825/6673801665"
-                
-                RewardedAd.load(appContext, rewardedUnitId, adRequest, object : RewardedAdLoadCallback() {
-                    override fun onAdFailedToLoad(adError: LoadAdError) {
-                        Log.d(TAG, "Standard Rewarded Ad failed to load (${adError.message}). Trying test ID fallback...")
-                        mStandardRewardedAd = null
-                        
-                        // Fallback 1: Try official Test Rewarded Ad Unit ID
-                        RewardedAd.load(appContext, TEST_REWARDED_AD_UNIT_ID, adRequest, object : RewardedAdLoadCallback() {
-                            override fun onAdFailedToLoad(err: LoadAdError) {
-                                mStandardRewardedAd = null
-                                // Fallback 2: Try Test Rewarded Interstitial Ad Unit ID
-                                RewardedInterstitialAd.load(appContext, TEST_REWARDED_INTERSTITIAL_AD_UNIT_ID, adRequest, object : RewardedInterstitialAdLoadCallback() {
-                                    override fun onAdFailedToLoad(e: LoadAdError) {
-                                        Log.d(TAG, "Rewarded Interstitial Test Ad failed to load: ${e.message}")
-                                        mRewardedInterstitialAd = null
-                                        isLoadingRewarded = false
-                                    }
-                                    override fun onAdLoaded(ad: RewardedInterstitialAd) {
-                                        Log.d(TAG, "Rewarded Interstitial Test Ad loaded and cached.")
-                                        mRewardedInterstitialAd = ad
-                                        isLoadingRewarded = false
-                                    }
-                                })
-                            }
-                            override fun onAdLoaded(ad: RewardedAd) {
-                                Log.d(TAG, "Test Rewarded Ad loaded and cached.")
-                                mStandardRewardedAd = ad
-                                isLoadingRewarded = false
-                            }
-                        })
+                val unitId = if (BuildConfig.DEBUG) TEST_REWARDED_INTERSTITIAL_AD_UNIT_ID else REWARDED_INTERSTITIAL_AD_UNIT_ID
+                RewardedInterstitialAd.load(appContext, unitId, adRequest, object : RewardedInterstitialAdLoadCallback() {
+                    override fun onAdFailedToLoad(e: LoadAdError) {
+                        Log.d(TAG, "Rewarded Interstitial failed to load: ${e.message}")
+                        mRewardedInterstitialAd = null
+                        isLoadingRewarded = false
+                        // Only retry a limited number of times; rewarded is optional
+                        if (rewardedRetries < RETRY_DELAYS_MS.size) {
+                            val delay = retryDelay(rewardedRetries++)
+                            mainHandler.postDelayed({ loadRewarded(appContext) }, delay)
+                        }
                     }
-
-                    override fun onAdLoaded(rewardedAd: RewardedAd) {
-                        Log.d(TAG, "Standard Rewarded Ad loaded and cached.")
-                        mStandardRewardedAd = rewardedAd
+                    override fun onAdLoaded(ad: RewardedInterstitialAd) {
+                        Log.d(TAG, "Rewarded Interstitial loaded and cached.")
+                        mRewardedInterstitialAd = ad
+                        rewardedLoadedAt = System.currentTimeMillis()
+                        rewardedRetries = 0
                         isLoadingRewarded = false
                     }
                 })
@@ -392,11 +426,15 @@ object AdManager {
      */
     fun loadNativeAd(context: Context) {
         try {
-            if (!ConfigManager.isAdsEnabled() || isNativeLoading || (prefetchedNativeAd != null)) return
+            if (!ConfigManager.isAdsEnabled() || isNativeLoading) return
+            if (prefetchedNativeAd != null && isFresh(nativeLoadedAt)) return
             if (isLoadingRewarded || isLoadingInterstitial) {
                 Log.d(TAG, "Deferring native ad load: High-priority rewarded or interstitial ad is loading")
+                mainHandler.postDelayed({ loadNativeAd(context.applicationContext) }, 3000L)
                 return
             }
+            prefetchedNativeAd?.destroy()
+            prefetchedNativeAd = null
             isNativeLoading = true
 
             val appContext = context.applicationContext
@@ -413,6 +451,8 @@ object AdManager {
                     .forNativeAd { nativeAd ->
                         Log.d(TAG, "Native Ad loaded.")
                         prefetchedNativeAd = nativeAd
+                        nativeLoadedAt = System.currentTimeMillis()
+                        nativeRetries = 0
                         isNativeLoading = false
                         onNativeAdLoadedListener?.invoke(nativeAd)
                     }
@@ -422,6 +462,8 @@ object AdManager {
                             Log.d(TAG, "Native Ad failed to load: ${adError.message}")
                             isNativeLoading = false
                             onNativeAdFailedListener?.invoke()
+                            val delay = retryDelay(nativeRetries++)
+                            mainHandler.postDelayed({ loadNativeAd(appContext) }, delay)
                         }
                     })
                     .build()
@@ -435,14 +477,20 @@ object AdManager {
     }
 
     fun getNextNativeAd(context: Context): NativeAd? {
-        val nextAd = prefetchedNativeAd
+        val nextAd = if (prefetchedNativeAd != null && isFresh(nativeLoadedAt)) prefetchedNativeAd else null
+        if (nextAd == null) {
+            // Stale or missing: drop it and warm a fresh one
+            prefetchedNativeAd?.destroy()
+            prefetchedNativeAd = null
+            loadNativeAd(context)
+            return null
+        }
         currentNativeAd?.destroy()
         currentNativeAd = nextAd
         prefetchedNativeAd = null
-        
-        if (nextAd != null) {
-            idleAdsShownInSession++
-        }
+        idleAdsShownInSession++
+        // Immediately warm the next one for the next idle cycle
+        mainHandler.postDelayed({ loadNativeAd(context.applicationContext) }, 5000L)
         return nextAd
     }
 

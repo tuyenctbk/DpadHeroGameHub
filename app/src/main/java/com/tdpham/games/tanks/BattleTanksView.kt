@@ -279,6 +279,8 @@ class BattleTanksView @JvmOverloads constructor(
         return true
     }
 
+    override val canRevive: Boolean get() = true
+
     override fun reviveGame(): Boolean {
         if (!gameOver) return false
         gameOver = false

@@ -715,4 +715,8 @@
     <string name="revive_prompt_description">Посмотрите короткую рекламу, чтобы получить +1 жизнь и продолжить игру!</string>
     <string name="btn_revive_continue">❤️ ПРОДОЛЖИТЬ (+1 ЖИЗНЬ)</string>
     <string name="btn_revive_give_up">❌ ЗАВЕРШИТЬ ИГРУ</string>
+    <string name="revive_title">Продолжить игру?</string>
+    <string name="revive_message">Посмотрите короткое видео, чтобы продолжить с того же места.</string>
+    <string name="revive_watch_ad">Смотреть рекламу</string>
+    <string name="revive_no_thanks">Нет, спасибо</string>
 </resources>

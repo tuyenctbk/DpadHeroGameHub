@@ -715,4 +715,8 @@
     <string name="revive_prompt_description">短い広告を視聴して＋1ライフで復活し、ゲームを続けましょう！</string>
     <string name="btn_revive_continue">❤️ コンティニュー (+1 ライフ)</string>
     <string name="btn_revive_give_up">❌ ゲーム終了</string>
+    <string name="revive_title">続けてプレイしますか？</string>
+    <string name="revive_message">短い動画を見ると、続きからプレイできます。</string>
+    <string name="revive_watch_ad">広告を見る</string>
+    <string name="revive_no_thanks">いいえ</string>
 </resources>

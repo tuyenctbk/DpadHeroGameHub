@@ -159,6 +159,8 @@ class SnakeGameView @JvmOverloads constructor(
         isPaused = true
     }
 
+    override val canRevive: Boolean get() = true
+
     override fun reviveGame(): Boolean {
         if (!isGameOver) return false
         isGameOver = false

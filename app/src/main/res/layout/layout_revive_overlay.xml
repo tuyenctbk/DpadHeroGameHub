@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/revive_overlay_scrim"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CC0A0E17"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:elevation="100dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/scanline_pattern"
+        android:alpha="0.08" />
+
+    <LinearLayout
+        android:id="@+id/revive_card_container"
+        android:layout_width="440dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/dialog_background"
+        android:orientation="vertical"
+        android:padding="28dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:elevation="16dp">
+
+        <TextView
+            android:id="@+id/revive_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="🎬"
+            android:textSize="44sp"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/revive_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/revive_title"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:gravity="center"
+            android:letterSpacing="0.06"
+            android:shadowColor="#00E5FF"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="8"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/revive_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/revive_message"
+            android:textColor="#94A3B8"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_marginBottom="18dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#3338BDF8"
+            android:layout_marginBottom="18dp" />
+
+        <Button
+            android:id="@+id/btn_revive_watch"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/revive_watch_ad"
+            android:background="@drawable/bg_menu_item_selector"
+            android:textColor="@color/btn_menu_text_selector"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/btn_revive_decline"
+            android:nextFocusDown="@+id/btn_revive_decline"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/btn_revive_decline"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/revive_no_thanks"
+            android:background="@drawable/bg_menu_item_selector"
+            android:textColor="@color/btn_menu_text_selector"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/btn_revive_watch"
+            android:nextFocusDown="@+id/btn_revive_watch" />
+
+    </LinearLayout>
+
+</FrameLayout>

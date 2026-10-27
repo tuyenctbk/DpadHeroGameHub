@@ -548,6 +548,8 @@ class SpinballView @JvmOverloads constructor(
         }
     }
 
+    override val canRevive: Boolean get() = true
+
     override fun reviveGame(): Boolean {
         if (!isGameOver) return false
         isGameOver = false

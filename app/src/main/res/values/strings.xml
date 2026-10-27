@@ -880,4 +880,8 @@
     <string name="claimed_today">✓ CLAIMED TODAY</string>
     <string name="claim_day_format">🎁 CLAIM DAY %1$d (+%2$d)</string>
     <string name="desc_game_icon">Game Icon</string>
+    <string name="revive_title">Continue playing?</string>
+    <string name="revive_message">Watch a short video to keep going from where you left off.</string>
+    <string name="revive_watch_ad">Watch ad</string>
+    <string name="revive_no_thanks">No thanks</string>
 </resources>

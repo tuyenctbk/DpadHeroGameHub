@@ -27,10 +27,11 @@ object ConfigManager {
                 "is_ads_enabled" to true,
                 "ads_min_days" to 0L,
                 "ads_min_opens" to 1L,
-                "ads_min_session_seconds" to 30L,
-                "ads_min_interval_ms" to 90000L,
-                "ads_max_per_session" to 4L,
-                "ads_game_over_frequency" to 4L,
+                "ads_min_session_seconds" to 15L,
+                "ads_min_interval_ms" to 60000L,
+                "ads_max_per_session" to 6L,
+                "ads_game_over_frequency" to 3L,
+                "ads_first_game_over_frequency" to 2L,
                 "ads_max_per_session_idle" to 3L,
                 "ads_idle_menu_corner_sec" to 45L,
                 "ads_idle_menu_full_sec" to 120L,
@@ -71,7 +72,12 @@ object ConfigManager {
 
 
     fun isAdsEnabled(): Boolean {
-        return true
+        val rc = remoteConfig ?: return true
+        return try {
+            rc.getBoolean("is_ads_enabled")
+        } catch (_: Exception) {
+            true
+        }
     }
 
     fun getAdsMinDays(): Int {
@@ -93,38 +99,47 @@ object ConfigManager {
     }
 
     fun getAdsMinSessionSeconds(): Int {
-        val rc = remoteConfig ?: return 30
+        val rc = remoteConfig ?: return 15
         return try {
             rc.getLong("ads_min_session_seconds").toInt()
         } catch (_: Exception) {
-            30
+            15
         }
     }
 
     fun getAdsMinIntervalMs(): Long {
-        val rc = remoteConfig ?: return 90000L
+        val rc = remoteConfig ?: return 60000L
         return try {
             rc.getLong("ads_min_interval_ms")
         } catch (_: Exception) {
-            90000L
+            60000L
         }
     }
 
     fun getAdsMaxPerSession(): Int {
-        val rc = remoteConfig ?: return 4
+        val rc = remoteConfig ?: return 6
         return try {
             rc.getLong("ads_max_per_session").toInt()
         } catch (_: Exception) {
-            4
+            6
         }
     }
 
     fun getAdsGameOverFrequency(): Int {
-        val rc = remoteConfig ?: return 4
+        val rc = remoteConfig ?: return 3
         return try {
             rc.getLong("ads_game_over_frequency").toInt()
         } catch (_: Exception) {
-            4
+            3
+        }
+    }
+
+    fun getAdsFirstGameOverFrequency(): Int {
+        val rc = remoteConfig ?: return 2
+        return try {
+            rc.getLong("ads_first_game_over_frequency").toInt()
+        } catch (_: Exception) {
+            2
         }
     }
 

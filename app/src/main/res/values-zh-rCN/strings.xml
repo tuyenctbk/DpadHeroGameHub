@@ -715,4 +715,8 @@
     <string name="revive_prompt_description">观看简短广告即可获得 +1 额外生命并继续游戏！</string>
     <string name="btn_revive_continue">❤️ 继续 (+1 生命)</string>
     <string name="btn_revive_give_up">❌ 结束游戏</string>
+    <string name="revive_title">继续游戏？</string>
+    <string name="revive_message">观看一段短视频，即可从中断处继续。</string>
+    <string name="revive_watch_ad">观看广告</string>
+    <string name="revive_no_thanks">不用了</string>
 </resources>

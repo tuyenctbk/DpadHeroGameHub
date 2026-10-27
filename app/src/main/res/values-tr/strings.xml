@@ -715,4 +715,8 @@
     <string name="revive_prompt_description">+1 ekstra canla canlanmak ve oyununa devam etmek için kısa bir reklam izle!</string>
     <string name="btn_revive_continue">❤️ DEVAM ET (+1 CAN)</string>
     <string name="btn_revive_give_up">❌ OYUNU BİTİR</string>
+    <string name="revive_title">Oynamaya devam edilsin mi?</string>
+    <string name="revive_message">Kaldığın yerden devam etmek için kısa bir video izle.</string>
+    <string name="revive_watch_ad">Reklamı izle</string>
+    <string name="revive_no_thanks">Hayır, teşekkürler</string>
 </resources>

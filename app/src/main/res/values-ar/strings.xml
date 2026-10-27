@@ -715,4 +715,8 @@
     <string name="revive_prompt_description">شاهد إعلاناً قصيراً للعودة بـ +1 حياة إضافية ومتابعة اللعب!</string>
     <string name="btn_revive_continue">❤️ متابعة (+1 حياة)</string>
     <string name="btn_revive_give_up">❌ إنهاء اللعبة</string>
+    <string name="revive_title">متابعة اللعب؟</string>
+    <string name="revive_message">شاهد فيديو قصيراً لتكمل من حيث توقفت.</string>
+    <string name="revive_watch_ad">شاهد الإعلان</string>
+    <string name="revive_no_thanks">لا، شكراً</string>
 </resources>

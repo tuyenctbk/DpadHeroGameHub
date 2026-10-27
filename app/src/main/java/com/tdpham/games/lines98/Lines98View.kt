@@ -269,6 +269,8 @@ class Lines98View @JvmOverloads constructor(
         return false
     }
 
+    override val canRevive: Boolean get() = true
+
     override fun reviveGame(): Boolean {
         if (!isGameOver) return false
         isGameOver = false

@@ -1916,6 +1916,8 @@ class RetroDriverView @JvmOverloads constructor(
         return super.onKeyUp(keyCode, event)
     }
 
+    override val canRevive: Boolean get() = true
+
     override fun reviveGame(): Boolean {
         if (!gameOver) return false
         gameOver = false

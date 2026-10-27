@@ -715,4 +715,8 @@
     <string name="revive_prompt_description">Guarda un breve annuncio per rivivere con +1 vita extra e continuare!</string>
     <string name="btn_revive_continue">❤️ CONTINUA (+1 VITA)</string>
     <string name="btn_revive_give_up">❌ TERMINA GIOCO</string>
+    <string name="revive_title">Continuare a giocare?</string>
+    <string name="revive_message">Guarda un breve video per riprendere da dove eri rimasto.</string>
+    <string name="revive_watch_ad">Guarda l\'annuncio</string>
+    <string name="revive_no_thanks">No, grazie</string>
 </resources>

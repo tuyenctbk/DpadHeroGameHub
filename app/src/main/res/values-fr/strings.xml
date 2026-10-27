@@ -845,4 +845,8 @@
     <string name="claimed_today">✓ RÉCLAMÉ AUJOURD\'HUI</string>
     <string name="claim_day_format">🎁 RÉCLAMER JOUR %1$d (+%2$d)</string>
     <string name="desc_game_icon">Icône du jeu</string>
+    <string name="revive_title">Continuer à jouer ?</string>
+    <string name="revive_message">Regardez une courte vidéo pour reprendre où vous vous étiez arrêté.</string>
+    <string name="revive_watch_ad">Voir la pub</string>
+    <string name="revive_no_thanks">Non merci</string>
 </resources>

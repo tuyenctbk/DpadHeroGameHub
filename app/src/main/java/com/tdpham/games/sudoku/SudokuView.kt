@@ -175,6 +175,8 @@ class SudokuView @JvmOverloads constructor(
         invalidate()
     }
 
+    override val canRevive: Boolean get() = true
+
     override fun reviveGame(): Boolean {
         if (solved) return false
         for (r in 0..8) {

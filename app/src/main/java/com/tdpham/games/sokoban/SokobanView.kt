@@ -180,6 +180,8 @@ class SokobanView @JvmOverloads constructor(
         handler.removeCallbacks(animRunnable)
     }
 
+    override val canRevive: Boolean get() = true
+
     override fun reviveGame(): Boolean {
         restartCurrentLevel()
         celebrationManager.clear()

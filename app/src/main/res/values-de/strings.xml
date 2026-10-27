@@ -715,4 +715,8 @@
     <string name="revive_prompt_description">Schau ein kurzes Video, um mit +1 Extra-Leben wiederbelebt zu werden!</string>
     <string name="btn_revive_continue">❤️ WEITER (+1 LEBEN)</string>
     <string name="btn_revive_give_up">❌ BEENDEN</string>
+    <string name="revive_title">Weiterspielen?</string>
+    <string name="revive_message">Sieh dir ein kurzes Video an und mach dort weiter, wo du aufgehört hast.</string>
+    <string name="revive_watch_ad">Werbung ansehen</string>
+    <string name="revive_no_thanks">Nein danke</string>
 </resources>

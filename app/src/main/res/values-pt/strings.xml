@@ -715,4 +715,8 @@
     <string name="revive_prompt_description">Assista a um anúncio curto para reviver com +1 vida extra e continuar sua partida!</string>
     <string name="btn_revive_continue">❤️ CONTINUAR (+1 VIDA)</string>
     <string name="btn_revive_give_up">❌ ENCERRAR JOGO</string>
+    <string name="revive_title">Continuar jogando?</string>
+    <string name="revive_message">Assista a um vídeo curto para continuar de onde parou.</string>
+    <string name="revive_watch_ad">Ver anúncio</string>
+    <string name="revive_no_thanks">Não, obrigado</string>
 </resources>

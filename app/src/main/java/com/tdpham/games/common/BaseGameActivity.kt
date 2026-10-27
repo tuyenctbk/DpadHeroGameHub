@@ -37,6 +37,8 @@ abstract class BaseGameActivity : AppCompatActivity() {
     private var activeOverlay: View? = null
     private lateinit var adOverlayHelper: IdleAdOverlayHelper
     private var gameOverCount = 0
+    private var revivePromptShowing = false
+    private var revivedLastRound = false
     private var pauseDialog: InGamePauseDialog? = null
     private var inGamePauseOverlay: PauseOverlay? = null
 
@@ -81,6 +83,9 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 adOverlayHelper.showState(state, remaining)
             }
 
+            // Warm a rewarded ad only for games that can actually use it (avoids wasted requests)
+            if (gameView.canRevive) AdManager.preloadRewarded(this)
+
             gameView.onGameOver = { score ->
                 HapticManager.vibrateExplosion(this)
                 val bundle = Bundle()
@@ -93,17 +98,23 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 val isHighScore = score > 0 && score >= currentBest
                 AppEngagementManager.onGameCompleted(this, isWin = score > 0, isNewHighScore = isHighScore)
 
-                // Natural Game-Over Interstitial Ad Trigger (Respects cooldown & frequency)
-                // Post with a delay to ensure the player sees victory/game-over and input dispatch is not halted
-                gameOverCount++
-                val freq = ConfigManager.getAdsGameOverFrequency()
-                if (gameOverCount >= freq && AdManager.canShowInterstitial(this)) {
-                    gameOverCount = 0
+                // Rewarded "continue" offer takes priority over the interstitial (never show both back-to-back)
+                if (shouldOfferRevive()) {
                     window?.decorView?.postDelayed({
-                        if (!isFinishing && !isDestroyed) {
-                            AdManager.showInterstitial(this)
-                        }
-                    }, 1500L)
+                        if (!isFinishing && !isDestroyed) showRevivePrompt()
+                    }, 1200L)
+                } else {
+                    revivedLastRound = false
+                    // Natural Game-Over Interstitial Ad Trigger (Respects cooldown & frequency)
+                    // Post with a delay to ensure the player sees victory/game-over and input dispatch is not halted
+                    if (AdManager.registerGameOver() && AdManager.canShowInterstitial(this)) {
+                        AdManager.resetGameOverCounter()
+                        window?.decorView?.postDelayed({
+                            if (!isFinishing && !isDestroyed) {
+                                AdManager.showInterstitial(this)
+                            }
+                        }, 1500L)
+                    }
                 }
             }
         } else {
@@ -137,6 +148,55 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 handleBackPress()
             }
         })
+    }
+
+    /** Offer only when: game supports revive, a rewarded ad is ready, and the player didn't just use a revive. */
+    private fun shouldOfferRevive(): Boolean {
+        if (!::gameView.isInitialized || !gameView.canRevive) return false
+        if (revivePromptShowing || revivedLastRound) return false
+        if (!ConfigManager.isAdsEnabled()) return false
+        return AdManager.isRewardedReady()
+    }
+
+    private fun showRevivePrompt() {
+        if (revivePromptShowing || isFinishing || isDestroyed) return
+        if (!AdManager.isRewardedReady()) return
+        revivePromptShowing = true
+        var earned = false
+
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.revive_title)
+            .setMessage(R.string.revive_message)
+            .setCancelable(true)
+            .setPositiveButton(R.string.revive_watch_ad) { d, _ ->
+                d.dismiss()
+                AdManager.showRewarded(
+                    activity = this,
+                    onUserEarnedReward = { earned = true },
+                    onAdDismissed = {
+                        revivePromptShowing = false
+                        if (earned) AdManager.resetGameOverCounter()
+                        if (earned && gameView.reviveGame()) {
+                            revivedLastRound = true
+                        }
+                        (gameView as View).requestFocus()
+                    }
+                )
+            }
+            .setNegativeButton(R.string.revive_no_thanks) { d, _ ->
+                revivePromptShowing = false
+                d.dismiss()
+                (gameView as View).requestFocus()
+            }
+            .create()
+        dialog.setOnCancelListener {
+            revivePromptShowing = false
+            (gameView as View).requestFocus()
+        }
+        dialog.setOnShowListener {
+            dialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE)?.requestFocus()
+        }
+        dialog.show()
     }
 
     private fun handleGuideProgression() {

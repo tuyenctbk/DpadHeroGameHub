@@ -158,6 +158,8 @@ class HangmanView @JvmOverloads constructor(
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
+    override val canRevive: Boolean get() = true
+
     override fun reviveGame(): Boolean {
         if (!isGameOver) return false
         isGameOver = false

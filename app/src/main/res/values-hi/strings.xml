@@ -715,4 +715,8 @@
     <string name="revive_prompt_description">+1 अतिरिक्त जीवन के साथ पुनर्जीवित होने और खेल जारी रखने के लिए एक छोटा विज्ञापन देखें!</string>
     <string name="btn_revive_continue">❤️ जारी रखें (+1 जीवन)</string>
     <string name="btn_revive_give_up">❌ खेल समाप्त करें</string>
+    <string name="revive_title">खेलना जारी रखें?</string>
+    <string name="revive_message">जहाँ छोड़ा था वहीं से जारी रखने के लिए एक छोटा वीडियो देखें।</string>
+    <string name="revive_watch_ad">विज्ञापन देखें</string>
+    <string name="revive_no_thanks">नहीं, धन्यवाद</string>
 </resources>

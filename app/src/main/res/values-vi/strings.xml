@@ -845,4 +845,8 @@
     <string name="claimed_today">✓ ĐÃ NHẬN HÔM NAY</string>
     <string name="claim_day_format">🎁 NHẬN NGÀY %1$d (+%2$d)</string>
     <string name="desc_game_icon">Biểu tượng trò chơi</string>
+    <string name="revive_title">Chơi tiếp?</string>
+    <string name="revive_message">Xem một video ngắn để tiếp tục từ chỗ bạn dừng lại.</string>
+    <string name="revive_watch_ad">Xem quảng cáo</string>
+    <string name="revive_no_thanks">Không, cảm ơn</string>
 </resources>

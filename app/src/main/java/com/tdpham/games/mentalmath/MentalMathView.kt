@@ -236,6 +236,8 @@ class MentalMathView @JvmOverloads constructor(
         options.shuffle()
     }
 
+    override val canRevive: Boolean get() = true
+
     override fun reviveGame(): Boolean {
         if (!gameOver) return false
         gameOver = false

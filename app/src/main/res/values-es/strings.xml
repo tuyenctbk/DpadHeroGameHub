@@ -845,4 +845,8 @@
     <string name="claimed_today">✓ RECLAMADO HOY</string>
     <string name="claim_day_format">🎁 RECLAMAR DÍA %1$d (+%2$d)</string>
     <string name="desc_game_icon">Icono del juego</string>
+    <string name="revive_title">¿Seguir jugando?</string>
+    <string name="revive_message">Mira un breve vídeo para continuar donde lo dejaste.</string>
+    <string name="revive_watch_ad">Ver anuncio</string>
+    <string name="revive_no_thanks">No, gracias</string>
 </resources>
