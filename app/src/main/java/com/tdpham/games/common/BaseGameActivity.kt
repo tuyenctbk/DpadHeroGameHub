@@ -41,6 +41,8 @@ abstract class BaseGameActivity : AppCompatActivity() {
     private var revivedLastRound = false
     private var pauseDialog: InGamePauseDialog? = null
     private var inGamePauseOverlay: PauseOverlay? = null
+    private var reviveOverlay: RevivePromptOverlay? = null
+    protected var isGameOverState = false
 
     protected open fun shouldShowHelpButton(): Boolean = false
 
@@ -87,6 +89,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
             if (gameView.canRevive) AdManager.preloadRewarded(this)
 
             gameView.onGameOver = { score ->
+                isGameOverState = true
                 HapticManager.vibrateExplosion(this)
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
@@ -161,42 +164,44 @@ abstract class BaseGameActivity : AppCompatActivity() {
     private fun showRevivePrompt() {
         if (revivePromptShowing || isFinishing || isDestroyed) return
         if (!AdManager.isRewardedReady()) return
+        val root = findViewById<android.view.ViewGroup>(android.R.id.content) ?: return
         revivePromptShowing = true
         var earned = false
 
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle(R.string.revive_title)
-            .setMessage(R.string.revive_message)
-            .setCancelable(true)
-            .setPositiveButton(R.string.revive_watch_ad) { d, _ ->
-                d.dismiss()
+        reviveOverlay = RevivePromptOverlay.show(
+            container = root,
+            onWatch = {
+                revivePromptShowing = false
+                reviveOverlay = null
                 AdManager.showRewarded(
                     activity = this,
                     onUserEarnedReward = { earned = true },
                     onAdDismissed = {
-                        revivePromptShowing = false
                         if (earned) AdManager.resetGameOverCounter()
                         if (earned && gameView.reviveGame()) {
                             revivedLastRound = true
+                            isGameOverState = false
                         }
                         (gameView as View).requestFocus()
+                        gameView.resume()
                     }
                 )
-            }
-            .setNegativeButton(R.string.revive_no_thanks) { d, _ ->
+            },
+            onDecline = {
                 revivePromptShowing = false
-                d.dismiss()
+                reviveOverlay = null
+                revivedLastRound = false
                 (gameView as View).requestFocus()
+                if (AdManager.registerGameOver() && AdManager.canShowInterstitial(this)) {
+                    AdManager.resetGameOverCounter()
+                    window?.decorView?.postDelayed({
+                        if (!isFinishing && !isDestroyed) {
+                            AdManager.showInterstitial(this)
+                        }
+                    }, 500L)
+                }
             }
-            .create()
-        dialog.setOnCancelListener {
-            revivePromptShowing = false
-            (gameView as View).requestFocus()
-        }
-        dialog.setOnShowListener {
-            dialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE)?.requestFocus()
-        }
-        dialog.show()
+        )
     }
 
     private fun handleGuideProgression() {
@@ -267,6 +272,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     private fun startGameWithAnalytics() {
         hasStarted = true
+        isGameOverState = false
         IdleAdManager.isWaitingMode = isGuideShowing
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, gameKey)
@@ -311,6 +317,16 @@ abstract class BaseGameActivity : AppCompatActivity() {
                     }
                 }
             },
+            onBackPress = {
+                isGuideShowing = false
+                IdleAdManager.isWaitingMode = false
+                if (!hasStarted) {
+                    finish()
+                } else {
+                    (gameView as View).requestFocus()
+                    gameView.resume()
+                }
+            },
             onDismiss = {
                 isGuideShowing = false
                 IdleAdManager.isWaitingMode = false
@@ -330,6 +346,13 @@ abstract class BaseGameActivity : AppCompatActivity() {
             removeActiveOverlay()
             return
         }
+        if (inGamePauseOverlay?.isShowing == true) {
+            inGamePauseOverlay?.hide {
+                (gameView as View).requestFocus()
+                gameView.resume()
+            }
+            return
+        }
         if (pauseDialog?.isShowing == true) {
             pauseDialog?.dismiss()
             pauseDialog = null
@@ -337,7 +360,24 @@ abstract class BaseGameActivity : AppCompatActivity() {
             gameView.resume()
             return
         }
+        if (reviveOverlay != null || revivePromptShowing) {
+            return
+        }
+        if (isGameOverState) {
+            exitToHub()
+            return
+        }
         showPauseDialog()
+    }
+
+    protected fun exitToHub() {
+        if (AdManager.canShowInterstitial(this)) {
+            AdManager.showInterstitial(this) {
+                finish()
+            }
+        } else {
+            finish()
+        }
     }
 
     protected open fun showPauseDialog() {
@@ -372,13 +412,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
                         gameView.resume()
                     },
                     onExit = {
-                        if (AdManager.canShowInterstitial(this)) {
-                            AdManager.showInterstitial(this) {
-                                finish()
-                            }
-                        } else {
-                            finish()
-                        }
+                        exitToHub()
                     }
                 )
             }
@@ -421,6 +455,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     }
 
     private fun restartCurrentGame() {
+        isGameOverState = false
         (gameView as View).requestFocus()
         gameView.resetGame()
     }
@@ -480,17 +515,55 @@ abstract class BaseGameActivity : AppCompatActivity() {
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         val keyCode = event.keyCode
+        val isDown = event.action == KeyEvent.ACTION_DOWN
 
-        if (event.action == KeyEvent.ACTION_DOWN) {
+        val isPauseShowing = inGamePauseOverlay?.isShowing == true || pauseDialog?.isShowing == true
+        val isReviveShowing = revivePromptShowing || reviveOverlay != null
+        val isModalShowing = isPauseShowing || isReviveShowing || isGuideShowing
+
+        if (isModalShowing) {
+            if (isDown) {
+                IdleAdManager.notifyInteraction()
+                if (ControllerNavigationHelper.isBackKey(keyCode)) {
+                    handleBackPress()
+                    return true
+                }
+                if (keyCode == KeyEvent.KEYCODE_BUTTON_A) {
+                    val focused = currentFocus ?: inGamePauseOverlay?.findFocus()
+                    if (focused != null && focused.isClickable) {
+                        focused.performClick()
+                        return true
+                    }
+                }
+            } else if (event.action == KeyEvent.ACTION_UP) {
+                if (keyCode == KeyEvent.KEYCODE_BUTTON_A) {
+                    val focused = currentFocus ?: inGamePauseOverlay?.findFocus()
+                    if (focused != null && focused.isClickable) {
+                        return true
+                    }
+                }
+            }
+            return super.dispatchKeyEvent(event)
+        }
+
+        if (isDown) {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 handleBackPress()
                 return true
             }
-            if (keyCode == KeyEvent.KEYCODE_M || keyCode == KeyEvent.KEYCODE_O || 
-                keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_SETTINGS) {
+            if (keyCode == KeyEvent.KEYCODE_BUTTON_B) {
+                if (::gameView.isInitialized && (gameView as View).onKeyDown(keyCode, event)) {
+                    return true
+                }
+                handleBackPress()
+                return true
+            }
+            if (ControllerNavigationHelper.isMenuKey(keyCode) || keyCode == KeyEvent.KEYCODE_M || keyCode == KeyEvent.KEYCODE_O) {
                 if (showGameOptions()) {
                     return true
                 }
+                showPauseDialog()
+                return true
             }
             if (keyCode == KeyEvent.KEYCODE_H || keyCode == KeyEvent.KEYCODE_INFO) {
                 removeActiveOverlay()
@@ -506,9 +579,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 return true
             }
             // Remove overlay on D-pad input
-            if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
-                keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
-                keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (ControllerNavigationHelper.isDpadKey(keyCode) || keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
                 removeActiveOverlay()
             }
         }
@@ -517,7 +588,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
         if (::gameView.isInitialized) {
             val v = gameView as View
             if (v.visibility == View.VISIBLE) {
-                if (event.action == KeyEvent.ACTION_DOWN) {
+                if (isDown) {
                     if (v.onKeyDown(keyCode, event)) {
                         return true
                     }
@@ -586,7 +657,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
+        if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_BUTTON_B) {
             handleBackPress()
             return true
         }
@@ -635,6 +706,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
         inGamePauseOverlay = null
         pauseDialog?.dismiss()
         pauseDialog = null
+        reviveOverlay = null
         removeActiveOverlay()
         adOverlayHelper.destroy()
     }

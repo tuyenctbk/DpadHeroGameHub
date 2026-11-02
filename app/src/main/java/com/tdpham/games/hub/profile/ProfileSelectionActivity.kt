@@ -261,6 +261,10 @@ class ProfileSelectionActivity : AppCompatActivity() {
             setOnClickListener { dialog.dismiss() }
         }
 
+        btnEdit.id = View.generateViewId()
+        btnDelete.id = View.generateViewId()
+        btnCancel.id = View.generateViewId()
+
         btnEdit.nextFocusDownId = btnDelete.id
         btnDelete.nextFocusUpId = btnEdit.id
         btnDelete.nextFocusDownId = btnCancel.id
@@ -274,6 +278,9 @@ class ProfileSelectionActivity : AppCompatActivity() {
         dialog.setContentView(view)
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
         dialog.setCancelable(true)
+        dialog.setOnKeyListener { _, _, event ->
+            com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(dialog, event)
+        }
         dialog.show()
         btnEdit.requestFocus()
     }
@@ -336,6 +343,8 @@ class ProfileSelectionActivity : AppCompatActivity() {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 46)
             setOnClickListener { dialog.dismiss() }
         }
+        btnYes.id = View.generateViewId()
+        btnNo.id = View.generateViewId()
         btnYes.nextFocusDownId = btnNo.id
         btnNo.nextFocusUpId = btnYes.id
 
@@ -347,6 +356,9 @@ class ProfileSelectionActivity : AppCompatActivity() {
         dialog.setContentView(view)
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
         dialog.setCancelable(true)
+        dialog.setOnKeyListener { _, _, event ->
+            com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(dialog, event)
+        }
         dialog.show()
         btnNo.requestFocus()
     }
@@ -373,6 +385,13 @@ class ProfileSelectionActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
+    }
+
+    override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        if (com.tdpham.games.common.ControllerNavigationHelper.handleUiKeyEvent(this, event)) {
+            return true
+        }
+        return super.dispatchKeyEvent(event)
     }
 
     private fun setupFocusAnimation(view: View) {

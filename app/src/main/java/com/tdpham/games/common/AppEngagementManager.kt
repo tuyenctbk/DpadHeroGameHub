@@ -146,6 +146,9 @@ object AppEngagementManager {
             .create()
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setOnKeyListener { _, _, event ->
+            ControllerNavigationHelper.handleDialogKeyEvent(dialog, event)
+        }
 
         val btnRate = view.findViewById<Button>(R.id.btn_rate_5_stars)
         val btnLater = view.findViewById<Button>(R.id.btn_rate_later)
@@ -202,6 +205,9 @@ object AppEngagementManager {
             .create()
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setOnKeyListener { _, _, event ->
+            ControllerNavigationHelper.handleDialogKeyEvent(dialog, event)
+        }
 
         val btnShare = view.findViewById<Button>(R.id.btn_share_now)
         val btnLater = view.findViewById<Button>(R.id.btn_share_later)
@@ -260,6 +266,20 @@ object AppEngagementManager {
 
         val btnUpdate = view.findViewById<Button>(R.id.btn_update_now)
         val btnLater = view.findViewById<Button>(R.id.btn_update_later)
+
+        dialog.setOnKeyListener { _, _, event ->
+            if (isForce) {
+                if (ControllerNavigationHelper.isBackKey(event.keyCode) && event.action == android.view.KeyEvent.ACTION_UP) {
+                    activity.finish()
+                    true
+                } else if (ControllerNavigationHelper.isConfirmKey(event.keyCode) && event.action == android.view.KeyEvent.ACTION_UP) {
+                    btnUpdate.performClick()
+                    true
+                } else false
+            } else {
+                ControllerNavigationHelper.handleDialogKeyEvent(dialog, event)
+            }
+        }
 
         setupFocusAnimation(btnUpdate)
         setupFocusAnimation(btnLater)

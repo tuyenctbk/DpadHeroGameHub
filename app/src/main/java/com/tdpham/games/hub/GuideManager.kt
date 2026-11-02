@@ -50,13 +50,14 @@ object GuideManager {
         buttonText: String? = null,
         showCheckbox: Boolean = true,
         onOptionsClick: (() -> Unit)? = null,
+        onBackPress: (() -> Unit)? = null,
         onDismiss: () -> Unit
     ) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_guide)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.setCancelable(false)
+        dialog.setCancelable(true)
 
         dialog.findViewById<TextView>(R.id.guide_title).text = title
         dialog.findViewById<TextView>(R.id.guide_content).text = content
@@ -101,14 +102,38 @@ object GuideManager {
         setupFocusEffect(btnClose)
         setupFocusEffect(checkBox)
 
+        dialog.setOnCancelListener {
+            onBackPress?.invoke() ?: onDismiss()
+        }
+
         dialog.setOnKeyListener { _, keyCode, event ->
             if (event.action == android.view.KeyEvent.ACTION_DOWN) {
                 IdleAdManager.notifyInteraction()
+                if (com.tdpham.games.common.ControllerNavigationHelper.isBackKey(keyCode)) {
+                    dialog.dismiss()
+                    onBackPress?.invoke() ?: onDismiss()
+                    return@setOnKeyListener true
+                }
+                if (keyCode == android.view.KeyEvent.KEYCODE_BUTTON_A) {
+                    val focused = dialog.currentFocus
+                    if (focused != null && focused.isClickable) {
+                        focused.performClick()
+                        return@setOnKeyListener true
+                    }
+                }
                 if (keyCode == android.view.KeyEvent.KEYCODE_M || keyCode == android.view.KeyEvent.KEYCODE_O ||
-                    keyCode == android.view.KeyEvent.KEYCODE_MENU || keyCode == android.view.KeyEvent.KEYCODE_SETTINGS) {
+                    keyCode == android.view.KeyEvent.KEYCODE_MENU || keyCode == android.view.KeyEvent.KEYCODE_SETTINGS ||
+                    keyCode == android.view.KeyEvent.KEYCODE_BUTTON_START) {
                     if (onOptionsClick != null) {
                         dialog.dismiss()
                         onOptionsClick()
+                        return@setOnKeyListener true
+                    }
+                }
+            } else if (event.action == android.view.KeyEvent.ACTION_UP) {
+                if (keyCode == android.view.KeyEvent.KEYCODE_BUTTON_A) {
+                    val focused = dialog.currentFocus
+                    if (focused != null && focused.isClickable) {
                         return@setOnKeyListener true
                     }
                 }

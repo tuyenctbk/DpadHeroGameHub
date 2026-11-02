@@ -120,6 +120,7 @@
             android:backgroundTint="#333333"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
+            android:focusable="true"
             android:elevation="4dp" />
 
     </LinearLayout>

@@ -196,17 +196,31 @@ class ControllerSettingsActivity : AppCompatActivity() {
         setupFocusEffect(seekbarDeadzone)
 
         // 7. Navigation Buttons
-        findViewById<Button>(R.id.btn_back_header)?.setOnClickListener {
-            SoundManager.playClick()
-            HapticManager.vibrateClick(this)
-            finish()
+        findViewById<Button>(R.id.btn_back_header)?.let { btnBack ->
+            btnBack.setOnClickListener {
+                SoundManager.playClick()
+                HapticManager.vibrateClick(this)
+                finish()
+            }
+            setupFocusEffect(btnBack)
         }
-        findViewById<Button>(R.id.btn_done)?.setOnClickListener {
-            SoundManager.playClick()
-            HapticManager.vibrateClick(this)
-            finish()
+        findViewById<Button>(R.id.btn_done)?.let { btnDone ->
+            btnDone.setOnClickListener {
+                SoundManager.playClick()
+                HapticManager.vibrateClick(this)
+                finish()
+            }
+            setupFocusEffect(btnDone)
         }
-        findViewById<Button>(R.id.btn_done)?.let { setupFocusEffect(it) }
+
+        layoutMasterToggle.requestFocus()
+    }
+
+    override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        if (com.tdpham.games.common.ControllerNavigationHelper.handleUiKeyEvent(this, event)) {
+            return true
+        }
+        return super.dispatchKeyEvent(event)
     }
 
     override fun onGenericMotionEvent(event: MotionEvent): Boolean {

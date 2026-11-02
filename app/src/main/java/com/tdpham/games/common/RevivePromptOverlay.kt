@@ -48,6 +48,8 @@ class RevivePromptOverlay(context: Context) : FrameLayout(context) {
     }
 
     private fun wire(button: View, action: () -> Unit) {
+        button.isFocusable = true
+        button.isFocusableInTouchMode = true
         button.setOnClickListener {
             SoundManager.playClick()
             HapticManager.vibrateClick(context)
@@ -69,6 +71,8 @@ class RevivePromptOverlay(context: Context) : FrameLayout(context) {
         card.scaleX = 0.85f
         card.scaleY = 0.85f
         card.translationY = 40f
+        btnWatch.requestFocus()
+        post { btnWatch.requestFocus() }
         animate().alpha(1f).setDuration(220).start()
         card.animate().scaleX(1f).scaleY(1f).translationY(0f)
             .setDuration(320).setInterpolator(OvershootInterpolator(1.4f))
@@ -105,11 +109,28 @@ class RevivePromptOverlay(context: Context) : FrameLayout(context) {
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        if (event.action == KeyEvent.ACTION_DOWN) {
+        val keyCode = event.keyCode
+        val isDown = event.action == KeyEvent.ACTION_DOWN
+
+        if (isDown) {
             IdleAdManager.notifyInteraction()
-            if (event.keyCode == KeyEvent.KEYCODE_BACK || event.keyCode == KeyEvent.KEYCODE_ESCAPE) {
+            if (ControllerNavigationHelper.isBackKey(keyCode)) {
                 close { onDecline?.invoke() }
                 return true
+            }
+            if (keyCode == KeyEvent.KEYCODE_BUTTON_A) {
+                val focused = findFocus()
+                if (focused != null && focused.isClickable) {
+                    focused.performClick()
+                    return true
+                }
+            }
+        } else if (event.action == KeyEvent.ACTION_UP) {
+            if (keyCode == KeyEvent.KEYCODE_BUTTON_A) {
+                val focused = findFocus()
+                if (focused != null && focused.isClickable) {
+                    return true
+                }
             }
         }
         return super.dispatchKeyEvent(event)

@@ -193,6 +193,30 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        findViewById<Button>(R.id.btn_main_exit)?.apply {
+            setOnClickListener {
+                SoundManager.playClick()
+                HapticManager.vibrateClick(this@MainActivity)
+                showExitConfirmationDialog()
+            }
+            setOnKeyListener(onDownToGameList)
+            setOnFocusChangeListener { view, hasFocus ->
+                if (hasFocus) {
+                    SoundManager.playClick()
+                    HapticManager.vibrateClick(this@MainActivity)
+                    view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
+                } else {
+                    view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                }
+            }
+        }
+
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showExitConfirmationDialog()
+            }
+        })
+
         setupGameButtons()
         updateProfileDisplay()
 
@@ -313,6 +337,10 @@ class MainActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
+        dialog.setOnKeyListener { _, _, event ->
+            com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(dialog, event)
+        }
+
         dialog.show()
         btnEdit.requestFocus()
     }
@@ -323,6 +351,10 @@ class MainActivity : AppCompatActivity() {
         dialog.setContentView(R.layout.dialog_pin_entry)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setCancelable(true)
+
+        dialog.setOnKeyListener { _, _, event ->
+            com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(dialog, event)
+        }
 
         val editPin = dialog.findViewById<EditText>(R.id.edit_pin)
         val errorView = dialog.findViewById<TextView>(R.id.pin_error)
@@ -554,10 +586,15 @@ class MainActivity : AppCompatActivity() {
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_UP) {
                 val hsv = findViewById<HorizontalScrollView>(R.id.hsv_games)
                 val settingsBtn = findViewById<View>(R.id.btn_settings)
+                val exitBtn = findViewById<View>(R.id.btn_main_exit)
                 val profileBtn = findViewById<View>(R.id.active_profile_layout)
                 val isRight = if (hsv != null) button.left > (hsv.scrollX + hsv.width / 2) else false
                 if (isRight) {
-                    settingsBtn?.requestFocus()
+                    if (hsv != null && button.left > (hsv.scrollX + hsv.width * 0.75f)) {
+                        exitBtn?.requestFocus() ?: settingsBtn?.requestFocus()
+                    } else {
+                        settingsBtn?.requestFocus()
+                    }
                 } else {
                     profileBtn?.requestFocus()
                 }
@@ -615,8 +652,86 @@ class MainActivity : AppCompatActivity() {
         IdleAdManager.notifyInteraction()
     }
 
+    private var exitDialog: Dialog? = null
+
+    fun showExitConfirmationDialog() {
+        if (isFinishing || isDestroyed) return
+        if (exitDialog?.isShowing == true) return
+
+        val dialog = Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_exit_app)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(true)
+
+        val btnExit = dialog.findViewById<Button>(R.id.btn_dialog_exit)
+        val btnCancel = dialog.findViewById<Button>(R.id.btn_dialog_cancel)
+
+        btnExit.setOnClickListener {
+            SoundManager.playClick()
+            HapticManager.vibrateClick(this)
+            dialog.dismiss()
+            finishAffinity()
+        }
+
+        btnCancel.setOnClickListener {
+            SoundManager.playClick()
+            HapticManager.vibrateClick(this)
+            dialog.dismiss()
+            currentFocusedButton?.requestFocus()
+        }
+
+        setupDialogButtonFocus(btnExit)
+        setupDialogButtonFocus(btnCancel)
+
+        dialog.setOnKeyListener { _, keyCode, event ->
+            if (com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(dialog, event) {
+                dialog.dismiss()
+                currentFocusedButton?.requestFocus()
+                true
+            }) {
+                return@setOnKeyListener true
+            }
+            false
+        }
+
+        dialog.setOnDismissListener {
+            exitDialog = null
+        }
+
+        exitDialog = dialog
+        dialog.show()
+        btnExit.requestFocus()
+    }
+
+    private fun setupDialogButtonFocus(button: Button) {
+        button.isFocusable = true
+        button.isFocusableInTouchMode = true
+        button.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                SoundManager.playClick()
+                HapticManager.vibrateClick(this)
+                v.animate().scaleX(1.08f).scaleY(1.08f).setDuration(150).start()
+            } else {
+                v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(150).start()
+            }
+        }
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (com.tdpham.games.common.ControllerNavigationHelper.handleUiKeyEvent(this, event) {
+            showExitConfirmationDialog()
+            true
+        }) {
+            return true
+        }
+        return super.dispatchKeyEvent(event)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        exitDialog?.dismiss()
+        exitDialog = null
         adOverlayHelper.destroy()
         SoundManager.release()
     }

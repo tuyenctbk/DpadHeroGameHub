@@ -134,8 +134,30 @@ class PauseActivity : AppCompatActivity() {
         btnMusic.text = if (musicOn) "${getString(R.string.music_on)} 🎵" else "${getString(R.string.music_off)} 🔇"
     }
 
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.action == KeyEvent.ACTION_DOWN) {
+            when {
+                ControllerNavigationHelper.isConfirmKey(event.keyCode) -> {
+                    val focused = currentFocus
+                    if (focused != null && focused.isClickable) {
+                        focused.performClick()
+                        return true
+                    }
+                }
+                ControllerNavigationHelper.isBackKey(event.keyCode) -> {
+                    SoundManager.playClick()
+                    HapticManager.vibrateClick(this)
+                    setResult(RESULT_RESUME)
+                    finish()
+                    return true
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event)
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
+        if (ControllerNavigationHelper.isBackKey(keyCode)) {
             setResult(RESULT_RESUME)
             finish()
             return true

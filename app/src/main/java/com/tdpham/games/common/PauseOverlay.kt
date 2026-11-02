@@ -79,6 +79,8 @@ class PauseOverlay @JvmOverloads constructor(
     }
 
     private fun setupButton(button: Button, action: () -> Unit) {
+        button.isFocusable = true
+        button.isFocusableInTouchMode = true
         button.setOnClickListener {
             SoundManager.playClick()
             HapticManager.vibrateClick(context)
@@ -155,6 +157,11 @@ class PauseOverlay @JvmOverloads constructor(
         cardContainer.scaleX = 0.9f
         cardContainer.scaleY = 0.9f
 
+        btnResume.isFocusable = true
+        btnResume.isFocusableInTouchMode = true
+        btnResume.requestFocus()
+        post { btnResume.requestFocus() }
+
         animate()
             .alpha(1f)
             .setDuration(200)
@@ -199,18 +206,35 @@ class PauseOverlay @JvmOverloads constructor(
         get() = visibility == View.VISIBLE
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        if (event.action == KeyEvent.ACTION_DOWN) {
+        val keyCode = event.keyCode
+        val isDown = event.action == KeyEvent.ACTION_DOWN
+
+        if (isDown) {
             IdleAdManager.notifyInteraction()
-            when (event.keyCode) {
-                KeyEvent.KEYCODE_BACK, KeyEvent.KEYCODE_ESCAPE -> {
+            when {
+                ControllerNavigationHelper.isBackKey(keyCode) -> {
                     hide { onResumeAction?.invoke() }
                     return true
                 }
-                KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_M, KeyEvent.KEYCODE_O -> {
+                keyCode == KeyEvent.KEYCODE_BUTTON_A -> {
+                    val focused = findFocus()
+                    if (focused != null && focused.isClickable) {
+                        focused.performClick()
+                        return true
+                    }
+                }
+                ControllerNavigationHelper.isMenuKey(keyCode) || keyCode == KeyEvent.KEYCODE_M || keyCode == KeyEvent.KEYCODE_O -> {
                     if (btnOptions.visibility == View.VISIBLE) {
                         hide { onOptionsAction?.invoke() }
                         return true
                     }
+                }
+            }
+        } else if (event.action == KeyEvent.ACTION_UP) {
+            if (keyCode == KeyEvent.KEYCODE_BUTTON_A) {
+                val focused = findFocus()
+                if (focused != null && focused.isClickable) {
+                    return true
                 }
             }
         }

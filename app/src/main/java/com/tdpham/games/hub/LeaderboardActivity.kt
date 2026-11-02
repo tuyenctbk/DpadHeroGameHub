@@ -98,11 +98,15 @@ class LeaderboardActivity : AppCompatActivity() {
 
         setupModeSwitcher()
 
-        findViewById<Button>(R.id.btn_back).setOnClickListener {
+        val btnBack = findViewById<Button>(R.id.btn_back)
+        btnBack.setOnClickListener {
             SoundManager.playClick()
             HapticManager.vibrateClick(this)
             finish()
         }
+        setupFocusEffect(btnBack)
+        setupFocusEffect(btnModeLocal)
+        setupFocusEffect(btnModeGlobal)
 
         setupGameTabs()
         
@@ -365,6 +369,25 @@ class LeaderboardActivity : AppCompatActivity() {
             iconView.setImageResource(avatars[entry.avatarId])
         } else {
             iconView.visibility = View.GONE
+        }
+    }
+
+    override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        if (com.tdpham.games.common.ControllerNavigationHelper.handleUiKeyEvent(this, event)) {
+            return true
+        }
+        return super.dispatchKeyEvent(event)
+    }
+
+    private fun setupFocusEffect(view: View) {
+        view.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                SoundManager.playClick()
+                HapticManager.vibrateClick(this)
+                v.animate().scaleX(1.05f).scaleY(1.05f).translationZ(6f).setDuration(200).start()
+            } else {
+                v.animate().scaleX(1.0f).scaleY(1.0f).translationZ(0f).setDuration(200).start()
+            }
         }
     }
 }

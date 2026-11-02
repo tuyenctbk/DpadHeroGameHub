@@ -109,16 +109,12 @@ class InGamePauseDialog(
             }
         }
 
-        setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN) {
-                IdleAdManager.notifyInteraction()
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dismiss()
-                    onResumeAction()
-                    return@setOnKeyListener true
-                }
+        setOnKeyListener { _, _, event ->
+            com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(this, event) {
+                dismiss()
+                onResumeAction()
+                true
             }
-            false
         }
     }
 

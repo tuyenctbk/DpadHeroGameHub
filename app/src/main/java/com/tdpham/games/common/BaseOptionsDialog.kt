@@ -66,6 +66,24 @@ class BaseOptionsDialog(context: Context) : Dialog(context) {
                 btnHelp.performClick()
                 return true
             }
+            if (ControllerNavigationHelper.isBackKey(event.keyCode)) {
+                dismiss()
+                return true
+            }
+            if (event.keyCode == KeyEvent.KEYCODE_BUTTON_A) {
+                val focused = currentFocus
+                if (focused != null && focused.isClickable) {
+                    focused.performClick()
+                    return true
+                }
+            }
+        } else if (event.action == KeyEvent.ACTION_UP) {
+            if (event.keyCode == KeyEvent.KEYCODE_BUTTON_A) {
+                val focused = currentFocus
+                if (focused != null && focused.isClickable) {
+                    return true
+                }
+            }
         }
         return super.dispatchKeyEvent(event)
     }

@@ -225,7 +225,7 @@ class SettingsActivity : AppCompatActivity() {
             setOnClickListener {
                 SoundManager.playClick()
                 HapticManager.vibrateClick(this@SettingsActivity)
-                AlertDialog.Builder(this@SettingsActivity, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+                val alert = AlertDialog.Builder(this@SettingsActivity, android.R.style.Theme_DeviceDefault_Dialog_Alert)
                     .setTitle(R.string.reset_high_scores)
                     .setMessage(R.string.reset_scores_confirm)
                     .setPositiveButton(R.string.yes) { _, _ ->
@@ -237,7 +237,14 @@ class SettingsActivity : AppCompatActivity() {
                     .setNegativeButton(R.string.no) { dialog, _ ->
                         dialog.dismiss()
                     }
-                    .show()
+                    .create()
+                alert.setOnShowListener {
+                    alert.getButton(android.content.DialogInterface.BUTTON_NEGATIVE)?.requestFocus()
+                }
+                alert.setOnKeyListener { _, _, event ->
+                    com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(alert, event)
+                }
+                alert.show()
             }
             setupFocusEffect(this)
         }
@@ -252,6 +259,13 @@ class SettingsActivity : AppCompatActivity() {
         setupFocusEffect(btnBack)
 
         soundToggleLayout.requestFocus()
+    }
+
+    override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        if (com.tdpham.games.common.ControllerNavigationHelper.handleUiKeyEvent(this, event)) {
+            return true
+        }
+        return super.dispatchKeyEvent(event)
     }
 
     private fun setupFocusEffect(view: View) {

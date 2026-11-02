@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="440dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:padding="28dp"
+    android:gravity="center_horizontal"
+    android:background="@drawable/dialog_background"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <!-- Exit / Power Icon Header -->
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/ic_exit"
+        app:tint="#FF5252"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/tv_exit_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/exit_app_title"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:letterSpacing="0.03"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/tv_exit_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/exit_app_confirm"
+        android:textColor="#B0BEC5"
+        android:textSize="15sp"
+        android:lineSpacingMultiplier="1.2"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <!-- Exit Button -->
+        <Button
+            android:id="@+id/btn_dialog_exit"
+            android:layout_width="0dp"
+            android:layout_height="54dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:text="@string/btn_exit_app"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_btn_danger_selector"
+            android:elevation="4dp"
+            android:focusable="true"
+            android:nextFocusRight="@+id/btn_dialog_cancel" />
+
+        <!-- Cancel Button (Default Focus) -->
+        <Button
+            android:id="@+id/btn_dialog_cancel"
+            android:layout_width="0dp"
+            android:layout_height="54dp"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:text="@string/btn_cancel"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_btn_neutral_selector"
+            android:elevation="4dp"
+            android:focusable="true"
+            android:nextFocusLeft="@+id/btn_dialog_exit" />
+    </LinearLayout>
+
+</LinearLayout>
+

@@ -85,19 +85,27 @@ object UpdateManager {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_update)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.setCancelable(false)
-
-        if (isForceUpdate) {
-            dialog.setOnKeyListener { _, keyCode, event ->
-                if (keyCode == android.view.KeyEvent.KEYCODE_BACK && event.action == android.view.KeyEvent.ACTION_UP) {
-                    (context as? androidx.appcompat.app.AppCompatActivity)?.finish()
-                    true
-                } else false
-            }
-        }
+        dialog.setCancelable(!isForceUpdate)
 
         val btnUpdate = dialog.findViewById<Button>(R.id.btn_update_now)
         val btnLater = dialog.findViewById<Button>(R.id.btn_update_later)
+
+        dialog.setOnKeyListener { _, _, event ->
+            if (isForceUpdate) {
+                if (com.tdpham.games.common.ControllerNavigationHelper.isBackKey(event.keyCode) && event.action == android.view.KeyEvent.ACTION_UP) {
+                    (context as? androidx.appcompat.app.AppCompatActivity)?.finish()
+                    true
+                } else if (com.tdpham.games.common.ControllerNavigationHelper.isConfirmKey(event.keyCode) && event.action == android.view.KeyEvent.ACTION_UP) {
+                    btnUpdate.performClick()
+                    true
+                } else false
+            } else {
+                com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(dialog, event)
+            }
+        }
+        dialog.setOnCancelListener {
+            onDismiss()
+        }
 
         if (isForceUpdate) {
             btnLater.visibility = View.GONE

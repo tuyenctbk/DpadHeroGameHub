@@ -91,7 +91,11 @@ object RatingGuideManager {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_rating)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.setCancelable(false)
+        dialog.setCancelable(true)
+        dialog.setOnCancelListener { onDismiss() }
+        dialog.setOnKeyListener { _, _, event ->
+            com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(dialog, event)
+        }
 
         // Mark as shown to prevent immediate re-prompt
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

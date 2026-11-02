@@ -884,4 +884,8 @@
     <string name="revive_message">Watch a short video to keep going from where you left off.</string>
     <string name="revive_watch_ad">Watch ad</string>
     <string name="revive_no_thanks">No thanks</string>
+    <string name="exit_app_title">Exit Game Hub</string>
+    <string name="exit_app_confirm">Are you sure you want to exit the app?</string>
+    <string name="btn_exit_app">Exit</string>
+    <string name="btn_cancel">Cancel</string>
 </resources>
