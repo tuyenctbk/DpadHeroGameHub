@@ -1,665 +1,659 @@
-Google Play Store Listings - Dpad Arcade: Retro Game Hub
+Google Play Store Listings - Dpad Arcade: 33 Retro TV Games (v3.0.0)
 
 ================================================================================
-LANGUAGE: English (en)
+LANGUAGE: English (en-US)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: Retro Game Hub
+App Name (30/30):
+Dpad Arcade: 33 Retro TV Games
 
-Short Description:
-Play 20+ classic retro games optimized for D-pads and physical controllers.
+Short Description (75/80):
+Play 33 classic retro games built for Android TV D-pads & game controllers.
 
-Full Description:
-Welcome to Dpad Arcade, the ultimate collection of classic retro games, beautifully optimized for Android TV, handheld consoles, and devices with physical controllers!
+Full Description (1996/4000):
+Welcome to Dpad Arcade, the ultimate retro game hub built from the ground up for Android TV, TV boxes, and physical game controllers!
 
-Designed from the ground up for seamless navigation, Dpad Arcade lets you play over 20 timeless arcade and puzzle games without ever needing touch controls. Simply grab your remote control, D-pad, or physical gamepad, and dive straight into the action.
+Play 33 timeless arcade, puzzle, board, card, racing, and brain games directly from your couch—zero touch controls required. Grab your TV remote D-pad or Bluetooth/USB gamepad and dive straight into 60 FPS retro fun.
 
-🕹️ AN INCREDIBLE LIBRARY OF GAMES
-Enjoy a diverse collection of classic retro games:
-* Snake: Grow your snake and avoid obstacles in the timeless classic.
-* Tetris: Stack blocks, clear lines, and reach for a high score.
-* Minesweeper: Test your logic with visual reveal mechanics.
-* 4096: Merge numbers to reach the ultimate tile in this brain-teaser.
-* T-Rex Run: Run, jump, and dodge obstacles with shifting weather and day/night cycles.
-* Brick Break: Keep the ball in play and smash all the bricks.
-* Star Fighter: Engage in retro space combat against waves of alien invaders.
-* Tic-Tac-Toe: Classic strategy against a smart CPU.
-* Sokoban & Sudoku: Solve challenging spatial and logical puzzles.
-* Road Racer: Dodge high-speed highway traffic.
-* Memory & Slide Puzzle: Sharpen your brain and visual recall.
-* Plus many more: Battle Tanks, Word Quest, Dungeon Escape, Solitaire, Simon Says, Hangman, Mental Math, and Lines 98!
+🕹️ 33 CLASSIC GAMES IN ONE HUB
+• Arcade & Action: Snake, Brick Break, Flappy Hero, Froggy Cross, Star Fighter, Battle Tanks, Feeding Frenzy, Fruit Slice, Spinball, Monkey Adventure, Cat Mario, and T-Rex Run.
+• Racing & Adventure: Retro Driver, Road Racer, and Dungeon Escape.
+• Puzzles & Logic: Tetris, Minesweeper, 4096, Sudoku, Sokoban, Lines 98, Slide Puzzle, and Memory Match.
+• Board, Card & Quiz: Blackjack, Solitaire, Checkers, Connect Four, Tic-Tac-Toe, Trivia Gauntlet, Word Quest, Hangman, Simon Says, and Mental Math.
 
-🎮 FULL CONTROLLER & D-PAD SUPPORT
-* Tailored for Android TV, TV boxes, handheld consoles, and gamepad controllers.
-* Zero touch input required. Fully navigate menus and gameplay using directional D-pad controls.
-* Supports physical buttons for actions (Enter/OK to confirm, Back to return, S to mute, H for help).
+🎮 FULL ANDROID TV D-PAD & GAMEPAD SUPPORT
+• Seamless D-pad navigation across every screen, menu, pause overlay, and exit dialog.
+• Native Bluetooth & USB game controller support (A to select, B to go back, Start/Menu for options, plus analog stick deadzone & sensitivity calibration).
+• Built-in haptic vibration feedback with customizable intensity and test profiles.
 
-✨ KEY FEATURES
-* Silky Smooth Gameplay: Lightweight rendering engine optimized for fluid 60 FPS performance.
-* Unified Scoreboard: Track and save your highest achievements for every game locally.
-* How to Play Guides: Accessible in-game help sheets so you never get stuck.
-* Multi-Language Interface: Supports 16 languages.
-* Clean Design: Modern dark mode theme with zero distractions.
+🏆 GLOBAL LEADERBOARDS & MULTI-PLAYER PROFILES
+• Local & Worldwide Hall of Fame leaderboards across games and difficulty levels.
+• Multiple Hero Profiles with custom avatars, colors, and optional 4-digit PIN protection.
+• Focused Game Spotlight HUD showing genres and personal best records right from the hub.
 
-Step back in time and relive the golden age of arcade gaming. Download Dpad Arcade today!
+✨ RETRO POLISH & MODERN COMFORT
+• Silky smooth 60 FPS gameplay with optional CRT scanline filter and screen shake effects.
+• Three retro audio presets (Arcade 8-Bit, Retro Synth, Modern Digital) with independent SFX & music controls.
+• In-game How-To-Play guides, customizable difficulty options, and instant restart.
+• Localized in 16 languages.
+
+Relive the golden age of arcade gaming on the big screen. Download Dpad Arcade today!
+
+Release Notes v3.0.0 (458/500):
+v3.0.0 — Major Arcade Upgrade!
+• Added 4 new games: Blackjack, Connect Four, Fruit Slice, and Trivia (33 games total!)
+• Redesigned Hub with Game Spotlight HUD & new Retro Synthwave splash screen
+• Full Android TV D-pad & Gamepad navigation across all menus, overlays, and exit dialog
+• Improved Worldwide & Local Hall of Fame leaderboards across all difficulty levels
+• Added revive support in Brick Break & Fruit Slice, plus performance and stability fixes
 
 ================================================================================
 LANGUAGE: Vietnamese (vi)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: Trò chơi Retro
+App Name (29/30):
+Dpad Arcade: 33 Game TV Retro
 
-Short Description:
-Chơi hơn 20 trò chơi retro cổ điển, tối ưu cho D-pad và tay cầm chơi game.
+Short Description (78/80):
+Chơi 33 game retro kinh điển tối ưu cho D-pad Android TV và tay cầm chơi game.
 
-Full Description:
-Chào mừng bạn đến với Dpad Arcade, bộ sưu tập trò chơi retro cổ điển đỉnh cao, được tối ưu hóa tuyệt vời cho Android TV, máy chơi game cầm tay và các thiết bị sử dụng tay cầm vật lý!
+Full Description (1903/4000):
+Chào mừng bạn đến với Dpad Arcade — kho 33 trò chơi retro kinh điển được thiết kế riêng cho Android TV, TV Box và tay cầm chơi game vật lý!
 
-Được thiết kế từ đầu để điều hướng mượt mà, Dpad Arcade cho phép bạn chơi hơn 20 trò chơi arcade và giải đố vượt thời gian mà không cần đến điều khiển cảm ứng. Chỉ cần cầm điều khiển từ xa, D-pad hoặc tay cầm chơi game và bắt đầu ngay cuộc vui.
+Không cần màn hình cảm ứng! Chỉ cần chiếc remote TV với phím D-pad hoặc tay cầm Bluetooth/USB là bạn có thể tận hưởng trọn vẹn 33 tựa game arcade, giải đố, cờ bàn, bài tây và đua xe mượt mà ở 60 FPS ngay trên màn hình lớn.
 
-🕹️ KHO TRÒ CHƠI KHỔNG LỒ
-Thưởng thức bộ sưu tập đa dạng các trò chơi retro kinh điển:
-* Rắn săn mồi: Nuôi rắn lớn và né vật cản trong trò chơi huyền thoại.
-* Tetris: Xếp khối, xóa hàng và chinh phục điểm số cao.
-* Dò mìn: Thử thách logic với cơ chế lật ô quen thuộc.
-* 4096: Hợp nhất các con số để đạt đến ô cuối cùng.
-* T-Rex Run: Chạy, nhảy và né tránh trong chu kỳ ngày/đêm và thời tiết thay đổi.
-* Phá gạch: Giữ bóng và phá hủy tất cả các viên gạch.
-* Star Fighter: Chiến đấu không gian retro chống lại làn sóng xâm lăng.
-* Cờ Caro: Trò chơi chiến thuật cổ điển đấu với máy thông minh.
-* Sokoban & Sudoku: Giải các câu đố logic và không gian đầy thử thách.
-* Đua xe: Né tránh giao thông tốc độ cao trên đường cao tốc.
-* Trúc xanh & Xếp hình: Rèn luyện trí não và khả năng ghi nhớ hình ảnh.
-* Và nhiều hơn thế nữa: Bắn tăng, Word Quest, Hầm ngục, Solitaire, Simon Says, Người treo cổ, Tính nhẩm và Lines 98!
+🕹️ 33 TỰA GAME KINH ĐIỂN TRONG MỘT ỨNG DỤNG
+• Arcade & Hành động: Rắn săn mồi, Phá gạch, Flappy Hero, Ếch qua đường, Star Fighter, Bắn tăng, Cá lớn nuốt cá bé, Chém hoa quả, Spinball, Khỉ phiêu lưu, Cat Mario và Khủng long T-Rex.
+• Đua xe & Phiêu lưu: Retro Driver, Đua xe cao tốc và Thoát khỏi hầm ngục.
+• Giải đố & Trí tuệ: Tetris, Dò mìn, 4096, Sudoku, Đẩy thùng Sokoban, Lines 98, Xếp hình trượt và Lật hình trí nhớ.
+• Cờ bàn, Bài & Đố vui: Blackjack, Solitaire, Cờ đam, Cờ thả 4 ô, Cờ Caro, Đố vui Trivia, Word Quest, Người treo cổ, Simon Says và Tính nhẩm.
 
-🎮 HỖ TRỢ ĐẦY ĐỦ TAY CẦM & D-PAD
-* Dành riêng cho Android TV, TV box, máy chơi game cầm tay và tay cầm gamepad.
-* Không cần cảm ứng. Điều hướng menu và chơi game hoàn toàn bằng phím điều hướng D-pad.
-* Hỗ trợ các nút vật lý (Enter/OK để chọn, Back để quay lại, S để tắt tiếng, H để giúp đỡ).
+🎮 HỖ TRỢ HOÀN HẢO D-PAD & TAY CẦM GAMEPAD
+• Điều hướng mượt mà 100% bằng D-pad trên mọi màn hình, menu tạm dừng và hộp thoại thoát.
+• Hỗ trợ đầy đủ tay cầm Bluetooth/USB (nút A chọn, nút B quay lại, Start/Menu mở tùy chọn, hiệu chỉnh vùng chết & độ nhạy cần analog).
+• Phản hồi rung Haptic tùy chỉnh cường độ trực tiếp trong cài đặt.
 
-✨ TÍNH NĂNG NỔI BẬT
-* Trải nghiệm mượt mà: Engine nhẹ được tối ưu hóa cho hiệu suất 60 FPS ổn định.
-* Bảng điểm thống nhất: Theo dõi và lưu giữ kỷ lục cao nhất cho từng trò chơi.
-* Hướng dẫn cách chơi: Bảng trợ giúp tích hợp giúp bạn dễ dàng làm quen.
-* Giao diện đa ngôn ngữ: Hỗ trợ 16 ngôn ngữ khác nhau.
-* Thiết kế tinh tế: Giao diện chế độ tối hiện đại, không gây xao nhãng.
+🏆 BẢNG XẾP HẠNG TOÀN CẦU & ĐA HỒ SƠ NGƯỜI CHƠI
+• Bảng vàng Hall of Fame cục bộ và toàn cầu theo từng trò chơi và độ khó.
+• Tạo nhiều hồ sơ Anh hùng với biểu tượng, màu sắc riêng và mã PIN bảo vệ 4 số.
+• Thanh Spotlight hiển thị thể loại và kỷ lục cá nhân ngay tại màn hình chính.
 
-Quay ngược thời gian và sống lại thời hoàng kim của trò chơi thùng. Tải Dpad Arcade ngay hôm nay!
+✨ PHONG CÁCH RETRO ĐỈNH CAO
+• Hiệu suất 60 FPS ổn định, tùy chọn bộ lọc CRT cổ điển và hiệu ứng rung màn hình.
+• 3 chủ đề âm thanh (Arcade 8-Bit, Retro Synth, Hiện đại) với điều chỉnh âm lượng độc lập.
+• Hướng dẫn cách chơi chi tiết trong game và hỗ trợ 16 ngôn ngữ.
 
-================================================================================
-LANGUAGE: Spanish (es)
---------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: Juegos Retro
+Sống lại thời hoàng kim của game thùng ngay trên TV nhà bạn. Tải Dpad Arcade ngay hôm nay!
 
-Short Description:
-Juega más de 20 juegos retro clásicos optimizados para D-pad y mandos físicos.
-
-Full Description:
-¡Bienvenido a Dpad Arcade, la colección definitiva de juegos retro clásicos, optimizada para Android TV, consolas portátiles y dispositivos con mandos físicos!
-
-Diseñado para una navegación fluida, Dpad Arcade te permite jugar a más de 20 juegos arcade y de puzles sin necesidad de controles táctiles. Simplemente toma tu control remoto, D-pad o mando físico y sumérgete en la acción.
-
-🕹️ UNA INCREÍBLE BIBLIOTECA DE JUEGOS
-Disfruta de una colección diversa de juegos clásicos:
-* Snake: Haz crecer tu serpiente y evita obstáculos.
-* Tetris: Apila bloques, limpia líneas y alcanza la puntuación más alta.
-* Buscaminas: Pon a prueba tu lógica.
-* 4096: Combina números para llegar a la ficha definitiva.
-* T-Rex Run: Corre, salta y esquiva obstáculos con ciclos día/noche.
-* Brick Break: Mantén la bola en juego y rompe todos los ladrillos.
-* Star Fighter: Combate espacial retro contra invasores.
-* Tic-Tac-Toe: Estrategia clásica contra una IA inteligente.
-* Sokoban y Sudoku: Resuelve desafiantes puzles lógicos.
-* Road Racer: Esquiva el tráfico a alta velocidad.
-* Memory & Slide Puzzle: Agudiza tu cerebro y memoria visual.
-* ¡Y muchos más: Battle Tanks, Word Quest, Dungeon Escape, Solitaire, Simon Says y Lines 98!
-
-🎮 SOPORTE COMPLETO PARA MANDOS Y D-PAD
-* Adaptado para Android TV, TV boxes y mandos de juego.
-* Cero entrada táctil requerida. Navega por menús y juegos usando el D-pad.
-* Soporta botones físicos (Enter/OK para confirmar, Atrás para volver).
-
-✨ CARACTERÍSTICAS PRINCIPALES
-* Juego fluido: Motor ligero optimizado para 60 FPS.
-* Tabla de puntuaciones: Guarda tus récords localmente.
-* Guías de juego: Hojas de ayuda accesibles.
-* Interfaz multilingüe: Soporta 16 idiomas.
-
-¡Descarga Dpad Arcade hoy mismo!
+Release Notes v3.0.0 (456/500):
+v3.0.0 — Bản nâng cấp lớn!
+• Thêm 4 game mới: Blackjack, Cờ thả 4 ô (Connect Four), Chém hoa quả và Đố vui Trivia (tổng 33 game!)
+• Làm mới giao diện chính với thanh Spotlight kỷ lục & màn hình khởi động Synthwave
+• Hoàn thiện điều hướng D-pad & tay cầm trên mọi menu, màn hình tạm dừng và hộp thoại thoát
+• Nâng cấp Bảng xếp hạng Hall of Fame cục bộ & toàn cầu cho mọi cấp độ
+• Thêm tính năng hồi sinh ở Phá gạch & Chém hoa quả cùng nhiều cải tiến ổn định
 
 ================================================================================
-LANGUAGE: German (de)
+LANGUAGE: Spanish (es-ES)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: Retro-Spiele
+App Name (25/30):
+Dpad Arcade: 33 Juegos TV
 
-Short Description:
-Spielen Sie 20+ klassische Retro-Spiele, optimiert für D-Pads und Controller.
+Short Description (75/80):
+Juega 33 juegos retro clásicos optimizados para Android TV, D-pad y mandos.
 
-Full Description:
-Willkommen bei Dpad Arcade, der ultimativen Sammlung klassischer Retro-Spiele, perfekt optimiert für Android TV, Handheld-Konsolen und Geräte mit physischen Controllern!
+Full Description (1563/4000):
+¡Bienvenido a Dpad Arcade, el centro definitivo de juegos retro diseñado desde cero para Android TV, TV Boxes y mandos físicos!
 
-Dpad Arcade wurde für eine nahtlose Navigation entwickelt und ermöglicht es Ihnen, über 20 zeitlose Arcade- und Puzzlespiele zu spielen, ohne jemals Touch-Bedienelemente zu benötigen. Schnappen Sie sich einfach Ihre Fernbedienung, Ihr D-Pad oder Ihr Gamepad und stürzen Sie sich direkt ins Geschehen.
+Disfruta de 33 juegos clásicos de arcade, puzles, mesa, cartas y carreras sin necesidad de pantalla táctil. Toma el mando de tu TV o tu gamepad Bluetooth/USB y sumérgete en la acción fluida a 60 FPS.
 
-🕹️ EINE UNGLAUBLICHE SPIELEBIBLIOTHEK
-Genießen Sie eine vielfältige Sammlung klassischer Retro-Spiele:
-* Snake: Lassen Sie Ihre Schlange wachsen und weichen Sie Hindernissen aus.
-* Tetris: Stapeln Sie Blöcke und knacken Sie den Highscore.
-* Minesweeper: Testen Sie Ihre Logik.
-* 4096: Kombinieren Sie Zahlen, um das Ziel zu erreichen.
-* T-Rex Run: Laufen und springen Sie durch Tag/Nacht-Zyklen.
-* Brick Break: Zerschmettern Sie alle Steine.
-* Star Fighter: Retro-Weltraumkampf.
-* Tic-Tac-Toe: Klassische Strategie gegen eine kluge KI.
-* Sokoban & Sudoku: Herausfordernde Logikrätsel.
-* Road Racer: Weichen Sie dem Autobahnverkehr aus.
-* Memory & Slide Puzzle: Trainieren Sie Ihr Gehirn.
-* Und viele mehr: Battle Tanks, Word Quest, Dungeon Escape, Solitaire, Simon Says und Lines 98!
+🕹️ 33 JUEGOS CLÁSICOS EN UN SOLO LUGAR
+• Arcade y Acción: Snake, Brick Break, Flappy Hero, Froggy Cross, Star Fighter, Battle Tanks, Feeding Frenzy, Fruit Slice, Spinball, Monkey Adventure, Cat Mario y T-Rex Run.
+• Carreras y Aventura: Retro Driver, Road Racer y Dungeon Escape.
+• Puzles y Lógica: Tetris, Buscaminas, 4096, Sudoku, Sokoban, Lines 98, Slide Puzzle y Memory Match.
+• Mesa, Cartas y Trivia: Blackjack, Solitario, Damas, Conecta 4, Tres en Raya, Trivia, Word Quest, Ahorcado, Simon Says y Cálculo Mental.
 
-🎮 VOLLE CONTROLLER- UND D-PAD-UNTERSTÜTZUNG
-* Maßgeschneidert für Android TV, TV-Boxen und Gamepads.
-* Keine Touch-Eingabe erforderlich. Navigieren Sie vollständig mit dem D-Pad.
-* Unterstützt physische Tasten zur Bestätigung und Rückkehr.
+🎮 SOPORTE TOTAL PARA D-PAD Y MANDOS
+• Navegación completa con D-pad en todos los menús, pantallas de pausa y diálogos de salida.
+• Compatible con mandos Bluetooth/USB (botón A para confirmar, B para volver, Start/Menu para opciones, calibración de zona muerta y sensibilidad).
+• Vibración háptica configurable y presets de sonido retro.
 
-✨ HAUPTMERKMALE
-* Flüssiges Gameplay: Optimiert für 60 FPS.
-* Highscore-Liste: Speichern Sie Ihre Erfolge lokal.
-* Spielanleitungen: Integrierte Hilfe, damit Sie nie feststecken.
+🏆 CLASIFICACIONES GLOBALES Y PERFILES
+• Salón de la Fama local y mundial por juego y dificultad.
+• Múltiples perfiles de héroe con avatares, colores y protección PIN opcional.
 
-Laden Sie Dpad Arcade noch heute herunter!
+✨ DISEÑO RETRO A 60 FPS
+• Filtro CRT opcional, sacudida de pantalla, guías integradas y soporte para 16 idiomas.
+
+Revive la época dorada de los videojuegos en tu televisor. ¡Descarga Dpad Arcade hoy!
+
+Release Notes v3.0.0 (382/500):
+v3.0.0 — ¡Gran actualización!
+• 4 juegos nuevos: Blackjack, Conecta 4, Fruit Slice y Trivia (¡33 juegos en total!)
+• Nuevo diseño principal con barra Spotlight y pantalla de inicio Synthwave
+• Navegación completa con D-pad y mando en todos los menús y opciones de salida
+• Mejoras en las clasificaciones mundiales y locales por dificultad
+• Correcciones de rendimiento y estabilidad
 
 ================================================================================
-LANGUAGE: French (fr)
+LANGUAGE: German (de-DE)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade : Jeux Rétro
+App Name (30/30):
+Dpad Arcade: 33 Retro TV Games
 
-Short Description:
-Jouez à plus de 20 jeux rétro classiques optimisés pour les manettes et D-pads.
+Short Description (75/80):
+33 klassische Retro-Spiele optimiert für Android TV D-Pad & Gamecontroller.
 
-Full Description:
-Bienvenue sur Dpad Arcade, la collection ultime de jeux rétro classiques, magnifiquement optimisée pour Android TV, les consoles portables et les appareils avec manettes physiques !
+Full Description (1559/4000):
+Willkommen bei Dpad Arcade – dem ultimativen Retro-Spiele-Hub speziell für Android TV, TV-Boxen und physische Gamecontroller!
 
-Conçu pour une navigation fluide, Dpad Arcade vous permet de jouer à plus de 20 jeux d'arcade et de réflexion intemporels sans jamais avoir besoin de commandes tactiles. Prenez votre télécommande, votre D-pad ou votre manette et plongez directement dans l'action.
+Spiele 33 zeitlose Arcade-, Puzzle-, Brett-, Karten- und Rennspiele bequem vom Sofa aus – ganz ohne Touchscreen. Schnapp dir deine TV-Fernbedienung oder dein Bluetooth-/USB-Gamepad und starte sofort mit flüssigen 60 FPS.
 
-🕹️ UNE BIBLIOTHÈQUE DE JEUX INCROYABLE
-Profitez d'une collection diversifiée de classiques :
-* Snake : Faites grandir votre serpent et évitez les obstacles.
-* Tetris : Empilez les blocs et atteignez le meilleur score.
-* Démineur : Testez votre logique.
-* 4096 : Fusionnez les nombres pour atteindre la tuile ultime.
-* T-Rex Run : Courez, sautez et esquivez avec des cycles jour/nuit.
-* Brick Break : Cassez toutes les briques.
-* Star Fighter : Combat spatial rétro.
-* Tic-Tac-Toe : Stratégie classique contre l'IA.
-* Sokoban & Sudoku : Résolvez des puzzles logiques.
-* Road Racer : Esquivez le trafic autoroutier.
-* Memory & Slide Puzzle : Entraînez votre cerveau.
-* Et bien d'autres : Battle Tanks, Word Quest, Dungeon Escape, Solitaire, Simon Says et Lines 98 !
+🕹️ 33 KLASSIKER IN EINEM HUB
+• Arcade & Action: Snake, Brick Break, Flappy Hero, Froggy Cross, Star Fighter, Battle Tanks, Feeding Frenzy, Fruit Slice, Spinball, Monkey Adventure, Cat Mario und T-Rex Run.
+• Racing & Abenteuer: Retro Driver, Road Racer und Dungeon Escape.
+• Puzzle & Logik: Tetris, Minesweeper, 4096, Sudoku, Sokoban, Lines 98, Slide Puzzle und Memory.
+• Brett, Karten & Quiz: Blackjack, Solitaire, Dame, Vier Gewinnt, Tic-Tac-Toe, Trivia, Word Quest, Galgenmännchen, Simon Says und Kopfrechnen.
 
-🎮 SUPPORT COMPLET DES MANETTES & D-PAD
-* Adapté pour Android TV, TV boxes and gamepads.
-* Zéro tactile requis. Naviguez entièrement avec le D-pad.
-* Support des boutons physiques pour confirmer et revenir.
+🎮 VOLLE D-PAD- & GAMEPAD-UNTERSTÜTZUNG
+• Vollständige D-Pad-Navigation in allen Menüs, Pausenbildschirmen und Dialogen.
+• Bluetooth- & USB-Controller-Support (A zum Bestätigen, B für Zurück, Start/Menü für Optionen, Analog-Stick-Kalibrierung & Empfindlichkeit).
+• Anpassbares haptisches Feedback und 3 Retro-Soundprofile.
 
-✨ CARACTÉRISTIQUES CLÉS
-* Gameplay fluide : Optimisé pour 60 FPS.
-* Scoreboard unifié : Enregistrez vos records localement.
-* Guides de jeu : Aide accessible en jeu.
+🏆 WELTWEITE RANGLISTEN & PROFILE
+• Lokale und globale Hall of Fame pro Spiel und Schwierigkeitsgrad.
+• Mehrere Spielerprofile mit eigenen Avataren, Farben und optionaler PIN.
 
-Téléchargez Dpad Arcade dès aujourd'hui !
+✨ RETRO-FEELING IN 60 FPS
+• Optionaler CRT-Scanline-Filter, Spielanleitungen im Spiel und 16 Sprachen.
+
+Erlebe das goldene Zeitalter der Arcade-Spiele auf deinem TV. Jetzt Dpad Arcade herunterladen!
+
+Release Notes v3.0.0 (383/500):
+v3.0.0 — Großes Update!
+• 4 neue Spiele: Blackjack, Vier Gewinnt, Fruit Slice & Trivia (insgesamt 33 Spiele!)
+• Neues Hub-Design mit Spotlight-Leiste und Synthwave-Startbildschirm
+• Verbesserte D-Pad- und Controller-Navigation für alle Menüs und den Beenden-Dialog
+• Erweiterte globale & lokale Bestenlisten für alle Schwierigkeitsgrade
+• Fehlerbehebungen und Leistungsverbesserungen
+
+================================================================================
+LANGUAGE: French (fr-FR)
+--------------------------------------------------------------------------------
+App Name (30/30):
+Dpad Arcade : 33 Jeux TV Rétro
+
+Short Description (75/80):
+Jouez à 33 jeux rétro classiques conçus pour Android TV, D-pad et manettes.
+
+Full Description (1553/4000):
+Bienvenue dans Dpad Arcade, la collection ultime de jeux rétro conçue pour Android TV, box TV et manettes physiques !
+
+Jouez à 33 jeux intemporels d'arcade, de réflexion, de plateau, de cartes et de course sans jamais avoir besoin d'écran tactile. Prenez votre télécommande TV ou votre manette Bluetooth/USB et plongez dans une action fluide à 60 FPS.
+
+🕹️ 33 JEUX CLASSIQUES RÉUNIS
+• Arcade & Action : Snake, Brick Break, Flappy Hero, Froggy Cross, Star Fighter, Battle Tanks, Feeding Frenzy, Fruit Slice, Spinball, Monkey Adventure, Cat Mario et T-Rex Run.
+• Course & Aventure : Retro Driver, Road Racer et Dungeon Escape.
+• Casse-tête & Logique : Tetris, Démineur, 4096, Sudoku, Sokoban, Lines 98, Taquin et Memory.
+• Plateau, Cartes & Quiz : Blackjack, Solitaire, Dames, Puissance 4, Morpion, Trivia, Word Quest, Pendu, Simon Says et Calcul Mental.
+
+🎮 SUPPORT COMPLET D-PAD & MANETTES
+• Navigation intégrale au D-pad dans tous les menus, écrans de pause et boîtes de dialogue.
+• Compatibilité manettes Bluetooth/USB (A pour valider, B pour retour, Start/Menu pour les options, réglage de la zone morte et de la sensibilité).
+• Retour haptique personnalisable et 3 thèmes sonores rétro.
+
+🏆 CLASSEMENTS MONDIAUX & PROFILS
+• Panthéon local et mondial pour chaque jeu et niveau de difficulté.
+• Profils multiples avec avatars, couleurs et code PIN optionnel.
+
+✨ FINITION RÉTRO À 60 FPS
+• Filtre CRT optionnel, guides intégrés et interface disponible en 16 langues.
+
+Revivez l'âge d'or de l'arcade sur grand écran. Téléchargez Dpad Arcade dès maintenant !
+
+Release Notes v3.0.0 (387/500):
+v3.0.0 — Mise à jour majeure !
+• 4 nouveaux jeux : Blackjack, Puissance 4, Fruit Slice et Trivia (33 jeux au total !)
+• Nouveau hub avec barre Spotlight et écran d'accueil Synthwave
+• Navigation complète au D-pad et à la manette dans tous les menus et la boîte de sortie
+• Classements mondiaux et locaux améliorés pour tous les modes
+• Optimisations de performance et corrections de bugs
 
 ================================================================================
 LANGUAGE: Arabic (ar)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: ألعاب ريترو
+App Name (29/30):
+Dpad Arcade: 33 لعبة ريترو TV
 
-Short Description:
-العب أكثر من 20 لعبة ريترو كلاسيكية مُحسّنة لأزرار التوجيه وأجهزة التحكم.
+Short Description (77/80):
+العب 33 لعبة ريترو كلاسيكية مصممة لأجهزة Android TV وجهاز التحكم وذراع اللعب.
 
-Full Description:
-مرحبًا بك في Dpad Arcade، المجموعة النهائية من ألعاب الريترو الكلاسيكية، المصممة بشكل رائع لأجهزة Android TV، والمنصات المحمولة، والأجهزة التي تدعم أجهزة التحكم الفعلية!
+Full Description (1403/4000):
+مرحبًا بك في Dpad Arcade، المجموعة الكاملة لألعاب الريترو الكلاسيكية المصممة خصيصًا لأجهزة Android TV وأذرع التحكم!
 
-تم تصميم Dpad Arcade للتنقل السلس، حيث يتيح لك لعب أكثر من 20 لعبة أركيد وألغاز خالدة دون الحاجة إلى أدوات تحكم تعمل باللمس. ما عليك سوى الإمساك بجهاز التحكم عن بُعد أو ذراع الألعاب، والانغماس مباشرة في الإثارة.
+استمتع بـ 33 لعبة خالدة من ألعاب الأركيد والألغاز واللوح والورق والسباقات مباشرة من أريكتك دون الحاجة إلى اللمس. استخدم ريموت التلفاز أو ذراع التحكم Bluetooth/USB واستمتع بأداء سلس 60 إطارًا في الثانية.
 
-🕹️ مكتبة ألعاب مذهلة
-استمتع بمجموعة متنوعة من الألعاب الكلاسيكية:
-* Snake: قم بتنمية ثعبانك وتجنب العقبات.
-* Tetris: قم برص الكتل ومسح الخطوط للوصول إلى أعلى نتيجة.
-* Minesweeper: اختبر منطقك مع ميكانيكا الكشف البصري.
-* 4096: ادمج الأرقام للوصول إلى المربع النهائي.
-* T-Rex Run: اركض واففز وتجنب العقبات مع دورات الليل والنهار.
-* Brick Break: حطم جميع الطوب وحافظ على الكرة في الملعب.
-* Star Fighter: انخرط في قتال فضائي ريترو.
-* Tic-Tac-Toe: استراتيجية كلاسيكية ضد ذكاء اصطناعي ذكي.
-* Sokoban & Sudoku: حل ألغاز مكانية ومنطقية صعبة.
-* Road Racer: تفادى حركة المرور السريعة على الطريق السريع.
-* Memory & Slide Puzzle: شحذ عقلك وذاكرتك البصرية.
-* بالإضافة إلى الكثير غيرها: Battle Tanks و Word Quest و Dungeon Escape و Solitaire و Simon Says و Lines 98!
+🕹️ 33 لعبة كلاسيكية في تطبيق واحد
+• الأركيد والأكشن: الثعبان، كسر الطوب، Flappy Hero، الضفدع العابر، Star Fighter، معركة الدبابات، Feeding Frenzy، تقطيع الفواكه، Spinball، مغامرة القرد، Cat Mario، وT-Rex Run.
+• السباقات والمغامرات: Retro Driver، سباق الطرق، والهروب من الزنزانة.
+• الألغاز والمنطق: تتريس، كاسحة الألغام، 4096، سودوكو، سوكوبان، Lines 98، أحجية الانزلاق، وتطابق الذاكرة.
+• الألعاب اللوحية والورق والمسابقات: بلاك جاك، سوليتير، الداما، كونكت 4، إكس أو، مسابقات Trivia، Word Quest، الرجل المشنوق، Simon Says، والحساب الذهني.
 
-🎮 دعم كامل لجهاز التحكم وأزرار التوجيه
-* مصمم خصيصًا لأجهزة Android TV وذراع الألعاب.
-* لا حاجة للمس. تنقل بالكامل في القوائم باستخدام أزرار D-pad.
-* يدعم الأزرار الفعلية للتأكيد والعودة.
+🎮 دعم كامل لـ D-pad وأذرع التحكم
+• تنقل كامل عبر D-pad في جميع القوائم وشاشات الإيقاف المؤقت ومربع الخروج.
+• دعم أذرع التحكم عبر Bluetooth وUSB مع معايرة الحساسية والمنطقة الميتة والاهتزاز اللمسي.
 
-✨ الميزات الرئيسية
-* لعب سلس للغاية: مُحسَّن لأداء 60 إطارًا في الثانية.
-* لوحة نتائج موحدة: تتبع واحفظ أعلى إنجازاتك محليًا.
-* أدلة كيفية اللعب: أوراق مساعدة يمكن الوصول إليها داخل اللعبة.
+🏆 قوائم الصدارة العالمية والملفات الشخصية
+• لوحات صدارة محلية وعالمية لكل لعبة ومستوى صعوبة.
+• ملفات شخصية متعددة للأبطال مع رموز وألوان مخصصة وحماية برقم PIN اختياري.
 
-حمل Dpad Arcade اليوم!
+✨ تجربة ريترو أصيلة
+• أداء سلس 60 FPS، فلتر شاشة CRT اختياري، 3 أنماط صوتية كلاسيكية، ودعم 16 لغة.
+
+استعد ذكريات العصر الذهبي للألعاب على الشاشة الكبيرة. حمّل Dpad Arcade اليوم!
+
+Release Notes v3.0.0 (293/500):
+v3.0.0 — تحديث رئيسي!
+• إضافة 4 ألعاب جديدة: بلاك جاك، كونكت 4، تقطيع الفواكه، ومسابقات Trivia (33 لعبة إجمالاً!)
+• واجهة رئيسية محدثة مع شريط Spotlight وشاشة بداية Synthwave
+• تنقل كامل عبر D-pad وذراع التحكم في جميع القوائم ومربع الخروج
+• تحسين قوائم الصدارة العالمية والمحلية وإصلاح الأخطاء
 
 ================================================================================
-LANGUAGE: Hindi (hi)
+LANGUAGE: Hindi (hi-IN)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: रेट्रो गेम्स
+App Name (29/30):
+Dpad Arcade: 33 रेट्रो TV गेम
 
-Short Description:
-D-pads और भौतिक नियंत्रकों के लिए अनुकूलित 20+ क्लासिक रेट्रो गेम खेलें।
+Short Description (68/80):
+Android TV D-pad और गेम कंट्रोलर के लिए 33 क्लासिक रेट्रो गेम खेलें।
 
-Full Description:
-Dpad Arcade में आपका स्वागत है, क्लासिक रेट्रो गेम्स का अंतिम संग्रह, जो Android TV, हैंडहेल्ड कंसोल और भौतिक नियंत्रकों वाले उपकरणों के लिए खूबसूरती से अनुकूलित है!
+Full Description (1380/4000):
+Dpad Arcade में आपका स्वागत है — Android TV, TV बॉक्स और गेम कंट्रोलर के लिए विशेष रूप से बनाया गया रेट्रो गेम हब!
 
-सहज नेविगेशन के लिए डिज़ाइन किया गया, Dpad Arcade आपको टच कंट्रोल की आवश्यकता के बिना 20 से अधिक सदाबहार आर्केड और पहेली गेम खेलने की अनुमति देता है। बस अपना रिमोट कंट्रोल, डी-पैड, या भौतिक गेमपैड लें, और सीधे एक्शन में उतरें।
+बिना टचस्क्रीन के अपने सोफे से ही 33 सदाबहार आर्केड, पज़ल, बोर्ड, कार्ड और रेसिंग गेम खेलें। बस अपना TV रिमोट D-pad या Bluetooth/USB गेमपैड उठाएं और स्मूथ 60 FPS गेमप्ले का आनंद लें।
 
-🕹️ खेलों की एक अविश्वसनीय लाइब्रेरी
-क्लासिक रेट्रो खेलों के विविध संग्रह का आनंद लें:
-* Snake: अपने सांप को बड़ा करें और बाधाओं से बचें।
-* Tetris: ब्लॉक जमा करें, लाइनें साफ करें और हाई स्कोर बनाएं।
-* Minesweeper: दृश्य प्रकट यांत्रिकी के साथ अपने तर्क का परीक्षण करें।
-* 4096: अंतिम टाइल तक पहुँचने के लिए संख्याओं का मिलान करें।
-* T-Rex Run: दिन/रात के चक्र और बदलते मौसम के साथ बाधाओं से बचें।
-* Brick Break: गेंद को खेल में रखें और सभी ईंटों को तोड़ दें।
-* Star Fighter: एलियन हमलावरों के खिलाफ रेट्रो स्पेस कॉम्बैट।
-* Tic-Tac-Toe: स्मार्ट सीपीयू के खिलाफ क्लासिक रणनीति।
-* Sokoban & Sudoku: चुनौतीपूर्ण स्थानिक और तार्किक पहेलियाँ हल करें।
-* Road Racer: हाई-स्पीड हाईवे ट्रैफिक से बचें।
-* Memory & Slide Puzzle: अपने दिमाग और दृश्य याददाश्त को तेज करें।
-* और भी बहुत कुछ: Battle Tanks, Word Quest, Dungeon Escape, Solitaire, Simon Says और Lines 98!
+🕹️ एक ही ऐप में 33 क्लासिक गेम
+• आर्केड और एक्शन: Snake, Brick Break, Flappy Hero, Froggy Cross, Star Fighter, Battle Tanks, Feeding Frenzy, Fruit Slice, Spinball, Monkey Adventure, Cat Mario और T-Rex Run।
+• रेसिंग और एडवेंचर: Retro Driver, Road Racer और Dungeon Escape।
+• पज़ल और लॉजिक: Tetris, Minesweeper, 4096, Sudoku, Sokoban, Lines 98, Slide Puzzle और Memory Match।
+• बोर्ड, कार्ड और क्विज़: Blackjack, Solitaire, Checkers, Connect Four, Tic-Tac-Toe, Trivia, Word Quest, Hangman, Simon Says और Mental Math।
 
-🎮 पूर्ण नियंत्रक और डी-पैड समर्थन
-* Android TV और गेमपैड नियंत्रकों के लिए तैयार।
-* शून्य टच इनपुट की आवश्यकता। डी-पैड नियंत्रणों का उपयोग करके पूरी तरह से नेविगेट करें।
-* पुष्टि करने और वापस लौटने के लिए भौतिक बटनों का समर्थन करता है।
+🎮 पूरा D-PAD और गेमपैड सपोर्ट
+• हर मेनू, पॉज़ स्क्रीन और एग्ज़िट डायलॉग में आसान D-pad नेविगेशन।
+• Bluetooth/USB कंट्रोलर सपोर्ट (चुनने के लिए A, वापस जाने के लिए B, एनालॉग स्टिक कैलिब्रेशन और हैप्टिक वाइब्रेशन)।
 
-✨ मुख्य विशेषताएं
-* स्मूथ गेमप्ले: तरल 60 FPS प्रदर्शन के लिए अनुकूलित।
-* एकीकृत स्कोरबोर्ड: अपनी उपलब्धियों को स्थानीय रूप से सहेजें।
-* खेलने के लिए गाइड: इन-गे-म हेल्प शीट ताकि आप कभी न फंसें।
+🏆 ग्लोबल लीडरबोर्ड और प्रोफ़ाइल
+• हर गेम और कठिनाई स्तर के लिए लोकल और वर्ल्डवाइड हॉल ऑफ फ़ेम।
+• कस्टम अवतार, रंग और वैकल्पिक 4-अंकीय PIN के साथ मल्टी-यूज़र प्रोफ़ाइल।
 
-आज ही Dpad Arcade डाउनलोड करें!
+✨ 60 FPS रेट्रो अनुभव
+• वैकल्पिक CRT स्कैनलाइन फ़िल्टर, 3 साउंड थीम, इन-गेम गाइड और 16 भाषाओं का सपोर्ट।
+
+आज ही Dpad Arcade डाउनलोड करें और बड़े स्क्रीन पर क्लासिक गेमिंग का मज़ा लें!
+
+Release Notes v3.0.0 (283/500):
+v3.0.0 — बड़ा अपग्रेड!
+• 4 नए गेम जोड़े गए: Blackjack, Connect Four, Fruit Slice और Trivia (कुल 33 गेम!)
+• स्पॉटलाइट बार और Synthwave स्प्लैश स्क्रीन के साथ नया हब डिज़ाइन
+• सभी मेनू और एग्ज़िट डायलॉग में पूर्ण D-pad व गेमपैड नेविगेशन
+• ग्लोबल व लोकल लीडरबोर्ड में सुधार और बग फ़िक्स
 
 ================================================================================
 LANGUAGE: Indonesian (id)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: Game Retro
+App Name (29/30):
+Dpad Arcade: 33 Game TV Retro
 
-Short Description:
-Mainkan 20+ game retro klasik yang dioptimalkan untuk D-pad dan pengontrol fisik.
+Short Description (80/80):
+Mainkan 33 game retro klasik yang dioptimalkan untuk Android TV D-pad & gamepad.
 
-Full Description:
-Selamat datang di Dpad Arcade, koleksi utama game retro klasik, yang dioptimalkan dengan indah untuk Android TV, konsol genggam, dan perangkat dengan pengontrol fisik!
+Full Description (1474/4000):
+Selamat datang di Dpad Arcade, pusat game retro terbaik yang dirancang khusus untuk Android TV, TV box, dan kontroler fisik!
 
-Didesain untuk navigasi yang mulus, Dpad Arcade memungkinkan Anda memainkan lebih dari 20 game arcade dan teka-teki abadi tanpa perlu kontrol sentuh. Cukup ambil remote control, D-pad, atau gamepad fisik Anda, dan langsung beraksi.
+Mainkan 33 game arcade, teka-teki, papan, kartu, balap, dan asah otak langsung dari sofa tanpa layar sentuh. Cukup gunakan remote TV D-pad atau gamepad Bluetooth/USB Anda untuk aksi mulus 60 FPS.
 
-🕹️ PERPUSTAKAAN GAME YANG LUAR BIASA
-Nikmati beragam koleksi game retro klasik:
-* Snake: Besarkan ularmu dan hindari rintangan.
-* Tetris: Tumpuk balok, bersihkan baris, và raih skor tinggi.
-* Minesweeper: Uji logika Anda dengan mekanik pengungkapan visual.
-* 4096: Gabungkan angka untuk mencapai ubin terakhir.
-* T-Rex Run: Lari, lompat, dan hindari rintangan dengan siklus siang/malam.
-* Brick Break: Jaga agar bola tetap dimainkan dan hancurkan semua bata.
-* Star Fighter: Pertempuran luar angkasa retro melawan alien.
-* Tic-Tac-Toe: Strategi klasik melawan CPU yang cerdas.
-* Sokoban & Sudoku: Selesaikan teka-teki spasial dan logis yang menantang.
-* Road Racer: Hindari lalu lintas jalan raya berkecepatan tinggi.
-* Memory & Slide Puzzle: Pertajam otak dan ingatan visual Anda.
-* Ditambah banyak lagi: Battle Tanks, Word Quest, Dungeon Escape, Solitaire, Simon Says, và Lines 98!
+🕹️ 33 GAME KLASIK DALAM SATU APLIKASI
+• Arcade & Aksi: Snake, Brick Break, Flappy Hero, Froggy Cross, Star Fighter, Battle Tanks, Feeding Frenzy, Fruit Slice, Spinball, Monkey Adventure, Cat Mario, dan T-Rex Run.
+• Balap & Petualangan: Retro Driver, Road Racer, dan Dungeon Escape.
+• Teka-teki & Logika: Tetris, Minesweeper, 4096, Sudoku, Sokoban, Lines 98, Slide Puzzle, dan Memory Match.
+• Papan, Kartu & Kuis: Blackjack, Solitaire, Checkers, Connect Four, Tic-Tac-Toe, Trivia, Word Quest, Hangman, Simon Says, dan Mental Math.
 
-🎮 DUKUNGAN PENUH PENGONTROL & D-PAD
-* Disesuaikan untuk Android TV, TV box, và pengontrol gamepad.
-* Tanpa input sentuh. Navigasi menu dan gameplay menggunakan kontrol D-pad.
-* Mendukung tombol fisik untuk konfirmasi dan kembali.
+🎮 DUKUNGAN PENUH D-PAD & GAMEPAD
+• Navigasi D-pad penuh di semua menu, layar jeda, dan dialog keluar.
+• Dukungan gamepad Bluetooth/USB lengkap (A untuk pilih, B untuk kembali, kalibrasi analog stick, dan getaran haptik).
 
-✨ FITUR UTAMA
-* Gameplay Halus: Dioptimalkan untuk performa 60 FPS yang lancar.
-* Papan Skor Terpadu: Simpan pencapaian tertinggi Anda secara lokal.
-* Panduan Cara Bermain: Lembar bantuan dalam game yang mudah diakses.
+🏆 PAPAN PERINGKAT GLOBAL & PROFIL PEMAIN
+• Hall of Fame lokal & dunia untuk setiap game dan tingkat kesulitan.
+• Banyak profil pemain dengan avatar, warna khusus, dan proteksi PIN 4 digit.
 
-Unduh Dpad Arcade hari ini!
+✨ NUANSA RETRO 60 FPS
+• Filter scanline CRT opsional, 3 tema audio retro, panduan cara bermain, dan dukungan 16 bahasa.
 
-================================================================================
-LANGUAGE: Italian (it)
---------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: Giochi retrò
+Hidupkan kembali era keemasan game arcade di layar TV Anda. Unduh Dpad Arcade sekarang!
 
-Short Description:
-Gioca a oltre 20 classici giochi retro ottimizzati per D-pad e controller fisici.
-
-Full Description:
-Benvenuti in Dpad Arcade, la collezione definitiva de giochi retro classici, splendidamente ottimizzata per Android TV, console portatili e dispositivi con controller fisici!
-
-Progettato per una navigazione fluida, Dpad Arcade ti permette di giocare a oltre 20 intramontabili giochi arcade e puzzle senza mai aver bisogno di controlli touch. Prendi il tuo telecomando, il D-pad o il gamepad fisico e tuffati nell'azione.
-
-🕹️ UN'INCREDIBILE LIBRERIA DI GIOCHI
-Divertiti con una collezione diversificata di classici retro:
-* Snake: Fai crescere il tuo serpente ed evita gli ostacoli.
-* Tetris: Impila i blocchi e raggiungi il punteggio più alto.
-* Prato fiorito (Minesweeper): Metti alla prova la tua logica.
-* 4096: Unisci i numeri per raggiungere la tessera finale.
-* T-Rex Run: Corri, salta e schiva ostacoli con cicli giorno/notte.
-* Brick Break: Mantieni la palla in gioco e rompi tutti i mattoni.
-* Star Fighter: Combattimento spaziale retro contro invasori alieni.
-* Tic-Tac-Toe: Strategia classica contro una CPU intelligente.
-* Sokoban e Sudoku: Risolvi impegnativi puzzle logici.
-* Road Racer: Schiva il traffico autostradale ad alta velocità.
-* Memory & Slide Puzzle: Allena il tuo cervello e la memoria visiva.
-* E molti altri: Battle Tanks, Word Quest, Dungeon Escape, Solitaire, Simon Says e Lines 98!
-
-🎮 SUPPORTO COMPLETO PER CONTROLLER E D-PAD
-* Pensato per Android TV, TV box e controller gamepad.
-* Zero input touch richiesto. Naviga nei menu e nel gioco usando il D-pad.
-* Supporta i pulsanti fisici per confermare e tornare indietro.
-
-✨ CARATTERISTICHE PRINCIPALI
-* Gameplay fluido: Ottimizzato per prestazioni a 60 FPS.
-* Classifica unificata: Salva i tuoi record localmente.
-* Guide di gioco: Fogli di aiuto accessibili durante il gioco.
-
-Scarica Dpad Arcade oggi stesso!
+Release Notes v3.0.0 (301/500):
+v3.0.0 — Pembaruan Besar!
+• 4 game baru: Blackjack, Connect Four, Fruit Slice, dan Trivia (total 33 game!)
+• Tampilan hub baru dengan Spotlight HUD & layar pembuka Synthwave
+• Navigasi penuh D-pad & gamepad di semua menu dan dialog keluar
+• Pembaruan papan peringkat lokal & global serta perbaikan bug
 
 ================================================================================
-LANGUAGE: Japanese (ja)
+LANGUAGE: Italian (it-IT)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: レトロゲーム
+App Name (25/30):
+Dpad Arcade: 33 Giochi TV
 
-Short Description:
-Dパッドと物理コントローラーに最適化された20以上のクラシックレトロゲーム。
+Short Description (77/80):
+Gioca a 33 classici giochi retrò ottimizzati per Android TV, D-pad e gamepad.
 
-Full Description:
-Dpad Arcadeへようこそ！Android TV、携帯型コンソール、物理コントローラーを備えたデバイス向けに美しく最適化された、究極のクラシックレトロゲームコレクションです。
+Full Description (1466/4000):
+Benvenuto in Dpad Arcade, l'hub di giochi retrò progettato appositamente per Android TV, TV box e controller fisici!
 
-シームレスな操作性を重視して設計された Dpad Arcade では、タッチ操作を一切必要とせずに、20種類以上の時代を超えたアーケードゲームやパズルゲームを楽しむことができます。リモコン、Dパッド、または物理ゲームパッドを手に取り、すぐにアクションに飛び込みましょう。
+Gioca a 33 grandi classici arcade, puzzle, da tavolo, di carte e di corse direttamente dal divano, senza mai usare il touch. Impugna il telecomando TV o il tuo gamepad Bluetooth/USB e tuffati nel divertimento fluido a 60 FPS.
 
-🕹️ 素晴らしいゲームライブラリ
-多彩なレトロゲームコレクションをお楽しみください：
-* スネーク：ヘビを成長させ、障害物を避ける不朽の名作。
-* テトリス：ブロックを積み上げ、ラインを消してハイスコアを目指す。
-* マインスイーパー：ロジックを駆使して地雷を特定する。
-* 4096：数字を合体させて究極のタイルを目指す。
-* T-Rex Run：昼夜のサイクルや天候の変化の中で障害物を回避。
-* ブロック崩し：ボールを打ち返し、すべてのブロックを破壊。
-* スターファイター：エイリアンの侵略者とのレトロな宇宙戦闘。
-* 三目並べ：賢いCPUとのクラシックな戦略ボードゲーム。
-* 倉庫番＆数独：やりがいのある論理パズル。
-* ロードレーサー：高速道路の交通をかわす。
-* 神経衰弱＆スライドパズル：脳と視覚的な記憶を鍛える。
-* その他多数：バトルタンク、ワードクエスト、ダンジョンエスケープ、ソリティア、サイモンセズ、ライン98など！
+🕹️ 33 GIOCHI CLASSICI IN UN SOLO HUB
+• Arcade e Azione: Snake, Brick Break, Flappy Hero, Froggy Cross, Star Fighter, Battle Tanks, Feeding Frenzy, Fruit Slice, Spinball, Monkey Adventure, Cat Mario e T-Rex Run.
+• Corse e Avventura: Retro Driver, Road Racer e Dungeon Escape.
+• Puzzle e Logica: Tetris, Campo Minato, 4096, Sudoku, Sokoban, Lines 98, Slide Puzzle e Memory.
+• Tavolo, Carte e Quiz: Blackjack, Solitario, Dama, Forza 4, Tris, Trivia, Word Quest, Impiccato, Simon Says e Calcolo Mentale.
 
-🎮 コントローラーとDパッドを完全サポート
-* Android TV、TVボックス、ゲームパッドコントローラー向けに調整。
-* タッチ入力不要。Dパッドのみでメニューとゲームプレイを完結。
-* 物理ボタン（決定、戻る、消音、ヘルプ）に対応。
+🎮 SUPPORTO COMPLETO D-PAD E CONTROLLER
+• Navigazione completa via D-pad in ogni menu, schermata di pausa e finestra di uscita.
+• Supporto nativo per gamepad Bluetooth/USB (A per confermare, B per tornare indietro, calibrazione analogico e vibrazione aptica).
 
-✨ 主な特徴
-* 滑らかなゲームプレイ：60 FPSの滑らかなパフォーマンス。
-* 統合スコアボード：ゲームごとの最高記録をローカルに保存。
-* 遊び方ガイド：ゲーム内でいつでもヘルプを確認可能。
+🏆 CLASSIFICHE GLOBALI E PROFILI
+• Hall of Fame locale e mondiale per ogni gioco e difficoltà.
+• Profili multipli con avatar personalizzati, colori e PIN opzionale.
 
-今すぐDpad Arcadeをダウンロードして、アーケードゲームの黄金時代を追体験しましょう！
+✨ STILE RETRÒ A 60 FPS
+• Filtro CRT opzionale, 3 profili audio retrò, guide integrate e 16 lingue supportate.
+
+Rivivi l'epoca d'oro delle sale giochi sul grande schermo. Scarica Dpad Arcade oggi!
+
+Release Notes v3.0.0 (338/500):
+v3.0.0 — Grande aggiornamento!
+• 4 nuovi giochi: Blackjack, Forza 4, Fruit Slice e Trivia (33 giochi in totale!)
+• Nuovo design della home con barra Spotlight e schermata iniziale Synthwave
+• Navigazione completa D-pad e controller su tutti i menu e il dialogo di uscita
+• Classifiche globali e locali migliorate e correzioni di stabilità
 
 ================================================================================
-LANGUAGE: Korean (ko)
+LANGUAGE: Japanese (ja-JP)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: 레트로 게임
+App Name (25/30):
+Dpad Arcade: 33種のレトロTVゲーム
 
-Short Description:
-D-패드 및 물리 컨트롤러에 최적화된 20개 이상의 클래식 레트로 게임을 즐기세요.
+Short Description (45/80):
+Android TVの十字キーとコントローラーに最適化された33種類の名作レトロゲーム集。
 
-Full Description:
-Dpad Arcade에 오신 것을 환영합니다! Android TV, 휴대용 콘솔 및 물리 컨트롤러가 있는 장치에 아름답게 최적화된 궁극의 클래식 레트로 게임 컬렉션입니다.
+Full Description (849/4000):
+Dpad Arcadeへようこそ！Android TV、TVボックス、ゲームコントローラーのために一から設計された究極のレトロゲームハブです。
 
-원활한 탐색을 위해 처음부터 설계된 Dpad Arcade를 사용하면 터치 제어 없이도 20가지 이상의 시대를 초월한 아케이드 및 퍼즐 게임을 플레이할 수 있습니다. 리모컨, D-패드 또는 물리적 게임패드를 들고 바로 액션에 뛰어드세요.
+タッチ操作は一切不要。テレビのリモコン（十字キー）やBluetooth/USBゲームパッドを使って、33種類の名作アーケード・パズル・ボード・カード・レースゲームを滑らかな60 FPSで楽しめます。
 
-🕹️ 놀라운 게임 라이브러리
-다양한 클래식 레트로 게임 컬렉션을 즐겨보세요:
-* 스네이크: 뱀을 키우고 장애물을 피하는 시대를 초월한 클래식.
-* 테트리스: 블록을 쌓고 라인을 지워 최고 점수에 도전하세요.
-* 지뢰찾기: 논리력을 테스트하세요.
-* 4096: 숫자를 합쳐 최종 타일에 도달하는 두뇌 퍼즐.
-* T-Rex Run: 낮/밤 주기와 날씨 변화 속에서 장애물을 피하세요.
-* 벽돌 깨기: 공을 떨어뜨리지 않고 모든 벽돌을 부수세요.
-* 스타 파이터: 외계인 침략자들에 맞선 레트로 우주 전투.
-* 틱택토: 똑똑한 CPU를 상대로 하는 클래식 전략 보드 게임.
-* 소코반 & 스도쿠: 도전적인 논리 퍼즐을 풀어보세요.
-* 로드 레이서: 고속도로 교통을 피하세요.
-* 메모리 & 슬라이드 퍼즐: 두뇌와 시각적 기억력을 강화하세요.
-* 그 외 다수: 배틀 탱크, 워드 퀘스트, 던전 탈출, 솔리테어, 사이몬 세즈, 라인 98!
+🕹️ 33種類の名作ゲームを1つのアプリに収録
+• アーケード＆アクション：スネーク、ブロック崩し、Flappy Hero、フロッギー、スターファイター、バトルタンク、Feeding Frenzy、フルーツスライス、スピンボール、モンキーアドベンチャー、Cat Mario、T-Rexラン。
+• レース＆アドベンチャー：Retro Driver、ロードレーサー、ダンジョン脱出。
+• パズル＆ロジック：テトリス、マインスイーパー、4096、数独、倉庫番、Lines 98、スライドパズル、神経衰弱。
+• ボード＆カード＆クイズ：ブラックジャック、ソリティア、チェッカー、コネクトフォー、三目並べ、トリビアクイズ、Word Quest、ハングマン、サイモンセイズ、暗算チャレンジ。
 
-🎮 완전한 컨트롤러 및 D-패드 지원
-* Android TV, TV 박스 및 게임패드 컨트롤러에 맞게 제작되었습니다.
-* 터치 입력이 필요 없습니다. D-패드 컨트롤을 사용하여 메뉴와 게임 플레이를 탐색하세요.
-* 물리 버튼 지원 (확인, 뒤로가기, 음소거, 도움말).
+🎮 D-PAD＆ゲームパッド完全対応
+• すべてのメニュー、ポーズ画面、終了ダイアログを十字キーとコントローラーで快適操作。
+• Bluetooth/USBゲームパッド対応（Aで決定、Bで戻る、アナログスティックのデッドゾーン・感度調整、振動フィードバック搭載）。
 
-✨ 주요 특징
-* 부드러운 게임 플레이: 60 FPS 성능에 최적화된 가벼운 렌더링 엔진.
-* 통합 점수판: 모든 게임의 최고 기록을 로컬에 저장합니다.
-* 게임 가이드: 게임 내 도움말 시트로 쉽게 배우세요.
+🏆 ワールドランキング＆マルチプロフィール
+• ゲーム別・難易度別のローカル＆世界ランキング（殿堂入り）。
+• アバター・カラー・4桁PINロック対応の複数プロフィール機能。
 
-지금 Dpad Arcade를 다운로드하고 아케이드 게임의 황금기를 다시 경험해 보세요!
+✨ こだわりのレトロ演出
+• 滑らかな60 FPS動作、CRTスキャンライン演出、3種類のレトロサウンドテーマ、16言語対応。
+
+大画面で懐かしのアーケード黄金時代を体験しよう。今すぐDpad Arcadeをダウンロード！
+
+Release Notes v3.0.0 (163/500):
+v3.0.0 — 大型アップデート！
+• 新作4タイトル追加：ブラックジャック、コネクトフォー、フルーツスライス、トリビア（全33種！）
+• スポットライトバー＆シンセウェーブ起動画面でハブを刷新
+• 全メニュー・ポーズ・終了画面でのD-pad＆ゲームパッド操作を完全対応
+• ランキング表示の修正と安定性・パフォーマンス改善
 
 ================================================================================
-LANGUAGE: Portuguese (pt)
+LANGUAGE: Korean (ko-KR)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: Jogos retrô
+App Name (26/30):
+Dpad Arcade: 33종 레트로 TV 게임
 
-Short Description:
-Jogue mais de 20 jogos retro clássicos otimizados para D-pads e comandos físicos.
+Short Description (53/80):
+Android TV 방향키(D-pad)와 게임패드에 최적화된 33가지 클래식 레트로 게임 모음.
 
-Full Description:
-Bem-vindo ao Dpad Arcade, a collezione definitiva de jogos retro clássicos, otimizada para Android TV, consolas portáteis e dispositivos com comandos físicos!
+Full Description (868/4000):
+Dpad Arcade에 오신 것을 환영합니다! Android TV, TV 박스, 물리 게임 컨트롤러를 위해 처음부터 설계된 궁극의 레트로 게임 허브입니다.
 
-Projetado para uma navegação fluida, o Dpad Arcade permite-lhe jogar mais de 20 jogos de arcade e puzzles intemporais sem precisar de controlos táteis. Basta pegar no seu comando remoto, D-pad ou gamepad físico e mergulhar na ação.
+터치 없이 TV 리모컨 방향키(D-pad)나 블루투스/USB 게임패드만으로 33가지 클래식 아케이드, 퍼즐, 보드, 카드, 레이싱 게임을 부드러운 60 FPS로 즐겨보세요.
 
-🕹️ UMA INCRÍVEL BIBLIOTECA DE JUEGOS
-Desfrute de uma coleção diversificada de clássicos:
-* Snake: Faça a sua serpente crescer e evite obstáculos.
-* Tetris: Empilhe blocos, limpe linhas e alcance a pontuação máxima.
-* Campo Minado: Teste a sua lógica.
-* 4096: Combine números para chegar à peça final.
-* T-Rex Run: Corra, salte e desvie-se de obstáculos com ciclos dia/noite.
-* Brick Break: Mantenha a bola em jogo e quebre todos os tijolos.
-* Star Fighter: Combate espacial retro contra invasores.
-* Tic-Tac-Toe: Estratégia clássica contra um CPU inteligente.
-* Sokoban e Sudoku: Resolva puzzles lógicos desafiantes.
-* Road Racer: Desvie-se do tráfego rodoviário a alta velocidade.
-* Memory & Slide Puzzle: Treine o seu cérebro e memória visual.
-* E muitos mais: Battle Tanks, Word Quest, Dungeon Escape, Solitaire, Simon Says e Lines 98!
+🕹️ 한 곳에 모은 33가지 클래식 게임
+• 아케이드 & 액션: 스네이크, 벽돌깨기, Flappy Hero, 개구리 건너기, 스타 파이터, 배틀 탱크, Feeding Frenzy, 과일 자르기, 스핀볼, 원숭이 모험, Cat Mario, 티렉스 런.
+• 레이싱 & 어드벤처: Retro Driver, 로드 레이서, 던전 탈출.
+• 퍼즐 & 로직: 테트리스, 지뢰찾기, 4096, 스도쿠, 소코반, Lines 98, 슬라이드 퍼즐, 메모리 매치.
+• 보드, 카드 & 퀴즈: 블랙잭, 솔리테어, 체커, 커넥트 포, 틱택토, 트리비아 퀴즈, Word Quest, 행맨, 사이먼 게임, 암산 챌린지.
 
-🎮 SUPORTE COMPLETO PARA COMANDO & D-PAD
-* Adaptado para Android TV, TV boxes e comandos de jogo.
-* Zero entrada tátil necessária. Navegue nos menus e jogos usando o D-pad.
-* Suporta botões físicos para confirmar e voltar.
+🎮 완벽한 D-PAD 및 게임패드 지원
+• 모든 메뉴, 일시정지 화면, 종료 대화상자에서 끊김 없는 방향키 탐색 지원.
+• 블루투스/USB 게임패드 완벽 지원(A 선택, B 뒤로, 아날로그 스틱 감도/데드존 보정 및 햅틱 진동).
 
-✨ CARACTERÍSTICAS PRINCIPAIS
-* Jogabilidade fluida: Otimizado para 60 FPS.
-* Tabela de pontuações: Guarde os seus recordes localmente.
-* Guias de gioco: Ajuda acessível durante o gioco.
+🏆 글로벌 리더보드 및 멀티 프로필
+• 게임별·난이도별 로컬 및 전 세계 명예의 전당 순위표.
+• 아바타, 색상, 4자리 PIN 잠금이 가능한 다중 영웅 프로필 지원.
 
-Descarregue o Dpad Arcade hoje mesmo!
+✨ 60 FPS 레트로 감성
+• 선택형 CRT 스캔라인 필터, 3가지 사운드 프리셋, 게임 내 가이드 및 16개 언어 지원.
+
+큰 TV 화면에서 오락실 황금기를 다시 느껴보세요. 지금 Dpad Arcade를 다운로드하세요!
+
+Release Notes v3.0.0 (186/500):
+v3.0.0 — 대규모 업그레이드!
+• 신규 게임 4종 추가: 블랙잭, 커넥트 포, 과일 자르기, 트리비아 (총 33종!)
+• 스포트라이트 HUD 및 신스웨이브 스플래시 화면으로 홈 허브 개편
+• 모든 메뉴, 일시정지, 종료 화면에서 D-pad 및 게임패드 탐색 완벽 지원
+• 난이도별 글로벌/로컬 리더보드 개선 및 안정성 버그 수정
 
 ================================================================================
-LANGUAGE: Russian (ru)
+LANGUAGE: Portuguese (pt-BR)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: Ретро-игры
+App Name (30/30):
+Dpad Arcade: 33 Jogos TV Retrô
 
-Short Description:
-Играйте в 20+ классических ретро-игр, оптимизированных для D-pad и контроллеров.
+Short Description (79/80):
+Jogue 33 clássicos retrô otimizados para Android TV, D-pad e controles físicos.
 
-Full Description:
-Добро пожаловать в Dpad Arcade — идеальную коллекцию классических ретро-игр, оптимизированную для Android TV, портативных консолей и устройств с физическими контроллерами!
+Full Description (1464/4000):
+Bem-vindo ao Dpad Arcade, a central definitiva de jogos retrô feita sob medida para Android TV, TV Boxes e controles físicos!
 
-Разработанный для удобной навигации, Dpad Arcade позволяет играть в более чем 20 легендарных аркад и головоломок без использования сенсорного управления. Просто возьмите пульт, D-pad или геймпад и погрузитесь в игру.
+Divirta-se com 33 jogos clássicos de arcade, quebra-cabeça, tabuleiro, cartas e corrida direto do sofá—sem precisar de tela sensível ao toque. Pegue o controle da TV ou seu gamepad Bluetooth/USB e jogue a 60 FPS fluidos.
 
-🕹️ НЕВЕРОЯТНАЯ БИБЛИОТЕКА ИГР
-Наслаждайтесь разнообразной коллекцией классических игр:
-* Змейка: Растите змейку и избегайте препятствий.
-* Тетрис: Складывайте блоки и бейте рекорды.
-* Сапер: Проверьте свою логику.
-* 4096: Объединяйте числа, чтобы достичь финальной плитки.
-* T-Rex Run: Бегайте и прыгайте со сменой дня и ночи.
-* Brick Break: Разбивайте кирпичи, не давая мячу упасть.
-* Star Fighter: Ретро-сражения в космосе.
-* Крестики-нолики: Классическая стратегия против умного ИИ.
-* Сокобан и Судоку: Решайте сложные логические задачи.
-* Road Racer: Уклоняйтесь от скоростного движения на шоссе.
-* Memory & Slide Puzzle: Тренируйте мозг и зрительную память.
-* И многое другое: Battle Tanks, Word Quest, Dungeon Escape, Solitaire, Simon Says и Lines 98!
+🕹️ 33 JOGOS CLÁSSICOS EM UM SÓ LUGAR
+• Arcade e Ação: Snake, Brick Break, Flappy Hero, Froggy Cross, Star Fighter, Battle Tanks, Feeding Frenzy, Fruit Slice, Spinball, Monkey Adventure, Cat Mario e T-Rex Run.
+• Corrida e Aventura: Retro Driver, Road Racer e Dungeon Escape.
+• Quebra-cabeça e Lógica: Tetris, Campo Minado, 4096, Sudoku, Sokoban, Lines 98, Slide Puzzle e Jogo da Memória.
+• Tabuleiro, Cartas e Quiz: Blackjack, Paciência, Damas, Ligue 4, Jogo da Velha, Trivia, Word Quest, Forca, Simon Says e Cálculo Mental.
 
-🎮 ПОЛНАЯ ПОДДЕРЖКА КОНТРОЛЛЕРОВ И D-PAD
-* Создано для Android TV, ТВ-приставок и геймпадов.
-* Сенсор не требуется. Навигация в меню и игра полностью через D-pad.
-* Поддержка физических кнопок для действий.
+🎮 SUPORTE TOTAL A D-PAD E CONTROLES
+• Navegação completa via D-pad em todos os menus, telas de pausa e confirmação de saída.
+• Compatível com gamepads Bluetooth/USB (A confirma, B volta, calibração de analógico e vibração háptica).
 
-✨ ОСНОВНЫЕ ХАРАКТЕРИСТИКИ
-* Плавный геймплей: Оптимизировано для 60 FPS.
-* Список рекордов: Сохраняйте свои достижения локально.
-* Инструкции: Доступные руководства по каждой игре.
+🏆 RANKINGS MUNDIAIS E PERFIS
+• Hall da Fama local e global por jogo e nível de dificuldade.
+• Múltiplos perfis de herói com avatares, cores e proteção opcional por PIN.
 
-Скачайте Dpad Arcade сегодня!
+✨ ESTILO RETRÔ A 60 FPS
+• Filtro CRT opcional, 3 perfis de áudio retrô, guias integrados e 16 idiomas.
+
+Reviva a era de ouro dos fliperamas na tela grande. Baixe o Dpad Arcade hoje mesmo!
+
+Release Notes v3.0.0 (317/500):
+v3.0.0 — Grande Atualização!
+• 4 novos jogos: Blackjack, Ligue 4, Fruit Slice e Trivia (33 jogos no total!)
+• Novo visual do hub com barra Spotlight e tela inicial Synthwave
+• Navegação completa por D-pad e gamepad em todos os menus e caixa de saída
+• Rankings globais e locais aprimorados e correções de estabilidade
+
+================================================================================
+LANGUAGE: Russian (ru-RU)
+--------------------------------------------------------------------------------
+App Name (29/30):
+Dpad Arcade: 33 Ретро ТВ Игры
+
+Short Description (76/80):
+33 классические ретро-игры для Android TV, пульта D-pad и игровых геймпадов.
+
+Full Description (1427/4000):
+Добро пожаловать в Dpad Arcade — главный центр ретро-игр, созданный специально для Android TV, ТВ-приставок и физических геймпадов!
+
+Играйте в 33 легендарные аркады, головоломки, настольные, карточные игры и гонки прямо с дивана — без сенсорного экрана. Возьмите пульт от телевизора или Bluetooth/USB-геймпад и наслаждайтесь плавными 60 FPS.
+
+🕹️ 33 КЛАССИЧЕСКИЕ ИГРЫ В ОДНОМ ПРИЛОЖЕНИИ
+• Аркады и экшен: Змейка, Арканоид, Flappy Hero, Froggy Cross, Star Fighter, Танчики, Feeding Frenzy, Фруктовый ниндзя, Пинбол, Обезьянка, Cat Mario и T-Rex Run.
+• Гонки и приключения: Retro Driver, Road Racer и Побег из подземелья.
+• Головоломки: Тетрис, Сапёр, 4096, Судоку, Сокобан, Линии 98, Пятнашки и Память.
+• Настольные, карты и викторины: Блэкджек, Пасьянс, Шашки, Четыре в ряд, Крестики-нолики, Викторина Trivia, Word Quest, Виселица, Саймон и Устный счёт.
+
+🎮 ПОЛНАЯ ПОДДЕРЖКА D-PAD И ГЕЙМПАДОВ
+• Удобная навигация крестовиной по всем меню, экрану паузы и диалогу выхода.
+• Поддержка Bluetooth/USB-контроллеров (A — выбор, B — назад, калибровка стиков и виброотклик).
+
+🏆 МИРОВЫЕ РЕКОРДЫ И ПРОФИЛИ
+• Локальный и мировой Зал славы для каждой игры и уровня сложности.
+• Несколько профилей игроков с аватарами, цветами и опциональным PIN-кодом.
+
+✨ РЕТРО-АТМОСФЕРА В 60 FPS
+• Фильтр CRT-экрана, 3 звуковых пресета, встроенные инструкции и 16 языков.
+
+Вернитесь в золотую эпоху аркад на большом экране. Скачайте Dpad Arcade прямо сейчас!
+
+Release Notes v3.0.0 (319/500):
+v3.0.0 — Крупное обновление!
+• 4 новые игры: Блэкджек, Четыре в ряд, Фруктовый срез и Викторина (всего 33 игры!)
+• Обновлённый главный экран с панелью Spotlight и заставкой Synthwave
+• Полная навигация с D-pad и геймпада по всем меню и экрану выхода
+• Улучшенные мировые и локальные таблицы лидеров и исправления ошибок
 
 ================================================================================
 LANGUAGE: Thai (th)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: เกมย้อนยุค
+App Name (28/30):
+Dpad Arcade: 33 เกมทีวีเรโทร
 
-Short Description:
-เล่นเกมเรโทรย้อนยุคกว่า 20 เกมที่ปรับให้เหมาะกับ D-pad และคอนโทรลเลอร์
+Short Description (78/80):
+เล่น 33 เกมเรโทรสุดคลาสสิกที่ออกแบบมาเพื่อรีโมต D-pad ของ Android TV และจอยเกม
 
-Full Description:
-ยินดีต้อนรับสู่ Dpad Arcade สุดยอดคอลเลกชันเกมเรโทรคลาสสิกที่ปรับแต่งมาอย่างสวยงามสำหรับ Android TV, เครื่องเกมพกพา และอุปกรณ์ที่มีคอนโทรลเลอร์จริง!
+Full Description (1289/4000):
+ยินดีต้อนรับสู่ Dpad Arcade ศูนย์รวมเกมเรโทรสุดคลาสสิกที่สร้างขึ้นเพื่อ Android TV, กล่องทีวี และจอยควบคุมโดยเฉพาะ!
 
-Dpad Arcade ได้รับการออกแบบมาเพื่อการนำทางที่ราบรื่น ช่วยให้คุณเล่นเกมอาร์เคดและปริศนาเหนือกาลเวลาได้มากกว่า 20 เกมโดยไม่ต้องใช้ระบบสัมผัส เพียงแค่หยิบรีโมทคอนโทรล, D-pad หรือเกมแพดของคุณ แล้วกระโจนเข้าสู่ความสนุกได้ทันที
+สนุกกับ 33 เกมอาร์เคด พัซเซิล เกมกระดาน เกมไพ่ และแข่งรถได้ทันทีจากโซฟาโดยไม่ต้องใช้หน้าจอสัมผัส เพียงหยิบรีโมตทีวีหรือจอย Bluetooth/USB แล้วลุยแบบลื่นไหล 60 FPS
 
-🕹️ คลังเกมที่น่าเหลือเชื่อ
-เพลิดเพลินกับคอลเลกชันเกมเรโทรคลาสสิกที่หลากหลาย:
-* Snake: เลี้ยงงูให้โตและหลีกเลี่ยงอุปสรรคในเกมระดับตำนาน
-* Tetris: วางบล็อก ล้างแถว และทำคะแนนสูงสุด
-* Minesweeper: ทดสอบตรรกะของคุณด้วยกลไกการเปิดเผยช่อง
-* 4096: รวมตัวเลขเพื่อไปให้ถึงไทล์สูงสุด
-* T-Rex Run: วิ่ง กระโดด และหลบหลีกอุปสรรคด้วยวงจรกลางวัน/กลางคืน
-* Brick Break: เลี้ยงลูกบอลและทำลายอิฐทั้งหมด
-* Star Fighter: การต่อสู้อวกาศเรโทรกับผู้บุกรุกจากต่างดาว
-* Tic-Tac-Toe: กลยุทธ์คลาสสิกต่อสู้กับ CPU อัจฉริยะ
-* Sokoban & Sudoku: แก้ปริศนาเชิงพื้นที่และตรรกะที่ท้าทาย
-* Road Racer: หลบการจราจรบนทางหลวงที่ใช้ความเร็วสูง
-* Memory & Slide Puzzle: ฝึกสมองและความจำภาพของคุณ
-* และอื่น ๆ อีกมากมาย: Battle Tanks, Word Quest, Dungeon Escape, Solitaire, Simon Says และ Lines 98!
+🕹️ 33 เกมคลาสสิกในแอปเดียว
+• อาร์เคดและแอ็กชัน: งู, ตีอิฐ, Flappy Hero, กบข้ามถนน, Star Fighter, รถถัง, Feeding Frenzy, ฟันผลไม้, Spinball, ลิงผจญภัย, Cat Mario และ T-Rex Run
+• แข่งรถและผจญภัย: Retro Driver, Road Racer และหนีดันเจี้ยน
+• พัซเซิลและฝึกสมอง: Tetris, กู้ระเบิด, 4096, ซูโดกุ, Sokoban, Lines 98, เกมเลื่อนภาพ และจับคู่ความจำ
+• เกมกระดาน ไพ่ และควิซ: แบล็คแจ็ค, โซลิแทร์, หมากฮอส, บิงโก 4 แถว (Connect Four), XO, ควิซ Trivia, Word Quest, แฮงแมน, Simon Says และคิดเลขเร็ว
 
-🎮 รองรับคอนโทรลเลอร์และ D-PAD อย่างสมบูรณ์
-* ออกแบบมาสำหรับ Android TV, กล่องทีวี และคอนโทรลเลอร์เกมแพด
-* ไม่ต้องใช้ระบบสัมผัส นำทางเมนูและเล่นเกมโดยใช้ปุ่ม D-pad
-* รองรับปุ่มจริงเพื่อยืนยันและย้อนกลับ
+🎮 รองรับ D-PAD และจอยเกมเต็มรูปแบบ
+• บังคับด้วยปุ่มทิศทาง D-pad ได้ครบทุกหน้าจอ เมนูพักเกม และหน้าต่างออกจากแอป
+• รองรับจอย Bluetooth/USB พร้อมปรับแต่งความไวจอยสติ๊กและระบบสั่น Haptic
 
-✨ คุณสมบัติหลัก
-* การเล่นเกมที่ราบรื่น: ปรับให้เหมาะกับประสิทธิภาพ 60 FPS ที่ลื่นไหล
-* กระดานคะแนนรวม: ติดตามและบันทึกความสำเร็จสูงสุดของคุณไว้ในเครื่อง
-* คู่มือวิธีการเล่น: แผ่นช่วยเหลือในเกมที่เข้าถึงได้ง่าย
+🏆 กระดานคะแนนโลกและหลายโปรไฟล์
+• หอเกียรติยศทั้งแบบในเครื่องและระดับโลกแยกตามเกมและระดับความยาก
+• สร้างโปรไฟล์ผู้เล่นได้หลายคนพร้อมอวาตาร์ สี และรหัส PIN ป้องกัน
 
-ดาวน์โหลด Dpad Arcade วันนี้!
+✨ กลิ่นอายเรโทรลื่นไหล 60 FPS
+• ฟิลเตอร์จอ CRT, โหมดเสียงเรโทร 3 สไตล์, คู่มือวิธีเล่นในเกม และรองรับ 16 ภาษา
+
+ย้อนวันวานยุคทองเกมตู้บนหน้าจอใหญ่ ดาวน์โหลด Dpad Arcade เลยวันนี้!
+
+Release Notes v3.0.0 (302/500):
+v3.0.0 — อัปเกรดครั้งใหญ่!
+• เพิ่ม 4 เกมใหม่: แบล็คแจ็ค, Connect Four, ฟันผลไม้ และควิซ Trivia (รวม 33 เกม!)
+• ปรับโฉมหน้าหลักพร้อมแถบ Spotlight และหน้าเริ่มต้นสไตล์ Synthwave
+• รองรับการนำทางด้วย D-pad และจอยเกมครบทุกเมนูและหน้าต่างออกแอป
+• ปรับปรุงกระดานคะแนนและแก้ไขข้อผิดพลาดเพื่อความเสถียรยิ่งขึ้น
 
 ================================================================================
-LANGUAGE: Turkish (tr)
+LANGUAGE: Turkish (tr-TR)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: Retro Oyunlar
+App Name (30/30):
+Dpad Arcade: 33 Retro TV Oyunu
 
-Short Description:
-D-pad ve fiziksel kontrolcüler için optimize edilmiş 20+ klasik retro oyun oynayın.
+Short Description (76/80):
+Android TV D-pad ve oyun kolları için optimize edilmiş 33 klasik retro oyun.
 
-Full Description:
-Dpad Arcade'e hoş geldiniz! Android TV, el konsolları ve fiziksel kontrolcülü cihazlar için mükemmel şekilde optimize edilmiş, klasik retro oyunların nihai koleksiyonu!
+Full Description (1515/4000):
+Android TV, TV kutuları ve fiziksel oyun kumandaları için sıfırdan tasarlanan nihai retro oyun merkezi Dpad Arcade'e hoş geldiniz!
 
-Sorunsuz navigasyon için sıfırdan tasarlanan Dpad Arcade, dokunmatik kontrollere ihtiyaç duymadan 20'den fazla zamansız arcade ve bulmaca oyunu oynamanıza olanak tanır. Sadece uzaktan kumandanızı, D-pad'inizi veya oyun kolunuzu alın ve doğrudan aksiyona dalın.
+Dokunmatik ekrana hiç ihtiyaç duymadan koltuğunuzdan 33 klasik atari, bulmaca, masa, kart ve yarış oyunu oynayın. TV kumandanızı veya Bluetooth/USB oyun kolunuzu alın ve akıcı 60 FPS eğlenceye dalın.
 
-🕹️ İNANILMAZ BİR OYUN KÜTÜPHANESİ
-Çeşitli klasik retro oyun koleksiyonunun tadını çıkarın:
-* Snake: Yılanınızı büyütün ve engellerden kaçının.
-* Tetris: Blokları istifleyin ve en yüksek puana ulaşın.
-* Mayın Tarlası: Mantığınızı test edin.
-* 4096: Nihai karoya ulaşmak için sayıları birleştirin.
-* T-Rex Run: Gece/gündüz döngüleri ve değişen hava durumunda engellerden kaçın.
-* Brick Break: Topu oyunda tutun ve tüm tuğlaları kırın.
-* Star Fighter: Uzaylı istilacılara karşı retro uzay savaşı.
-* Tic-Tac-Toe: Akıllı CPU'ya karşı klasik strateji.
-* Sokoban & Sudoku: Zorlu mantık bulmacalarını çözün.
-* Road Racer: Otoyol trafiğinden kaçın.
-* Memory & Slide Puzzle: Beyninizi ve görsel hafızanızı geliştirin.
-* Ve çok daha fazlası: Battle Tanks, Word Quest, Dungeon Escape, Solitaire, Simon Says ve Lines 98!
+🕹️ TEK MERKEZDE 33 KLASİK OYUN
+• Atari ve Aksiyon: Yılan, Tuğla Kırma, Flappy Hero, Froggy Cross, Star Fighter, Tank Savaşı, Feeding Frenzy, Meyve Kesme, Spinball, Maymun Macerası, Cat Mario ve T-Rex Run.
+• Yarış ve Macera: Retro Driver, Road Racer ve Zindandan Kaçış.
+• Bulmaca ve Mantık: Tetris, Mayın Tarlası, 4096, Sudoku, Sokoban, Lines 98, Kaydırma Bulmacası ve Hafıza Eşleştirme.
+• Masa, Kart ve Bilgi: Blackjack, Solitaire, Dama, Dörtlü Bağla, XOX, Trivia Bilgi Yarışması, Word Quest, Adam Asmaca, Simon Says ve Zihinden Matematik.
 
-🎮 TAM KONTROLCÜ VE D-PAD DESTEĞİ
-* Android TV, TV kutuları ve gamepadler için özel olarak tasarlanmıştır.
-* Dokunmatik giriş gerekmez. Menülerde tamamen D-pad ile gezinin.
-* Onaylamak ve geri dönmek için fiziksel düğmeleri destekler.
+🎮 TAM D-PAD VE OYUN KOLU DESTEĞİ
+• Tüm menülerde, duraklatma ekranlarında ve çıkış penceresinde eksiksiz D-pad kontrolü.
+• Bluetooth/USB oyun kolu desteği (A onayla, B geri, analog çubuk kalibrasyonu ve titreşim geri bildirimi).
 
-✨ ANA ÖZELLİKLER
-* Akıcı Oynanış: 60 FPS performans için optimize edilmiştir.
-* Birleşik Puan Tablosu: Rekorlarınızı yerel olarak kaydedin.
-* Nasıl Oynanır Kılavuzları: Oyun içi yardım sayfaları mevcuttur.
+🏆 KÜRESEL LİDER TABLOLARI VE PROFİLLER
+• Her oyun ve zorluk seviyesi için yerel ve dünya çapında Şeref Kürsüsü.
+• Özel avatarlar, renkler ve isteğe bağlı PIN korumalı çoklu oyuncu profilleri.
 
-Dpad Arcade'i bugün indirin!
+✨ 60 FPS RETRO DENEYİMİ
+• İsteğe bağlı CRT tarama çizgisi filtresi, 3 retro ses teması, oyun içi rehberler ve 16 dil desteği.
+
+Büyük ekranda atari salonlarının altın çağını yeniden yaşayın. Dpad Arcade'i hemen indirin!
+
+Release Notes v3.0.0 (322/500):
+v3.0.0 — Büyük Güncelleme!
+• 4 yeni oyun eklendi: Blackjack, Connect Four, Meyve Kesme ve Trivia (toplam 33 oyun!)
+• Spotlight çubuğu ve Synthwave açılış ekranıyla yenilenen ana ekran
+• Tüm menülerde ve çıkış ekranında tam D-pad ve oyun kolu desteği
+• Küresel/yerel lider tablosu iyileştirmeleri ve kararlılık düzeltmeleri
 
 ================================================================================
 LANGUAGE: Chinese (Simplified) (zh-CN)
 --------------------------------------------------------------------------------
-App Name:
-Dpad Arcade: 复古游戏
+App Name (21/30):
+Dpad Arcade：33款复古电视游戏
 
-Short Description:
-玩 20 多款专为 D-pad 和实体手柄优化的经典复古游戏。
+Short Description (39/80):
+畅玩33款经典复古游戏，专为 Android TV 方向键与游戏手柄深度优化。
 
-Full Description:
-欢迎来到 Dpad Arcade，这是经典复古游戏的终极合集，专为 Android TV、掌上游戏机和带实体手柄 de 设备进行了精美优化！
+Full Description (646/4000):
+欢迎来到 Dpad Arcade —— 专为 Android TV、电视盒子和实体游戏手柄打造的复古街机游戏合集！
 
-Dpad Arcade 从头开始设计，旨在实现无缝导航，让您无需触控即可畅玩 20 多款永恒 de 街机和益智游戏。只需拿起遥控器、D-pad 或实体手柄，即可直接投入行动。
+完全无需触控操作！只需拿起电视遥控器方向键或蓝牙/USB游戏手柄，即可在客厅大屏上以丝滑 60 FPS 畅玩 33 款经典街机、益智、棋牌、赛车与脑力游戏。
 
-🕹️ 令人惊叹的游戏库
-享受多种经典复古游戏：
-* 贪吃蛇：在永恒的经典中让您的蛇成长并避开障碍物。
-* 俄罗斯方块：堆叠方块，消除行，并挑战高分。
-* 扫雷：通过视觉揭示机制测试您的逻辑。
-* 4096：合并数字以达到最终方块。
-* T-Rex Run：在昼夜交替和天气变化中奔跑、跳跃并躲避障碍。
-* 打砖块：保持球在场，粉碎所有砖块。
-* 星际战斗机：对抗外星入侵者的复古太空战斗。
-* 井字棋：对抗智能 CPU 的经典策略游戏。
-* 推箱子和数独：解决具有挑战性的空间和逻辑谜题。
-* 公路赛车：躲避高速公路上的车辆。
-* 记忆与幻灯片拼图：锻炼您的大脑和视觉记忆。
-* 还有更多：坦克大战、Word Quest、地牢逃脱、纸牌、Simon Says 和 Lines 98！
+🕹️ 33 款经典游戏一站畅玩
+• 街机与动作：贪吃蛇、打砖块、Flappy Hero、青蛙过河、星际战机、坦克大战、大鱼吃小鱼、切水果、弹球、猴子大冒险、猫里奥与小恐龙快跑。
+• 赛车与冒险：复古赛车 Retro Driver、公路狂飙与地牢逃脱。
+• 益智与逻辑：俄罗斯方块、扫雷、4096、数独、推箱子、五子连珠 Lines 98、数字华容道与记忆翻牌。
+• 棋牌与答题：21点 Blackjack、纸牌接龙、跳棋、四子棋、井字棋、知识问答 Trivia、猜词、绞刑架、西蒙记忆与心算挑战。
 
-🎮 全面支持手柄和 D-PAD
-* 量身打造，适用于 Android TV、电视盒和手柄控制器。
-* 无需触控输入。完全使用方向 D-pad 控件导航菜单和游戏。
-* 支持实体按钮进行操作（Enter/OK 确认，Back 返回）。
+🎮 全面支持方向键与游戏手柄
+• 所有菜单、暂停界面与退出弹窗均支持完整的 D-pad 方向键导航。
+• 原生支持蓝牙/USB手柄（A确认、B返回、摇杆死区与灵敏度校准及震动反馈）。
 
-✨ 主要特色
-* 丝滑顺畅的游戏体验：针对 60 FPS 流畅性能优化的轻量化引擎。
-* 统一积分榜：本地跟踪并保存每款游戏的最高成就。
-* 玩法指南：内置游戏说明，让您永远不会卡关。
-* 多语言界面：支持 16 种语言。
+🏆 全球排行榜与多玩家档案
+• 按游戏与难度分类的本地与全球名人堂排行榜。
+• 支持创建多个英雄档案，自定义头像、配色及可选 4 位 PIN 锁。
 
-重温街机游戏的黄金时代。立即下载 Dpad Arcade！
+✨ 60 FPS 复古质感
+• 可选 CRT 扫描线滤镜、3 种复古音效主题、内置玩法指南，支持 16 种语言。
 
-================================================================================
+在大屏幕上重温街机黄金时代，立即下载 Dpad Arcade！
+
+Release Notes v3.0.0 (137/500):
+v3.0.0 — 重磅升级！
+• 新增4款游戏：21点、四子棋、切水果与知识问答（共33款游戏！）
+• 全新主界面 Spotlight 焦点栏与合成波启动画面
+• 全面优化所有菜单、暂停界面与退出确认的 D-pad 和手柄操作
+• 修复各难度全球/本地排行榜显示并提升稳定性
+
