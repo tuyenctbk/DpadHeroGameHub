@@ -547,8 +547,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Preload icons off the UI thread
-        lifecycleScope.launch(Dispatchers.Default) {
+        // Preload icons via Glide's async background decoder (initiated on main thread)
+        lifecycleScope.launch(Dispatchers.Main) {
             com.tdpham.games.common.GlideGameIconLoader.preloadIcons(applicationContext, iconMap.values)
         }
 

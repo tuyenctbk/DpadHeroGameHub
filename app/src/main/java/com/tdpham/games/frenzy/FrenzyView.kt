@@ -1587,7 +1587,7 @@ class FrenzyView @JvmOverloads constructor(
             meat.y += meat.vy - 0.35f // gentle upward float
             meat.rotation += meat.rotSpeed
 
-            meat.x = meat.x.coerceIn(20f, width - 20f)
+            meat.x = meat.x.coerceIn(20f, (width - 20f).coerceAtLeast(20f))
             if (meat.y < 70f) {
                 meat.y = 70f
                 meat.vy = 0.2f

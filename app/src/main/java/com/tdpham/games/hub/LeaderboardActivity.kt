@@ -64,12 +64,12 @@ class LeaderboardActivity : AppCompatActivity() {
             GameTab("syobon_action", getString(R.string.game_syobon), listOf("CLASSIC" to 0)),
             GameTab("road_racer", getString(R.string.game_road_racer), listOf("LOW" to 0, "NORMAL" to 1, "HIGH" to 2)),
             GameTab("brick_break", getString(R.string.game_brick_break), listOf("LARGE" to 0, "MEDIUM" to 1, "SMALL" to 2)),
-            GameTab("froggy_cross", getString(R.string.game_froggy)),
+            GameTab("froggy_cross", getString(R.string.game_froggy), listOf("EASY" to 0, "NORMAL" to 1, "HARD" to 2)),
             GameTab("battle_tanks", getString(R.string.game_tanks), listOf("STAGE 1" to 1, "STAGE 5" to 5, "STAGE 10" to 10)),
             GameTab("solitaire", getString(R.string.game_solitaire), listOf("DRAW 1" to 1, "DRAW 3" to 3)),
             GameTab("retrodriver", getString(R.string.game_retrodriver)),
             GameTab("lines98", getString(R.string.game_lines98), listOf("5 COLORS" to 5, "7 COLORS" to 7, "9 COLORS" to 9)),
-            GameTab("spinball", getString(R.string.game_spinball)),
+            GameTab("spinball", getString(R.string.game_spinball), listOf("EASY" to 0, "NORMAL" to 1, "HARD" to 2)),
             GameTab("simon_says", getString(R.string.game_simon), listOf("EASY" to 0, "NORMAL" to 1, "HARD" to 2)),
             GameTab("checkers", getString(R.string.game_checkers), listOf("EASY" to 0, "HARD" to 1)),
             GameTab("memory", getString(R.string.game_memory), listOf("EASY" to 0, "NORMAL" to 1, "HARD" to 2)),
@@ -77,15 +77,15 @@ class LeaderboardActivity : AppCompatActivity() {
             GameTab("sokoban", getString(R.string.game_sokoban), listOf("$lvlLabel 1" to 0, "$lvlLabel 2" to 1, "$lvlLabel 3" to 2)),
             GameTab("slide_puzzle", getString(R.string.game_slide_puzzle), listOf("3x3" to 0, "4x4" to 1, "5x5" to 2)),
             GameTab("mental_math", getString(R.string.game_mental_math), listOf("EASY" to 0, "NORMAL" to 1, "HARD" to 2)),
-            GameTab("tic_tac_toe", getString(R.string.game_tictactoe)),
+            GameTab("tic_tac_toe", getString(R.string.game_tictactoe), listOf("3x3" to 0, "4x4" to 1, "5x5" to 2)),
             GameTab("word_quest", getString(R.string.game_word_quest), listOf("EASY" to 0, "NORMAL" to 1, "HARD" to 2)),
             GameTab("dungeon_escape", getString(R.string.game_dungeon), listOf("LVL 1" to 1, "LVL 5" to 5, "LVL 10" to 10)),
-            GameTab("hangman", getString(R.string.game_hangman)),
+            GameTab("hangman", getString(R.string.game_hangman), listOf("RANDOM" to -1, "ANIMALS" to 0, "FRUITS" to 1, "COUNTRIES" to 2, "SPORTS" to 3)),
             GameTab("monkey", getString(R.string.game_monkey)),
             GameTab("frenzy", getString(R.string.game_frenzy)),
-            GameTab("connect_four", getString(R.string.game_connect_four)),
+            GameTab("connect_four", getString(R.string.game_connect_four), listOf("EASY" to 0, "NORMAL" to 1, "MASTER" to 2)),
             GameTab("blackjack", getString(R.string.game_blackjack)),
-            GameTab("trivia", getString(R.string.game_trivia), listOf("ALL" to 0, "SCIENCE" to 1, "HISTORY" to 2, "POP" to 3, "SPORTS" to 4))
+            GameTab("trivia", getString(R.string.game_trivia), listOf("ALL" to 0, "GAMING" to 1, "SCIENCE" to 2, "POP" to 3, "HISTORY" to 4))
         )
     }
 

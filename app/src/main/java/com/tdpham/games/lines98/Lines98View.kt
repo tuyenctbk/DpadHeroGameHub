@@ -71,6 +71,7 @@ class Lines98View @JvmOverloads constructor(
     private val random = Random()
     private var nextBalls = mutableListOf<Int>()
     private var nextPositions = mutableListOf<Pair<Int, Int>>()
+    private var cachedHighScore = 0
 
     init {
         isFocusable = true
@@ -112,6 +113,7 @@ class Lines98View @JvmOverloads constructor(
         // Load color count from settings
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         colorCount = prefs.getInt(KEY_COLOR_COUNT, 7).coerceIn(5, 9)
+        cachedHighScore = ScoreManager.getHighScore(context, gameKey, colorCount)
 
         board = Array(gridSize) { IntArray(gridSize) { 0 } }
         score = 0
@@ -240,7 +242,9 @@ class Lines98View @JvmOverloads constructor(
                 board[rr][cc] = 0
             }
             score += toRemove.size * 2
-            ScoreManager.updateHighScore(context, gameKey, score, colorCount)
+            if (ScoreManager.updateHighScore(context, gameKey, score, colorCount) || score > cachedHighScore) {
+                cachedHighScore = max(cachedHighScore, score)
+            }
             SoundManager.playScore()
             return true
         }
@@ -585,7 +589,7 @@ class Lines98View @JvmOverloads constructor(
         
         paint.textAlign = Paint.Align.RIGHT
         paint.color = Color.WHITE
-        canvas.drawText("${context.getString(R.string.best_label)}: ${ScoreManager.getHighScore(context, gameKey, colorCount)}", rightX, hudY1, paint)
+        canvas.drawText("${context.getString(R.string.best_label)}: $cachedHighScore", rightX, hudY1, paint)
         
         // Quick Hint (Top/Left)
         if (hintShowFrames > 0) {

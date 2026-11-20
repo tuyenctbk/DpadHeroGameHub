@@ -54,6 +54,7 @@ class ConnectFourView @JvmOverloads constructor(
     private val winningCells = mutableListOf<Pair<Int, Int>>()
 
     private var score = 0
+    private var bestScore = 0
     private var winStreak = 0
     private var moveCount = 0
 
@@ -146,7 +147,10 @@ class ConnectFourView @JvmOverloads constructor(
         isDropping = false
         isEndCelebration = false
         moveCount = 0
-        score = ScoreManager.getHighScore(context, gameKey, aiDifficulty)
+        bestScore = ScoreManager.getHighScore(context, gameKey, aiDifficulty)
+        if (winStreak == 0) {
+            score = 0
+        }
 
         invalidate()
     }
@@ -203,8 +207,10 @@ class ConnectFourView @JvmOverloads constructor(
             winStreak++
             val ptsEarned = 100 + (max(0, 42 - moveCount) * 10) + (aiDifficulty * 50)
             score += ptsEarned
-            val best = ScoreManager.getHighScore(context, gameKey, aiDifficulty)
-            ScoreManager.updateHighScore(context, gameKey, score, aiDifficulty)
+            val best = bestScore
+            if (ScoreManager.updateHighScore(context, gameKey, score, aiDifficulty)) {
+                bestScore = score
+            }
             SoundManager.playSuccess()
             HapticManager.vibrateSuccess(context)
             isEndCelebration = true
@@ -531,6 +537,9 @@ class ConnectFourView @JvmOverloads constructor(
                 if (event.action == MotionEvent.ACTION_DOWN) resetGame()
                 return true
             }
+            if (isDropping || (!isPlayerTurn && isVsAi)) {
+                return true
+            }
             val boardL = width * 0.12f
             val boardW = width * 0.76f
             val cellW = boardW / COLS
@@ -734,10 +743,9 @@ class ConnectFourView @JvmOverloads constructor(
         paint.color = Color.WHITE
         canvas.drawText(context.getString(R.string.hud_score_format, score), rightX, hudTop, paint)
 
-        val best = ScoreManager.getHighScore(context, gameKey, aiDifficulty)
         paint.textSize = 15f
         paint.color = Color.parseColor("#00E5FF")
-        canvas.drawText(context.getString(R.string.hud_best_format, best), rightX, hudSub, paint)
+        canvas.drawText(context.getString(R.string.hud_best_format, bestScore), rightX, hudSub, paint)
     }
 
     private fun drawGameOverOverlay(canvas: Canvas, w: Float, h: Float, p1Color: Int, p2Color: Int) {

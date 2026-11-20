@@ -499,7 +499,8 @@ class BlackjackView @JvmOverloads constructor(
     }
 
     private fun adjustBet(delta: Int) {
-        val newBet = (currentBet + delta).coerceIn(10, chipBalance)
+        val minBet = min(10, chipBalance)
+        val newBet = (currentBet + delta).coerceIn(minBet, chipBalance)
         if (newBet != currentBet) {
             currentBet = newBet
             SoundManager.playClick()

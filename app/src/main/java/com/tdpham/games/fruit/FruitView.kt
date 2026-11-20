@@ -269,8 +269,10 @@ class FruitView @JvmOverloads constructor(
         if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_DOWN)) moveDy += moveSpeed
 
         if (moveDx != 0f || moveDy != 0f) {
-            cursorX = (cursorX + moveDx).coerceIn(40f, width - 40f)
-            cursorY = (cursorY + moveDy).coerceIn(40f, height - 40f)
+            val maxX = (width - 40f).coerceAtLeast(40f)
+            val maxY = (height - 40f).coerceAtLeast(40f)
+            cursorX = (cursorX + moveDx).coerceIn(40f, maxX)
+            cursorY = (cursorY + moveDy).coerceIn(40f, maxY)
             slashTrail.add(PointF(cursorX, cursorY))
             if (slashTrail.size > maxTrailSize) slashTrail.removeAt(0)
 
@@ -364,7 +366,7 @@ class FruitView @JvmOverloads constructor(
                         trailParticles.add(TrailParticle(item.x, item.y, vx, vy, color, size, 255))
                     }
 
-                    if (lives <= 0) {
+                    if (!gameOver && lives <= 0) {
                         gameOver = true
                         val isNewHigh = score > best
                         if (isNewHigh) {
@@ -373,6 +375,8 @@ class FruitView @JvmOverloads constructor(
                         }
                         celebrationManager.start(width / 2f, height / 2f)
                         onGameOver?.invoke(score)
+                        itemIterator.remove()
+                        break
                     }
                 } else {
                     // Sliced fruit!
@@ -1009,8 +1013,8 @@ class FruitView @JvmOverloads constructor(
             return true
         }
 
-        cursorX = event.x.coerceIn(20f, width - 20f)
-        cursorY = event.y.coerceIn(20f, height - 20f)
+        cursorX = event.x.coerceIn(20f, (width - 20f).coerceAtLeast(20f))
+        cursorY = event.y.coerceIn(20f, (height - 20f).coerceAtLeast(20f))
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {

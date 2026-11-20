@@ -207,7 +207,7 @@ class TriviaEngine(private val context: Context) {
             listener?.onQuestionReady(q, currentIndex, activeQuestions.size)
         }
 
-        if (!isUntimed) {
+        if (!isUntimed && !isPaused) {
             startTimer()
         }
     }

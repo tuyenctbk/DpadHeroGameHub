@@ -32,28 +32,35 @@ object GlideGameIconLoader {
         targetWidthDp: Int = 96,
         targetHeightDp: Int = 96
     ) {
+        val activity = (button.context as? android.app.Activity) ?: (context as? android.app.Activity)
+        if (activity != null && (activity.isFinishing || activity.isDestroyed)) return
+
         val density = context.resources.displayMetrics.density
         val targetWidthPx = (targetWidthDp * density).toInt().coerceAtLeast(1)
         val targetHeightPx = (targetHeightDp * density).toInt().coerceAtLeast(1)
 
-        Glide.with(button.context)
-            .asBitmap()
-            .apply(baseOptions)
-            .load(iconResId)
-            .override(targetWidthPx, targetHeightPx)
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(
-                    resource: Bitmap,
-                    transition: Transition<in Bitmap>?
-                ) {
-                    val drawable = BitmapDrawable(button.resources, resource)
-                    button.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)
-                }
+        try {
+            Glide.with(button.context)
+                .asBitmap()
+                .apply(baseOptions)
+                .load(iconResId)
+                .override(targetWidthPx, targetHeightPx)
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        val drawable = BitmapDrawable(button.resources, resource)
+                        button.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)
+                    }
 
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    button.setCompoundDrawablesWithIntrinsicBounds(null, placeholder, null, null)
-                }
-            })
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        button.setCompoundDrawablesWithIntrinsicBounds(null, placeholder, null, null)
+                    }
+                })
+        } catch (_: Throwable) {
+            // Ignore if Activity was destroyed concurrently
+        }
     }
 
     fun loadImageViewIcon(
@@ -63,15 +70,22 @@ object GlideGameIconLoader {
         targetWidthDp: Int = 96,
         targetHeightDp: Int = 96
     ) {
+        val activity = (imageView.context as? android.app.Activity) ?: (context as? android.app.Activity)
+        if (activity != null && (activity.isFinishing || activity.isDestroyed)) return
+
         val density = context.resources.displayMetrics.density
         val targetWidthPx = (targetWidthDp * density).toInt().coerceAtLeast(1)
         val targetHeightPx = (targetHeightDp * density).toInt().coerceAtLeast(1)
 
-        Glide.with(imageView.context)
-            .load(iconResId)
-            .apply(baseOptions)
-            .override(targetWidthPx, targetHeightPx)
-            .into(imageView)
+        try {
+            Glide.with(imageView.context)
+                .load(iconResId)
+                .apply(baseOptions)
+                .override(targetWidthPx, targetHeightPx)
+                .into(imageView)
+        } catch (_: Throwable) {
+            // Ignore if Activity was destroyed concurrently
+        }
     }
 
     fun preloadIcons(
@@ -84,13 +98,17 @@ object GlideGameIconLoader {
         val targetWidthPx = (targetWidthDp * density).toInt().coerceAtLeast(1)
         val targetHeightPx = (targetHeightDp * density).toInt().coerceAtLeast(1)
 
-        val glide = Glide.with(context.applicationContext)
-        for (resId in iconResIds) {
-            glide.asBitmap()
-                .apply(baseOptions)
-                .load(resId)
-                .override(targetWidthPx, targetHeightPx)
-                .preload()
+        try {
+            val glide = Glide.with(context.applicationContext)
+            for (resId in iconResIds) {
+                glide.asBitmap()
+                    .apply(baseOptions)
+                    .load(resId)
+                    .override(targetWidthPx, targetHeightPx)
+                    .preload()
+            }
+        } catch (_: Throwable) {
+            // Best-effort icon cache warmup
         }
     }
 }

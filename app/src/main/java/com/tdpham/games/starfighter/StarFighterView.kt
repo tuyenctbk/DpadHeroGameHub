@@ -292,8 +292,8 @@ class StarFighterView @JvmOverloads constructor(
             }
             
             // Ship follows mouse/touch
-            playerX = event.x.coerceIn(playerSize, width - playerSize)
-            playerY = event.y.coerceIn(playerSize, height - playerSize)
+            playerX = event.x.coerceIn(playerSize, (width - playerSize).coerceAtLeast(playerSize))
+            playerY = event.y.coerceIn(playerSize, (height - playerSize).coerceAtLeast(playerSize))
             return true
         }
         return super.onTouchEvent(event)

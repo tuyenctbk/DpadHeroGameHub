@@ -22,7 +22,8 @@ import com.tdpham.games.hub.ControllerSettingsActivity
  * Detects connected physical controllers/gamepads versus Android TV remotes,
  * and dynamically updates the header UI status indicator.
  */
-class GamePadMonitor(private val context: Context) {
+class GamePadMonitor(context: Context) {
+    private val appContext: Context = context.applicationContext
 
     enum class InputMode {
         GAMEPAD,
@@ -39,7 +40,7 @@ class GamePadMonitor(private val context: Context) {
         fun onModeChanged(mode: InputMode, primaryDeviceName: String)
     }
 
-    private val inputManager = context.getSystemService(Context.INPUT_SERVICE) as? InputManager
+    private val inputManager = appContext.getSystemService(Context.INPUT_SERVICE) as? InputManager
     private val mainHandler = Handler(Looper.getMainLooper())
     private val listeners = mutableListOf<OnModeChangeListener>()
 
@@ -144,6 +145,7 @@ class GamePadMonitor(private val context: Context) {
     }
 
     companion object {
+        @Volatile
         private var instance: GamePadMonitor? = null
 
         fun getInstance(context: Context): GamePadMonitor {

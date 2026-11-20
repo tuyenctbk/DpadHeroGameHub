@@ -625,7 +625,9 @@ class CelebrationManager {
             val innerRadius = size / 2
             for (i in 0 until 5) {
                 val angle = PI * 2 * i / 5 - PI / 2
-                path.lineTo((cos(angle) * outerRadius).toFloat(), (sin(angle) * outerRadius).toFloat())
+                val ox = (cos(angle) * outerRadius).toFloat()
+                val oy = (sin(angle) * outerRadius).toFloat()
+                if (i == 0) path.moveTo(ox, oy) else path.lineTo(ox, oy)
                 val nextAngle = PI * 2 * (i + 0.5) / 5 - PI / 2
                 path.lineTo((cos(nextAngle) * innerRadius).toFloat(), (sin(nextAngle) * innerRadius).toFloat())
             }
@@ -696,13 +698,13 @@ class CelebrationManager {
             canvas.translate(x, y)
             canvas.rotate(rotation)
             path.reset()
+            path.moveTo(0f, 0f)
+            path.quadTo(size * 0.2f, -size * 0.2f, 0f, -size)
+            path.quadTo(-size * 0.2f, -size * 0.2f, 0f, 0f)
             repeat(4) {
                 canvas.rotate(90f)
-                path.moveTo(0f, 0f)
-                path.quadTo(size * 0.2f, -size * 0.2f, 0f, -size)
-                path.quadTo(-size * 0.2f, -size * 0.2f, 0f, 0f)
+                canvas.drawPath(path, paint)
             }
-            canvas.drawPath(path, paint)
         } finally {
             canvas.restoreToCount(sc)
         }

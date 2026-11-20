@@ -188,8 +188,10 @@ object AppEngagementManager {
             if (!activity.isFinishing && !activity.isDestroyed) {
                 dialog.show()
                 btnRate.requestFocus()
+            } else {
+                isDialogOpen = false
             }
-        } catch (_: Exception) {
+        } catch (_: Throwable) {
             isDialogOpen = false
         }
     }
@@ -239,8 +241,10 @@ object AppEngagementManager {
             if (!activity.isFinishing && !activity.isDestroyed) {
                 dialog.show()
                 btnShare.requestFocus()
+            } else {
+                isDialogOpen = false
             }
-        } catch (_: Exception) {
+        } catch (_: Throwable) {
             isDialogOpen = false
         }
     }
@@ -365,9 +369,15 @@ object AppEngagementManager {
                 addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
             }
             context.startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName"))
-            context.startActivity(webIntent)
+        } catch (_: Throwable) {
+            try {
+                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(webIntent)
+            } catch (_: Throwable) {
+                // Device has neither Play Store nor a browser (e.g. restricted Android TV)
+            }
         }
     }
 

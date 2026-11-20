@@ -279,8 +279,18 @@ abstract class BaseGameView @JvmOverloads constructor(
     override fun pause() {
         isPaused = true
         isRunning = false
-        gameThread?.interrupt()
+        val thread = gameThread
         gameThread = null
+        if (thread != null) {
+            thread.interrupt()
+            if (Thread.currentThread() !== thread) {
+                try {
+                    thread.join(200)
+                } catch (_: InterruptedException) {
+                    Thread.currentThread().interrupt()
+                }
+            }
+        }
     }
 
     private fun logCrashToFirebase(throwable: Throwable, contextTag: String) {
@@ -321,7 +331,7 @@ abstract class BaseGameView @JvmOverloads constructor(
         onSurfaceDimensionsChanged(width, height)
         // Post resume to ensure SurfaceView completes updateSurface and releases internal mSurfaceLock
         post {
-            if (surfaceHolder.surface.isValid) {
+            if (!isPaused && surfaceHolder.surface.isValid) {
                 resume()
             }
         }

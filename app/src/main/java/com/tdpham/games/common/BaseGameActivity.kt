@@ -45,6 +45,12 @@ abstract class BaseGameActivity : AppCompatActivity() {
     private var pendingInterstitialRunnable: Runnable? = null
     protected var isGameOverState = false
 
+    private val pauseActivityLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        handlePauseActivityResult(result.resultCode)
+    }
+
     protected open fun shouldShowHelpButton(): Boolean = false
 
     private fun cancelPendingPostGamePrompts() {
@@ -437,37 +443,28 @@ abstract class BaseGameActivity : AppCompatActivity() {
             inGamePauseOverlay?.show()
         } else {
             val intent = PauseActivity.createIntent(this, gameKey, gameTitle)
-            startActivityForResult(intent, PauseActivity.REQUEST_CODE_PAUSE)
+            pauseActivityLauncher.launch(intent)
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PauseActivity.REQUEST_CODE_PAUSE) {
-            when (resultCode) {
-                PauseActivity.RESULT_RESUME -> {
+    private fun handlePauseActivityResult(resultCode: Int) {
+        when (resultCode) {
+            PauseActivity.RESULT_RESUME -> {
+                (gameView as View).requestFocus()
+                gameView.resume()
+            }
+            PauseActivity.RESULT_OPTIONS -> {
+                showGameOptions {
                     (gameView as View).requestFocus()
                     gameView.resume()
                 }
-                PauseActivity.RESULT_OPTIONS -> {
-                    showGameOptions {
-                        (gameView as View).requestFocus()
-                        gameView.resume()
-                    }
-                }
-                PauseActivity.RESULT_RESTART -> {
-                    restartCurrentGame()
-                    gameView.resume()
-                }
-                PauseActivity.RESULT_EXIT -> {
-                    if (AdManager.canShowInterstitial(this)) {
-                        AdManager.showInterstitial(this) {
-                            finish()
-                        }
-                    } else {
-                        finish()
-                    }
-                }
+            }
+            PauseActivity.RESULT_RESTART -> {
+                restartCurrentGame()
+                gameView.resume()
+            }
+            PauseActivity.RESULT_EXIT -> {
+                exitToHub()
             }
         }
     }
@@ -679,6 +676,10 @@ abstract class BaseGameActivity : AppCompatActivity() {
             "monkey" -> com.tdpham.games.monkey.MonkeyOptionsDialog.show(this) { (gameView as? com.tdpham.games.monkey.MonkeyView)?.resetGame(); callback() }
             "frenzy" -> com.tdpham.games.frenzy.FrenzyOptionsDialog.show(this) { (gameView as? com.tdpham.games.frenzy.FrenzyView)?.resetGame(); callback() }
             "retrodriver" -> com.tdpham.games.retrodriver.RetroDriverOptionsDialog.show(this) { (gameView as? com.tdpham.games.retrodriver.RetroDriverView)?.resetGame(); callback() }
+            "fruit" -> com.tdpham.games.fruit.FruitOptionsDialog.show(this) { (gameView as? com.tdpham.games.fruit.FruitView)?.resetGame(); callback() }
+            "connect_four" -> com.tdpham.games.connectfour.ConnectFourOptionsDialog.show(this) { (gameView as? com.tdpham.games.connectfour.ConnectFourView)?.resetGame(); callback() }
+            "blackjack" -> com.tdpham.games.blackjack.BlackjackOptionsDialog.show(this) { (gameView as? com.tdpham.games.blackjack.BlackjackView)?.resetGame(); callback() }
+            "trivia" -> com.tdpham.games.trivia.TriviaOptionsDialog.show(this) { (gameView as? com.tdpham.games.trivia.TriviaView)?.resetGame(); callback() }
             else -> {
                 callback()
                 return false

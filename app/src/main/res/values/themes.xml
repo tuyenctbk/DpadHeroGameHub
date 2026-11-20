@@ -13,7 +13,7 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         
         <!-- TV Focus Highlight Control: Disable default clipped framework outline -->
-        <item name="android:defaultFocusHighlightEnabled">false</item>
+        <item name="android:defaultFocusHighlightEnabled" tools:targetApi="o">false</item>
         
         <!-- Global Button Theme overrides for pixel-perfect D-Pad & TV focus -->
         <item name="materialButtonStyle">@style/Widget.App.Button</item>
@@ -26,7 +26,7 @@
         <item name="android:insetLeft">0dp</item>
         <item name="android:insetRight">0dp</item>
         <item name="android:stateListAnimator">@null</item>
-        <item name="android:defaultFocusHighlightEnabled">false</item>
+        <item name="android:defaultFocusHighlightEnabled" tools:targetApi="o">false</item>
         <item name="cornerRadius">16dp</item>
         <item name="backgroundTint">@null</item>
     </style>

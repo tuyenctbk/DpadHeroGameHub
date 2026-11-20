@@ -38,6 +38,7 @@ class TriviaView @JvmOverloads constructor(
     private var statusMessage = ""
     private var explanationText = ""
     private var timerFraction = 1f
+    private var cachedBestScore = 0
 
     private val celebrationManager = CelebrationManager()
     private var isEndCelebration = false
@@ -97,6 +98,7 @@ class TriviaView @JvmOverloads constructor(
         explanationText = ""
         statusMessage = "LOADING GAUNTLET..."
         engine.startGauntlet(fetchFromApi = true)
+        cachedBestScore = ScoreManager.getHighScore(context, gameKey, engine.categoryIndex)
         invalidate()
     }
 
@@ -168,6 +170,7 @@ class TriviaView @JvmOverloads constructor(
         totalQuestions: Int,
         isNewHighScore: Boolean
     ) {
+        cachedBestScore = ScoreManager.getHighScore(context, gameKey, engine.categoryIndex)
         if (correctCount >= totalQuestions / 2) {
             isEndCelebration = true
             val w = width.toFloat()
@@ -178,7 +181,7 @@ class TriviaView @JvmOverloads constructor(
                 isWin = true,
                 isNewHigh = isNewHighScore,
                 score = finalScore,
-                highScore = ScoreManager.getHighScore(context, gameKey, engine.categoryIndex)
+                highScore = cachedBestScore
             )
             HapticManager.vibrateSuccess(context)
         }
@@ -420,10 +423,9 @@ class TriviaView @JvmOverloads constructor(
         paint.color = Color.parseColor("#00E676")
         canvas.drawText(context.getString(R.string.hud_score_format, engine.score), rightX, hudTop, paint)
 
-        val best = ScoreManager.getHighScore(context, gameKey, engine.categoryIndex)
         paint.textSize = 15f
         paint.color = Color.WHITE
-        canvas.drawText(context.getString(R.string.hud_best_format, best), rightX, hudSub, paint)
+        canvas.drawText(context.getString(R.string.hud_best_format, cachedBestScore), rightX, hudSub, paint)
     }
 
     private fun drawQuestionCard(canvas: Canvas, w: Float, h: Float) {

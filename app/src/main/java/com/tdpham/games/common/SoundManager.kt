@@ -36,6 +36,7 @@ object SoundManager {
         isMusicEnabled = prefs?.getBoolean(KEY_MUSIC_ENABLED, true) ?: true
         soundEffectsVolume = prefs?.getInt(KEY_SOUND_VOLUME, 100) ?: 100
         musicVolume = prefs?.getInt(KEY_MUSIC_VOLUME, 80) ?: 80
+        activePreset = SettingsManager.getSoundProfilePreset(applicationContext)
 
         soundExecutor.execute {
             ensureToneGenerator()
@@ -134,6 +135,9 @@ object SoundManager {
     fun toggleMusic(): Boolean {
         isMusicEnabled = !isMusicEnabled
         prefs?.edit()?.putBoolean(KEY_MUSIC_ENABLED, isMusicEnabled)?.apply()
+        if (!isMusicEnabled) {
+            stopAmbientMusic()
+        }
         return isMusicEnabled
     }
 

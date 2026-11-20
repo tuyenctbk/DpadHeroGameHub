@@ -52,8 +52,8 @@ object IdleAdManager {
         if (listenerOwner === owner) {
             listenerOwner = null
             onStateChangeListener = null
+            stopTracking()
         }
-        stopTracking()
     }
 
     fun startTracking() {
