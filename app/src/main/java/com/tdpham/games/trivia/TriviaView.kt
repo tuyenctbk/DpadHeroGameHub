@@ -61,17 +61,30 @@ class TriviaView @JvmOverloads constructor(
         loopHandler.post(loopRunnable)
     }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        loopHandler.removeCallbacksAndMessages(null)
+        engine.release()
+        celebrationManager.clear()
+    }
+
     override fun startGame() {
         requestFocus()
+        loopHandler.removeCallbacks(loopRunnable)
+        loopHandler.post(loopRunnable)
     }
 
     override fun pause() {
-        // Engine handles background/pause gracefully
+        loopHandler.removeCallbacks(loopRunnable)
+        engine.pause()
     }
 
     override fun resume() {
         requestFocus()
         engine.loadSettings()
+        engine.resume()
+        loopHandler.removeCallbacks(loopRunnable)
+        loopHandler.post(loopRunnable)
     }
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
@@ -165,7 +178,7 @@ class TriviaView @JvmOverloads constructor(
                 isWin = true,
                 isNewHigh = isNewHighScore,
                 score = finalScore,
-                highScore = ScoreManager.getHighScore(context, gameKey)
+                highScore = ScoreManager.getHighScore(context, gameKey, engine.categoryIndex)
             )
             HapticManager.vibrateSuccess(context)
         }
@@ -177,14 +190,28 @@ class TriviaView @JvmOverloads constructor(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (engine.state == TriviaEngine.EngineState.GAUNTLET_COMPLETED) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                 resetGame()
                 return true
             }
             return super.onKeyDown(keyCode, event)
         }
 
-        if (engine.state != TriviaEngine.EngineState.QUESTION_ACTIVE) return true
+        val isGameplayKey = keyCode == KeyEvent.KEYCODE_DPAD_UP ||
+            keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+            keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
+            keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
+            keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+            keyCode == KeyEvent.KEYCODE_ENTER ||
+            keyCode == KeyEvent.KEYCODE_SPACE ||
+            keyCode == KeyEvent.KEYCODE_BUTTON_A ||
+            keyCode == KeyEvent.KEYCODE_BUTTON_X ||
+            keyCode == KeyEvent.KEYCODE_BUTTON_Y ||
+            keyCode == KeyEvent.KEYCODE_BUTTON_R1 ||
+            keyCode == KeyEvent.KEYCODE_TAB
+        if (engine.state != TriviaEngine.EngineState.QUESTION_ACTIVE) {
+            return if (isGameplayKey) true else super.onKeyDown(keyCode, event)
+        }
 
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> {
@@ -233,7 +260,7 @@ class TriviaView @JvmOverloads constructor(
                 invalidate()
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE -> {
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> {
                 when (focusedIndex) {
                     in 0..3 -> {
                         if (!engine.eliminatedIndices.contains(focusedIndex)) {
@@ -255,7 +282,7 @@ class TriviaView @JvmOverloads constructor(
                 engine.useFreezeLifeline()
                 return true
             }
-            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB -> {
+            KeyEvent.KEYCODE_BUTTON_R1, KeyEvent.KEYCODE_TAB -> {
                 engine.useSkipLifeline()
                 return true
             }
@@ -374,12 +401,12 @@ class TriviaView @JvmOverloads constructor(
         paint.isFakeBoldText = true
         paint.color = Color.WHITE
 
-        val catLabel = engine.currentQuestion?.category ?: "TRIVIA ARENA"
+        val catLabel = engine.currentQuestion?.category ?: context.getString(R.string.trivia_arena_default)
         canvas.drawText(catLabel.uppercase(), leftX, hudTop, paint)
 
         paint.textSize = 15f
         paint.color = Color.parseColor("#FFD700")
-        canvas.drawText("STREAK: ${engine.streak} 🔥", leftX, hudSub, paint)
+        canvas.drawText(context.getString(R.string.hud_streak_format, engine.streak), leftX, hudSub, paint)
 
         // Center Status Banner
         paint.textAlign = Paint.Align.CENTER
@@ -391,12 +418,12 @@ class TriviaView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.RIGHT
         paint.textSize = 20f
         paint.color = Color.parseColor("#00E676")
-        canvas.drawText("SCORE: ${engine.score}", rightX, hudTop, paint)
+        canvas.drawText(context.getString(R.string.hud_score_format, engine.score), rightX, hudTop, paint)
 
-        val best = ScoreManager.getHighScore(context, gameKey)
+        val best = ScoreManager.getHighScore(context, gameKey, engine.categoryIndex)
         paint.textSize = 15f
         paint.color = Color.WHITE
-        canvas.drawText("BEST: $best", rightX, hudSub, paint)
+        canvas.drawText(context.getString(R.string.hud_best_format, best), rightX, hudSub, paint)
     }
 
     private fun drawQuestionCard(canvas: Canvas, w: Float, h: Float) {
@@ -598,10 +625,15 @@ class TriviaView @JvmOverloads constructor(
         val accuracyPct = (engine.correctCount * 100) / totalQ
         canvas.drawText(context.getString(R.string.trivia_accuracy, engine.correctCount, totalQ, accuracyPct), w * 0.5f, cardT + 160f, paint)
 
-        val totalCoins = engine.correctCount * 10 + if (engine.correctCount == totalQ) 100 else engine.correctCount * 5
+        val rankLabel = when {
+            accuracyPct >= 90 -> "RANK: TRIVIA GRANDMASTER 👑"
+            accuracyPct >= 70 -> "RANK: QUIZ CHAMPION 🏆"
+            accuracyPct >= 50 -> "RANK: SHARP CONTENDER ⭐"
+            else -> "RANK: ROOKIE CHALLENGER 🎯"
+        }
         paint.textSize = 18f
         paint.color = Color.parseColor("#FFD700")
-        canvas.drawText(context.getString(R.string.trivia_coins_earned, totalCoins), w * 0.5f, cardT + 200f, paint)
+        canvas.drawText(rankLabel, w * 0.5f, cardT + 200f, paint)
 
         // Play Again Button
         val btnW = 280f
@@ -634,11 +666,5 @@ class TriviaView @JvmOverloads constructor(
         }
         if (currentLine.isNotEmpty()) lines.add(currentLine)
         return lines
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        loopHandler.removeCallbacksAndMessages(null)
-        engine.release()
     }
 }

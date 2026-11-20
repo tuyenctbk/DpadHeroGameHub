@@ -719,4 +719,208 @@
     <string name="revive_message">短い動画を見ると、続きからプレイできます。</string>
     <string name="revive_watch_ad">広告を見る</string>
     <string name="revive_no_thanks">いいえ</string>
+
+    <string name="scanline_crt_effect">CRTスキャンラインフィルター</string>
+    <string name="scanline_crt_desc">クラシックなアーケードCRTモニターの走査線を再現します。</string>
+    <string name="screen_shake_effect">画面シェイク演出</string>
+    <string name="screen_shake_desc">衝突や爆発時のダイナミックな画面揺れフィードバック。</string>
+    <string name="reset_high_scores">ハイスコアをリセット</string>
+    <string name="reset_high_scores_desc">現在のヒーローの最高スコア記録をすべて消去します。</string>
+    <string name="reset_scores_confirm">このヒーローのハイスコアをすべて消去してもよろしいですか？この操作は取り消せません。</string>
+    <string name="scores_cleared">ハイスコアをリセットしました。</string>
+    <string name="frenzy_tang">ナンヨウハギ</string>
+    <string name="frenzy_barracuda">バラクーダ</string>
+    <string name="frenzy_shark">サメ</string>
+
+    <string-array name="win_connect_four">
+        <item>4つ揃った！</item>
+        <item>グリッドマスター！</item>
+        <item>戦術の天才！</item>
+        <item>コネクトフォー王者！</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>ナチュラルブラックジャック！</item>
+        <item>ハイローラー！</item>
+        <item>ディーラー撃破！</item>
+        <item>カジノロワイヤル！</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>知識の天才！</item>
+        <item>パーフェクトスコア！</item>
+        <item>トリビアマスター！</item>
+        <item>クイズチャンピオン！</item>
+    </string-array>
+
+    <string name="game_connect_four">コネクトフォー</string>
+    <string name="game_connect_four_instructions">定番の4目並べ戦略バトル！\n• 十字キー左 / 右: 列を選択\n• 決定 / ENTER: コマを落とす\n• 縦・横・斜めに自分のコマを4つ並べよう\n• 1人用AI対戦または2人用対戦が選べます！</string>
+    <string name="connect_four_settings_title">コネクトフォー設定</string>
+    <string name="game_blackjack">ブラックジャック21</string>
+    <string name="game_blackjack_instructions">本格的なベガスカジノのブラックジャック！\n• 目標: 21を超えずに21に近づけよう\n• 十字キー上下左右: チップとアクションを選択\n• 決定 / ENTER: ベット / ディール / ヒット / スタンド / ダブル\n• ブラックジャックは3:2配当！チップを増やして大富豪を目指そう！</string>
+    <string name="blackjack_settings_title">ブラックジャック設定</string>
+    <string name="game_trivia">トリビアクイズ</string>
+    <string name="game_trivia_instructions">白熱のアーケードクイズショー！\n• 十字キー上下左右: 選択肢 A・B・C・D を選択\n• 決定 / ENTER: 解答を確定\n• 素早く答えるほど高倍率タイムボーナス\n• ライフライン: 50:50、タイマー停止、問題スキップ\n• 全10問をクリアして豪華コイン報酬を獲得しよう！</string>
+    <string name="trivia_settings_title">トリビアクイズ設定</string>
+
+    <string name="sound_profile_label">サウンドプロファイル</string>
+    <string name="sound_profile_arcade">アーケード8ビット</string>
+    <string name="sound_profile_retro">レトロシンセ</string>
+    <string name="sound_profile_modern">モダンデジタル</string>
+    <string name="sound_profile_arcade_desc">迫力の8ビットパルス波サウンド</string>
+    <string name="sound_profile_retro_desc">温かみのあるアナログシンセ音</string>
+    <string name="sound_profile_modern_desc">クリアなポリフォニックチャイム</string>
+    <string name="sound_profile_toast">サウンドプロファイル: %1$s</string>
+    <string name="sound_profile_desc_format">%1$s • タップして切替</string>
+    <string name="volume_desc_format">音量: %1$d%% • タップして音量を変更</string>
+    <string name="sensitivity_toast">コントローラー感度: %1$s</string>
+
+    <string name="trivia_gauntlet_completed">チャレンジ達成！ 🏆</string>
+    <string name="trivia_final_score">最終スコア: %1$d ポイント</string>
+    <string name="trivia_accuracy">正答率: %1$d / %2$d 正解 (%3$d%%)</string>
+    <string name="trivia_coins_earned">+%1$d コイン獲得 🪙</string>
+    <string name="trivia_play_again">もう一度プレイ [ENTER]</string>
+    <string name="press_enter_next_round">[ENTER] で次のラウンドを開始</string>
+    <string name="twentyfortyeight_hint">🎮 十字キー/スワイプ: 移動 • [U] 戻す • [MENU] サイズ変更</string>
+
+    <string name="tab_local">🏠 ローカル</string>
+    <string name="tab_worldwide">🌐 世界ランキング</string>
+
+    <string name="setting_volume_desc_format">音量: %1$d%% • 音量バッジをタップして調整</string>
+    <string name="setting_sound_profile_theme">サウンドプロファイルテーマ</string>
+    <string name="setting_sound_profile_desc">アーケード8ビット • タップしてオーディオ切替</string>
+    <string name="setting_retro_music">レトロ音楽 &amp; 環境音</string>
+    <string name="setting_retro_music_desc">シンセサイザーのアーケードBGM</string>
+    <string name="setting_controller_sensitivity">コントローラー &amp; ゲームパッド感度</string>
+    <string name="setting_controller_sensitivity_desc">十字キー、スティック、タッチの応答性を調整</string>
+    <string name="setting_haptic_vibration">触覚 &amp; コントローラー振動</string>
+    <string name="setting_haptic_vibration_desc">ヒット、スコア、爆発時の触覚フィードバック</string>
+    <string name="calibrate">調整</string>
+
+    <string name="badge_live">● ライブ</string>
+    <string name="global_top3_snake">世界トップ3 • スネーク</string>
+    <string name="hall_of_fame_widget">殿堂入り 🏆</string>
+    <string name="placeholder_dash">---</string>
+    <string name="zero_pts">0 pt</string>
+
+    <string name="controller_settings_title">🎮 コントローラー &amp; 振動設定</string>
+    <string name="hardware_diagnostics">ハードウェア診断</string>
+    <string name="controller_checking">🎮 コントローラー: デバイス確認中...</string>
+    <string name="vibrator_checking">⚡ 振動モーター: VibratorManager確認中...</string>
+    <string name="haptic_rumble_title">触覚 &amp; ランブル振動</string>
+    <string name="haptic_rumble_desc">衝撃、コイン、ボタン操作時のモーター振動を有効化</string>
+    <string name="haptic_intensity_title">振動の強さ（モーター振幅）</string>
+    <string name="vibration_motor_test_title">振動モーターハードウェアテスト</string>
+    <string name="vibration_test_instructions">振動パターンを選択してテストをタップし応答を確認:</string>
+    <string name="vibe_profile_click">🕹️ クリック (15ms)</string>
+    <string name="vibe_profile_score">⚡ スコア (35ms)</string>
+    <string name="vibe_profile_hazard">💥 ダメージ (70ms)</string>
+    <string name="vibe_profile_explosion">💣 ボス爆発</string>
+    <string name="vibe_profile_victory">🏆 勝利波形</string>
+    <string name="test_vibration_now">⚡ 今すぐ振動テスト</string>
+    <string name="gamepad_speed_title">ゲームパッド入力速度</string>
+    <string name="gamepad_speed_desc">デジタル連射速度と感度カーブ</string>
+    <string name="analog_deadzone_title">アナログスティック・デッドゾーン</string>
+    <string name="analog_deadzone_desc">Bluetoothパッドのドリフトを防ぎ十字キー精度を向上</string>
+    <string name="live_stick_neutral">🕹️ スティックテスト: ニュートラル (0.00, 0.00)</string>
+
+    <string name="sound_sfx_on">効果音: オン</string>
+    <string name="sound_sfx_off">効果音: オフ</string>
+    <string name="music_on">音楽: オン</string>
+    <string name="music_off">音楽: オフ</string>
+
+    <string name="gamepad_connected">ゲームパッド接続中</string>
+    <string name="remote_mode">リモコンモード</string>
+    <string name="desc_controller_status">コントローラー接続状態</string>
+    <string name="gamepad_connected_format">🎮 接続済み: %1$s</string>
+    <string name="no_external_gamepad">外部ゲームパッドなし（仮想D-Pad有効）</string>
+    <string name="haptic_test_fired">振動テスト実行: %1$s (強度 %2$d%%)</string>
+    <string name="motor_hardware_info">⚡ モーター: %1$s • 準備完了: %2$s • 振幅制御: %3$s</string>
+    <string name="status_yes">はい</string>
+    <string name="status_no">いいえ</string>
+    <string name="status_fallback">代替</string>
+    <string name="vibrator_manager_api">VibratorManager (API 31+)</string>
+    <string name="vibrator_legacy">Vibrator (レガシー)</string>
+
+    <string name="global_top3_format">世界トップ3 • %1$s</string>
+    <string name="no_record">記録なし</string>
+    <string name="score_pts_format">%1$d pt</string>
+    <string name="status_claimed">✓ 受取済</string>
+    <string name="status_ready">準備完了！</string>
+    <string name="claimed_today">✓ 本日受取済</string>
+    <string name="claim_day_format">🎁 %1$d日目を受取る (+%2$d)</string>
+    <string name="desc_game_icon">ゲームアイコン</string>
+    <string name="exit_app_title">ゲームハブを終了</string>
+    <string name="exit_app_confirm">アプリを終了してもよろしいですか？</string>
+    <string name="btn_exit_app">終了</string>
+    <string name="btn_cancel">キャンセル</string>
+
+    <string name="genre_arcade">アーケード</string>
+    <string name="genre_puzzle">パズル</string>
+    <string name="genre_strategy">ストラテジー</string>
+    <string name="genre_adventure">アドベンチャー</string>
+    <string name="genre_action">アクション</string>
+    <string name="genre_runner">ランナー</string>
+    <string name="genre_brain">脳トレ</string>
+    <string name="genre_cards">カード</string>
+    <string name="genre_racing">レース</string>
+    <string name="genre_logic">ロジック</string>
+    <string name="genre_classic">クラシック</string>
+    <string name="genre_word">ワード</string>
+    <string name="genre_shooter">シューティング</string>
+    <string name="genre_platform">プラットフォーム</string>
+    <string name="genre_memory">メモリー</string>
+    <string name="genre_board">ボード</string>
+    <string name="spotlight_new_challenge">★ 新しい挑戦</string>
+    <string name="spotlight_play_to_set_record">★ プレイして新記録を目指そう</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">選択中のヒーロー</string>
+    <string name="sensitivity_standard">1.0x (標準)</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33種類のクラシックTVゲーム</string>
+    <string name="default_arcade_game">アーケードゲーム</string>
+    <string name="fallback_ad_body">TVの十字キー操作で永遠に遊べるクラシックアーケード！</string>
+    <string name="fallback_ad_cta">今すぐプレイ</string>
+
+    <string name="retro_hud_default_circuit">サーキット</string>
+    <string name="retro_hud_lap">ラップ</string>
+    <string name="retro_hud_time">タイム</string>
+    <string name="retro_hud_best">ベスト</string>
+    <string name="retro_hud_coins">コイン</string>
+    <string name="retro_hud_mph">MPH</string>
+    <string name="retro_hud_pos">順位</string>
+    <string name="retro_hud_slipstream">&gt;&gt; スリップストリーム加速 &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">ニトロブースト！</string>
+
+    <string name="hud_score_format">スコア: %1$d</string>
+    <string name="hud_best_format">ベスト: %1$d</string>
+    <string name="hud_streak_format">連勝: %1$d</string>
+    <string name="blackjack_chips_format">チップ: $%1$d</string>
+    <string name="blackjack_streak_format">連勝記録: %1$d 勝</string>
+    <string name="blackjack_table_title">ベガス ブラックジャック21</string>
+    <string name="blackjack_table_rules">ブラックジャック3対2配当 • ディーラーは17でスタンド</string>
+    <string name="blackjack_best_format">ベスト: $%1$d</string>
+    <string name="blackjack_shoe_format">残り: %1$d 枚</string>
+    <string name="blackjack_dealer">ディーラー</string>
+    <string name="blackjack_dealer_total">ディーラー: %1$d</string>
+    <string name="blackjack_next_round">次のラウンド [ENTER]</string>
+    <string name="connect_four_vs_easy">対CPU（かんたん）</string>
+    <string name="connect_four_vs_normal">対CPU（ふつう）</string>
+    <string name="connect_four_vs_master">対CPU（マスター）</string>
+    <string name="connect_four_2p">2人対戦モード</string>
+    <string name="connect_four_your_turn">あなたの番（黄）</string>
+    <string name="connect_four_p1_turn">プレイヤー1の番</string>
+    <string name="connect_four_cpu_thinking">CPU思考中...</string>
+    <string name="connect_four_p2_turn">プレイヤー2の番</string>
+    <string name="connect_four_victory">勝利！</string>
+    <string name="connect_four_defeat">敗北</string>
+    <string name="connect_four_p2_wins">プレイヤー2の勝利！</string>
+    <string name="connect_four_draw">引き分け</string>
+    <string name="connect_four_win_moves">%1$d 手で4つ並びを達成！</string>
+    <string name="connect_four_draw_desc">盤面がいっぱいです！空きマスがありません。</string>
+    <string name="connect_four_cpu_win_desc">CPUに先に4つ並べられました！再挑戦しよう。</string>
+    <string name="connect_four_victory_points">+%1$d 勝利ポイント</string>
+    <string name="press_enter_to_play">[ENTER] を押してプレイ</string>
+    <string name="trivia_arena_default">トリビアアリーナ</string>
+    <string name="fruit_best_score_format">ベスト: %1$d  スコア: %2$d</string>
 </resources>

@@ -91,6 +91,8 @@ class TriviaEngine(private val context: Context) {
         private set
 
     var categoryFilter: String = "ALL"
+    var categoryIndex: Int = 0
+        private set
 
     // Lifeline availability
     var is5050Used = false
@@ -108,6 +110,8 @@ class TriviaEngine(private val context: Context) {
     private val backgroundExecutor = Executors.newSingleThreadExecutor()
     private var timerRunnable: Runnable? = null
     private var advanceRunnable: Runnable? = null
+    @Volatile private var isReleased = false
+    private var isPaused = false
 
     init {
         loadSettings()
@@ -116,6 +120,7 @@ class TriviaEngine(private val context: Context) {
     fun loadSettings() {
         val prefs = context.getSharedPreferences("trivia_settings", Context.MODE_PRIVATE)
         val catIdx = prefs.getInt(TriviaOptionsDialog.KEY_CATEGORY, 0)
+        categoryIndex = catIdx
         categoryFilter = when (catIdx) {
             1 -> "Gaming"
             2 -> "Science"
@@ -156,10 +161,14 @@ class TriviaEngine(private val context: Context) {
         eliminatedIndices.clear()
 
         if (fetchFromApi) {
-            backgroundExecutor.execute {
-                val questions = fetchQuestionsFromApiOrFallback()
-                mainHandler.post {
-                    setupQuestions(questions)
+            if (!backgroundExecutor.isShutdown) {
+                backgroundExecutor.execute {
+                    val questions = fetchQuestionsFromApiOrFallback()
+                    if (!isReleased) {
+                        mainHandler.post {
+                            if (!isReleased) setupQuestions(questions)
+                        }
+                    }
                 }
             }
         } else {
@@ -358,9 +367,10 @@ class TriviaEngine(private val context: Context) {
         }
 
         val apiUrl = "https://opentdb.com/api.php?amount=${gauntletLength * 2}&type=multiple$categoryIdParam"
+        var connection: HttpURLConnection? = null
         try {
             val url = URL(apiUrl)
-            val connection = url.openConnection() as HttpURLConnection
+            connection = url.openConnection() as HttpURLConnection
             connection.connectTimeout = 3000
             connection.readTimeout = 3000
             connection.requestMethod = "GET"
@@ -414,6 +424,8 @@ class TriviaEngine(private val context: Context) {
             }
         } catch (e: Throwable) {
             Log.w(TAG, "API fetch warning (using local fallback): ${e.message}")
+        } finally {
+            try { connection?.disconnect() } catch (_: Throwable) {}
         }
 
         return loadQuestionsFromLocalAssetsOrDb()
@@ -483,8 +495,27 @@ class TriviaEngine(private val context: Context) {
         }
     }
 
-    fun release() {
+    fun pause() {
+        isPaused = true
         stopTimer()
+        advanceRunnable?.let { mainHandler.removeCallbacks(it) }
+    }
+
+    fun resume() {
+        if (!isPaused) return
+        isPaused = false
+        if (state == EngineState.QUESTION_ACTIVE && !isUntimed) {
+            startTimer()
+        } else if (state == EngineState.ANSWER_REVEALED) {
+            advanceRunnable?.let { mainHandler.postDelayed(it, 600L) }
+        }
+    }
+
+    fun release() {
+        isReleased = true
+        stopTimer()
+        advanceRunnable = null
         mainHandler.removeCallbacksAndMessages(null)
+        backgroundExecutor.shutdownNow()
     }
 }

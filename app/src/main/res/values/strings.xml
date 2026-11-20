@@ -888,4 +888,78 @@
     <string name="exit_app_confirm">Are you sure you want to exit the app?</string>
     <string name="btn_exit_app">Exit</string>
     <string name="btn_cancel">Cancel</string>
+
+    <!-- Genres, Spotlight & Common UI -->
+    <string name="genre_arcade">ARCADE</string>
+    <string name="genre_puzzle">PUZZLE</string>
+    <string name="genre_strategy">STRATEGY</string>
+    <string name="genre_adventure">ADVENTURE</string>
+    <string name="genre_action">ACTION</string>
+    <string name="genre_runner">RUNNER</string>
+    <string name="genre_brain">BRAIN</string>
+    <string name="genre_cards">CARDS</string>
+    <string name="genre_racing">RACING</string>
+    <string name="genre_logic">LOGIC</string>
+    <string name="genre_classic">CLASSIC</string>
+    <string name="genre_word">WORD</string>
+    <string name="genre_shooter">SHOOTER</string>
+    <string name="genre_platform">PLATFORM</string>
+    <string name="genre_memory">MEMORY</string>
+    <string name="genre_board">BOARD</string>
+    <string name="spotlight_new_challenge">★ NEW CHALLENGE</string>
+    <string name="spotlight_play_to_set_record">★ PLAY TO SET RECORD</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">ACTIVE HERO</string>
+    <string name="sensitivity_standard">1.0x (Standard)</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33 CLASSIC TV GAMES</string>
+    <string name="default_arcade_game">ARCADE GAME</string>
+    <string name="fallback_ad_body">Enjoy endless classic arcade games with TV D-Pad controls!</string>
+    <string name="fallback_ad_cta">Play Now</string>
+
+    <!-- Retro Driver Synthwave HUD -->
+    <string name="retro_hud_default_circuit">Circuit</string>
+    <string name="retro_hud_lap">LAP</string>
+    <string name="retro_hud_time">TIME</string>
+    <string name="retro_hud_best">BEST</string>
+    <string name="retro_hud_coins">COINS</string>
+    <string name="retro_hud_mph">MPH</string>
+    <string name="retro_hud_pos">POS</string>
+    <string name="retro_hud_slipstream">&gt;&gt; SLIPSTREAM DRAFTING &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">NITRO BOOST!</string>
+
+    <!-- Shared & New Game HUDs -->
+    <string name="hud_score_format">SCORE: %1$d</string>
+    <string name="hud_best_format">BEST: %1$d</string>
+    <string name="hud_streak_format">STREAK: %1$d</string>
+    <string name="blackjack_chips_format">CHIPS: $%1$d</string>
+    <string name="blackjack_streak_format">STREAK: %1$d WINS</string>
+    <string name="blackjack_table_title">VEGAS BLACKJACK 21</string>
+    <string name="blackjack_table_rules">BLACKJACK PAYS 3 TO 2 • DEALER STANDS ON 17</string>
+    <string name="blackjack_best_format">BEST: $%1$d</string>
+    <string name="blackjack_shoe_format">SHOE: %1$d CARDS</string>
+    <string name="blackjack_dealer">DEALER</string>
+    <string name="blackjack_dealer_total">DEALER: %1$d</string>
+    <string name="blackjack_next_round">NEXT ROUND [ENTER]</string>
+    <string name="connect_four_vs_easy">VS CPU (EASY)</string>
+    <string name="connect_four_vs_normal">VS CPU (NORMAL)</string>
+    <string name="connect_four_vs_master">VS CPU (MASTER)</string>
+    <string name="connect_four_2p">2-PLAYER BATTLE</string>
+    <string name="connect_four_your_turn">YOUR TURN (YELLOW)</string>
+    <string name="connect_four_p1_turn">PLAYER 1 TURN</string>
+    <string name="connect_four_cpu_thinking">CPU THINKING...</string>
+    <string name="connect_four_p2_turn">PLAYER 2 TURN</string>
+    <string name="connect_four_victory">VICTORY!</string>
+    <string name="connect_four_defeat">DEFEAT</string>
+    <string name="connect_four_p2_wins">PLAYER 2 WINS!</string>
+    <string name="connect_four_draw">DRAW MATCH</string>
+    <string name="connect_four_win_moves">4 in a row achieved in %1$d moves!</string>
+    <string name="connect_four_draw_desc">Grid fully locked! No more open slots.</string>
+    <string name="connect_four_cpu_win_desc">CPU connected 4 discs first! Try again.</string>
+    <string name="connect_four_victory_points">+%1$d VICTORY POINTS</string>
+    <string name="press_enter_to_play">PRESS [ENTER] TO PLAY</string>
+    <string name="trivia_arena_default">TRIVIA ARENA</string>
+    <string name="fruit_best_score_format">BEST: %1$d  SCORE: %2$d</string>
 </resources>

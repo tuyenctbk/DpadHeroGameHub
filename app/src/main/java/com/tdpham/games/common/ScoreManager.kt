@@ -22,6 +22,20 @@ object ScoreManager {
         return prefs.getInt(key, 0)
     }
 
+    fun getBestScoreAcrossAllLevels(context: Context, gameKey: String): Int {
+        val activeId = ProfileManager.getActiveProfileId(context) ?: "global"
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val exactKey = "${activeId}_high_score_$gameKey"
+        val levelPrefix = "${activeId}_high_score_${gameKey}_l"
+        var best = prefs.getInt(exactKey, 0)
+        for ((key, value) in prefs.all) {
+            if (value is Int && key.startsWith(levelPrefix) && value > best) {
+                best = value
+            }
+        }
+        return best
+    }
+
     fun updateHighScore(context: Context, gameKey: String, newScore: Int, level: Int = -1): Boolean {
         val currentHigh = getHighScore(context, gameKey, level)
         if (newScore > currentHigh) {

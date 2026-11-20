@@ -849,4 +849,86 @@
     <string name="revive_message">Xem một video ngắn để tiếp tục từ chỗ bạn dừng lại.</string>
     <string name="revive_watch_ad">Xem quảng cáo</string>
     <string name="revive_no_thanks">Không, cảm ơn</string>
+
+    <string name="frenzy_tang">CÁ ĐUÔI GAI XANH</string>
+    <string name="frenzy_barracuda">CÁ NHỒNG</string>
+    <string name="frenzy_shark">CÁ MẬP</string>
+    <string name="exit_app_title">Thoát Kho Trò Chơi</string>
+    <string name="exit_app_confirm">Bạn có chắc muốn thoát ứng dụng không?</string>
+    <string name="btn_exit_app">Thoát</string>
+    <string name="btn_cancel">Hủy</string>
+
+    <!-- Genres, Spotlight & Common UI -->
+    <string name="genre_arcade">ARCADE</string>
+    <string name="genre_puzzle">GIẢI ĐỐ</string>
+    <string name="genre_strategy">CHIẾN THUẬT</string>
+    <string name="genre_adventure">PHIÊU LƯU</string>
+    <string name="genre_action">HÀNH ĐỘNG</string>
+    <string name="genre_runner">CHẠY VƯỢT CHƯỚNG NGẠI</string>
+    <string name="genre_brain">TRÍ TUỆ</string>
+    <string name="genre_cards">ĐÁNH BÀI</string>
+    <string name="genre_racing">ĐUA XE</string>
+    <string name="genre_logic">TƯ DUY</string>
+    <string name="genre_classic">CỔ ĐIỂN</string>
+    <string name="genre_word">ĐOÁN CHỮ</string>
+    <string name="genre_shooter">BẮN SÚNG</string>
+    <string name="genre_platform">ĐI CẢNH</string>
+    <string name="genre_memory">TRÍ NHỚ</string>
+    <string name="genre_board">CỜ BÀN</string>
+    <string name="spotlight_new_challenge">★ THỬ THÁCH MỚI</string>
+    <string name="spotlight_play_to_set_record">★ CHƠI ĐỂ LẬP KỶ LỤC</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">ANH HÙNG ĐANG CHỌN</string>
+    <string name="sensitivity_standard">1.0x (Tiêu chuẩn)</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33 TRÒ CHƠI TV CỔ ĐIỂN</string>
+    <string name="default_arcade_game">TRÒ CHƠI ARCADE</string>
+    <string name="fallback_ad_body">Tận hưởng các trò chơi arcade cổ điển bất tận với điều khiển D-Pad TV!</string>
+    <string name="fallback_ad_cta">Chơi ngay</string>
+
+    <!-- Retro Driver Synthwave HUD -->
+    <string name="retro_hud_default_circuit">Đường đua</string>
+    <string name="retro_hud_lap">VÒNG</string>
+    <string name="retro_hud_time">THỜI GIAN</string>
+    <string name="retro_hud_best">TỐT NHẤT</string>
+    <string name="retro_hud_coins">XU</string>
+    <string name="retro_hud_mph">MPH</string>
+    <string name="retro_hud_pos">HẠNG</string>
+    <string name="retro_hud_slipstream">&gt;&gt; NÚP GIÓ TĂNG TỐC &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">TĂNG TỐC NITRO!</string>
+
+    <!-- Shared & New Game HUDs -->
+    <string name="hud_score_format">ĐIỂM: %1$d</string>
+    <string name="hud_best_format">KỶ LỤC: %1$d</string>
+    <string name="hud_streak_format">CHUỖI: %1$d</string>
+    <string name="blackjack_chips_format">CHIP: $%1$d</string>
+    <string name="blackjack_streak_format">CHUỖI: %1$d THẮNG</string>
+    <string name="blackjack_table_title">XÌ DÁCH VEGAS 21</string>
+    <string name="blackjack_table_rules">XÌ DÁCH THƯỞNG 3:2 • NHÀ CÁI DỪNG Ở 17</string>
+    <string name="blackjack_best_format">KỶ LỤC: $%1$d</string>
+    <string name="blackjack_shoe_format">BỘ BÀI: %1$d LÁ</string>
+    <string name="blackjack_dealer">NHÀ CÁI</string>
+    <string name="blackjack_dealer_total">NHÀ CÁI: %1$d</string>
+    <string name="blackjack_next_round">VÁN TIẾP THEO [ENTER]</string>
+    <string name="connect_four_vs_easy">ĐẤU MÁY (DỄ)</string>
+    <string name="connect_four_vs_normal">ĐẤU MÁY (THƯỜNG)</string>
+    <string name="connect_four_vs_master">ĐẤU MÁY (CAO THỦ)</string>
+    <string name="connect_four_2p">ĐẤU 2 NGƯỜI</string>
+    <string name="connect_four_your_turn">LƯỢT BẠN (VÀNG)</string>
+    <string name="connect_four_p1_turn">LƯỢT NGƯỜI CHƠI 1</string>
+    <string name="connect_four_cpu_thinking">MÁY ĐANG SUY NGHĨ...</string>
+    <string name="connect_four_p2_turn">LƯỢT NGƯỜI CHƠI 2</string>
+    <string name="connect_four_victory">CHIẾN THẮNG!</string>
+    <string name="connect_four_defeat">THẤT BẠI</string>
+    <string name="connect_four_p2_wins">NGƯỜI CHƠI 2 THẮNG!</string>
+    <string name="connect_four_draw">HÒA NHAU</string>
+    <string name="connect_four_win_moves">Xếp 4 quân liên tiếp sau %1$d nước đi!</string>
+    <string name="connect_four_draw_desc">Bàn cờ đã kín! Không còn ô trống.</string>
+    <string name="connect_four_cpu_win_desc">Máy đã nối 4 quân trước! Hãy thử lại.</string>
+    <string name="connect_four_victory_points">+%1$d ĐIỂM CHIẾN THẮNG</string>
+    <string name="press_enter_to_play">NHẤN [ENTER] ĐỂ CHƠI</string>
+    <string name="trivia_arena_default">ĐẤU TRƯỜNG ĐỐ VUI</string>
+    <string name="fruit_best_score_format">KỶ LỤC: %1$d  ĐIỂM: %2$d</string>
 </resources>

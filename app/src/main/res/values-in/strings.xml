@@ -719,4 +719,208 @@
     <string name="revive_message">Tonton video singkat untuk melanjutkan dari posisi terakhir.</string>
     <string name="revive_watch_ad">Tonton iklan</string>
     <string name="revive_no_thanks">Tidak, terima kasih</string>
+
+    <string name="scanline_crt_effect">Filter Scanline CRT</string>
+    <string name="scanline_crt_desc">Simulasikan garis pindai monitor CRT arkade klasik.</string>
+    <string name="screen_shake_effect">Efek Getar Layar</string>
+    <string name="screen_shake_desc">Umpan balik guncangan dinamis saat tabrakan dan ledakan.</string>
+    <string name="reset_high_scores">Reset Skor Tertinggi</string>
+    <string name="reset_high_scores_desc">Hapus semua skor terbaik yang tercatat untuk pahlawan aktif.</string>
+    <string name="reset_scores_confirm">Yakin ingin menghapus semua skor tertinggi pahlawan ini? Tindakan ini tidak dapat dibatalkan.</string>
+    <string name="scores_cleared">Skor tertinggi telah direset.</string>
+    <string name="frenzy_tang">IKAN TANG BIRU</string>
+    <string name="frenzy_barracuda">BARAKUDA</string>
+    <string name="frenzy_shark">HIU</string>
+
+    <string-array name="win_connect_four">
+        <item>EMPAT SEJAJAR!</item>
+        <item>MASTER PAPAN!</item>
+        <item>JENIUS TAKTIK!</item>
+        <item>JUARA CONNECT FOUR!</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>BLACKJACK ALAMI!</item>
+        <item>PEMAIN BESAR!</item>
+        <item>BANDAR KALAH!</item>
+        <item>CASINO ROYALE!</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>CENDEKIAWAN JENIUS!</item>
+        <item>SKOR SEMPURNA!</item>
+        <item>MASTER TRIVIA!</item>
+        <item>JUARA KUIS!</item>
+    </string-array>
+
+    <string name="game_connect_four">CONNECT FOUR</string>
+    <string name="game_connect_four_instructions">Pertarungan taktis 4-sejajar klasik!\n• D-PAD KIRI / KANAN: Geser kursor antar kolom\n• D-PAD TENGAH / ENTER: Jatuhkan keping ke kolom\n• Hubungkan 4 keping secara mendatar, tegak, atau diagonal\n• Pilih 1 Pemain lawan AI Cerdas atau Duel 2 Pemain!</string>
+    <string name="connect_four_settings_title">PENGATURAN CONNECT FOUR</string>
+    <string name="game_blackjack">BLACKJACK 21</string>
+    <string name="game_blackjack_instructions">Meja Blackjack Kasino Vegas autentik!\n• Tujuan: Dapatkan nilai kartu sedekat mungkin dengan 21 tanpa melebihinya\n• D-PAD ATAS / BAWAH / KIRI / KANAN: Pilih chip dan aksi meja\n• D-PAD TENGAH / ENTER: Taruhan / Bagi / Tambah / Bertahan / Gandakan\n• Blackjack dibayar 3:2! Menangkan chip dan bangun kekayaan kasinomu!</string>
+    <string name="blackjack_settings_title">PENGATURAN BLACKJACK</string>
+    <string name="game_trivia">KUIS TRIVIA</string>
+    <string name="game_trivia_instructions">Acara Kuis Arkade penuh ketegangan!\n• D-PAD ATAS / BAWAH / KIRI / KANAN: Pilih Jawaban A, B, C, atau D\n• D-PAD TENGAH / ENTER: Konfirmasi Jawaban\n• Jawab lebih cepat untuk bonus pengali waktu besar\n• Gunakan Bantuan: 50:50, Bekukan Waktu, dan Lewati Soal\n• Selesaikan 10 soal tantangan untuk hadiah koin besar!</string>
+    <string name="trivia_settings_title">PENGATURAN KUIS TRIVIA</string>
+
+    <string name="sound_profile_label">Profil Suara</string>
+    <string name="sound_profile_arcade">Arkade 8-Bit</string>
+    <string name="sound_profile_retro">Retro Synth</string>
+    <string name="sound_profile_modern">Digital Modern</string>
+    <string name="sound_profile_arcade_desc">Gelombang pulsa 8-bit bertenaga</string>
+    <string name="sound_profile_retro_desc">Nada synth analog hangat</string>
+    <string name="sound_profile_modern_desc">Dentingan polifonik jernih</string>
+    <string name="sound_profile_toast">Profil Suara: %1$s</string>
+    <string name="sound_profile_desc_format">%1$s • Ketuk untuk mengganti</string>
+    <string name="volume_desc_format">Volume: %1$d%% • Ketuk untuk mengubah level</string>
+    <string name="sensitivity_toast">Sensitivitas Kontroler: %1$s</string>
+
+    <string name="trivia_gauntlet_completed">TANTANGAN SELESAI! 🏆</string>
+    <string name="trivia_final_score">Skor Akhir: %1$d Poin</string>
+    <string name="trivia_accuracy">Akurasi: %1$d / %2$d Benar (%3$d%%)</string>
+    <string name="trivia_coins_earned">+%1$d Koin Didapat 🪙</string>
+    <string name="trivia_play_again">MAIN LAGI [ENTER]</string>
+    <string name="press_enter_next_round">Tekan [ENTER] untuk ronde berikutnya</string>
+    <string name="twentyfortyeight_hint">🎮 D-Pad/Geser: Gerak • [U] Urung • [MENU] Ukuran</string>
+
+    <string name="tab_local">🏠 LOKAL</string>
+    <string name="tab_worldwide">🌐 DUNIA</string>
+
+    <string name="setting_volume_desc_format">Volume: %1$d%% • Ketuk lencana volume untuk menyesuaikan</string>
+    <string name="setting_sound_profile_theme">Tema Profil Suara</string>
+    <string name="setting_sound_profile_desc">Arkade 8-Bit • Ketuk untuk mengganti preset audio</string>
+    <string name="setting_retro_music">Musik Retro &amp; Suasana</string>
+    <string name="setting_retro_music_desc">Melodi latar arkade bergaya synthesizer</string>
+    <string name="setting_controller_sensitivity">Sensitivitas Kontroler &amp; Gamepad</string>
+    <string name="setting_controller_sensitivity_desc">Atur respons D-Pad, stik analog, dan sentuhan</string>
+    <string name="setting_haptic_vibration">Getaran Haptik &amp; Kontroler</string>
+    <string name="setting_haptic_vibration_desc">Denyut sentuhan saat benturan, skor, dan ledakan</string>
+    <string name="calibrate">KALIBRASI</string>
+
+    <string name="badge_live">● LANGSUNG</string>
+    <string name="global_top3_snake">TOP 3 GLOBAL • SNAKE</string>
+    <string name="hall_of_fame_widget">AULA KEHORMATAN 🏆</string>
+    <string name="placeholder_dash">---</string>
+    <string name="zero_pts">0 poin</string>
+
+    <string name="controller_settings_title">🎮 Pengaturan Kontroler &amp; Haptik</string>
+    <string name="hardware_diagnostics">DIAGNOSTIK PERANGKAT KERAS</string>
+    <string name="controller_checking">🎮 Kontroler: Memeriksa perangkat...</string>
+    <string name="vibrator_checking">⚡ Vibrator: Memeriksa VibratorManager...</string>
+    <string name="haptic_rumble_title">Getaran Haptik &amp; Rumble</string>
+    <string name="haptic_rumble_desc">Aktifkan getaran motor untuk benturan, koin, dan tombol</string>
+    <string name="haptic_intensity_title">Intensitas Haptik (Amplitudo Getaran)</string>
+    <string name="vibration_motor_test_title">UJI PERANGKAT KERAS MOTOR GETAR</string>
+    <string name="vibration_test_instructions">Pilih profil getaran dan ketuk uji untuk memeriksa respons motor:</string>
+    <string name="vibe_profile_click">🕹️ Klik (15ms)</string>
+    <string name="vibe_profile_score">⚡ Skor (35ms)</string>
+    <string name="vibe_profile_hazard">💥 Bahaya (70ms)</string>
+    <string name="vibe_profile_explosion">💣 Ledakan Bos</string>
+    <string name="vibe_profile_victory">🏆 Pola Kemenangan</string>
+    <string name="test_vibration_now">⚡ UJI GETARAN SEKARANG</string>
+    <string name="gamepad_speed_title">Kecepatan Input Gamepad</string>
+    <string name="gamepad_speed_desc">Laju pengulangan digital &amp; kurva sensitivitas</string>
+    <string name="analog_deadzone_title">Ambang Deadzone Stik Analog</string>
+    <string name="analog_deadzone_desc">Mencegah stik meleset &amp; meningkatkan presisi D-Pad pada gamepad Bluetooth</string>
+    <string name="live_stick_neutral">🕹️ Uji Stik Langsung: Netral (0.00, 0.00)</string>
+
+    <string name="sound_sfx_on">EFEK SUARA: AKTIF</string>
+    <string name="sound_sfx_off">EFEK SUARA: MATI</string>
+    <string name="music_on">MUSIK: AKTIF</string>
+    <string name="music_off">MUSIK: MATI</string>
+
+    <string name="gamepad_connected">Gamepad Terhubung</string>
+    <string name="remote_mode">Mode Remot</string>
+    <string name="desc_controller_status">Status koneksi kontroler</string>
+    <string name="gamepad_connected_format">🎮 Terhubung: %1$s</string>
+    <string name="no_external_gamepad">Tidak Ada Gamepad Eksternal (D-Pad Virtual Aktif)</string>
+    <string name="haptic_test_fired">Uji haptik dijalankan: %1$s (intensitas %2$d%%)</string>
+    <string name="motor_hardware_info">⚡ Motor: %1$s • Perangkat Siap: %2$s • Kontrol Amplitudo: %3$s</string>
+    <string name="status_yes">YA</string>
+    <string name="status_no">TIDAK</string>
+    <string name="status_fallback">CADANGAN</string>
+    <string name="vibrator_manager_api">VibratorManager (API 31+)</string>
+    <string name="vibrator_legacy">Vibrator (Lama)</string>
+
+    <string name="global_top3_format">TOP 3 GLOBAL • %1$s</string>
+    <string name="no_record">Belum Ada Rekor</string>
+    <string name="score_pts_format">%1$d poin</string>
+    <string name="status_claimed">✓ DIKLAIM</string>
+    <string name="status_ready">SIAP!</string>
+    <string name="claimed_today">✓ DIKLAIM HARI INI</string>
+    <string name="claim_day_format">🎁 KLAIM HARI %1$d (+%2$d)</string>
+    <string name="desc_game_icon">Ikon Game</string>
+    <string name="exit_app_title">Keluar dari Game Hub</string>
+    <string name="exit_app_confirm">Apakah Anda yakin ingin keluar dari aplikasi?</string>
+    <string name="btn_exit_app">Keluar</string>
+    <string name="btn_cancel">Batal</string>
+
+    <string name="genre_arcade">ARKADE</string>
+    <string name="genre_puzzle">TEKA-TEKI</string>
+    <string name="genre_strategy">STRATEGI</string>
+    <string name="genre_adventure">PETUALANGAN</string>
+    <string name="genre_action">AKSI</string>
+    <string name="genre_runner">LARI</string>
+    <string name="genre_brain">ASAH OTAK</string>
+    <string name="genre_cards">KARTU</string>
+    <string name="genre_racing">BALAPAN</string>
+    <string name="genre_logic">LOGIKA</string>
+    <string name="genre_classic">KLASIK</string>
+    <string name="genre_word">KATA</string>
+    <string name="genre_shooter">TEMBAK</string>
+    <string name="genre_platform">PLATFORM</string>
+    <string name="genre_memory">MEMORI</string>
+    <string name="genre_board">PAPAN</string>
+    <string name="spotlight_new_challenge">★ TANTANGAN BARU</string>
+    <string name="spotlight_play_to_set_record">★ MAIN UNTUK CATAT REKOR</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">PAHLAWAN AKTIF</string>
+    <string name="sensitivity_standard">1.0x (Standar)</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33 GAME TV KLASIK</string>
+    <string name="default_arcade_game">GAME ARKADE</string>
+    <string name="fallback_ad_body">Nikmati game arkade klasik tanpa batas dengan kontrol D-Pad TV!</string>
+    <string name="fallback_ad_cta">Main Sekarang</string>
+
+    <string name="retro_hud_default_circuit">Sirkuit</string>
+    <string name="retro_hud_lap">PUTARAN</string>
+    <string name="retro_hud_time">WAKTU</string>
+    <string name="retro_hud_best">TERBAIK</string>
+    <string name="retro_hud_coins">KOIN</string>
+    <string name="retro_hud_mph">MPH</string>
+    <string name="retro_hud_pos">POS</string>
+    <string name="retro_hud_slipstream">&gt;&gt; DRAFTING SLIPSTREAM &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">TURBO NITRO!</string>
+
+    <string name="hud_score_format">SKOR: %1$d</string>
+    <string name="hud_best_format">REKOR: %1$d</string>
+    <string name="hud_streak_format">RENTETAN: %1$d</string>
+    <string name="blackjack_chips_format">CHIP: $%1$d</string>
+    <string name="blackjack_streak_format">RENTETAN: %1$d MENANG</string>
+    <string name="blackjack_table_title">VEGAS BLACKJACK 21</string>
+    <string name="blackjack_table_rules">BLACKJACK BAYAR 3 BANDING 2 • BANDAR BERHENTI DI 17</string>
+    <string name="blackjack_best_format">REKOR: $%1$d</string>
+    <string name="blackjack_shoe_format">DEK: %1$d KARTU</string>
+    <string name="blackjack_dealer">BANDAR</string>
+    <string name="blackjack_dealer_total">BANDAR: %1$d</string>
+    <string name="blackjack_next_round">RONDE BERIKUTNYA [ENTER]</string>
+    <string name="connect_four_vs_easy">VS CPU (MUDAH)</string>
+    <string name="connect_four_vs_normal">VS CPU (NORMAL)</string>
+    <string name="connect_four_vs_master">VS CPU (MASTER)</string>
+    <string name="connect_four_2p">DUEL 2 PEMAIN</string>
+    <string name="connect_four_your_turn">GILIRANMU (KUNING)</string>
+    <string name="connect_four_p1_turn">GILIRAN PEMAIN 1</string>
+    <string name="connect_four_cpu_thinking">CPU BERPIKIR...</string>
+    <string name="connect_four_p2_turn">GILIRAN PEMAIN 2</string>
+    <string name="connect_four_victory">KEMENANGAN!</string>
+    <string name="connect_four_defeat">KEKALAHAN</string>
+    <string name="connect_four_p2_wins">PEMAIN 2 MENANG!</string>
+    <string name="connect_four_draw">SERI</string>
+    <string name="connect_four_win_moves">4 sejajar tercapai dalam %1$d langkah!</string>
+    <string name="connect_four_draw_desc">Papan penuh! Tidak ada slot kosong tersisa.</string>
+    <string name="connect_four_cpu_win_desc">CPU menghubungkan 4 keping lebih dulu! Coba lagi.</string>
+    <string name="connect_four_victory_points">+%1$d POIN KEMENANGAN</string>
+    <string name="press_enter_to_play">TEKAN [ENTER] UNTUK BERMAIN</string>
+    <string name="trivia_arena_default">ARENA TRIVIA</string>
+    <string name="fruit_best_score_format">REKOR: %1$d  SKOR: %2$d</string>
 </resources>

@@ -52,6 +52,7 @@ class TwentyFortyEightView @JvmOverloads constructor(
         isAntiAlias = true
         typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
     }
+    private val textRect = Rect()
 
     // Touch Swipe Gesture Detector
     private val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
@@ -93,6 +94,31 @@ class TwentyFortyEightView @JvmOverloads constructor(
 
     init {
         resetGame()
+    }
+
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = isGameOver && !isWin
+
+    override fun reviveGame(): Boolean {
+        if (!isGameOver || isWin) return false
+        val occupied = mutableListOf<Triple<Int, Int, Int>>()
+        for (r in 0 until gridSize) {
+            for (c in 0 until gridSize) {
+                if (board[r][c] > 0) {
+                    occupied.add(Triple(board[r][c], r, c))
+                }
+            }
+        }
+        occupied.sortBy { it.first }
+        val clearCount = min(4, occupied.size)
+        for (i in 0 until clearCount) {
+            val (_, r, c) = occupied[i]
+            board[r][c] = 0
+        }
+        isGameOver = false
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        return true
     }
 
     override fun resetGame() {
@@ -197,9 +223,13 @@ class TwentyFortyEightView @JvmOverloads constructor(
     }
 
     private fun handleDirectionalMove(dx: Int, dy: Int): Boolean {
-        saveUndoState()
+        val snapshotBoard = Array(gridSize) { r -> board[r].clone() }
+        val snapshotScore = score
         val moved = move(dx, dy)
         if (moved) {
+            previousBoard = snapshotBoard
+            previousScore = snapshotScore
+            canUndo = true
             SoundManager.playDpadMove()
             HapticManager.vibrateClick(context)
             addRandomTile()
@@ -554,7 +584,6 @@ class TwentyFortyEightView @JvmOverloads constructor(
         }
         paint.textAlign = Paint.Align.CENTER
         val text = value.toString()
-        val textRect = Rect()
         paint.getTextBounds(text, 0, text.length, textRect)
         canvas.drawText(text, cx, cy + textRect.height() / 2f, paint)
     }

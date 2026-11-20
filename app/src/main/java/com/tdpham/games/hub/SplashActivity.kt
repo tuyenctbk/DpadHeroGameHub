@@ -5,16 +5,19 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.KeyEvent
+import android.view.MotionEvent
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.tdpham.games.R
-import com.tdpham.games.common.SoundManager
-import com.tdpham.games.common.ConfigManager
-import com.tdpham.games.common.AdManager
-import com.tdpham.games.common.profile.ProfileManager
 import androidx.lifecycle.lifecycleScope
+import com.tdpham.games.R
+import com.tdpham.games.common.AdManager
+import com.tdpham.games.common.ConfigManager
+import com.tdpham.games.common.SoundManager
+import com.tdpham.games.common.profile.ProfileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -22,14 +25,21 @@ import kotlinx.coroutines.withContext
 
 class SplashActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
-    private var isSkipped = false
+    private var hasNavigated = false
 
     private val startMainRunnable = Runnable {
-        if (isFinishing || isDestroyed) return@Runnable
+        navigateToMain()
+    }
+
+    private fun navigateToMain() {
+        if (hasNavigated || isFinishing || isDestroyed) return
+        hasNavigated = true
+        handler.removeCallbacks(startMainRunnable)
+
         ProfileManager.ensureDefaultProfileExists(this)
         val lastPlayerId = ProfileManager.getLastPlayerId(this)
         val profiles = ProfileManager.getProfiles(this)
-        
+
         val intent = if (lastPlayerId != null && profiles.any { it.id == lastPlayerId }) {
             ProfileManager.setActiveProfileId(this, lastPlayerId)
             Intent(this, MainActivity::class.java).apply {
@@ -41,61 +51,63 @@ class SplashActivity : AppCompatActivity() {
             Intent(this, MainActivity::class.java)
         }
         startActivity(intent)
+        @Suppress("DEPRECATION")
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()
-    }
-
-    private fun skipSplash() {
-        if (!isSkipped) {
-            isSkipped = true
-            handler.removeCallbacks(startMainRunnable)
-            startMainRunnable.run()
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        // Initialize audio and play custom 1-second retro chime sequence
         lifecycleScope.launch(Dispatchers.IO) {
             SoundManager.init(this@SplashActivity)
             withContext(Dispatchers.Main) {
-                SoundManager.playRetroSplashChime()
+                if (!hasNavigated && !isFinishing && !isDestroyed) {
+                    SoundManager.playRetroSplashChime()
+                }
             }
-            
-            // Asynchronous background pre-warming
+
             launch { ConfigManager.init() }
-            launch { 
+            launch {
                 delay(150)
-                AdManager.init(this@SplashActivity) 
+                AdManager.init(this@SplashActivity)
             }
         }
 
-        // Configure 1-second Canvas animation
+        val splashDurationMs = 1400L
         val canvasView = findViewById<RetroSplashCanvasView>(R.id.retro_splash_canvas)
         canvasView?.onSplashFinished = {
-            skipSplash()
+            navigateToMain()
         }
-        canvasView?.startAnimation(1000L)
+        canvasView?.startAnimation(splashDurationMs)
 
-        // Set skippable click listener on root view
-        findViewById<android.view.View>(android.R.id.content)?.setOnClickListener {
-            skipSplash()
+        findViewById<View>(android.R.id.content)?.setOnClickListener {
+            navigateToMain()
         }
 
         hideSystemUI()
 
-        // 1-second fallback navigation timer
-        handler.postDelayed(startMainRunnable, 1000L)
+        // Fallback safety timer slightly after animation duration
+        handler.postDelayed(startMainRunnable, splashDurationMs + 150L)
     }
 
-    override fun onKeyDown(keyCode: Int, event: android.view.KeyEvent?): Boolean {
-        skipSplash()
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP ||
+            keyCode == KeyEvent.KEYCODE_VOLUME_DOWN ||
+            keyCode == KeyEvent.KEYCODE_VOLUME_MUTE
+        ) {
+            return super.onKeyDown(keyCode, event)
+        }
+        navigateToMain()
         return true
     }
 
-    override fun onTouchEvent(event: android.view.MotionEvent?): Boolean {
-        skipSplash()
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_DOWN) {
+            navigateToMain()
+            return true
+        }
         return super.onTouchEvent(event)
     }
 
@@ -112,12 +124,12 @@ class SplashActivity : AppCompatActivity() {
             controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         } else {
             @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility = (android.view.View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    or android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
-                    or android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    or android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    or android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    or android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
         }
     }
 }

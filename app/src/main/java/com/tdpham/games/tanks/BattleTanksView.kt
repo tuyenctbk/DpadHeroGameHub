@@ -129,11 +129,17 @@ class BattleTanksView @JvmOverloads constructor(
     override fun pause() {
         gamePaused = true
         handler.removeCallbacks(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
     }
     override fun resume() {
+        requestFocus()
         gamePaused = false
         handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
+        if (gameOver) {
+            animHandler.removeCallbacks(animRunnable)
+            animHandler.post(animRunnable)
+        }
     }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
@@ -236,20 +242,32 @@ class BattleTanksView @JvmOverloads constructor(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resetGame(); resume(); return true
             }
             return super.onKeyDown(keyCode, event)
         }
         if (isLevelCleared) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 level++
                 isLevelCleared = false
                 setupLevel()
                 resume()
                 return true
             }
-            return true
+            val isGameplayKey = keyCode == KeyEvent.KEYCODE_DPAD_UP ||
+                keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+                keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
+                keyCode == KeyEvent.KEYCODE_DPAD_RIGHT
+            return if (isGameplayKey) true else super.onKeyDown(keyCode, event)
         }
         if (gamePaused && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
                 keyCode == KeyEvent.KEYCODE_ENTER ||
@@ -279,14 +297,18 @@ class BattleTanksView @JvmOverloads constructor(
         return true
     }
 
-    override val canRevive: Boolean get() = true
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = gameOver
 
     override fun reviveGame(): Boolean {
         if (!gameOver) return false
         gameOver = false
         playerLives = 2
-        player.x = 6
-        player.y = 12
+        val spawnCol = cols / 2 - 2
+        val spawnRow = rows - 1
+        grid[spawnRow][spawnCol] = 0
+        player.x = spawnCol
+        player.y = spawnRow
         player.dir = 0
         player.blinkUntil = System.currentTimeMillis() + 3500L
         bullets.removeAll { !it.isPlayer }

@@ -40,6 +40,7 @@ class GamePadMonitor(private val context: Context) {
     }
 
     private val inputManager = context.getSystemService(Context.INPUT_SERVICE) as? InputManager
+    private val mainHandler = Handler(Looper.getMainLooper())
     private val listeners = mutableListOf<OnModeChangeListener>()
 
     fun getConnectedGamepads(): List<InputDevice> {
@@ -121,13 +122,13 @@ class GamePadMonitor(private val context: Context) {
 
             private fun notifyChange() {
                 val info = getControllerInfo()
-                Handler(Looper.getMainLooper()).post {
+                mainHandler.post {
                     listener.onModeChanged(info.mode, info.primaryDeviceName)
                 }
             }
         }
 
-        inputManager?.registerInputDeviceListener(inputDeviceListener, Handler(Looper.getMainLooper()))
+        inputManager?.registerInputDeviceListener(inputDeviceListener, mainHandler)
 
         lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
@@ -169,6 +170,7 @@ class GamePadMonitor(private val context: Context) {
             val monitor = getInstance(activity)
 
             fun updateUi(mode: InputMode, primaryName: String) {
+                if (activity.isFinishing || activity.isDestroyed) return
                 if (mode == InputMode.GAMEPAD) {
                     iconView.setImageResource(R.drawable.ic_gamepad_connected)
                     iconView.imageTintList = ColorStateList.valueOf(Color.parseColor("#00E5FF"))

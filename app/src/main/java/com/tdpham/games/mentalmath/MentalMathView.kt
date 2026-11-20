@@ -96,6 +96,8 @@ class MentalMathView @JvmOverloads constructor(
     }
 
     override fun pause() {
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.removeCallbacks(nextQuestionRunnable)
         if (!isPaused && !gameOver && !isReviewing) {
             val now = System.currentTimeMillis()
             timeLeft = (timerMax - (now - timerStart)).coerceAtLeast(0)
@@ -107,8 +109,14 @@ class MentalMathView @JvmOverloads constructor(
         if (isPaused) {
             timerStart = System.currentTimeMillis() - (timerMax - timeLeft)
             isPaused = false
-            invalidate()
         }
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
+        if (isReviewing && isCorrect && !gameOver) {
+            animHandler.removeCallbacks(nextQuestionRunnable)
+            animHandler.postDelayed(nextQuestionRunnable, 400)
+        }
+        invalidate()
         requestFocus()
     }
 
@@ -236,7 +244,8 @@ class MentalMathView @JvmOverloads constructor(
         options.shuffle()
     }
 
-    override val canRevive: Boolean get() = true
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = gameOver
 
     override fun reviveGame(): Boolean {
         if (!gameOver) return false
@@ -264,10 +273,21 @@ class MentalMathView @JvmOverloads constructor(
             return super.onKeyDown(keyCode, event)
         }
 
-        if (isPaused) return true
+        val isGameplayKey = keyCode == KeyEvent.KEYCODE_DPAD_UP ||
+            keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+            keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
+            keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
+            keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+            keyCode == KeyEvent.KEYCODE_ENTER ||
+            keyCode == KeyEvent.KEYCODE_SPACE ||
+            keyCode == KeyEvent.KEYCODE_BUTTON_A ||
+            keyCode in KeyEvent.KEYCODE_1..KeyEvent.KEYCODE_4 ||
+            keyCode in KeyEvent.KEYCODE_NUMPAD_1..KeyEvent.KEYCODE_NUMPAD_4
+
+        if (isPaused) return if (isGameplayKey) true else super.onKeyDown(keyCode, event)
 
         if (isReviewing) {
-            if (isCorrect) return true
+            if (isCorrect) return if (isGameplayKey) true else super.onKeyDown(keyCode, event)
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
                 keyCode == KeyEvent.KEYCODE_ENTER ||
                 keyCode == KeyEvent.KEYCODE_SPACE ||
@@ -276,7 +296,7 @@ class MentalMathView @JvmOverloads constructor(
                 endGame()
                 return true
             }
-            return true
+            return if (isGameplayKey) true else super.onKeyDown(keyCode, event)
         }
 
         // Direct option selection with number keys 1, 2, 3, 4

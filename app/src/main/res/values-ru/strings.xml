@@ -719,4 +719,208 @@
     <string name="revive_message">Посмотрите короткое видео, чтобы продолжить с того же места.</string>
     <string name="revive_watch_ad">Смотреть рекламу</string>
     <string name="revive_no_thanks">Нет, спасибо</string>
+
+    <string name="scanline_crt_effect">Фильтр ЭЛТ-строк (CRT)</string>
+    <string name="scanline_crt_desc">Имитация классических строк развёртки аркадных ЭЛТ-мониторов.</string>
+    <string name="screen_shake_effect">Тряска экрана</string>
+    <string name="screen_shake_desc">Динамическая отдача экрана при столкновениях и взрывах.</string>
+    <string name="reset_high_scores">Сбросить рекорды</string>
+    <string name="reset_high_scores_desc">Очистить все сохранённые рекорды текущего героя.</string>
+    <string name="reset_scores_confirm">Вы уверены, что хотите очистить все рекорды этого героя? Действие необратимо.</string>
+    <string name="scores_cleared">Рекорды сброшены.</string>
+    <string name="frenzy_tang">ГОЛУБОЙ ХИРУРГ</string>
+    <string name="frenzy_barracuda">БАРРАКУДА</string>
+    <string name="frenzy_shark">АКУЛА</string>
+
+    <string-array name="win_connect_four">
+        <item>ЧЕТЫРЕ В РЯД!</item>
+        <item>МАСТЕР СЕТКИ!</item>
+        <item>ГЕНИЙ ТАКТИКИ!</item>
+        <item>ЧЕМПИОН ИГРЫ!</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>НАТУРАЛЬНЫЙ БЛЭКДЖЕК!</item>
+        <item>ХАЙРОЛЛЕР!</item>
+        <item>КАЗИНО ОБЫГРАНО!</item>
+        <item>КАЗИНО РОЯЛЬ!</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>ГЕНИЙ ЭРУДИЦИИ!</item>
+        <item>ИДЕАЛЬНЫЙ СЧЁТ!</item>
+        <item>МАСТЕР ВИКТОРИНЫ!</item>
+        <item>ЧЕМПИОН КВИЗА!</item>
+    </string-array>
+
+    <string name="game_connect_four">ЧЕТЫРЕ В РЯД</string>
+    <string name="game_connect_four_instructions">Классическая тактическая дуэль «4 в ряд»!\n• D-PAD ВЛЕВО / ВПРАВО: Выбор столбца\n• D-PAD ЦЕНТР / ENTER: Бросить фишку в столбец\n• Соберите 4 свои фишки по горизонтали, вертикали или диагонали\n• Играйте против ИИ или вдвоём на одном экране!</string>
+    <string name="connect_four_settings_title">НАСТРОЙКИ «ЧЕТЫРЕ В РЯД»</string>
+    <string name="game_blackjack">БЛЭКДЖЕК 21</string>
+    <string name="game_blackjack_instructions">Классический стол блэкджека Лас-Вегаса!\n• Цель: Наберите сумму, максимально близкую к 21, без перебора\n• D-PAD ВВЕРХ / ВНИЗ / ВЛЕВО / ВПРАВО: Выбор фишек и действий\n• D-PAD ЦЕНТР / ENTER: Ставка / Раздача / Ещё / Хватит / Удвоить\n• Блэкджек платит 3:2! Выигрывайте фишки и копите состояние!</string>
+    <string name="blackjack_settings_title">НАСТРОЙКИ БЛЭКДЖЕКА</string>
+    <string name="game_trivia">ВИКТОРИНА</string>
+    <string name="game_trivia_instructions">Азартная аркадная викторина!\n• D-PAD ВВЕРХ / ВНИЗ / ВЛЕВО / ВПРАВО: Выбор ответа A, B, C или D\n• D-PAD ЦЕНТР / ENTER: Подтвердить ответ\n• Отвечайте быстрее ради крупных множителей времени\n• Используйте подсказки: 50:50, Заморозка таймера и Пропуск\n• Пройдите 10 вопросов и заберите главный приз монет!</string>
+    <string name="trivia_settings_title">НАСТРОЙКИ ВИКТОРИНЫ</string>
+
+    <string name="sound_profile_label">Звуковой профиль</string>
+    <string name="sound_profile_arcade">Аркада 8-Бит</string>
+    <string name="sound_profile_retro">Ретро-синт</string>
+    <string name="sound_profile_modern">Цифровой модерн</string>
+    <string name="sound_profile_arcade_desc">Мощные 8-битные импульсные волны</string>
+    <string name="sound_profile_retro_desc">Тёплые аналоговые синт-тоны</string>
+    <string name="sound_profile_modern_desc">Чистые полифонические сигналы</string>
+    <string name="sound_profile_toast">Звуковой профиль: %1$s</string>
+    <string name="sound_profile_desc_format">%1$s • Нажмите для смены</string>
+    <string name="volume_desc_format">Громкость: %1$d%% • Нажмите для изменения</string>
+    <string name="sensitivity_toast">Чувствительность контроллера: %1$s</string>
+
+    <string name="trivia_gauntlet_completed">ИСПЫТАНИЕ ПРОЙДЕНО! 🏆</string>
+    <string name="trivia_final_score">Итоговый счёт: %1$d очков</string>
+    <string name="trivia_accuracy">Точность: %1$d / %2$d верно (%3$d%%)</string>
+    <string name="trivia_coins_earned">+%1$d монет заработано 🪙</string>
+    <string name="trivia_play_again">ИГРАТЬ СНОВА [ENTER]</string>
+    <string name="press_enter_next_round">Нажмите [ENTER] для следующего раунда</string>
+    <string name="twentyfortyeight_hint">🎮 D-Pad/Свайп: Ход • [U] Отмена • [MENU] Размер поля</string>
+
+    <string name="tab_local">🏠 ЛОКАЛЬНЫЕ</string>
+    <string name="tab_worldwide">🌐 МИРОВЫЕ</string>
+
+    <string name="setting_volume_desc_format">Громкость: %1$d%% • Нажмите на значок громкости для настройки</string>
+    <string name="setting_sound_profile_theme">Тема звукового профиля</string>
+    <string name="setting_sound_profile_desc">Аркада 8-Бит • Нажмите для смены аудио-пресета</string>
+    <string name="setting_retro_music">Ретро-музыка и атмосфера</string>
+    <string name="setting_retro_music_desc">Фоновые синтезаторные аркадные мелодии</string>
+    <string name="setting_controller_sensitivity">Чувствительность контроллера и геймпада</string>
+    <string name="setting_controller_sensitivity_desc">Настройка отклика D-Pad, стиков и сенсора</string>
+    <string name="setting_haptic_vibration">Тактильная вибрация и отдача</string>
+    <string name="setting_haptic_vibration_desc">Импульсы при ударах, очках и взрывах</string>
+    <string name="calibrate">КАЛИБРОВКА</string>
+
+    <string name="badge_live">● В ЭФИРЕ</string>
+    <string name="global_top3_snake">МИРОВОЙ ТОП-3 • SNAKE</string>
+    <string name="hall_of_fame_widget">ЗАЛ СЛАВЫ 🏆</string>
+    <string name="placeholder_dash">---</string>
+    <string name="zero_pts">0 очк.</string>
+
+    <string name="controller_settings_title">🎮 Настройки контроллера и вибрации</string>
+    <string name="hardware_diagnostics">ДИАГНОСТИКА ОБОРУДОВАНИЯ</string>
+    <string name="controller_checking">🎮 Контроллер: Проверка устройств...</string>
+    <string name="vibrator_checking">⚡ Вибромотор: Проверка VibratorManager...</string>
+    <string name="haptic_rumble_title">Тактильная отдача и вибрация</string>
+    <string name="haptic_rumble_desc">Включить вибрацию для ударов, монет и нажатий</string>
+    <string name="haptic_intensity_title">Сила вибрации (амплитуда мотора)</string>
+    <string name="vibration_motor_test_title">ТЕСТ ВИБРОМОТОРА</string>
+    <string name="vibration_test_instructions">Выберите профиль вибрации и нажмите тест для проверки мотора:</string>
+    <string name="vibe_profile_click">🕹️ Клик (15мс)</string>
+    <string name="vibe_profile_score">⚡ Очко (35мс)</string>
+    <string name="vibe_profile_hazard">💥 Угроза (70мс)</string>
+    <string name="vibe_profile_explosion">💣 Взрыв босса</string>
+    <string name="vibe_profile_victory">🏆 Волна победы</string>
+    <string name="test_vibration_now">⚡ ПРОВЕРИТЬ ВИБРАЦИЮ</string>
+    <string name="gamepad_speed_title">Скорость ввода геймпада</string>
+    <string name="gamepad_speed_desc">Частота повторения и кривая чувствительности</string>
+    <string name="analog_deadzone_title">Мёртвая зона аналогового стика</string>
+    <string name="analog_deadzone_desc">Устраняет дрейф стика и повышает точность D-Pad на Bluetooth-геймпадах</string>
+    <string name="live_stick_neutral">🕹️ Тест стика: Нейтраль (0.00, 0.00)</string>
+
+    <string name="sound_sfx_on">ЗВУКОВЫЕ ЭФФЕКТЫ: ВКЛ</string>
+    <string name="sound_sfx_off">ЗВУКОВЫЕ ЭФФЕКТЫ: ВЫКЛ</string>
+    <string name="music_on">МУЗЫКА: ВКЛ</string>
+    <string name="music_off">МУЗЫКА: ВЫКЛ</string>
+
+    <string name="gamepad_connected">Геймпад подключён</string>
+    <string name="remote_mode">Режим пульта</string>
+    <string name="desc_controller_status">Статус подключения контроллера</string>
+    <string name="gamepad_connected_format">🎮 Подключён: %1$s</string>
+    <string name="no_external_gamepad">Внешний геймпад не найден (активен виртуальный D-Pad)</string>
+    <string name="haptic_test_fired">Тест вибрации запущен: %1$s (сила %2$d%%)</string>
+    <string name="motor_hardware_info">⚡ Мотор: %1$s • Готов: %2$s • Амплитуда: %3$s</string>
+    <string name="status_yes">ДА</string>
+    <string name="status_no">НЕТ</string>
+    <string name="status_fallback">ЗАПАСНОЙ</string>
+    <string name="vibrator_manager_api">VibratorManager (API 31+)</string>
+    <string name="vibrator_legacy">Vibrator (Базовый)</string>
+
+    <string name="global_top3_format">МИРОВОЙ ТОП-3 • %1$s</string>
+    <string name="no_record">Нет рекорда</string>
+    <string name="score_pts_format">%1$d очк.</string>
+    <string name="status_claimed">✓ ПОЛУЧЕНО</string>
+    <string name="status_ready">ГОТОВО!</string>
+    <string name="claimed_today">✓ ПОЛУЧЕНО СЕГОДНЯ</string>
+    <string name="claim_day_format">🎁 ЗАБРАТЬ ДЕНЬ %1$d (+%2$d)</string>
+    <string name="desc_game_icon">Иконка игры</string>
+    <string name="exit_app_title">Выход из игрового центра</string>
+    <string name="exit_app_confirm">Вы уверены, что хотите выйти из приложения?</string>
+    <string name="btn_exit_app">Выйти</string>
+    <string name="btn_cancel">Отмена</string>
+
+    <string name="genre_arcade">АРКАДА</string>
+    <string name="genre_puzzle">ГОЛОВОЛОМКА</string>
+    <string name="genre_strategy">СТРАТЕГИЯ</string>
+    <string name="genre_adventure">ПРИКЛЮЧЕНИЕ</string>
+    <string name="genre_action">ЭКШЕН</string>
+    <string name="genre_runner">РАННЕР</string>
+    <string name="genre_brain">ИНТЕЛЛЕКТ</string>
+    <string name="genre_cards">КАРТЫ</string>
+    <string name="genre_racing">ГОНКИ</string>
+    <string name="genre_logic">ЛОГИКА</string>
+    <string name="genre_classic">КЛАССИКА</string>
+    <string name="genre_word">СЛОВА</string>
+    <string name="genre_shooter">ШУТЕР</string>
+    <string name="genre_platform">ПЛАТФОРМЕР</string>
+    <string name="genre_memory">ПАМЯТЬ</string>
+    <string name="genre_board">НАСТОЛЬНАЯ</string>
+    <string name="spotlight_new_challenge">★ НОВЫЙ ВЫЗОВ</string>
+    <string name="spotlight_play_to_set_record">★ СЫГРАЙТЕ ДЛЯ РЕКОРДА</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">АКТИВНЫЙ ГЕРОЙ</string>
+    <string name="sensitivity_standard">1.0x (Стандарт)</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33 КЛАССИЧЕСКИЕ ТВ-ИГРЫ</string>
+    <string name="default_arcade_game">АРКАДНАЯ ИГРА</string>
+    <string name="fallback_ad_body">Играйте в классические аркадные хиты с управлением D-Pad для ТВ!</string>
+    <string name="fallback_ad_cta">Играть</string>
+
+    <string name="retro_hud_default_circuit">Трасса</string>
+    <string name="retro_hud_lap">КРУГ</string>
+    <string name="retro_hud_time">ВРЕМЯ</string>
+    <string name="retro_hud_best">РЕКОРД</string>
+    <string name="retro_hud_coins">МОНЕТЫ</string>
+    <string name="retro_hud_mph">MPH</string>
+    <string name="retro_hud_pos">МЕСТО</string>
+    <string name="retro_hud_slipstream">&gt;&gt; ВОЗДУШНЫЙ МЕШОК &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">НИТРО-УСКОРЕНИЕ!</string>
+
+    <string name="hud_score_format">СЧЁТ: %1$d</string>
+    <string name="hud_best_format">РЕКОРД: %1$d</string>
+    <string name="hud_streak_format">СЕРИЯ: %1$d</string>
+    <string name="blackjack_chips_format">ФИШКИ: $%1$d</string>
+    <string name="blackjack_streak_format">СЕРИЯ: %1$d ПОБЕД</string>
+    <string name="blackjack_table_title">БЛЭКДЖЕК 21 ЛАС-ВЕГАС</string>
+    <string name="blackjack_table_rules">БЛЭКДЖЕК ПЛАТИТ 3 К 2 • ДИЛЕР СТОИТ НА 17</string>
+    <string name="blackjack_best_format">РЕКОРД: $%1$d</string>
+    <string name="blackjack_shoe_format">КОЛОДА: %1$d КАРТ</string>
+    <string name="blackjack_dealer">ДИЛЕР</string>
+    <string name="blackjack_dealer_total">ДИЛЕР: %1$d</string>
+    <string name="blackjack_next_round">СЛЕДУЮЩИЙ РАУНД [ENTER]</string>
+    <string name="connect_four_vs_easy">ПРОТИВ ИИ (ЛЁГКИЙ)</string>
+    <string name="connect_four_vs_normal">ПРОТИВ ИИ (ОБЫЧНЫЙ)</string>
+    <string name="connect_four_vs_master">ПРОТИВ ИИ (МАСТЕР)</string>
+    <string name="connect_four_2p">ДУЭЛЬ НА ДВОИХ</string>
+    <string name="connect_four_your_turn">ВАШ ХОД (ЖЁЛТЫЙ)</string>
+    <string name="connect_four_p1_turn">ХОД ИГРОКА 1</string>
+    <string name="connect_four_cpu_thinking">ИИ ДУМАЕТ...</string>
+    <string name="connect_four_p2_turn">ХОД ИГРОКА 2</string>
+    <string name="connect_four_victory">ПОБЕДА!</string>
+    <string name="connect_four_defeat">ПОРАЖЕНИЕ</string>
+    <string name="connect_four_p2_wins">ПОБЕДИЛ ИГРОК 2!</string>
+    <string name="connect_four_draw">НИЧЬЯ</string>
+    <string name="connect_four_win_moves">4 в ряд собраны за %1$d ходов!</string>
+    <string name="connect_four_draw_desc">Поле заполнено! Свободных ячеек не осталось.</string>
+    <string name="connect_four_cpu_win_desc">ИИ собрал 4 фишки первым! Попробуйте ещё раз.</string>
+    <string name="connect_four_victory_points">+%1$d ОЧКОВ ПОБЕДЫ</string>
+    <string name="press_enter_to_play">НАЖМИТЕ [ENTER] ДЛЯ ИГРЫ</string>
+    <string name="trivia_arena_default">АРЕНА ВИКТОРИНЫ</string>
+    <string name="fruit_best_score_format">РЕКОРД: %1$d  СЧЁТ: %2$d</string>
 </resources>

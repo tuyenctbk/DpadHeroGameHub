@@ -140,8 +140,19 @@ class FlappyHeroView @JvmOverloads constructor(
         animHandler.post(animRunnable)
     }
 
+    private val hillPath = Path()
+    private var cachedSunsetHeight = 0f
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        if (h > 0) {
+            cachedSunsetHeight = h.toFloat()
+            sunsetPaint.shader = LinearGradient(
+                0f, 0f, 0f, cachedSunsetHeight,
+                Color.parseColor("#FF5722"), Color.parseColor("#3F51B5"),
+                Shader.TileMode.CLAMP
+            )
+        }
         if (w > 0 && h > 0 && !isInitialized) {
             resetGame()
             isInitialized = true
@@ -156,11 +167,15 @@ class FlappyHeroView @JvmOverloads constructor(
     override fun pause() {
         gamePaused = true
         handler.removeCallbacks(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
     }
     override fun resume() {
+        requestFocus()
         gamePaused = false
         handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
     }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
@@ -206,9 +221,32 @@ class FlappyHeroView @JvmOverloads constructor(
         invalidate()
     }
 
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = gameOver
+
+    override fun reviveGame(): Boolean {
+        if (!gameOver) return false
+        gameOver = false
+        deathReason = ""
+        currentDeathType = DeathType.NONE
+        birdY = height / 2f
+        birdV = 0f
+        pipes.clear()
+        pipeSpawnTime = System.currentTimeMillis()
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        resume()
+        invalidate()
+        return true
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resetGame()
                 resume()
                 birdV = currentCharacter.jumpForce
@@ -218,7 +256,13 @@ class FlappyHeroView @JvmOverloads constructor(
             return super.onKeyDown(keyCode, event)
         }
 
-        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+            keyCode == KeyEvent.KEYCODE_ENTER ||
+            keyCode == KeyEvent.KEYCODE_DPAD_UP ||
+            keyCode == KeyEvent.KEYCODE_SPACE ||
+            keyCode == KeyEvent.KEYCODE_BUTTON_A ||
+            keyCode == KeyEvent.KEYCODE_W
+        ) {
             if (gamePaused) {
                 resume()
             }
@@ -276,10 +320,10 @@ class FlappyHeroView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         val w = width.toFloat()
         val h = height.toFloat()
+        if (w <= 0f || h <= 0f) return
 
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
 
         val bgType = when (currentTheme) {
@@ -293,9 +337,14 @@ class FlappyHeroView @JvmOverloads constructor(
         val isNight = currentTheme == FlappyTheme.NIGHT
         
         if (currentTheme == FlappyTheme.SUNSET) {
-            // Special sunset draw
-            val colors = intArrayOf(Color.parseColor("#FF5722"), Color.parseColor("#3F51B5"))
-            sunsetPaint.shader = LinearGradient(0f, 0f, 0f, h, colors[0], colors[1], Shader.TileMode.CLAMP)
+            if (cachedSunsetHeight != h || sunsetPaint.shader == null) {
+                cachedSunsetHeight = h
+                sunsetPaint.shader = LinearGradient(
+                    0f, 0f, 0f, h,
+                    Color.parseColor("#FF5722"), Color.parseColor("#3F51B5"),
+                    Shader.TileMode.CLAMP
+                )
+            }
             canvas.drawRect(0f, 0f, w, h, sunsetPaint)
         } else if (currentTheme == FlappyTheme.WINTER) {
              canvas.drawColor(Color.parseColor("#E1F5FE")) // Light Blue Sky
@@ -305,45 +354,43 @@ class FlappyHeroView @JvmOverloads constructor(
         
         super.onDraw(canvas)
 
-        // Draw Parallax Hills / Mountains (inspired by T-Rex)
+        // Draw Parallax Hills / Mountains (reusing hillPath to avoid per-frame allocations)
         if (currentTheme == FlappyTheme.WINTER) {
-            // Snowy Mountains
             paint.color = Color.parseColor("#B2DFDB")
-            val mPath1 = Path()
+            hillPath.reset()
             val mScroll1 = (bgScrollX * 0.3f) % w
-            mPath1.moveTo(-mScroll1, h)
-            mPath1.lineTo(w * 0.25f - mScroll1, h * 0.55f)
-            mPath1.lineTo(w * 0.5f - mScroll1, h)
-            mPath1.lineTo(w * 0.75f - mScroll1, h * 0.5f)
-            mPath1.lineTo(w - mScroll1, h)
-            mPath1.lineTo(w * 1.25f - mScroll1, h * 0.55f)
-            mPath1.lineTo(w * 1.5f - mScroll1, h)
-            mPath1.lineTo(w * 1.75f - mScroll1, h * 0.5f)
-            mPath1.lineTo(w * 2f - mScroll1, h)
-            mPath1.close()
-            canvas.drawPath(mPath1, paint)
+            hillPath.moveTo(-mScroll1, h)
+            hillPath.lineTo(w * 0.25f - mScroll1, h * 0.55f)
+            hillPath.lineTo(w * 0.5f - mScroll1, h)
+            hillPath.lineTo(w * 0.75f - mScroll1, h * 0.5f)
+            hillPath.lineTo(w - mScroll1, h)
+            hillPath.lineTo(w * 1.25f - mScroll1, h * 0.55f)
+            hillPath.lineTo(w * 1.5f - mScroll1, h)
+            hillPath.lineTo(w * 1.75f - mScroll1, h * 0.5f)
+            hillPath.lineTo(w * 2f - mScroll1, h)
+            hillPath.close()
+            canvas.drawPath(hillPath, paint)
 
             // Snowy caps
             paint.color = Color.WHITE
-            val capPath = Path().apply {
-                moveTo(w * 0.25f - mScroll1, h * 0.55f)
-                lineTo(w * 0.21f - mScroll1, h * 0.62f)
-                lineTo(w * 0.29f - mScroll1, h * 0.62f)
-                close()
-                moveTo(w * 0.75f - mScroll1, h * 0.5f)
-                lineTo(w * 0.70f - mScroll1, h * 0.58f)
-                lineTo(w * 0.80f - mScroll1, h * 0.58f)
-                close()
-                moveTo(w * 1.25f - mScroll1, h * 0.55f)
-                lineTo(w * 1.21f - mScroll1, h * 0.62f)
-                lineTo(w * 1.29f - mScroll1, h * 0.62f)
-                close()
-                moveTo(w * 1.75f - mScroll1, h * 0.5f)
-                lineTo(w * 1.70f - mScroll1, h * 0.58f)
-                lineTo(w * 1.80f - mScroll1, h * 0.58f)
-                close()
-            }
-            canvas.drawPath(capPath, paint)
+            hillPath.reset()
+            hillPath.moveTo(w * 0.25f - mScroll1, h * 0.55f)
+            hillPath.lineTo(w * 0.21f - mScroll1, h * 0.62f)
+            hillPath.lineTo(w * 0.29f - mScroll1, h * 0.62f)
+            hillPath.close()
+            hillPath.moveTo(w * 0.75f - mScroll1, h * 0.5f)
+            hillPath.lineTo(w * 0.70f - mScroll1, h * 0.58f)
+            hillPath.lineTo(w * 0.80f - mScroll1, h * 0.58f)
+            hillPath.close()
+            hillPath.moveTo(w * 1.25f - mScroll1, h * 0.55f)
+            hillPath.lineTo(w * 1.21f - mScroll1, h * 0.62f)
+            hillPath.lineTo(w * 1.29f - mScroll1, h * 0.62f)
+            hillPath.close()
+            hillPath.moveTo(w * 1.75f - mScroll1, h * 0.5f)
+            hillPath.lineTo(w * 1.70f - mScroll1, h * 0.58f)
+            hillPath.lineTo(w * 1.80f - mScroll1, h * 0.58f)
+            hillPath.close()
+            canvas.drawPath(hillPath, paint)
         } else {
             val hillColor1 = when (currentTheme) {
                 FlappyTheme.NIGHT -> Color.parseColor("#101525")
@@ -358,33 +405,33 @@ class FlappyHeroView @JvmOverloads constructor(
 
             // Draw Layer 1 Hills (Far, Slower Scroll)
             paint.color = hillColor1
-            val path1 = Path()
+            hillPath.reset()
             val scroll1 = (bgScrollX * 0.3f) % w
-            path1.moveTo(0f, h)
-            path1.lineTo(0f, h * 0.8f)
-            path1.quadTo(w * 0.25f - scroll1, h * 0.72f, w * 0.5f - scroll1, h * 0.8f)
-            path1.quadTo(w * 0.75f - scroll1, h * 0.68f, w - scroll1, h * 0.8f)
-            path1.quadTo(w * 1.25f - scroll1, h * 0.72f, w * 1.5f - scroll1, h * 0.8f)
-            path1.quadTo(w * 1.75f - scroll1, h * 0.68f, w * 2f - scroll1, h * 0.8f)
-            path1.lineTo(w, h)
-            path1.close()
-            canvas.drawPath(path1, paint)
+            hillPath.moveTo(0f, h)
+            hillPath.lineTo(0f, h * 0.8f)
+            hillPath.quadTo(w * 0.25f - scroll1, h * 0.72f, w * 0.5f - scroll1, h * 0.8f)
+            hillPath.quadTo(w * 0.75f - scroll1, h * 0.68f, w - scroll1, h * 0.8f)
+            hillPath.quadTo(w * 1.25f - scroll1, h * 0.72f, w * 1.5f - scroll1, h * 0.8f)
+            hillPath.quadTo(w * 1.75f - scroll1, h * 0.68f, w * 2f - scroll1, h * 0.8f)
+            hillPath.lineTo(w, h)
+            hillPath.close()
+            canvas.drawPath(hillPath, paint)
 
             // Draw Layer 2 Hills (Near, Faster Scroll)
             paint.color = hillColor2
-            val path2 = Path()
+            hillPath.reset()
             val scroll2 = (bgScrollX * 0.6f) % w
-            path2.moveTo(0f, h)
-            path2.lineTo(0f, h * 0.85f)
-            path2.quadTo(w * 0.15f - scroll2, h * 0.8f, w * 0.3f - scroll2, h * 0.85f)
-            path2.quadTo(w * 0.55f - scroll2, h * 0.77f, w * 0.8f - scroll2, h * 0.85f)
-            path2.quadTo(w * 0.95f - scroll2, h * 0.82f, w - scroll2, h * 0.85f)
-            path2.quadTo(w * 1.15f - scroll2, h * 0.8f, w * 1.3f - scroll2, h * 0.85f)
-            path2.quadTo(w * 1.55f - scroll2, h * 0.77f, w * 1.8f - scroll2, h * 0.85f)
-            path2.quadTo(w * 1.95f - scroll2, h * 0.82f, w * 2f - scroll2, h * 0.85f)
-            path2.lineTo(w, h)
-            path2.close()
-            canvas.drawPath(path2, paint)
+            hillPath.moveTo(0f, h)
+            hillPath.lineTo(0f, h * 0.85f)
+            hillPath.quadTo(w * 0.15f - scroll2, h * 0.8f, w * 0.3f - scroll2, h * 0.85f)
+            hillPath.quadTo(w * 0.55f - scroll2, h * 0.77f, w * 0.8f - scroll2, h * 0.85f)
+            hillPath.quadTo(w * 0.95f - scroll2, h * 0.82f, w - scroll2, h * 0.85f)
+            hillPath.quadTo(w * 1.15f - scroll2, h * 0.8f, w * 1.3f - scroll2, h * 0.85f)
+            hillPath.quadTo(w * 1.55f - scroll2, h * 0.77f, w * 1.8f - scroll2, h * 0.85f)
+            hillPath.quadTo(w * 1.95f - scroll2, h * 0.82f, w * 2f - scroll2, h * 0.85f)
+            hillPath.lineTo(w, h)
+            hillPath.close()
+            canvas.drawPath(hillPath, paint)
         }
 
         // Draw Clouds (not in Night/Winter)
@@ -962,7 +1009,6 @@ class FlappyHeroView @JvmOverloads constructor(
 
         if (!gamePaused && !gameOver) {
             celebrationManager.update()
-            invalidate()
         }
     }
 

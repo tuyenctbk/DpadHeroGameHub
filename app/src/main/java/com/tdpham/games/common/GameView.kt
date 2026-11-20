@@ -11,7 +11,9 @@ interface GameView {
     fun resetGame()
     fun toggleSound(): Boolean
     fun showOptionsDialog(context: Context, onComplete: () -> Unit): Boolean = false
-    /** True when this game implements [reviveGame] (enables the "watch ad to continue" prompt). */
+    /** Static capability: true when this game supports rewarded revive (used to preload rewarded ads). */
+    val supportsRevive: Boolean get() = canRevive
+    /** Dynamic eligibility at game-over time: true when the current state can be revived (never true on win). */
     val canRevive: Boolean get() = false
     fun reviveGame(): Boolean = false
 }

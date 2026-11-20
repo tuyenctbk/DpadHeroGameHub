@@ -849,4 +849,86 @@
     <string name="revive_message">Regardez une courte vidéo pour reprendre où vous vous étiez arrêté.</string>
     <string name="revive_watch_ad">Voir la pub</string>
     <string name="revive_no_thanks">Non merci</string>
+
+    <string name="frenzy_tang">CHIRURGIEN BLEU</string>
+    <string name="frenzy_barracuda">BARRACUDA</string>
+    <string name="frenzy_shark">REQUIN</string>
+    <string name="exit_app_title">Quitter le Hub</string>
+    <string name="exit_app_confirm">Voulez-vous vraiment quitter l\'application ?</string>
+    <string name="btn_exit_app">Quitter</string>
+    <string name="btn_cancel">Annuler</string>
+
+    <!-- Genres, Spotlight & Common UI -->
+    <string name="genre_arcade">ARCADE</string>
+    <string name="genre_puzzle">PUZZLE</string>
+    <string name="genre_strategy">STRATÉGIE</string>
+    <string name="genre_adventure">AVENTURE</string>
+    <string name="genre_action">ACTION</string>
+    <string name="genre_runner">COURSE</string>
+    <string name="genre_brain">RÉFLEXION</string>
+    <string name="genre_cards">CARTES</string>
+    <string name="genre_racing">PILOTAGE</string>
+    <string name="genre_logic">LOGIQUE</string>
+    <string name="genre_classic">CLASSIQUE</string>
+    <string name="genre_word">MOTS</string>
+    <string name="genre_shooter">TIR</string>
+    <string name="genre_platform">PLATEFORME</string>
+    <string name="genre_memory">MÉMOIRE</string>
+    <string name="genre_board">PLATEAU</string>
+    <string name="spotlight_new_challenge">★ NOUVEAU DÉFI</string>
+    <string name="spotlight_play_to_set_record">★ JOUEZ POUR ÉTABLIR UN RECORD</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">HÉROS ACTIF</string>
+    <string name="sensitivity_standard">1.0x (Standard)</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33 JEUX TV CLASSIQUES</string>
+    <string name="default_arcade_game">JEU D\'ARCADE</string>
+    <string name="fallback_ad_body">Profitez de jeux d\'arcade classiques sans fin avec commandes D-Pad TV !</string>
+    <string name="fallback_ad_cta">Jouer</string>
+
+    <!-- Retro Driver Synthwave HUD -->
+    <string name="retro_hud_default_circuit">Circuit</string>
+    <string name="retro_hud_lap">TOUR</string>
+    <string name="retro_hud_time">TEMPS</string>
+    <string name="retro_hud_best">RECORD</string>
+    <string name="retro_hud_coins">PIÈCES</string>
+    <string name="retro_hud_mph">MPH</string>
+    <string name="retro_hud_pos">POS</string>
+    <string name="retro_hud_slipstream">&gt;&gt; ASPIRATION ACTIVE &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">BOOST NITRO !</string>
+
+    <!-- Shared & New Game HUDs -->
+    <string name="hud_score_format">SCORE : %1$d</string>
+    <string name="hud_best_format">RECORD : %1$d</string>
+    <string name="hud_streak_format">SÉRIE : %1$d</string>
+    <string name="blackjack_chips_format">JETONS : $%1$d</string>
+    <string name="blackjack_streak_format">SÉRIE : %1$d VICTOIRES</string>
+    <string name="blackjack_table_title">BLACKJACK 21 LAS VEGAS</string>
+    <string name="blackjack_table_rules">LE BLACKJACK PAIE 3 POUR 2 • LE CROUPIER RESTE À 17</string>
+    <string name="blackjack_best_format">RECORD : $%1$d</string>
+    <string name="blackjack_shoe_format">SABOT : %1$d CARTES</string>
+    <string name="blackjack_dealer">CROUPIER</string>
+    <string name="blackjack_dealer_total">CROUPIER : %1$d</string>
+    <string name="blackjack_next_round">MANCHE SUIVANTE [ENTER]</string>
+    <string name="connect_four_vs_easy">VS IA (FACILE)</string>
+    <string name="connect_four_vs_normal">VS IA (NORMAL)</string>
+    <string name="connect_four_vs_master">VS IA (MAÎTRE)</string>
+    <string name="connect_four_2p">DUEL 2 JOUEURS</string>
+    <string name="connect_four_your_turn">VOTRE TOUR (JAUNE)</string>
+    <string name="connect_four_p1_turn">TOUR JOUEUR 1</string>
+    <string name="connect_four_cpu_thinking">IA EN RÉFLEXION...</string>
+    <string name="connect_four_p2_turn">TOUR JOUEUR 2</string>
+    <string name="connect_four_victory">VICTOIRE !</string>
+    <string name="connect_four_defeat">DÉFAITE</string>
+    <string name="connect_four_p2_wins">JOUEUR 2 GAGNE !</string>
+    <string name="connect_four_draw">MATCH NUL</string>
+    <string name="connect_four_win_moves">4 alignés en %1$d coups !</string>
+    <string name="connect_four_draw_desc">Grille complète ! Plus aucune case libre.</string>
+    <string name="connect_four_cpu_win_desc">L\'IA a aligné 4 jetons en premier ! Réessayez.</string>
+    <string name="connect_four_victory_points">+%1$d POINTS DE VICTOIRE</string>
+    <string name="press_enter_to_play">APPUYEZ SUR [ENTER] POUR JOUER</string>
+    <string name="trivia_arena_default">ARÈNE QUIZ</string>
+    <string name="fruit_best_score_format">RECORD : %1$d  SCORE : %2$d</string>
 </resources>

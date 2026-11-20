@@ -69,6 +69,7 @@ class RetroDriverView @JvmOverloads constructor(
 
     private val drawPath = Path()
     private val drawRectF = RectF()
+    private val clipBoundsRect = Rect()
     private val tempPoint3D = Point3D(0f, 0f, 0f)
 
     // Pre-allocated colors for optimal onDraw allocation-free rendering
@@ -88,7 +89,57 @@ class RetroDriverView @JvmOverloads constructor(
     private val colorSign = Color.parseColor("#FFD54F")
     private val colorCoinGold = Color.parseColor("#FFD700")
     private val colorCoinEdge = Color.parseColor("#FFA000")
+    private val colorNeonCyan = Color.parseColor("#00E5FF")
+    private val colorNeonMagenta = Color.parseColor("#D500F9")
+    private val colorNeonGreen = Color.parseColor("#39FF14")
+    private val colorNeonGold = Color.parseColor("#FFD54F")
+    private val colorHudBg = Color.parseColor("#AA000000")
+    private val colorHudBarBg = Color.parseColor("#44FFFFFF")
+    private val colorNitroBarBg = Color.parseColor("#22FFFFFF")
+    private val colorOverlayBg = Color.parseColor("#D9000000")
+    private val colorDarkTire = Color.parseColor("#151515")
+    private val colorDarkJacket = Color.parseColor("#37474F")
+    private val colorDarkHelmet = Color.parseColor("#212121")
+    private val colorSilver = Color.parseColor("#E0E0E0")
+    private val colorBronze = Color.parseColor("#CD7F32")
+    private val colorShadowDark = Color.argb(180, 0, 0, 0)
     private var coinsCollectedSession = 0
+
+    // Pre-allocated HUD & Competitor helpers to avoid per-frame GC churn
+    private val hudStringBuilder = StringBuilder(96)
+    private var cachedLeftHeaderText: String = ""
+    private var cachedLeftHeaderKey: Long = Long.MIN_VALUE
+    private var cachedRightHeaderText: String = ""
+    private var cachedRightHeaderBestMs: Long = Long.MIN_VALUE
+    private var cachedRightHeaderCoins: Int = -1
+    private var cachedSpeedText: String = ""
+    private var cachedSpeedMph: Int = -1
+    private var cachedRankText: String = ""
+    private var cachedRankValue: Int = -1
+
+    // Cached localized HUD labels (loaded once to avoid per-frame resource lookups)
+    private val labelDefaultCircuit: String by lazy { context.getString(R.string.retro_hud_default_circuit) }
+    private val labelLap: String by lazy { context.getString(R.string.retro_hud_lap) }
+    private val labelTime: String by lazy { context.getString(R.string.retro_hud_time) }
+    private val labelBest: String by lazy { context.getString(R.string.retro_hud_best) }
+    private val labelCoins: String by lazy { context.getString(R.string.retro_hud_coins) }
+    private val labelMph: String by lazy { context.getString(R.string.retro_hud_mph) }
+    private val labelPos: String by lazy { context.getString(R.string.retro_hud_pos) }
+    private val labelSlipstream: String by lazy { context.getString(R.string.retro_hud_slipstream) }
+    private val labelNitroBoost: String by lazy { context.getString(R.string.retro_hud_nitro_boost) }
+
+    private val visibleCarIndices = ArrayList<Int>(24)
+    private val visibleCarRelZ = FloatArray(24)
+    private val rankLabels = arrayOf(
+        "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th",
+        "11th", "12th", "13th", "14th", "15th", "16th", "17th", "18th", "19th", "20th", "21st"
+    )
+    private val cachedVehicleColors = intArrayOf(
+        Color.parseColor("#FF1744"),
+        Color.parseColor("#FFEA00"),
+        Color.parseColor("#00E5FF"),
+        Color.parseColor("#39FF14")
+    )
 
     // Core Racing Physics
     private var score = 0
@@ -107,6 +158,8 @@ class RetroDriverView @JvmOverloads constructor(
     private var keyDownPressed = false
     private var keyLeftPressed = false
     private var keyRightPressed = false
+    private var analogGasActive = false
+    private var analogBrakeActive = false
     private var analogStickX = 0f
     private var analogStickY = 0f
 
@@ -187,7 +240,15 @@ class RetroDriverView @JvmOverloads constructor(
     private var lastFrameTimeNanos = 0L
     private val frameCallback = object : Choreographer.FrameCallback {
         override fun doFrame(frameTimeNanos: Long) {
-            if (!isRunning) return
+            if (!isRunning || windowVisibility != View.VISIBLE || !isAttachedToWindow) {
+                isRunning = false
+                return
+            }
+
+            if (gamePaused && !gameOver && !gameWon) {
+                isRunning = false
+                return
+            }
 
             if (lastFrameTimeNanos == 0L) {
                 lastFrameTimeNanos = frameTimeNanos
@@ -195,16 +256,40 @@ class RetroDriverView @JvmOverloads constructor(
             val deltaSec = ((frameTimeNanos - lastFrameTimeNanos) / 1_000_000_000f).coerceIn(0.005f, 0.04f)
             lastFrameTimeNanos = frameTimeNanos
 
-            if (!gamePaused && !gameOver) {
+            if (!gamePaused && !gameOver && !gameWon) {
                 updatePhysics(deltaSec)
             } else if (gameOver || gameWon) {
-                celebrationManager.update()
+                if (celebrationManager.isActive()) {
+                    celebrationManager.update()
+                } else {
+                    isRunning = false
+                    invalidate()
+                    return
+                }
             }
 
             animationTick++
             invalidate()
-            Choreographer.getInstance().postFrameCallback(this)
+            if (isRunning) {
+                Choreographer.getInstance().postFrameCallback(this)
+            }
         }
+    }
+
+    private fun startFrameLoop() {
+        if (!isAttachedToWindow || windowVisibility != View.VISIBLE) return
+        if (gamePaused && !gameOver && !gameWon) return
+        if (!isRunning) {
+            isRunning = true
+            lastFrameTimeNanos = 0L
+            Choreographer.getInstance().removeFrameCallback(frameCallback)
+            Choreographer.getInstance().postFrameCallback(frameCallback)
+        }
+    }
+
+    private fun stopFrameLoop() {
+        isRunning = false
+        Choreographer.getInstance().removeFrameCallback(frameCallback)
     }
 
     // Data Structures
@@ -238,21 +323,29 @@ class RetroDriverView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
+        textPaint.typeface = Typeface.DEFAULT_BOLD
         RetroDriverMapCatalog.validateAllMaps()
         buildRoad()
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        isRunning = true
-        lastFrameTimeNanos = 0L
-        Choreographer.getInstance().postFrameCallback(frameCallback)
+        startFrameLoop()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (visibility == View.VISIBLE) {
+            startFrameLoop()
+        } else {
+            stopFrameLoop()
+            resetKeyStates()
+        }
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        isRunning = false
-        Choreographer.getInstance().removeFrameCallback(frameCallback)
+        stopFrameLoop()
         celebrationManager.clear()
     }
 
@@ -366,17 +459,22 @@ class RetroDriverView @JvmOverloads constructor(
         requestFocus()
         gamePaused = false
         lastFrameTimeNanos = 0L
+        startFrameLoop()
         invalidate()
     }
 
     override fun pause() {
         gamePaused = true
+        stopFrameLoop()
         resetKeyStates()
+        invalidate()
     }
 
     override fun resume() {
         gamePaused = false
         lastFrameTimeNanos = 0L
+        startFrameLoop()
+        invalidate()
     }
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
@@ -456,6 +554,8 @@ class RetroDriverView @JvmOverloads constructor(
         keyDownPressed = false
         keyLeftPressed = false
         keyRightPressed = false
+        analogGasActive = false
+        analogBrakeActive = false
         analogStickX = 0f
         analogStickY = 0f
     }
@@ -877,120 +977,132 @@ class RetroDriverView @JvmOverloads constructor(
 
     // --- RENDERING PIPELINE (SYNTHWAVE 3D CANVAS) ---
     override fun onDraw(canvas: Canvas) {
-        if (!isInitialized) return
+        if (!isInitialized || !isCanvasRenderable(canvas, width, height) || segments.isEmpty()) return
 
-        val needsInvalidate = screenShake.apply(canvas)
-        val width = width
-        val height = height
-        val cameraDepth = 1f / (cameraHeight / segmentLength)
+        val saveCount = canvas.save()
+        try {
+            screenShake.apply(canvas)
+            val width = width
+            val height = height
+            val cameraDepth = 1f / (cameraHeight / segmentLength)
 
-        // 1. Synthwave Horizon & Layered Parallax Background
-        drawSynthwaveParallaxHorizon(canvas, width, height)
+            paint.shader = null
+            paint.style = Paint.Style.FILL
+            paint.alpha = 255
 
-        // 2. Project Visible Segments with Dynamic Cumulative Curves & Topography
-        val startSegIndex = (position / segmentLength).toInt()
-        val baseSeg = segments[startSegIndex % segments.size]
-        val segmentPercent = (position % segmentLength) / segmentLength
-        val cameraX = playerX * roadWidth
+            // 1. Synthwave Horizon & Layered Parallax Background
+            drawSynthwaveParallaxHorizon(canvas, width, height)
 
-        var dx = -(baseSeg.curve * segmentPercent)
-        var dy = -(baseSeg.hill * segmentPercent)
-        var accumulatedX = 0f
-        var accumulatedY = 0f
+            // 2. Project Visible Segments with Dynamic Cumulative Curves & Topography
+            val startSegIndex = (position / segmentLength).toInt()
+            val baseSeg = segments[startSegIndex % segments.size]
+            val segmentPercent = (position % segmentLength) / segmentLength
+            val cameraX = playerX * roadWidth
 
-        for (n in 0 until drawDistance) {
-            val seg = segments[(startSegIndex + n) % segments.size]
-            val zDiff = (n * segmentLength - (position % segmentLength)).coerceAtLeast(1f)
-            val scale = cameraDepth / zDiff
+            var dx = -(baseSeg.curve * segmentPercent)
+            var dy = -(baseSeg.hill * segmentPercent)
+            var accumulatedX = 0f
+            var accumulatedY = 0f
 
-            accumulatedX += dx
-            accumulatedY += dy
-            dx += seg.curve * 1.8f
-            dy += seg.hill * 0.8f
+            for (n in 0 until drawDistance) {
+                val seg = segments[(startSegIndex + n) % segments.size]
+                val zDiff = (n * segmentLength - (position % segmentLength)).coerceAtLeast(1f)
+                val scale = cameraDepth / zDiff
 
-            seg.scale = scale
-            seg.screenX = (width / 2f) + (accumulatedX - cameraX) * scale * (width / 2f)
-            seg.screenY = (height / 2f) - (cameraHeight + accumulatedY) * scale * (height / 2f)
-            seg.screenW = scale * roadWidth * (width / 2f)
-        }
+                accumulatedX += dx
+                accumulatedY += dy
+                dx += seg.curve * 1.8f
+                dy += seg.hill * 0.8f
 
-        // 3. Draw Road Segments (Farthest to Closest)
-        for (n in drawDistance - 1 downTo 1) {
-            val seg1 = segments[(startSegIndex + n - 1) % segments.size]
-            val seg2 = segments[(startSegIndex + n) % segments.size]
-            if (seg2.screenY >= seg1.screenY) continue
-
-            drawSegment(canvas, width, seg1.screenX, seg1.screenY, seg1.screenW, seg2.screenX, seg2.screenY, seg2.screenW, seg2.color)
-
-            // Dashed Centerline
-            if (seg2.index % 2 == 0) {
-                paint.color = Color.WHITE
-                paint.style = Paint.Style.FILL
-                val stripePath = Path()
-                val w1 = seg1.screenW * 0.04f
-                val w2 = seg2.screenW * 0.04f
-                stripePath.moveTo(seg1.screenX - w1 / 2, seg1.screenY)
-                stripePath.lineTo(seg2.screenX - w2 / 2, seg2.screenY)
-                stripePath.lineTo(seg2.screenX + w2 / 2, seg2.screenY)
-                stripePath.lineTo(seg1.screenX + w1 / 2, seg1.screenY)
-                stripePath.close()
-                canvas.drawPath(stripePath, paint)
+                seg.scale = scale
+                seg.screenX = (width / 2f) + (accumulatedX - cameraX) * scale * (width / 2f)
+                seg.screenY = (height / 2f) - (cameraHeight + accumulatedY) * scale * (height / 2f)
+                seg.screenW = scale * roadWidth * (width / 2f)
             }
 
-            // Roadside Assets
-            if (seg2.decorationType > 0) {
-                val decX = seg2.screenX + seg2.decorationSide * seg2.screenW
-                val decSize = seg2.screenW * 0.75f
-                drawDecoration(canvas, decX, seg2.screenY, decSize, seg2.decorationType)
+            // 3. Draw Road Segments (Farthest to Closest)
+            for (n in drawDistance - 1 downTo 1) {
+                val seg1 = segments[(startSegIndex + n - 1) % segments.size]
+                val seg2 = segments[(startSegIndex + n) % segments.size]
+                if (seg2.screenY >= seg1.screenY) continue
+
+                drawSegment(canvas, width, seg1.screenX, seg1.screenY, seg1.screenW, seg2.screenX, seg2.screenY, seg2.screenW, seg2.color)
+
+                // Dashed Centerline (reuses pre-allocated drawPath)
+                if (seg2.index % 2 == 0) {
+                    paint.color = Color.WHITE
+                    paint.style = Paint.Style.FILL
+                    drawPath.reset()
+                    val w1 = seg1.screenW * 0.04f
+                    val w2 = seg2.screenW * 0.04f
+                    drawPath.moveTo(seg1.screenX - w1 / 2, seg1.screenY)
+                    drawPath.lineTo(seg2.screenX - w2 / 2, seg2.screenY)
+                    drawPath.lineTo(seg2.screenX + w2 / 2, seg2.screenY)
+                    drawPath.lineTo(seg1.screenX + w1 / 2, seg1.screenY)
+                    drawPath.close()
+                    canvas.drawPath(drawPath, paint)
+                }
+
+                // Roadside Assets
+                if (seg2.decorationType > 0) {
+                    val decX = seg2.screenX + seg2.decorationSide * seg2.screenW
+                    val decSize = seg2.screenW * 0.75f
+                    drawDecoration(canvas, decX, seg2.screenY, decSize, seg2.decorationType)
+                }
             }
+
+            // 4. Draw Skid Marks
+            paint.style = Paint.Style.FILL
+            for (skid in skidMarks) {
+                paint.color = Color.BLACK
+                paint.alpha = skid.alpha
+                canvas.drawRect(skid.x - skid.w / 2, skid.y - 4f, skid.x + skid.w / 2, skid.y + 4f, paint)
+            }
+            paint.alpha = 255
+
+            // 5. Draw Boost Pads, Oil Slicks, Barriers & Gold Coins
+            drawTrackObjects(canvas, width, height)
+
+            // 6. Draw Traffic & Competitor Vehicles
+            drawCompetitorVehicles(canvas, width, height)
+
+            // 7. Draw Headlight Projection Beam (On Cyber Night or Dark themes)
+            if (selectedThemeIndex == 2 || selectedThemeIndex == 0) {
+                drawHeadlightBeam(canvas, width, height)
+            }
+
+            // 8. Draw Player Motorcycle & Leaning Rider
+            drawPlayerMotorcycle(canvas, width, height)
+
+            // 9. High-Speed Radial Motion Speed Lines
+            if (speed > 125f || (now() < turboUntil)) {
+                drawSpeedLines(canvas, width, height)
+            }
+
+            // 10. Draw Floating Notifications & Popups (zero-blur crisp shadow)
+            textPaint.textAlign = Paint.Align.CENTER
+            textPaint.textSize = 38f
+            for (pop in floatingPopups) {
+                val popText = pop.text
+                if (popText.isNotEmpty() && pop.x.isFinite() && pop.y.isFinite()) {
+                    textPaint.color = Color.BLACK
+                    textPaint.alpha = (pop.alpha * 0.65f).toInt().coerceIn(0, 255)
+                    safeDrawText(canvas, popText, pop.x + 2f, pop.y + 2f, textPaint)
+                    textPaint.color = pop.color
+                    textPaint.alpha = pop.alpha.coerceIn(0, 255)
+                    safeDrawText(canvas, popText, pop.x, pop.y, textPaint)
+                }
+            }
+            textPaint.alpha = 255
+
+            // 11. Synthwave HUD (Speedometer, Tachometer, Radar, Lap Stopwatch)
+            drawSynthwaveHUD(canvas, width, height)
+
+            // 12. State Overlays
+            drawStateOverlays(canvas, width, height)
+        } finally {
+            canvas.restoreToCount(saveCount)
         }
-
-        // 4. Draw Skid Marks
-        for (skid in skidMarks) {
-            paint.color = Color.BLACK
-            paint.alpha = skid.alpha
-            canvas.drawRect(skid.x - skid.w / 2, skid.y - 4f, skid.x + skid.w / 2, skid.y + 4f, paint)
-        }
-
-        // 5. Draw Boost Pads, Oil Slicks, Barriers & Gold Coins
-        drawTrackObjects(canvas, width, height)
-
-        // 6. Draw Traffic & Competitor Vehicles
-        drawCompetitorVehicles(canvas, width, height)
-
-        // 7. Draw Headlight Projection Beam (On Cyber Night or Dark themes)
-        if (selectedThemeIndex == 2 || selectedThemeIndex == 0) {
-            drawHeadlightBeam(canvas, width, height)
-        }
-
-        // 8. Draw Player Motorcycle & Leaning Rider
-        drawPlayerMotorcycle(canvas, width, height)
-
-        // 9. High-Speed Radial Motion Speed Lines
-        if (speed > 125f || (now() < turboUntil)) {
-            drawSpeedLines(canvas, width, height)
-        }
-
-        // 10. Draw Floating Notifications & Popups
-        for (pop in floatingPopups) {
-            paint.reset()
-            paint.isAntiAlias = true
-            paint.textAlign = Paint.Align.CENTER
-            paint.typeface = Typeface.DEFAULT_BOLD
-            paint.textSize = 38f
-            paint.color = pop.color
-            paint.alpha = pop.alpha
-            paint.setShadowLayer(14f, 0f, 0f, pop.color)
-            canvas.drawText(pop.text, pop.x, pop.y, paint)
-        }
-
-        // 11. Synthwave HUD (Speedometer, Tachometer, Radar, Lap Stopwatch)
-        drawSynthwaveHUD(canvas, width, height)
-
-        // 12. State Overlays
-        drawStateOverlays(canvas, width, height)
-
-        if (needsInvalidate) invalidate()
     }
 
     private fun now(): Long = System.currentTimeMillis()
@@ -1196,8 +1308,8 @@ class RetroDriverView @JvmOverloads constructor(
 
     private fun drawDecoration(canvas: Canvas, x: Float, y: Float, size: Float, type: Int) {
         if (size <= 0) return
-        paint.reset()
-        paint.isAntiAlias = true
+        paint.style = Paint.Style.FILL
+        paint.alpha = 255
         when (type) {
             1 -> { // Palm Tree
                 paint.color = colorTrunk
@@ -1328,11 +1440,19 @@ class RetroDriverView @JvmOverloads constructor(
                     val coinRadius = seg.screenW * 0.11f
 
                     val spinScale = abs(cos((animationTick + coin.z) * 0.08f))
+                    // Lightweight outer glow ring (zero Skia blur)
                     paint.color = colorCoinGold
-                    paint.setShadowLayer(8f, 0f, 0f, colorCoinGold)
+                    paint.alpha = 70
+                    drawRectF.set(
+                        coinX - coinRadius * spinScale * 1.25f,
+                        coinY - coinRadius * 2.15f,
+                        coinX + coinRadius * spinScale * 1.25f,
+                        coinY + coinRadius * 0.15f
+                    )
+                    canvas.drawOval(drawRectF, paint)
+                    paint.alpha = 255
                     drawRectF.set(coinX - coinRadius * spinScale, coinY - coinRadius * 2, coinX + coinRadius * spinScale, coinY)
                     canvas.drawOval(drawRectF, paint)
-                    paint.clearShadowLayer()
                 }
             }
         }
@@ -1342,38 +1462,37 @@ class RetroDriverView @JvmOverloads constructor(
         val roadLength = segments.size * segmentLength
         val startSegIndex = (position / segmentLength).toInt()
 
-        // Sort visible competitor vehicles by distance from farthest to closest
-        val visibleCars = mutableListOf<Pair<TrafficCar, Float>>()
-        for (car in traffic) {
-            var carZ = car.z
+        visibleCarIndices.clear()
+        val trafficCount = traffic.size
+        for (i in 0 until trafficCount) {
+            var carZ = traffic[i].z
             while (carZ < position) carZ += roadLength
             val relZ = carZ - position
             if (relZ > 1f && relZ < (drawDistance - 1) * segmentLength) {
-                visibleCars.add(car to relZ)
+                if (i < visibleCarRelZ.size) {
+                    visibleCarRelZ[i] = relZ
+                    visibleCarIndices.add(i)
+                }
             }
         }
-        visibleCars.sortByDescending { it.second }
-
-        val participants = mutableListOf<Pair<Int, Float>>()
-        participants.add(-1 to position)
-        for (i in 0 until traffic.size) {
-            participants.add(i to traffic[i].z)
-        }
-        participants.sortByDescending { it.second }
-
-        val rankMap = HashMap<Int, String>()
-        for (rankIndex in 0 until participants.size) {
-            val rankNum = rankIndex + 1
-            val suffix = when (rankNum) {
-                1 -> "st"
-                2 -> "nd"
-                3 -> "rd"
-                else -> "th"
+        // Insertion sort visible cars by relZ descending (farthest first, zero allocation)
+        for (i in 1 until visibleCarIndices.size) {
+            val keyIdx = visibleCarIndices[i]
+            val keyZ = visibleCarRelZ[keyIdx]
+            var j = i - 1
+            while (j >= 0 && visibleCarRelZ[visibleCarIndices[j]] < keyZ) {
+                visibleCarIndices[j + 1] = visibleCarIndices[j]
+                j--
             }
-            rankMap[participants[rankIndex].first] = "$rankNum$suffix"
+            visibleCarIndices[j + 1] = keyIdx
         }
 
-        for ((car, relZ) in visibleCars) {
+        textPaint.textAlign = Paint.Align.CENTER
+        textPaint.color = Color.YELLOW
+        for (idxPos in 0 until visibleCarIndices.size) {
+            val carIndex = visibleCarIndices[idxPos]
+            val car = traffic[carIndex]
+            val relZ = visibleCarRelZ[carIndex]
             val segN = (relZ / segmentLength).toInt().coerceIn(0, drawDistance - 2)
             val seg = segments[(startSegIndex + segN) % segments.size]
             val carX = seg.screenX + car.offset * seg.screenW
@@ -1387,15 +1506,14 @@ class RetroDriverView @JvmOverloads constructor(
                 drawDetailedTrafficCar(canvas, carX, carY, carW, carH, car.color)
             }
 
-            // Rank Badge above car
-            val rankStr = rankMap[traffic.indexOf(car)] ?: ""
-            paint.reset()
-            paint.isAntiAlias = true
-            paint.color = Color.YELLOW
-            paint.textSize = (seg.screenW * 0.08f).coerceIn(12f, 24f)
-            paint.textAlign = Paint.Align.CENTER
-            paint.typeface = Typeface.DEFAULT_BOLD
-            canvas.drawText(rankStr, carX, carY - carH * 0.7f - 6f, paint)
+            // Compute car rank without allocating maps/pairs
+            var ahead = if (position > car.z) 1 else 0
+            for (k in 0 until trafficCount) {
+                if (k != carIndex && traffic[k].z > car.z) ahead++
+            }
+            val rankStr = rankLabels[ahead.coerceIn(0, rankLabels.lastIndex)]
+            textPaint.textSize = (seg.screenW * 0.08f).coerceIn(12f, 24f)
+            safeDrawText(canvas, rankStr, carX, carY - carH * 0.7f - 6f, textPaint)
         }
     }
 
@@ -1502,17 +1620,20 @@ class RetroDriverView @JvmOverloads constructor(
             paint.style = Paint.Style.FILL
         }
 
+        val specColor = cachedVehicleColors[selectedCarIndex.coerceIn(0, cachedVehicleColors.lastIndex)]
         canvas.withSave {
             // Roll / Lean tilt
             canvas.rotate(steerAngle, carX, carY + carH / 2)
 
             // Rear Tire with spinning rim spokes
-            paint.color = Color.parseColor("#151515")
+            paint.color = colorDarkTire
+            paint.alpha = 255
+            paint.style = Paint.Style.FILL
             drawRectF.set(carX - carW * 0.12f, carY + carH * 0.35f, carX + carW * 0.12f, carY + carH * 0.98f)
             canvas.drawRoundRect(drawRectF, 8f, 8f, paint)
 
             // Neon Wheel Rim Glow
-            paint.color = Color.parseColor(spec.colorHex)
+            paint.color = specColor
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = 2.5f
             canvas.drawRoundRect(drawRectF, 8f, 8f, paint)
@@ -1521,18 +1642,18 @@ class RetroDriverView @JvmOverloads constructor(
             // License Tag
             paint.color = Color.YELLOW
             canvas.drawRect(carX - 18f, carY + carH * 0.32f, carX + 18f, carY + carH * 0.44f, paint)
-            paint.color = Color.BLACK
-            paint.textSize = 9f
-            paint.textAlign = Paint.Align.CENTER
-            canvas.drawText("MOTO", carX, carY + carH * 0.41f, paint)
+            textPaint.color = Color.BLACK
+            textPaint.textSize = 9f
+            textPaint.textAlign = Paint.Align.CENTER
+            safeDrawText(canvas, "MOTO", carX, carY + carH * 0.41f, textPaint)
 
             // Fairing Chassis Body
-            paint.color = Color.parseColor(spec.colorHex)
+            paint.color = specColor
             drawRectF.set(carX - carW * 0.28f, carY + carH * 0.15f, carX + carW * 0.28f, carY + carH * 0.65f)
             canvas.drawRoundRect(drawRectF, 12f, 12f, paint)
 
             // Exhaust Tubes
-            paint.color = Color.parseColor("#757575")
+            paint.color = colorPost
             canvas.drawCircle(carX - carW * 0.22f, carY + carH * 0.72f, 7f, paint)
             canvas.drawCircle(carX + carW * 0.22f, carY + carH * 0.72f, 7f, paint)
 
@@ -1549,25 +1670,27 @@ class RetroDriverView @JvmOverloads constructor(
             }
 
             // Rider Torso (Black Leather Jacket)
-            paint.color = Color.parseColor("#37474F")
+            paint.color = colorDarkJacket
             drawRectF.set(carX - carW * 0.24f, carY - carH * 0.15f, carX + carW * 0.24f, carY + carH * 0.3f)
             canvas.drawRoundRect(drawRectF, 14f, 14f, paint)
 
             // Neon Racing Stripes on Jacket
-            paint.color = Color.parseColor(spec.colorHex)
+            paint.color = specColor
             canvas.drawRect(carX - carW * 0.20f, carY + carH * 0.05f, carX - carW * 0.14f, carY + carH * 0.25f, paint)
             canvas.drawRect(carX + carW * 0.14f, carY + carH * 0.05f, carX + carW * 0.20f, carY + carH * 0.25f, paint)
 
             // Helmet
-            paint.color = Color.parseColor("#212121")
+            paint.color = colorDarkHelmet
             canvas.drawCircle(carX, carY - carH * 0.38f, carW * 0.18f, paint)
 
-            // Glowing Neon Visor
-            paint.color = Color.parseColor("#00E5FF")
-            paint.setShadowLayer(6f, 0f, 0f, Color.parseColor("#00E5FF"))
+            // Glowing Neon Visor (soft halo without Skia blur)
+            paint.color = colorNeonCyan
+            paint.alpha = 80
+            drawRectF.set(carX - carW * 0.15f, carY - carH * 0.47f, carX + carW * 0.15f, carY - carH * 0.31f)
+            canvas.drawRoundRect(drawRectF, 6f, 6f, paint)
+            paint.alpha = 255
             drawRectF.set(carX - carW * 0.12f, carY - carH * 0.44f, carX + carW * 0.12f, carY - carH * 0.34f)
             canvas.drawRoundRect(drawRectF, 4f, 4f, paint)
-            paint.clearShadowLayer()
         }
     }
 
@@ -1591,157 +1714,262 @@ class RetroDriverView @JvmOverloads constructor(
             )
         }
         paint.style = Paint.Style.FILL
+        paint.alpha = 255
     }
 
-    // --- SYNTHWAVE HUD & DASHBOARD ---
-    private fun drawSynthwaveHUD(canvas: Canvas, width: Int, height: Int) {
-        val currentMap = RetroDriverMapCatalog.getMap(selectedMapIndex)
+    private fun appendLapTime(sb: StringBuilder, ms: Long) {
+        val totalCs = (ms / 10L).coerceAtLeast(0L)
+        val minutes = (totalCs / 6000L).toInt()
+        val seconds = ((totalCs / 100L) % 60L).toInt()
+        val cs = (totalCs % 100L).toInt()
+        if (minutes < 10) sb.append('0')
+        sb.append(minutes).append(':')
+        if (seconds < 10) sb.append('0')
+        sb.append(seconds).append('.')
+        if (cs < 10) sb.append('0')
+        sb.append(cs)
+    }
 
-        // Calculate live position rank
+    private fun isCanvasRenderable(canvas: Canvas?, viewWidth: Int, viewHeight: Int): Boolean {
+        if (canvas == null) return false
+        if (!isAttachedToWindow || windowVisibility != View.VISIBLE || visibility != View.VISIBLE) return false
+        if (viewWidth <= 0 || viewHeight <= 0) return false
+        if (canvas.width <= 0 || canvas.height <= 0) return false
+        if (!canvas.getClipBounds(clipBoundsRect) || clipBoundsRect.isEmpty) return false
+        return true
+    }
+
+    private fun safeDrawText(
+        canvas: Canvas?,
+        text: CharSequence?,
+        start: Int,
+        end: Int,
+        x: Float,
+        y: Float,
+        textDrawPaint: Paint?
+    ) {
+        if (canvas == null || text == null || textDrawPaint == null) return
+        val safeStart = start.coerceAtLeast(0)
+        val safeEnd = end.coerceAtMost(text.length)
+        if (safeStart >= safeEnd) return
+        if (!x.isFinite() || !y.isFinite()) return
+        if (!textDrawPaint.textSize.isFinite() || textDrawPaint.textSize <= 0f) return
+        if (canvas.width <= 0 || canvas.height <= 0) return
+        try {
+            canvas.drawText(text, safeStart, safeEnd, x, y, textDrawPaint)
+        } catch (_: IllegalStateException) {
+            // Ignore transient recording canvas invalidation during rapid background transitions
+        }
+    }
+
+    private fun safeDrawText(
+        canvas: Canvas?,
+        text: String?,
+        x: Float,
+        y: Float,
+        textDrawPaint: Paint?
+    ) {
+        if (canvas == null || text.isNullOrBlank() || textDrawPaint == null) return
+        if (!x.isFinite() || !y.isFinite()) return
+        if (!textDrawPaint.textSize.isFinite() || textDrawPaint.textSize <= 0f) return
+        if (canvas.width <= 0 || canvas.height <= 0) return
+        try {
+            canvas.drawText(text, x, y, textDrawPaint)
+        } catch (_: IllegalStateException) {
+            // Ignore transient recording canvas invalidation during rapid background transitions
+        }
+    }
+
+    private fun drawShadowedText(canvas: Canvas?, text: String?, x: Float, y: Float, color: Int) {
+        if (canvas == null || text.isNullOrBlank() || !x.isFinite() || !y.isFinite()) return
+        textPaint.color = colorShadowDark
+        safeDrawText(canvas, text, x + 2f, y + 2f, textPaint)
+        textPaint.color = color
+        safeDrawText(canvas, text, x, y, textPaint)
+    }
+
+    // --- SYNTHWAVE HUD & DASHBOARD (Modular, Cached Strings, Strict Null-Safety & Canvas Validation) ---
+    private fun drawSynthwaveHUD(canvas: Canvas?, width: Int, height: Int) {
+        if (!isCanvasRenderable(canvas, width, height)) return
+        val safeCanvas = canvas ?: return
+
+        val safePosition = if (position.isFinite()) position else 0f
         var passedCount = 0
-        for (car in traffic) {
-            if (position > car.z) {
+        for (i in 0 until traffic.size) {
+            val carZ = traffic[i].z
+            if (carZ.isFinite() && safePosition > carZ) {
                 passedCount++
             }
         }
         val currentRank = (21 - passedCount).coerceIn(1, 20)
 
-        // Top Status Header Bar
-        paint.reset()
-        paint.isAntiAlias = true
-        paint.color = Color.parseColor("#AA000000")
-        canvas.drawRect(0f, 0f, width.toFloat(), height * 0.11f, paint)
-
-        // Left Header: Map Name & Lap Counter & Stopwatch
-        textPaint.reset()
-        textPaint.isAntiAlias = true
-        textPaint.color = Color.WHITE
-        textPaint.typeface = Typeface.DEFAULT_BOLD
-        textPaint.textSize = 26f
-        textPaint.textAlign = Paint.Align.LEFT
-
         val hudY = max(55f, height * 0.065f)
         val leftX = max(45f, width * 0.04f)
         val rightX = min(width - 45f, width * 0.96f)
 
-        val lapSeconds = (currentLapTimeMs / 1000f)
-        val timeStr = String.format(Locale.US, "%02d:%05.2f", (lapSeconds / 60).toInt(), lapSeconds % 60)
-        canvas.drawText("${currentMap.name}  |  LAP $currentLap/$totalLaps  |  TIME: $timeStr", leftX, hudY, textPaint)
+        drawHudTopBar(safeCanvas, width, height, leftX, rightX, hudY)
+        drawHudRadar(safeCanvas, width, height, leftX, safePosition)
+        drawHudSpeedAndNitro(safeCanvas, width, height)
+        drawHudPositionAndDrafting(safeCanvas, width, height, currentRank)
+    }
 
-        // Right Header: Coin Counter & Best Lap
+    private fun drawHudTopBar(canvas: Canvas, width: Int, height: Int, leftX: Float, rightX: Float, hudY: Float) {
+        paint.style = Paint.Style.FILL
+        paint.shader = null
+        paint.color = colorHudBg
+        canvas.drawRect(0f, 0f, width.toFloat(), height * 0.11f, paint)
+
+        textPaint.alpha = 255
+        textPaint.color = Color.WHITE
+        textPaint.textSize = 26f
+        textPaint.textAlign = Paint.Align.LEFT
+
+        val safeTotalLaps = totalLaps.coerceAtLeast(1)
+        val safeCurrentLap = currentLap.coerceIn(1, safeTotalLaps)
+        val safeLapTimeMs = currentLapTimeMs.coerceAtLeast(0L)
+        // Throttle header stopwatch rebuild to 10Hz to minimize nDrawText shaping churn on Android TV
+        val deciseconds = safeLapTimeMs / 100L
+        val leftKey = (selectedMapIndex.toLong() shl 40) xor (safeCurrentLap.toLong() shl 32) xor deciseconds
+        if (leftKey != cachedLeftHeaderKey || cachedLeftHeaderText.isEmpty()) {
+            val currentMap = if (RetroDriverMapCatalog.maps.isNotEmpty()) {
+                RetroDriverMapCatalog.getMap(selectedMapIndex)
+            } else {
+                null
+            }
+            val safeMapName = currentMap?.name?.takeIf { it.isNotBlank() } ?: labelDefaultCircuit
+            hudStringBuilder.setLength(0)
+            hudStringBuilder.append(safeMapName)
+                .append("  |  ").append(labelLap).append(' ').append(safeCurrentLap).append('/').append(safeTotalLaps)
+                .append("  |  ").append(labelTime).append(": ")
+            appendLapTime(hudStringBuilder, deciseconds * 100L)
+            cachedLeftHeaderText = hudStringBuilder.toString()
+            cachedLeftHeaderKey = leftKey
+        }
+        safeDrawText(canvas, cachedLeftHeaderText, leftX, hudY, textPaint)
+
         textPaint.textAlign = Paint.Align.RIGHT
-        val coins = coinsCollectedSession
-        val bestSeconds = (bestLapTimeMs / 1000f)
-        val bestStr = if (bestLapTimeMs > 0) String.format(Locale.US, "%02d:%05.2f", (bestSeconds / 60).toInt(), bestSeconds % 60) else "--:--"
-        canvas.drawText("BEST: $bestStr   ★ COINS: $coins", rightX, hudY, textPaint)
+        val safeBestMs = bestLapTimeMs.coerceAtLeast(0L)
+        val safeCoins = coinsCollectedSession.coerceAtLeast(0)
+        if (safeBestMs != cachedRightHeaderBestMs || safeCoins != cachedRightHeaderCoins || cachedRightHeaderText.isEmpty()) {
+            hudStringBuilder.setLength(0)
+            hudStringBuilder.append(labelBest).append(": ")
+            if (safeBestMs > 0L) {
+                appendLapTime(hudStringBuilder, safeBestMs)
+            } else {
+                hudStringBuilder.append("--:--")
+            }
+            hudStringBuilder.append("   ").append(labelCoins).append(": ").append(safeCoins)
+            cachedRightHeaderText = hudStringBuilder.toString()
+            cachedRightHeaderBestMs = safeBestMs
+            cachedRightHeaderCoins = safeCoins
+        }
+        safeDrawText(canvas, cachedRightHeaderText, rightX, hudY, textPaint)
+    }
 
-        // Live Track Radar / Minimap Bar (Bottom Left)
+    private fun drawHudRadar(canvas: Canvas, width: Int, height: Int, leftX: Float, safePosition: Float) {
         val radarW = width * 0.28f
         val radarH = 14f
         val radarX = leftX
         val radarY = min(height - 50f, height * 0.92f)
-        paint.color = Color.parseColor("#44FFFFFF")
+        paint.color = colorHudBarBg
         drawRectF.set(radarX, radarY, radarX + radarW, radarY + radarH)
         canvas.drawRoundRect(drawRectF, 6f, 6f, paint)
 
-        val trackTotalDistance = trackLengthSegments * segmentLength
-        val playerProg = (position % trackTotalDistance) / trackTotalDistance
-        paint.color = Color.parseColor("#FFD700")
+        val trackTotalDistance = (trackLengthSegments * segmentLength).coerceAtLeast(1f)
+        val playerProg = ((safePosition % trackTotalDistance) / trackTotalDistance).coerceIn(0f, 1f)
+        paint.color = colorCoinGold
         canvas.drawCircle(radarX + radarW * playerProg, radarY + radarH / 2, 7f, paint)
 
-        // Competitor dots on radar
-        for (car in traffic) {
-            val carProg = (car.z % trackTotalDistance) / trackTotalDistance
-            paint.color = Color.parseColor("#FF1744")
-            canvas.drawCircle(radarX + radarW * carProg, radarY + radarH / 2, 4f, paint)
+        paint.color = colorTaillight
+        for (i in 0 until traffic.size) {
+            val carZ = traffic[i].z
+            if (carZ.isFinite()) {
+                val carProg = ((carZ % trackTotalDistance) / trackTotalDistance).coerceIn(0f, 1f)
+                canvas.drawCircle(radarX + radarW * carProg, radarY + radarH / 2, 4f, paint)
+            }
         }
+    }
 
-        // Nitro Booster Charge Bar (Bottom Right)
+    private fun drawHudSpeedAndNitro(canvas: Canvas, width: Int, height: Int) {
         val nitroBarW = width * 0.22f
         val nitroBarH = 12f
         val speedX = min(width - nitroBarW - 45f, width * 0.74f)
         val speedY = min(height - 60f, height * 0.88f)
+        val safeNitro = if (nitroCharge.isFinite()) nitroCharge.coerceIn(0f, 1f) else 0f
 
-        paint.color = Color.parseColor("#22FFFFFF")
+        paint.color = colorNitroBarBg
         drawRectF.set(speedX, speedY + 12f, speedX + nitroBarW, speedY + 12f + nitroBarH)
         canvas.drawRoundRect(drawRectF, 6f, 6f, paint)
 
-        paint.color = if (nitroCharge >= 0.99f) Color.parseColor("#00E5FF") else Color.parseColor("#D500F9")
-        drawRectF.set(speedX, speedY + 12f, speedX + (nitroBarW * nitroCharge), speedY + 12f + nitroBarH)
+        paint.color = if (safeNitro >= 0.99f) colorNeonCyan else colorNeonMagenta
+        drawRectF.set(speedX, speedY + 12f, speedX + (nitroBarW * safeNitro), speedY + 12f + nitroBarH)
         canvas.drawRoundRect(drawRectF, 6f, 6f, paint)
 
-        // Speedometer Digits
+        val safeSpeedMph = if (speed.isFinite()) speed.coerceAtLeast(0f).toInt() else 0
+        if (safeSpeedMph != cachedSpeedMph || cachedSpeedText.isEmpty()) {
+            hudStringBuilder.setLength(0)
+            hudStringBuilder.append(safeSpeedMph).append(' ').append(labelMph)
+            cachedSpeedText = hudStringBuilder.toString()
+            cachedSpeedMph = safeSpeedMph
+        }
         textPaint.textAlign = Paint.Align.LEFT
         textPaint.textSize = 38f
-        textPaint.color = Color.parseColor("#00E5FF")
-        textPaint.setShadowLayer(10f, 0f, 0f, Color.parseColor("#00E5FF"))
-        canvas.drawText("${speed.toInt()} MPH", speedX, speedY, textPaint)
-        textPaint.clearShadowLayer()
+        drawShadowedText(canvas, cachedSpeedText, speedX, speedY, colorNeonCyan)
+    }
 
-        // Position Badge (Bottom Center)
+    private fun drawHudPositionAndDrafting(canvas: Canvas, width: Int, height: Int, currentRank: Int) {
         val rankX = width / 2f
         val rankY = min(height - 45f, height * 0.93f)
         val rankBadgeColor = when (currentRank) {
-            1 -> Color.parseColor("#FFD700") // Gold
-            2 -> Color.parseColor("#E0E0E0") // Silver
-            3 -> Color.parseColor("#CD7F32") // Bronze
-            else -> Color.parseColor("#00E5FF") // Cyan
+            1 -> colorCoinGold
+            2 -> colorSilver
+            3 -> colorBronze
+            else -> colorNeonCyan
+        }
+        if (currentRank != cachedRankValue || cachedRankText.isEmpty()) {
+            hudStringBuilder.setLength(0)
+            hudStringBuilder.append(labelPos).append(": ").append(currentRank).append(" / 20")
+            cachedRankText = hudStringBuilder.toString()
+            cachedRankValue = currentRank
         }
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.textSize = 32f
-        textPaint.color = rankBadgeColor
-        textPaint.setShadowLayer(12f, 0f, 0f, rankBadgeColor)
-        canvas.drawText("POS: $currentRank / 20", rankX, rankY, textPaint)
-        textPaint.clearShadowLayer()
+        drawShadowedText(canvas, cachedRankText, rankX, rankY, rankBadgeColor)
 
-        // Slipstream active badge
         if (isDrafting) {
             textPaint.textSize = 28f
-            textPaint.color = Color.parseColor("#39FF14")
-            textPaint.setShadowLayer(14f, 0f, 0f, Color.parseColor("#39FF14"))
-            canvas.drawText("⚡ SLIPSTREAM DRAFTING ⚡", width / 2f, height * 0.72f, textPaint)
-            textPaint.clearShadowLayer()
+            drawShadowedText(canvas, labelSlipstream, width / 2f, height * 0.72f, colorNeonGreen)
         }
     }
 
     // --- STATE OVERLAYS ---
-    private fun drawStateOverlays(canvas: Canvas, width: Int, height: Int) {
+    private fun drawStateOverlays(canvas: Canvas?, width: Int, height: Int) {
+        if (!isCanvasRenderable(canvas, width, height)) return
+        val safeCanvas = canvas ?: return
         val nowTime = System.currentTimeMillis()
 
         // Starting Countdown Display
         if (countdown >= 0) {
-            paint.reset()
-            paint.isAntiAlias = true
-            paint.textAlign = Paint.Align.CENTER
-            paint.typeface = Typeface.DEFAULT_BOLD
+            textPaint.textAlign = Paint.Align.CENTER
             val elapsed = nowTime - countdownStartTime
             val progress = (elapsed.toFloat() / 650f).coerceIn(0f, 1f)
             val scale = 1.35f - 0.35f * progress
-            paint.textSize = 120f * scale
-            val glowColor = if (countdown == 0) Color.parseColor("#39FF14") else Color.parseColor("#00E5FF")
-            paint.color = glowColor
-            paint.setShadowLayer(30f * scale, 0f, 0f, glowColor)
+            textPaint.textSize = 120f * scale
+            val glowColor = if (countdown == 0) colorNeonGreen else colorNeonCyan
             val countStr = if (countdown == 0) context.getString(R.string.retro_driver_go) else countdown.toString()
-            canvas.drawText(countStr, width / 2f, height / 2f - 30f, paint)
-            paint.clearShadowLayer()
+            drawShadowedText(safeCanvas, countStr, width / 2f, height / 2f - 30f, glowColor)
         }
 
         // Lap Banner
-        if (nowTime < lapMessageUntil) {
-            paint.reset()
-            paint.isAntiAlias = true
-            paint.textAlign = Paint.Align.CENTER
-            paint.typeface = Typeface.DEFAULT_BOLD
-            paint.textSize = 72f
-            paint.color = Color.parseColor("#FFD54F")
-            paint.setShadowLayer(25f, 0f, 0f, Color.parseColor("#FFD54F"))
-            canvas.drawText(lapMessage, width / 2f, height / 2f - 40f, paint)
-            paint.clearShadowLayer()
+        if (nowTime < lapMessageUntil && lapMessage.isNotBlank()) {
+            textPaint.textAlign = Paint.Align.CENTER
+            textPaint.textSize = 72f
+            drawShadowedText(safeCanvas, lapMessage, width / 2f, height / 2f - 40f, colorNeonGold)
         }
 
         // Finished Victory Banner
         if (gameWon) {
-            celebrationManager.draw(canvas)
+            celebrationManager.draw(safeCanvas)
             var passedCount = 0
             for (car in traffic) {
                 if (position > car.z) passedCount++
@@ -1756,41 +1984,42 @@ class RetroDriverView @JvmOverloads constructor(
             }
             val title = context.getString(R.string.retro_driver_finish)
             val subtitle = "You completed ${currentMap.name} in ${currentRank}$suffix place!\nFinal Score: $score  |  Best Lap: ${String.format(Locale.US, "%.2fs", bestLapTimeMs / 1000f)}\n\nPress [ENTER] to Race Again"
-            drawOverlay(canvas, title, subtitle)
+            drawOverlay(safeCanvas, title, subtitle)
         } else if (gameOver) {
-            celebrationManager.draw(canvas)
-            drawOverlay(canvas, context.getString(R.string.game_over), "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
+            celebrationManager.draw(safeCanvas)
+            drawOverlay(safeCanvas, context.getString(R.string.game_over), "${context.getString(R.string.final_score_label)}: $score\n${context.getString(R.string.restart_hint)}")
         } else if (gamePaused && countdown < 0) {
             val currentMap = RetroDriverMapCatalog.getMap(selectedMapIndex)
-            val spec = vehicleSpecs[selectedCarIndex]
+            val spec = vehicleSpecs[selectedCarIndex.coerceIn(0, vehicleSpecs.lastIndex)]
             drawOverlay(
-                canvas,
+                safeCanvas,
                 context.getString(R.string.game_retrodriver),
                 "${context.getString(R.string.resume_hint)}\n\nCircuit: < ${currentMap.name} >\n(${currentMap.description})\nVehicle: < ${spec.name} > (Top Speed: ${spec.topSpeed.toInt()} MPH)\nLaps: $totalLaps Laps\n\n[DPAD ↑ / ↓] Change Map   [DPAD ← / →] Change Vehicle\n[SPACE / ENTER] Start Race / Nitro"
             )
         }
     }
 
-    private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {
-        paint.reset()
-        paint.isAntiAlias = true
-        paint.color = Color.parseColor("#D9000000")
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+    private fun drawOverlay(canvas: Canvas?, title: String?, subtitle: String?) {
+        if (!isCanvasRenderable(canvas, width, height)) return
+        val safeCanvas = canvas ?: return
 
-        paint.color = Color.WHITE
-        paint.textSize = 68f
-        paint.textAlign = Paint.Align.CENTER
-        paint.typeface = Typeface.DEFAULT_BOLD
-        paint.setShadowLayer(16f, 0f, 0f, Color.parseColor("#00E5FF"))
-        canvas.drawText(title, width / 2f, height / 2f - 70f, paint)
-        paint.clearShadowLayer()
+        paint.style = Paint.Style.FILL
+        paint.shader = null
+        paint.color = colorOverlayBg
+        safeCanvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
 
-        paint.textSize = 28f
-        paint.typeface = Typeface.DEFAULT
-        val lines = subtitle.split("\n")
+        textPaint.textSize = 68f
+        textPaint.textAlign = Paint.Align.CENTER
+        drawShadowedText(safeCanvas, title, width / 2f, height / 2f - 70f, Color.WHITE)
+
+        textPaint.textSize = 28f
+        textPaint.color = Color.WHITE
+        val lines = subtitle.orEmpty().split("\n")
         var yOffset = height / 2f + 10f
         for (line in lines) {
-            canvas.drawText(line, width / 2f, yOffset, paint)
+            if (line.isNotEmpty()) {
+                safeDrawText(safeCanvas, line, width / 2f, yOffset, textPaint)
+            }
             yOffset += 38f
         }
     }
@@ -1849,7 +2078,16 @@ class RetroDriverView @JvmOverloads constructor(
             return false
         }
 
-        if (countdown >= 0) return true
+        if (countdown >= 0) {
+            return when (keyCode) {
+                KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN,
+                KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT,
+                KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER,
+                KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A,
+                KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_D -> true
+                else -> super.onKeyDown(keyCode, event)
+            }
+        }
 
         if (gameWon || gameOver) {
             if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
@@ -1868,7 +2106,7 @@ class RetroDriverView @JvmOverloads constructor(
                 screenShake.trigger(14, 18f)
                 SoundManager.playPowerUp()
                 HapticManager.vibrateSuccess(context)
-                floatingPopups.add(FloatingPopup("NITRO BOOST!", width / 2f, height * 0.45f, Color.parseColor("#00E5FF")))
+                floatingPopups.add(FloatingPopup(labelNitroBoost, width / 2f, height * 0.45f, Color.parseColor("#00E5FF")))
                 return true
             }
         }
@@ -1916,10 +2154,11 @@ class RetroDriverView @JvmOverloads constructor(
         return super.onKeyUp(keyCode, event)
     }
 
-    override val canRevive: Boolean get() = true
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = gameOver && !gameWon
 
     override fun reviveGame(): Boolean {
-        if (!gameOver) return false
+        if (!gameOver || gameWon) return false
         gameOver = false
         gameWon = false
         gamePaused = false
@@ -1927,6 +2166,7 @@ class RetroDriverView @JvmOverloads constructor(
         speed = 80f
         celebrationManager.clear()
         SoundManager.playSuccess()
+        startFrameLoop()
         invalidate()
         return true
     }
@@ -1942,11 +2182,23 @@ class RetroDriverView @JvmOverloads constructor(
             analogStickX = filteredX
             analogStickY = filteredY
 
-            // Trigger Gas / Brake analog axes
+            // Trigger Gas / Brake analog axes (with clean release)
             val gas = event.getAxisValue(MotionEvent.AXIS_GAS).let { if (it != 0f) it else event.getAxisValue(MotionEvent.AXIS_RTRIGGER) }
             val brake = event.getAxisValue(MotionEvent.AXIS_BRAKE).let { if (it != 0f) it else event.getAxisValue(MotionEvent.AXIS_LTRIGGER) }
-            if (gas > 0.2f) keyUpPressed = true
-            if (brake > 0.2f) keyDownPressed = true
+            if (gas > 0.2f) {
+                analogGasActive = true
+                keyUpPressed = true
+            } else if (analogGasActive) {
+                analogGasActive = false
+                keyUpPressed = false
+            }
+            if (brake > 0.2f) {
+                analogBrakeActive = true
+                keyDownPressed = true
+            } else if (analogBrakeActive) {
+                analogBrakeActive = false
+                keyDownPressed = false
+            }
 
             return true
         }

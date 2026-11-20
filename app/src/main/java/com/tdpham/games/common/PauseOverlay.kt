@@ -150,6 +150,8 @@ class PauseOverlay @JvmOverloads constructor(
     }
 
     fun show() {
+        animate().cancel()
+        cardContainer.animate().cancel()
         if (visibility == View.VISIBLE && !isAnimating) return
         isAnimating = true
         visibility = View.VISIBLE
@@ -184,6 +186,8 @@ class PauseOverlay @JvmOverloads constructor(
     }
 
     fun hide(onHidden: (() -> Unit)? = null) {
+        animate().cancel()
+        cardContainer.animate().cancel()
         if (visibility != View.VISIBLE && !isAnimating) {
             onHidden?.invoke()
             return
@@ -231,6 +235,9 @@ class PauseOverlay @JvmOverloads constructor(
                 }
             }
         } else if (event.action == KeyEvent.ACTION_UP) {
+            if (ControllerNavigationHelper.isBackKey(keyCode)) {
+                return true
+            }
             if (keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                 val focused = findFocus()
                 if (focused != null && focused.isClickable) {

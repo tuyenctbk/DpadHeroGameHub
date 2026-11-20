@@ -37,7 +37,7 @@ class PauseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pause)
 
-        val gameTitle = intent.getStringExtra(EXTRA_GAME_TITLE) ?: "ARCADE GAME"
+        val gameTitle = intent.getStringExtra(EXTRA_GAME_TITLE) ?: getString(R.string.default_arcade_game)
         findViewById<TextView>(R.id.tv_pause_subtitle).text = gameTitle.uppercase()
 
         val btnResume = findViewById<Button>(R.id.btn_pause_resume)
@@ -151,6 +151,12 @@ class PauseActivity : AppCompatActivity() {
                     finish()
                     return true
                 }
+            }
+        } else if (event.action == KeyEvent.ACTION_UP) {
+            if (ControllerNavigationHelper.isBackKey(event.keyCode) ||
+                ControllerNavigationHelper.isConfirmKey(event.keyCode)
+            ) {
+                return true
             }
         }
         return super.dispatchKeyEvent(event)

@@ -78,6 +78,9 @@ object ControllerNavigationHelper {
                 }
             }
         } else if (event.action == KeyEvent.ACTION_UP) {
+            if (isBackKey(keyCode)) {
+                return true
+            }
             if (keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                 val focused = activity.currentFocus
                 if (focused != null && focused.isClickable) {
@@ -118,6 +121,9 @@ object ControllerNavigationHelper {
                 }
             }
         } else if (event.action == KeyEvent.ACTION_UP) {
+            if (isBackKey(keyCode)) {
+                return true
+            }
             if (keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                 val focused = dialog.currentFocus
                 if (focused != null && focused.isClickable) {

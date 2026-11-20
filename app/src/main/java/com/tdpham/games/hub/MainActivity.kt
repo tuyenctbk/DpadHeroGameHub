@@ -1,76 +1,77 @@
 package com.tdpham.games.hub
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
+import android.view.Window
+import android.view.animation.DecelerateInterpolator
 import android.widget.Button
 import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.TextView
-import android.app.Dialog
-import android.graphics.drawable.ColorDrawable
-import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
-import com.tdpham.games.common.ControllerIndicatorManager
-import com.tdpham.games.common.FocusHighlightDrawable
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
 import com.tdpham.games.R
+import com.tdpham.games.blackjack.BlackjackActivity
 import com.tdpham.games.brickbreak.BrickBreakActivity
-import com.tdpham.games.snake.SnakeActivity
-import com.tdpham.games.minesweeper.MinesweeperActivity
-import com.tdpham.games.sokoban.SokobanActivity
-import com.tdpham.games.sudoku.SudokuActivity
-import com.tdpham.games.tetris.TetrisActivity
-import com.tdpham.games.starfighter.StarFighterActivity
-import com.tdpham.games.memory.MemoryActivity
-import com.tdpham.games.slidepuzzle.SlidePuzzleActivity
-import com.tdpham.games.mentalmath.MentalMathActivity
-import com.tdpham.games.simon.SimonSaysActivity
-import com.tdpham.games.tanks.BattleTanksActivity
-import com.tdpham.games.wordquest.WordQuestActivity
-import com.tdpham.games.lines98.Lines98Activity
-import com.tdpham.games.solitaire.SolitaireActivity
-import com.tdpham.games.dungeon.DungeonEscapeActivity
-import com.tdpham.games.twentyfortyeight.TwentyFortyEightActivity
-import com.tdpham.games.trex.TRexActivity
-import com.tdpham.games.tictactoe.TicTacToeActivity
-import com.tdpham.games.hangman.HangmanActivity
-import com.tdpham.games.roadracer.RoadRacerActivity
-import com.tdpham.games.flappy.FlappyHeroActivity
 import com.tdpham.games.checkers.CheckersActivity
-import com.tdpham.games.spinball.SpinballActivity
-import com.tdpham.games.froggy.FroggyCrossActivity
-import com.tdpham.games.syobon.SyobonActivity
-import com.tdpham.games.monkey.MonkeyActivity
-import com.tdpham.games.retrodriver.RetroDriverActivity
-import com.tdpham.games.frenzy.FrenzyActivity
+import com.tdpham.games.connectfour.ConnectFourActivity
+import com.tdpham.games.common.FocusHighlightDrawable
 import com.tdpham.games.common.HapticManager
-import com.tdpham.games.common.LeaderboardManager
+import com.tdpham.games.common.IdleAdManager
+import com.tdpham.games.common.IdleAdOverlayHelper
+import com.tdpham.games.common.ScoreManager
 import com.tdpham.games.common.SettingsManager
 import com.tdpham.games.common.SoundManager
 import com.tdpham.games.common.profile.ProfileManager
 import com.tdpham.games.common.profile.UserProfile
-import com.tdpham.games.hub.profile.ProfileSelectionActivity
+import com.tdpham.games.dungeon.DungeonEscapeActivity
+import com.tdpham.games.flappy.FlappyHeroActivity
+import com.tdpham.games.frenzy.FrenzyActivity
+import com.tdpham.games.froggy.FroggyCrossActivity
+import com.tdpham.games.fruit.FruitActivity
+import com.tdpham.games.hangman.HangmanActivity
 import com.tdpham.games.hub.profile.ProfileCreationActivity
-import com.tdpham.games.common.IdleAdManager
-import com.tdpham.games.common.IdleAdOverlayHelper
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.analytics
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.ListenerRegistration
-
-import androidx.lifecycle.lifecycleScope
+import com.tdpham.games.hub.profile.ProfileSelectionActivity
+import com.tdpham.games.lines98.Lines98Activity
+import com.tdpham.games.memory.MemoryActivity
+import com.tdpham.games.mentalmath.MentalMathActivity
+import com.tdpham.games.minesweeper.MinesweeperActivity
+import com.tdpham.games.monkey.MonkeyActivity
+import com.tdpham.games.retrodriver.RetroDriverActivity
+import com.tdpham.games.roadracer.RoadRacerActivity
+import com.tdpham.games.simon.SimonSaysActivity
+import com.tdpham.games.slidepuzzle.SlidePuzzleActivity
+import com.tdpham.games.snake.SnakeActivity
+import com.tdpham.games.sokoban.SokobanActivity
+import com.tdpham.games.solitaire.SolitaireActivity
+import com.tdpham.games.spinball.SpinballActivity
+import com.tdpham.games.starfighter.StarFighterActivity
+import com.tdpham.games.sudoku.SudokuActivity
+import com.tdpham.games.syobon.SyobonActivity
+import com.tdpham.games.tanks.BattleTanksActivity
+import com.tdpham.games.tetris.TetrisActivity
+import com.tdpham.games.tictactoe.TicTacToeActivity
+import com.tdpham.games.trex.TRexActivity
+import com.tdpham.games.trivia.TriviaActivity
+import com.tdpham.games.twentyfortyeight.TwentyFortyEightActivity
+import com.tdpham.games.wordquest.WordQuestActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.NumberFormat
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -79,51 +80,60 @@ class MainActivity : AppCompatActivity() {
     private var currentFocusedButton: View? = null
     private var returnedFromGame = false
 
-    private var currentFocusedGameKey: String = "snake"
-    private var currentFocusedGameTitle: String = "SNAKE"
+    private var currentFocusedMeta: GameCardMeta? = null
 
-    private val gameMetadata = mapOf(
-        R.id.btn_snake to Pair("snake", "SNAKE"),
-        R.id.btn_tetris to Pair("tetris", "TETRIS"),
-        R.id.btn_minesweeper to Pair("minesweeper", "MINESWEEPER"),
-        R.id.btn_trex to Pair("trex", "T-REX RUNNER"),
-        R.id.btn_4096 to Pair("twentyfortyeight", "2048"),
-        R.id.btn_memory to Pair("memory", "MEMORY MATCH"),
-        R.id.btn_brick_break to Pair("brickbreak", "BRICK BREAK"),
-        R.id.btn_syobon to Pair("syobon", "CAT MARIO"),
-        R.id.btn_solitaire to Pair("solitaire", "SOLITAIRE"),
-        R.id.btn_lines98 to Pair("lines98", "LINES 98"),
-        R.id.btn_mental_math to Pair("mentalmath", "MENTAL MATH"),
-        R.id.btn_sudoku to Pair("sudoku", "SUDOKU"),
-        R.id.btn_tictactoe to Pair("tictactoe", "TIC TAC TOE"),
-        R.id.btn_word_quest to Pair("wordquest", "WORD QUEST"),
-        R.id.btn_sokoban to Pair("sokoban", "SOKOBAN"),
-        R.id.btn_tanks to Pair("tanks", "BATTLE TANKS"),
-        R.id.btn_starfighter to Pair("starfighter", "STAR FIGHTER"),
-        R.id.btn_dungeon to Pair("dungeon", "DUNGEON ESCAPE"),
-        R.id.btn_slide_puzzle to Pair("slidepuzzle", "SLIDE PUZZLE"),
-        R.id.btn_hangman to Pair("hangman", "HANGMAN"),
-        R.id.btn_simon to Pair("simon", "SIMON SAYS"),
-        R.id.btn_flappy to Pair("flappy", "FLAPPY HERO"),
-        R.id.btn_checkers to Pair("checkers", "CHECKERS"),
-        R.id.btn_spinball to Pair("spinball", "SPINBALL"),
-        R.id.btn_froggy to Pair("froggy", "FROGGY CROSS"),
-        R.id.btn_monkey to Pair("monkey", "MONKEY ADVENTURE"),
-        R.id.btn_retrodriver to Pair("retrodriver", "RETRO DRIVER"),
-        R.id.btn_frenzy to Pair("frenzy", "FEEDING FRENZY"),
-        R.id.btn_road_racer to Pair("roadracer", "ROAD RACER")
+    private data class GameCardMeta(
+        val key: String,
+        val defaultTitleRes: Int,
+        val genreRes: Int,
+        val index: Int
     )
 
+    // Matches exact left-to-right order in activity_main.xml & exact gameKey values across all 33 games
+    private val gameMetadata = mapOf(
+        R.id.btn_snake to GameCardMeta("snake", R.string.snake, R.string.genre_arcade, 1),
+        R.id.btn_tetris to GameCardMeta("tetris", R.string.game_tetris, R.string.genre_puzzle, 2),
+        R.id.btn_minesweeper to GameCardMeta("minesweeper", R.string.minesweeper, R.string.genre_strategy, 3),
+        R.id.btn_monkey to GameCardMeta("monkey", R.string.game_monkey, R.string.genre_adventure, 4),
+        R.id.btn_frenzy to GameCardMeta("frenzy", R.string.game_frenzy, R.string.genre_action, 5),
+        R.id.btn_trex to GameCardMeta("trex", R.string.game_trex, R.string.genre_runner, 6),
+        R.id.btn_4096 to GameCardMeta("4096", R.string.game_4096, R.string.genre_puzzle, 7),
+        R.id.btn_flappy to GameCardMeta("flappy_hero", R.string.game_flappy, R.string.genre_arcade, 8),
+        R.id.btn_memory to GameCardMeta("memory", R.string.game_memory, R.string.genre_brain, 9),
+        R.id.btn_brick_break to GameCardMeta("brick_break", R.string.game_brick_break, R.string.genre_arcade, 10),
+        R.id.btn_solitaire to GameCardMeta("solitaire", R.string.game_solitaire, R.string.genre_cards, 11),
+        R.id.btn_retrodriver to GameCardMeta("retrodriver", R.string.game_retrodriver, R.string.genre_racing, 12),
+        R.id.btn_lines98 to GameCardMeta("lines98", R.string.game_lines98, R.string.genre_puzzle, 13),
+        R.id.btn_sudoku to GameCardMeta("sudoku", R.string.game_sudoku, R.string.genre_logic, 14),
+        R.id.btn_tictactoe to GameCardMeta("tic_tac_toe", R.string.game_tictactoe, R.string.genre_classic, 15),
+        R.id.btn_word_quest to GameCardMeta("word_quest", R.string.game_word_quest, R.string.genre_word, 16),
+        R.id.btn_sokoban to GameCardMeta("sokoban", R.string.game_sokoban, R.string.genre_puzzle, 17),
+        R.id.btn_tanks to GameCardMeta("battle_tanks", R.string.game_tanks, R.string.genre_action, 18),
+        R.id.btn_starfighter to GameCardMeta("starfighter", R.string.game_starfighter, R.string.genre_shooter, 19),
+        R.id.btn_dungeon to GameCardMeta("dungeon_escape", R.string.game_dungeon, R.string.genre_adventure, 20),
+        R.id.btn_froggy to GameCardMeta("froggy_cross", R.string.game_froggy, R.string.genre_arcade, 21),
+        R.id.btn_syobon to GameCardMeta("syobon_action", R.string.game_syobon, R.string.genre_platform, 22),
+        R.id.btn_slide_puzzle to GameCardMeta("slide_puzzle", R.string.game_slide_puzzle, R.string.genre_puzzle, 23),
+        R.id.btn_hangman to GameCardMeta("hangman", R.string.game_hangman, R.string.genre_word, 24),
+        R.id.btn_simon to GameCardMeta("simon_says", R.string.game_simon, R.string.genre_memory, 25),
+        R.id.btn_checkers to GameCardMeta("checkers", R.string.game_checkers, R.string.genre_board, 26),
+        R.id.btn_spinball to GameCardMeta("spinball", R.string.game_spinball, R.string.genre_arcade, 27),
+        R.id.btn_mental_math to GameCardMeta("mental_math", R.string.game_mental_math, R.string.genre_brain, 28),
+        R.id.btn_road_racer to GameCardMeta("road_racer", R.string.game_road_racer, R.string.genre_racing, 29),
+        R.id.btn_fruit to GameCardMeta("fruit", R.string.game_fruit, R.string.genre_arcade, 30),
+        R.id.btn_connect_four to GameCardMeta("connect_four", R.string.game_connect_four, R.string.genre_board, 31),
+        R.id.btn_blackjack to GameCardMeta("blackjack", R.string.game_blackjack, R.string.genre_cards, 32),
+        R.id.btn_trivia to GameCardMeta("trivia", R.string.game_trivia, R.string.genre_brain, 33)
+    )
+
+    private val spotlightInterpolator = DecelerateInterpolator()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        window.requestFeature(android.view.Window.FEATURE_ACTIVITY_TRANSITIONS)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         adOverlayHelper = IdleAdOverlayHelper(this).apply { init() }
         IdleAdManager.isGameMode = false
-        IdleAdManager.init { state, remaining ->
-            adOverlayHelper.showState(state, remaining)
-        }
 
         lifecycleScope.launch(Dispatchers.Default) {
             val analytics = try {
@@ -138,8 +148,15 @@ class MainActivity : AppCompatActivity() {
 
         val title = findViewById<View>(R.id.main_title)
         title.alpha = 0f
-        title.translationY = -50f
-        title.animate().alpha(1f).translationY(0f).setDuration(800).setStartDelay(300).start()
+        title.translationY = -40f
+        title.animate().alpha(1f).translationY(0f).setDuration(600).setStartDelay(120).setInterpolator(spotlightInterpolator).start()
+
+        val spotlight = findViewById<View>(R.id.spotlight_container)
+        spotlight?.apply {
+            alpha = 0f
+            translationY = 24f
+            animate().alpha(1f).translationY(0f).setDuration(550).setStartDelay(220).setInterpolator(spotlightInterpolator).start()
+        }
 
         val onDownToGameList = View.OnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
@@ -169,26 +186,38 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        findViewById<Button>(R.id.btn_settings)?.apply {
-            androidx.core.view.ViewCompat.setTransitionName(this, "hub_settings_transition")
+        findViewById<Button>(R.id.btn_main_leaderboard)?.apply {
             setOnClickListener {
                 SoundManager.playClick()
                 HapticManager.vibrateClick(this@MainActivity)
-                val options = androidx.core.app.ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    this@MainActivity,
-                    this,
-                    "hub_settings_transition"
-                )
-                startActivity(Intent(this@MainActivity, SettingsActivity::class.java), options.toBundle())
+                startActivity(Intent(this@MainActivity, LeaderboardActivity::class.java))
             }
             setOnKeyListener(onDownToGameList)
             setOnFocusChangeListener { view, hasFocus ->
                 if (hasFocus) {
                     SoundManager.playClick()
                     HapticManager.vibrateClick(this@MainActivity)
-                    view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
+                    view.animate().scaleX(1.12f).scaleY(1.12f).setDuration(180).start()
                 } else {
-                    view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                    view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(180).start()
+                }
+            }
+        }
+
+        findViewById<Button>(R.id.btn_settings)?.apply {
+            setOnClickListener {
+                SoundManager.playClick()
+                HapticManager.vibrateClick(this@MainActivity)
+                startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
+            }
+            setOnKeyListener(onDownToGameList)
+            setOnFocusChangeListener { view, hasFocus ->
+                if (hasFocus) {
+                    SoundManager.playClick()
+                    HapticManager.vibrateClick(this@MainActivity)
+                    view.animate().scaleX(1.12f).scaleY(1.12f).setDuration(180).start()
+                } else {
+                    view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(180).start()
                 }
             }
         }
@@ -204,9 +233,9 @@ class MainActivity : AppCompatActivity() {
                 if (hasFocus) {
                     SoundManager.playClick()
                     HapticManager.vibrateClick(this@MainActivity)
-                    view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
+                    view.animate().scaleX(1.12f).scaleY(1.12f).setDuration(180).start()
                 } else {
-                    view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                    view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(180).start()
                 }
             }
         }
@@ -228,6 +257,41 @@ class MainActivity : AppCompatActivity() {
         focusLastPlayed()
     }
 
+    private fun updateSpotlightBar(meta: GameCardMeta, displayTitle: String, animate: Boolean) {
+        currentFocusedMeta = meta
+        val container = findViewById<View>(R.id.spotlight_container) ?: return
+        val genreTv = findViewById<TextView>(R.id.tv_spotlight_genre)
+        val titleTv = findViewById<TextView>(R.id.tv_spotlight_title)
+        val bestTv = findViewById<TextView>(R.id.tv_spotlight_best)
+        val indexTv = findViewById<TextView>(R.id.tv_spotlight_index)
+
+        val bestScore = ScoreManager.getBestScoreAcrossAllLevels(this, meta.key)
+        val bestLabel = if (bestScore > 0) {
+            val formatted = NumberFormat.getIntegerInstance(Locale.US).format(bestScore)
+            "★ ${getString(R.string.best_label)} $formatted"
+        } else {
+            getString(R.string.spotlight_play_to_set_record)
+        }
+
+        genreTv?.text = getString(meta.genreRes)
+        titleTv?.text = displayTitle.ifBlank { getString(meta.defaultTitleRes) }
+        bestTv?.text = bestLabel
+        bestTv?.setTextColor(if (bestScore > 0) Color.parseColor("#FFD700") else Color.parseColor("#38BDF8"))
+        indexTv?.text = String.format(Locale.US, "%02d / %02d", meta.index, gameMetadata.size)
+
+        if (animate) {
+            container.animate().cancel()
+            container.alpha = 0.72f
+            container.translationY = 6f
+            container.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(160)
+                .setInterpolator(spotlightInterpolator)
+                .start()
+        }
+    }
+
     private fun updateProfileDisplay() {
         val activeProfile = ProfileManager.getActiveProfile(this) ?: return
         val nameView = findViewById<TextView>(R.id.active_profile_name)
@@ -236,13 +300,9 @@ class MainActivity : AppCompatActivity() {
         val customizationHint = findViewById<TextView>(R.id.hero_customization_hint)
 
         nameView.text = activeProfile.name
-        
-        // Show/Hide customization hint for default guest profile
         customizationHint.visibility = if (ProfileManager.isDefaultProfile(activeProfile)) View.VISIBLE else View.GONE
-
-        // Transparent background for the layout
         layout.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.TRANSPARENT)
-        
+
         val avatars = listOf(
             R.drawable.ic_hero_knight, R.drawable.ic_hero_wizard,
             R.drawable.ic_hero_archer, R.drawable.ic_hero_ninja,
@@ -253,7 +313,6 @@ class MainActivity : AppCompatActivity() {
 
         if (activeProfile.avatarId in avatars.indices) {
             iconView.setImageResource(avatars[activeProfile.avatarId])
-            // Color applies to the icon itself
             iconView.imageTintList = android.content.res.ColorStateList.valueOf(activeProfile.avatarColor)
         }
 
@@ -263,10 +322,11 @@ class MainActivity : AppCompatActivity() {
         layout.isFocusable = true
         layout.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
-                view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(200).start()
+                SoundManager.playClick()
+                view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(180).start()
                 view.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#22FFFFFF"))
             } else {
-                view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
+                view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(180).start()
                 view.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.TRANSPARENT)
             }
         }
@@ -275,17 +335,17 @@ class MainActivity : AppCompatActivity() {
     private fun animateProfilePulse() {
         val layout = findViewById<View>(R.id.active_profile_layout)
         layout.animate()
-            .scaleX(1.2f).scaleY(1.2f)
-            .setDuration(400)
+            .scaleX(1.18f).scaleY(1.18f)
+            .setDuration(350)
             .withEndAction {
-                layout.animate().scaleX(1.0f).scaleY(1.0f).setDuration(400).start()
+                layout.animate().scaleX(1.0f).scaleY(1.0f).setDuration(350).start()
             }
             .start()
     }
 
     private fun showProfileMenu() {
         val activeProfile = ProfileManager.getActiveProfile(this) ?: return
-        
+
         val dialog = Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_hero_profile_menu)
@@ -390,14 +450,16 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_snake to SnakeActivity::class.java,
             R.id.btn_tetris to TetrisActivity::class.java,
             R.id.btn_minesweeper to MinesweeperActivity::class.java,
+            R.id.btn_monkey to MonkeyActivity::class.java,
+            R.id.btn_frenzy to FrenzyActivity::class.java,
             R.id.btn_trex to TRexActivity::class.java,
             R.id.btn_4096 to TwentyFortyEightActivity::class.java,
+            R.id.btn_flappy to FlappyHeroActivity::class.java,
             R.id.btn_memory to MemoryActivity::class.java,
             R.id.btn_brick_break to BrickBreakActivity::class.java,
-            R.id.btn_syobon to SyobonActivity::class.java,
             R.id.btn_solitaire to SolitaireActivity::class.java,
+            R.id.btn_retrodriver to RetroDriverActivity::class.java,
             R.id.btn_lines98 to Lines98Activity::class.java,
-            R.id.btn_mental_math to MentalMathActivity::class.java,
             R.id.btn_sudoku to SudokuActivity::class.java,
             R.id.btn_tictactoe to TicTacToeActivity::class.java,
             R.id.btn_word_quest to WordQuestActivity::class.java,
@@ -405,17 +467,19 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_tanks to BattleTanksActivity::class.java,
             R.id.btn_starfighter to StarFighterActivity::class.java,
             R.id.btn_dungeon to DungeonEscapeActivity::class.java,
+            R.id.btn_froggy to FroggyCrossActivity::class.java,
+            R.id.btn_syobon to SyobonActivity::class.java,
             R.id.btn_slide_puzzle to SlidePuzzleActivity::class.java,
             R.id.btn_hangman to HangmanActivity::class.java,
             R.id.btn_simon to SimonSaysActivity::class.java,
-            R.id.btn_flappy to FlappyHeroActivity::class.java,
             R.id.btn_checkers to CheckersActivity::class.java,
             R.id.btn_spinball to SpinballActivity::class.java,
-            R.id.btn_froggy to FroggyCrossActivity::class.java,
-            R.id.btn_monkey to MonkeyActivity::class.java,
-            R.id.btn_retrodriver to RetroDriverActivity::class.java,
-            R.id.btn_frenzy to FrenzyActivity::class.java,
-            R.id.btn_road_racer to RoadRacerActivity::class.java
+            R.id.btn_mental_math to MentalMathActivity::class.java,
+            R.id.btn_road_racer to RoadRacerActivity::class.java,
+            R.id.btn_fruit to FruitActivity::class.java,
+            R.id.btn_connect_four to ConnectFourActivity::class.java,
+            R.id.btn_blackjack to BlackjackActivity::class.java,
+            R.id.btn_trivia to TriviaActivity::class.java
         )
 
         val iconMap = mapOf(
@@ -447,7 +511,11 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_monkey to R.drawable.ic_game_monkey,
             R.id.btn_retrodriver to R.drawable.ic_game_retrodriver,
             R.id.btn_frenzy to R.drawable.ic_game_frenzy,
-            R.id.btn_road_racer to R.drawable.ic_game_road_racer
+            R.id.btn_road_racer to R.drawable.ic_game_road_racer,
+            R.id.btn_fruit to R.drawable.ic_game_fruit,
+            R.id.btn_connect_four to R.drawable.ic_game_connect_four,
+            R.id.btn_blackjack to R.drawable.ic_game_blackjack,
+            R.id.btn_trivia to R.drawable.ic_game_trivia
         )
 
         fun bindSingleGameCard(id: Int, activityClass: Class<*>) {
@@ -455,59 +523,23 @@ class MainActivity : AppCompatActivity() {
             val button = findViewById<Button>(id) ?: return
             initializedGameButtons.add(id)
 
-            androidx.core.view.ViewCompat.setTransitionName(button, "game_card_transition")
             val iconRes = iconMap[id]
             if (iconRes != null) {
                 com.tdpham.games.common.GlideGameIconLoader.loadButtonTopIcon(this, button, iconRes)
             }
             setupGameButton(button) {
-                val intent = Intent(this, activityClass)
-                val options = androidx.core.app.ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    this,
-                    button,
-                    "game_card_transition"
-                )
-                startActivity(intent, options.toBundle())
+                startActivity(Intent(this, activityClass))
+                @Suppress("DEPRECATION")
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             }
         }
 
-        // 1. Identify Priority Viewport (First 4 games + Last played game)
         val prefs = getSharedPreferences("game_settings", Context.MODE_PRIVATE)
         val lastPlayedKey = prefs.getString("last_played", "snake")
-        val lastPlayedId = when (lastPlayedKey) {
-            "tetris" -> R.id.btn_tetris
-            "minesweeper" -> R.id.btn_minesweeper
-            "trex" -> R.id.btn_trex
-            "4096" -> R.id.btn_4096
-            "memory" -> R.id.btn_memory
-            "brick_break" -> R.id.btn_brick_break
-            "solitaire" -> R.id.btn_solitaire
-            "lines98" -> R.id.btn_lines98
-            "mental_math" -> R.id.btn_mental_math
-            "sudoku" -> R.id.btn_sudoku
-            "tic_tac_toe" -> R.id.btn_tictactoe
-            "word_quest" -> R.id.btn_word_quest
-            "sokoban" -> R.id.btn_sokoban
-            "battle_tanks" -> R.id.btn_tanks
-            "starfighter" -> R.id.btn_starfighter
-            "dungeon_escape" -> R.id.btn_dungeon
-            "slide_puzzle" -> R.id.btn_slide_puzzle
-            "hangman" -> R.id.btn_hangman
-            "simon_says" -> R.id.btn_simon
-            "flappy_hero" -> R.id.btn_flappy
-            "froggy_cross" -> R.id.btn_froggy
-            "syobon_action" -> R.id.btn_syobon
-            "checkers" -> R.id.btn_checkers
-            "spinball" -> R.id.btn_spinball
-            "monkey" -> R.id.btn_monkey
-            "retrodriver" -> R.id.btn_retrodriver
-            "frenzy" -> R.id.btn_frenzy
-            "road_racer" -> R.id.btn_road_racer
-            else -> R.id.btn_snake
-        }
+        val lastPlayedId = resolveButtonIdForGameKey(lastPlayedKey)
 
-        // Immediately bind the priority viewport cards (< 200ms initial screen display)
-        val initialIds = listOf(R.id.btn_snake, R.id.btn_tetris, R.id.btn_minesweeper, R.id.btn_trex, lastPlayedId)
+        // Immediately bind priority viewport cards (< 200ms initial screen display)
+        val initialIds = listOf(R.id.btn_snake, R.id.btn_tetris, R.id.btn_minesweeper, R.id.btn_monkey, R.id.btn_frenzy, lastPlayedId)
         for (id in initialIds) {
             val act = games[id]
             if (act != null) {
@@ -515,17 +547,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 2. Preload icons in background without blocking UI thread
+        // Preload icons off the UI thread
         lifecycleScope.launch(Dispatchers.Default) {
             com.tdpham.games.common.GlideGameIconLoader.preloadIcons(applicationContext, iconMap.values)
         }
 
-        // 3. Staggered Lazy Loading for remaining games across animation frames
+        // Staggered lazy binding for remaining cards
         val remainingGames = games.filterKeys { !initializedGameButtons.contains(it) }.toList()
         lifecycleScope.launch(Dispatchers.Main.immediate) {
-            // Process in small non-blocking chunks of 4 games per micro-tick
             for (chunk in remainingGames.chunked(4)) {
-                kotlinx.coroutines.delay(16) // Yield to allow UI rendering and user interactions
+                kotlinx.coroutines.delay(16)
                 for ((id, act) in chunk) {
                     bindSingleGameCard(id, act)
                 }
@@ -533,70 +564,83 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun resolveButtonIdForGameKey(gameKey: String?): Int = when (gameKey) {
+        "tetris" -> R.id.btn_tetris
+        "minesweeper" -> R.id.btn_minesweeper
+        "trex" -> R.id.btn_trex
+        "4096" -> R.id.btn_4096
+        "memory" -> R.id.btn_memory
+        "brick_break" -> R.id.btn_brick_break
+        "solitaire" -> R.id.btn_solitaire
+        "lines98" -> R.id.btn_lines98
+        "mental_math" -> R.id.btn_mental_math
+        "sudoku" -> R.id.btn_sudoku
+        "tic_tac_toe" -> R.id.btn_tictactoe
+        "word_quest" -> R.id.btn_word_quest
+        "sokoban" -> R.id.btn_sokoban
+        "battle_tanks" -> R.id.btn_tanks
+        "starfighter" -> R.id.btn_starfighter
+        "dungeon_escape" -> R.id.btn_dungeon
+        "slide_puzzle" -> R.id.btn_slide_puzzle
+        "hangman" -> R.id.btn_hangman
+        "simon_says" -> R.id.btn_simon
+        "flappy_hero" -> R.id.btn_flappy
+        "froggy_cross" -> R.id.btn_froggy
+        "syobon_action" -> R.id.btn_syobon
+        "checkers" -> R.id.btn_checkers
+        "spinball" -> R.id.btn_spinball
+        "monkey" -> R.id.btn_monkey
+        "retrodriver" -> R.id.btn_retrodriver
+        "frenzy" -> R.id.btn_frenzy
+        "road_racer" -> R.id.btn_road_racer
+        "fruit" -> R.id.btn_fruit
+        "connect_four" -> R.id.btn_connect_four
+        "blackjack" -> R.id.btn_blackjack
+        "trivia" -> R.id.btn_trivia
+        else -> R.id.btn_snake
+    }
+
     private fun focusLastPlayed() {
         val prefs = getSharedPreferences("game_settings", Context.MODE_PRIVATE)
         val lastPlayed = prefs.getString("last_played", "snake")
-        val viewId = when (lastPlayed) {
-            "snake" -> R.id.btn_snake
-            "tetris" -> R.id.btn_tetris
-            "minesweeper" -> R.id.btn_minesweeper
-            "trex" -> R.id.btn_trex
-            "4096" -> R.id.btn_4096
-            "memory" -> R.id.btn_memory
-            "brick_break" -> R.id.btn_brick_break
-            "solitaire" -> R.id.btn_solitaire
-            "lines98" -> R.id.btn_lines98
-            "mental_math" -> R.id.btn_mental_math
-            "sudoku" -> R.id.btn_sudoku
-            "tic_tac_toe" -> R.id.btn_tictactoe
-            "word_quest" -> R.id.btn_word_quest
-            "sokoban" -> R.id.btn_sokoban
-            "battle_tanks" -> R.id.btn_tanks
-            "starfighter" -> R.id.btn_starfighter
-            "dungeon_escape" -> R.id.btn_dungeon
-            "slide_puzzle" -> R.id.btn_slide_puzzle
-            "hangman" -> R.id.btn_hangman
-            "simon_says" -> R.id.btn_simon
-            "flappy_hero" -> R.id.btn_flappy
-            "froggy_cross" -> R.id.btn_froggy
-            "syobon_action" -> R.id.btn_syobon
-            "checkers" -> R.id.btn_checkers
-            "spinball" -> R.id.btn_spinball
-            "monkey" -> R.id.btn_monkey
-            "retrodriver" -> R.id.btn_retrodriver
-            "frenzy" -> R.id.btn_frenzy
-            "road_racer" -> R.id.btn_road_racer
-            else -> R.id.btn_snake
+        val viewId = resolveButtonIdForGameKey(lastPlayed)
+        val btn = findViewById<Button>(viewId)
+        btn?.requestFocus()
+        gameMetadata[viewId]?.let { meta ->
+            updateSpotlightBar(meta, btn?.text?.toString() ?: getString(meta.defaultTitleRes), animate = false)
         }
-        findViewById<Button>(viewId)?.requestFocus()
     }
 
     private fun setupGameButton(button: Button, action: () -> Unit) {
         button.isFocusableInTouchMode = true
-        button.setOnClickListener { 
+        button.setOnClickListener {
+            SoundManager.playClick()
+            HapticManager.vibrateClick(this)
             returnedFromGame = true
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, button.text.toString())
             bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "game")
             firebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
-            action() 
+            action()
         }
-        
+
         button.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_UP) {
                 val hsv = findViewById<HorizontalScrollView>(R.id.hsv_games)
+                val leaderboardBtn = findViewById<View>(R.id.btn_main_leaderboard)
                 val settingsBtn = findViewById<View>(R.id.btn_settings)
                 val exitBtn = findViewById<View>(R.id.btn_main_exit)
                 val profileBtn = findViewById<View>(R.id.active_profile_layout)
-                val isRight = if (hsv != null) button.left > (hsv.scrollX + hsv.width / 2) else false
-                if (isRight) {
-                    if (hsv != null && button.left > (hsv.scrollX + hsv.width * 0.75f)) {
-                        exitBtn?.requestFocus() ?: settingsBtn?.requestFocus()
-                    } else {
-                        settingsBtn?.requestFocus()
-                    }
+                val relPos = if (hsv != null && hsv.width > 0) {
+                    (button.left + button.width / 2f - hsv.scrollX) / hsv.width.toFloat()
                 } else {
-                    profileBtn?.requestFocus()
+                    0.5f
+                }
+                when {
+                    relPos < 0.42f -> profileBtn?.requestFocus()
+                    relPos < 0.65f -> leaderboardBtn?.requestFocus() ?: settingsBtn?.requestFocus()
+                    relPos < 0.82f -> settingsBtn?.requestFocus()
+                    else -> exitBtn?.requestFocus() ?: settingsBtn?.requestFocus()
                 }
                 true
             } else {
@@ -607,12 +651,10 @@ class MainActivity : AppCompatActivity() {
         FocusHighlightDrawable.attach(button, scaleFactor = 1.18f, elevationZ = 36f) { hasFocus ->
             if (hasFocus) {
                 currentFocusedButton = button
-                gameMetadata[button.id]?.let { (key, title) ->
-                    currentFocusedGameKey = key
-                    currentFocusedGameTitle = title
+                gameMetadata[button.id]?.let { meta ->
+                    updateSpotlightBar(meta, button.text.toString(), animate = true)
                 }
 
-                // Smoothly center the focused button in the HorizontalScrollView
                 val hsv = findViewById<HorizontalScrollView>(R.id.hsv_games)
                 hsv?.post {
                     val targetScrollX = button.left - (hsv.width - button.width) / 2
@@ -625,8 +667,17 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         IdleAdManager.isGameMode = false
+        IdleAdManager.registerListener(this) { state, remaining ->
+            adOverlayHelper.showState(state, remaining)
+        }
         IdleAdManager.startTracking()
         updateProfileDisplay()
+
+        // Refresh focused game spotlight score (picks up new records immediately on return)
+        currentFocusedMeta?.let { meta ->
+            val title = (currentFocusedButton as? Button)?.text?.toString() ?: getString(meta.defaultTitleRes)
+            updateSpotlightBar(meta, title, animate = false)
+        }
 
         val isScanlineOn = SettingsManager.isScanlineEnabled(this)
         findViewById<View>(R.id.main_scanline_overlay)?.visibility = if (isScanlineOn) View.VISIBLE else View.GONE
@@ -640,6 +691,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         IdleAdManager.stopTracking()
+        IdleAdManager.unregisterListener(this)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -684,7 +736,7 @@ class MainActivity : AppCompatActivity() {
         setupDialogButtonFocus(btnExit)
         setupDialogButtonFocus(btnCancel)
 
-        dialog.setOnKeyListener { _, keyCode, event ->
+        dialog.setOnKeyListener { _, _, event ->
             if (com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(dialog, event) {
                 dialog.dismiss()
                 currentFocusedButton?.requestFocus()
@@ -732,7 +784,10 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         exitDialog?.dismiss()
         exitDialog = null
+        IdleAdManager.unregisterListener(this)
         adOverlayHelper.destroy()
-        SoundManager.release()
+        if (isFinishing) {
+            SoundManager.release()
+        }
     }
 }

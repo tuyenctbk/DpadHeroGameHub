@@ -66,8 +66,15 @@ object AppEngagementManager {
 
     /**
      * Call when player finishes a game session.
+     * Pass [skipPrompt] = true when another overlay (e.g., Revive or Interstitial) is taking priority
+     * so stats still accumulate without stacking dialogs on top of each other.
      */
-    fun onGameCompleted(activity: AppCompatActivity, isWin: Boolean, isNewHighScore: Boolean) {
+    fun onGameCompleted(
+        activity: AppCompatActivity,
+        isWin: Boolean,
+        isNewHighScore: Boolean,
+        skipPrompt: Boolean = false
+    ) {
         val prefs = activity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val games = prefs.getInt(KEY_GAMES_PLAYED, 0) + 1
         var wins = prefs.getInt(KEY_GAMES_WON, 0)
@@ -79,9 +86,8 @@ object AppEngagementManager {
             .putInt(KEY_GAMES_WON, wins)
             .apply()
 
-        if (isWin || isNewHighScore) {
+        if (!skipPrompt && (isWin || isNewHighScore)) {
             // High positive sentiment: attempt Rate dialog, or milestone Share dialog.
-            // Post with a delay to ensure input dispatch and win animations complete without blocking the UI thread.
             activity.window?.decorView?.postDelayed({
                 if (activity.isFinishing || activity.isDestroyed) return@postDelayed
                 if (!hasUserRated(activity) && shouldPromptRate(activity)) {
@@ -302,30 +308,35 @@ object AppEngagementManager {
             onDismiss?.invoke()
         }
 
-        dialog.show()
-        btnUpdate.requestFocus()
+        try {
+            if (!activity.isFinishing && !activity.isDestroyed) {
+                dialog.show()
+                btnUpdate.requestFocus()
+            } else {
+                isDialogOpen = false
+            }
+        } catch (_: Throwable) {
+            isDialogOpen = false
+        }
     }
 
     /**
-     * Checks Firebase Remote Config for newer version releases.
+     * Checks Firebase Remote Config for newer version releases (reuses ConfigManager values).
      */
     fun checkForAppUpdate(activity: AppCompatActivity, callback: ((Boolean) -> Unit)? = null) {
         activity.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val remoteConfig = Firebase.remoteConfig
-                val configSettings = remoteConfigSettings {
-                    minimumFetchIntervalInSeconds = 3600 // Cache 1 hour
-                }
-                remoteConfig.setConfigSettingsAsync(configSettings).await()
-                remoteConfig.fetchAndActivate().await()
-
-                val latestVersionCode = remoteConfig.getLong("latest_version_code")
-                val minRequiredCode = remoteConfig.getLong("min_required_version_code")
+                val latestVersionCode = ConfigManager.getLatestVersionCode()
+                val minRequiredCode = maxOf(
+                    ConfigManager.getMinVersionCode(),
+                    remoteConfig.getLong("min_required_version_code")
+                )
                 val updateMessage = remoteConfig.getString("update_message")
                 val isForce = BuildConfig.VERSION_CODE < minRequiredCode
 
                 withContext(Dispatchers.Main) {
-                    if (latestVersionCode > BuildConfig.VERSION_CODE) {
+                    if (!activity.isFinishing && !activity.isDestroyed && latestVersionCode > BuildConfig.VERSION_CODE) {
                         showUpdateDialog(
                             activity = activity,
                             isForce = isForce,

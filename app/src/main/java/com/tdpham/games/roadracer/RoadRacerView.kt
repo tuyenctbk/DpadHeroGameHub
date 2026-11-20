@@ -117,20 +117,27 @@ class RoadRacerView @JvmOverloads constructor(
     }
 
     override fun startGame() {
+        requestFocus()
         isPaused = false
         handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
+        handler.removeCallbacks(animRunnable)
+        handler.post(animRunnable)
         invalidate()
     }
 
     override fun pause() {
         isPaused = true
         handler.removeCallbacks(gameLoop)
+        handler.removeCallbacks(animRunnable)
     }
     override fun resume() {
+        requestFocus()
         isPaused = false
         handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
+        handler.removeCallbacks(animRunnable)
+        handler.post(animRunnable)
     }
 
     override fun onDetachedFromWindow() {
@@ -166,33 +173,72 @@ class RoadRacerView @JvmOverloads constructor(
         invalidate()
     }
 
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = isGameOver
+
+    override fun reviveGame(): Boolean {
+        if (!isGameOver) return false
+        isGameOver = false
+        isPaused = false
+        obstacles.clear()
+        nextObstacleTimer = 0f
+        gameSpeed = (gameSpeed * 0.8f).coerceAtLeast(10f)
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+        invalidate()
+        return true
+    }
+
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (isGameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resetGame(); startGame(); return true
             }
             return super.onKeyDown(keyCode, event)
         }
 
         if (isPaused) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 startGame(); return true
+            }
+            if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_TAB || keyCode == KeyEvent.KEYCODE_O) {
+                showOptions()
+                return true
             }
             return super.onKeyDown(keyCode, event)
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_LEFT -> { if (playerLane > 0) { playerLane--; SoundManager.playClick() } }
-            KeyEvent.KEYCODE_DPAD_RIGHT -> { if (playerLane < 2) { playerLane++; SoundManager.playClick() } }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A -> {
+                if (playerLane > 0) { playerLane--; SoundManager.playClick() }
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D -> {
+                if (playerLane < 2) { playerLane++; SoundManager.playClick() }
+            }
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> {
                 pause()
             }
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
                 return true
             }
+            KeyEvent.KEYCODE_VOLUME_MUTE -> {
+                toggleSound()
+                return true
+            }
+            else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
@@ -402,9 +448,9 @@ class RoadRacerView @JvmOverloads constructor(
         paint.pathEffect = null
         paint.style = Paint.Style.FILL
 
-        // Draw Obstacles
+        // Draw Obstacles (sync crossing animals' X position with checkCollision)
         for (obs in obstacles) {
-            val ox = obs.lane * laneWidth + (laneWidth - playerWidth) / 2f
+            val ox = if (obs.animalX != -999f) obs.animalX else obs.lane * laneWidth + (laneWidth - playerWidth) / 2f
             drawObstacle(canvas, ox, obs.y, obs, theme)
         }
 

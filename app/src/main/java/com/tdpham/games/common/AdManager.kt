@@ -43,6 +43,7 @@ object AdManager {
     private const val TEST_REWARDED_AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
     private const val TEST_REWARDED_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-3940256099942544/5354046379"
     private const val TEST_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712"
+    private const val TEST_NATIVE_AD_UNIT_ID = "ca-app-pub-3940256099942544/2247696110"
     
     private var isInitialized = false
     private var isInitializing = false
@@ -194,15 +195,17 @@ object AdManager {
             val appContext = context.applicationContext
             mainHandler.post {
                 val adRequest = AdRequest.Builder().build()
-                InterstitialAd.load(appContext, INTERSTITIAL_AD_UNIT_ID, adRequest,
+                val unitId = if (BuildConfig.DEBUG) TEST_INTERSTITIAL_AD_UNIT_ID else INTERSTITIAL_AD_UNIT_ID
+                InterstitialAd.load(appContext, unitId, adRequest,
                     object : InterstitialAdLoadCallback() {
                         override fun onAdFailedToLoad(adError: LoadAdError) {
                             Log.d(TAG, "Interstitial Ad failed to load: ${adError.message}")
                             mInterstitialAd = null
                             isLoadingInterstitial = false
-                            // No-fill backoff retry so an ad is ready by the next game over
-                            val delay = retryDelay(interstitialRetries++)
-                            mainHandler.postDelayed({ loadInterstitial(appContext) }, delay)
+                            if (interstitialRetries < RETRY_DELAYS_MS.size) {
+                                val delay = retryDelay(interstitialRetries++)
+                                mainHandler.postDelayed({ loadInterstitial(appContext) }, delay)
+                            }
                         }
 
                         override fun onAdLoaded(interstitialAd: InterstitialAd) {
@@ -226,6 +229,10 @@ object AdManager {
      */
     fun showInterstitial(activity: Activity, force: Boolean = false, onAdDismissed: () -> Unit = {}) {
         try {
+            if (activity.isFinishing || activity.isDestroyed) {
+                onAdDismissed()
+                return
+            }
             if (!ConfigManager.isAdsEnabled()) {
                 onAdDismissed()
                 return
@@ -287,6 +294,7 @@ object AdManager {
                 ad.show(activity)
             } else {
                 Log.d(TAG, "Interstitial Ad not ready yet - requesting 1 for next time")
+                interstitialRetries = 0
                 loadInterstitial(activity.applicationContext)
                 onAdDismissed()
             }
@@ -365,6 +373,10 @@ object AdManager {
         onAdDismissed: () -> Unit = {}
     ) {
         try {
+            if (activity.isFinishing || activity.isDestroyed) {
+                onAdDismissed()
+                return
+            }
             val standardAd = mStandardRewardedAd
             if (standardAd != null) {
                 standardAd.fullScreenContentCallback = object : FullScreenContentCallback() {
@@ -447,7 +459,8 @@ object AdManager {
                     .setVideoOptions(videoOptions)
                     .build()
 
-                val adLoader = AdLoader.Builder(appContext, NATIVE_AD_UNIT_ID)
+                val nativeUnitId = if (BuildConfig.DEBUG) TEST_NATIVE_AD_UNIT_ID else NATIVE_AD_UNIT_ID
+                val adLoader = AdLoader.Builder(appContext, nativeUnitId)
                     .forNativeAd { nativeAd ->
                         Log.d(TAG, "Native Ad loaded.")
                         prefetchedNativeAd = nativeAd
@@ -462,8 +475,10 @@ object AdManager {
                             Log.d(TAG, "Native Ad failed to load: ${adError.message}")
                             isNativeLoading = false
                             onNativeAdFailedListener?.invoke()
-                            val delay = retryDelay(nativeRetries++)
-                            mainHandler.postDelayed({ loadNativeAd(appContext) }, delay)
+                            if (nativeRetries < RETRY_DELAYS_MS.size) {
+                                val delay = retryDelay(nativeRetries++)
+                                mainHandler.postDelayed({ loadNativeAd(appContext) }, delay)
+                            }
                         }
                     })
                     .build()
@@ -549,13 +564,14 @@ object AdManager {
         val ctaView = adView.findViewById<Button>(R.id.ad_call_to_action)
         val iconView = adView.findViewById<ImageView>(R.id.ad_app_icon)
 
-        headlineView?.text = "D-Pad Arcade Hub"
+        val ctx = adView.context
+        headlineView?.text = ctx.getString(R.string.app_name)
         bodyView?.apply {
-            text = "Enjoy endless classic arcade games with TV D-Pad controls!"
+            text = ctx.getString(R.string.fallback_ad_body)
             visibility = View.VISIBLE
         }
         ctaView?.apply {
-            text = "Play Now"
+            text = ctx.getString(R.string.fallback_ad_cta)
             visibility = View.VISIBLE
         }
         iconView?.apply {

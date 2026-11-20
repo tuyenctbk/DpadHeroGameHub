@@ -94,6 +94,10 @@ class RevivePromptOverlay(context: Context) : FrameLayout(context) {
         }
     }
 
+    fun decline() {
+        close { onDecline?.invoke() }
+    }
+
     private fun close(after: () -> Unit) {
         if (isClosing) return
         isClosing = true

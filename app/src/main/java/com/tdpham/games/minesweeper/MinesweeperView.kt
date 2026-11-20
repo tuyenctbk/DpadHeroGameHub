@@ -132,10 +132,16 @@ class MinesweeperView @JvmOverloads constructor(
     }
 
     override fun pause() {
+        pressedKeys.clear()
+        moveHandler.removeCallbacks(moveRunnable)
         revealHandler.removeCallbacks(processQueueRunnable)
+        animationHandler.removeCallbacks(animationRunnable)
     }
 
     override fun resume() {
+        requestFocus()
+        animationHandler.removeCallbacks(animationRunnable)
+        animationHandler.post(animationRunnable)
         if (isProcessingQueue && !isGameOver && !isWin) {
             revealHandler.post(processQueueRunnable)
         }
@@ -289,6 +295,8 @@ class MinesweeperView @JvmOverloads constructor(
         }
 
         if (grid[r][c].isMine) {
+            lastExplodedR = r
+            lastExplodedC = c
             isGameOver = true
             SoundManager.playExplosion()
             revealAllMines(r, c)
@@ -428,39 +436,46 @@ class MinesweeperView @JvmOverloads constructor(
         }
     }
 
-    override val canRevive: Boolean get() = true
+    private var lastExplodedR = -1
+    private var lastExplodedC = -1
+
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = isGameOver && !isWin
 
     override fun reviveGame(): Boolean {
-        if (!isGameOver) return false
+        if (!isGameOver || isWin) return false
         isGameOver = false
-        // Disarm the mine at cursor or wherever clicked
-        if (cursorY in 0 until rows && cursorX in 0 until cols) {
-            val cell = grid[cursorY][cursorX]
-            if (cell.isMine) {
-                cell.isMine = false
-                cell.isRevealed = true
-                // Recompute neighbor mines for adjacent cells
-                for (r in 0 until rows) {
-                    for (c in 0 until cols) {
-                        if (!grid[r][c].isMine) {
-                            var count = 0
-                            for (dr in -1..1) {
-                                for (dc in -1..1) {
-                                    val nr = r + dr
-                                    val nc = c + dc
-                                    if (nr in 0 until rows && nc in 0 until cols && grid[nr][nc].isMine) {
-                                        count++
-                                    }
-                                }
-                            }
-                            grid[r][c].neighborMines = count
-                        }
-                    }
+
+        val disarmR = if (lastExplodedR in 0 until rows) lastExplodedR else cursorY
+        val disarmC = if (lastExplodedC in 0 until cols) lastExplodedC else cursorX
+
+        // Disarm the exploded mine and re-hide all other mines revealed on game over
+        if (disarmR in 0 until rows && disarmC in 0 until cols && grid[disarmR][disarmC].isMine) {
+            grid[disarmR][disarmC].isMine = false
+            grid[disarmR][disarmC].isRevealed = true
+            grid[disarmR][disarmC].isFlagged = false
+            minesCount = (minesCount - 1).coerceAtLeast(0)
+        }
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (grid[r][c].isMine) {
+                    grid[r][c].isRevealed = false
                 }
             }
         }
+        // Recompute neighbor counts across the board
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (!grid[r][c].isMine) {
+                    grid[r][c].neighborMines = countMinesAround(r, c)
+                }
+            }
+        }
+        lastExplodedR = -1
+        lastExplodedC = -1
         celebrationManager.clear()
         SoundManager.playSuccess()
+        checkWin()
         invalidate()
         return true
     }
@@ -538,7 +553,7 @@ class MinesweeperView @JvmOverloads constructor(
                 return true
             }
 
-            cellSize = width.coerceAtMost(height).toFloat() / (rows + 5)
+            cellSize = minOf((width * 0.94f) / cols, height.toFloat() / (rows + 5))
             val offsetX = (width - cellSize * cols) / 2
             val offsetY = (height - cellSize * rows) / 2 + cellSize * 1.5f
             
@@ -591,7 +606,8 @@ class MinesweeperView @JvmOverloads constructor(
             hintShowFrames--
         }
 
-        cellSize = width.coerceAtMost(height).toFloat() / (rows + 5)
+        if (width <= 0 || height <= 0) return
+        cellSize = minOf((width * 0.94f) / cols, height.toFloat() / (rows + 5))
         val offsetX = (width - cellSize * cols) / 2
         val offsetY = (height - cellSize * rows) / 2 + cellSize * 1.5f
 

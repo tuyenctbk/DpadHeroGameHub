@@ -119,11 +119,12 @@ class TRexView @JvmOverloads constructor(
 
     private val frameCallback = object : android.view.Choreographer.FrameCallback {
         override fun doFrame(frameTimeNanos: Long) {
+            if (windowVisibility != View.VISIBLE || !isAttachedToWindow) return
             if (!isGameOver && !isPaused) {
                 update()
                 invalidate()
                 android.view.Choreographer.getInstance().postFrameCallback(this)
-            } else if (isGameOver) {
+            } else if (isGameOver && celebrationManager.isActive()) {
                 celebrationManager.update()
                 invalidate()
                 android.view.Choreographer.getInstance().postFrameCallback(this)
@@ -214,6 +215,18 @@ class TRexView @JvmOverloads constructor(
         android.view.Choreographer.getInstance().postFrameCallback(frameCallback)
     }
 
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (visibility == View.VISIBLE) {
+            if (!isPaused || (isGameOver && celebrationManager.isActive())) {
+                android.view.Choreographer.getInstance().removeFrameCallback(frameCallback)
+                android.view.Choreographer.getInstance().postFrameCallback(frameCallback)
+            }
+        } else {
+            android.view.Choreographer.getInstance().removeFrameCallback(frameCallback)
+        }
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         android.view.Choreographer.getInstance().removeFrameCallback(frameCallback)
@@ -284,11 +297,36 @@ class TRexView @JvmOverloads constructor(
         invalidate()
     }
 
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = isGameOver
+
+    override fun reviveGame(): Boolean {
+        if (!isGameOver) return false
+        isGameOver = false
+        causeOfDeath = null
+        dinoY = 0f
+        dinoVelocityY = 0f
+        isJumping = false
+        hasDoubleJumped = false
+        obstacles.clear()
+        pendingObstacles.clear()
+        nextObstacleDistance = 650f
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        resume()
+        invalidate()
+        return true
+    }
+
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (isGameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resetGame()
                 startGame()
                 return true
@@ -297,7 +335,7 @@ class TRexView @JvmOverloads constructor(
         }
 
         return when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> {
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W -> {
                 if (isPaused) {
                     resume()
                 } else {
@@ -305,7 +343,7 @@ class TRexView @JvmOverloads constructor(
                 }
                 true
             }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE -> {
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> {
                 if (isPaused) resume() else jump()
                 true
             }
@@ -346,12 +384,6 @@ class TRexView @JvmOverloads constructor(
     }
 
     override fun performClick(): Boolean {
-        if (isPaused && !isGameOver) {
-            TRexOptionsDialog.show(context) {
-                resetGame()
-            }
-            return true
-        }
         super.performClick()
         return true
     }
@@ -867,6 +899,7 @@ class TRexView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (width <= 0 || height <= 0) return
         super.onDraw(canvas)
 
         canvas.save()
@@ -1031,7 +1064,6 @@ class TRexView @JvmOverloads constructor(
 
         if (isGameOver) {
             celebrationManager.draw(canvas)
-            invalidate()
             val title = currentVictoryWord.ifEmpty { context.getString(R.string.game_over) }
             drawOverlay(canvas, title, theme.textColor)
         }

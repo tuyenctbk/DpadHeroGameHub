@@ -26,7 +26,7 @@ object ProfileManager {
                     avatarColor = obj.getInt("avatarColor"),
                     avatarId = if (obj.has("avatarId")) obj.getInt("avatarId") else 0,
                     createdAt = obj.getLong("createdAt"),
-                    pin = if (obj.has("pin")) obj.getString("pin") else null
+                    pin = if (obj.has("pin") && !obj.isNull("pin")) obj.getString("pin").takeIf { it.isNotEmpty() && it != "null" } else null
                 ))
             }
         } catch (e: Exception) {

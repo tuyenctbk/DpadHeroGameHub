@@ -78,7 +78,7 @@ abstract class BaseGameView @JvmOverloads constructor(
         private set
 
     private var originalThreadHandler: Thread.UncaughtExceptionHandler? = null
-    private val gameExceptionHandler by lazy { GameUncaughtExceptionHandler(this) }
+    private var installedExceptionHandler: GameUncaughtExceptionHandler? = null
 
     init {
         surfaceHolder.addCallback(this)
@@ -89,15 +89,21 @@ abstract class BaseGameView @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        originalThreadHandler = Thread.getDefaultUncaughtExceptionHandler()
-        Thread.setDefaultUncaughtExceptionHandler(GameUncaughtExceptionHandler(this, originalThreadHandler))
+        val currentDefault = Thread.getDefaultUncaughtExceptionHandler()
+        if (currentDefault !is GameUncaughtExceptionHandler) {
+            originalThreadHandler = currentDefault
+        }
+        val handler = GameUncaughtExceptionHandler(this, originalThreadHandler)
+        installedExceptionHandler = handler
+        Thread.setDefaultUncaughtExceptionHandler(handler)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (originalThreadHandler != null) {
+        if (Thread.getDefaultUncaughtExceptionHandler() === installedExceptionHandler) {
             Thread.setDefaultUncaughtExceptionHandler(originalThreadHandler)
         }
+        installedExceptionHandler = null
     }
 
     /**
@@ -299,7 +305,8 @@ abstract class BaseGameView @JvmOverloads constructor(
             isPaused = false
             gameThread = Thread(this, "BaseGameEngineThread_${gameKey}").apply {
                 priority = Thread.NORM_PRIORITY + 1
-                uncaughtExceptionHandler = gameExceptionHandler
+                uncaughtExceptionHandler = installedExceptionHandler
+                    ?: GameUncaughtExceptionHandler(this@BaseGameView, originalThreadHandler)
                 start()
             }
         }
@@ -382,10 +389,15 @@ abstract class BaseGameView @JvmOverloads constructor(
                         if (!isRunning || !surfaceHolder.surface.isValid) break
                         canvas = surfaceHolder.lockCanvas()
                         if (canvas != null && isRunning && surfaceHolder.surface.isValid) {
+                            val saveCount = canvas.save()
                             try {
                                 onRender(canvas, interpolation)
                             } catch (e: Throwable) {
                                 logCrashToFirebase(e, "onRender")
+                            } finally {
+                                try {
+                                    canvas.restoreToCount(saveCount)
+                                } catch (_: Throwable) {}
                             }
                         }
                     } catch (e: Exception) {

@@ -84,8 +84,20 @@ class SimonSaysView @JvmOverloads constructor(
         startNextRound()
     }
 
-    override fun pause() { gamePaused = true }
-    override fun resume() { gamePaused = false; invalidate() }
+    override fun pause() {
+        gamePaused = true
+        handler.removeCallbacksAndMessages(null)
+        activeQuadrant = -1
+    }
+
+    override fun resume() {
+        requestFocus()
+        gamePaused = false
+        if (!gameOver && sequence.isNotEmpty() && isShowingSequence) {
+            showSequence()
+        }
+        invalidate()
+    }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
@@ -141,7 +153,8 @@ class SimonSaysView @JvmOverloads constructor(
         handler.removeCallbacksAndMessages(null)
     }
 
-    override val canRevive: Boolean get() = true
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = gameOver
 
     override fun reviveGame(): Boolean {
         if (!gameOver) return false
@@ -177,7 +190,23 @@ class SimonSaysView @JvmOverloads constructor(
             return true
         }
 
-        if (isShowingSequence || gamePaused) return true
+        if (isShowingSequence || gamePaused) {
+            if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_TAB || keyCode == KeyEvent.KEYCODE_O) {
+                showOptions()
+                return true
+            }
+            val isGameplayKey = keyCode == KeyEvent.KEYCODE_DPAD_UP ||
+                keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+                keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
+                keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
+                keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_X ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_Y
+            return if (isGameplayKey) true else super.onKeyDown(keyCode, event)
+        }
 
         val input = when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_BUTTON_Y -> 0

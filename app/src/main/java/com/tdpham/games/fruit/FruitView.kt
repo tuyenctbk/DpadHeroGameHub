@@ -176,16 +176,21 @@ class FruitView @JvmOverloads constructor(
 
     override fun pause() {
         gamePaused = true
+        pressedKeys.clear()
         handler.removeCallbacks(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
     }
 
     override fun resume() {
         gamePaused = false
         handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
     }
 
-    override val canRevive: Boolean get() = true
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = gameOver
 
     override fun reviveGame(): Boolean {
         if (!gameOver) return false
@@ -236,7 +241,8 @@ class FruitView @JvmOverloads constructor(
         val isBomb = if (isInitialGrace) false else (Random.nextFloat() < bombProbability)
         val radius = Random.nextFloat() * 20f + 48f // Nice large fruits (48f to 68f)
 
-        val x = Random.nextFloat() * (width - 200f) + 100f
+        val spanX = max(1f, width - 200f)
+        val x = Random.nextFloat() * spanX + 100f
         val y = height + 50f
         val vx = (Random.nextFloat() * 6f - 3f)
         val vy = -(Random.nextFloat() * 5f + 13f) // Launch upwards
@@ -817,29 +823,6 @@ class FruitView @JvmOverloads constructor(
         val now = System.currentTimeMillis()
         val blinkRed = now - lastBombHitTime < 500L
 
-        // Spawn Sword Particles when moving
-        if (Random.nextFloat() < 0.35f && !gamePaused) {
-            val color = when (selectedBlade) {
-                1 -> Color.parseColor("#FF7043") // Fire Orange
-                2 -> Color.parseColor("#00E5FF") // Cyber Cyan
-                3 -> Color.parseColor("#7E57C2") // Shadow Violet
-                else -> Color.WHITE
-            }
-            repeat(3) {
-                trailParticles.add(
-                    TrailParticle(
-                        x = cursorX,
-                        y = cursorY,
-                        vx = Random.nextFloat() * 4f - 2f,
-                        vy = Random.nextFloat() * 4f - 2f,
-                        color = color,
-                        size = Random.nextFloat() * 6f + 3f,
-                        alpha = 200
-                    )
-                )
-            }
-        }
-
         paint.reset()
         paint.isAntiAlias = true
         paint.strokeCap = Paint.Cap.ROUND
@@ -945,7 +928,7 @@ class FruitView @JvmOverloads constructor(
         // Best / Score
         paint.textAlign = Paint.Align.RIGHT
         paint.textSize = 34f
-        canvas.drawText("BEST: $best  SCORE: $score", rightX, hudY, paint)
+        canvas.drawText(context.getString(R.string.fruit_best_score_format, best, score), rightX, hudY, paint)
     }
 
     private fun drawOverlay(canvas: Canvas, title: String, subtitle: String) {

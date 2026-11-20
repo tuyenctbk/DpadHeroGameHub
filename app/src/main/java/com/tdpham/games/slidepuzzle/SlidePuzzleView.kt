@@ -69,9 +69,14 @@ class SlidePuzzleView @JvmOverloads constructor(
         requestFocus()
     }
 
-    override fun pause() {}
+    override fun pause() {
+        handler.removeCallbacks(animRunnable)
+    }
+
     override fun resume() {
         requestFocus()
+        handler.removeCallbacks(animRunnable)
+        handler.post(animRunnable)
     }
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
@@ -175,15 +180,7 @@ class SlidePuzzleView @JvmOverloads constructor(
         tiles[j] = temp
     }
 
-    override val canRevive: Boolean get() = true
-
-    override fun reviveGame(): Boolean {
-        resetGame()
-        celebrationManager.clear()
-        SoundManager.playSuccess()
-        invalidate()
-        return true
-    }
+    override val canRevive: Boolean get() = false
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {

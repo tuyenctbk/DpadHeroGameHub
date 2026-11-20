@@ -31,17 +31,17 @@ class WordQuestView @JvmOverloads constructor(
         "HEART", "DREAM", "WORLD", "PILOT", "SHINE", "LEVEL", "TRACK", "STAGE", "MATCH", "BRICK",
         "POINT", "SNAKE", "ROBOT", "SUPER", "SOUND", "GUIDE", "QUICK", "FLASH", "TIMER", "SMART",
         "COLOR", "ROUND", "QUEST", "BRAVE", "CLEAR", "EARTH", "FINAL", "GREAT", "HOUSE", "IMAGE",
-        "JOINT", "KNIFE", "LARGE", "MODEL", "NORTH", "OCEAN", "PLANT", "SPACE", "TOUCH", "VALVE"
+        "JOINT", "KNIFE", "LARGE", "MODEL", "NORTH", "OCEAN", "PLANT", "LASER", "TOUCH", "VALVE"
     ).map { it.uppercase() }.filter { it.length == 5 }
 
     private val natureWords = listOf(
-        "OCEAN", "PLANT", "EARTH", "WORLD", "FIELD", "WATER", "FLOWER", "RIVER", "CLOUD", "STORM",
-        "GRASS", "TREES", "LEAFY", "STONE", "BEACH", "MOUNTS", "SUNNY", "RAINY", "WINDY", "FROST"
+        "OCEAN", "PLANT", "EARTH", "WORLD", "FIELD", "WATER", "BLOOM", "RIVER", "CLOUD", "STORM",
+        "GRASS", "TREES", "LEAFY", "STONE", "BEACH", "CLIFF", "SUNNY", "RAINY", "WINDY", "FROST"
     ).map { it.uppercase() }.filter { it.length == 5 }
 
     private val techWords = listOf(
         "ROBOT", "PIXEL", "POWER", "CLOCK", "TIMER", "FLASH", "MODEL", "VALVE", "SPACE", "TRACK",
-        "MOUSE", "BOARD", "LOGIC", "DATA", "MICRO", "CHIPY", "CODEX", "SOUND", "AUDIO", "VIDEO"
+        "MOUSE", "BOARD", "LOGIC", "STACK", "MICRO", "CYBER", "CODEX", "SOUND", "AUDIO", "VIDEO"
     ).map { it.uppercase() }.filter { it.length == 5 }
 
     private var targetWord = ""
@@ -104,8 +104,15 @@ class WordQuestView @JvmOverloads constructor(
         requestFocus()
     }
 
-    override fun pause() {}
-    override fun resume() { requestFocus() }
+    override fun pause() {
+        animHandler.removeCallbacks(animRunnable)
+    }
+
+    override fun resume() {
+        requestFocus()
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
+    }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
@@ -213,6 +220,38 @@ class WordQuestView @JvmOverloads constructor(
         return true
     }
 
+    private data class BoardLayout(
+        val cellS: Float,
+        val margin: Float,
+        val startX: Float,
+        val startY: Float,
+        val keyS: Float,
+        val keyM: Float,
+        val kStartY: Float
+    )
+
+    private fun computeLayout(): BoardLayout {
+        val w = width.toFloat().coerceAtLeast(1f)
+        val h = height.toFloat().coerceAtLeast(1f)
+        val topReserve = max(86f, h * 0.11f)
+        val bottomMargin = max(20f, h * 0.03f)
+        val availH = (h - topReserve - bottomMargin).coerceAtLeast(200f)
+        val cellFromH = availH / 9.45f
+        val cellFromW = (w * 0.88f) / 10.6f
+        val cellS = min(84f, min(cellFromH, cellFromW / 0.72f)).coerceAtLeast(32f)
+        val margin = (cellS * 0.12f).coerceIn(4f, 10f)
+        val keyS = min(cellS * 0.75f, (w * 0.90f) / 11.2f).coerceAtLeast(28f)
+        val keyM = (keyS * 0.12f).coerceIn(4f, 8f)
+        val gridH = 6 * cellS + 5 * margin
+        val kbH = 3 * keyS + 2 * keyM
+        val gapBetween = (cellS * 0.42f).coerceIn(16f, 36f)
+        val totalH = gridH + gapBetween + kbH
+        val startY = topReserve + ((availH - totalH).coerceAtLeast(0f)) / 2f
+        val startX = (w - (5 * cellS + 4 * margin)) / 2f
+        val kStartY = startY + gridH + gapBetween
+        return BoardLayout(cellS, margin, startX, startY, keyS, keyM, kStartY)
+    }
+
     override fun onTouchEvent(event: android.view.MotionEvent): Boolean {
         if (event.action == android.view.MotionEvent.ACTION_DOWN) {
             performClick()
@@ -221,20 +260,17 @@ class WordQuestView @JvmOverloads constructor(
                 return true
             }
 
-            // Keyboard layout (must match onDraw)
-            val cellS = 80f
-            val margin = 10f
-            val startY = 80f
-            val keyS = 60f
-            val keyM = 8f
-            val kStartY = startY + 6 * (cellS + margin) + 40f
-            
+            val layout = computeLayout()
+            val keyS = layout.keyS
+            val keyM = layout.keyM
+            val kStartY = layout.kStartY
+
             val x = event.x
             val y = event.y
 
             for (r in keyboard.indices) {
                 val kRow = keyboard[r]
-                val rowW = kRow.length * (keyS + keyM)
+                val rowW = kRow.length * (keyS + keyM) - keyM
                 val rowX = (width - rowW) / 2f
                 for (c in kRow.indices) {
                     val kx = rowX + c * (keyS + keyM)
@@ -321,16 +357,18 @@ class WordQuestView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (width <= 0 || height <= 0) return
         canvas.drawColor(GamePalette.BACKGROUND)
 
         if (hintShowFrames > 0) {
             hintShowFrames--
         }
 
-        val cellS = 80f
-        val margin = 10f
-        val startX = (width - (5 * cellS + 4 * margin)) / 2f
-        val startY = 80f
+        val layout = computeLayout()
+        val cellS = layout.cellS
+        val margin = layout.margin
+        val startX = layout.startX
+        val startY = layout.startY
 
         // Draw Guesses
         for (r in 0 until 6) {
@@ -349,31 +387,29 @@ class WordQuestView @JvmOverloads constructor(
                 
                 // Bevel highlight
                 paint.color = Color.argb(40, 255, 255, 255)
-                canvas.drawRect(x + 5, y + 5, x + cellS - 5, y + 12, paint)
+                canvas.drawRect(x + 5, y + 5, x + cellS - 5, y + 10, paint)
 
                 if (char != ' ') {
                     // Subtle "pop" animation by slight scaling
                     val isCurrentChar = (r == guesses.size && c == word.length - 1)
-                    val charScale = if (isCurrentChar) 1.2f else 1.0f
+                    val charScale = if (isCurrentChar) 1.18f else 1.0f
                     
                     paint.color = Color.WHITE
-                    paint.textSize = 44f
+                    paint.textSize = cellS * 0.55f
                     paint.textAlign = Paint.Align.CENTER
                     
-                    val textX = x + cellS / 2
-                    val textY = y + cellS / 2 + 15f
+                    val textX = x + cellS / 2f
+                    val textY = y + cellS / 2f + paint.textSize * 0.35f
                     
                     if (charScale > 1.0f) {
                         canvas.save()
                         canvas.scale(charScale, charScale, textX, textY)
-                        // Shadow
                         paint.color = Color.BLACK
                         canvas.drawText(char.toString(), textX + 2, textY + 2, paint)
                         paint.color = Color.WHITE
                         canvas.drawText(char.toString(), textX, textY, paint)
                         canvas.restore()
                     } else {
-                        // Shadow
                         paint.color = Color.BLACK
                         canvas.drawText(char.toString(), textX + 2, textY + 2, paint)
                         paint.color = Color.WHITE
@@ -391,13 +427,13 @@ class WordQuestView @JvmOverloads constructor(
         }
 
         // Draw On-screen Keyboard
-        val keyS = 60f
-        val keyM = 8f
-        val kStartY = startY + 6 * (cellS + margin) + 40f
+        val keyS = layout.keyS
+        val keyM = layout.keyM
+        val kStartY = layout.kStartY
         
         for (r in keyboard.indices) {
             val kRow = keyboard[r]
-            val rowW = kRow.length * (keyS + keyM)
+            val rowW = kRow.length * (keyS + keyM) - keyM
             val rowX = (width - rowW) / 2f
             for (c in kRow.indices) {
                 val x = rowX + c * (keyS + keyM)
@@ -426,9 +462,9 @@ class WordQuestView @JvmOverloads constructor(
                 paint.clearShadowLayer()
                 
                 paint.color = if (isSelected) Color.BLACK else Color.WHITE
-                paint.textSize = 30f
+                paint.textSize = keyS * 0.50f
                 paint.textAlign = Paint.Align.CENTER
-                canvas.drawText(kRow[c].toString(), keyRect.centerX(), keyRect.centerY() + 10f, paint)
+                canvas.drawText(kRow[c].toString(), keyRect.centerX(), keyRect.centerY() + paint.textSize * 0.34f, paint)
             }
         }
 

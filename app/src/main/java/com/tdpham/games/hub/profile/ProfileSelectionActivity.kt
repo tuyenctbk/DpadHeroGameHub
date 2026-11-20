@@ -23,6 +23,8 @@ class ProfileSelectionActivity : AppCompatActivity() {
 
     private lateinit var profileContainer: LinearLayout
 
+    private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_selection)
@@ -133,6 +135,9 @@ class ProfileSelectionActivity : AppCompatActivity() {
         dialog.setContentView(R.layout.dialog_pin_entry)
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
         dialog.setCancelable(true)
+        dialog.setOnKeyListener { _, _, event ->
+            com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(dialog, event)
+        }
 
         val editPin = dialog.findViewById<EditText>(R.id.edit_pin)
         val errorView = dialog.findViewById<TextView>(R.id.pin_error)
@@ -167,6 +172,9 @@ class ProfileSelectionActivity : AppCompatActivity() {
             dialog.setContentView(R.layout.dialog_pin_entry)
             dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
             dialog.setCancelable(true)
+            dialog.setOnKeyListener { _, _, event ->
+                com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(dialog, event)
+            }
 
             val editPin = dialog.findViewById<EditText>(R.id.edit_pin)
             val errorView = dialog.findViewById<TextView>(R.id.pin_error)
@@ -186,6 +194,8 @@ class ProfileSelectionActivity : AppCompatActivity() {
                             s.clear()
                             SoundManager.playError()
                         }
+                    } else {
+                        errorView.visibility = View.INVISIBLE
                     }
                 }
             })
@@ -199,12 +209,13 @@ class ProfileSelectionActivity : AppCompatActivity() {
     private fun showOptionsList(profile: UserProfile) {
         val dialog = android.app.Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
         dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
+        val pad = dpToPx(24)
         val view = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setBackgroundResource(R.drawable.dialog_background)
-            setPadding(28, 28, 28, 28)
+            setPadding(pad, pad, pad, pad)
             gravity = android.view.Gravity.CENTER_HORIZONTAL
-            layoutParams = LinearLayout.LayoutParams(400, LinearLayout.LayoutParams.WRAP_CONTENT)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(360), LinearLayout.LayoutParams.WRAP_CONTENT)
         }
 
         val title = TextView(this).apply {
@@ -213,7 +224,7 @@ class ProfileSelectionActivity : AppCompatActivity() {
             textSize = 22f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             gravity = android.view.Gravity.CENTER
-            setPadding(0, 0, 0, 16)
+            setPadding(0, 0, 0, dpToPx(16))
         }
 
         val btnEdit = android.widget.Button(this).apply {
@@ -223,8 +234,8 @@ class ProfileSelectionActivity : AppCompatActivity() {
             textSize = 16f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             isFocusable = true
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 50).apply {
-                setMargins(0, 0, 0, 10)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(50)).apply {
+                setMargins(0, 0, 0, dpToPx(10))
             }
             setOnClickListener {
                 dialog.dismiss()
@@ -241,8 +252,8 @@ class ProfileSelectionActivity : AppCompatActivity() {
             textSize = 15f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             isFocusable = true
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 46).apply {
-                setMargins(0, 0, 0, 10)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(48)).apply {
+                setMargins(0, 0, 0, dpToPx(10))
             }
             setOnClickListener {
                 dialog.dismiss()
@@ -257,7 +268,7 @@ class ProfileSelectionActivity : AppCompatActivity() {
             textSize = 14f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             isFocusable = true
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 44)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(48))
             setOnClickListener { dialog.dismiss() }
         }
 
@@ -288,12 +299,13 @@ class ProfileSelectionActivity : AppCompatActivity() {
     private fun confirmDelete(profile: UserProfile) {
         val dialog = android.app.Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
         dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
+        val pad = dpToPx(24)
         val view = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setBackgroundResource(R.drawable.dialog_background)
-            setPadding(28, 28, 28, 28)
+            setPadding(pad, pad, pad, pad)
             gravity = android.view.Gravity.CENTER_HORIZONTAL
-            layoutParams = LinearLayout.LayoutParams(400, LinearLayout.LayoutParams.WRAP_CONTENT)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(360), LinearLayout.LayoutParams.WRAP_CONTENT)
         }
 
         val title = TextView(this).apply {
@@ -302,14 +314,14 @@ class ProfileSelectionActivity : AppCompatActivity() {
             textSize = 22f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             gravity = android.view.Gravity.CENTER
-            setPadding(0, 0, 0, 12)
+            setPadding(0, 0, 0, dpToPx(12))
         }
         val msg = TextView(this).apply {
             text = getString(R.string.confirm_delete_profile)
             setTextColor(Color.parseColor("#B0BEC5"))
             textSize = 15f
             gravity = android.view.Gravity.CENTER
-            setPadding(0, 0, 0, 24)
+            setPadding(0, 0, 0, dpToPx(20))
         }
         val btnYes = android.widget.Button(this).apply {
             text = getString(R.string.yes)
@@ -318,8 +330,8 @@ class ProfileSelectionActivity : AppCompatActivity() {
             textSize = 16f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             isFocusable = true
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 48).apply {
-                setMargins(0, 0, 0, 10)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(48)).apply {
+                setMargins(0, 0, 0, dpToPx(10))
             }
             setOnClickListener {
                 dialog.dismiss()
@@ -340,7 +352,7 @@ class ProfileSelectionActivity : AppCompatActivity() {
             textSize = 15f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             isFocusable = true
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 46)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(48))
             setOnClickListener { dialog.dismiss() }
         }
         btnYes.id = View.generateViewId()

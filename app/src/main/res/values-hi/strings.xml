@@ -719,4 +719,208 @@
     <string name="revive_message">जहाँ छोड़ा था वहीं से जारी रखने के लिए एक छोटा वीडियो देखें।</string>
     <string name="revive_watch_ad">विज्ञापन देखें</string>
     <string name="revive_no_thanks">नहीं, धन्यवाद</string>
+
+    <string name="scanline_crt_effect">CRT स्कैनलाइन फ़िल्टर</string>
+    <string name="scanline_crt_desc">क्लासिक आर्केड CRT मॉनिटर की स्कैनलाइन का अनुभव दें।</string>
+    <string name="screen_shake_effect">स्क्रीन शेक प्रभाव</string>
+    <string name="screen_shake_desc">टकराव और विस्फोटों के दौरान गतिशील स्क्रीन कंपन।</string>
+    <string name="reset_high_scores">उच्च स्कोर रीसेट करें</string>
+    <string name="reset_high_scores_desc">सक्रिय हीरो के सभी रिकॉर्ड किए गए सर्वश्रेष्ठ स्कोर मिटाएँ।</string>
+    <string name="reset_scores_confirm">क्या आप वाकई इस हीरो के सभी उच्च स्कोर मिटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।</string>
+    <string name="scores_cleared">उच्च स्कोर रीसेट कर दिए गए हैं।</string>
+    <string name="frenzy_tang">ब्लू टैंग मछली</string>
+    <string name="frenzy_barracuda">बैराकुडा</string>
+    <string name="frenzy_shark">शार्क</string>
+
+    <string-array name="win_connect_four">
+        <item>चार एक कतार में!</item>
+        <item>ग्रिड मास्टर!</item>
+        <item>रणनीति के महारथी!</item>
+        <item>कनेक्ट फोर चैंपियन!</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>नेचुरल ब्लैकजैक!</item>
+        <item>हाई रोलर!</item>
+        <item>डीलर को हराया!</item>
+        <item>कसीनो रॉयल!</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>ज्ञान के महारथी!</item>
+        <item>परफ़ेक्ट स्कोर!</item>
+        <item>ट्रिविया मास्टर!</item>
+        <item>क्विज़ चैंपियन!</item>
+    </string-array>
+
+    <string name="game_connect_four">कनेक्ट फोर</string>
+    <string name="game_connect_four_instructions">क्लासिक 4-इन-ए-रो रणनीतिक मुकाबला!\n• D-PAD बायाँ / दायाँ: कॉलम के बीच कर्सर घुमाएँ\n• D-PAD केंद्र / ENTER: कॉलम में डिस्क गिराएँ\n• क्षैतिज, लंबवत या तिरछे 4 डिस्क जोड़ें\n• स्मार्ट AI या 2-खिलाड़ी मुकाबले में खेलें!</string>
+    <string name="connect_four_settings_title">कनेक्ट फोर सेटिंग्स</string>
+    <string name="game_blackjack">ब्लैकजैक 21</string>
+    <string name="game_blackjack_instructions">असली वेगास कसीनो ब्लैकजैक टेबल!\n• लक्ष्य: 21 से अधिक हुए बिना 21 के सबसे करीब पहुँचें\n• D-PAD ऊपर / नीचे / बायाँ / दायाँ: चिप्स और विकल्प चुनें\n• D-PAD केंद्र / ENTER: दांव / डील / हिट / स्टैंड / डबल डाउन\n• ब्लैकजैक 3:2 का इनाम देता है! चिप्स जीतें और खज़ाना बढ़ाएँ!</string>
+    <string name="blackjack_settings_title">ब्लैकजैक सेटिंग्स</string>
+    <string name="game_trivia">ट्रिविया क्विज़</string>
+    <string name="game_trivia_instructions">रोमांचक आर्केड क्विज़ शो!\n• D-PAD ऊपर / नीचे / बायाँ / दायाँ: उत्तर A, B, C या D चुनें\n• D-PAD केंद्र / ENTER: उत्तर पक्का करें\n• बड़े समय बोनस के लिए तेज़ी से उत्तर दें\n• लाइफलाइन का उपयोग करें: 50:50, टाइमर रोकें और प्रश्न छोड़ें\n• बड़े कॉइन इनाम के लिए 10 प्रश्नों की चुनौती पूरी करें!</string>
+    <string name="trivia_settings_title">ट्रिविया क्विज़ सेटिंग्स</string>
+
+    <string name="sound_profile_label">ध्वनि प्रोफ़ाइल</string>
+    <string name="sound_profile_arcade">आर्केड 8-बिट</string>
+    <string name="sound_profile_retro">रेट्रो सिंथ</string>
+    <string name="sound_profile_modern">मॉडर्न डिजिटल</string>
+    <string name="sound_profile_arcade_desc">दमदार 8-बिट पल्स तरंगें</string>
+    <string name="sound_profile_retro_desc">गर्म एनालॉग सिंथ स्वर</string>
+    <string name="sound_profile_modern_desc">स्पष्ट पॉलीफ़ोनिक ध्वनियाँ</string>
+    <string name="sound_profile_toast">ध्वनि प्रोफ़ाइल: %1$s</string>
+    <string name="sound_profile_desc_format">%1$s • बदलने के लिए टैप करें</string>
+    <string name="volume_desc_format">वॉल्यूम: %1$d%% • स्तर बदलने के लिए टैप करें</string>
+    <string name="sensitivity_toast">कंट्रोलर संवेदनशीलता: %1$s</string>
+
+    <string name="trivia_gauntlet_completed">चुनौती पूरी हुई! 🏆</string>
+    <string name="trivia_final_score">अंतिम स्कोर: %1$d अंक</string>
+    <string name="trivia_accuracy">सटीकता: %1$d / %2$d सही (%3$d%%)</string>
+    <string name="trivia_coins_earned">+%1$d सिक्के अर्जित 🪙</string>
+    <string name="trivia_play_again">फिर से खेलें [ENTER]</string>
+    <string name="press_enter_next_round">अगले दौर के लिए [ENTER] दबाएँ</string>
+    <string name="twentyfortyeight_hint">🎮 D-Pad/स्वाइप: चलें • [U] पूर्ववत • [MENU] आकार</string>
+
+    <string name="tab_local">🏠 स्थानीय</string>
+    <string name="tab_worldwide">🌐 वैश्विक</string>
+
+    <string name="setting_volume_desc_format">वॉल्यूम: %1$d%% • समायोजित करने के लिए वॉल्यूम बैज टैप करें</string>
+    <string name="setting_sound_profile_theme">ध्वनि प्रोफ़ाइल थीम</string>
+    <string name="setting_sound_profile_desc">आर्केड 8-बिट • ऑडियो प्रीसेट बदलने के लिए टैप करें</string>
+    <string name="setting_retro_music">रेट्रो संगीत और माहौल</string>
+    <string name="setting_retro_music_desc">सिंथेसाइज़र बैकग्राउंड आर्केड धुनें</string>
+    <string name="setting_controller_sensitivity">कंट्रोलर और गेमपैड संवेदनशीलता</string>
+    <string name="setting_controller_sensitivity_desc">D-Pad, जॉयस्टिक और टच प्रतिक्रिया समायोजित करें</string>
+    <string name="setting_haptic_vibration">हैप्टिक और कंट्रोलर कंपन</string>
+    <string name="setting_haptic_vibration_desc">हिट, स्कोर और विस्फोट पर स्पर्श कंपन</string>
+    <string name="calibrate">कैलिब्रेट</string>
+
+    <string name="badge_live">● लाइव</string>
+    <string name="global_top3_snake">वैश्विक टॉप 3 • स्नेक</string>
+    <string name="hall_of_fame_widget">हॉल ऑफ़ फ़ेम 🏆</string>
+    <string name="placeholder_dash">---</string>
+    <string name="zero_pts">0 अंक</string>
+
+    <string name="controller_settings_title">🎮 कंट्रोलर और हैप्टिक सेटिंग्स</string>
+    <string name="hardware_diagnostics">हार्डवेयर निदान</string>
+    <string name="controller_checking">🎮 कंट्रोलर: उपकरणों की जाँच हो रही है...</string>
+    <string name="vibrator_checking">⚡ वाइब्रेटर: VibratorManager की जाँच हो रही है...</string>
+    <string name="haptic_rumble_title">हैप्टिक और रंबल कंपन</string>
+    <string name="haptic_rumble_desc">टकराव, सिक्कों और बटन के लिए मोटर कंपन सक्षम करें</string>
+    <string name="haptic_intensity_title">हैप्टिक तीव्रता (कंपन आयाम)</string>
+    <string name="vibration_motor_test_title">कंपन मोटर हार्डवेयर परीक्षण</string>
+    <string name="vibration_test_instructions">मोटर प्रतिक्रिया जाँचने के लिए कंपन प्रोफ़ाइल चुनें और टेस्ट दबाएँ:</string>
+    <string name="vibe_profile_click">🕹️ क्लिक (15ms)</string>
+    <string name="vibe_profile_score">⚡ स्कोर (35ms)</string>
+    <string name="vibe_profile_hazard">💥 ख़तरा (70ms)</string>
+    <string name="vibe_profile_explosion">💣 बॉस विस्फोट</string>
+    <string name="vibe_profile_victory">🏆 विजय तरंग</string>
+    <string name="test_vibration_now">⚡ अभी कंपन जाँचें</string>
+    <string name="gamepad_speed_title">गेमपैड इनपुट गति</string>
+    <string name="gamepad_speed_desc">डिजिटल दोहराव दर और संवेदनशीलता वक्र</string>
+    <string name="analog_deadzone_title">एनालॉग स्टिक डेडज़ोन सीमा</string>
+    <string name="analog_deadzone_desc">ब्लूटूथ गेमपैड पर स्टिक ड्रिफ्ट रोकता है और D-Pad सटीकता बढ़ाता है</string>
+    <string name="live_stick_neutral">🕹️ लाइव स्टिक टेस्ट: न्यूट्रल (0.00, 0.00)</string>
+
+    <string name="sound_sfx_on">ध्वनि प्रभाव: चालू</string>
+    <string name="sound_sfx_off">ध्वनि प्रभाव: बंद</string>
+    <string name="music_on">संगीत: चालू</string>
+    <string name="music_off">संगीत: बंद</string>
+
+    <string name="gamepad_connected">गेमपैड जुड़ा हुआ है</string>
+    <string name="remote_mode">रिमोट मोड</string>
+    <string name="desc_controller_status">कंट्रोलर कनेक्शन स्थिति</string>
+    <string name="gamepad_connected_format">🎮 जुड़ा हुआ: %1$s</string>
+    <string name="no_external_gamepad">कोई बाहरी गेमपैड नहीं (वर्चुअल D-Pad सक्रिय)</string>
+    <string name="haptic_test_fired">हैप्टिक टेस्ट चलाया गया: %1$s (%2$d%% तीव्रता)</string>
+    <string name="motor_hardware_info">⚡ मोटर: %1$s • हार्डवेयर तैयार: %2$s • आयाम नियंत्रण: %3$s</string>
+    <string name="status_yes">हाँ</string>
+    <string name="status_no">नहीं</string>
+    <string name="status_fallback">वैकल्पिक</string>
+    <string name="vibrator_manager_api">VibratorManager (API 31+)</string>
+    <string name="vibrator_legacy">Vibrator (पुराना)</string>
+
+    <string name="global_top3_format">वैश्विक टॉप 3 • %1$s</string>
+    <string name="no_record">कोई रिकॉर्ड नहीं</string>
+    <string name="score_pts_format">%1$d अंक</string>
+    <string name="status_claimed">✓ प्राप्त</string>
+    <string name="status_ready">तैयार!</string>
+    <string name="claimed_today">✓ आज प्राप्त किया</string>
+    <string name="claim_day_format">🎁 दिन %1$d प्राप्त करें (+%2$d)</string>
+    <string name="desc_game_icon">गेम आइकन</string>
+    <string name="exit_app_title">गेम हब से बाहर निकलें</string>
+    <string name="exit_app_confirm">क्या आप वाकई ऐप से बाहर निकलना चाहते हैं?</string>
+    <string name="btn_exit_app">बाहर निकलें</string>
+    <string name="btn_cancel">रद्द करें</string>
+
+    <string name="genre_arcade">आर्केड</string>
+    <string name="genre_puzzle">पहेली</string>
+    <string name="genre_strategy">रणनीति</string>
+    <string name="genre_adventure">रोमांच</string>
+    <string name="genre_action">एक्शन</string>
+    <string name="genre_runner">दौड़</string>
+    <string name="genre_brain">दिमागी</string>
+    <string name="genre_cards">ताश</string>
+    <string name="genre_racing">रेसिंग</string>
+    <string name="genre_logic">तर्क</string>
+    <string name="genre_classic">क्लासिक</string>
+    <string name="genre_word">शब्द</string>
+    <string name="genre_shooter">शूटर</string>
+    <string name="genre_platform">प्लेटफ़ॉर्म</string>
+    <string name="genre_memory">याददाश्त</string>
+    <string name="genre_board">बोर्ड</string>
+    <string name="spotlight_new_challenge">★ नई चुनौती</string>
+    <string name="spotlight_play_to_set_record">★ रिकॉर्ड बनाने के लिए खेलें</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">सक्रिय हीरो</string>
+    <string name="sensitivity_standard">1.0x (मानक)</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33 क्लासिक टीवी गेम्स</string>
+    <string name="default_arcade_game">आर्केड गेम</string>
+    <string name="fallback_ad_body">टीवी D-Pad नियंत्रण के साथ अनंत क्लासिक आर्केड गेम्स का आनंद लें!</string>
+    <string name="fallback_ad_cta">अभी खेलें</string>
+
+    <string name="retro_hud_default_circuit">सर्किट</string>
+    <string name="retro_hud_lap">लैप</string>
+    <string name="retro_hud_time">समय</string>
+    <string name="retro_hud_best">सर्वश्रेष्ठ</string>
+    <string name="retro_hud_coins">सिक्के</string>
+    <string name="retro_hud_mph">MPH</string>
+    <string name="retro_hud_pos">स्थान</string>
+    <string name="retro_hud_slipstream">&gt;&gt; स्लिपस्ट्रीम ड्राफ्टिंग &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">नाइट्रो बूस्ट!</string>
+
+    <string name="hud_score_format">स्कोर: %1$d</string>
+    <string name="hud_best_format">सर्वश्रेष्ठ: %1$d</string>
+    <string name="hud_streak_format">लगातार: %1$d</string>
+    <string name="blackjack_chips_format">चिप्स: $%1$d</string>
+    <string name="blackjack_streak_format">जीत की लय: %1$d</string>
+    <string name="blackjack_table_title">वेगास ब्लैकजैक 21</string>
+    <string name="blackjack_table_rules">ब्लैकजैक 3 पर 2 देता है • डीलर 17 पर रुकता है</string>
+    <string name="blackjack_best_format">सर्वश्रेष्ठ: $%1$d</string>
+    <string name="blackjack_shoe_format">डेक: %1$d कार्ड</string>
+    <string name="blackjack_dealer">डीलर</string>
+    <string name="blackjack_dealer_total">डीलर: %1$d</string>
+    <string name="blackjack_next_round">अगला राउंड [ENTER]</string>
+    <string name="connect_four_vs_easy">बनाम CPU (आसान)</string>
+    <string name="connect_four_vs_normal">बनाम CPU (सामान्य)</string>
+    <string name="connect_four_vs_master">बनाम CPU (मास्टर)</string>
+    <string name="connect_four_2p">2-खिलाड़ी मुकाबला</string>
+    <string name="connect_four_your_turn">आपकी बारी (पीला)</string>
+    <string name="connect_four_p1_turn">खिलाड़ी 1 की बारी</string>
+    <string name="connect_four_cpu_thinking">CPU सोच रहा है...</string>
+    <string name="connect_four_p2_turn">खिलाड़ी 2 की बारी</string>
+    <string name="connect_four_victory">जीत!</string>
+    <string name="connect_four_defeat">हार</string>
+    <string name="connect_four_p2_wins">खिलाड़ी 2 जीता!</string>
+    <string name="connect_four_draw">ड्रॉ मैच</string>
+    <string name="connect_four_win_moves">%1$d चालों में 4 एक कतार में पूरे हुए!</string>
+    <string name="connect_four_draw_desc">बोर्ड पूरी तरह भर गया! कोई खाली जगह नहीं।</string>
+    <string name="connect_four_cpu_win_desc">CPU ने पहले 4 डिस्क जोड़ लिए! फिर से प्रयास करें।</string>
+    <string name="connect_four_victory_points">+%1$d विजय अंक</string>
+    <string name="press_enter_to_play">खेलने के लिए [ENTER] दबाएँ</string>
+    <string name="trivia_arena_default">ट्रिविया अरीना</string>
+    <string name="fruit_best_score_format">सर्वश्रेष्ठ: %1$d  स्कोर: %2$d</string>
 </resources>

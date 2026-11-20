@@ -75,8 +75,22 @@ class CheckersView @JvmOverloads constructor(
         requestFocus()
     }
 
-    override fun pause() {}
-    override fun resume() {}
+    private var playerWon = false
+
+    override fun pause() {
+        handler.removeCallbacks(cpuRunnable)
+        animHandler.removeCallbacks(animRunnable)
+    }
+
+    override fun resume() {
+        requestFocus()
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
+        if (!gameOver && isCpuTurn) {
+            handler.removeCallbacks(cpuRunnable)
+            handler.postDelayed(cpuRunnable, 400)
+        }
+    }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
@@ -97,6 +111,7 @@ class CheckersView @JvmOverloads constructor(
         selected = null
         mustContinueFrom = null
         gameOver = false
+        playerWon = false
         isCpuTurn = false
         status = context.getString(R.string.your_turn_label)
         wins = ScoreManager.getHighScore(context, gameKey, currentDifficultyIndex)
@@ -105,7 +120,7 @@ class CheckersView @JvmOverloads constructor(
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (gameOver && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
+        if (gameOver && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_BUTTON_A)) {
             resetGame()
             return true
         }
@@ -114,14 +129,22 @@ class CheckersView @JvmOverloads constructor(
                 showOptions()
                 return true
             }
-            return true
+            val isGameplayKey = keyCode == KeyEvent.KEYCODE_DPAD_UP ||
+                keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+                keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
+                keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
+                keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            return if (isGameplayKey) true else super.onKeyDown(keyCode, event)
         }
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> { cursorR = (cursorR + 7) % 8; SoundManager.playClick() }
             KeyEvent.KEYCODE_DPAD_DOWN -> { cursorR = (cursorR + 1) % 8; SoundManager.playClick() }
             KeyEvent.KEYCODE_DPAD_LEFT -> { cursorC = (cursorC + 7) % 8; SoundManager.playClick() }
             KeyEvent.KEYCODE_DPAD_RIGHT -> { cursorC = (cursorC + 1) % 8; SoundManager.playClick() }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> onSelect()
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> onSelect()
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
                 return true
@@ -260,6 +283,7 @@ class CheckersView @JvmOverloads constructor(
 
     private fun endPlayerWin() {
         gameOver = true
+        playerWon = true
         currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
         val oldWins = wins
         val newWins = wins + 1
@@ -278,6 +302,7 @@ class CheckersView @JvmOverloads constructor(
 
     private fun endCpuWin() {
         gameOver = true
+        playerWon = false
         status = context.getString(R.string.cpu_wins_label)
         celebrationManager.startOutcome(
             width = width.toFloat(),
@@ -427,7 +452,7 @@ class CheckersView @JvmOverloads constructor(
                     nextJumps.maxByOrNull { jumpMove ->
                         var jumpScore = 0
                         if (isThreatened(jumpMove.tr, jumpMove.tc, CPU)) jumpScore -= 10
-                        if (promoteIfNeeded(jumpMove.tr, jumpMove.tc, CPU)) jumpScore += 10
+                        if (board[cr][cc] == CPU_MAN && jumpMove.tr == 7) jumpScore += 10
                         jumpScore
                     } ?: nextJumps[Random.nextInt(nextJumps.size)]
                 } else {
@@ -696,8 +721,7 @@ class CheckersView @JvmOverloads constructor(
         canvas.drawText(status, width / 2f, top - 16f, paint)
 
         if (gameOver) {
-            val isWin = !board.any { r -> r.any { it == 2 || it == 4 } }
-            drawOverlay(canvas, if (isWin) currentVictoryWord else context.getString(R.string.cpu_wins_label), context.getString(R.string.restart_hint))
+            drawOverlay(canvas, if (playerWon) currentVictoryWord else context.getString(R.string.cpu_wins_label), context.getString(R.string.restart_hint))
         }
     }
 

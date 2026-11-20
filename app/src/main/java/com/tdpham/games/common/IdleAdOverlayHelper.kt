@@ -30,25 +30,19 @@ class IdleAdOverlayHelper(private val activity: Activity) {
     private var adLoadTimeoutRunnable: Runnable? = null
 
     fun init() {
-        val root = activity.findViewById<ViewGroup>(android.R.id.content)
-        rootContainer = FrameLayout(activity).apply {
-            layoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-            )
-            elevation = 9999f
-        }
-        root.addView(rootContainer)
+        // Dialog-based overlays are created lazily when idle states trigger.
     }
 
     fun showState(state: IdleAdManager.IdleState, remainingToFull: Int) {
         currentAdState = state
+        if (activity.isFinishing || activity.isDestroyed) {
+            hideAd()
+            return
+        }
         if (!AdManager.canShowIdleAd(activity)) {
             hideAd()
             return
         }
-
-        rootContainer?.bringToFront()
 
         when (state) {
             IdleAdManager.IdleState.ACTIVE, IdleAdManager.IdleState.IDLE_YIELD -> hideAd()
@@ -176,6 +170,7 @@ class IdleAdOverlayHelper(private val activity: Activity) {
 
     private fun displayFullScreenAdView(nativeAd: NativeAd?) {
         cancelAdTimeout()
+        if (activity.isFinishing || activity.isDestroyed) return
         val inflater = LayoutInflater.from(activity)
         adOverlay = inflater.inflate(R.layout.layout_native_ad_screensaver, null, false)
         
@@ -271,8 +266,6 @@ class IdleAdOverlayHelper(private val activity: Activity) {
         }
         cornerAdDialog = null
 
-        if (!isAdShowing && rootContainer?.childCount == 0) return
-        rootContainer?.removeAllViews()
         adOverlay = null
         isAdShowing = false
     }
@@ -280,8 +273,6 @@ class IdleAdOverlayHelper(private val activity: Activity) {
     fun destroy() {
         hideAd()
         mainHandler.removeCallbacksAndMessages(null)
-        val root = activity.findViewById<ViewGroup>(android.R.id.content)
-        rootContainer?.let { root?.removeView(it) }
         rootContainer = null
     }
 }

@@ -26,6 +26,7 @@ object IdleAdManager {
     private var adShownStartTime = 0L
     private var snoozeMultiplier = 1.0f
     
+    private var listenerOwner: Any? = null
     private var onStateChangeListener: ((IdleState, Int) -> Unit)? = null
 
     private val idleCheckRunnable = object : Runnable {
@@ -36,8 +37,23 @@ object IdleAdManager {
     }
 
     fun init(listener: (IdleState, Int) -> Unit) {
+        listenerOwner = null
         onStateChangeListener = listener
         startTracking()
+    }
+
+    fun registerListener(owner: Any, listener: (IdleState, Int) -> Unit) {
+        listenerOwner = owner
+        onStateChangeListener = listener
+        startTracking()
+    }
+
+    fun unregisterListener(owner: Any) {
+        if (listenerOwner === owner) {
+            listenerOwner = null
+            onStateChangeListener = null
+        }
+        stopTracking()
     }
 
     fun startTracking() {

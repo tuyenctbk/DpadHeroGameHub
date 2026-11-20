@@ -719,4 +719,208 @@
     <string name="revive_message">ดูวิดีโอสั้นๆ เพื่อเล่นต่อจากจุดเดิม</string>
     <string name="revive_watch_ad">ดูโฆษณา</string>
     <string name="revive_no_thanks">ไม่ล่ะ ขอบคุณ</string>
+
+    <string name="scanline_crt_effect">ฟิลเตอร์เส้นสแกน CRT</string>
+    <string name="scanline_crt_desc">จำลองเส้นสแกนของจอ CRT อาร์เคดสุดคลาสสิก</string>
+    <string name="screen_shake_effect">เอฟเฟกต์สั่นหน้าจอ</string>
+    <string name="screen_shake_desc">แรงสั่นสะเทือนหน้าจอแบบไดนามิกเมื่อเกิดการชนและระเบิด</string>
+    <string name="reset_high_scores">รีเซ็ตคะแนนสูงสุด</string>
+    <string name="reset_high_scores_desc">ล้างคะแนนสูงสุดทั้งหมดที่บันทึกไว้สำหรับฮีโร่ที่เลือก</string>
+    <string name="reset_scores_confirm">คุณแน่ใจหรือไม่ว่าต้องการล้างคะแนนสูงสุดทั้งหมดของฮีโร่นี้? การดำเนินการนี้ไม่สามารถย้อนกลับได้</string>
+    <string name="scores_cleared">รีเซ็ตคะแนนสูงสุดเรียบร้อยแล้ว</string>
+    <string name="frenzy_tang">ปลาบลูแทงค์</string>
+    <string name="frenzy_barracuda">ปลาสาก</string>
+    <string name="frenzy_shark">ปลาฉลาม</string>
+
+    <string-array name="win_connect_four">
+        <item>เรียงสี่สำเร็จ!</item>
+        <item>เจ้าแห่งกระดาน!</item>
+        <item>อัจฉริยะวางแผน!</item>
+        <item>แชมป์คอนเนคโฟร์!</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>แบล็คแจ็คแท้!</item>
+        <item>เซียนเดิมพัน!</item>
+        <item>ชนะเจ้ามือ!</item>
+        <item>คาสิโนรอยัล!</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>อัจฉริยะรอบรู้!</item>
+        <item>คะแนนเต็มสมบูรณ์แบบ!</item>
+        <item>เจ้าแห่งควิซ!</item>
+        <item>แชมป์ตอบคำถาม!</item>
+    </string-array>
+
+    <string name="game_connect_four">คอนเนคโฟร์</string>
+    <string name="game_connect_four_instructions">ศึกวางแผนเรียง 4 สุดคลาสสิก!\n• D-PAD ซ้าย / ขวา: เลื่อนตัวชี้ข้ามคอลัมน์\n• D-PAD กลาง / ENTER: หยอดเหรียญลงคอลัมน์\n• เรียงเหรียญของคุณให้ครบ 4 อันในแนวนอน แนวตั้ง หรือแนวทแยง\n• เลือกเล่น 1 คนสู้ AI หรือดวล 2 คน!</string>
+    <string name="connect_four_settings_title">ตั้งค่าคอนเนคโฟร์</string>
+    <string name="game_blackjack">แบล็คแจ็ค 21</string>
+    <string name="game_blackjack_instructions">โต๊ะแบล็คแจ็คคาสิโนเวกัสแท้!\n• เป้าหมาย: ทำแต้มให้ใกล้ 21 ที่สุดโดยไม่เกิน 21\n• D-PAD ขึ้น / ลง / ซ้าย / ขวา: เลือกชิปและคำสั่ง\n• D-PAD กลาง / ENTER: เดิมพัน / แจกไพ่ / จั่ว / หยุด / เพิ่มเป็นสองเท่า\n• แบล็คแจ็คจ่าย 3:2! สะสมชิปและสร้างความมั่งคั่ง!</string>
+    <string name="blackjack_settings_title">ตั้งค่าแบล็คแจ็ค</string>
+    <string name="game_trivia">ควิซตอบคำถาม</string>
+    <string name="game_trivia_instructions">เกมโชว์ตอบคำถามอาร์เคดสุดเร้าใจ!\n• D-PAD ขึ้น / ลง / ซ้าย / ขวา: เลือกคำตอบ A, B, C หรือ D\n• D-PAD กลาง / ENTER: ยืนยันคำตอบ\n• ตอบให้เร็วเพื่อรับโบนัสตัวคูณเวลาสุดคุ้ม\n• ใช้ตัวช่วย: 50:50, หยุดเวลา และข้ามคำถาม\n• พิชิตภารกิจ 10 คำถามเพื่อรับรางวัลเหรียญก้อนโต!</string>
+    <string name="trivia_settings_title">ตั้งค่าควิซตอบคำถาม</string>
+
+    <string name="sound_profile_label">โปรไฟล์เสียง</string>
+    <string name="sound_profile_arcade">อาร์เคด 8 บิต</string>
+    <string name="sound_profile_retro">เรโทรซินธ์</string>
+    <string name="sound_profile_modern">โมเดิร์นดิจิทัล</string>
+    <string name="sound_profile_arcade_desc">คลื่นเสียง 8 บิตสุดเร้าใจ</string>
+    <string name="sound_profile_retro_desc">โทนเสียงซินธ์อนาล็อกอบอุ่น</string>
+    <string name="sound_profile_modern_desc">เสียงโพลีโฟนิกคมชัด</string>
+    <string name="sound_profile_toast">โปรไฟล์เสียง: %1$s</string>
+    <string name="sound_profile_desc_format">%1$s • แตะเพื่อเปลี่ยน</string>
+    <string name="volume_desc_format">ระดับเสียง: %1$d%% • แตะเพื่อปรับระดับเสียง</string>
+    <string name="sensitivity_toast">ความไวคอนโทรลเลอร์: %1$s</string>
+
+    <string name="trivia_gauntlet_completed">พิชิตภารกิจสำเร็จ! 🏆</string>
+    <string name="trivia_final_score">คะแนนสุดท้าย: %1$d คะแนน</string>
+    <string name="trivia_accuracy">ความแม่นยำ: %1$d / %2$d ข้อ (%3$d%%)</string>
+    <string name="trivia_coins_earned">+%1$d เหรียญที่ได้รับ 🪙</string>
+    <string name="trivia_play_again">เล่นอีกครั้ง [ENTER]</string>
+    <string name="press_enter_next_round">กด [ENTER] เพื่อเริ่มรอบถัดไป</string>
+    <string name="twentyfortyeight_hint">🎮 D-Pad/ปัด: เลื่อน • [U] ย้อนกลับ • [MENU] ขนาดกระดาน</string>
+
+    <string name="tab_local">🏠 ในเครื่อง</string>
+    <string name="tab_worldwide">🌐 ทั่วโลก</string>
+
+    <string name="setting_volume_desc_format">ระดับเสียง: %1$d%% • แตะป้ายระดับเสียงเพื่อปรับ</string>
+    <string name="setting_sound_profile_theme">ธีมโปรไฟล์เสียง</string>
+    <string name="setting_sound_profile_desc">อาร์เคด 8 บิต • แตะเพื่อสลับรูปแบบเสียง</string>
+    <string name="setting_retro_music">ดนตรีเรโทรและบรรยากาศ</string>
+    <string name="setting_retro_music_desc">เพลงประกอบอาร์เคดสไตล์ซินธิไซเซอร์</string>
+    <string name="setting_controller_sensitivity">ความไวคอนโทรลเลอร์และจอย</string>
+    <string name="setting_controller_sensitivity_desc">ปรับการตอบสนองของ D-Pad จอยสติ๊ก และการสัมผัส</string>
+    <string name="setting_haptic_vibration">การสั่นสะเทือนแฮปติกและจอย</string>
+    <string name="setting_haptic_vibration_desc">จังหวะสั่นเมื่อชน ทำคะแนน และเกิดระเบิด</string>
+    <string name="calibrate">ปรับเทียบ</string>
+
+    <string name="badge_live">● สด</string>
+    <string name="global_top3_snake">ท็อป 3 ทั่วโลก • งู</string>
+    <string name="hall_of_fame_widget">หอเกียรติยศ 🏆</string>
+    <string name="placeholder_dash">---</string>
+    <string name="zero_pts">0 แต้ม</string>
+
+    <string name="controller_settings_title">🎮 ตั้งค่าคอนโทรลเลอร์และการสั่น</string>
+    <string name="hardware_diagnostics">ตรวจสอบฮาร์ดแวร์</string>
+    <string name="controller_checking">🎮 คอนโทรลเลอร์: กำลังตรวจสอบอุปกรณ์...</string>
+    <string name="vibrator_checking">⚡ มอเตอร์สั่น: กำลังตรวจสอบ VibratorManager...</string>
+    <string name="haptic_rumble_title">การสั่นแฮปติกและรัมเบิล</string>
+    <string name="haptic_rumble_desc">เปิดการสั่นมอเตอร์สำหรับการชน เหรียญ และปุ่มกด</string>
+    <string name="haptic_intensity_title">ความแรงการสั่น (แอมพลิจูด)</string>
+    <string name="vibration_motor_test_title">ทดสอบฮาร์ดแวร์มอเตอร์สั่น</string>
+    <string name="vibration_test_instructions">เลือกรูปแบบการสั่นแล้วแตะทดสอบเพื่อตรวจสอบการทำงาน:</string>
+    <string name="vibe_profile_click">🕹️ คลิก (15ms)</string>
+    <string name="vibe_profile_score">⚡ คะแนน (35ms)</string>
+    <string name="vibe_profile_hazard">💥 อันตราย (70ms)</string>
+    <string name="vibe_profile_explosion">💣 บอสระเบิด</string>
+    <string name="vibe_profile_victory">🏆 คลื่นแห่งชัยชนะ</string>
+    <string name="test_vibration_now">⚡ ทดสอบการสั่นตอนนี้</string>
+    <string name="gamepad_speed_title">ความเร็วอินพุตจอยเกม</string>
+    <string name="gamepad_speed_desc">อัตราการกดซ้ำดิจิทัลและกราฟความไว</string>
+    <string name="analog_deadzone_title">ระยะเดดโซนก้านอนาล็อก</string>
+    <string name="analog_deadzone_desc">ป้องกันก้านอนาล็อกไหลและเพิ่มความแม่นยำ D-Pad บนจอยบลูทูธ</string>
+    <string name="live_stick_neutral">🕹️ ทดสอบก้านอนาล็อก: ปกติ (0.00, 0.00)</string>
+
+    <string name="sound_sfx_on">เอฟเฟกต์เสียง: เปิด</string>
+    <string name="sound_sfx_off">เอฟเฟกต์เสียง: ปิด</string>
+    <string name="music_on">เพลง: เปิด</string>
+    <string name="music_off">เพลง: ปิด</string>
+
+    <string name="gamepad_connected">เชื่อมต่อจอยเกมแล้ว</string>
+    <string name="remote_mode">โหมดรีโมต</string>
+    <string name="desc_controller_status">สถานะการเชื่อมต่อคอนโทรลเลอร์</string>
+    <string name="gamepad_connected_format">🎮 เชื่อมต่อแล้ว: %1$s</string>
+    <string name="no_external_gamepad">ไม่มีจอยเกมภายนอก (ใช้ D-Pad เสมือน)</string>
+    <string name="haptic_test_fired">ทดสอบการสั่นแล้ว: %1$s (ความแรง %2$d%%)</string>
+    <string name="motor_hardware_info">⚡ มอเตอร์: %1$s • ฮาร์ดแวร์พร้อม: %2$s • คุมแอมพลิจูด: %3$s</string>
+    <string name="status_yes">ใช่</string>
+    <string name="status_no">ไม่</string>
+    <string name="status_fallback">สำรอง</string>
+    <string name="vibrator_manager_api">VibratorManager (API 31+)</string>
+    <string name="vibrator_legacy">Vibrator (รุ่นเก่า)</string>
+
+    <string name="global_top3_format">ท็อป 3 ทั่วโลก • %1$s</string>
+    <string name="no_record">ยังไม่มีสถิติ</string>
+    <string name="score_pts_format">%1$d แต้ม</string>
+    <string name="status_claimed">✓ รับแล้ว</string>
+    <string name="status_ready">พร้อมแล้ว!</string>
+    <string name="claimed_today">✓ รับรางวัลวันนี้แล้ว</string>
+    <string name="claim_day_format">🎁 รับรางวัลวันที่ %1$d (+%2$d)</string>
+    <string name="desc_game_icon">ไอคอนเกม</string>
+    <string name="exit_app_title">ออกจากศูนย์รวมเกม</string>
+    <string name="exit_app_confirm">คุณแน่ใจหรือไม่ว่าต้องการออกจากแอป?</string>
+    <string name="btn_exit_app">ออก</string>
+    <string name="btn_cancel">ยกเลิก</string>
+
+    <string name="genre_arcade">อาร์เคด</string>
+    <string name="genre_puzzle">ปริศนา</string>
+    <string name="genre_strategy">กลยุทธ์</string>
+    <string name="genre_adventure">ผจญภัย</string>
+    <string name="genre_action">แอ็กชัน</string>
+    <string name="genre_runner">วิ่ง</string>
+    <string name="genre_brain">ฝึกสมอง</string>
+    <string name="genre_cards">ไพ่</string>
+    <string name="genre_racing">แข่งรถ</string>
+    <string name="genre_logic">ตรรกะ</string>
+    <string name="genre_classic">คลาสสิก</string>
+    <string name="genre_word">คำศัพท์</string>
+    <string name="genre_shooter">ยิงปืน</string>
+    <string name="genre_platform">แพลตฟอร์ม</string>
+    <string name="genre_memory">ความจำ</string>
+    <string name="genre_board">กระดาน</string>
+    <string name="spotlight_new_challenge">★ ความท้าทายใหม่</string>
+    <string name="spotlight_play_to_set_record">★ เล่นเพื่อสร้างสถิติใหม่</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">ฮีโร่ที่ใช้งานอยู่</string>
+    <string name="sensitivity_standard">1.0x (มาตรฐาน)</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33 เกมทีวีคลาสสิก</string>
+    <string name="default_arcade_game">เกมอาร์เคด</string>
+    <string name="fallback_ad_body">สนุกกับเกมอาร์เคดคลาสสิกไม่รู้จบด้วยปุ่มควบคุม D-Pad ทีวี!</string>
+    <string name="fallback_ad_cta">เล่นเลย</string>
+
+    <string name="retro_hud_default_circuit">สนามแข่ง</string>
+    <string name="retro_hud_lap">รอบ</string>
+    <string name="retro_hud_time">เวลา</string>
+    <string name="retro_hud_best">ดีที่สุด</string>
+    <string name="retro_hud_coins">เหรียญ</string>
+    <string name="retro_hud_mph">MPH</string>
+    <string name="retro_hud_pos">อันดับ</string>
+    <string name="retro_hud_slipstream">&gt;&gt; ดูดลมเร่งความเร็ว &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">ไนโตรบูสต์!</string>
+
+    <string name="hud_score_format">คะแนน: %1$d</string>
+    <string name="hud_best_format">สถิติ: %1$d</string>
+    <string name="hud_streak_format">ต่อเนื่อง: %1$d</string>
+    <string name="blackjack_chips_format">ชิป: $%1$d</string>
+    <string name="blackjack_streak_format">ชนะติดกัน: %1$d ครั้ง</string>
+    <string name="blackjack_table_title">เวกัส แบล็คแจ็ค 21</string>
+    <string name="blackjack_table_rules">แบล็คแจ็คจ่าย 3 ต่อ 2 • เจ้ามือหยุดที่ 17</string>
+    <string name="blackjack_best_format">สถิติ: $%1$d</string>
+    <string name="blackjack_shoe_format">กองไพ่: %1$d ใบ</string>
+    <string name="blackjack_dealer">เจ้ามือ</string>
+    <string name="blackjack_dealer_total">เจ้ามือ: %1$d</string>
+    <string name="blackjack_next_round">รอบถัดไป [ENTER]</string>
+    <string name="connect_four_vs_easy">สู้ CPU (ง่าย)</string>
+    <string name="connect_four_vs_normal">สู้ CPU (ปกติ)</string>
+    <string name="connect_four_vs_master">สู้ CPU (เซียน)</string>
+    <string name="connect_four_2p">ดวล 2 ผู้เล่น</string>
+    <string name="connect_four_your_turn">ตาของคุณ (เหลือง)</string>
+    <string name="connect_four_p1_turn">ตาผู้เล่น 1</string>
+    <string name="connect_four_cpu_thinking">CPU กำลังคิด...</string>
+    <string name="connect_four_p2_turn">ตาผู้เล่น 2</string>
+    <string name="connect_four_victory">ชัยชนะ!</string>
+    <string name="connect_four_defeat">พ่ายแพ้</string>
+    <string name="connect_four_p2_wins">ผู้เล่น 2 ชนะ!</string>
+    <string name="connect_four_draw">เสมอกัน</string>
+    <string name="connect_four_win_moves">เรียง 4 สำเร็จใน %1$d ตา!</string>
+    <string name="connect_four_draw_desc">กระดานเต็มแล้ว! ไม่มีช่องว่างเหลือ</string>
+    <string name="connect_four_cpu_win_desc">CPU เรียง 4 เหรียญได้ก่อน! ลองใหม่อีกครั้ง</string>
+    <string name="connect_four_victory_points">+%1$d แต้มชัยชนะ</string>
+    <string name="press_enter_to_play">กด [ENTER] เพื่อเล่น</string>
+    <string name="trivia_arena_default">สนามควิซ</string>
+    <string name="fruit_best_score_format">สถิติ: %1$d  คะแนน: %2$d</string>
 </resources>

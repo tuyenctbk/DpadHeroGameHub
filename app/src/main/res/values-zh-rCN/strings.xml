@@ -719,4 +719,208 @@
     <string name="revive_message">观看一段短视频，即可从中断处继续。</string>
     <string name="revive_watch_ad">观看广告</string>
     <string name="revive_no_thanks">不用了</string>
+
+    <string name="scanline_crt_effect">CRT 扫描线滤镜</string>
+    <string name="scanline_crt_desc">模拟经典街机 CRT 显示器扫描线效果。</string>
+    <string name="screen_shake_effect">屏幕震动特效</string>
+    <string name="screen_shake_desc">碰撞和爆炸时的动态屏幕冲击反馈。</string>
+    <string name="reset_high_scores">重置最高分</string>
+    <string name="reset_high_scores_desc">清除当前英雄的所有历史最高分记录。</string>
+    <string name="reset_scores_confirm">确定要清除该英雄的所有最高分记录吗？此操作无法撤销。</string>
+    <string name="scores_cleared">最高分已重置。</string>
+    <string name="frenzy_tang">蓝倒吊鱼</string>
+    <string name="frenzy_barracuda">梭子鱼</string>
+    <string name="frenzy_shark">鲨鱼</string>
+
+    <string-array name="win_connect_four">
+        <item>四子连珠！</item>
+        <item>棋盘大师！</item>
+        <item>战术天才！</item>
+        <item>四子棋冠军！</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>天生黑杰克！</item>
+        <item>豪客赢家！</item>
+        <item>击败庄家！</item>
+        <item>皇家赌场！</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>博学天才！</item>
+        <item>满分通关！</item>
+        <item>知识大师！</item>
+        <item>问答冠军！</item>
+    </string-array>
+
+    <string name="game_connect_four">四子连珠</string>
+    <string name="game_connect_four_instructions">经典四子连珠策略对决！\n• 方向键左 / 右：移动列光标\n• 确定 / ENTER：向当前列投下棋子\n• 在横、竖或斜向连成4颗同色棋子即可获胜\n• 可选单人挑战智能 AI 或双人同屏对战！</string>
+    <string name="connect_four_settings_title">四子连珠设置</string>
+    <string name="game_blackjack">21点黑杰克</string>
+    <string name="game_blackjack_instructions">纯正拉斯维加斯赌场 21 点牌桌！\n• 目标：在不爆牌的前提下尽可能接近 21 点\n• 方向键上 / 下 / 左 / 右：选择筹码与牌桌操作\n• 确定 / ENTER：下注 / 发牌 / 要牌 / 停牌 / 加倍\n• 黑杰克赔率 3:2！赢取筹码打造赌场财富！</string>
+    <string name="blackjack_settings_title">21点设置</string>
+    <string name="game_trivia">知识问答</string>
+    <string name="game_trivia_instructions">紧张刺激的街机问答秀！\n• 方向键上 / 下 / 左 / 右：选择选项 A、B、C 或 D\n• 确定 / ENTER：确认答案\n• 答题越快，时间倍率奖励越高\n• 善用道具：50:50、冻结计时和跳过题目\n• 完成 10 道题挑战赢取丰厚金币奖励！</string>
+    <string name="trivia_settings_title">知识问答设置</string>
+
+    <string name="sound_profile_label">音效风格</string>
+    <string name="sound_profile_arcade">8位街机</string>
+    <string name="sound_profile_retro">复古合成</string>
+    <string name="sound_profile_modern">现代数字</string>
+    <string name="sound_profile_arcade_desc">震撼的 8 位脉冲波形音效</string>
+    <string name="sound_profile_retro_desc">温暖的模拟合成器音色</string>
+    <string name="sound_profile_modern_desc">清脆的和弦铃声</string>
+    <string name="sound_profile_toast">音效风格：%1$s</string>
+    <string name="sound_profile_desc_format">%1$s • 点击切换</string>
+    <string name="volume_desc_format">音量：%1$d%% • 点击切换音量等级</string>
+    <string name="sensitivity_toast">手柄灵敏度：%1$s</string>
+
+    <string name="trivia_gauntlet_completed">挑战完成！🏆</string>
+    <string name="trivia_final_score">最终得分：%1$d 分</string>
+    <string name="trivia_accuracy">正确率：%1$d / %2$d 题 (%3$d%%)</string>
+    <string name="trivia_coins_earned">+%1$d 金币奖励 🪙</string>
+    <string name="trivia_play_again">再玩一次 [ENTER]</string>
+    <string name="press_enter_next_round">按 [ENTER] 开始下一轮</string>
+    <string name="twentyfortyeight_hint">🎮 方向键/滑动：移动 • [U] 撤销 • [MENU] 棋盘大小</string>
+
+    <string name="tab_local">🏠 本地</string>
+    <string name="tab_worldwide">🌐 全球</string>
+
+    <string name="setting_volume_desc_format">音量：%1$d%% • 点击音量标签进行调节</string>
+    <string name="setting_sound_profile_theme">音效风格主题</string>
+    <string name="setting_sound_profile_desc">8位街机 • 点击切换音频预设</string>
+    <string name="setting_retro_music">复古音乐与氛围</string>
+    <string name="setting_retro_music_desc">合成器街机背景旋律</string>
+    <string name="setting_controller_sensitivity">控制器与手柄灵敏度</string>
+    <string name="setting_controller_sensitivity_desc">调整方向键、摇杆与触控响应速度</string>
+    <string name="setting_haptic_vibration">触觉与手柄震动</string>
+    <string name="setting_haptic_vibration_desc">击中、得分和爆炸时的触觉脉冲反馈</string>
+    <string name="calibrate">校准</string>
+
+    <string name="badge_live">● 实时</string>
+    <string name="global_top3_snake">全球前三 • 贪吃蛇</string>
+    <string name="hall_of_fame_widget">名人堂 🏆</string>
+    <string name="placeholder_dash">---</string>
+    <string name="zero_pts">0 分</string>
+
+    <string name="controller_settings_title">🎮 手柄与震动设置</string>
+    <string name="hardware_diagnostics">硬件诊断</string>
+    <string name="controller_checking">🎮 控制器：正在检测设备...</string>
+    <string name="vibrator_checking">⚡ 震动马达：正在检测 VibratorManager...</string>
+    <string name="haptic_rumble_title">触觉与震动反馈</string>
+    <string name="haptic_rumble_desc">为碰撞、金币和按键开启马达震动</string>
+    <string name="haptic_intensity_title">震动强度（马达振幅）</string>
+    <string name="vibration_motor_test_title">震动马达硬件测试</string>
+    <string name="vibration_test_instructions">选择震动模式并点击测试以验证马达响应：</string>
+    <string name="vibe_profile_click">🕹️ 点击 (15ms)</string>
+    <string name="vibe_profile_score">⚡ 得分 (35ms)</string>
+    <string name="vibe_profile_hazard">💥 危险 (70ms)</string>
+    <string name="vibe_profile_explosion">💣 Boss 爆炸</string>
+    <string name="vibe_profile_victory">🏆 胜利波形</string>
+    <string name="test_vibration_now">⚡ 立即测试震动</string>
+    <string name="gamepad_speed_title">手柄输入速度</string>
+    <string name="gamepad_speed_desc">数字连发速率与灵敏度曲线</string>
+    <string name="analog_deadzone_title">摇杆死区阈值</string>
+    <string name="analog_deadzone_desc">防止摇杆漂移并提升蓝牙手柄方向键精度</string>
+    <string name="live_stick_neutral">🕹️ 实时摇杆测试：居中 (0.00, 0.00)</string>
+
+    <string name="sound_sfx_on">音效：开</string>
+    <string name="sound_sfx_off">音效：关</string>
+    <string name="music_on">音乐：开</string>
+    <string name="music_off">音乐：关</string>
+
+    <string name="gamepad_connected">手柄已连接</string>
+    <string name="remote_mode">遥控器模式</string>
+    <string name="desc_controller_status">控制器连接状态</string>
+    <string name="gamepad_connected_format">🎮 已连接：%1$s</string>
+    <string name="no_external_gamepad">未检测到外接手柄（虚拟方向键已启用）</string>
+    <string name="haptic_test_fired">已触发震动测试：%1$s（强度 %2$d%%）</string>
+    <string name="motor_hardware_info">⚡ 马达：%1$s • 硬件就绪：%2$s • 振幅控制：%3$s</string>
+    <string name="status_yes">是</string>
+    <string name="status_no">否</string>
+    <string name="status_fallback">备用</string>
+    <string name="vibrator_manager_api">VibratorManager (API 31+)</string>
+    <string name="vibrator_legacy">Vibrator (传统)</string>
+
+    <string name="global_top3_format">全球前三 • %1$s</string>
+    <string name="no_record">暂无记录</string>
+    <string name="score_pts_format">%1$d 分</string>
+    <string name="status_claimed">✓ 已领取</string>
+    <string name="status_ready">可领取！</string>
+    <string name="claimed_today">✓ 今日已领</string>
+    <string name="claim_day_format">🎁 领取第 %1$d 天 (+%2$d)</string>
+    <string name="desc_game_icon">游戏图标</string>
+    <string name="exit_app_title">退出游戏中心</string>
+    <string name="exit_app_confirm">确定要退出应用程序吗？</string>
+    <string name="btn_exit_app">退出</string>
+    <string name="btn_cancel">取消</string>
+
+    <string name="genre_arcade">街机</string>
+    <string name="genre_puzzle">益智</string>
+    <string name="genre_strategy">策略</string>
+    <string name="genre_adventure">冒险</string>
+    <string name="genre_action">动作</string>
+    <string name="genre_runner">跑酷</string>
+    <string name="genre_brain">烧脑</string>
+    <string name="genre_cards">纸牌</string>
+    <string name="genre_racing">赛车</string>
+    <string name="genre_logic">逻辑</string>
+    <string name="genre_classic">经典</string>
+    <string name="genre_word">文字</string>
+    <string name="genre_shooter">射击</string>
+    <string name="genre_platform">平台</string>
+    <string name="genre_memory">记忆</string>
+    <string name="genre_board">桌游</string>
+    <string name="spotlight_new_challenge">★ 全新挑战</string>
+    <string name="spotlight_play_to_set_record">★ 开玩冲击新纪录</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">当前英雄</string>
+    <string name="sensitivity_standard">1.0x（标准）</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33 款经典电视游戏</string>
+    <string name="default_arcade_game">街机游戏</string>
+    <string name="fallback_ad_body">使用电视方向键畅玩无限经典街机游戏！</string>
+    <string name="fallback_ad_cta">立即游玩</string>
+
+    <string name="retro_hud_default_circuit">赛道</string>
+    <string name="retro_hud_lap">圈数</string>
+    <string name="retro_hud_time">时间</string>
+    <string name="retro_hud_best">最佳</string>
+    <string name="retro_hud_coins">金币</string>
+    <string name="retro_hud_mph">MPH</string>
+    <string name="retro_hud_pos">排名</string>
+    <string name="retro_hud_slipstream">&gt;&gt; 尾流加速 &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">氮气加速！</string>
+
+    <string name="hud_score_format">得分：%1$d</string>
+    <string name="hud_best_format">最高：%1$d</string>
+    <string name="hud_streak_format">连胜：%1$d</string>
+    <string name="blackjack_chips_format">筹码：$%1$d</string>
+    <string name="blackjack_streak_format">连胜：%1$d 胜</string>
+    <string name="blackjack_table_title">维加斯 21 点</string>
+    <string name="blackjack_table_rules">黑杰克 3 赔 2 • 庄家 17 点停牌</string>
+    <string name="blackjack_best_format">最高：$%1$d</string>
+    <string name="blackjack_shoe_format">牌靴：%1$d 张</string>
+    <string name="blackjack_dealer">庄家</string>
+    <string name="blackjack_dealer_total">庄家：%1$d</string>
+    <string name="blackjack_next_round">下一局 [ENTER]</string>
+    <string name="connect_four_vs_easy">对战电脑（简单）</string>
+    <string name="connect_four_vs_normal">对战电脑（普通）</string>
+    <string name="connect_four_vs_master">对战电脑（大师）</string>
+    <string name="connect_four_2p">双人对战</string>
+    <string name="connect_four_your_turn">你的回合（黄棋）</string>
+    <string name="connect_four_p1_turn">玩家 1 回合</string>
+    <string name="connect_four_cpu_thinking">电脑思考中...</string>
+    <string name="connect_four_p2_turn">玩家 2 回合</string>
+    <string name="connect_four_victory">胜利！</string>
+    <string name="connect_four_defeat">失败</string>
+    <string name="connect_four_p2_wins">玩家 2 获胜！</string>
+    <string name="connect_four_draw">平局</string>
+    <string name="connect_four_win_moves">仅用 %1$d 步完成四子连珠！</string>
+    <string name="connect_four_draw_desc">棋盘已满！没有剩余空位。</string>
+    <string name="connect_four_cpu_win_desc">电脑率先连成 4 子！请再接再厉。</string>
+    <string name="connect_four_victory_points">+%1$d 胜利积分</string>
+    <string name="press_enter_to_play">按 [ENTER] 开始游戏</string>
+    <string name="trivia_arena_default">问答竞技场</string>
+    <string name="fruit_best_score_format">最高：%1$d  得分：%2$d</string>
 </resources>

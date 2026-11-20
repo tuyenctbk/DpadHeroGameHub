@@ -102,20 +102,28 @@ class StarFighterView @JvmOverloads constructor(
     }
 
     override fun startGame() {
+        requestFocus()
         isPaused = false
         handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
     }
 
     override fun pause() { 
         isPaused = true
+        pressedKeys.clear()
         handler.removeCallbacks(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
     }
     
     override fun resume() { 
+        requestFocus()
         isPaused = false
         handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -188,29 +196,63 @@ class StarFighterView @JvmOverloads constructor(
         invalidate()
     }
 
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = gameOver
+
+    override fun reviveGame(): Boolean {
+        if (!gameOver) return false
+        gameOver = false
+        isPaused = false
+        lives = 2
+        invulnerableUntil = System.currentTimeMillis() + 3500L
+        bullets.removeAll { it.isEnemy }
+        enemies.removeAll { it.type != EnemyType.BOSS && it.y > height * 0.45f }
+        pressedKeys.clear()
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+        invalidate()
+        return true
+    }
+
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resetGame(); startGame(); return true
             }
             return super.onKeyDown(keyCode, event)
         }
         if (isPaused) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 startGame(); return true
+            }
+            if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_TAB || keyCode == KeyEvent.KEYCODE_O) {
+                showOptions()
+                return true
             }
             return super.onKeyDown(keyCode, event)
         }
 
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT,
-            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN -> {
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN,
+            KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_D,
+            KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_S -> {
                 pressedKeys.add(keyCode)
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> {
                 pause()
                 return true
             }
@@ -218,7 +260,7 @@ class StarFighterView @JvmOverloads constructor(
                 showOptions()
                 return true
             }
-            KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_VOLUME_MUTE -> {
+            KeyEvent.KEYCODE_M, KeyEvent.KEYCODE_VOLUME_MUTE -> {
                 toggleSound()
                 return true
             }
@@ -274,17 +316,17 @@ class StarFighterView @JvmOverloads constructor(
         lastPlayerX = playerX
         targetTilt = 0f
         
-        // DPAD Movement
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT)) {
+        // DPAD / WASD Movement
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_LEFT) || pressedKeys.contains(KeyEvent.KEYCODE_A)) {
             playerX = (playerX - playerSpeed).coerceAtLeast(playerSize)
             targetTilt = -25f
-        } else if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT)) {
+        } else if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_RIGHT) || pressedKeys.contains(KeyEvent.KEYCODE_D)) {
             playerX = (playerX + playerSpeed).coerceAtMost(width - playerSize)
             targetTilt = 25f
         }
         
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_UP)) playerY = (playerY - playerSpeed).coerceAtLeast(playerSize)
-        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_DOWN)) playerY = (playerY + playerSpeed).coerceAtMost(height - playerSize)
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_UP) || pressedKeys.contains(KeyEvent.KEYCODE_W)) playerY = (playerY - playerSpeed).coerceAtLeast(playerSize)
+        if (pressedKeys.contains(KeyEvent.KEYCODE_DPAD_DOWN) || pressedKeys.contains(KeyEvent.KEYCODE_S)) playerY = (playerY + playerSpeed).coerceAtMost(height - playerSize)
 
         // Touch/Mouse Tilt Calculation
         if (pressedKeys.isEmpty()) {
@@ -318,7 +360,8 @@ class StarFighterView @JvmOverloads constructor(
             } else {
                 type
             }
-            enemies.add(Enemy(random.nextFloat() * (width - 150) + 75, -100f, finalType))
+            val spawnSpan = max(1f, width - 150f)
+            enemies.add(Enemy(random.nextFloat() * spawnSpan + 75f, -100f, finalType))
             lastEnemySpawn = now
         }
 
@@ -581,12 +624,14 @@ class StarFighterView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (width <= 0 || height <= 0) return
+        val saveCount = canvas.save()
+        try {
         val now = System.currentTimeMillis()
         val needsInvalidate = screenShake.apply(canvas)
         
         if (hintShowFrames > 0) {
             hintShowFrames--
-            invalidate()
         }
 
         if (playerX == 0f) { playerX = width / 2f; playerY = height - 250f }
@@ -881,9 +926,11 @@ class StarFighterView @JvmOverloads constructor(
         
         if (!isPaused && !gameOver) {
             celebrationManager.update()
-            invalidate()
         }
         if (needsInvalidate) invalidate()
+        } finally {
+            canvas.restoreToCount(saveCount)
+        }
     }
 
     private fun drawPlayerShip(canvas: Canvas, x: Float, y: Float) {

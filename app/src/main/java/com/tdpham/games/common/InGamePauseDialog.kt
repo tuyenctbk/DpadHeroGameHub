@@ -91,22 +91,15 @@ class InGamePauseDialog(
         setupFocusEffect(btnRestart)
         setupFocusEffect(btnExit)
 
-        btnResume.setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-                btnExit.requestFocus()
-                true
-            } else {
-                false
-            }
-        }
-
-        btnExit.setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-                btnResume.requestFocus()
-                true
-            } else {
-                false
-            }
+        // Ensure continuous D-pad focus loop regardless of whether Options is visible
+        val visibleButtons = listOf(btnResume, btnOptions, btnGuide, btnRestart, btnExit)
+            .filter { it.visibility == View.VISIBLE }
+        for (i in visibleButtons.indices) {
+            val current = visibleButtons[i]
+            val prev = if (i > 0) visibleButtons[i - 1] else visibleButtons.last()
+            val next = if (i < visibleButtons.size - 1) visibleButtons[i + 1] else visibleButtons.first()
+            current.nextFocusUpId = prev.id
+            current.nextFocusDownId = next.id
         }
 
         setOnKeyListener { _, _, event ->
@@ -120,6 +113,17 @@ class InGamePauseDialog(
 
     override fun show() {
         super.show()
+        window?.decorView?.let { decor ->
+            decor.alpha = 0f
+            decor.scaleX = 0.92f
+            decor.scaleY = 0.92f
+            decor.animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(180)
+                .start()
+        }
         btnResume.requestFocus()
     }
 

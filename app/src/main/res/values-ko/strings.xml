@@ -719,4 +719,208 @@
     <string name="revive_message">짧은 영상을 시청하면 이어서 플레이할 수 있어요.</string>
     <string name="revive_watch_ad">광고 보기</string>
     <string name="revive_no_thanks">아니요</string>
+
+    <string name="scanline_crt_effect">CRT 스캔라인 필터</string>
+    <string name="scanline_crt_desc">클래식 아케이드 CRT 모니터의 주사선을 재현합니다.</string>
+    <string name="screen_shake_effect">화면 흔들림 효과</string>
+    <string name="screen_shake_desc">충돌 및 폭발 시 역동적인 화면 흔들림 피드백.</string>
+    <string name="reset_high_scores">최고 점수 초기화</string>
+    <string name="reset_high_scores_desc">활성 영웅의 모든 최고 점수 기록을 삭제합니다.</string>
+    <string name="reset_scores_confirm">이 영웅의 모든 최고 점수를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</string>
+    <string name="scores_cleared">최고 점수가 초기화되었습니다.</string>
+    <string name="frenzy_tang">블루 탱</string>
+    <string name="frenzy_barracuda">바라쿠다</string>
+    <string name="frenzy_shark">상어</string>
+
+    <string-array name="win_connect_four">
+        <item>4목 완성!</item>
+        <item>그리드 마스터!</item>
+        <item>전술의 천재!</item>
+        <item>커넥트 포 챔피언!</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>내추럴 블랙잭!</item>
+        <item>하이 롤러!</item>
+        <item>딜러 격파!</item>
+        <item>카지노 로열!</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>지식의 천재!</item>
+        <item>퍼펙트 스코어!</item>
+        <item>트리비아 마스터!</item>
+        <item>퀴즈 챔피언!</item>
+    </string-array>
+
+    <string name="game_connect_four">커넥트 포</string>
+    <string name="game_connect_four_instructions">클래식 4목 전략 대결!\n• D-PAD 왼쪽 / 오른쪽: 열 커서 이동\n• D-PAD 가운데 / ENTER: 디스크 떨어뜨리기\n• 가로, 세로, 대각선으로 4개의 디스크를 연결하세요\n• 스마트 AI 대전 또는 2인 대결을 선택하세요!</string>
+    <string name="connect_four_settings_title">커넥트 포 설정</string>
+    <string name="game_blackjack">블랙잭 21</string>
+    <string name="game_blackjack_instructions">정통 라스베이거스 카지노 블랙잭 테이블!\n• 목표: 21을 넘지 않고 21에 가장 가까운 패를 만드세요\n• D-PAD 상 / 하 / 좌 / 우: 칩과 액션 선택\n• D-PAD 가운데 / ENTER: 베팅 / 딜 / 히트 / 스탠드 / 더블다운\n• 블랙잭은 3:2 배당! 칩을 모아 부자가 되세요!</string>
+    <string name="blackjack_settings_title">블랙잭 설정</string>
+    <string name="game_trivia">트리비아 퀴즈</string>
+    <string name="game_trivia_instructions">박진감 넘치는 아케이드 퀴즈 쇼!\n• D-PAD 상 / 하 / 좌 / 우: 보기 A, B, C, D 선택\n• D-PAD 가운데 / ENTER: 정답 확정\n• 빠르게 맞힐수록 높은 시간 배수 보너스\n• 라이프라인 활용: 50:50, 타이머 정지, 문제 건너뛰기\n• 10문제 도전을 완료하고 대량 코인을 획득하세요!</string>
+    <string name="trivia_settings_title">트리비아 퀴즈 설정</string>
+
+    <string name="sound_profile_label">사운드 프로필</string>
+    <string name="sound_profile_arcade">아케이드 8비트</string>
+    <string name="sound_profile_retro">레트로 신스</string>
+    <string name="sound_profile_modern">모던 디지털</string>
+    <string name="sound_profile_arcade_desc">강렬한 8비트 펄스 웨이브</string>
+    <string name="sound_profile_retro_desc">따뜻한 아날로그 신스 음색</string>
+    <string name="sound_profile_modern_desc">선명한 폴리포닉 차임</string>
+    <string name="sound_profile_toast">사운드 프로필: %1$s</string>
+    <string name="sound_profile_desc_format">%1$s • 탭하여 전환</string>
+    <string name="volume_desc_format">볼륨: %1$d%% • 탭하여 볼륨 조절</string>
+    <string name="sensitivity_toast">컨트롤러 감도: %1$s</string>
+
+    <string name="trivia_gauntlet_completed">도전 완료! 🏆</string>
+    <string name="trivia_final_score">최종 점수: %1$d점</string>
+    <string name="trivia_accuracy">정확도: %1$d / %2$d 정답 (%3$d%%)</string>
+    <string name="trivia_coins_earned">+%1$d 코인 획득 🪙</string>
+    <string name="trivia_play_again">다시 플레이 [ENTER]</string>
+    <string name="press_enter_next_round">다음 라운드를 시작하려면 [ENTER]를 누르세요</string>
+    <string name="twentyfortyeight_hint">🎮 D-Pad/스와이프: 이동 • [U] 실행 취소 • [MENU] 크기</string>
+
+    <string name="tab_local">🏠 로컬</string>
+    <string name="tab_worldwide">🌐 글로벌</string>
+
+    <string name="setting_volume_desc_format">볼륨: %1$d%% • 볼륨 배지를 탭하여 조절</string>
+    <string name="setting_sound_profile_theme">사운드 프로필 테마</string>
+    <string name="setting_sound_profile_desc">아케이드 8비트 • 탭하여 오디오 프리셋 변경</string>
+    <string name="setting_retro_music">레트로 음악 &amp; 배경음</string>
+    <string name="setting_retro_music_desc">신시사이저 아케이드 배경 멜로디</string>
+    <string name="setting_controller_sensitivity">컨트롤러 &amp; 게임패드 감도</string>
+    <string name="setting_controller_sensitivity_desc">D-Pad, 조이스틱 및 터치 반응 속도 조절</string>
+    <string name="setting_haptic_vibration">햅틱 &amp; 컨트롤러 진동</string>
+    <string name="setting_haptic_vibration_desc">타격, 득점, 폭발 시 촉각 진동 피드백</string>
+    <string name="calibrate">보정</string>
+
+    <string name="badge_live">● 실시간</string>
+    <string name="global_top3_snake">글로벌 TOP 3 • 스네이크</string>
+    <string name="hall_of_fame_widget">명예의 전당 🏆</string>
+    <string name="placeholder_dash">---</string>
+    <string name="zero_pts">0점</string>
+
+    <string name="controller_settings_title">🎮 컨트롤러 &amp; 햅틱 설정</string>
+    <string name="hardware_diagnostics">하드웨어 진단</string>
+    <string name="controller_checking">🎮 컨트롤러: 기기 확인 중...</string>
+    <string name="vibrator_checking">⚡ 진동 모터: VibratorManager 확인 중...</string>
+    <string name="haptic_rumble_title">햅틱 &amp; 럼블 진동</string>
+    <string name="haptic_rumble_desc">충돌, 코인, 버튼 입력 시 진동 활성화</string>
+    <string name="haptic_intensity_title">햅틱 강도 (진동 진폭)</string>
+    <string name="vibration_motor_test_title">진동 모터 하드웨어 테스트</string>
+    <string name="vibration_test_instructions">진동 프로필을 선택하고 테스트를 눌러 모터 반응을 확인하세요:</string>
+    <string name="vibe_profile_click">🕹️ 클릭 (15ms)</string>
+    <string name="vibe_profile_score">⚡ 득점 (35ms)</string>
+    <string name="vibe_profile_hazard">💥 위험 (70ms)</string>
+    <string name="vibe_profile_explosion">💣 보스 폭발</string>
+    <string name="vibe_profile_victory">🏆 승리 파형</string>
+    <string name="test_vibration_now">⚡ 지금 진동 테스트</string>
+    <string name="gamepad_speed_title">게임패드 입력 속도</string>
+    <string name="gamepad_speed_desc">디지털 반복 속도 및 감도 곡선</string>
+    <string name="analog_deadzone_title">아날로그 스틱 데드존 임계값</string>
+    <string name="analog_deadzone_desc">블루투스 게임패드의 스틱 쏠림을 방지하고 D-Pad 정확도 향상</string>
+    <string name="live_stick_neutral">🕹️ 실시간 스틱 테스트: 중립 (0.00, 0.00)</string>
+
+    <string name="sound_sfx_on">효과음: 켜짐</string>
+    <string name="sound_sfx_off">효과음: 꺼짐</string>
+    <string name="music_on">음악: 켜짐</string>
+    <string name="music_off">음악: 꺼짐</string>
+
+    <string name="gamepad_connected">게임패드 연결됨</string>
+    <string name="remote_mode">리모컨 모드</string>
+    <string name="desc_controller_status">컨트롤러 연결 상태</string>
+    <string name="gamepad_connected_format">🎮 연결됨: %1$s</string>
+    <string name="no_external_gamepad">외부 게임패드 없음 (가상 D-Pad 활성)</string>
+    <string name="haptic_test_fired">햅틱 테스트 실행: %1$s (강도 %2$d%%)</string>
+    <string name="motor_hardware_info">⚡ 모터: %1$s • 하드웨어 준비: %2$s • 진폭 제어: %3$s</string>
+    <string name="status_yes">예</string>
+    <string name="status_no">아니요</string>
+    <string name="status_fallback">대체</string>
+    <string name="vibrator_manager_api">VibratorManager (API 31+)</string>
+    <string name="vibrator_legacy">Vibrator (레거시)</string>
+
+    <string name="global_top3_format">글로벌 TOP 3 • %1$s</string>
+    <string name="no_record">기록 없음</string>
+    <string name="score_pts_format">%1$d점</string>
+    <string name="status_claimed">✓ 수령 완료</string>
+    <string name="status_ready">준비 완료!</string>
+    <string name="claimed_today">✓ 오늘 수령 완료</string>
+    <string name="claim_day_format">🎁 %1$d일차 보상 받기 (+%2$d)</string>
+    <string name="desc_game_icon">게임 아이콘</string>
+    <string name="exit_app_title">게임 허브 종료</string>
+    <string name="exit_app_confirm">앱을 종료하시겠습니까?</string>
+    <string name="btn_exit_app">종료</string>
+    <string name="btn_cancel">취소</string>
+
+    <string name="genre_arcade">아케이드</string>
+    <string name="genre_puzzle">퍼즐</string>
+    <string name="genre_strategy">전략</string>
+    <string name="genre_adventure">어드벤처</string>
+    <string name="genre_action">액션</string>
+    <string name="genre_runner">러너</string>
+    <string name="genre_brain">두뇌</string>
+    <string name="genre_cards">카드</string>
+    <string name="genre_racing">레이싱</string>
+    <string name="genre_logic">로직</string>
+    <string name="genre_classic">클래식</string>
+    <string name="genre_word">단어</string>
+    <string name="genre_shooter">슈팅</string>
+    <string name="genre_platform">플랫폼</string>
+    <string name="genre_memory">기억력</string>
+    <string name="genre_board">보드</string>
+    <string name="spotlight_new_challenge">★ 새로운 도전</string>
+    <string name="spotlight_play_to_set_record">★ 플레이하고 기록 세우기</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">활성 영웅</string>
+    <string name="sensitivity_standard">1.0x (표준)</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33가지 클래식 TV 게임</string>
+    <string name="default_arcade_game">아케이드 게임</string>
+    <string name="fallback_ad_body">TV D-Pad 조작으로 끝없는 클래식 아케이드 게임을 즐겨보세요!</string>
+    <string name="fallback_ad_cta">지금 플레이</string>
+
+    <string name="retro_hud_default_circuit">서킷</string>
+    <string name="retro_hud_lap">랩</string>
+    <string name="retro_hud_time">시간</string>
+    <string name="retro_hud_best">최고</string>
+    <string name="retro_hud_coins">코인</string>
+    <string name="retro_hud_mph">MPH</string>
+    <string name="retro_hud_pos">순위</string>
+    <string name="retro_hud_slipstream">&gt;&gt; 슬립스트림 가속 &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">니트로 부스트!</string>
+
+    <string name="hud_score_format">점수: %1$d</string>
+    <string name="hud_best_format">최고: %1$d</string>
+    <string name="hud_streak_format">연승: %1$d</string>
+    <string name="blackjack_chips_format">칩: $%1$d</string>
+    <string name="blackjack_streak_format">연승: %1$d승</string>
+    <string name="blackjack_table_title">베가스 블랙잭 21</string>
+    <string name="blackjack_table_rules">블랙잭 3:2 배당 • 딜러 17 스탠드</string>
+    <string name="blackjack_best_format">최고: $%1$d</string>
+    <string name="blackjack_shoe_format">남은 카드: %1$d장</string>
+    <string name="blackjack_dealer">딜러</string>
+    <string name="blackjack_dealer_total">딜러: %1$d</string>
+    <string name="blackjack_next_round">다음 라운드 [ENTER]</string>
+    <string name="connect_four_vs_easy">VS CPU (쉬움)</string>
+    <string name="connect_four_vs_normal">VS CPU (보통)</string>
+    <string name="connect_four_vs_master">VS CPU (마스터)</string>
+    <string name="connect_four_2p">2인 대결</string>
+    <string name="connect_four_your_turn">당신의 차례 (노랑)</string>
+    <string name="connect_four_p1_turn">플레이어 1 차례</string>
+    <string name="connect_four_cpu_thinking">CPU 생각 중...</string>
+    <string name="connect_four_p2_turn">플레이어 2 차례</string>
+    <string name="connect_four_victory">승리!</string>
+    <string name="connect_four_defeat">패배</string>
+    <string name="connect_four_p2_wins">플레이어 2 승리!</string>
+    <string name="connect_four_draw">무승부</string>
+    <string name="connect_four_win_moves">%1$d수 만에 4목을 달성했습니다!</string>
+    <string name="connect_four_draw_desc">보드가 가득 찼습니다! 남은 빈 칸이 없습니다.</string>
+    <string name="connect_four_cpu_win_desc">CPU가 먼저 4목을 완성했습니다! 다시 도전하세요.</string>
+    <string name="connect_four_victory_points">+%1$d 승리 포인트</string>
+    <string name="press_enter_to_play">[ENTER]를 눌러 플레이</string>
+    <string name="trivia_arena_default">트리비아 아레나</string>
+    <string name="fruit_best_score_format">최고: %1$d  점수: %2$d</string>
 </resources>

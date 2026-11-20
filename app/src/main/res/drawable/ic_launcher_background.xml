@@ -6,69 +6,16 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- 1. Deep Space Synthwave Gradient Background -->
-    <path
-        android:pathData="M0,0h108v108h-108z">
+    <path android:pathData="M0,0h108v108h-108z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:endY="108"
                 android:startY="0"
+                android:endY="108"
                 android:type="linear">
-                <item android:color="#070414" android:offset="0" />
-                <item android:color="#13082A" android:offset="0.5" />
-                <item android:color="#240A48" android:offset="1" />
+                <item android:color="#060416" android:offset="0" />
+                <item android:color="#0E0728" android:offset="0.55" />
+                <item android:color="#210B45" android:offset="1" />
             </gradient>
         </aapt:attr>
     </path>
-
-    <!-- 2. Neon Horizon Radial Sunset Glow -->
-    <path
-        android:pathData="M0,35h108v73h-108z">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                android:centerX="54"
-                android:centerY="58"
-                android:gradientRadius="48"
-                android:type="radial">
-                <item android:color="#70FF007F" android:offset="0" />
-                <item android:color="#00FF007F" android:offset="1" />
-            </gradient>
-        </aapt:attr>
-    </path>
-
-    <!-- 3. Retro Horizon Sun with Sliced Striping -->
-    <path
-        android:pathData="M38,62 a16,16 0 0,1 32,0 z">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                android:endY="62"
-                android:startY="46"
-                android:type="linear">
-                <item android:color="#FFE600" android:offset="0" />
-                <item android:color="#FF007F" android:offset="1" />
-            </gradient>
-        </aapt:attr>
-    </path>
-    <path
-        android:fillColor="#13082A"
-        android:pathData="M36,58 h36 v1.5 h-36 z M36,54 h36 v1.8 h-36 z M38,49 h32 v2 h-32 z" />
-
-    <!-- 4. Perspective Cyber Neon Grid Floor -->
-    <!-- Horizontal Perspective Grid Lines -->
-    <path
-        android:strokeColor="#4000E5FF"
-        android:strokeWidth="0.8"
-        android:pathData="M0,64 L108,64 M0,70 L108,70 M0,78 L108,78 M0,88 L108,88 M0,100 L108,100" />
-
-    <!-- Vanishing Vertical Lines to Horizon Center (54, 62) -->
-    <path
-        android:strokeColor="#4000E5FF"
-        android:strokeWidth="0.9"
-        android:pathData="M54,62 L-30,108 M54,62 L0,108 M54,62 L24,108 M54,62 L42,108 M54,62 L54,108 M54,62 L66,108 M54,62 L84,108 M54,62 L108,108 M54,62 L138,108" />
-
-    <!-- 5. Neon Cosmic Stars -->
-    <path android:fillColor="#FFFF80" android:pathData="M24,20 h1.5 v4 h-1.5 z M22.75,21.25 h4 v1.5 h-4 z" />
-    <path android:fillColor="#00E5FF" android:pathData="M84,18 h1.5 v4 h-1.5 z M82.75,19.25 h4 v1.5 h-4 z" />
-    <path android:fillColor="#FFFFFF" android:pathData="M50,14 h1 v3 h-1 z M49,15 h3 v1 h-3 z" />
-
 </vector>

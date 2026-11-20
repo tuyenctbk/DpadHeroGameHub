@@ -154,22 +154,57 @@ class MonkeyView @JvmOverloads constructor(
         celebrationManager.clear()
     }
 
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = gameOver
+
+    override fun reviveGame(): Boolean {
+        if (!gameOver) return false
+        gameOver = false
+        gamePaused = false
+        lives = 3
+        playerDizzyUntil = 0L
+        monkeyGrabbed = false
+        isFalling = false
+        fallSpeed = 0f
+        cutRopeIndex = -1
+        currentRope = 1
+        playerY = height * 0.72f
+        playerRenderX = getRopeX(currentRope)
+        obstacles.clear()
+        harpyEagle = null
+        blackJaguar = null
+        deathReason = null
+        deathReasonDisplayUntil = 0L
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+        invalidate()
+        return true
+    }
+
     override fun startGame() {
         requestFocus()
         gamePaused = false
+        handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
         invalidate()
     }
 
     override fun pause() {
         gamePaused = true
         handler.removeCallbacks(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
     }
 
     override fun resume() {
         gamePaused = false
         handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
     }
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
@@ -258,7 +293,9 @@ class MonkeyView @JvmOverloads constructor(
         // 4. Vine scrolling animation (visual illusion of climbing)
         val isDizzy = now < playerDizzyUntil
         val currentClimbSpeed = if (isDizzy || isFalling || monkeyGrabbed) 0f else 3f + (score / 150f).coerceAtMost(5f)
-        vineScrollOffset = (vineScrollOffset + currentClimbSpeed) % height
+        if (height > 0) {
+            vineScrollOffset = (vineScrollOffset + currentClimbSpeed) % height
+        }
         if (currentClimbSpeed > 0f) {
             climbTime += 0.18f
         }
@@ -1487,38 +1524,40 @@ class MonkeyView @JvmOverloads constructor(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {
-            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                 resetGame()
                 startGame()
                 return true
             }
-            return false
+            return super.onKeyDown(keyCode, event)
         }
 
         if (gamePaused) {
             when (keyCode) {
-                KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DPAD_CENTER -> {
+                KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DPAD_CENTER,
+                KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> {
                     resume()
                     return true
                 }
-                KeyEvent.KEYCODE_DPAD_LEFT -> {
+                KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A -> {
                     selectedCharacter = (selectedCharacter - 1 + 4) % 4
                     SoundManager.playClick()
                     invalidate()
                     return true
                 }
-                KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D -> {
                     selectedCharacter = (selectedCharacter + 1) % 4
                     SoundManager.playClick()
                     invalidate()
                     return true
                 }
             }
-            return false
+            return super.onKeyDown(keyCode, event)
         }
 
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_LEFT -> {
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_A -> {
                 if (currentRope > 0) {
                     currentRope--
                     SoundManager.playClick()
@@ -1526,7 +1565,7 @@ class MonkeyView @JvmOverloads constructor(
                 }
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+            KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_D -> {
                 if (currentRope < 2) {
                     currentRope++
                     SoundManager.playClick()

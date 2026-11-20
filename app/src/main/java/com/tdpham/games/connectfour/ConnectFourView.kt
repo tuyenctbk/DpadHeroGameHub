@@ -40,6 +40,7 @@ class ConnectFourView @JvmOverloads constructor(
     }
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val arrowPath = android.graphics.Path()
     private val board = Array(ROWS) { IntArray(COLS) { EMPTY } }
     private var selectedCol = 3 // Start in center
     private var currentPlayer = PLAYER_1
@@ -95,18 +96,31 @@ class ConnectFourView @JvmOverloads constructor(
         themeIndex = prefs.getInt(ConnectFourOptionsDialog.KEY_THEME, 0)
     }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        gameHandler.removeCallbacks(loopRunnable)
+        gameHandler.removeCallbacks(cpuMoveRunnable)
+        celebrationManager.clear()
+    }
+
     override fun startGame() {
         requestFocus()
+        gameHandler.removeCallbacks(loopRunnable)
+        gameHandler.post(loopRunnable)
     }
 
     override fun pause() {
+        gameHandler.removeCallbacks(loopRunnable)
         gameHandler.removeCallbacks(cpuMoveRunnable)
     }
 
     override fun resume() {
         requestFocus()
         loadSettings()
+        gameHandler.removeCallbacks(loopRunnable)
+        gameHandler.post(loopRunnable)
         if (!gameOver && isVsAi && !isPlayerTurn && !isDropping) {
+            gameHandler.removeCallbacks(cpuMoveRunnable)
             gameHandler.postDelayed(cpuMoveRunnable, 400)
         }
     }
@@ -466,14 +480,23 @@ class ConnectFourView @JvmOverloads constructor(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                 resetGame()
                 return true
             }
             return super.onKeyDown(keyCode, event)
         }
 
-        if (isDropping || (!isPlayerTurn && isVsAi)) return true
+        val isGameplayKey = keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
+            keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
+            keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+            keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+            keyCode == KeyEvent.KEYCODE_ENTER ||
+            keyCode == KeyEvent.KEYCODE_SPACE ||
+            keyCode == KeyEvent.KEYCODE_BUTTON_A
+        if (isDropping || (!isPlayerTurn && isVsAi)) {
+            return if (isGameplayKey) true else super.onKeyDown(keyCode, event)
+        }
 
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT -> {
@@ -494,7 +517,7 @@ class ConnectFourView @JvmOverloads constructor(
                 }
                 return true
             }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_DPAD_DOWN -> {
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_BUTTON_A -> {
                 dropDisc(selectedCol)
                 return true
             }
@@ -566,12 +589,11 @@ class ConnectFourView @JvmOverloads constructor(
             // Pointer Arrow
             paint.color = Color.WHITE
             paint.alpha = 255
-            val arrowPath = android.graphics.Path().apply {
-                moveTo(indicatorX, indicatorY + 12f)
-                lineTo(indicatorX - 14f, indicatorY)
-                lineTo(indicatorX + 14f, indicatorY)
-                close()
-            }
+            arrowPath.reset()
+            arrowPath.moveTo(indicatorX, indicatorY + 12f)
+            arrowPath.lineTo(indicatorX - 14f, indicatorY)
+            arrowPath.lineTo(indicatorX + 14f, indicatorY)
+            arrowPath.close()
             canvas.drawPath(arrowPath, paint)
         }
 
@@ -680,16 +702,16 @@ class ConnectFourView @JvmOverloads constructor(
         // Mode & Streak
         val modeTitle = if (isVsAi) {
             when (aiDifficulty) {
-                0 -> "VS CPU (EASY)"
-                1 -> "VS CPU (NORMAL)"
-                else -> "VS CPU (MASTER)"
+                0 -> context.getString(R.string.connect_four_vs_easy)
+                1 -> context.getString(R.string.connect_four_vs_normal)
+                else -> context.getString(R.string.connect_four_vs_master)
             }
-        } else "2-PLAYER BATTLE"
+        } else context.getString(R.string.connect_four_2p)
         canvas.drawText(modeTitle, leftX, hudTop, paint)
 
         paint.textSize = 16f
         paint.color = Color.parseColor("#FFD700")
-        canvas.drawText("STREAK: $winStreak 🔥", leftX, hudSub, paint)
+        canvas.drawText(context.getString(R.string.hud_streak_format, winStreak), leftX, hudSub, paint)
 
         // Center Turn Indicator Banner
         paint.textAlign = Paint.Align.CENTER
@@ -697,11 +719,11 @@ class ConnectFourView @JvmOverloads constructor(
         if (!gameOver) {
             if (currentPlayer == PLAYER_1) {
                 paint.color = p1Color
-                val label = if (isVsAi) "YOUR TURN (YELLOW)" else "PLAYER 1 TURN"
+                val label = if (isVsAi) context.getString(R.string.connect_four_your_turn) else context.getString(R.string.connect_four_p1_turn)
                 canvas.drawText(label, w * 0.5f, hudTop + 10f, paint)
             } else {
                 paint.color = p2Color
-                val label = if (isVsAi) "CPU THINKING..." else "PLAYER 2 TURN"
+                val label = if (isVsAi) context.getString(R.string.connect_four_cpu_thinking) else context.getString(R.string.connect_four_p2_turn)
                 canvas.drawText(label, w * 0.5f, hudTop + 10f, paint)
             }
         }
@@ -710,12 +732,12 @@ class ConnectFourView @JvmOverloads constructor(
         paint.textAlign = Paint.Align.RIGHT
         paint.textSize = 20f
         paint.color = Color.WHITE
-        canvas.drawText("SCORE: $score", rightX, hudTop, paint)
+        canvas.drawText(context.getString(R.string.hud_score_format, score), rightX, hudTop, paint)
 
         val best = ScoreManager.getHighScore(context, gameKey, aiDifficulty)
         paint.textSize = 15f
         paint.color = Color.parseColor("#00E5FF")
-        canvas.drawText("BEST: $best", rightX, hudSub, paint)
+        canvas.drawText(context.getString(R.string.hud_best_format, best), rightX, hudSub, paint)
     }
 
     private fun drawGameOverOverlay(canvas: Canvas, w: Float, h: Float, p1Color: Int, p2Color: Int) {
@@ -749,10 +771,10 @@ class ConnectFourView @JvmOverloads constructor(
         paint.isFakeBoldText = true
 
         val (titleText, titleColor) = when {
-            winner == PLAYER_1 -> Pair("VICTORY! 🏆", p1Color)
-            winner == PLAYER_2 && isVsAi -> Pair("DEFEAT 💀", p2Color)
-            winner == PLAYER_2 -> Pair("PLAYER 2 WINS! 👑", p2Color)
-            else -> Pair("DRAW MATCH 🤝", Color.WHITE)
+            winner == PLAYER_1 -> Pair(context.getString(R.string.connect_four_victory), p1Color)
+            winner == PLAYER_2 && isVsAi -> Pair(context.getString(R.string.connect_four_defeat), p2Color)
+            winner == PLAYER_2 -> Pair(context.getString(R.string.connect_four_p2_wins), p2Color)
+            else -> Pair(context.getString(R.string.connect_four_draw), Color.WHITE)
         }
 
         paint.textSize = 38f
@@ -762,19 +784,19 @@ class ConnectFourView @JvmOverloads constructor(
         paint.textSize = 20f
         paint.color = Color.WHITE
         val subText = if (winner == PLAYER_1 || (!isVsAi && winner != EMPTY)) {
-            "4 in a row achieved in $moveCount moves!"
+            context.getString(R.string.connect_four_win_moves, moveCount)
         } else if (winner == EMPTY) {
-            "Grid fully locked! No more open slots."
+            context.getString(R.string.connect_four_draw_desc)
         } else {
-            "CPU connected 4 discs first! Try again."
+            context.getString(R.string.connect_four_cpu_win_desc)
         }
         canvas.drawText(subText, w / 2f, cardT + 120f, paint)
 
-        // Coin Reward pill
+        // Victory Points pill
         if (winner == PLAYER_1) {
             paint.color = Color.parseColor("#FFD700")
             paint.textSize = 18f
-            canvas.drawText("+${25 + (aiDifficulty * 15)} COINS BONUS EARNED 🪙", w / 2f, cardT + 165f, paint)
+            canvas.drawText(context.getString(R.string.connect_four_victory_points, 100 + (aiDifficulty * 50)), w / 2f, cardT + 165f, paint)
         }
 
         // Restart prompt button
@@ -789,6 +811,6 @@ class ConnectFourView @JvmOverloads constructor(
 
         paint.color = Color.BLACK
         paint.textSize = 20f
-        canvas.drawText("PRESS [ENTER] TO PLAY", w / 2f, btnT + 32f, paint)
+        canvas.drawText(context.getString(R.string.press_enter_to_play), w / 2f, btnT + 32f, paint)
     }
 }

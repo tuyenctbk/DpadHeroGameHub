@@ -229,23 +229,55 @@ class FrenzyView @JvmOverloads constructor(
         celebrationManager.clear()
     }
 
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = gameOver && !gameWon
+
+    override fun reviveGame(): Boolean {
+        if (!gameOver || gameWon) return false
+        val now = System.currentTimeMillis()
+        gameOver = false
+        gamePaused = false
+        lives = 2
+        playerX = width / 2f
+        playerY = height / 2f
+        playerStunUntil = 0L
+        playerShieldUntil = now + 4000L
+        deathReason = null
+        deathReasonDisplayUntil = 0L
+        mines.clear()
+        mineWarnings.clear()
+        otherFish.removeAll { it.size > playerSize }
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        handler.removeCallbacks(gameLoop)
+        handler.post(gameLoop)
+        invalidate()
+        return true
+    }
+
     override fun startGame() {
         requestFocus()
         gamePaused = false
         gameStartTime = System.currentTimeMillis()
+        handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
         invalidate()
     }
 
     override fun pause() {
         gamePaused = true
         handler.removeCallbacks(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
     }
 
     override fun resume() {
         gamePaused = false
         handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
     }
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
@@ -303,7 +335,7 @@ class FrenzyView @JvmOverloads constructor(
         val count = Random.nextInt(4, 7)
         val facingRight = Random.nextBoolean()
         val startX = if (facingRight) -150f else width + 150f
-        val startY = Random.nextFloat() * (height - 280f) + 120f
+        val startY = Random.nextFloat() * (height - 280f).coerceAtLeast(1f) + 120f
         
         for (i in 0 until count) {
             // Spawn school in close alignment
@@ -458,11 +490,11 @@ class FrenzyView @JvmOverloads constructor(
 
         val facingRight = Random.nextBoolean()
         var x = if (facingRight) -100f else width + 100f
-        var y = Random.nextFloat() * (height - 260f) + 100f
+        var y = Random.nextFloat() * (height - 260f).coerceAtLeast(1f) + 100f
 
         if (behavior == 3 || behavior == 4 || behavior in 12..16 || behavior == 18 || behavior == 19) { // Floor Dwellers
-            y = height - 60f - Random.nextFloat() * 15f
-            x = Random.nextFloat() * (width - 200f) + 100f // spawn directly on bottom
+            y = (height - 60f).coerceAtLeast(100f) - Random.nextFloat() * 15f
+            x = Random.nextFloat() * (width - 200f).coerceAtLeast(1f) + 100f // spawn directly on bottom
         }
 
         otherFish.add(AIFish(x, y, size, baseSpeed, facingRight, color, speciesIndex, behavior))
@@ -4564,20 +4596,22 @@ class FrenzyView @JvmOverloads constructor(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver || gameWon) {
-            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                 resetGame()
                 startGame()
                 return true
             }
-            return false
+            return super.onKeyDown(keyCode, event)
         }
 
         if (gamePaused) {
-            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                 resume()
                 return true
             }
-            return false
+            return super.onKeyDown(keyCode, event)
         }
 
         val now = System.currentTimeMillis()
@@ -4585,17 +4619,27 @@ class FrenzyView @JvmOverloads constructor(
         val speedMult = if (isStunned) 0.35f else 1.0f
         val currentSpeed = playerSpeed * speedMult
 
-        var effectiveKeyCode = keyCode
+        val normalizedKey = when (keyCode) {
+            KeyEvent.KEYCODE_W -> KeyEvent.KEYCODE_DPAD_UP
+            KeyEvent.KEYCODE_S -> KeyEvent.KEYCODE_DPAD_DOWN
+            KeyEvent.KEYCODE_A -> KeyEvent.KEYCODE_DPAD_LEFT
+            KeyEvent.KEYCODE_D -> KeyEvent.KEYCODE_DPAD_RIGHT
+            else -> keyCode
+        }
+
+        var effectiveKeyCode = normalizedKey
         if (isStunned) {
-            effectiveKeyCode = when (keyCode) {
+            effectiveKeyCode = when (normalizedKey) {
                 KeyEvent.KEYCODE_DPAD_UP -> KeyEvent.KEYCODE_DPAD_DOWN
                 KeyEvent.KEYCODE_DPAD_DOWN -> KeyEvent.KEYCODE_DPAD_UP
                 KeyEvent.KEYCODE_DPAD_LEFT -> KeyEvent.KEYCODE_DPAD_RIGHT
                 KeyEvent.KEYCODE_DPAD_RIGHT -> KeyEvent.KEYCODE_DPAD_LEFT
-                else -> keyCode
+                else -> normalizedKey
             }
         }
 
+        val maxX = (width - 50f).coerceAtLeast(50f)
+        val maxY = (height - 50f).coerceAtLeast(50f)
         when (effectiveKeyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> {
                 playerY = (playerY - currentSpeed).coerceAtLeast(50f)
@@ -4603,7 +4647,7 @@ class FrenzyView @JvmOverloads constructor(
                 return true
             }
             KeyEvent.KEYCODE_DPAD_DOWN -> {
-                playerY = (playerY + currentSpeed).coerceAtMost(height - 50f)
+                playerY = (playerY + currentSpeed).coerceAtMost(maxY)
                 invalidate()
                 return true
             }
@@ -4614,7 +4658,7 @@ class FrenzyView @JvmOverloads constructor(
                 return true
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                playerX = (playerX + currentSpeed).coerceAtMost(width - 50f)
+                playerX = (playerX + currentSpeed).coerceAtMost(maxX)
                 if (!isStunned) playerFacingRight = true else playerFacingRight = false
                 invalidate()
                 return true
@@ -4649,8 +4693,8 @@ class FrenzyView @JvmOverloads constructor(
                     val moveX = (dx / dist) * currentSpeed
                     val moveY = (dy / dist) * currentSpeed
 
-                    playerX = (playerX + moveX).coerceIn(50f, width - 50f)
-                    playerY = (playerY + moveY).coerceIn(50f, height - 50f)
+                    playerX = (playerX + moveX).coerceIn(50f, (width - 50f).coerceAtLeast(50f))
+                    playerY = (playerY + moveY).coerceIn(50f, (height - 50f).coerceAtLeast(50f))
 
                     if (!isStunned) {
                         if (dx > 5f) playerFacingRight = true

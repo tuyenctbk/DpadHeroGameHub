@@ -719,4 +719,208 @@
     <string name="revive_message">Guarda un breve video per riprendere da dove eri rimasto.</string>
     <string name="revive_watch_ad">Guarda l\'annuncio</string>
     <string name="revive_no_thanks">No, grazie</string>
+
+    <string name="scanline_crt_effect">Filtro CRT Scanline</string>
+    <string name="scanline_crt_desc">Simula le classiche linee di scansione dei monitor CRT arcade.</string>
+    <string name="screen_shake_effect">Effetto Scossa Schermo</string>
+    <string name="screen_shake_desc">Feedback visivo dinamico durante collisioni ed esplosioni.</string>
+    <string name="reset_high_scores">Azzera Record</string>
+    <string name="reset_high_scores_desc">Cancella tutti i punteggi migliori registrati per l\'eroe attivo.</string>
+    <string name="reset_scores_confirm">Vuoi davvero cancellare tutti i record di questo eroe? Questa azione non può essere annullata.</string>
+    <string name="scores_cleared">I record sono stati azzerati.</string>
+    <string name="frenzy_tang">PESCE CHIRURGO BLU</string>
+    <string name="frenzy_barracuda">BARRACUDA</string>
+    <string name="frenzy_shark">SQUALO</string>
+
+    <string-array name="win_connect_four">
+        <item>QUATTRO IN FILA!</item>
+        <item>MAESTRO DELLA GRIGLIA!</item>
+        <item>GENIO TATTICO!</item>
+        <item>CAMPIONE DI FORZA 4!</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>BLACKJACK NATURALE!</item>
+        <item>GRANDE GIOCATORE!</item>
+        <item>BANCO BATTUTO!</item>
+        <item>CASINO ROYALE!</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>GENIO ASSOLUTO!</item>
+        <item>PUNTEGGIO PERFETTO!</item>
+        <item>MAESTRO DEI QUIZ!</item>
+        <item>CAMPIONE DI TRIVIA!</item>
+    </string-array>
+
+    <string name="game_connect_four">FORZA 4</string>
+    <string name="game_connect_four_instructions">Classica sfida tattica 4 in fila!\n• D-PAD SINISTRA / DESTRA: Sposta il cursore tra le colonne\n• D-PAD CENTRO / INVIO: Fai cadere il gettone nella colonna\n• Collega 4 gettoni in orizzontale, verticale o diagonale\n• Scegli 1 giocatore contro IA o sfida a 2 giocatori!</string>
+    <string name="connect_four_settings_title">IMPOSTAZIONI FORZA 4</string>
+    <string name="game_blackjack">BLACKJACK 21</string>
+    <string name="game_blackjack_instructions">Autentico tavolo da Blackjack di Las Vegas!\n• Obiettivo: Avvicinati a 21 senza superare 21\n• D-PAD SU / GIÙ / SINISTRA / DESTRA: Scegli fiche e azioni\n• D-PAD CENTRO / INVIO: Punta / Distribuisci / Carta / Stai / Raddoppia\n• Il Blackjack paga 3:2! Vinci fiche e costruisci la tua fortuna!</string>
+    <string name="blackjack_settings_title">IMPOSTAZIONI BLACKJACK</string>
+    <string name="game_trivia">TRIVIA QUIZ</string>
+    <string name="game_trivia_instructions">Quiz show arcade ad alta tensione!\n• D-PAD SU / GIÙ / SINISTRA / DESTRA: Seleziona risposta A, B, C o D\n• D-PAD CENTRO / INVIO: Conferma risposta\n• Rispondi velocemente per grandi moltiplicatori di tempo\n• Usa gli aiuti: 50:50, Blocca timer e Salta domanda\n• Completa le 10 domande per ricche ricompense in monete!</string>
+    <string name="trivia_settings_title">IMPOSTAZIONI TRIVIA QUIZ</string>
+
+    <string name="sound_profile_label">Profilo Audio</string>
+    <string name="sound_profile_arcade">Arcade 8-Bit</string>
+    <string name="sound_profile_retro">Synth Retrò</string>
+    <string name="sound_profile_modern">Digitale Moderno</string>
+    <string name="sound_profile_arcade_desc">Onde a impulsi 8-bit potenti</string>
+    <string name="sound_profile_retro_desc">Toni synth analogici caldi</string>
+    <string name="sound_profile_modern_desc">Suoni polifonici nitidi</string>
+    <string name="sound_profile_toast">Profilo Audio: %1$s</string>
+    <string name="sound_profile_desc_format">%1$s • Tocca per cambiare</string>
+    <string name="volume_desc_format">Volume: %1$d%% • Tocca per regolare</string>
+    <string name="sensitivity_toast">Sensibilità Controller: %1$s</string>
+
+    <string name="trivia_gauntlet_completed">SFIDA COMPLETATA! 🏆</string>
+    <string name="trivia_final_score">Punteggio Finale: %1$d Punti</string>
+    <string name="trivia_accuracy">Precisione: %1$d / %2$d corrette (%3$d%%)</string>
+    <string name="trivia_coins_earned">+%1$d Monete guadagnate 🪙</string>
+    <string name="trivia_play_again">GIOCA ANCORA [ENTER]</string>
+    <string name="press_enter_next_round">Premi [ENTER] per il prossimo round</string>
+    <string name="twentyfortyeight_hint">🎮 D-Pad/Scorri: Muovi • [U] Annulla • [MENU] Dimensione</string>
+
+    <string name="tab_local">🏠 LOCALE</string>
+    <string name="tab_worldwide">🌐 MONDIALE</string>
+
+    <string name="setting_volume_desc_format">Volume: %1$d%% • Tocca il badge volume per regolare</string>
+    <string name="setting_sound_profile_theme">Tema Profilo Audio</string>
+    <string name="setting_sound_profile_desc">Arcade 8-Bit • Tocca per cambiare preset audio</string>
+    <string name="setting_retro_music">Musica Retrò &amp; Atmosfera</string>
+    <string name="setting_retro_music_desc">Melodie arcade di sottofondo al sintetizzatore</string>
+    <string name="setting_controller_sensitivity">Sensibilità Controller &amp; Gamepad</string>
+    <string name="setting_controller_sensitivity_desc">Regola risposta di D-Pad, joystick e tocco</string>
+    <string name="setting_haptic_vibration">Vibrazione Aptica &amp; Controller</string>
+    <string name="setting_haptic_vibration_desc">Impulsi tattili su colpi, punteggi ed esplosioni</string>
+    <string name="calibrate">CALIBRA</string>
+
+    <string name="badge_live">● LIVE</string>
+    <string name="global_top3_snake">TOP 3 MONDIALE • SNAKE</string>
+    <string name="hall_of_fame_widget">HALL OF FAME 🏆</string>
+    <string name="placeholder_dash">---</string>
+    <string name="zero_pts">0 pt</string>
+
+    <string name="controller_settings_title">🎮 Impostazioni Controller &amp; Aptica</string>
+    <string name="hardware_diagnostics">DIAGNOSTICA HARDWARE</string>
+    <string name="controller_checking">🎮 Controller: Controllo dispositivi...</string>
+    <string name="vibrator_checking">⚡ Vibrazione: Controllo VibratorManager...</string>
+    <string name="haptic_rumble_title">Vibrazione Aptica &amp; Rumble</string>
+    <string name="haptic_rumble_desc">Attiva vibrazione per impatti, monete e pulsanti</string>
+    <string name="haptic_intensity_title">Intensità Aptica (Ampiezza Vibrazione)</string>
+    <string name="vibration_motor_test_title">TEST HARDWARE MOTORE VIBRAZIONE</string>
+    <string name="vibration_test_instructions">Seleziona un profilo di vibrazione e premi test per verificare il motore:</string>
+    <string name="vibe_profile_click">🕹️ Clic (15ms)</string>
+    <string name="vibe_profile_score">⚡ Punto (35ms)</string>
+    <string name="vibe_profile_hazard">💥 Pericolo (70ms)</string>
+    <string name="vibe_profile_explosion">💣 Esplosione Boss</string>
+    <string name="vibe_profile_victory">🏆 Onda Vittoria</string>
+    <string name="test_vibration_now">⚡ PROVA VIBRAZIONE ORA</string>
+    <string name="gamepad_speed_title">Velocità Input Gamepad</string>
+    <string name="gamepad_speed_desc">Frequenza di ripetizione e curva di sensibilità</string>
+    <string name="analog_deadzone_title">Soglia Zona Morta Stick Analogico</string>
+    <string name="analog_deadzone_desc">Previene il drift dello stick e migliora la precisione del D-Pad sui gamepad Bluetooth</string>
+    <string name="live_stick_neutral">🕹️ Test Stick Live: Neutro (0.00, 0.00)</string>
+
+    <string name="sound_sfx_on">EFFETTI AUDIO: ON</string>
+    <string name="sound_sfx_off">EFFETTI AUDIO: OFF</string>
+    <string name="music_on">MUSICA: ON</string>
+    <string name="music_off">MUSICA: OFF</string>
+
+    <string name="gamepad_connected">Gamepad connesso</string>
+    <string name="remote_mode">Modalità Telecomando</string>
+    <string name="desc_controller_status">Stato connessione controller</string>
+    <string name="gamepad_connected_format">🎮 Connesso: %1$s</string>
+    <string name="no_external_gamepad">Nessun Gamepad esterno (D-Pad virtuale attivo)</string>
+    <string name="haptic_test_fired">Test aptico eseguito: %1$s (%2$d%% intensità)</string>
+    <string name="motor_hardware_info">⚡ Motore: %1$s • Hardware pronto: %2$s • Controllo ampiezza: %3$s</string>
+    <string name="status_yes">SÌ</string>
+    <string name="status_no">NO</string>
+    <string name="status_fallback">ALTERNATIVO</string>
+    <string name="vibrator_manager_api">VibratorManager (API 31+)</string>
+    <string name="vibrator_legacy">Vibrator (Legacy)</string>
+
+    <string name="global_top3_format">TOP 3 MONDIALE • %1$s</string>
+    <string name="no_record">Nessun record</string>
+    <string name="score_pts_format">%1$d pt</string>
+    <string name="status_claimed">✓ RISCOSSO</string>
+    <string name="status_ready">PRONTO!</string>
+    <string name="claimed_today">✓ RISCOSSO OGGI</string>
+    <string name="claim_day_format">🎁 RISCUOTI GIORNO %1$d (+%2$d)</string>
+    <string name="desc_game_icon">Icona gioco</string>
+    <string name="exit_app_title">Esci dal Game Hub</string>
+    <string name="exit_app_confirm">Vuoi davvero uscire dall\'app?</string>
+    <string name="btn_exit_app">Esci</string>
+    <string name="btn_cancel">Annulla</string>
+
+    <string name="genre_arcade">ARCADE</string>
+    <string name="genre_puzzle">PUZZLE</string>
+    <string name="genre_strategy">STRATEGIA</string>
+    <string name="genre_adventure">AVVENTURA</string>
+    <string name="genre_action">AZIONE</string>
+    <string name="genre_runner">CORSA</string>
+    <string name="genre_brain">INGEGNO</string>
+    <string name="genre_cards">CARTE</string>
+    <string name="genre_racing">GARA</string>
+    <string name="genre_logic">LOGICA</string>
+    <string name="genre_classic">CLASSICO</string>
+    <string name="genre_word">PAROLE</string>
+    <string name="genre_shooter">SPARATUTTO</string>
+    <string name="genre_platform">PIATTAFORME</string>
+    <string name="genre_memory">MEMORIA</string>
+    <string name="genre_board">TAVOLO</string>
+    <string name="spotlight_new_challenge">★ NUOVA SFIDA</string>
+    <string name="spotlight_play_to_set_record">★ GIOCA PER FISSARE UN RECORD</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">EROE ATTIVO</string>
+    <string name="sensitivity_standard">1.0x (Standard)</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33 GIOCHI CLASSICI PER TV</string>
+    <string name="default_arcade_game">GIOCO ARCADE</string>
+    <string name="fallback_ad_body">Divertiti con infiniti giochi arcade classici con controlli D-Pad per TV!</string>
+    <string name="fallback_ad_cta">Gioca ora</string>
+
+    <string name="retro_hud_default_circuit">Circuito</string>
+    <string name="retro_hud_lap">GIRO</string>
+    <string name="retro_hud_time">TEMPO</string>
+    <string name="retro_hud_best">RECORD</string>
+    <string name="retro_hud_coins">MONETE</string>
+    <string name="retro_hud_mph">MPH</string>
+    <string name="retro_hud_pos">POS</string>
+    <string name="retro_hud_slipstream">&gt;&gt; SCIA AERODINAMICA &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">TURBO NITRO!</string>
+
+    <string name="hud_score_format">PUNTI: %1$d</string>
+    <string name="hud_best_format">RECORD: %1$d</string>
+    <string name="hud_streak_format">SERIE: %1$d</string>
+    <string name="blackjack_chips_format">FICHE: $%1$d</string>
+    <string name="blackjack_streak_format">SERIE: %1$d VITTORIE</string>
+    <string name="blackjack_table_title">BLACKJACK 21 LAS VEGAS</string>
+    <string name="blackjack_table_rules">IL BLACKJACK PAGA 3 A 2 • IL BANCO STA SUL 17</string>
+    <string name="blackjack_best_format">RECORD: $%1$d</string>
+    <string name="blackjack_shoe_format">MAZZO: %1$d CARTE</string>
+    <string name="blackjack_dealer">BANCO</string>
+    <string name="blackjack_dealer_total">BANCO: %1$d</string>
+    <string name="blackjack_next_round">PROSSIMO ROUND [ENTER]</string>
+    <string name="connect_four_vs_easy">VS CPU (FACILE)</string>
+    <string name="connect_four_vs_normal">VS CPU (NORMALE)</string>
+    <string name="connect_four_vs_master">VS CPU (MAESTRO)</string>
+    <string name="connect_four_2p">SFIDA 2 GIOCATORI</string>
+    <string name="connect_four_your_turn">TUO TURNO (GIALLO)</string>
+    <string name="connect_four_p1_turn">TURNO GIOCATORE 1</string>
+    <string name="connect_four_cpu_thinking">CPU STA PENSANDO...</string>
+    <string name="connect_four_p2_turn">TURNO GIOCATORE 2</string>
+    <string name="connect_four_victory">VITTORIA!</string>
+    <string name="connect_four_defeat">SCONFITTA</string>
+    <string name="connect_four_p2_wins">VINCE IL GIOCATORE 2!</string>
+    <string name="connect_four_draw">PAREGGIO</string>
+    <string name="connect_four_win_moves">4 in fila ottenuti in %1$d mosse!</string>
+    <string name="connect_four_draw_desc">Griglia piena! Nessuna casella libera.</string>
+    <string name="connect_four_cpu_win_desc">La CPU ha collegato 4 gettoni per prima! Riprova.</string>
+    <string name="connect_four_victory_points">+%1$d PUNTI VITTORIA</string>
+    <string name="press_enter_to_play">PREMI [ENTER] PER GIOCARE</string>
+    <string name="trivia_arena_default">ARENA QUIZ</string>
+    <string name="fruit_best_score_format">RECORD: %1$d  PUNTI: %2$d</string>
 </resources>

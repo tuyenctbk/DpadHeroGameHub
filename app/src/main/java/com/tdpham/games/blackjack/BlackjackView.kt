@@ -127,11 +127,21 @@ class BlackjackView @JvmOverloads constructor(
         highestBalance = max(chipBalance, ScoreManager.getHighScore(context, gameKey))
     }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        gameHandler.removeCallbacks(loopRunnable)
+        gameHandler.removeCallbacks(dealerStepRunnable)
+        celebrationManager.clear()
+    }
+
     override fun startGame() {
         requestFocus()
+        gameHandler.removeCallbacks(loopRunnable)
+        gameHandler.post(loopRunnable)
     }
 
     override fun pause() {
+        gameHandler.removeCallbacks(loopRunnable)
         gameHandler.removeCallbacks(dealerStepRunnable)
     }
 
@@ -139,6 +149,12 @@ class BlackjackView @JvmOverloads constructor(
         requestFocus()
         loadSettings()
         syncCoins()
+        gameHandler.removeCallbacks(loopRunnable)
+        gameHandler.post(loopRunnable)
+        if (gameState == GameState.DEALER_TURN) {
+            gameHandler.removeCallbacks(dealerStepRunnable)
+            gameHandler.postDelayed(dealerStepRunnable, 500)
+        }
     }
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
@@ -246,8 +262,8 @@ class BlackjackView @JvmOverloads constructor(
             val isDealerBlackjack = (dealerHand.size == 2 && dealerVal == 21)
 
             if (isDealerBlackjack) {
-                // Push
-                endRound("PUSH! Both have Blackjack 🤝", 0, isPush = true)
+                // Push — return player's bet
+                endRound("PUSH! Both have Blackjack 🤝", currentBet, isPush = true)
             } else {
                 // 3:2 payout!
                 val winnings = (currentBet * 2.5f).toInt()
@@ -434,7 +450,7 @@ class BlackjackView @JvmOverloads constructor(
                         adjustBet(-50)
                         return true
                     }
-                    KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE -> {
+                    KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> {
                         triggerBetAction()
                         return true
                     }
@@ -461,7 +477,7 @@ class BlackjackView @JvmOverloads constructor(
                         }
                         return true
                     }
-                    KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE -> {
+                    KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> {
                         when (actionFocusIndex) {
                             0 -> hitPlayer()
                             1 -> standPlayer()
@@ -472,7 +488,7 @@ class BlackjackView @JvmOverloads constructor(
                 }
             }
             GameState.ROUND_OVER -> {
-                if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE) {
+                if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                     resetGame()
                     return true
                 }
@@ -566,31 +582,31 @@ class BlackjackView @JvmOverloads constructor(
 
         // Balance & Chips
         paint.color = Color.parseColor("#FFD700")
-        canvas.drawText("CHIPS: $$chipBalance 🪙", leftX, hudTop, paint)
+        canvas.drawText(context.getString(R.string.blackjack_chips_format, chipBalance), leftX, hudTop, paint)
 
         paint.textSize = 15f
         paint.color = Color.parseColor("#00E5FF")
-        canvas.drawText("STREAK: $winStreak WINS 🔥", leftX, hudSub, paint)
+        canvas.drawText(context.getString(R.string.blackjack_streak_format, winStreak), leftX, hudSub, paint)
 
         // Title Center
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 22f
         paint.color = Color.WHITE
-        canvas.drawText("VEGAS BLACKJACK 21", w * 0.5f, hudTop, paint)
+        canvas.drawText(context.getString(R.string.blackjack_table_title), w * 0.5f, hudTop, paint)
 
         paint.textSize = 14f
         paint.color = Color.parseColor("#B0BEC5")
-        canvas.drawText("BLACKJACK PAYS 3 TO 2 • DEALER STANDS ON 17", w * 0.5f, hudSub, paint)
+        canvas.drawText(context.getString(R.string.blackjack_table_rules), w * 0.5f, hudSub, paint)
 
         // High Score Right
         paint.textAlign = Paint.Align.RIGHT
         paint.textSize = 18f
         paint.color = Color.parseColor("#FFD700")
-        canvas.drawText("BEST: $$highestBalance", rightX, hudTop, paint)
+        canvas.drawText(context.getString(R.string.blackjack_best_format, highestBalance), rightX, hudTop, paint)
 
         paint.textSize = 14f
         paint.color = Color.WHITE
-        canvas.drawText("SHOE: ${deck.size} CARDS", rightX, hudSub, paint)
+        canvas.drawText(context.getString(R.string.blackjack_shoe_format, deck.size), rightX, hudSub, paint)
     }
 
     private fun drawDealerArea(canvas: Canvas, w: Float, h: Float) {
@@ -601,7 +617,11 @@ class BlackjackView @JvmOverloads constructor(
         paint.isFakeBoldText = true
 
         val dealerTotal = calculateHandValue(dealerHand)
-        val dealerLabel = if (dealerHand.any { !it.isFaceUp }) "DEALER" else "DEALER: $dealerTotal"
+        val dealerLabel = if (dealerHand.any { !it.isFaceUp }) {
+            context.getString(R.string.blackjack_dealer)
+        } else {
+            context.getString(R.string.blackjack_dealer_total, dealerTotal)
+        }
         canvas.drawText(dealerLabel, w * 0.5f, areaY, paint)
 
         // Draw Dealer Cards
@@ -807,7 +827,7 @@ class BlackjackView @JvmOverloads constructor(
             paint.textAlign = Paint.Align.CENTER
             paint.textSize = 19f
             paint.isFakeBoldText = true
-            canvas.drawText("NEXT ROUND [ENTER]", w / 2f, bottomY + 32f, paint)
+            canvas.drawText(context.getString(R.string.blackjack_next_round), w / 2f, bottomY + 32f, paint)
         }
     }
 }

@@ -129,8 +129,19 @@ class SudokuView @JvmOverloads constructor(
         requestFocus()
     }
 
-    override fun pause() {}
-    override fun resume() {}
+    override fun pause() {
+        pressedKeys.clear()
+        handler.removeCallbacks(moveRunnable)
+        animationHandler.removeCallbacks(animationRunnable)
+    }
+
+    override fun resume() {
+        requestFocus()
+        if (solved) {
+            animationHandler.removeCallbacks(animationRunnable)
+            animationHandler.post(animationRunnable)
+        }
+    }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
@@ -175,22 +186,7 @@ class SudokuView @JvmOverloads constructor(
         invalidate()
     }
 
-    override val canRevive: Boolean get() = true
-
-    override fun reviveGame(): Boolean {
-        if (solved) return false
-        for (r in 0..8) {
-            for (c in 0..8) {
-                if (!given[r][c]) {
-                    board[r][c] = 0
-                }
-            }
-        }
-        celebrationManager.clear()
-        SoundManager.playSuccess()
-        invalidate()
-        return true
-    }
+    override val canRevive: Boolean get() = false
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (solved) {

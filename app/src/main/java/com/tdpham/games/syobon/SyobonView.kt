@@ -253,6 +253,22 @@ class SyobonView @JvmOverloads constructor(
         isFocusableInTouchMode = true
     }
 
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = gameOver && !isLevelCleared
+
+    override fun reviveGame(): Boolean {
+        if (!gameOver || isLevelCleared) return false
+        gameOver = false
+        isDying = false
+        gamePaused = false
+        currentLives = if (initialLivesOption == -99) -99 else 3
+        resetLevelState()
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        startGame()
+        return true
+    }
+
     override fun startGame() {
         mainHandler.removeCallbacks(gameLoop)
         gamePaused = false
@@ -262,11 +278,15 @@ class SyobonView @JvmOverloads constructor(
 
     override fun pause() {
         gamePaused = true
+        pressedKeys.clear()
+        mainHandler.removeCallbacks(gameLoop)
     }
 
     override fun resume() {
         gamePaused = false
         lastUpdate = System.currentTimeMillis()
+        mainHandler.removeCallbacks(gameLoop)
+        mainHandler.post(gameLoop)
     }
 
     override fun toggleSound(): Boolean {
@@ -1324,7 +1344,8 @@ class SyobonView @JvmOverloads constructor(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver || isLevelCleared) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                 handleNextLevelOrReset()
                 return true
             }
@@ -1343,8 +1364,8 @@ class SyobonView @JvmOverloads constructor(
                 pressedKeys.add(KeyEvent.KEYCODE_DPAD_RIGHT)
             }
             KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER,
-            KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_BUTTON_Y,
-            KeyEvent.KEYCODE_BUTTON_L1, KeyEvent.KEYCODE_BUTTON_R1, KeyEvent.KEYCODE_BUTTON_START,
+            KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_BUTTON_Y,
+            KeyEvent.KEYCODE_BUTTON_L1, KeyEvent.KEYCODE_BUTTON_R1,
             KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_K,
             KeyEvent.KEYCODE_NUMPAD_8, KeyEvent.KEYCODE_NUMPAD_5, KeyEvent.KEYCODE_NUMPAD_ENTER -> {
                 lastJumpPressTime = System.currentTimeMillis()
@@ -1373,8 +1394,8 @@ class SyobonView @JvmOverloads constructor(
                 pressedKeys.remove(KeyEvent.KEYCODE_DPAD_RIGHT)
             }
             KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER,
-            KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_BUTTON_Y,
-            KeyEvent.KEYCODE_BUTTON_L1, KeyEvent.KEYCODE_BUTTON_R1, KeyEvent.KEYCODE_BUTTON_START,
+            KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_BUTTON_Y,
+            KeyEvent.KEYCODE_BUTTON_L1, KeyEvent.KEYCODE_BUTTON_R1,
             KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_K,
             KeyEvent.KEYCODE_NUMPAD_8, KeyEvent.KEYCODE_NUMPAD_5, KeyEvent.KEYCODE_NUMPAD_ENTER -> {
                 pressedKeys.remove(keyCode)

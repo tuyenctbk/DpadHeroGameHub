@@ -83,8 +83,19 @@ class HangmanView @JvmOverloads constructor(
         invalidate()
     }
 
-    override fun pause() { isPaused = true; invalidate() }
-    override fun resume() { isPaused = false; invalidate() }
+    override fun pause() {
+        isPaused = true
+        animHandler.removeCallbacks(animRunnable)
+        invalidate()
+    }
+
+    override fun resume() {
+        requestFocus()
+        isPaused = false
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
+        invalidate()
+    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -158,10 +169,11 @@ class HangmanView @JvmOverloads constructor(
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
-    override val canRevive: Boolean get() = true
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = isGameOver && !isWin
 
     override fun reviveGame(): Boolean {
-        if (!isGameOver) return false
+        if (!isGameOver || isWin) return false
         isGameOver = false
         remainingAttempts = 3 // Give 3 extra attempts
         celebrationManager.clear()
@@ -218,6 +230,7 @@ class HangmanView @JvmOverloads constructor(
                 return true
             }
             KeyEvent.KEYCODE_VOLUME_MUTE -> toggleSound()
+            else -> return super.onKeyDown(keyCode, event)
         }
         invalidate()
         return true
@@ -248,7 +261,8 @@ class HangmanView @JvmOverloads constructor(
             // Keyboard layout (must match drawKeyboard)
             val topH = height * 0.45f
             val startY = topH + 30f
-            val kW = 90f; val kH = 75f; val s = 15f
+            val scale = min(1f, (width * 0.92f) / (9 * 90f + 8 * 15f))
+            val kW = 90f * scale; val kH = 75f * scale; val s = 15f * scale
             val totalW = 9 * kW + 8 * s
             val sX = (width - totalW) / 2f
             
@@ -395,7 +409,8 @@ class HangmanView @JvmOverloads constructor(
     }
 
     private fun drawKeyboard(canvas: Canvas, startY: Float) {
-        val kW = 90f; val kH = 75f; val s = 15f
+        val scale = min(1f, (width * 0.92f) / (9 * 90f + 8 * 15f))
+        val kW = 90f * scale; val kH = 75f * scale; val s = 15f * scale
         val totalW = 9 * kW + 8 * s
         val sX = (width - totalW) / 2f
         for (i in alphabet.indices) {
@@ -405,10 +420,10 @@ class HangmanView @JvmOverloads constructor(
             val isSelected = (r == cursorRow && c == cursorCol)
             val isGuessed = (letter in guessedLetters)
             paint.color = if (isSelected) Color.YELLOW else if (isGuessed) Color.DKGRAY else Color.argb(160, 255, 255, 255)
-            canvas.drawRoundRect(x, y, x + kW, y + kH, 10f, 10f, paint)
+            canvas.drawRoundRect(x, y, x + kW, y + kH, 10f * scale, 10f * scale, paint)
             paint.color = if (isGuessed) Color.GRAY else Color.BLACK
-            paint.textSize = 36f; paint.textAlign = Paint.Align.CENTER
-            canvas.drawText(letter.toString(), x + kW / 2f, y + kH / 2f + 12f, paint)
+            paint.textSize = 36f * scale; paint.textAlign = Paint.Align.CENTER
+            canvas.drawText(letter.toString(), x + kW / 2f, y + kH / 2f + 12f * scale, paint)
         }
     }
 

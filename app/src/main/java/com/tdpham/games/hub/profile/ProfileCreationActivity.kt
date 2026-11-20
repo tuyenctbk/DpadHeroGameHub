@@ -25,6 +25,8 @@ class ProfileCreationActivity : AppCompatActivity() {
     private var editingProfileId: String? = null
     private var selectedAvatarId = 0
     private var selectedColor = Color.WHITE
+
+    private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
     
     private val avatars = listOf(
         0 to R.drawable.ic_hero_knight,
@@ -112,12 +114,14 @@ class ProfileCreationActivity : AppCompatActivity() {
     private fun confirmDelete(profile: UserProfile) {
         val dialog = android.app.Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
         dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
-        val view = layoutInflater.inflate(R.layout.dialog_rate_app, null) as LinearLayout
-        view.removeAllViews()
-        view.layoutParams = LinearLayout.LayoutParams(400, LinearLayout.LayoutParams.WRAP_CONTENT)
-        view.setBackgroundResource(R.drawable.dialog_background)
-        view.setPadding(28, 28, 28, 28)
-        view.gravity = android.view.Gravity.CENTER_HORIZONTAL
+        val pad = dpToPx(24)
+        val view = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(dpToPx(360), LinearLayout.LayoutParams.WRAP_CONTENT)
+            setBackgroundResource(R.drawable.dialog_background)
+            setPadding(pad, pad, pad, pad)
+            gravity = android.view.Gravity.CENTER_HORIZONTAL
+        }
 
         val title = TextView(this).apply {
             text = getString(R.string.delete_profile)
@@ -125,14 +129,14 @@ class ProfileCreationActivity : AppCompatActivity() {
             textSize = 22f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             gravity = android.view.Gravity.CENTER
-            setPadding(0, 0, 0, 12)
+            setPadding(0, 0, 0, dpToPx(12))
         }
         val msg = TextView(this).apply {
             text = getString(R.string.confirm_delete_profile)
             setTextColor(Color.parseColor("#B0BEC5"))
             textSize = 15f
             gravity = android.view.Gravity.CENTER
-            setPadding(0, 0, 0, 24)
+            setPadding(0, 0, 0, dpToPx(20))
         }
         val btnYes = Button(this).apply {
             text = getString(R.string.yes)
@@ -141,8 +145,8 @@ class ProfileCreationActivity : AppCompatActivity() {
             textSize = 16f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             isFocusable = true
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 48).apply {
-                setMargins(0, 0, 0, 10)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(48)).apply {
+                setMargins(0, 0, 0, dpToPx(10))
             }
             setOnClickListener {
                 dialog.dismiss()
@@ -160,7 +164,7 @@ class ProfileCreationActivity : AppCompatActivity() {
             textSize = 15f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             isFocusable = true
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 46)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(48))
             setOnClickListener { dialog.dismiss() }
         }
         btnYes.id = View.generateViewId()
@@ -185,12 +189,15 @@ class ProfileCreationActivity : AppCompatActivity() {
 
     private fun setupAvatarSelection() {
         val container = findViewById<LinearLayout>(R.id.avatar_selection_container)
+        val iconSize = dpToPx(64)
+        val iconMargin = dpToPx(8)
+        val iconPad = dpToPx(10)
         avatars.forEach { (id, resId) ->
             val iconView = ImageView(this).apply {
-                layoutParams = LinearLayout.LayoutParams(110, 110).apply { setMargins(12, 0, 12, 0) }
+                layoutParams = LinearLayout.LayoutParams(iconSize, iconSize).apply { setMargins(iconMargin, 0, iconMargin, 0) }
                 setImageResource(resId)
                 scaleType = ImageView.ScaleType.FIT_CENTER
-                setPadding(16, 16, 16, 16)
+                setPadding(iconPad, iconPad, iconPad, iconPad)
                 background = getDrawable(R.drawable.game_item_background)
                 backgroundTintList = android.content.res.ColorStateList.valueOf(if (selectedAvatarId == id) Color.parseColor("#33FFFFFF") else Color.parseColor("#1AFFFFFF"))
                 imageTintList = android.content.res.ColorStateList.valueOf(if (selectedAvatarId == id) selectedColor else Color.LTGRAY)
@@ -220,10 +227,12 @@ class ProfileCreationActivity : AppCompatActivity() {
 
     private fun setupColorSelection() {
         val container = findViewById<LinearLayout>(R.id.color_selection_container)
+        val swatchSize = dpToPx(36)
+        val swatchMargin = dpToPx(8)
         colors.forEach { hex ->
             val color = Color.parseColor(hex)
             val colorView = View(this).apply {
-                layoutParams = LinearLayout.LayoutParams(60, 60).apply { setMargins(12, 0, 12, 0) }
+                layoutParams = LinearLayout.LayoutParams(swatchSize, swatchSize).apply { setMargins(swatchMargin, 0, swatchMargin, 0) }
                 background = getDrawable(R.drawable.avatar_circle_placeholder)
                 backgroundTintList = android.content.res.ColorStateList.valueOf(color)
                 isFocusable = true

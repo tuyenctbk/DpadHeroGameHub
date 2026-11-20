@@ -70,9 +70,19 @@ class TicTacToeView @JvmOverloads constructor(
         requestFocus()
     }
     
-    override fun pause() {}
+    override fun pause() {
+        handler.removeCallbacks(cpuMoveRunnable)
+        animationHandler.removeCallbacks(animationRunnable)
+    }
+
     override fun resume() {
         requestFocus()
+        animationHandler.removeCallbacks(animationRunnable)
+        animationHandler.post(animationRunnable)
+        if (!gameOver && !isPlayerTurn) {
+            handler.removeCallbacks(cpuMoveRunnable)
+            handler.postDelayed(cpuMoveRunnable, 400)
+        }
     }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
@@ -116,7 +126,7 @@ class TicTacToeView @JvmOverloads constructor(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                 // Switch who starts for next match
                 turnStarter = if (turnStarter == 1) 2 else 1
                 resetGame()
@@ -129,7 +139,7 @@ class TicTacToeView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_DOWN -> { cursorR = (cursorR + 1).coerceAtMost(gridSize - 1); SoundManager.playClick() }
             KeyEvent.KEYCODE_DPAD_LEFT -> { cursorC = (cursorC - 1).coerceAtLeast(0); SoundManager.playClick() }
             KeyEvent.KEYCODE_DPAD_RIGHT -> { cursorC = (cursorC + 1).coerceAtMost(gridSize - 1); SoundManager.playClick() }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> if (isPlayerTurn) playerMove()
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> if (isPlayerTurn) playerMove()
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
                 return true
@@ -180,25 +190,30 @@ class TicTacToeView @JvmOverloads constructor(
         handler.removeCallbacks(cpuMoveRunnable)
         board[cursorR][cursorC] = 1
         SoundManager.playClick()
-        if (resolveEnd(context.getString(R.string.victory_label))) {
-            val newScore = wins + 1
-            isEndCelebration = true
-            currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
-            
-            val level = when(gridSize) {
-                4 -> 1
-                5 -> 2
-                else -> 0
+        if (resolveEnd(context.getString(R.string.victory_label), notifyCallback = false)) {
+            if (winner() == 1) {
+                val oldBest = wins
+                val newScore = wins + 1
+                isEndCelebration = true
+                currentVictoryWord = celebrationManager.getRandomVictoryWord(context, gameKey)
+
+                val level = when (gridSize) {
+                    4 -> 1
+                    5 -> 2
+                    else -> 0
+                }
+                val isNewHigh = ScoreManager.updateHighScore(context, gameKey, newScore, level)
+                if (isNewHigh) wins = newScore
+                celebrationManager.startOutcome(
+                    width = width.toFloat(),
+                    height = height.toFloat(),
+                    isWin = true,
+                    score = newScore,
+                    highScore = oldBest
+                )
             }
-            val isNewHigh = ScoreManager.updateHighScore(context, gameKey, newScore, level)
-            if (isNewHigh) wins = newScore
-            celebrationManager.startOutcome(
-                width = width.toFloat(),
-                height = height.toFloat(),
-                isWin = true,
-                score = newScore,
-                highScore = wins
-            )
+            onGameOver?.invoke(wins)
+            invalidate()
             return
         }
         isPlayerTurn = false
@@ -275,13 +290,13 @@ class TicTacToeView @JvmOverloads constructor(
         return null
     }
 
-    private fun resolveEnd(winLabel: String): Boolean {
+    private fun resolveEnd(winLabel: String, notifyCallback: Boolean = true): Boolean {
         val win = winner()
         return if (win != 0) {
             gameOver = true
             status = winLabel
             SoundManager.playSuccess()
-            onGameOver?.invoke(wins)
+            if (notifyCallback) onGameOver?.invoke(wins)
             true
         } else if (isDraw()) {
             gameOver = true
@@ -295,7 +310,7 @@ class TicTacToeView @JvmOverloads constructor(
                 highScore = wins
             )
             SoundManager.playError()
-            onGameOver?.invoke(wins)
+            if (notifyCallback) onGameOver?.invoke(wins)
             true
         } else {
             false

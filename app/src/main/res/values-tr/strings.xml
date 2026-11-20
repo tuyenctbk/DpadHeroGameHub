@@ -719,4 +719,208 @@
     <string name="revive_message">Kaldığın yerden devam etmek için kısa bir video izle.</string>
     <string name="revive_watch_ad">Reklamı izle</string>
     <string name="revive_no_thanks">Hayır, teşekkürler</string>
+
+    <string name="scanline_crt_effect">CRT Tarama Çizgisi Filtresi</string>
+    <string name="scanline_crt_desc">Klasik arcade CRT monitör tarama çizgilerini simüle eder.</string>
+    <string name="screen_shake_effect">Ekran Sarsıntısı Efekti</string>
+    <string name="screen_shake_desc">Çarpışma ve patlamalarda dinamik ekran sarsıntı geri bildirimi.</string>
+    <string name="reset_high_scores">Yüksek Skorları Sıfırla</string>
+    <string name="reset_high_scores_desc">Aktif kahraman için kayıtlı tüm en iyi skorları temizler.</string>
+    <string name="reset_scores_confirm">Bu kahramanın tüm yüksek skorlarını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</string>
+    <string name="scores_cleared">Yüksek skorlar sıfırlandı.</string>
+    <string name="frenzy_tang">MAVİ TANG BALIĞI</string>
+    <string name="frenzy_barracuda">BARAKÜDA</string>
+    <string name="frenzy_shark">KÖPEKBALIĞI</string>
+
+    <string-array name="win_connect_four">
+        <item>DÖRTÜ BİR ARADA!</item>
+        <item>IZGARA USTASI!</item>
+        <item>TAKTİK DEHASI!</item>
+        <item>DÖRTLE ŞAMPİYONU!</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>DOĞAL BLACKJACK!</item>
+        <item>BÜYÜK OYUNCU!</item>
+        <item>KASA YENİLDİ!</item>
+        <item>CASINO ROYALE!</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>BİLGİ DEHASI!</item>
+        <item>MÜKEMMEL SKOR!</item>
+        <item>BİLGİ YARIŞMASI USTASI!</item>
+        <item>QUİZ ŞAMPİYONU!</item>
+    </string-array>
+
+    <string name="game_connect_four">DÖRTLE (CONNECT FOUR)</string>
+    <string name="game_connect_four_instructions">Klasik 4\'lü strateji savaşı!\n• D-PAD SOL / SAĞ: İmleci sütunlar arasında hareket ettir\n• D-PAD ORTA / ENTER: Pulu sütuna bırak\n• 4 pulunu yatay, dikey veya çapraz birleştir\n• Akıllı Yapay Zekaya karşı veya 2 Oyunculu kapışmayı seç!</string>
+    <string name="connect_four_settings_title">DÖRTLE AYARLARI</string>
+    <string name="game_blackjack">BLACKJACK 21</string>
+    <string name="game_blackjack_instructions">Gerçek Vegas Casino Blackjack masası!\n• Amaç: 21\'i aşmadan 21\'e en yakın el değerine ulaş\n• D-PAD YUKARI / AŞAĞI / SOL / SAĞ: Fişleri ve hamleleri seç\n• D-PAD ORTA / ENTER: Bahis / Dağıt / Kart Çek / Kal / İkiye Katla\n• Blackjack 3:2 öder! Fiş kazan ve casino servetini büyüt!</string>
+    <string name="blackjack_settings_title">BLACKJACK AYARLARI</string>
+    <string name="game_trivia">BİLGİ YARIŞMASI</string>
+    <string name="game_trivia_instructions">Heyecan dolu Arcade Bilgi Yarışması!\n• D-PAD YUKARI / AŞAĞI / SOL / SAĞ: A, B, C veya D şıkkını seç\n• D-PAD ORTA / ENTER: Cevabı onayla\n• Büyük zaman çarpanı bonusları için hızlı cevapla\n• Jokerleri kullan: 50:50, Süreyi Dondur ve Soruyu Atla\n• Büyük jeton ödülleri için 10 soruluk turu tamamla!</string>
+    <string name="trivia_settings_title">BİLGİ YARIŞMASI AYARLARI</string>
+
+    <string name="sound_profile_label">Ses Profili</string>
+    <string name="sound_profile_arcade">Arcade 8-Bit</string>
+    <string name="sound_profile_retro">Retro Synth</string>
+    <string name="sound_profile_modern">Modern Dijital</string>
+    <string name="sound_profile_arcade_desc">Güçlü 8-bit darbe dalgaları</string>
+    <string name="sound_profile_retro_desc">Sıcak analog synth tonları</string>
+    <string name="sound_profile_modern_desc">Net polifonik tınılar</string>
+    <string name="sound_profile_toast">Ses Profili: %1$s</string>
+    <string name="sound_profile_desc_format">%1$s • Değiştirmek için dokun</string>
+    <string name="volume_desc_format">Ses: %1$d%% • Seviyeyi değiştirmek için dokun</string>
+    <string name="sensitivity_toast">Kontrolcü Hassasiyeti: %1$s</string>
+
+    <string name="trivia_gauntlet_completed">YARIŞMA TAMAMLANDI! 🏆</string>
+    <string name="trivia_final_score">Final Skoru: %1$d Puan</string>
+    <string name="trivia_accuracy">Doğruluk: %1$d / %2$d Doğru (%3$d%%)</string>
+    <string name="trivia_coins_earned">+%1$d Jeton Kazanıldı 🪙</string>
+    <string name="trivia_play_again">TEKRAR OYNA [ENTER]</string>
+    <string name="press_enter_next_round">Sonraki tur için [ENTER] tuşuna basın</string>
+    <string name="twentyfortyeight_hint">🎮 D-Pad/Kaydır: Hareket • [U] Geri Al • [MENU] Boyut</string>
+
+    <string name="tab_local">🏠 YEREL</string>
+    <string name="tab_worldwide">🌐 KÜRESEL</string>
+
+    <string name="setting_volume_desc_format">Ses: %1$d%% • Ayarlamak için ses rozetine dokun</string>
+    <string name="setting_sound_profile_theme">Ses Profili Teması</string>
+    <string name="setting_sound_profile_desc">Arcade 8-Bit • Ses ön ayarını değiştirmek için dokun</string>
+    <string name="setting_retro_music">Retro Müzik &amp; Atmosfer</string>
+    <string name="setting_retro_music_desc">Arka plan sentezleyici arcade melodileri</string>
+    <string name="setting_controller_sensitivity">Kontrolcü &amp; Gamepad Hassasiyeti</string>
+    <string name="setting_controller_sensitivity_desc">D-Pad, analog kol ve dokunma tepkisini ayarla</string>
+    <string name="setting_haptic_vibration">Dokunsal &amp; Kontrolcü Titreşimi</string>
+    <string name="setting_haptic_vibration_desc">Vuruş, skor ve patlamalarda titreşim geri bildirimi</string>
+    <string name="calibrate">KALİBRE ET</string>
+
+    <string name="badge_live">● CANLI</string>
+    <string name="global_top3_snake">KÜRESEL İLK 3 • YILAN</string>
+    <string name="hall_of_fame_widget">ŞÖHRETLER SALONU 🏆</string>
+    <string name="placeholder_dash">---</string>
+    <string name="zero_pts">0 puan</string>
+
+    <string name="controller_settings_title">🎮 Kontrolcü &amp; Titreşim Ayarları</string>
+    <string name="hardware_diagnostics">DONANIM TANILAMA</string>
+    <string name="controller_checking">🎮 Kontrolcü: Cihazlar denetleniyor...</string>
+    <string name="vibrator_checking">⚡ Titreşim: VibratorManager denetleniyor...</string>
+    <string name="haptic_rumble_title">Dokunsal &amp; Rumble Titreşim</string>
+    <string name="haptic_rumble_desc">Çarpışmalar, jetonlar ve düğmeler için motor titreşimini aç</string>
+    <string name="haptic_intensity_title">Titreşim Şiddeti (Motor Genliği)</string>
+    <string name="vibration_motor_test_title">TİTREŞİM MOTORU DONANIM TESTİ</string>
+    <string name="vibration_test_instructions">Motor tepkisini doğrulamak için bir titreşim profili seçip teste dokunun:</string>
+    <string name="vibe_profile_click">🕹️ Tık (15ms)</string>
+    <string name="vibe_profile_score">⚡ Skor (35ms)</string>
+    <string name="vibe_profile_hazard">💥 Tehlike (70ms)</string>
+    <string name="vibe_profile_explosion">💣 Boss Patlaması</string>
+    <string name="vibe_profile_victory">🏆 Zafer Dalgası</string>
+    <string name="test_vibration_now">⚡ TİTREŞİMİ ŞİMDİ TEST ET</string>
+    <string name="gamepad_speed_title">Gamepad Giriş Hızı</string>
+    <string name="gamepad_speed_desc">Dijital tekrar hızı ve hassasiyet eğrisi</string>
+    <string name="analog_deadzone_title">Analog Çubuk Ölü Bölge Eşiği</string>
+    <string name="analog_deadzone_desc">Bluetooth gamepad\'lerde kaymayı önler ve D-Pad hassasiyetini artırır</string>
+    <string name="live_stick_neutral">🕹️ Canlı Çubuk Testi: Nötr (0.00, 0.00)</string>
+
+    <string name="sound_sfx_on">SES EFEKTLERİ: AÇIK</string>
+    <string name="sound_sfx_off">SES EFEKTLERİ: KAPALI</string>
+    <string name="music_on">MÜZİK: AÇIK</string>
+    <string name="music_off">MÜZİK: KAPALI</string>
+
+    <string name="gamepad_connected">Gamepad Bağlı</string>
+    <string name="remote_mode">Kumanda Modu</string>
+    <string name="desc_controller_status">Kontrolcü bağlantı durumu</string>
+    <string name="gamepad_connected_format">🎮 Bağlandı: %1$s</string>
+    <string name="no_external_gamepad">Harici Gamepad Yok (Sanal D-Pad Aktif)</string>
+    <string name="haptic_test_fired">Titreşim testi çalıştırıldı: %1$s (%%%2$d şiddet)</string>
+    <string name="motor_hardware_info">⚡ Motor: %1$s • Donanım Hazır: %2$s • Genlik Kontrolü: %3$s</string>
+    <string name="status_yes">EVET</string>
+    <string name="status_no">HAYIR</string>
+    <string name="status_fallback">YEDEK</string>
+    <string name="vibrator_manager_api">VibratorManager (API 31+)</string>
+    <string name="vibrator_legacy">Vibrator (Eski)</string>
+
+    <string name="global_top3_format">KÜRESEL İLK 3 • %1$s</string>
+    <string name="no_record">Rekor Yok</string>
+    <string name="score_pts_format">%1$d puan</string>
+    <string name="status_claimed">✓ ALINDI</string>
+    <string name="status_ready">HAZIR!</string>
+    <string name="claimed_today">✓ BUGÜN ALINDI</string>
+    <string name="claim_day_format">🎁 GÜN %1$d ÖDÜLÜNÜ AL (+%2$d)</string>
+    <string name="desc_game_icon">Oyun Simgesi</string>
+    <string name="exit_app_title">Oyun Merkezinden Çık</string>
+    <string name="exit_app_confirm">Uygulamadan çıkmak istediğinizden emin misiniz?</string>
+    <string name="btn_exit_app">Çık</string>
+    <string name="btn_cancel">İptal</string>
+
+    <string name="genre_arcade">ARCADE</string>
+    <string name="genre_puzzle">BULMACA</string>
+    <string name="genre_strategy">STRATEJİ</string>
+    <string name="genre_adventure">MACERA</string>
+    <string name="genre_action">AKSİYON</string>
+    <string name="genre_runner">KOŞU</string>
+    <string name="genre_brain">ZEKA</string>
+    <string name="genre_cards">KART</string>
+    <string name="genre_racing">YARIŞ</string>
+    <string name="genre_logic">MANTIK</string>
+    <string name="genre_classic">KLASİK</string>
+    <string name="genre_word">KELİME</string>
+    <string name="genre_shooter">NİŞANCI</string>
+    <string name="genre_platform">PLATFORM</string>
+    <string name="genre_memory">HAFIZA</string>
+    <string name="genre_board">MASA</string>
+    <string name="spotlight_new_challenge">★ YENİ MEYDAN OKUMA</string>
+    <string name="spotlight_play_to_set_record">★ REKOR KIRMAK İÇİN OYNA</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">AKTİF KAHRAMAN</string>
+    <string name="sensitivity_standard">1.0x (Standart)</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33 KLASİK TV OYUNU</string>
+    <string name="default_arcade_game">ARCADE OYUNU</string>
+    <string name="fallback_ad_body">TV D-Pad kontrolleriyle sonsuz klasik arcade oyunlarının tadını çıkarın!</string>
+    <string name="fallback_ad_cta">Şimdi Oyna</string>
+
+    <string name="retro_hud_default_circuit">Pist</string>
+    <string name="retro_hud_lap">TUR</string>
+    <string name="retro_hud_time">SÜRE</string>
+    <string name="retro_hud_best">EN İYİ</string>
+    <string name="retro_hud_coins">JETON</string>
+    <string name="retro_hud_mph">MPH</string>
+    <string name="retro_hud_pos">SIRA</string>
+    <string name="retro_hud_slipstream">&gt;&gt; HAVA KORİDORU &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">NİTRO HIZLANMA!</string>
+
+    <string name="hud_score_format">SKOR: %1$d</string>
+    <string name="hud_best_format">REKOR: %1$d</string>
+    <string name="hud_streak_format">SERİ: %1$d</string>
+    <string name="blackjack_chips_format">FİŞ: $%1$d</string>
+    <string name="blackjack_streak_format">SERİ: %1$d GALİBİYET</string>
+    <string name="blackjack_table_title">VEGAS BLACKJACK 21</string>
+    <string name="blackjack_table_rules">BLACKJACK 3\'E 2 ÖDER • KRUPİYE 17\'DE DURUR</string>
+    <string name="blackjack_best_format">REKOR: $%1$d</string>
+    <string name="blackjack_shoe_format">DESTE: %1$d KART</string>
+    <string name="blackjack_dealer">KRUPİYE</string>
+    <string name="blackjack_dealer_total">KRUPİYE: %1$d</string>
+    <string name="blackjack_next_round">SONRAKİ TUR [ENTER]</string>
+    <string name="connect_four_vs_easy">CPU\'YA KARŞI (KOLAY)</string>
+    <string name="connect_four_vs_normal">CPU\'YA KARŞI (NORMAL)</string>
+    <string name="connect_four_vs_master">CPU\'YA KARŞI (USTA)</string>
+    <string name="connect_four_2p">2 OYUNCULU DÜELLO</string>
+    <string name="connect_four_your_turn">SENİN SIRAN (SARI)</string>
+    <string name="connect_four_p1_turn">1. OYUNCU SIRASI</string>
+    <string name="connect_four_cpu_thinking">CPU DÜŞÜNÜYOR...</string>
+    <string name="connect_four_p2_turn">2. OYUNCU SIRASI</string>
+    <string name="connect_four_victory">ZAFER!</string>
+    <string name="connect_four_defeat">YENİLGİ</string>
+    <string name="connect_four_p2_wins">2. OYUNCU KAZANDI!</string>
+    <string name="connect_four_draw">BERABERE</string>
+    <string name="connect_four_win_moves">%1$d hamlede 4\'lü tamamlandı!</string>
+    <string name="connect_four_draw_desc">Tahta tamamen doldu! Açık alan kalmadı.</string>
+    <string name="connect_four_cpu_win_desc">CPU önce 4 pulu birleştirdi! Tekrar dene.</string>
+    <string name="connect_four_victory_points">+%1$d ZAFER PUANI</string>
+    <string name="press_enter_to_play">OYNAMAK İÇİN [ENTER] TUŞUNA BAS</string>
+    <string name="trivia_arena_default">TRIVIA ARENASI</string>
+    <string name="fruit_best_score_format">REKOR: %1$d  SKOR: %2$d</string>
 </resources>

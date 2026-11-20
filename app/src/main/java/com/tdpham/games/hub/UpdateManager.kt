@@ -92,11 +92,15 @@ object UpdateManager {
 
         dialog.setOnKeyListener { _, _, event ->
             if (isForceUpdate) {
-                if (com.tdpham.games.common.ControllerNavigationHelper.isBackKey(event.keyCode) && event.action == android.view.KeyEvent.ACTION_UP) {
-                    (context as? androidx.appcompat.app.AppCompatActivity)?.finish()
+                if (com.tdpham.games.common.ControllerNavigationHelper.isBackKey(event.keyCode)) {
+                    if (event.action == android.view.KeyEvent.ACTION_DOWN) {
+                        (context as? android.app.Activity)?.finish()
+                    }
                     true
-                } else if (com.tdpham.games.common.ControllerNavigationHelper.isConfirmKey(event.keyCode) && event.action == android.view.KeyEvent.ACTION_UP) {
-                    btnUpdate.performClick()
+                } else if (event.keyCode == android.view.KeyEvent.KEYCODE_BUTTON_A) {
+                    if (event.action == android.view.KeyEvent.ACTION_DOWN) {
+                        btnUpdate.performClick()
+                    }
                     true
                 } else false
             } else {

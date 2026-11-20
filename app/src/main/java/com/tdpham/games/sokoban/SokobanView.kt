@@ -131,8 +131,15 @@ class SokobanView @JvmOverloads constructor(
         requestFocus()
     }
 
-    override fun pause() {}
-    override fun resume() {}
+    override fun pause() {
+        handler.removeCallbacks(animRunnable)
+    }
+
+    override fun resume() {
+        requestFocus()
+        handler.removeCallbacks(animRunnable)
+        handler.post(animRunnable)
+    }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun resetGame() {
@@ -180,15 +187,7 @@ class SokobanView @JvmOverloads constructor(
         handler.removeCallbacks(animRunnable)
     }
 
-    override val canRevive: Boolean get() = true
-
-    override fun reviveGame(): Boolean {
-        restartCurrentLevel()
-        celebrationManager.clear()
-        SoundManager.playSuccess()
-        invalidate()
-        return true
-    }
+    override val canRevive: Boolean get() = false
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (solved || allLevelsDone) {

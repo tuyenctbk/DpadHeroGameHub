@@ -161,7 +161,7 @@
                     android:paddingEnd="12dp"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
-                    android:text="100%"
+                    android:text="@string/percent_100"
                     android:textColor="#0A0E17"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -340,7 +340,7 @@
                 android:layout_height="38dp"
                 android:background="@drawable/game_item_background"
                 android:backgroundTint="#FFD700"
-                android:text="1.0x (Standard)"
+                android:text="@string/sensitivity_standard"
                 android:textColor="#0A0E17"
                 android:textSize="12sp"
                 android:textStyle="bold"
@@ -396,7 +396,7 @@
                     android:paddingEnd="14dp"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
-                    android:text="25%"
+                    android:text="@string/percent_25"
                     android:textColor="#0A0E17"
                     android:textSize="14sp"
                     android:textStyle="bold" />

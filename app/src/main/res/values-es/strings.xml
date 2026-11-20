@@ -849,4 +849,86 @@
     <string name="revive_message">Mira un breve vídeo para continuar donde lo dejaste.</string>
     <string name="revive_watch_ad">Ver anuncio</string>
     <string name="revive_no_thanks">No, gracias</string>
+
+    <string name="frenzy_tang">PEZ CIRUJANO AZUL</string>
+    <string name="frenzy_barracuda">BARRACUDA</string>
+    <string name="frenzy_shark">TIBURÓN</string>
+    <string name="exit_app_title">Salir del centro de juegos</string>
+    <string name="exit_app_confirm">¿Seguro que quieres salir de la aplicación?</string>
+    <string name="btn_exit_app">Salir</string>
+    <string name="btn_cancel">Cancelar</string>
+
+    <!-- Genres, Spotlight & Common UI -->
+    <string name="genre_arcade">ARCADE</string>
+    <string name="genre_puzzle">ROMPECABEZAS</string>
+    <string name="genre_strategy">ESTRATEGIA</string>
+    <string name="genre_adventure">AVENTURA</string>
+    <string name="genre_action">ACCIÓN</string>
+    <string name="genre_runner">CARRERAS</string>
+    <string name="genre_brain">INGENIO</string>
+    <string name="genre_cards">CARTAS</string>
+    <string name="genre_racing">VELOCIDAD</string>
+    <string name="genre_logic">LÓGICA</string>
+    <string name="genre_classic">CLÁSICO</string>
+    <string name="genre_word">PALABRAS</string>
+    <string name="genre_shooter">DISPAROS</string>
+    <string name="genre_platform">PLATAFORMAS</string>
+    <string name="genre_memory">MEMORIA</string>
+    <string name="genre_board">MESA</string>
+    <string name="spotlight_new_challenge">★ NUEVO DESAFÍO</string>
+    <string name="spotlight_play_to_set_record">★ JUEGA PARA MARCAR RÉCORD</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">HÉROE ACTIVO</string>
+    <string name="sensitivity_standard">1.0x (Estándar)</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33 JUEGOS CLÁSICOS DE TV</string>
+    <string name="default_arcade_game">JUEGO ARCADE</string>
+    <string name="fallback_ad_body">¡Disfruta de juegos arcade clásicos sin fin con controles D-Pad para TV!</string>
+    <string name="fallback_ad_cta">Jugar ahora</string>
+
+    <!-- Retro Driver Synthwave HUD -->
+    <string name="retro_hud_default_circuit">Circuito</string>
+    <string name="retro_hud_lap">VUELTA</string>
+    <string name="retro_hud_time">TIEMPO</string>
+    <string name="retro_hud_best">MEJOR</string>
+    <string name="retro_hud_coins">MONEDAS</string>
+    <string name="retro_hud_mph">MPH</string>
+    <string name="retro_hud_pos">POS</string>
+    <string name="retro_hud_slipstream">&gt;&gt; REBUFO AERODINÁMICO &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">¡TURBO NITRO!</string>
+
+    <!-- Shared & New Game HUDs -->
+    <string name="hud_score_format">PUNTOS: %1$d</string>
+    <string name="hud_best_format">MEJOR: %1$d</string>
+    <string name="hud_streak_format">RACHA: %1$d</string>
+    <string name="blackjack_chips_format">FICHAS: $%1$d</string>
+    <string name="blackjack_streak_format">RACHA: %1$d VICTORIAS</string>
+    <string name="blackjack_table_title">BLACKJACK 21 LAS VEGAS</string>
+    <string name="blackjack_table_rules">EL BLACKJACK PAGA 3 A 2 • LA BANCA SE PLANTA EN 17</string>
+    <string name="blackjack_best_format">MEJOR: $%1$d</string>
+    <string name="blackjack_shoe_format">MAZO: %1$d CARTAS</string>
+    <string name="blackjack_dealer">BANCA</string>
+    <string name="blackjack_dealer_total">BANCA: %1$d</string>
+    <string name="blackjack_next_round">SIGUIENTE RONDA [ENTER]</string>
+    <string name="connect_four_vs_easy">VS CPU (FÁCIL)</string>
+    <string name="connect_four_vs_normal">VS CPU (NORMAL)</string>
+    <string name="connect_four_vs_master">VS CPU (MAESTRO)</string>
+    <string name="connect_four_2p">DUELO 2 JUGADORES</string>
+    <string name="connect_four_your_turn">TU TURNO (AMARILLO)</string>
+    <string name="connect_four_p1_turn">TURNO JUGADOR 1</string>
+    <string name="connect_four_cpu_thinking">CPU PENSANDO...</string>
+    <string name="connect_four_p2_turn">TURNO JUGADOR 2</string>
+    <string name="connect_four_victory">¡VICTORIA!</string>
+    <string name="connect_four_defeat">DERROTA</string>
+    <string name="connect_four_p2_wins">¡GANA EL JUGADOR 2!</string>
+    <string name="connect_four_draw">EMPATE</string>
+    <string name="connect_four_win_moves">¡4 en raya logrados en %1$d movimientos!</string>
+    <string name="connect_four_draw_desc">¡Tablero lleno! No quedan espacios libres.</string>
+    <string name="connect_four_cpu_win_desc">¡La CPU conectó 4 fichas primero! Inténtalo de nuevo.</string>
+    <string name="connect_four_victory_points">+%1$d PUNTOS DE VICTORIA</string>
+    <string name="press_enter_to_play">PULSA [ENTER] PARA JUGAR</string>
+    <string name="trivia_arena_default">ARENA DE TRIVIA</string>
+    <string name="fruit_best_score_format">MEJOR: %1$d  PUNTOS: %2$d</string>
 </resources>

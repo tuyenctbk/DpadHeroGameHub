@@ -408,11 +408,10 @@ class CelebrationManager {
             val count = particles.size
             for (i in 0 until count) {
                 val p = particles.getOrNull(i) ?: continue
-                paint.reset()
-                paint.isAntiAlias = true
                 paint.color = p.color
                 paint.alpha = p.alpha
                 paint.style = Paint.Style.FILL
+                paint.strokeWidth = 0f
 
                 when (p.type) {
                     CelebrationType.CONFETTI -> {

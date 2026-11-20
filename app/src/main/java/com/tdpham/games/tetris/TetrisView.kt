@@ -96,20 +96,28 @@ class TetrisView @JvmOverloads constructor(
     }
 
     override fun startGame() {
+        requestFocus()
         paused = false
         handler.removeCallbacks(tick)
         handler.post(tick)
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
     }
 
     override fun pause() {
         paused = true
         handler.removeCallbacks(tick)
+        animHandler.removeCallbacks(animRunnable)
         invalidate()
     }
 
     override fun resume() {
+        requestFocus()
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
         if (paused && !gameOver) {
             paused = false
+            handler.removeCallbacks(tick)
             handler.post(tick)
             invalidate()
         }
@@ -150,7 +158,8 @@ class TetrisView @JvmOverloads constructor(
         animHandler.removeCallbacks(animRunnable)
     }
 
-    override val canRevive: Boolean get() = true
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = gameOver
 
     override fun reviveGame(): Boolean {
         if (!gameOver) return false
@@ -469,6 +478,9 @@ class TetrisView @JvmOverloads constructor(
     private val blockPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     override fun onDraw(canvas: Canvas) {
+        if (width <= 0 || height <= 0) return
+        val saveCount = canvas.save()
+        try {
         val needsInvalidate = screenShake.apply(canvas)
         
         if (hintShowFrames > 0) {
@@ -596,6 +608,9 @@ class TetrisView @JvmOverloads constructor(
         if (!paused && !gameOver) {
             celebrationManager.update()
             invalidate()
+        }
+        } finally {
+            canvas.restoreToCount(saveCount)
         }
     }
 

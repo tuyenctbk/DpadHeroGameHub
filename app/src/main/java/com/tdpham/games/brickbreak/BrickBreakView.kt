@@ -51,9 +51,11 @@ class BrickBreakView @JvmOverloads constructor(
         Choreographer.getInstance().postFrameCallback(this)
     }
 
+    private data class Brick(val rect: RectF, val row: Int)
+
     private val ball = RectF()
     private val paddle = RectF()
-    private val bricks = mutableListOf<RectF>()
+    private val bricks = mutableListOf<Brick>()
     private val brickFlashes = mutableMapOf<RectF, Long>()
     private var frameCount = 0
 
@@ -71,6 +73,8 @@ class BrickBreakView @JvmOverloads constructor(
     private val celebrationManager = CelebrationManager()
     private val PREFS_NAME = "brick_break_settings"
     private val KEY_PADDLE_SIZE = "paddle_size_index"
+    private var cachedPaddleSizeIndex = 1
+    private var cachedPaddleSizeLabel = ""
     private var hintShowFrames = 0
 
     private var score = 0
@@ -136,6 +140,24 @@ class BrickBreakView @JvmOverloads constructor(
         invalidate()
     }
 
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = isGameOver && !isWin
+
+    override fun reviveGame(): Boolean {
+        if (!isGameOver || isWin) return false
+        isGameOver = false
+        isPaused = false
+        lives = 2
+        resetBall()
+        celebrationManager.clear()
+        SoundManager.playSuccess()
+        lastFrameTimeNanos = 0L
+        Choreographer.getInstance().removeFrameCallback(this)
+        Choreographer.getInstance().postFrameCallback(this)
+        invalidate()
+        return true
+    }
+
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
     override fun onAttachedToWindow() {
@@ -169,9 +191,15 @@ class BrickBreakView @JvmOverloads constructor(
     }
 
     private fun initializeBoard(sizeIndex: Int = 1) {
+        cachedPaddleSizeIndex = sizeIndex.coerceIn(0, 2)
+        cachedPaddleSizeLabel = context.getString(when (cachedPaddleSizeIndex) {
+            0 -> R.string.brick_break_paddle_large
+            2 -> R.string.brick_break_paddle_small
+            else -> R.string.brick_break_paddle_medium
+        })
         if (width == 0 || height == 0) return
 
-        val paddleWidthMult = when(sizeIndex) {
+        val paddleWidthMult = when(cachedPaddleSizeIndex) {
             0 -> 0.32f // Large
             2 -> 0.14f // Small
             else -> 0.22f // Medium
@@ -204,7 +232,7 @@ class BrickBreakView @JvmOverloads constructor(
                 val top = areaTop + row * rowHeight + BRICK_PADDING
                 val right = (col + 1) * columnWidth - BRICK_PADDING
                 val bottom = areaTop + (row + 1) * rowHeight - BRICK_PADDING
-                bricks.add(RectF(left, top, right, bottom))
+                bricks.add(Brick(RectF(left, top, right, bottom), row))
             }
         }
     }
@@ -295,20 +323,21 @@ class BrickBreakView @JvmOverloads constructor(
             SoundManager.playClick()
         }
 
-        var hitBrick: RectF? = null
+        var hitBrick: Brick? = null
         for (brick in bricks) {
-            if (RectF.intersects(ball, brick)) {
+            if (RectF.intersects(ball, brick.rect)) {
                 hitBrick = brick
                 break
             }
         }
 
         if (hitBrick != null) {
+            val hitRect = hitBrick.rect
             // Determine which side of the brick was hit
-            val overlapLeft = ball.right - hitBrick.left
-            val overlapRight = hitBrick.right - ball.left
-            val overlapTop = ball.bottom - hitBrick.top
-            val overlapBottom = hitBrick.bottom - ball.top
+            val overlapLeft = ball.right - hitRect.left
+            val overlapRight = hitRect.right - ball.left
+            val overlapTop = ball.bottom - hitRect.top
+            val overlapBottom = hitRect.bottom - ball.top
 
             val minOverlap = minOf(overlapLeft, overlapRight, overlapTop, overlapBottom)
 
@@ -319,7 +348,7 @@ class BrickBreakView @JvmOverloads constructor(
             }
 
             bricks.remove(hitBrick)
-            brickFlashes[hitBrick] = System.currentTimeMillis()
+            brickFlashes[hitRect] = System.currentTimeMillis()
             score += 10
             ballSpeedMultiplier = (ballSpeedMultiplier + 0.012f).coerceAtMost(2.2f)
             SoundManager.playScore()
@@ -378,10 +407,12 @@ class BrickBreakView @JvmOverloads constructor(
                         keyCode == KeyEvent.KEYCODE_DPAD_UP || 
                         keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
                         keyCode == KeyEvent.KEYCODE_DPAD_CENTER || 
-                        keyCode == KeyEvent.KEYCODE_ENTER
+                        keyCode == KeyEvent.KEYCODE_ENTER ||
+                        keyCode == KeyEvent.KEYCODE_SPACE ||
+                        keyCode == KeyEvent.KEYCODE_BUTTON_A
 
         if (isGameOver || isWin) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                 resetGame()
                 resume()
                 requestFocus()
@@ -394,7 +425,7 @@ class BrickBreakView @JvmOverloads constructor(
                 pressedKeys.add(keyCode)
                 true
             }
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> {
                 if (isPaused) {
                     resume()
                     launchBall()
@@ -555,14 +586,9 @@ class BrickBreakView @JvmOverloads constructor(
         paint.color = Color.LTGRAY
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = 28f
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val sizeIndex = prefs.getInt(KEY_PADDLE_SIZE, 1)
-        val sizeStr = context.getString(when(sizeIndex) {
-            0 -> R.string.brick_break_paddle_large
-            2 -> R.string.brick_break_paddle_small
-            else -> R.string.brick_break_paddle_medium
-        })
-        canvas.drawText(sizeStr, width / 2f, hudY, paint)
+        if (cachedPaddleSizeLabel.isNotEmpty()) {
+            canvas.drawText(cachedPaddleSizeLabel, width / 2f, hudY, paint)
+        }
 
         if (isPaused && !isGameOver && !isWin) {
             val title = if (!isBallLaunched) context.getString(R.string.game_brick_break) else context.getString(R.string.paused)
@@ -581,8 +607,9 @@ class BrickBreakView @JvmOverloads constructor(
 
     private fun drawBricks(canvas: Canvas) {
         paint.style = Paint.Style.FILL
-        for ((index, brick) in bricks.withIndex()) {
-            val row = index / BRICK_COLUMNS
+        for (brickItem in bricks) {
+            val brick = brickItem.rect
+            val row = brickItem.row
             paint.color = when (row % 5) {
                 0 -> Color.parseColor("#EF5350")
                 1 -> Color.parseColor("#AB47BC")

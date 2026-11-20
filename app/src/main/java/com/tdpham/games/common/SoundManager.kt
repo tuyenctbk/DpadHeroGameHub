@@ -37,7 +37,9 @@ object SoundManager {
         soundEffectsVolume = prefs?.getInt(KEY_SOUND_VOLUME, 100) ?: 100
         musicVolume = prefs?.getInt(KEY_MUSIC_VOLUME, 80) ?: 80
 
-        ensureToneGenerator()
+        soundExecutor.execute {
+            ensureToneGenerator()
+        }
     }
 
     // --- GAMEPAD & CONTROLLER DETECTION ---
@@ -169,7 +171,10 @@ object SoundManager {
 
     fun playTone(toneType: Int, durationMs: Int = 100) {
         if (!isSoundEnabled || soundEffectsVolume <= 0) return
+        val queuedAt = System.currentTimeMillis()
         soundExecutor.execute {
+            // Drop stale short SFX if rapid D-pad navigation backed up the queue
+            if (System.currentTimeMillis() - queuedAt > 250L) return@execute
             playToneDirect(toneType, durationMs)
         }
     }
@@ -728,7 +733,11 @@ object SoundManager {
 
     fun release() {
         stopAmbientMusic()
-        toneGenerator?.release()
-        toneGenerator = null
+        soundExecutor.execute {
+            try {
+                toneGenerator?.release()
+            } catch (_: Throwable) {}
+            toneGenerator = null
+        }
     }
 }

@@ -117,24 +117,35 @@ class DungeonEscapeView @JvmOverloads constructor(
         invalidate()
     }
 
+    private val visorRect = RectF()
+    private val shieldPath = Path()
+
     override fun pause() {
         gamePaused = true
         handler.removeCallbacks(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
     }
     override fun resume() {
+        requestFocus()
         gamePaused = false
         handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
     }
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
 
-    override val canRevive: Boolean get() = true
+    private var spawnPlayerX = 1
+    private var spawnPlayerY = 1
+
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = gameOver
 
     override fun reviveGame(): Boolean {
         if (!gameOver) return false
         gameOver = false
-        playerX = 1
-        playerY = 1
+        playerX = spawnPlayerX
+        playerY = spawnPlayerY
         celebrationManager.clear()
         gamePaused = false
         handler.removeCallbacks(gameLoop)
@@ -182,6 +193,8 @@ class DungeonEscapeView @JvmOverloads constructor(
         }
         playerX = startC
         playerY = startR
+        spawnPlayerX = startC
+        spawnPlayerY = startR
         
         val (endR, endC) = when (startCorner) {
             0 -> rows - 2 to cols - 2        // Bottom-Right
@@ -554,7 +567,7 @@ class DungeonEscapeView @JvmOverloads constructor(
 
         // Draw Helmet Visor (Black)
         paint.color = Color.parseColor("#212121")
-        val visorRect = RectF(px - radius * 0.7f, py - radius * 0.4f, px + radius * 0.7f, py)
+        visorRect.set(px - radius * 0.7f, py - radius * 0.4f, px + radius * 0.7f, py)
         canvas.drawRoundRect(visorRect, 4f, 4f, paint)
 
         // Glowing Eyes
@@ -564,7 +577,7 @@ class DungeonEscapeView @JvmOverloads constructor(
 
         // Shield (Silver)
         paint.color = Color.parseColor("#B0BEC5")
-        val shieldPath = Path()
+        shieldPath.reset()
         shieldPath.moveTo(px - radius * 0.8f, py + radius * 0.1f)
         shieldPath.lineTo(px - radius * 0.3f, py + radius * 0.1f)
         shieldPath.lineTo(px - radius * 0.55f, py + radius * 0.7f)
@@ -614,7 +627,6 @@ class DungeonEscapeView @JvmOverloads constructor(
 
         if (!gamePaused && !gameOver) {
             celebrationManager.update()
-            invalidate()
         }
     }
 

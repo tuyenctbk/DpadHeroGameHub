@@ -173,9 +173,15 @@ class SpinballView @JvmOverloads constructor(
 
     override fun pause() {
         isPaused = true
+        pressedKeys.clear()
+        mainHandler.removeCallbacks(updateRunnable)
+        mainHandler.removeCallbacks(animRunnable)
     }
 
     override fun resume() {
+        requestFocus()
+        mainHandler.removeCallbacks(animRunnable)
+        mainHandler.post(animRunnable)
         if (isPaused && !isGameOver) {
             isPaused = false
             mainHandler.removeCallbacks(updateRunnable)
@@ -317,6 +323,7 @@ class SpinballView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (width <= 0 || height <= 0) return
         if (hintShowFrames > 0) {
             hintShowFrames--
         }
@@ -548,7 +555,8 @@ class SpinballView @JvmOverloads constructor(
         }
     }
 
-    override val canRevive: Boolean get() = true
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = isGameOver
 
     override fun reviveGame(): Boolean {
         if (!isGameOver) return false

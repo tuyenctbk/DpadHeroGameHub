@@ -21,13 +21,8 @@ import com.tdpham.games.hub.profile.ProfileSelectionActivity
 class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        window.requestFeature(android.view.Window.FEATURE_ACTIVITY_TRANSITIONS)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
-        findViewById<View>(R.id.settings_title)?.let {
-            androidx.core.view.ViewCompat.setTransitionName(it, "hub_settings_transition")
-        }
 
         // 1. Sound Effects Toggle & Volume
         val soundToggleLayout = findViewById<LinearLayout>(R.id.layout_sound_toggle)
@@ -225,26 +220,7 @@ class SettingsActivity : AppCompatActivity() {
             setOnClickListener {
                 SoundManager.playClick()
                 HapticManager.vibrateClick(this@SettingsActivity)
-                val alert = AlertDialog.Builder(this@SettingsActivity, android.R.style.Theme_DeviceDefault_Dialog_Alert)
-                    .setTitle(R.string.reset_high_scores)
-                    .setMessage(R.string.reset_scores_confirm)
-                    .setPositiveButton(R.string.yes) { _, _ ->
-                        ScoreManager.clearHighScoresForActiveProfile(this@SettingsActivity)
-                        SoundManager.playSuccess()
-                        HapticManager.vibrateSuccess(this@SettingsActivity)
-                        Toast.makeText(this@SettingsActivity, R.string.scores_cleared, Toast.LENGTH_SHORT).show()
-                    }
-                    .setNegativeButton(R.string.no) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .create()
-                alert.setOnShowListener {
-                    alert.getButton(android.content.DialogInterface.BUTTON_NEGATIVE)?.requestFocus()
-                }
-                alert.setOnKeyListener { _, _, event ->
-                    com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(alert, event)
-                }
-                alert.show()
+                showResetScoresDialog()
             }
             setupFocusEffect(this)
         }
@@ -284,5 +260,42 @@ class SettingsActivity : AppCompatActivity() {
             }
             false
         }
+    }
+
+    private fun showResetScoresDialog() {
+        if (isFinishing || isDestroyed) return
+        val dialog = android.app.Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_exit_app)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.setCancelable(true)
+
+        dialog.findViewById<TextView>(R.id.tv_exit_title)?.text = getString(R.string.reset_high_scores)
+        dialog.findViewById<TextView>(R.id.tv_exit_message)?.text = getString(R.string.reset_scores_confirm)
+        val btnConfirm = dialog.findViewById<Button>(R.id.btn_dialog_exit)
+        val btnCancel = dialog.findViewById<Button>(R.id.btn_dialog_cancel)
+        btnConfirm?.text = getString(R.string.yes)
+        btnCancel?.text = getString(R.string.no)
+
+        btnConfirm?.setOnClickListener {
+            dialog.dismiss()
+            ScoreManager.clearHighScoresForActiveProfile(this@SettingsActivity)
+            SoundManager.playSuccess()
+            HapticManager.vibrateSuccess(this@SettingsActivity)
+            Toast.makeText(this@SettingsActivity, R.string.scores_cleared, Toast.LENGTH_SHORT).show()
+        }
+        btnCancel?.setOnClickListener {
+            SoundManager.playClick()
+            HapticManager.vibrateClick(this@SettingsActivity)
+            dialog.dismiss()
+        }
+        btnConfirm?.let { setupFocusEffect(it) }
+        btnCancel?.let { setupFocusEffect(it) }
+
+        dialog.setOnKeyListener { _, _, event ->
+            com.tdpham.games.common.ControllerNavigationHelper.handleDialogKeyEvent(dialog, event)
+        }
+        dialog.show()
+        btnCancel?.requestFocus()
     }
 }

@@ -53,6 +53,11 @@ object GuideManager {
         onBackPress: (() -> Unit)? = null,
         onDismiss: () -> Unit
     ) {
+        val activity = context as? android.app.Activity
+        if (activity != null && (activity.isFinishing || activity.isDestroyed)) {
+            onDismiss()
+            return
+        }
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_guide)
@@ -131,6 +136,9 @@ object GuideManager {
                     }
                 }
             } else if (event.action == android.view.KeyEvent.ACTION_UP) {
+                if (com.tdpham.games.common.ControllerNavigationHelper.isBackKey(keyCode)) {
+                    return@setOnKeyListener true
+                }
                 if (keyCode == android.view.KeyEvent.KEYCODE_BUTTON_A) {
                     val focused = dialog.currentFocus
                     if (focused != null && focused.isClickable) {

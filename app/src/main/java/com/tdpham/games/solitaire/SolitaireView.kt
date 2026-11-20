@@ -84,17 +84,24 @@ class SolitaireView @JvmOverloads constructor(
     }
 
     override fun startGame() {
+        requestFocus()
         isPaused = false
+        handler.removeCallbacks(animRunnable)
+        handler.post(animRunnable)
         invalidate()
     }
 
     override fun pause() {
         isPaused = true
+        handler.removeCallbacks(animRunnable)
         invalidate()
     }
 
     override fun resume() {
+        requestFocus()
         isPaused = false
+        handler.removeCallbacks(animRunnable)
+        handler.post(animRunnable)
         invalidate()
     }
 
@@ -144,7 +151,7 @@ class SolitaireView @JvmOverloads constructor(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (isGameOver) {
-            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                 resetGame()
                 return true
             }
@@ -156,7 +163,7 @@ class SolitaireView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_DOWN -> moveCursor(0, 1)
             KeyEvent.KEYCODE_DPAD_LEFT -> moveCursor(-1, 0)
             KeyEvent.KEYCODE_DPAD_RIGHT -> moveCursor(1, 0)
-            KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DPAD_CENTER -> handleSelection()
+            KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> handleSelection()
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
                 return true
@@ -325,16 +332,9 @@ class SolitaireView @JvmOverloads constructor(
                     val fIdx = cursorX - 3
                     val lastCard = selectedCards.last()
                     if (canMoveToFoundation(lastCard, fIdx)) {
-                        // Move ONLY the last card of our stack
-                        val cardToMove = lastCard
-                        selectedCards.removeAt(selectedCards.size - 1)
-                        val rest = selectedCards.toList()
-                        
-                        selectedCards.add(cardToMove) // For removeCardsFromSource
-                        removeCardsFromSource()
-                        returnCardsToSource(rest)
-                        
-                        foundations[fIdx].add(cardToMove)
+                        // Move ONLY the top card from source without prematurely flipping cards beneath unmoved stacks
+                        removeTopCardsFromSource(1)
+                        foundations[fIdx].add(lastCard)
                         score += 10
                         moveSuccessful = true
                     }
@@ -344,11 +344,7 @@ class SolitaireView @JvmOverloads constructor(
                 val movableIdx = findMovableStackIndex(selectedCards, tIdx)
                 if (movableIdx != -1) {
                     val toMove = selectedCards.subList(movableIdx, selectedCards.size).toList()
-                    val toReturn = selectedCards.subList(0, movableIdx).toList()
-                    
-                    removeCardsFromSource()
-                    returnCardsToSource(toReturn)
-                    
+                    removeTopCardsFromSource(toMove.size)
                     tableaus[tIdx].addAll(toMove)
                     score += 5
                     moveSuccessful = true
@@ -404,12 +400,17 @@ class SolitaireView @JvmOverloads constructor(
     }
 
     private fun removeCardsFromSource() {
+        removeTopCardsFromSource(selectedCards.size)
+    }
+
+    private fun removeTopCardsFromSource(count: Int) {
+        if (count <= 0) return
         when (sourcePile) {
             PileType.WASTE -> if (waste.isNotEmpty()) waste.removeAt(waste.size - 1)
             PileType.FOUNDATION -> if (foundations[sourceIndex].isNotEmpty()) foundations[sourceIndex].removeAt(foundations[sourceIndex].size - 1)
             PileType.TABLEAU -> {
                 val tableau = tableaus[sourceIndex]
-                repeat(selectedCards.size) { if (tableau.isNotEmpty()) tableau.removeAt(tableau.size - 1) }
+                repeat(count) { if (tableau.isNotEmpty()) tableau.removeAt(tableau.size - 1) }
                 if (tableau.isNotEmpty() && !tableau.last().isFaceUp) {
                     tableau.last().isFaceUp = true
                     score += 5
@@ -448,6 +449,7 @@ class SolitaireView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (width <= 0 || height <= 0) return
         // Green Felt Background
         GameEnvironment.draw(canvas, GameEnvironment.BackgroundType.FELT, paint = paint)
 

@@ -36,33 +36,30 @@ abstract class BaseGameActivity : AppCompatActivity() {
     private var hasStarted = false
     private var activeOverlay: View? = null
     private lateinit var adOverlayHelper: IdleAdOverlayHelper
-    private var gameOverCount = 0
     private var revivePromptShowing = false
     private var revivedLastRound = false
     private var pauseDialog: InGamePauseDialog? = null
     private var inGamePauseOverlay: PauseOverlay? = null
     private var reviveOverlay: RevivePromptOverlay? = null
+    private var pendingReviveRunnable: Runnable? = null
+    private var pendingInterstitialRunnable: Runnable? = null
     protected var isGameOverState = false
 
     protected open fun shouldShowHelpButton(): Boolean = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        window.requestFeature(android.view.Window.FEATURE_ACTIVITY_TRANSITIONS)
-        val moveTransition = android.transition.TransitionInflater.from(this)
-            .inflateTransition(android.R.transition.move).apply {
-                duration = 350
-                interpolator = android.view.animation.DecelerateInterpolator(1.5f)
-            }
-        window.sharedElementEnterTransition = moveTransition
-        window.sharedElementReturnTransition = moveTransition
+    private fun cancelPendingPostGamePrompts() {
+        val decor = window?.decorView
+        pendingReviveRunnable?.let { decor?.removeCallbacks(it) }
+        pendingReviveRunnable = null
+        pendingInterstitialRunnable?.let { decor?.removeCallbacks(it) }
+        pendingInterstitialRunnable = null
+    }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutId())
 
         val view = findViewById<View>(getGameViewId())
-        if (view != null) {
-            androidx.core.view.ViewCompat.setTransitionName(view, "game_card_transition")
-        }
 
         lifecycleScope.launch(Dispatchers.Default) {
             val analytics = try {
@@ -81,14 +78,12 @@ abstract class BaseGameActivity : AppCompatActivity() {
             gameView.gameKey = gameKey
             
             adOverlayHelper = IdleAdOverlayHelper(this).apply { init() }
-            IdleAdManager.init { state, remaining ->
-                adOverlayHelper.showState(state, remaining)
-            }
 
-            // Warm a rewarded ad only for games that can actually use it (avoids wasted requests)
-            if (gameView.canRevive) AdManager.preloadRewarded(this)
+            // Warm a rewarded ad only for games that support revive (avoids wasted requests)
+            if (gameView.supportsRevive) AdManager.preloadRewarded(this)
 
             gameView.onGameOver = { score ->
+                cancelPendingPostGamePrompts()
                 isGameOverState = true
                 HapticManager.vibrateExplosion(this)
                 val bundle = Bundle()
@@ -96,27 +91,45 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 bundle.putInt(FirebaseAnalytics.Param.SCORE, score)
                 firebaseAnalytics?.logEvent("level_end", bundle)
 
-                // Record event for smart rating and sharing engagement:
                 val currentBest = ScoreManager.getHighScore(this, gameKey)
                 val isHighScore = score > 0 && score >= currentBest
-                AppEngagementManager.onGameCompleted(this, isWin = score > 0, isNewHighScore = isHighScore)
 
-                // Rewarded "continue" offer takes priority over the interstitial (never show both back-to-back)
+                // Priority 1: Rewarded "continue" offer (only on true loss, never stacked with ads or rate dialogs)
                 if (shouldOfferRevive()) {
-                    window?.decorView?.postDelayed({
-                        if (!isFinishing && !isDestroyed) showRevivePrompt()
-                    }, 1200L)
+                    AppEngagementManager.onGameCompleted(
+                        this,
+                        isWin = score > 0,
+                        isNewHighScore = isHighScore,
+                        skipPrompt = true
+                    )
+                    val runnable = Runnable {
+                        pendingReviveRunnable = null
+                        if (!isFinishing && !isDestroyed && isGameOverState) {
+                            showRevivePrompt()
+                        }
+                    }
+                    pendingReviveRunnable = runnable
+                    window?.decorView?.postDelayed(runnable, 1100L)
                 } else {
                     revivedLastRound = false
-                    // Natural Game-Over Interstitial Ad Trigger (Respects cooldown & frequency)
-                    // Post with a delay to ensure the player sees victory/game-over and input dispatch is not halted
-                    if (AdManager.registerGameOver() && AdManager.canShowInterstitial(this)) {
+                    // Priority 2: Natural Game-Over Interstitial Ad Trigger (Respects cooldown & frequency)
+                    val interstitialDue = AdManager.registerGameOver() && AdManager.canShowInterstitial(this)
+                    AppEngagementManager.onGameCompleted(
+                        this,
+                        isWin = score > 0,
+                        isNewHighScore = isHighScore,
+                        skipPrompt = interstitialDue
+                    )
+                    if (interstitialDue) {
                         AdManager.resetGameOverCounter()
-                        window?.decorView?.postDelayed({
-                            if (!isFinishing && !isDestroyed) {
+                        val runnable = Runnable {
+                            pendingInterstitialRunnable = null
+                            if (!isFinishing && !isDestroyed && isGameOverState) {
                                 AdManager.showInterstitial(this)
                             }
-                        }, 1500L)
+                        }
+                        pendingInterstitialRunnable = runnable
+                        window?.decorView?.postDelayed(runnable, 1400L)
                     }
                 }
             }
@@ -192,13 +205,16 @@ abstract class BaseGameActivity : AppCompatActivity() {
                 reviveOverlay = null
                 revivedLastRound = false
                 (gameView as View).requestFocus()
-                if (AdManager.registerGameOver() && AdManager.canShowInterstitial(this)) {
+                if (isGameOverState && AdManager.registerGameOver() && AdManager.canShowInterstitial(this)) {
                     AdManager.resetGameOverCounter()
-                    window?.decorView?.postDelayed({
-                        if (!isFinishing && !isDestroyed) {
+                    val runnable = Runnable {
+                        pendingInterstitialRunnable = null
+                        if (!isFinishing && !isDestroyed && isGameOverState) {
                             AdManager.showInterstitial(this)
                         }
-                    }, 500L)
+                    }
+                    pendingInterstitialRunnable = runnable
+                    window?.decorView?.postDelayed(runnable, 500L)
                 }
             }
         )
@@ -361,9 +377,11 @@ abstract class BaseGameActivity : AppCompatActivity() {
             return
         }
         if (reviveOverlay != null || revivePromptShowing) {
+            reviveOverlay?.decline()
             return
         }
         if (isGameOverState) {
+            cancelPendingPostGamePrompts()
             exitToHub()
             return
         }
@@ -455,7 +473,9 @@ abstract class BaseGameActivity : AppCompatActivity() {
     }
 
     private fun restartCurrentGame() {
+        cancelPendingPostGamePrompts()
         isGameOverState = false
+        revivedLastRound = false
         (gameView as View).requestFocus()
         gameView.resetGame()
     }
@@ -465,15 +485,20 @@ abstract class BaseGameActivity : AppCompatActivity() {
         ScreenShake.syncSettings(this)
         IdleAdManager.isGameMode = true
         IdleAdManager.isWaitingMode = !hasStarted || isGuideShowing
-        IdleAdManager.startTracking()
-        if (!isGuideShowing) {
+        if (::adOverlayHelper.isInitialized) {
+            IdleAdManager.registerListener(this) { state, remaining ->
+                adOverlayHelper.showState(state, remaining)
+            }
+        }
+        if (!isGuideShowing && inGamePauseOverlay?.isShowing != true && !revivePromptShowing) {
             gameView.resume()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        IdleAdManager.stopTracking()
+        cancelPendingPostGamePrompts()
+        IdleAdManager.unregisterListener(this)
         gameView.pause()
     }
 
@@ -582,9 +607,15 @@ abstract class BaseGameActivity : AppCompatActivity() {
             if (ControllerNavigationHelper.isDpadKey(keyCode) || keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
                 removeActiveOverlay()
             }
+            // If the player restarts directly from the game-over screen via confirm key, clear post-game state & pending overlays
+            if (isGameOverState && ControllerNavigationHelper.isConfirmKey(keyCode)) {
+                cancelPendingPostGamePrompts()
+                isGameOverState = false
+                revivedLastRound = false
+            }
         }
 
-        // Direct D-Pad and Gamepad pass-through to active gameView
+        // Direct D-Pad and Gamepad pass-through to active gameView (single delivery, no double onKeyDown)
         if (::gameView.isInitialized) {
             val v = gameView as View
             if (v.visibility == View.VISIBLE) {
@@ -661,34 +692,7 @@ abstract class BaseGameActivity : AppCompatActivity() {
             handleBackPress()
             return true
         }
-        
-        // Pass specialized keys (M, O, etc.) to the game view even if activity handles some
-        if (keyCode == KeyEvent.KEYCODE_M || keyCode == KeyEvent.KEYCODE_O || 
-            keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_SETTINGS) {
-            if ((gameView as View).onKeyDown(keyCode, event)) return true
-        }
-
-        // Hide overlay on any D-pad input
-        if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
-            keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
-            keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
-            removeActiveOverlay()
-        }
-
-        if (keyCode == KeyEvent.KEYCODE_S || keyCode == KeyEvent.KEYCODE_VOLUME_MUTE) {
-            gameView.toggleSound()
-            return true
-        }
-        if (keyCode == KeyEvent.KEYCODE_H || keyCode == KeyEvent.KEYCODE_INFO) {
-            removeActiveOverlay()
-            showGameGuide()
-            return true
-        }
-        if (keyCode == KeyEvent.KEYCODE_L || keyCode == KeyEvent.KEYCODE_PROG_BLUE) {
-            showInGameLeaderboard()
-            return true
-        }
-        return (gameView as View).onKeyDown(keyCode, event)
+        return super.onKeyDown(keyCode, event)
     }
 
     private fun showInGameLeaderboard() {
@@ -697,17 +701,21 @@ abstract class BaseGameActivity : AppCompatActivity() {
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        return (gameView as View).onKeyUp(keyCode, event)
+        return super.onKeyUp(keyCode, event)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        cancelPendingPostGamePrompts()
+        IdleAdManager.unregisterListener(this)
         inGamePauseOverlay?.hide()
         inGamePauseOverlay = null
         pauseDialog?.dismiss()
         pauseDialog = null
         reviveOverlay = null
         removeActiveOverlay()
-        adOverlayHelper.destroy()
+        if (::adOverlayHelper.isInitialized) {
+            adOverlayHelper.destroy()
+        }
     }
 }

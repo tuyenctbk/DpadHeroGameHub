@@ -719,4 +719,208 @@
     <string name="revive_message">شاهد فيديو قصيراً لتكمل من حيث توقفت.</string>
     <string name="revive_watch_ad">شاهد الإعلان</string>
     <string name="revive_no_thanks">لا، شكراً</string>
+
+    <string name="scanline_crt_effect">فلتر خطوط CRT</string>
+    <string name="scanline_crt_desc">محاكاة خطوط شاشات الأركيد الكلاسيكية CRT.</string>
+    <string name="screen_shake_effect">تأثير اهتزاز الشاشة</string>
+    <string name="screen_shake_desc">استجابة اهتزاز ديناميكية أثناء التصادمات والانفجارات.</string>
+    <string name="reset_high_scores">إعادة تعيين أعلى النتائج</string>
+    <string name="reset_high_scores_desc">مسح جميع أفضل النتائج المسجلة للبطل النشط.</string>
+    <string name="reset_scores_confirm">هل أنت متأكد من مسح جميع أعلى النتائج لهذا البطل؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="scores_cleared">تمت إعادة تعيين أعلى النتائج.</string>
+    <string name="frenzy_tang">سمكة التانغ الزرقاء</string>
+    <string name="frenzy_barracuda">باراكودا</string>
+    <string name="frenzy_shark">قرش</string>
+
+    <string-array name="win_connect_four">
+        <item>أربعة على التوالي!</item>
+        <item>سيد الشبكة!</item>
+        <item>عبقري التكتيك!</item>
+        <item>بطل الأربعة!</item>
+    </string-array>
+    <string-array name="win_blackjack">
+        <item>بلاك جاك طبيعي!</item>
+        <item>لاعب محترف!</item>
+        <item>هزمت الكازينو!</item>
+        <item>كازينو رويال!</item>
+    </string-array>
+    <string-array name="win_trivia">
+        <item>عالم عبقري!</item>
+        <item>نتيجة مثالية!</item>
+        <item>سيد المعلومات!</item>
+        <item>بطل المسابقات!</item>
+    </string-array>
+
+    <string name="game_connect_four">أربعة في صف</string>
+    <string name="game_connect_four_instructions">معركة تكتيكية كلاسيكية لربط 4 أقراص!\n• D-PAD يسار / يمين: حرك المؤشر بين الأعمدة\n• D-PAD وسط / ENTER: أسقط القرص في العمود\n• اربط 4 من أقراصك أفقياً أو عمودياً أو قطرياً\n• اختر لاعب واحد ضد الذكاء الاصطناعي أو تحدي لاعبين!</string>
+    <string name="connect_four_settings_title">إعدادات أربعة في صف</string>
+    <string name="game_blackjack">بلاك جاك 21</string>
+    <string name="game_blackjack_instructions">طاولة بلاك جاك أصلية بأسلوب فيغاس!\n• الهدف: اقترب من 21 دون تجاوزها\n• D-PAD أعلى / أسفل / يسار / يمين: تنقل بين الفيش وإجراءات الطاولة\n• D-PAD وسط / ENTER: رهان / توزيع / سحب / توقف / مضاعفة\n• البلاك جاك يدفع 3:2! اربح الفيش وابنِ ثروتك!</string>
+    <string name="blackjack_settings_title">إعدادات بلاك جاك</string>
+    <string name="game_trivia">مسابقة معلومات</string>
+    <string name="game_trivia_instructions">برنامج مسابقات أركيد مثير!\n• D-PAD أعلى / أسفل / يسار / يمين: اختر الإجابة A أو B أو C أو D\n• D-PAD وسط / ENTER: تأكيد الإجابة\n• أجب بسرعة للحصول على مضاعفات وقت ضخمة\n• استخدم وسائل المساعدة: 50:50 وتجميد المؤقت وتخطي السؤال\n• أكمل تحدي 10 أسئلة لربح جوائز عملات كبرى!</string>
+    <string name="trivia_settings_title">إعدادات مسابقة المعلومات</string>
+
+    <string name="sound_profile_label">ملف الصوت</string>
+    <string name="sound_profile_arcade">أركيد 8-بت</string>
+    <string name="sound_profile_retro">سينث كلاسيكي</string>
+    <string name="sound_profile_modern">رقمي حديث</string>
+    <string name="sound_profile_arcade_desc">موجات نبضية 8-بت قوية</string>
+    <string name="sound_profile_retro_desc">نغمات سينث تناظرية دافئة</string>
+    <string name="sound_profile_modern_desc">نغمات متعددة الأصوات نقية</string>
+    <string name="sound_profile_toast">ملف الصوت: %1$s</string>
+    <string name="sound_profile_desc_format">%1$s • اضغط للتبديل</string>
+    <string name="volume_desc_format">مستوى الصوت: %1$d%% • اضغط لتغيير المستوى</string>
+    <string name="sensitivity_toast">حساسية وحدة التحكم: %1$s</string>
+
+    <string name="trivia_gauntlet_completed">اكتمل التحدي! 🏆</string>
+    <string name="trivia_final_score">النتيجة النهائية: %1$d نقطة</string>
+    <string name="trivia_accuracy">الدقة: %1$d / %2$d صحيحة (%3$d%%)</string>
+    <string name="trivia_coins_earned">+%1$d عملة مكتسبة 🪙</string>
+    <string name="trivia_play_again">العب مجدداً [ENTER]</string>
+    <string name="press_enter_next_round">اضغط [ENTER] لبدء الجولة التالية</string>
+    <string name="twentyfortyeight_hint">🎮 D-Pad/سحب: تحريك • [U] تراجع • [MENU] الحجم</string>
+
+    <string name="tab_local">🏠 محلي</string>
+    <string name="tab_worldwide">🌐 عالمي</string>
+
+    <string name="setting_volume_desc_format">مستوى الصوت: %1$d%% • اضغط على شارة الصوت للتعديل</string>
+    <string name="setting_sound_profile_theme">سمة ملف الصوت</string>
+    <string name="setting_sound_profile_desc">أركيد 8-بت • اضغط لتبديل النمط الصوتي</string>
+    <string name="setting_retro_music">الموسيقى الكلاسيكية والأجواء</string>
+    <string name="setting_retro_music_desc">ألحان أركيد خلفية بالسينثسايزر</string>
+    <string name="setting_controller_sensitivity">حساسية وحدة التحكم واليد</string>
+    <string name="setting_controller_sensitivity_desc">ضبط استجابة D-Pad وعصا التحكم واللمس</string>
+    <string name="setting_haptic_vibration">الاهتزاز اللمسي ووحدة التحكم</string>
+    <string name="setting_haptic_vibration_desc">نبضات لمسية عند الضربات والنقاط والانفجارات</string>
+    <string name="calibrate">معايرة</string>
+
+    <string name="badge_live">● مباشر</string>
+    <string name="global_top3_snake">أفضل 3 عالمياً • الثعبان</string>
+    <string name="hall_of_fame_widget">قاعة المشاهير 🏆</string>
+    <string name="placeholder_dash">---</string>
+    <string name="zero_pts">0 نقطة</string>
+
+    <string name="controller_settings_title">🎮 إعدادات التحكم والاهتزاز</string>
+    <string name="hardware_diagnostics">تشخيص العتاد</string>
+    <string name="controller_checking">🎮 وحدة التحكم: جاري فحص الأجهزة...</string>
+    <string name="vibrator_checking">⚡ الهزاز: جاري فحص VibratorManager...</string>
+    <string name="haptic_rumble_title">الاهتزاز اللمسي والقوي</string>
+    <string name="haptic_rumble_desc">تفعيل اهتزاز المحرك للتصادمات والعملات والأزرار</string>
+    <string name="haptic_intensity_title">شدة الاهتزاز (سعة المحرك)</string>
+    <string name="vibration_motor_test_title">اختبار محرك الاهتزاز</string>
+    <string name="vibration_test_instructions">اختر نمط اهتزاز واضغط اختبار للتحقق من استجابة المحرك:</string>
+    <string name="vibe_profile_click">🕹️ نقرة (15ms)</string>
+    <string name="vibe_profile_score">⚡ نقطة (35ms)</string>
+    <string name="vibe_profile_hazard">💥 خطر (70ms)</string>
+    <string name="vibe_profile_explosion">💣 انفجار زعيم</string>
+    <string name="vibe_profile_victory">🏆 موجة النصر</string>
+    <string name="test_vibration_now">⚡ اختبر الاهتزاز الآن</string>
+    <string name="gamepad_speed_title">سرعة إدخال يد التحكم</string>
+    <string name="gamepad_speed_desc">معدل التكرار الرقمي ومنحنى الحساسية</string>
+    <string name="analog_deadzone_title">منطقة الخمول للعصا التناظرية</string>
+    <string name="analog_deadzone_desc">تمنع انحراف العصا وتحسن دقة D-Pad على أذرع البلوتوث</string>
+    <string name="live_stick_neutral">🕹️ اختبار العصا المباشر: متعادل (0.00, 0.00)</string>
+
+    <string name="sound_sfx_on">المؤثرات الصوتية: تشغيل</string>
+    <string name="sound_sfx_off">المؤثرات الصوتية: إيقاف</string>
+    <string name="music_on">الموسيقى: تشغيل</string>
+    <string name="music_off">الموسيقى: إيقاف</string>
+
+    <string name="gamepad_connected">يد التحكم متصلة</string>
+    <string name="remote_mode">وضع الريموت</string>
+    <string name="desc_controller_status">حالة اتصال وحدة التحكم</string>
+    <string name="gamepad_connected_format">🎮 متصل: %1$s</string>
+    <string name="no_external_gamepad">لا توجد يد تحكم خارجية (D-Pad الافتراضي نشط)</string>
+    <string name="haptic_test_fired">تم تشغيل اختبار الاهتزاز: %1$s (الشدة %2$d%%)</string>
+    <string name="motor_hardware_info">⚡ المحرك: %1$s • العتاد جاهز: %2$s • التحكم بالسعة: %3$s</string>
+    <string name="status_yes">نعم</string>
+    <string name="status_no">لا</string>
+    <string name="status_fallback">بديل</string>
+    <string name="vibrator_manager_api">VibratorManager (API 31+)</string>
+    <string name="vibrator_legacy">Vibrator (قديم)</string>
+
+    <string name="global_top3_format">أفضل 3 عالمياً • %1$s</string>
+    <string name="no_record">لا يوجد رقم قياسي</string>
+    <string name="score_pts_format">%1$d نقطة</string>
+    <string name="status_claimed">✓ تم الاستلام</string>
+    <string name="status_ready">جاهز!</string>
+    <string name="claimed_today">✓ تم الاستلام اليوم</string>
+    <string name="claim_day_format">🎁 استلم اليوم %1$d (+%2$d)</string>
+    <string name="desc_game_icon">أيقونة اللعبة</string>
+    <string name="exit_app_title">الخروج من مركز الألعاب</string>
+    <string name="exit_app_confirm">هل أنت متأكد من رغبتك في الخروج من التطبيق؟</string>
+    <string name="btn_exit_app">خروج</string>
+    <string name="btn_cancel">إلغاء</string>
+
+    <string name="genre_arcade">أركيد</string>
+    <string name="genre_puzzle">ألغاز</string>
+    <string name="genre_strategy">استراتيجية</string>
+    <string name="genre_adventure">مغامرة</string>
+    <string name="genre_action">أكشن</string>
+    <string name="genre_runner">جري</string>
+    <string name="genre_brain">ذكاء</string>
+    <string name="genre_cards">ورق</string>
+    <string name="genre_racing">سباق</string>
+    <string name="genre_logic">منطق</string>
+    <string name="genre_classic">كلاسيكي</string>
+    <string name="genre_word">كلمات</string>
+    <string name="genre_shooter">تصويب</string>
+    <string name="genre_platform">منصات</string>
+    <string name="genre_memory">ذاكرة</string>
+    <string name="genre_board">لوحية</string>
+    <string name="spotlight_new_challenge">★ تحدٍ جديد</string>
+    <string name="spotlight_play_to_set_record">★ العب لتسجيل رقم قياسي</string>
+    <string name="spotlight_index_default">01 / 33</string>
+    <string name="active_hero_label">البطل النشط</string>
+    <string name="sensitivity_standard">1.0x (قياسي)</string>
+    <string name="percent_100">100%</string>
+    <string name="percent_25">25%</string>
+    <string name="splash_title">D-PAD ARCADE</string>
+    <string name="splash_subtitle">33 لعبة تلفاز كلاسيكية</string>
+    <string name="default_arcade_game">لعبة أركيد</string>
+    <string name="fallback_ad_body">استمتع بألعاب الأركيد الكلاسيكية بلا حدود مع تحكم D-Pad للتلفاز!</string>
+    <string name="fallback_ad_cta">العب الآن</string>
+
+    <string name="retro_hud_default_circuit">الحلبة</string>
+    <string name="retro_hud_lap">اللفة</string>
+    <string name="retro_hud_time">الوقت</string>
+    <string name="retro_hud_best">الأفضل</string>
+    <string name="retro_hud_coins">العملات</string>
+    <string name="retro_hud_mph">ميل/س</string>
+    <string name="retro_hud_pos">المركز</string>
+    <string name="retro_hud_slipstream">&gt;&gt; سحب هوائي فائق &lt;&lt;</string>
+    <string name="retro_hud_nitro_boost">دفعة نيترو!</string>
+
+    <string name="hud_score_format">النتيجة: %1$d</string>
+    <string name="hud_best_format">الأفضل: %1$d</string>
+    <string name="hud_streak_format">السلسلة: %1$d</string>
+    <string name="blackjack_chips_format">الفيش: $%1$d</string>
+    <string name="blackjack_streak_format">السلسلة: %1$d فوز</string>
+    <string name="blackjack_table_title">فيغاس بلاك جاك 21</string>
+    <string name="blackjack_table_rules">البلاك جاك يدفع 3 إلى 2 • الموزع يتوقف عند 17</string>
+    <string name="blackjack_best_format">الأفضل: $%1$d</string>
+    <string name="blackjack_shoe_format">الأوراق: %1$d ورقة</string>
+    <string name="blackjack_dealer">الموزع</string>
+    <string name="blackjack_dealer_total">الموزع: %1$d</string>
+    <string name="blackjack_next_round">الجولة التالية [ENTER]</string>
+    <string name="connect_four_vs_easy">ضد الذكاء (سهل)</string>
+    <string name="connect_four_vs_normal">ضد الذكاء (عادي)</string>
+    <string name="connect_four_vs_master">ضد الذكاء (خبير)</string>
+    <string name="connect_four_2p">مباراة لاعبين</string>
+    <string name="connect_four_your_turn">دورك (أصفر)</string>
+    <string name="connect_four_p1_turn">دور اللاعب 1</string>
+    <string name="connect_four_cpu_thinking">الذكاء يفكر...</string>
+    <string name="connect_four_p2_turn">دور اللاعب 2</string>
+    <string name="connect_four_victory">فوز!</string>
+    <string name="connect_four_defeat">هزيمة</string>
+    <string name="connect_four_p2_wins">فاز اللاعب 2!</string>
+    <string name="connect_four_draw">تعادل</string>
+    <string name="connect_four_win_moves">تم ربط 4 أقراص خلال %1$d حركة!</string>
+    <string name="connect_four_draw_desc">الشبكة ممتلئة بالكامل! لا توجد خانات متاحة.</string>
+    <string name="connect_four_cpu_win_desc">ربط الذكاء الاصطناعي 4 أقراص أولاً! حاول مجدداً.</string>
+    <string name="connect_four_victory_points">+%1$d نقطة فوز</string>
+    <string name="press_enter_to_play">اضغط [ENTER] للعب</string>
+    <string name="trivia_arena_default">ساحة المسابقة</string>
+    <string name="fruit_best_score_format">الأفضل: %1$d  النتيجة: %2$d</string>
 </resources>

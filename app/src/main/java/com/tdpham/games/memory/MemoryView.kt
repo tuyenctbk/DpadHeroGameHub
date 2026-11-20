@@ -64,10 +64,10 @@ class MemoryView @JvmOverloads constructor(
     private val handler = Handler(Looper.getMainLooper())
     private val animRunnable = object : Runnable {
         override fun run() {
-            if (gameOver || isProcessing || hintShowFrames > 0) {
+            if (gameOver) {
                 celebrationManager.update()
-                invalidate()
             }
+            invalidate()
             handler.postDelayed(this, 50)
         }
     }
@@ -100,10 +100,14 @@ class MemoryView @JvmOverloads constructor(
         requestFocus()
     }
 
-    override fun pause() {}
+    override fun pause() {
+        handler.removeCallbacks(animRunnable)
+    }
 
     override fun resume() {
         requestFocus()
+        handler.removeCallbacks(animRunnable)
+        handler.post(animRunnable)
     }
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
@@ -163,7 +167,7 @@ class MemoryView @JvmOverloads constructor(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                 resetGame()
                 return true
             }
@@ -174,7 +178,7 @@ class MemoryView @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_DOWN -> cursorR = (cursorR + 1).coerceAtMost(rows - 1)
             KeyEvent.KEYCODE_DPAD_LEFT -> cursorC = (cursorC - 1).coerceAtLeast(0)
             KeyEvent.KEYCODE_DPAD_RIGHT -> cursorC = (cursorC + 1).coerceAtMost(cols - 1)
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_SPACE, KeyEvent.KEYCODE_BUTTON_A -> {
                 if (!isProcessing) flipCard(cursorR * cols + cursorC)
             }
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
@@ -237,6 +241,7 @@ class MemoryView @JvmOverloads constructor(
     }
 
     private fun flipCard(idx: Int) {
+        if (idx !in cards.indices) return
         val card = cards[idx]
         if (card.isFlipped || card.isMatched || idx == selectedIdx1) return
 
@@ -408,7 +413,6 @@ class MemoryView @JvmOverloads constructor(
             paint.strokeWidth = 6f
             canvas.drawRoundRect(rect, radius, radius, paint)
             paint.style = Paint.Style.FILL
-            invalidate() // Ensure continuous animation for cursor pulse
         }
 
         if (card.isFlipped) {

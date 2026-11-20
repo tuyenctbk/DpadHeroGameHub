@@ -87,17 +87,24 @@ class Lines98View @JvmOverloads constructor(
     }
 
     override fun startGame() {
+        requestFocus()
         isPaused = false
+        handler.removeCallbacks(animRunnable)
+        handler.post(animRunnable)
         invalidate()
     }
 
     override fun pause() {
         isPaused = true
+        handler.removeCallbacks(animRunnable)
         invalidate()
     }
 
     override fun resume() {
+        requestFocus()
         isPaused = false
+        handler.removeCallbacks(animRunnable)
+        handler.post(animRunnable)
         invalidate()
     }
 
@@ -269,7 +276,8 @@ class Lines98View @JvmOverloads constructor(
         return false
     }
 
-    override val canRevive: Boolean get() = true
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = isGameOver
 
     override fun reviveGame(): Boolean {
         if (!isGameOver) return false
@@ -331,9 +339,13 @@ class Lines98View @JvmOverloads constructor(
                 handleSelection()
             }
             KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_ESCAPE -> {
-                selectedX = -1
-                selectedY = -1
-                SoundManager.playClick()
+                if (selectedX != -1 || selectedY != -1) {
+                    selectedX = -1
+                    selectedY = -1
+                    SoundManager.playClick()
+                } else {
+                    return super.onKeyDown(keyCode, event)
+                }
             }
             KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_TAB, KeyEvent.KEYCODE_O -> {
                 showOptions()
@@ -512,15 +524,22 @@ class Lines98View @JvmOverloads constructor(
                     paint.color = ballColors[(ballColorIdx - 1) % ballColors.size]
                     canvas.drawCircle(cx, cy - bounceOffset, drawRadius, paint)
 
-                    // Highlight (3D effect)
-                    val gradient = RadialGradient(
-                        cx - drawRadius * 0.4f, cy - bounceOffset - drawRadius * 0.4f, drawRadius * 0.8f,
-                        Color.WHITE, Color.TRANSPARENT, Shader.TileMode.CLAMP
+                    // Specular 3D Highlight (zero per-frame shader allocations)
+                    paint.color = Color.WHITE
+                    paint.alpha = 115
+                    canvas.drawCircle(
+                        cx - drawRadius * 0.32f,
+                        cy - bounceOffset - drawRadius * 0.32f,
+                        drawRadius * 0.30f,
+                        paint
                     )
-                    paint.shader = gradient
-                    paint.alpha = 150
-                    canvas.drawCircle(cx, cy - bounceOffset, drawRadius, paint)
-                    paint.shader = null
+                    paint.alpha = 200
+                    canvas.drawCircle(
+                        cx - drawRadius * 0.36f,
+                        cy - bounceOffset - drawRadius * 0.36f,
+                        drawRadius * 0.14f,
+                        paint
+                    )
                     paint.alpha = 255
 
                     if (isSelected) {

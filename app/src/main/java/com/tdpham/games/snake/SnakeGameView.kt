@@ -92,7 +92,14 @@ class SnakeGameView @JvmOverloads constructor(
 
     private val frameCallback = object : Choreographer.FrameCallback {
         override fun doFrame(frameTimeNanos: Long) {
-            if (!isRunning) return
+            if (!isRunning || windowVisibility != View.VISIBLE || !isAttachedToWindow) {
+                isRunning = false
+                return
+            }
+            if (isPaused && !isGameOver) {
+                isRunning = false
+                return
+            }
 
             val nowMs = System.currentTimeMillis()
             val currentStepInterval = (currentDifficulty.speedMs - (score / 20) * 4).coerceAtLeast(50)
@@ -106,11 +113,19 @@ class SnakeGameView @JvmOverloads constructor(
 
             animationFrame++
             if (isGameOver) {
-                celebrationManager.update()
+                if (celebrationManager.isActive()) {
+                    celebrationManager.update()
+                } else {
+                    isRunning = false
+                    invalidate()
+                    return
+                }
             }
 
             invalidate()
-            Choreographer.getInstance().postFrameCallback(this)
+            if (isRunning) {
+                Choreographer.getInstance().postFrameCallback(this)
+            }
         }
     }
 
@@ -122,8 +137,25 @@ class SnakeGameView @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        isRunning = true
-        Choreographer.getInstance().postFrameCallback(frameCallback)
+        if (windowVisibility == View.VISIBLE && (!isPaused || isGameOver)) {
+            isRunning = true
+            Choreographer.getInstance().removeFrameCallback(frameCallback)
+            Choreographer.getInstance().postFrameCallback(frameCallback)
+        }
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (visibility == View.VISIBLE) {
+            if (!isPaused || (isGameOver && celebrationManager.isActive())) {
+                isRunning = true
+                Choreographer.getInstance().removeFrameCallback(frameCallback)
+                Choreographer.getInstance().postFrameCallback(frameCallback)
+            }
+        } else {
+            isRunning = false
+            Choreographer.getInstance().removeFrameCallback(frameCallback)
+        }
     }
 
     override fun onDetachedFromWindow() {
@@ -153,21 +185,28 @@ class SnakeGameView @JvmOverloads constructor(
         requestFocus()
         isPaused = false
         lastLogicTickTime = System.currentTimeMillis()
+        if (!isRunning && isAttachedToWindow && windowVisibility == View.VISIBLE) {
+            isRunning = true
+            Choreographer.getInstance().removeFrameCallback(frameCallback)
+            Choreographer.getInstance().postFrameCallback(frameCallback)
+        }
     }
 
     override fun pause() {
         isPaused = true
+        isRunning = false
+        Choreographer.getInstance().removeFrameCallback(frameCallback)
     }
 
-    override val canRevive: Boolean get() = true
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = isGameOver
 
     override fun reviveGame(): Boolean {
         if (!isGameOver) return false
         isGameOver = false
         gameOverReason = ""
-        val head = if (snake.isNotEmpty()) snake.first() else Point(10, 10)
-        val safeX = head.x.coerceIn(2, gridSize - 3)
-        val safeY = head.y.coerceIn(2, gridSize - 3)
+        val safeX = gridSize / 2
+        val safeY = gridSize / 2
         snake.clear()
         snake.add(Point(safeX, safeY))
         snake.add(Point((safeX - 1).coerceAtLeast(0), safeY))
@@ -175,7 +214,7 @@ class SnakeGameView @JvmOverloads constructor(
         currentDirection = Direction.RIGHT
         inputQueue.clear()
         isPaused = false
-        lastLogicTickTime = System.currentTimeMillis()
+        lastLogicTickTime = System.currentTimeMillis() + 350L
         celebrationManager.clear()
         SoundManager.playSuccess()
         invalidate()
@@ -462,6 +501,9 @@ class SnakeGameView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (width <= 0 || height <= 0) return
+        val saveCount = canvas.save()
+        try {
         val needsInvalidate = screenShake.apply(canvas)
         super.onDraw(canvas)
 
@@ -569,6 +611,9 @@ class SnakeGameView @JvmOverloads constructor(
 
         // 7. Header Stats
         drawHeaderStats(canvas, offsetX, offsetY)
+        } finally {
+            canvas.restoreToCount(saveCount)
+        }
     }
 
     private fun drawSnakeEyes(canvas: Canvas, left: Float, top: Float, right: Float, bottom: Float) {

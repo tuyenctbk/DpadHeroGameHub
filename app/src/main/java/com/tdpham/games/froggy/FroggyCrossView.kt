@@ -144,11 +144,15 @@ class FroggyCrossView @JvmOverloads constructor(
     override fun pause() {
         gamePaused = true
         handler.removeCallbacks(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
     }
     override fun resume() {
+        requestFocus()
         gamePaused = false
         handler.removeCallbacks(gameLoop)
         handler.post(gameLoop)
+        animHandler.removeCallbacks(animRunnable)
+        animHandler.post(animRunnable)
     }
 
     override fun toggleSound(): Boolean = SoundManager.toggleSound()
@@ -290,7 +294,11 @@ class FroggyCrossView @JvmOverloads constructor(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (gameOver) {
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_SPACE ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A
+            ) {
                 resetGame()
                 resume()
                 return true
@@ -308,7 +316,11 @@ class FroggyCrossView @JvmOverloads constructor(
                 resume()
                 return true
             }
-            return true
+            val isGameplayKey = keyCode == KeyEvent.KEYCODE_DPAD_UP ||
+                keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+                keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
+                keyCode == KeyEvent.KEYCODE_DPAD_RIGHT
+            return if (isGameplayKey) true else super.onKeyDown(keyCode, event)
         }
         if (gamePaused && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
                 keyCode == KeyEvent.KEYCODE_ENTER ||
@@ -335,17 +347,21 @@ class FroggyCrossView @JvmOverloads constructor(
         return true
     }
 
-    override val canRevive: Boolean get() = true
+    override val supportsRevive: Boolean get() = true
+    override val canRevive: Boolean get() = gameOver
 
     override fun reviveGame(): Boolean {
         if (!gameOver) return false
         gameOver = false
         lives = 2
-        frogR = when {
-            frogR >= 10 -> 15
-            frogR >= 5 -> 10
-            else -> 5
+        var safeRow = rows - 1
+        for (r in frogR.coerceIn(0, rows - 1) until rows) {
+            if (getTerrainType(r) == TerrainType.GRASS) {
+                safeRow = r
+                break
+            }
         }
+        frogR = safeRow
         frogX = (cols / 2).toFloat()
         celebrationManager.clear()
         gamePaused = false
